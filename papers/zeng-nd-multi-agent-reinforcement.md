@@ -100,4 +100,4 @@ Paul has no annotation of this paper, and none of his component positions cite i
 - [[luo-2020-path-planning-algorithm]] — complements — Same UAV application domain. Luo plans paths for single drones with D* Lite, while Zeng controls a swarm with RL. Both are engineering simulations relevant to Paul's pathfinding reading only by analogy.
 
 ### Linked from
-_None._
+- [[sutton-2018-reinforcement-learning-introduction]] — complements — Paper exists. Adjacent multi-agent RL with no direct bearing on Melange; the builds-on relation is not confirmed.

@@ -126,3 +126,4 @@ Paul has not annotated this paper. The paper treats CELF as the accuracy ceiling
 - [[chen-2023-complex-contagion-influence]] — complements — Efficient IM under the submodular IC model, the setting whose guarantees this paper shows do not carry to complex contagion.
 - [[kamarthi-2020-influence-maximization-unknown]] — complements — Efficient greedy influence maximization under the independent cascade model, the same diffusion model Kamarthi uses as its oracle. Checked against the text on greedy and ICM.
 - [[fink-2023-congressional-social-network-dataset]] — complements — Influence maximization under the Independent Cascade Model, the diffusion model whose edge probabilities Fink supplies. Checked against the item title and venue.
+- [[kempe-2015-maximizing-spread-influence]] — built-on-by — Speeds up Kempe-style greedy under Independent Cascade. Item exists; not re-read here.

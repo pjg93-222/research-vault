@@ -120,4 +120,6 @@ Paul's entry is a bare citation (Kamarthi et al. 2020, AAMAS Geometric-DQN, unkn
 - [[bharathi-nd-competitive-influence-maximization]] — complements — Competitive influence maximization, the setting behind the system two-colour cascade. Kamarthi single-colour IC results do not cover that rival setting. Checked against the title and opening text.
 
 ### Linked from
-_None._
+- [[dai-2017-learning-combinatorial-optimization-graphs]] — built-on-by — Partly verified: Kamarthi says previous graph RL work [13], which is Khalil et al. 2017 in its reference list, did not use a distinct global representation (text around line 215). The closest prior work phrasing is not in the text. Internal item slug is kamarthi-2019 (arXiv 1907.11625) while the filename says 2020.
+- [[manchanda-2020-gcomb-learning-budget-constrained]] — same-method — Title confirms RL policy for IM under unknown structure. Checked by title and note only; item file exists.
+- [[kempe-2015-maximizing-spread-influence]] — built-on-by — IM on a sampled, unknown graph, which relaxes Kempe's known-graph assumption. Item exists; not re-read here.

@@ -129,3 +129,4 @@ Paul has no annotated-bibliography entry or markup on this work. Non-verbal and 
 
 ### Linked from
 - [[rubio-2024-feasibility-data-analytics]] — complements — Real item. Melange Salam-2022 sex check (brain line 111) supports the sex-confound complement; Rubio's all-female sample cannot answer that question.
+- [[mairesse-2007-automatic-recognition-personality]] — complements — Personalised models for self-reported personality recognition. It does not cite Mairesse 2007, so the link is topical only; the rel labelled it extends, which is not supported.

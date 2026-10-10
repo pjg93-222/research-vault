@@ -207,4 +207,7 @@ Paul's entry has no takeaways or system links; his one margin note questions dim
 - [[zareie-2023-influence-maximization-social]] — complements — Survey of behaviour-aware IM methods. receptivity_layer.py line 29 cites it alongside Chen UAI 2021 for contingency-aware seeding.
 
 ### Linked from
-_None._
+- [[sutton-2018-reinforcement-learning-introduction]] — complements — Paper exists in the research store. Shares the RL foundations of the book, but no citation of this book was confirmed in the stub.
+- [[watkins-1992-q-learning]] — complements — Real item: complex contagion influence maximization as a reinforcement learning approach (title confirmed). The deep RL and Q-learning lineage claimed by the analyst was not confirmed, so the link is weakened to complements.
+- [[dai-2017-learning-combinatorial-optimization-graphs]] — built-on-by — Verified: RL4CCIM says it builds on the Khalil 2017 and RL4IM line (text lines 395-413) and uses a graph attention network encoder (line 484).
+- [[kempe-2015-maximizing-spread-influence]] — complements — Relabelled from contradicts. Complex contagion leaves the submodular regime that Kempe proves for triggering models, a different model, so it does not contradict Kempe's theorems.

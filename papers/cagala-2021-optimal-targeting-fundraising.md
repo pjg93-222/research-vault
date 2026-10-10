@@ -122,3 +122,4 @@ Paul has not annotated this paper, so no note is stale. It partly cuts against h
 
 ### Linked from
 - [[sverdrup-nd-introduction-grf-causal-forests]] — same-method — Vault item exists. Rel describes it as applying causal forests and policy learning to target fundraising appeals by estimated individual effect. Content was not re-read in this pass; kept on existence and title fit.
+- [[bouton-2022-small-campaign-donors]] — complements — Bouton et al. describe small donors as responding to candidate fundraising requests and external events. Cagala et al. (2021, arXiv, Optimal Targeting in Fundraising) study the supply side of solicitation. Bouton et al. do not cite this work, so the link is a vault-level complement.

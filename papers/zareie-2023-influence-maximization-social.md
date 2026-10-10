@@ -123,3 +123,4 @@ Paul has no annotations on this paper, and it is not cited in his component posi
 - [[trivedi-2020-efficient-influence-maximization]] — complements — A survey of behaviour-aware IM methods that places degree-discount and edge-probability modelling in wider context.
 - [[almazaydeh-2026-heuristic-centrality-methods]] — complements — Item exists; title matches (survey of behaviour-aware IM, 2023). Covers the receiver-susceptibility and seed-probability extensions that the uniform-p setup leaves out.
 - [[chen-2023-complex-contagion-influence]] — complements — Survey of behaviour-aware IM methods. receptivity_layer.py line 29 cites it alongside Chen UAI 2021 for contingency-aware seeding.
+- [[kempe-2015-maximizing-spread-influence]] — cited-by — Survey of behaviour-aware IM methods that build on the Kempe models. Item exists; not re-read here.

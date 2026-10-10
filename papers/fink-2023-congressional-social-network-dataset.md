@@ -134,3 +134,4 @@ Paul has no written takeaway: 23 highlights, no notes. The highlights cover meth
 
 ### Linked from
 - [[vanderdoes-2022-strategic-identity-signaling]] — complements — Same medium. Fink builds congressional Twitter interaction ties that feed the social layer. This paper implies the content on those ties is audience-shaped, and that heterogeneous followings yield more covert political tweets.
+- [[kempe-2015-maximizing-spread-influence]] — complements — Supplies estimated pairwise influence probabilities, the parameter-estimation step Kempe leaves open (Conclusions p.138). Item exists; not re-read here.

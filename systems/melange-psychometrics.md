@@ -16,7 +16,7 @@ brain_notes:
   - C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md
   - C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-case-1-moneyball-gate2.md
   - C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md
-paper_count: 26
+paper_count: 27
 tags: [system]
 ---
 
@@ -24,32 +24,51 @@ tags: [system]
 
 Measuring legislator personality and behavioural dispositions from text and behaviour. Covers the lexical Big Five pipeline (Ramey-style, with SMOreg and RKH calibration), the LLM item-level reader, the ridge hybrid, the CT-CM latent model, behavioural dispositions, cooperation_v2, affective N, the agency/communion persona channel, shrinkage rules, and the genre-transfer tests. These feed the receptivity layer.
 
-**Brain notes:** [topics/2026-07-feature-personality-psychometrics](obsidian://open?vault=brain&file=topics%2F2026-07-feature-personality-psychometrics); [topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search](obsidian://open?vault=brain&file=topics%2F2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search); [concepts/single-look-holdout-discipline-case-1-moneyball-gate2](obsidian://open?vault=brain&file=concepts%2Fsingle-look-holdout-discipline-case-1-moneyball-gate2); [concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template](obsidian://open?vault=brain&file=concepts%2Fsingle-look-holdout-discipline-cases-2-3-n-slot-and-gold-template)
+Brain notes: [topics/2026-07-feature-personality-psychometrics](obsidian://open?vault=brain&file=topics%2F2026-07-feature-personality-psychometrics); [topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search](obsidian://open?vault=brain&file=topics%2F2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search); [concepts/single-look-holdout-discipline-case-1-moneyball-gate2](obsidian://open?vault=brain&file=concepts%2Fsingle-look-holdout-discipline-case-1-moneyball-gate2); [concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template](obsidian://open?vault=brain&file=concepts%2Fsingle-look-holdout-discipline-cases-2-3-n-slot-and-gold-template)
 
-**Melange member psychometrics: evidence assessment (hub snapshot, 70 bearings over 8 components)**
+**Melange member psychometrics: evidence assessment (hub snapshot 2026-10-10)**
 
-The bearings are spread unevenly. Lexical Big Five has 20, gold-panel validation 12, affective N 12, persona 11, LLM/hybrid readers 8 and behavioural dispositions 6. Cooperation v2 has 1, a weak context row. Shrinkage and weighting has 0, so it is a GAP. Most rows are VERIFIED-SOFTENED: the paper side checked out, but the analyst's framing was trimmed. Only 9 rows are fully VERIFIED, and 11 are UNVERIFIED. Under DE-062 the UNVERIFIED rows count as leads only.
+The hub holds 74 bearings on 7 of the 8 components: 11 VERIFIED, 51 VERIFIED-SOFTENED and 12 UNVERIFIED. Interview weighting and gated shrinkage (C_INT_W / P6) has none. On top of the hub I ran a short online scan (2026-10-10). Every result from that scan is a lead from a single read (DE-062) and none is a finding.
 
-The literature says three things clearly:
+**What the evidence says overall**
 
-1. **Closed-vocabulary text is weak against self-report and fairly strong against observer ratings.** For self-report, |rho| is about .08 to .16 and mean R² about 5% (Koutsoumpis 2024: k=25 samples, n≈84k, about 87% of it from one study; Pennebaker 2003: several hundred students). Observer cue utilization reaches mean R² about 38.5% (k=5, n=1,637, almost all zero-acquaintance raters). So Melange's traits are best read as measures of perceived public persona, not inner disposition. That is consistent with how the receptivity layer uses them. It also means convergence with the Senate panels shows that the text and the raters use shared cues; it does not show trait accuracy.
-2. **None of the strong evidence comes from Congress.** Nearly every effect size comes from students, social-media users, German party sentences or MPs in other countries. The only congressional sources are Ramey 2016 (House, with no ground-truth validation) and the Mondak appendix (Senate, historic, era not stated).
-3. **Several figures in the system's own records could not be located by the verifiers.** These are the held-out CV against RKH (E .510 / A .406 / C .363 / ES .258 / O .214, mean .350), the 0.12 Pink bar, the .21 text-tone halo, the genre-transfer rhos (.050 / .161) and "O reversed on party check". The committed artifact data/members/big5_v2.json instead reports held-out r against behavioural targets: A .059, C .281, E .563, O .135, and no ES value. Until these numbers are found, provenance is a bigger problem than any paper finding.
+1. **Text-to-trait signal is weak.** Against self-report, closed-vocabulary word use correlates at about |r| .10 to .16 (Pennebaker; Koutsoumpis meta-analysis: mean R² 5.07% across 52 LIWC categories). Observer ratings are easier to match than self-report (cue utilization R² about 38.5%). Matching observers shows that raters and text use the same cues; it does not show trait accuracy.
+2. **The system's validation story rests on criteria that share its method.** RKH is itself built on a Mairesse-type SVR. Refitting to RKH therefore turns convergence into a fit statistic, not validation. Mairesse 2007 found that SMOreg trained on observer ratings did worse than the mean baseline on all five traits. Its relative absolute error ran 132% to 213%, against a baseline of 100%.
+3. **Senate gold panels are the only independent criterion.** They are Senate-only and historic, skewed by party at the extremes, and include senators rated by a single coder (k=1), whom Mondak excludes.
+4. **Several numbers in the system description could not be located in the repo:**
+   - the held-out CV figures against RKH (E .510, A .406, C .363, ES .258, O .214; mean .350);
+   - the claim that O was reversed on the party check;
+   - the affective-N genre-transfer values (rho .050 and .161), which were not in the cited lines.
 
-The verified findings that most affect the system:
+   What the repo does hold: `data/members/big5_v2.json` records held-out r against *behavioural* targets (A .059, C .281, E .563, O .135), and the brain records C +0.348 held out. The component descriptions look stale. The next action is to re-source them, not to re-run anything (single-look discipline).
 
-- The Mondak appendix excludes senators rated by only one coder (k=1). The primary validators do not apply that filter (VERIFIED, strong).
-- Floor-vote participation shifts within the same legislator with electoral status, falling 2.70 points from a mean of 90.48 in the final term (Fouirnaies & Hall 2022, US state legislatures; VERIFIED). This affects both diligence_z and the recorded C PASS.
-- The agency facet is not unidimensional in PoliPers observer ratings (alpha .40 for Trump/Merkel pooled, N=211; VERIFIED).
-- Among MPs in Belgium, Canada and Israel (n=306), more neurotic members appear less in national news (beta -.111; VERIFIED). By analogy, interview-derived N may be range-restricted.
+**Actual errors to fix.** These are documentation or code defects, not modelling findings.
+- The `behavioral_dispositions.py` docstring attributes roll-call participation as a C criterion to Ramey 2016. The paper's only C outcome is the share of ceremonial bills.
+- The `big5_llm.py` docstring says "balanced keying". The items are keyed 3:1 for O, C, E and A, and 2:2 for ES.
+- `build_big5_senate_gold.py` drops the malformed academic Feingold row without warning (the panel has 125 records against 126 in the appendix). Its comment says only headings reach that branch, which is wrong.
+- The primary gold validators do not apply Mondak's rule excluding k=1 senators.
+- The `emit_affective_n.py` docstring still says the score combines LIWC. LIWC is now only a convergent anchor.
+- The brain ruling of 2026-07-04 misreads Birkenmaier. The paper does not call its task "easier", and .72 is the agreement on whether any cue is present, not the agency or communion alpha.
+
+**Online scan.** These copies are downloaded to `C:\Users\pgoff\Documents\research\_work\downloads\scan_2026-10-10\` with one folder per paper. None has been ingested into `papers/` yet.
+- `cao_kosinski_2024_scirep\` – GPT-3 name embeddings predict how 226 public figures' personalities are perceived (600 raters). Raw r is .78 to .88; after controlling for likability and demographics it falls to .53 to .70. This is direct evidence for the reputational-prior assumption behind de-identification, and it shows likability as a large share of perceived personality.
+- `peters_matz_2024_arxiv\` – Zero-shot GPT inference from Facebook posts against self-report, mean r .29. Accuracy differs by sex and age.
+- `osnabrugge_hobolt_rodon_2021_apsr\` – In about 2 million UK and Irish parliamentary speeches, emotive rhetoric rises in high-audience debates. Affect in legislative speech follows the audience.
+- `rheault_2016_plosone\` – In a century of House of Commons debates, emotional polarity tracks the national economy.
+- `aroyehun_2026_arxiv\` – A 2026 preprint on 1.7 million Congress speeches (1973 to 2024). Emotion varies with policy domain and ideology, and anger is negatively associated with legislative effectiveness.
+- `decter_frain_frimer_2016_frontiers\` – An aggregate time series of agency and communion in House floor speech (1996 to 2014) against Congress approval. Only the "helping" form of communion is positive.
+- `hargrave_blumenau_2022_ucl\` – In UK MPs' speech (1997 to 2019), gendered style shifts over time, with women adopting more agentic styles.
+- `harbridge_volden_wiseman_2023_jop\` – Members of the 93rd to 114th Congresses who draw a larger share of their cosponsors from the other party are more effective. The paper proposes reciprocity as the path.
+
+Cao & Kosinski 2024 (PNAS Nexus) could not be downloaded because PMC blocks scripted fetches. Park et al. 2015 (JPSP) is paywalled and no trusted open copy was found. Both remain in `missing.md`.
 
 ## Lexical Big Five (Ramey-style closed vocabulary)
 
-**What it computes:** Corpus-relative Big Five z (O, C, E, A, ES; N = -ES) from category rates of floor speech and interviews.
+**Computes.** Corpus-relative Big Five z (O, C, E, A, ES; N = -ES) from category rates of floor speech and interviews.
 
-**Method:** Rates per 1000 words (LIWC-analog, Empath, MATTR, Brysbaert concreteness) are z-scored and combined with linear weights from published correlates or SMOreg (Mairesse) fit on essays, then refit to RKH targets per trait (hybrid). Shrinkage z x sqrt(tokens/1500). Held-out CV vs RKH: E .510, A .406, C .363, ES .258, O .214 (mean .350). O was reversed on the party check.
+**Method.** Rates per 1000 words (LIWC-analog, Empath, MATTR, Brysbaert concreteness) are z-scored and combined with linear weights from published correlates or SMOreg (Mairesse) fit on essays, then refit to RKH targets per trait (hybrid). Shrinkage z x sqrt(tokens/1500). Held-out CV vs RKH: E .510, A .406, C .363, ES .258, O .214 (mean .350). O was reversed on the party check.
 
-**Code refs:** `fec/members/big5_traits.py:1-286`, `fec/members/fit_smoreg_rkh.py`, `fec/members/fit_smoreg_essays.py`, `fec/liwc/mairesse_smoreg.json`
+**Code refs.** `fec/members/big5_traits.py:1-286`, `fec/members/fit_smoreg_rkh.py`, `fec/members/fit_smoreg_essays.py`, `fec/liwc/mairesse_smoreg.json`
 
 **Assumptions**
 - Closed-vocabulary rates carry trait signal
@@ -80,58 +99,68 @@ The verified findings that most affect the system:
 | [[kumari-nd-five-personality-predictions]] |  | context | Proposes predicting Big Five trait percentages from tweets with TF-IDF, LIWC/psycholinguistic categories, sentiment and profile features, using RF/SVM/NN (Sec 3.3) or NB/SVM/RNN/BERT (Sec 3.5) plus regression. No N, no label source and no accuracy, precision or recall values are reported. It says cross-validation and confusion matrices are used (Sec 3.4) but shows none. | It does not transfer as evidence. There are no labels, no sample, no results, and the genre (general Twitter users) differs from legislators' floor speech and interviews. At most it is a list of candidate features. Its absolute 'percentage' outputs conflict with the system's rule that scores are meaningful only within this corpus. Its accuracy claim stays unverified and should never be cited as a benchmark (DE-062 spirit). | weak | UNVERIFIED |
 | [[celli-2012-role-emotional-stability]] | 2012 | method-source | An unsupervised ES tagger built from Mairesse et al. 2007 linguistic correlations (Table 2) scores 0.625 accuracy against a 0.5 majority baseline on Personage (8 users x 20 sentences). The authors call this in line with the state of the art. Prior text classifiers reached E.Stab. accuracy of 0.531-0.705 (Table 1). | Shared lineage only: both apply published Mairesse correlates to new text without local supervision. Celli's evidence covers 2011 English tweets from public users and 8 human-rated users. Congressional floor speech and interviews are a different genre and population. The paper does not show that the ES weights transfer, and its accuracy is barely above chance at that sample size. Use it as a historical benchmark for how weak unsupervised ES reading is, never as validation. | weak | UNVERIFIED |
 | [[yang-2023-getting-personal-deep]] | 2023 | qualifies | On PANDORA DeepPerson reaches AUC 75.0 (+33.7% vs an IBM feature baseline of about 56.1) against best comparator AttRCNN 64.6. The authors say IBM moved away from LIWC toward open-vocabulary GloVe embeddings. In Table 7 the concept encoder adds about 2 pp AUC (68.0 with it vs 66.2 without). The paper does not rank closed-vocabulary scoring as a family. | The paper's evidence is binary median-split self-report classification on Reddit, Facebook and student essays. The system is judged against RKH and Senate gold panels on congressional speech, which the paper never tests. The held-out CV figure of .350 vs RKH and the refit-to-RKH step were not located in the cited file, so they stay unverified. | moderate | VERIFIED-SOFTENED |
+| [[mairesse-2007-automatic-recognition-personality]] | 2007 | contradicts | SMOreg trained on EAR observer ratings (96 speakers, 10-fold CV) has relative absolute error above the mean baseline for all five traits: E 140.05, ES 162.05, A 173.97, C 131.75, O 213.20 percent (baseline 100). The authors say linear regression and SVMs perform poorly and suggest they need a bigger dataset. | Holds as a statement about the Mairesse observer model and Ramey fn 4. The paper never says what data the distributed observer model was fit on, so the claim that it was fit on all 96 speakers is an assumption. Ramey line 191 calls the training sample the essay sample, so Ramey is internally inconsistent on provenance. | strong | VERIFIED-SOFTENED |
+| [[mairesse-2007-automatic-recognition-personality]] | 2007 | qualifies | On the essays corpus with self-reports, SMO binary accuracy is 54.9 to 62.1 percent (openness 62.1 vs 50.3 baseline). SMOreg relative error is E 100.65, ES 98.35, A 100.28, C 99.30 (none significant) and O 94.19 (significant). Best Pearson r is 0.33 for openness and 0.24 for emotional stability. | Paper figures verified. Table 12 SMO values are E 54.93, ES 57.35, A 55.78, C 55.29, O 62.11, so the 55 to 62 range is rounded. The grid search picks the best of 12 settings on the same folds, so its CV figure is optimistic, as stated. The paper's binary accuracies are not comparable to the system's refit since the features differ (Empath-augmented). | moderate | VERIFIED-SOFTENED |
 
 **Assessment**
 
-**Evidence weight: moderate on the general method, weak on validity in Congress.** There are 20 bearings: 1 VERIFIED, 14 VERIFIED-SOFTENED and 5 UNVERIFIED leads (Rammstedt, Simchon, Naz, Kumari, Celli 2012).
+**Evidence weight: moderate as procedure, weak as validity.** The hub has 22 rows (19 distinct papers): 1 VERIFIED, 16 VERIFIED-SOFTENED and 5 UNVERIFIED.
 
-**What the evidence supports**
-- The procedure follows Ramey et al. 2016: corpus-standardized features, scores relative to the corpus, and N = -ES (VERIFIED-SOFTENED, strong as a method source).
-- Several SMOreg weight signs match Koutsoumpis's bivariate cue-validity signs: A anger, A swear, C anger, C swear and O sixltr.
+**What the literature supports**
+- Ramey 2016 (VERIFIED-SOFTENED, method source) documents the procedure the system follows: corpus-relative standardization, member-level features and N = -ES.
+- Self-report convergence for closed-vocabulary features is low. Pennebaker 2003 reports r .10 to .16 in students. Koutsoumpis 2024 reports a mean R² of 5.07%, with maximum self-report cue validity of |rho| .08 to .14 and heterogeneity in 96% of effects. Marrero 2022 reports 3.13% out-of-sample R² on texts of about 92 words.
+- The Text Personality Recognition state of the art is about r .30 against self-report (Celli review).
 
-**What limits it**
-1. **Ceiling.** Closed-vocabulary categories explain about 5% of self-report variance. Koutsoumpis's meta-analysis (k=25 self-report samples, n≈84k, about 87% of n from Schwartz 2013) gives |rho| at most .08 to .14. Pennebaker and King give r .10 to .16 (several hundred students). Koutsoumpis also shows that formal registers weaken these markers, and floor speech is formal and partly staff-written. Simchon 2024 (UNVERIFIED) adds that openness-styled text can be produced on demand, so prepared speech may reflect communications strategy rather than the author.
-2. **Circular reference.** RKH is itself built on Mairesse-type SVR (Birkenmaier §2.5). Birkenmaier calls Ramey's pretrained SVR outdated and not validated against human labels. Refitting to RKH therefore turns convergence with RKH into a fit statistic, not validation (Ramey and Pennebaker bearings).
-3. **Precision floor.** Ramey's bootstrap CI width of about 0.3 assumes at least about 5,000 words per member-year (median about 11,000). The system's 1,500-token lowconf floor is far below that band, so Ramey's precision claim does not carry over.
-4. **Benchmarks do not compare.** The SotA figure of about r .30 (Celli), Azucar's pooled r .29 to .40 (16 effect sizes per trait, I² 93 to 97%, best-model selection; UNSTRATIFIED across 4 platforms, 2012-2017) and Naz's MBTI accuracies all use lay self-report criteria. None of them benchmarks an RKH or panel figure.
-
-**Contradictions inside the system record**
-- The hub describes the active weights as refit to RKH. The Celli bearing says fit_smoreg_rkh.py produces candidate weights, promoted only on REFIT WINS. The Mondak bearing says the v2 builder (big5_lexcal_v2.py) learns weights against behavioural criteria and treats RKH and Mairesse weights as v1 priors. Which weights are live is therefore unresolved.
-- The held-out CV figures (.350 mean, E .510) were not found by six separate verifiers.
-- Three Koutsoumpis sign disagreements remain UNVERIFIED (DE-062) and are audit leads only: ES first-person singular +.0094, ES negemo about 0, E posemo -.0339. Multivariate suppression can flip signs legitimately.
+**Why the system's .350 figure is not comparable**
+- The criterion differs: RKH is a text-derived target, while the benchmarks above are self-report.
+- RKH shares the method. It is built on a Mairesse-type SVR, so refitting to RKH makes agreement a fit statistic (Ramey and Birkenmaier rows).
+- Precision does not transfer. Ramey's CI band of about 0.3 assumes about 5,000 or more words per member-year, and the system's low-confidence floor is 1,500 tokens.
 
 **Contradictions**
-- Hub says the active weights are refit to RKH. Celli bearing: the RKH refit is a candidate promoted only on REFIT WINS. Mondak bearing: the v2 builder learns weights against behavioural criteria, with RKH and Mairesse as v1 priors.
-- Held-out CV against RKH (E .510, A .406, C .363, ES .258, O .214, mean .350) was not found in the fec tree. big5_v2.json reports held-out r against behavioural targets instead (A .059, C .281, E .563, O .135).
-- Birkenmaier calls Ramey's pretrained Mairesse SVR outdated and not validated against human labels, yet RKH, built on it, is the system's refit target.
-- Ramey's precision band (CI width about 0.3 at 5,000 words or more per member-year) is set against the system's 1,500-token lowconf floor.
-- Koutsoumpis signs disagree with three SMOreg weights (ES first-person singular, ES negemo, E posemo). These are UNVERIFIED leads and may be suppression effects.
+- Mairesse 2007 (strong, VERIFIED-SOFTENED). SMOreg trained on observer ratings had relative absolute error of 132% to 213%, against a mean baseline of 100%, on every trait. On self-report essays only O beat baseline. The model family behind the active weights did not beat the mean in its own source paper.
+- The provenance of the shipped weights is unclear. One row says the RKH refit (`fit_smoreg_rkh.py`) is promoted only when it wins and is a candidate, not active. Another says the v2 builder (`big5_lexcal_v2.py`) learns against behavioural criteria and treats RKH and Mairesse weights as v1 priors.
+- The held-out CV figures against RKH (E .510, mean .350) were not found by any of six verifiers. What `big5_v2.json` does hold is held-out r against behavioural targets: A .059, C .281, E .563, O .135, with ES missing.
+- Koutsoumpis disagrees with some SMOreg weight signs: ES first-person singular +.0094 and E positive emotion -.0339. This is UNVERIFIED (DE-062). The comparison is multivariate weights against bivariate paper effects, so suppression could explain it. Treat it as an audit lead only.
+
+**Transfer conditions**
+- Nearly all evidence comes from student or social-media self-report in informal English. Congressional speech is formal and partly staff-written, and Koutsoumpis shows that formality weakens these markers.
+- Simchon 2024 (UNVERIFIED) shows openness-styled text can be produced on demand (d .51). This is a construct caution for O on prepared speech.
+- Yang 2023 and Naz 2025 favour open-vocabulary and transformer readers, but on self-report classification. They give no usable effect size for this system.
+
+**Contradictions**
+- Mairesse 2007: SMOreg on observer ratings has relative absolute error above the mean baseline for all five traits (E 140%, ES 162%, A 174%, C 132%, O 213%). The model family behind the active weights failed in its own source paper.
+- The component's held-out CV figures against RKH (E .510, A .406, C .363, ES .258, O .214; mean .350) were not located by six independent checks. big5_v2.json instead holds held-out r against behavioural targets (A .059, C .281, E .563, O .135).
+- There are conflicting statements about which weights are active. The RKH refit is a candidate promoted only on a win. The v2 builder learns against behavioural criteria. The component text says 'refit to RKH'.
+- The claim that O was 'reversed on the party check' is not supported. The ONC candidate marks O NOT_LOOKED_CRITERION_STOP_BAR_MISS.
+- Some SMOreg signs differ from Koutsoumpis cue-validity signs (ES first-person singular, E positive emotion). UNVERIFIED (DE-062), and suppression may explain them.
 
 **Gaps**
-- No congressional study links text-derived traits to a non-text criterion, other than the Senate panels (handled in gold-panel-validation).
-- No measurement-invariance test across genres (floor, interview, hearing, social). Rammstedt's analogy is UNVERIFIED and supplies no numbers.
-- Equivalence between the system's exemplar word lists and licensed LIWC categories is not tested.
-- No staff-authorship control: prepared and staff-written text is not separated from extemporaneous speech.
+- No convergence of text traits with an independent criterion for the House. The Senate panels cover only the overlap with current members.
+- No genre-invariance evidence (floor vs interview vs social) for any trait other than N. Needed: a multi-trait multi-method (MTMM) design with genre as the method, plus a pre-registered single look at cross-genre rank stability.
+- No measured staff-authorship effect on the system's corpus. Ramey asserts robustness to speechwriting, but only for floor speech.
 
-**Paul's position vs the evidence**
-
-Paul calls Ramey 'dated but foundational' and asks for frameworks built for each venue. The evidence supports both halves. Ramey is the procedural backbone (VERIFIED-SOFTENED, strong), but it had no ground-truth validation for legislators. Its SVR is the part Birkenmaier criticizes, and the system inherits that weakness by calibrating to RKH. The call for venue-specific frameworks is backed by Koutsoumpis's evidence on formality and heterogeneity (significant in 96% of cue-validity effects), by the failed genre transfer, and by Lechner's finding that contextualized measures beat generic ones. Lechner's evidence is about survey items, not text, so a venue-specific text reader would still need its own validation. Peng et al. 2022 is cited but has no bearing row, so its contribution cannot be judged here.
+**Paul's position vs the evidence.** Paul's reading, 'dated but foundational', together with Birkenmaier's critique, fits the evidence. One point should be added: Mairesse 2007 itself shows SMOreg underperforming a mean baseline, which is stronger than 'outdated'. No error in his notes.
 
 **Open questions**
-- Which weight file is live today: published-correlate weights, the Mairesse SMOreg json, the RKH refit or the v2 behavioural fit?
-- Where did the .350 held-out CV against RKH come from, and can it be reproduced from a committed artifact?
-- Do the ES and E sign disagreements with Koutsoumpis survive when weights are fit univariately, or are they suppression?
-- What share of each member's floor text is prepared or staff-written, and does lexical O, the weakest trait, track that share?
+- Which weight file is active in the shipped build: the published-correlate weights, mairesse_smoreg.json, the RKH refit candidate, or the v2 behavioural fit? Where is the .350 CV figure stored?
+- Does the 1,500-token floor give usable precision when Ramey's CI band assumes about 5,000 words per member-year?
+- Do floor-speech traits survive removing staff-drafted prepared remarks?
 
-**Read first:** [[koutsoumpis-2024-kernel-truth-text]], [[ramey-2016-measuring-elite-personality]], [[birkenmaier-2025-measuring-politicians-public]], [[pennebaker-2003-psychological-aspects-natural]], [[celli-nd-twenty-years-personality]], [[mondak-nd-online-appendix-personality]]
+**Read first**
+- [[koutsoumpis-2024-kernel-truth-text]]
+- [[mairesse-2007-automatic-recognition-personality]]
+- [[ramey-2016-measuring-elite-personality]]
+- [[birkenmaier-2025-measuring-politicians-public]]
+- [[celli-nd-twenty-years-personality]]
+- [[pennebaker-2003-psychological-aspects-natural]]
 
 ## Big Five validation against Senate gold panels and criteria
 
-**What it computes:** Pass or miss of trait validity looks. E and A pass both panels; O passes academics only; N passes insiders only; C has an insider association only.
+**Computes.** Pass or miss of trait validity looks. E and A pass both panels; O passes academics only; N passes insiders only; C has an insider association only.
 
-**Method:** Pre-registered looks: interview C vs votes cast rho +0.155 PASS; C vs follow-through +0.112 PASS. Several improvement rounds MISSed. A-ES about .44 is population-real (RKH benchmark) plus about .21 text-tone halo. Status labels must accompany any external claim.
+**Method.** Pre-registered looks: interview C vs votes cast rho +0.155 PASS; C vs follow-through +0.112 PASS. Several improvement rounds MISSed. A-ES about .44 is population-real (RKH benchmark) plus about .21 text-tone halo. Status labels must accompany any external claim.
 
-**Code refs:** `fec/big5_improvements_eval.py`, `fec/b5_residual_eval.py`, `fec/b5_stylometry_eval.py`
+**Code refs.** `fec/big5_improvements_eval.py`, `fec/b5_residual_eval.py`, `fec/b5_stylometry_eval.py`
 
 **Assumptions**
 - Gold panels are independent ratings
@@ -153,56 +182,57 @@ Paul calls Ramey 'dated but foundational' and asks for frameworks built for each
 | [[mondak-nd-online-appendix-personality]] |  | qualifies | The extremes of both panels are party-skewed. Democrats are 62% of the insider highest scorers and 65% of the lowest (main-paper Table 3, as cited). In the academic table 80% of high scores go to Democrats (Angus King counted as Democrat) and 80% of low scores to Republicans. The note calls the academic table A3; it is labelled A2. | Party is a known fault line here. Panel-level correlations should be quoted with party strata or an UNSTRATIFIED label. The suggestion that O passes only against academics because of party is new agent analysis and stays UNVERIFIED (DE-062). The 62/65 and 80/80 figures describe only the extremes. | moderate | VERIFIED-SOFTENED |
 | [[soto-2017-next-five-inventory]] | 2017 | measurement-source | The BFI-2 has 15 facets, three per domain. E: Sociability, Assertiveness, Energy Level. A: Compassion, Respectfulness, Trust. C: Organization, Productiveness, Responsibility. N: Anxiety, Depression, Emotional Volatility. O: Intellectual Curiosity, Creative Imagination, Aesthetic Sensitivity. Domain scales have 12 balanced-keyed items; the 60-item form and scoring key are in the Appendix. | This paper does not contain the BFI-2-XS item set. The one-item-per-facet fact and the verbatim check come from the companion short-form paper (Soto and John 2017, JRP), which is not in this item. Three items per domain cannot give facet scores or balanced keying, so the acquiescence results here transfer to the XS panel only weakly. The panel is CANCELED per the memory index, so this bearing is lineage only. | moderate | VERIFIED-SOFTENED |
 | [[yang-2023-getting-personal-deep]] | 2023 | context | Validity evidence is agreement with self-report surveys on non-elite authors. User-level Pearson correlations are at least 10 to 18 points above the best comparator and MSE at least 10 percent lower, reported in Online Appendix B and not in the body. No observer, expert or criterion validation is reported, and executive scores are used without survey validation. | The paper's standard is self-report agreement on non-elite authors. It is weaker than and different in kind from the system's observer-panel standard, so its figures cannot substitute for a gold-panel look. | weak | VERIFIED-SOFTENED |
+| [[mairesse-2007-automatic-recognition-personality]] | 2007 | supports | On EAR, observer-rated Naive Bayes beats baseline for E 73.00 vs 47.78, ES 73.89 vs 51.11 and C 67.67 vs 47.78. No self-report classifier or regressor significantly beats baseline. Mean inter-observer pair r is 0.54 for E, 0.29 for ES and 0.51 for C (18 observers, 31 to 33 pairs). | The EAR design is verified: observers rated audio only, without knowing the participants, in three groups, and the ratings were averaged (EAR description p.464-465). The Senate known-figure reputation point is outside the paper, and the paper never discusses Senate panels. Linking the ES observer agreement to the system's N gate is the verifier's inference. | moderate | VERIFIED-SOFTENED |
 
 **Assessment**
 
-**Evidence weight: moderate, and it mainly qualifies the validation rather than supporting it.** There are 12 bearings: 2 VERIFIED, 10 VERIFIED-SOFTENED, 0 UNVERIFIED.
+**Evidence weight: moderate, and the criterion itself is qualified.** The hub has 13 rows (11 distinct papers): 2 VERIFIED, 11 VERIFIED-SOFTENED and 0 UNVERIFIED.
 
-**The gold source checks out, but the validators diverge from it**
-- **Gold artifact.** The Mondak appendix (VERIFIED-SOFTENED, strong) confirms 129 insider ratings and 126 academic name entries on a 1-7 scale. The frozen artifact has 125 academic rows. The malformed academic Feingold row is dropped silently by an except branch whose comment is wrong.
-- **k=1 rule (VERIFIED, strong).** The main paper excludes senators rated by a single coder. The primary validators (b5_gold_multitrait_validate.py, b5_external_gold_validate.py) do not filter on ratings_n. Only the side probes stratify k=1 against k≥2. How many current-roster matches are k=1 was not counted. A k≥2 re-score would be a new look, not a free correction.
-- **Party fault line.** At the extremes the panels are party-skewed: Democrats are 62% and 65% of the insider top and bottom scorers, and 80% of academic high scores go to Democrats and 80% of low scores to Republicans. Neither primary validator has a party term. Panel correlations must therefore carry party strata or an UNSTRATIFIED label. The idea that O passes academics only because of party is an UNVERIFIED lead (DE-062).
-- **Panels no longer untouched.** Full-sample gold-fitted weights flow into b5_profile_basis.py, so only the out-of-fold figures are clean. Shipped composites are partly fit to the panels.
+**The panels as a criterion**
+- Mondak's appendix (strong, VERIFIED-SOFTENED) confirms the panels: 129 insider ratings, and 125 academic ratings in the artifact against 126 in the text. They describe perceived public persona, not self-report, so the Brunswik "Perception" benchmarks are the right comparison: about .30 for machines and .38 for humans (Celli).
+- Koutsoumpis predicts the observed pass pattern. Overt traits (E, A) should match observers best and ES worst, and E and A do pass both panels. This counts as a fit to shared cues, not as evidence of trait accuracy.
 
-**What the panels can and cannot show.** Koutsoumpis and Celli place the panels on the Perception side of the Brunswik lens. Machine perception r is about .30 against human .38 (Hinds & Joinson 2024; settings not comparable). Zero-acquaintance observers predict E and A best and ES worst, which matches the recorded pass pattern (E and A pass both panels). So the pattern is what shared observable cues would produce, and it is not evidence of trait accuracy. Lechner 2025 shows that observer ratings track the rater's ideological proximity (r up to .48), but that evidence comes from crowdworkers rating two leaders, not experts rating senators.
+**Problems with the criterion**
+- **k=1 raters** (VERIFIED). Mondak excludes senators rated by a single coder. The primary validators (`b5_gold_multitrait_validate.py`, `b5_external_gold_validate.py`) do not. Any k≥2 rerun is a new look, not a free re-score.
+- **Party.** The extremes of both panels are party-skewed (Democrats are 62% of the insiders' highest-rated senators; 80/80 split in the academic table). Lechner shows observer ratings track the rater's ideological proximity, with r up to .48. Neither primary validator includes a party term, so panel correlations should carry party strata or an UNSTRATIFIED label. The idea that O passes only with academics *because of* party is an UNVERIFIED lead.
+- **Electoral situation.** The criterion C vs votes_cast (rho +0.155, PASS) mixes trait with electoral situation. Fouirnaies 2022 (VERIFIED) finds a within-person drop of 2.70 points in the final term (mean 90.48, in state legislatures). Quote the PASS with an UNSTRATIFIED label on electoral status, and do not re-run it.
+- **Shipped composites.** `b5_profile_basis.py` uses gold-fitted weights, so only the out-of-fold figures are clean evidence.
 
-**Criterion side.** Fouirnaies & Hall (VERIFIED) show that the C PASS against votes_cast (rho +.155) is cross-sectional and mixes trait with electoral situation. Quote it as UNSTRATIFIED on electoral status, and do not re-run it (single-look).
-
-**Brain ruling at odds with the paper.** The 2026-07-04 ruling that set aside the single-rater persona gold test (n=30) said Birkenmaier's coders reached only about α .72 on an easier task. In the paper, .72 to .73 is the cue-presence alpha, agency and communion run .70 to .78, and the paper never calls its task easier. The decision may still stand, but its stated rationale misreads the source.
+**Unsourced figures**
+The A-ES halo split (about .44 population plus about .21 text tone) is not in the brain topic. The .44 is the RKH anchor (.443), and the .21 attribution was not found.
 
 **Contradictions**
-- Mondak's main paper excludes k=1-rated senators. The primary validators keep them (VERIFIED).
-- Academic panel: the artifact has 125 rows against 126 entries in the source text. The Feingold academic row is dropped silently, and the code comment says only headings reach that branch.
-- The 2026-07-04 brain ruling's rationale (coders only about α .72 on an easier task) misstates Birkenmaier: .72 is the presence alpha, agency and communion are .70 to .78, and the paper never calls its task easier.
-- The hub component says 'O was reversed on the party check'. The ONC candidate file marks O NOT_LOOKED_CRITERION_STOP_BAR_MISS, and no reversal result was found.
-- Hub claims of an A-ES of about .44 plus about .21 halo: .443 is the RKH anchor, and the .21 halo attribution was not located.
-- Gold panels are described as untouched external criteria, but full-sample gold-fitted weights are emitted into b5_profile_basis.
+- Mondak excludes senators with a single coder (k=1). The primary validators average or keep them (VERIFIED code-level mismatch).
+- build_big5_senate_gold.py silently drops the academic Feingold row (125 records against 126 in the text), and its except-branch comment is wrong.
+- The A-ES '.21 text-tone halo' figure was not located. The .44 is the RKH reference anchor, not a system result.
+- The panel pass pattern in the component text could not be checked against the brain topic for C. The brain records one-panel support for O, C and N, while the component says C has only an insider association.
 
 **Gaps**
-- Ratings exist for senators only, so nothing validates House members, about 80% of the roster.
-- Panel era is not stated, so whether ratings match the text window is unknown.
-- No study separates rater ideology from target trait in expert ratings of US legislators.
-- No non-rating criterion exists for O or ES.
+- Party-stratified panel correlations (D and R separately), or an explicit UNSTRATIFIED label on every quoted figure.
+- A count of how many current-roster matches are k=1 insiders, so the size of the k=1 issue is known before any new look.
+- Any House-side criterion. A study that would fill it: blind expert or staff ratings of a random House sample on BFI-2-S items, collected before any text scoring.
 
-**Paul's position vs the evidence**
-
-Paul highlighted Birkenmaier's validation framework: codebook, Krippendorff α .70 to .78, and macro-F1 below .80 for every computational model. That framework measures sentence-level cue agreement among three trained coders. It does not validate member-level traits, so it cannot stand in for the panel looks. His notes do not reflect the system's single-look MISS record, and the evidence makes that record more important. The panel PASSes for E and A are what shared public cues predict. The un-applied k=1 rule and the missing party term mean the PASS and MISS pattern should be quoted with strata or an UNSTRATIFIED label. His instinct toward codebook-style reliability is sound, but it applies to the persona channel more than to the Big Five panel looks.
+**Paul's position vs the evidence.** Paul highlighted Birkenmaier's agreement figures. The brain ruling of 2026-07-04 that cites them is wrong in two ways. Birkenmaier does not call its task 'easier', and .72 is the alpha for detecting any cue, not for agency or communion. The ruling's use of the figure to set aside the single-rater test therefore rests on a misreading.
 
 **Open questions**
-- How many current-roster gold matches are k=1 insider-only? Does Paul want a new pre-registered k≥2 look?
-- Should panel correlations be reported with D and R strata from now on, as a reporting change rather than a new look?
-- Is the 2026-07-04 persona-gold set-aside to be re-justified on corrected grounds, or reopened? That is Paul's ruling.
-- Should shipped composites stop using full-sample gold-fitted weights so the panels stay a clean holdout?
+- What share of the matched senators are k=1 insiders?
+- Does the E/A pass survive party stratification?
+- Should the C-participation PASS be quoted only with an UNSTRATIFIED-on-electoral-status label?
 
-**Read first:** [[mondak-nd-online-appendix-personality]], [[koutsoumpis-2024-kernel-truth-text]], [[celli-nd-twenty-years-personality]], [[fouirnaies-2022-electoral-incentives-affect]], [[birkenmaier-2025-measuring-politicians-public]], [[lechner-2025-mapping-political-personality]]
+**Read first**
+- [[mondak-nd-online-appendix-personality]]
+- [[koutsoumpis-2024-kernel-truth-text]]
+- [[lechner-2025-mapping-political-personality]]
+- [[fouirnaies-2022-electoral-incentives-affect]]
+- [[celli-nd-twenty-years-personality]]
 
 ## LLM item-level reader (Pink), ridge hybrid and CT-CM latent model
 
-**What it computes:** De-identified, chunked LLM ratings on 20 items; ridge hybrid on lexical, interaction and persona features; CT-CM SEM with an LLM method factor.
+**Computes.** De-identified, chunked LLM ratings on 20 items; ridge hybrid on lexical, interaction and persona features; CT-CM SEM with an LLM method factor.
 
-**Method:** The LLM reader removes names before scoring and codes 'cannot tell' as 0. It is display-only. Pink x behavioural diagonal mean +0.064 < 0.12 fails. CT-CM is a one-look capstone.
+**Method.** The LLM reader removes names before scoring and codes 'cannot tell' as 0. It is display-only. Pink x behavioural diagonal mean +0.064 < 0.12 fails. CT-CM is a one-look capstone.
 
-**Code refs:** `fec/members/big5_llm.py`, `fec/members/big5_hybrid.py`, `fec/members/big5_ctcm.py`
+**Code refs.** `fec/members/big5_llm.py`, `fec/members/big5_hybrid.py`, `fec/members/big5_ctcm.py`
 
 **Assumptions**
 - De-identification removes reputational priors (Cao & Kosinski)
@@ -223,48 +253,55 @@ Paul highlighted Birkenmaier's validation framework: codebook, Krippendorff α .
 
 **Assessment**
 
-**Evidence weight: weak to moderate, and it does not support moving the readers off display-only.** There are 8 bearings: 0 VERIFIED, 6 VERIFIED-SOFTENED, 2 UNVERIFIED (Rammstedt, Naz).
+**Evidence weight: weak. Nothing supports moving the LLM reader off display-only status.** The hub has 8 rows (8 distinct papers): 0 VERIFIED, 6 VERIFIED-SOFTENED and 2 UNVERIFIED.
 
-**Pink item-level reader**
-- The nearest benchmark is Peters & Matz 2024 via Celli. Zero-shot GPT-3.5 and GPT-4 reach average r .29 against self-report on users' own Facebook posts. That is parity with specialized machine learning, not superiority, and LLM outputs show stereotyped profiles (high A, high O, low N).
-- On de-identified, staff-mediated political text a lower figure is expected. The recorded diagonal of +0.064 against behavioural targets is consistent with that. The 0.12 bar itself was not located in the brain.
-- Birkenmaier validates a narrow sentence-cue task, so its success does not carry over to item-level Big Five rating.
-- **Keying.** Soto 2017 (VERIFIED-SOFTENED) shows that acquiescence forms its own component in raw item responses. Contrary to the docstring's "balanced keying", big5_llm.py keys O, C, E and A at 3:1 and ES at 2:2. An all-yes rater would add +0.5 to O, C, E and A and 0 to ES. Whether the LLM has a yes-tendency on observer items is untested. A uniform yes-tendency would not by itself create the A-ES correlation.
-- **De-identification.** Lechner 2025 shows that human observer ratings track the rater's ideological proximity (r .36 to .48). That supports de-identification by analogy only; LLM reputational priors are inferred, not shown.
+**What the literature says about LLM readers**
+- The best general evidence is parity, not superiority. Zero-shot GPT-3.5 and GPT-4 reach mean r .29 against self-report on Facebook posts (Peters & Matz 2024). That copy is now downloaded, and it also reports accuracy differences by sex and age.
+- Birkenmaier validates a narrow sentence-cue task, not item-level Big Five ratings, so its success does not carry over to the 'Pink' reader. The system's own result is a behavioural diagonal of +0.064 against a 0.12 bar: a MISS.
 
-**Ridge hybrid.** The committed big5_v3_hybrid.json shows no held-out gain over lexical-only on any target: A .056 vs .059, C .273 vs .281, E .564 vs .563, O .130 vs .135. Azucar's multi-footprint gains (lay users, self-report) do not carry over to interaction-channel features. The docstring notes that interaction features are degraded by nickname matching until re-ingest, so these numbers are a floor, not a final verdict.
+**Halo and reputational priors**
+- Lechner shows the human analogue: observer ratings track ideological proximity (r .36 to .48) and liking (r up to .76).
+- Scan lead (UNVERIFIED): Cao & Kosinski 2024 (Scientific Reports, downloaded). GPT-3 name embeddings alone predict perceived Big Five for 226 public figures at r .78 to .88 (attenuation-corrected). That drops to .53 to .70 after controlling for likability and demographics. This directly supports the assumption that LLMs carry reputational priors about named figures, which justifies de-identification. It also shows likability is a large part of perceived personality, which is a reason to model the halo as a method factor in CT-CM.
 
-**CT-CM.** No bearing tests it. The method-factor rationale is inferred from the human-rater halo literature only.
+**Acquiescence**
+Soto 2017 shows yea-saying is a scale-level factor. The reader's keying is 3:1 for O, C, E and A and 2:2 for ES. An all-yes response would lift O, C, E and A and leave ES at 0. That cannot create the A-ES correlation, but it can inflate correlations among the other four traits.
+
+**Hybrid**
+The committed `big5_v3_hybrid.json` shows no held-out gain over lexical-only on any target (A .056 vs .059, C .273 vs .281, E .564 vs .563, O .130 vs .135). The interaction features are degraded by unresolved nicknames, so this is a floor. Azucar 2017 gives no reason to expect these features to add signal.
+
+**CT-CM**
+No bearing tests CT-CM. It remains a one-look capstone with no literature behind it.
 
 **Contradictions**
-- big5_llm.py docstring line 7 says balanced keying. The ITEMS table keys O, C, E and A 3:1 and ES 2:2.
-- The 0.12 pass bar cited for the Pink diagonal was not located in the brain; only +0.064 was.
-- The hybrid was designed to add signal over lexical-only, but its committed artifact shows no held-out gain on any of the four targets.
+- The big5_llm.py docstring says 'balanced keying', but the items are keyed 3:1 for O, C, E and A and 2:2 for ES (VERIFIED-SOFTENED).
+- The hybrid ridge shows no held-out gain over lexical-only on any behavioural target in the committed artifact.
 
 **Gaps**
-- No study validates de-identified, item-level LLM observer ratings of politicians against expert panels. This is the comparison Pink needs.
-- No test of LLM acquiescence or yes-tendency on observer-keyed items applied to political text.
-- No measurement of how much reputational prior survives de-identification for well-known members, for example a name-recovery probe.
-- CT-CM method-factor adequacy has no external benchmark.
+- No human-gold check of the de-identified LLM reader against the Senate panels. A study that would fill it: score panel senators' de-identified text, then compare that to a named-input run to measure reputational leakage, as Cao & Kosinski do from the other direction.
+- No estimate of the LLM's acquiescence tendency on observer items. Running a content-free control prompt would measure it.
+- CT-CM has no external evidence. Its one look should state in advance what share of variance the method factor must take.
 
-**Paul's position vs the evidence**
-
-Paul endorses LLM-based trait reading on the grounds that GPT-4o and DeepSeek-V3 were the only models validated. The evidence narrows that endorsement. Birkenmaier validated those two models on German sentence-level agency and communion cue classification (macro-F1 .76 and .77), not on Big Five item ratings. The best LLM Big Five evidence (Peters & Matz via Celli) shows parity with older methods (r about .29), not an advantage. The system's own Pink reader fails its behavioural bar, and the persona channel runs on claude-sonnet-5, which Birkenmaier never tested. The endorsement fits the cue-classification design. It does not yet fit trait reading.
+**Paul's position vs the evidence.** Paul's note that GPT-4o and DeepSeek-V3 were the only models validated is accurate for Birkenmaier's sentence-cue task. Reading it as support for LLM *trait* reading is a transfer error. The paper validates cue classification, and the system's own item-level trait reader failed its bar.
 
 **Open questions**
-- Does the LLM rater show a yes-tendency on observer items? A content-free control chunk would test this cheaply.
-- Should the keying be rebalanced? Under itemset versioning that would be a new cache key and a new look.
-- Is the nickname-degraded interaction channel re-ingested yet, so the hybrid null can be read as final?
+- How much of the Pink reader's variance is a single halo or likability factor once de-identification is applied?
+- Does the LLM say 'yes' more often than 'no' on the observer items?
+- Is the hybrid worth keeping after the nickname re-ingest, or should it be retired?
 
-**Read first:** [[birkenmaier-2025-measuring-politicians-public]], [[celli-nd-twenty-years-personality]], [[soto-2017-next-five-inventory]], [[lechner-2025-mapping-political-personality]], [[azucar-2017-predicting-personality-traits]]
+**Read first**
+- [[celli-nd-twenty-years-personality]]
+- [[lechner-2025-mapping-political-personality]]
+- [[birkenmaier-2025-measuring-politicians-public]]
+- [[soto-2017-next-five-inventory]]
+- [[azucar-2017-predicting-personality-traits]]
 
 ## Behavioural dispositions
 
-**What it computes:** Cooperation, diligence (roll-call participation, LEP), dominance (turn statistics, leadership), visibility (interviews), breadth (portfolio) and reactivity (interview cutoff).
+**Computes.** Cooperation, diligence (roll-call participation, LEP), dominance (turn statistics, leadership), visibility (interviews), breadth (portfolio) and reactivity (interview cutoff).
 
-**Method:** z-score composites with coverage floors; missing values are neutral.
+**Method.** z-score composites with coverage floors; missing values are neutral.
 
-**Code refs:** `fec/members/behavioral_dispositions.py:1-120`, `fec/members/interaction_features.py`
+**Code refs.** `fec/members/behavioral_dispositions.py:1-120`, `fec/members/interaction_features.py`
 
 **Assumptions**
 - Observed behaviour indicates disposition
@@ -283,46 +320,54 @@ Paul endorses LLM-based trait reading on the grounds that GPT-4o and DeepSeek-V3
 
 **Assessment**
 
-**Evidence weight: moderate, and the strongest bearing is a confound warning.** There are 6 bearings: 2 VERIFIED, 4 VERIFIED-SOFTENED.
+**Evidence weight: moderate on the confounds, none on the predictive claim.** The hub has 6 rows (6 distinct papers): 2 VERIFIED, 4 VERIFIED-SOFTENED and 0 UNVERIFIED.
 
-**Diligence_z**
-- Fouirnaies & Hall 2022 (VERIFIED, moderate) use within-legislator identification in US state legislatures. Floor-vote participation falls 2.70 points (SE .53, mean 90.48) in the final term, and committee activity falls about 8%. The transfer to Congress is moderate: the drop is small next to the cross-member spread, but it is concentrated in retiring members and those running for other office.
-- Diligence_z enters susceptibility at -0.20. A retiring member therefore gets lower diligence and higher susceptibility, while the incentive term gives them 0.60. Electoral status enters the pressure term twice, with opposite signs, and is never modelled explicitly. The disposition reading holds only after electoral status is held fixed.
-- **Citation error.** The behavioral_dispositions.py docstring calls roll-call participation RKH's strongest C criterion. Ramey 2016's only C outcome is the ceremonial-bill share, and participation is not analysed (VERIFIED-SOFTENED, contradicts). This is a citation fix, not a modelling finding.
+**Diligence**
+- Fouirnaies 2022 (VERIFIED, moderate) shows roll-call participation depends on the legislator's situation. Within the same person it falls 2.70 points (SE 0.53, from a mean of 90.48) in the final term, and committee activity falls about 8%. These are US state legislatures.
+- In the system, retiring members get lower diligence_z, and therefore higher susceptibility (weight -0.20), while also getting incent 0.60. Electoral status enters the pressure term twice with opposite signs and is never modelled explicitly.
+- The disposition reading holds only after electoral status is held fixed. Transfer is moderate: missing votes is a universal behaviour, but the state effect is small next to the spread across members of Congress.
 
-**Visibility_z.** Amsalem 2018 (VERIFIED-SOFTENED) finds extraversion predicts media presence among MPs in Belgium, Canada and Israel 2011-2015 (n=306, beta .117). The effect is small, and office is the dominant predictor. The outcome there is earned journalist mentions, not interviews given. A US interview count needs office and leadership controls before it reads as temperament. Azucar's social-media activity moderator (E only, marginal p=.06) is an analogy only.
+**Citation error**
+The docstring attributes roll-call participation as a C criterion to Ramey 2016. The paper's only C outcome is the share of ceremonial bills (VERIFIED-SOFTENED, 'contradicts'). This is a citation fix, not a modelling finding.
 
-**Dominance_z.** Salam 2022 is five-trait-averaged lab evidence that turn structure carries trait signal. It does not validate floor turn statistics or the committee-leadership term.
+**Visibility**
+Amsalem 2018 finds extraversion predicts earned media mentions (beta .117, n 306 MPs in Belgium, Canada and Israel, 2011 to 2015). Office is the dominant predictor there. A US interview count needs office and leadership controls before it reads as temperament.
 
-**Comparison design.** Yang 2023 offers a design to borrow, not effect sizes: the same learner with and without the trait block, a chronological split and paired tests. That is the right shape for the prospective H1/H2 comparison of text traits against dispositions. Its lift magnitudes come from executives and firm outcomes and must not be quoted.
+**Dominance**
+Salam 2022 gives only indirect evidence, from dyadic lab tasks averaged over five traits, that turn structure carries trait signal.
+
+**Untested hypothesis**
+The headline question of whether dispositions beat text traits on responsiveness (H1/H2) is untested. Yang 2023 offers a reusable design: the same learner with and without the trait block, a chronological holdout and paired tests. Its effect sizes must not be quoted.
 
 **Contradictions**
-- The behavioral_dispositions.py docstring attributes roll-call participation as RKH's strongest C criterion. Ramey 2016 uses only the ceremonial-bill share and does not analyse participation.
-- Electoral status enters pressure twice with opposite signs (incentive +0.60, and through diligence_z -0.20 in susceptibility) and is never modelled explicitly.
+- The behavioral_dispositions.py docstring credits Ramey (RKH) with roll-call participation as the C criterion. Ramey 2016 has no participation analysis.
+- Electoral status enters susceptibility twice with opposite signs: through diligence_z at -0.20 and through incent 0.60.
 
 **Gaps**
-- No congressional within-member study of how stable votes_cast, LEP follow-through or turn statistics are across Congresses. This is needed to call them dispositions rather than states.
-- No validation of turn-share dominance on legislative floor or hearing speech.
-- No test that interview counts reflect temperament rather than press-office scheduling, seniority or office.
+- Nothing yet shows that dispositions beat text traits on lobbying responsiveness. Needed: a pre-registered prospective H1/H2 look using Yang's paired with/without design on a chronological split.
+- Diligence_z has not been re-estimated with members in their final Congress or seeking other office excluded or stratified.
+- visibility_z has not been residualized on office and leadership.
 
-**Paul's position vs the evidence**
-
-Paul's position is indirect support: effort allocation is observable, and conscientiousness relates to sponsorship. On observability the evidence agrees, and Fouirnaies's within-person design is cleaner than anything the system has. But the same paper shows that the observed effort is partly situational, so labelling it a disposition needs an electoral-status stratum. On conscientiousness and sponsorship, Ramey's C link is to ceremonial-bill share, not to participation. The system's docstring overstates what Ramey showed.
+**Paul's position vs the evidence.** Fouirnaies does show effort allocation is observable, but it shows it is situational, which cuts against reading it as a disposition. The other half of Paul's note, that Ramey links conscientiousness to sponsorship, is accurate only for ceremonial-bill share. Ramey does not link it to participation.
 
 **Open questions**
-- Should diligence_z be computed excluding final-Congress and running-for-other-office member-Congresses, or carry an electoral-status stratum? Any such change is Paul's call.
-- Is visibility_z still informative after committee-leadership and office controls?
-- Is the H1/H2 prospective comparison pre-registered with a chronological split?
+- How many current members are in their final Congress or running statewide, and how much does stratifying on that move diligence_z?
+- Should electoral status be modelled once and explicitly in the pressure term?
 
-**Read first:** [[fouirnaies-2022-electoral-incentives-affect]], [[ramey-2016-measuring-elite-personality]], [[amsalem-2018-effect-politicians-personality]], [[yang-2023-getting-personal-deep]], [[salam-2022-learning-personalised-models]]
+**Read first**
+- [[fouirnaies-2022-electoral-incentives-affect]]
+- [[amsalem-2018-effect-politicians-personality]]
+- [[ramey-2016-measuring-elite-personality]]
+- [[yang-2023-getting-personal-deep]]
+- [[salam-2022-learning-personalised-models]]
 
 ## Cooperation v2 (share-based bridging)
 
-**What it computes:** Mean of within-chamber z of cross-party tie share and directional cross-party cosponsorship share (at least 10 cosponsorships). Reciprocity is reported only.
+**Computes.** Mean of within-chamber z of cross-party tie share and directional cross-party cosponsorship share (at least 10 cosponsorships). Reciprocity is reported only.
 
-**Method:** Volume-free by design. Promoted 2026-07-10. Correlates rho .888 with bpf.
+**Method.** Volume-free by design. Promoted 2026-07-10. Correlates rho .888 with bpf.
 
-**Code refs:** `fec/members/coop_v2_candidate.py:1-130`
+**Code refs.** `fec/members/coop_v2_candidate.py:1-130`
 
 **Assumptions**
 - Cross-party share measures cooperation independent of volume
@@ -335,42 +380,45 @@ Paul's position is indirect support: effort allocation is observable, and consci
 
 **Assessment**
 
-**Evidence weight: effectively a GAP.** There is one bearing, VERIFIED-SOFTENED, weak, and it is context only. Poole 1999 shows that polarization has risen since the late 1970s, which explains why an extremity control matters. The system records cooperation_v2_z against |dim1| at r = -0.250 (n = 532 of 533 members, 2026-07-10). No bearing tests the measure itself.
+**Evidence weight: thin, close to a gap.** The hub has 1 rows (1 distinct papers): 0 VERIFIED, 1 VERIFIED-SOFTENED and 0 UNVERIFIED. Poole 1999 gives context for why an extremity control matters in a polarized chamber: cooperation_v2_z vs |dim1| is -0.250 for n = 532 of 533 members (2026-07-10). It does not test the measure.
 
-The component's two cited sources, Bacik et al. 2026 and Aref & Neal 2021, have no bearing rows, so their support cannot be judged here.
+**Scan lead: Harbridge-Yong, Volden & Wiseman (JOP 2023; working-paper copy downloaded)**
+- Members of the 93rd to 114th Congresses (1973 to 2016) who attract a larger *share* of their cosponsors from the other party are more effective lawmakers. The result holds for majority and minority members and over time.
+- This is the closest published construct to cooperation_v2's share-based bridging, and it gives predictive-validity context. Two transfer notes:
+  - Their share counts cosponsors *attracted* to the member's own bills. The system's directional share needs to be checked for whether it counts attracted or offered cosponsorships.
+  - They identify reciprocity as the path to attracting cross-party cosponsors. Reciprocity is NOT validated in this project (D-104..D-108), and cooperation_v2 rightly reports it only. Do not import the paper's mechanism.
 
-**Design checks**
-- The measure is a member-level share: the cross-party share of a member's ties and cosponsorships, with a floor of 10 or more cosponsorships. It is not per-edge volume normalization of graph edges, a proposal that was measured and REJECTED in this project. Keep the two distinct, and do not extend cooperation_v2 into edge-weight normalization.
-- Reciprocity is reported only. That is consistent with reciprocity NOT being validated (D-104..D-108).
-- The recorded rho .888 with bpf raises a redundancy question that no paper addresses.
+**Redundancy**
+cooperation_v2 correlates rho .888 with bpf, so it is nearly redundant with that existing measure. Its separate value is unshown.
+
+**Normalization flag**
+The measure is volume-free by design, using shares. That is a member-level share, not per-edge volume normalization of the cosponsorship graph, so it does not reopen the rejected SNA proposal. Any paper that argues for per-edge normalization should be flagged, not recommended.
 
 **Contradictions**
-- None recorded.
+- (none)
 
 **Gaps**
-- Trait stability: a test-retest study of cross-party cosponsorship share across successive Congresses for the same members (for example an ICC over 2 or more Congresses), with chamber and majority-status strata.
-- Convergent validity: correlate it with an independent bipartisanship measure, such as an externally published bipartisan cosponsorship index, within the same window and denominator.
-- Discriminant validity: separate cooperation from ideological moderateness (the recorded r = -.250 with |dim1|) and from district partisanship.
-- Redundancy: incremental validity over bpf given rho .888.
-- Mechanism: whether share-based bridging reflects disposition or committee and caucus assignment.
+- No test-retest evidence. Needed: the intraclass correlation (ICC) of a member's cross-party cosponsorship share in consecutive Congresses, stratified by majority/minority status and chamber, with a stated window (for example the 110th to 118th Congresses) and a minimum of 10 cosponsorships per Congress.
+- No criterion validity. Test whether cooperation_v2 predicts out-of-sample cross-party co-voting or LES-style success, with party and |dim1| strata.
+- It is unclear whether the 'directional' share is attracted or offered. Harbridge-Yong's predictive result applies to the attracted share.
 
-**Paul's position vs the evidence**
-
-No annotation of Paul's addresses this component, and the evidence base is nearly empty. The design choice (volume-free share, reciprocity reported only) is consistent with project rulings but has no external empirical support or contradiction in the hub.
+**Paul's position vs the evidence.** Paul has no annotation on this component. The citations it uses (Bacik 2026, Aref & Neal 2021) have no bearings in the hub, so the citation base is effectively empty. This is a gap, not an error.
 
 **Open questions**
-- Do the Bacik et al. 2026 and Aref & Neal 2021 citations actually bear on member-level cooperation share, or only on network structure?
-- Is cooperation_v2 distinct enough from bpf (rho .888) to justify a separate slot?
+- Is cooperation_v2 stable across Congresses (trait-like) or does it track majority status?
+- Given rho .888, what does cooperation_v2 add over bpf?
+- Does the directional share measure attracted or offered cross-party cosponsorship?
 
-**Read first:** [[poole-1999-nominate-after-years]]
+**Read first**
+- [[poole-1999-nominate-after-years]]
 
 ## Affective neuroticism slot and N genre-transfer tests
 
-**What it computes:** affective_n = z(LIWC i + negemo - posemo) + z(LLM pessimism, anxiety, depression, volatility), residualized on E and party.
+**Computes.** affective_n = z(LIWC i + negemo - posemo) + z(LLM pessimism, anxiety, depression, volatility), residualized on E and party.
 
-**Method:** Gate 5/5 passed: |r(N,E)| .039; party .000; LIWC-LLM convergence +.236; split-half SB .742. Promoted 2026-07-11. Genre transfer of interview N to floor and hearing text FAILED (rho .050, .161).
+**Method.** Gate 5/5 passed: |r(N,E)| .039; party .000; LIWC-LLM convergence +.236; split-half SB .742. Promoted 2026-07-11. Genre transfer of interview N to floor and hearing text FAILED (rho .050, .161).
 
-**Code refs:** `fec/members/emit_affective_n.py`, `fec/members/affective_n_validate.py`
+**Code refs.** `fec/members/emit_affective_n.py`, `fec/members/affective_n_validate.py`
 
 **Assumptions**
 - Negative-emotion and first-person-singular words track N (Pennebaker)
@@ -392,54 +440,64 @@ No annotation of Paul's addresses this component, and the evidence base is nearl
 | [[soto-2017-next-five-inventory]] | 2017 | suggests-extension | Negative Emotionality facets predict different criteria. Peer-rated stress resistance is predicted by Emotional Volatility (r -.47, beta -.32) and Anxiety (r -.46, beta -.28); positive relations by Depression (r -.53, beta -.38). Facets average R2 .33 against .27 for domains across 20 criteria, and BFI-2 facets add significant variance over BFI domains for 14 of 20 criteria. Predictive utility depends more on facet quality than on facet count. | The pressure mechanism fits Anxiety and Volatility more closely than Depression or pessimism. Keeping those components apart is a later measurement question that would need its own prereg and look. Transfer is weak because the paper's criteria are general-population self-report and peer ratings, not legislators' decisions. The genre-transfer rho values and the H5 null were not checked here. | weak | VERIFIED-SOFTENED |
 | [[celli-2012-role-emotional-stability]] | 2012 | qualifies | Validation against Analyzewords (a LIWC-based proxy, worried = neurotic, upbeat = secure) on 18 users: neurotic P 0.8 / R 0.615 / F1 0.695; secure F1 0.462; average F1 0.578. The authors concede the proxy does not measure the Big Five and that upbeat does not equal secure. | Celli's validation is circular: a LIWC-family feature set scored against a LIWC-family proxy, so agreement partly reflects shared method. The system's LIWC anchor is the same kind of convergence. The paper therefore reinforces the system's own caveat (gate tests construct integrity, not validity) and adds no criterion evidence. It does not carry over as support for N validity. | weak | UNVERIFIED |
 | [[yang-2023-getting-personal-deep]] | 2023 | supports | The authors restrict their evaluation to social posts, forum messages and essays, and say speech transcripts and written articles may warrant exploration. The downstream case applies a model fine-tuned on Facebook labels to executives' tweets, and the text reports no executive-level survey validation. | Support is for caution only. The paper runs no transfer test of its own, so it neither confirms nor explains the system's genre-transfer result. | weak | VERIFIED-SOFTENED |
+| [[mairesse-2007-automatic-recognition-personality]] | 2007 | supports | In conversation only a high word count and a low mean pitch mark ES in both self and observer reports. Observed ES tracks swearing and anger words but self-assessed ES does not. Self-references and negative-emotion words mark neuroticism in essays, citing Pennebaker and King. | The paper compares essays and student conversation, not political genres, so the link to floor speech is an analogy. The genre-transfer rho values (.050, .161) are not checked here and are not in the paper. | weak | VERIFIED |
 
 **Assessment**
 
-**Evidence weight: weak.** The bearings support direction only. None gives a criterion, and one VERIFIED bearing raises a selection problem. There are 12 bearings: 2 VERIFIED, 8 VERIFIED-SOFTENED, 2 UNVERIFIED (Naz, Celli 2012).
+**Evidence weight: weak to moderate on direction, none on the yielding mechanism.** The hub has 13 rows (13 distinct papers): 3 VERIFIED, 8 VERIFIED-SOFTENED and 2 UNVERIFIED.
 
-**Direction.** Pennebaker 2003 and Koutsoumpis 2024 both link N or low ES to more negative emotion (cue validity rho -.12) and to first-person singular (observer cue utilization rho -.29, k=5). Both use students and lay users, and Koutsoumpis notes that the negemo effect weakens with publication year. Marrero 2022 finds linguistic features beat vocal ones for N in students (about 92 words per sample). Its top N predictors are not the system's anchor terms. No study tests N in politicians' speech.
+**Direction of the lexical signs**
+Pennebaker, Koutsoumpis and Mairesse support the signs of the lexical anchor: N goes with more negative emotion, fewer positive-emotion words and more first-person singular. The sizes are small: cue validity of ES with negative emotion is rho -.12 (self-report), and with first-person singular -.29 (observer utilization). The evidence comes from students and social media.
 
-**What is actually emitted.** Per emit_affective_n.py and affective_n_validate.py, affective_n is now the E-residualized, party-controlled sum of four LLM facets: pessimism, anxiety, depression and volatility. The LIWC base was removed as a component and kept as a convergent anchor at r +.24; the code comment cites one member moving from rank 1 to 412. Rice & Zorn 2018 supports dropping a closed-vocabulary component outside its home register, as a general point only. Both the hub component description and the module docstring still say the measure combines LIWC and LLM. They are stale.
+**What the emitted score actually is**
+Verified code rows show `affective_n` is now the E-residualized, party-controlled sum of four LLM facets (pessimism, anxiety, depression, volatility). LIWC is kept only as a convergent anchor (r about +.24). The component text 'z(LIWC) + z(LLM)' and the docstring are stale.
 
-**Mechanism.** Byrne 2014/2015 (VERIFIED) is the reason for having the slot, but it never measured anxiety, mood or working memory, and its pressure manipulation check was null. The project's H5 test of N x loss domain (partial r +.036, n=441) is therefore neither confirmed nor refuted by Byrne. The N contribution stays UNVERIFIED (DE-062).
+**Mechanism**
+- Byrne 2014 (VERIFIED) supplies the theory for why N should predict yielding under pressure, but it never measured anxiety, mood or working memory. The project's H5 test of N × loss domain was null (partial r +0.036, n 441). The N contribution stays UNVERIFIED.
+- Soto 2017: the pressure mechanism fits Anxiety and Volatility, not Depression or pessimism. Pooling all four facets may dilute it. Separating them would need its own pre-registration.
 
-**Selection.** Amsalem 2018 (VERIFIED) finds that, net of office and activity, more neurotic MPs in Belgium, Canada and Israel appear less in national news (beta -.111, n=306). If US interview coverage selects the same way, interview-derived N is range-restricted. That is untested.
+**Why genre transfer failed (scan leads, UNVERIFIED)**
+The failed transfer of interview N to floor and hearing text (rho .050 and .161) has a ready explanation: in legislative speech, affect follows the audience and the context, not the person.
+- Osnabrügge, Hobolt & Rodon 2021 (APSR; about 2 million UK and Irish speeches; downloaded): emotive rhetoric rises in high-audience debates such as Prime Minister's Questions.
+- Rheault et al. 2016 (PLoS ONE; a century of House of Commons debates; downloaded): emotional polarity tracks the national economy.
+- Aroyehun 2026 (arXiv preprint; Congress 1973 to 2024; downloaded): emotion varies by policy domain and ideology.
 
-**Facets.** Soto 2017 finds that Anxiety and Volatility predict different criteria than Depression. The pressure mechanism fits Anxiety and Volatility better than the pessimism and depression facets, so summing all four may dilute the slot. Changing that would need its own prereg.
+These read as evidence that affective words in public speech index situation and strategy, which contradicts reading them as a stable trait outside the interview genre. The score is residualized on party but not on ideology within party, nor on topic or period.
 
-**Party residualization.** Ramey's ES loads .20 on Common Space (N=844), so controlling for party may remove real ES signal. The brain records raw r -0.11 against RKH-ES (n=147), falling to -0.04 (not significant) once E is removed.
-
-No gold N criterion exists, and Naz (UNVERIFIED) confirms the field has none ready-made. The 5/5 gate therefore tests construct integrity only, as the system already says.
+**Selection**
+Amsalem 2018 (VERIFIED) finds more neurotic MPs appear less in national news (beta -.111). If US interview coverage selects the same way, interview-derived N is range-restricted.
 
 **Contradictions**
-- The hub component description and the emit_affective_n.py docstring (lines 3-4) say affective_n combines z(LIWC) and z(LLM). The code emits LLM facets only, with LIWC as a convergent anchor.
-- The receptivity layer labels the N slot as Byrne's channel, but Byrne never measured the anxiety or working-memory mechanism, and the system's own H5 test is null (partial r +.036, n=441).
-- The genre-transfer failure figures (rho .050, .161) were not located in the cited files by any verifier.
+- Osnabrügge 2021 and Rheault 2016 (scan leads, UNVERIFIED): affect in parliamentary speech varies with audience and economic conditions. This works against treating affective word use as a trait across genres, and it fits the system's own failed genre transfer.
+- The component description (z(LIWC) + z(LLM)) and the emit_affective_n.py docstring are stale. LIWC is now only a convergent anchor, not a component.
+- The genre-transfer values (.050, .161) were not located at the cited code lines.
 
 **Gaps**
-- Criterion study: an observable yielding-under-pressure outcome, for example position change after targeted pressure campaigns, scored prospectively for high and low affective-N members with party and electoral-status strata.
-- Selection study: whether interview availability in the US correlates with non-text reactivity proxies after leadership and office controls (the test Amsalem implies).
-- A facet-separated look (Anxiety and Volatility versus Depression and pessimism) under prereg.
-- An invariance study of affective N across interview, floor and hearing genres, to establish why transfer failed.
+- No criterion for N. The literature confirms none exists for elites (Naz 2025). Needed: an observed-behaviour test of the yielding mechanism. For example, pre-register whether high-N members shift roll-call position more after a primary threat or a negative press shock, using a within-member design.
+- No residualization on topic, ideology or period. Needed: re-estimate affective N within policy-topic × Congress cells and check whether the member ranking survives.
+- No check of selection into interviews (Amsalem). Correlate interview coverage with reactivity_z after leadership controls.
 
-**Paul's position vs the evidence**
-
-No annotation of Paul's addresses this component. The evidence supports keeping the slot as a theoretically motivated, UNVERIFIED contributor and does not support any validity claim. The strongest new information is Amsalem's selection finding and Soto's facet distinction. Both are leads for a pre-registered look, not changes.
+**Paul's position vs the evidence.** Paul has no annotation. This component cites only Ramey, whose ES remark is about face validity, not a ranking of ES. No error.
 
 **Open questions**
-- Should party residualization stay, given Ramey's ES-ideology loading?
-- Is the four-facet sum the intended construct, or should the slot track Anxiety and Volatility only (new prereg)?
-- Where are the genre-transfer rho values recorded?
+- Is the member-level variance in affective N mostly topic, audience and period, as the parliamentary-emotion literature suggests?
+- Should the anxiety and volatility facets be separated from depression and pessimism for the Byrne channel? This would need a new prereg.
+- Does party residualization remove real ES signal (Ramey's ideology loading of 0.20)?
 
-**Read first:** [[koutsoumpis-2024-kernel-truth-text]], [[amsalem-2018-effect-politicians-personality]], [[byrne-2014-chokes-under-pressure]], [[soto-2017-next-five-inventory]], [[pennebaker-2003-psychological-aspects-natural]], [[rice-2018-corpus-based-dictionaries]]
+**Read first**
+- [[koutsoumpis-2024-kernel-truth-text]]
+- [[byrne-2014-chokes-under-pressure]]
+- [[amsalem-2018-effect-politicians-personality]]
+- [[soto-2017-next-five-inventory]]
+- [[pennebaker-2003-psychological-aspects-natural]]
 
 ## Agency-communion persona channel
 
-**What it computes:** persona_z = 0.60 z(communion) - 0.40 z(agency) from LLM few-shot cue classification (strong 1.0, weak 0.5), blended at PERSONA_W 0.30.
+**Computes.** persona_z = 0.60 z(communion) - 0.40 z(agency) from LLM few-shot cue classification (strong 1.0, weak 0.5), blended at PERSONA_W 0.30.
 
-**Method:** Functional gate 18/18. Party signature: communion D .099 vs R .049. Persona homophily is not earned (|r| <= 0.015).
+**Method.** Functional gate 18/18. Party signature: communion D .099 vs R .049. Persona homophily is not earned (|r| <= 0.015).
 
-**Code refs:** `fec/members/agency_communion_llm.py`, `fec/persona_homophily_validate.py`
+**Code refs.** `fec/members/agency_communion_llm.py`, `fec/persona_homophily_validate.py`
 
 **Assumptions**
 - Projected persona is what a lobbyist meets
@@ -463,66 +521,57 @@ No annotation of Paul's addresses this component. The evidence supports keeping 
 
 **Assessment**
 
-**Evidence weight: moderate for the construct and method; weak to none for the susceptibility signs.** There are 11 bearings: 3 VERIFIED, 5 VERIFIED-SOFTENED, 3 UNVERIFIED (Palm, Selfhout, Celli 2012).
+**Evidence weight: moderate for the instrument design, none for the receptivity direction.** The hub has 11 rows (8 distinct papers): 3 VERIFIED, 5 VERIFIED-SOFTENED and 3 UNVERIFIED.
 
-**Method source.** Birkenmaier & Lechner 2025 (VERIFIED-SOFTENED, strong) is a faithful method source. The system ports its codebook, the positive-pole rule and the strong/weak cue split. Lechner 2025 PoliPers supplies the facet definitions.
+**Instrument design**
+- Birkenmaier 2025 (strong method source) validates the codebook design. Few-shot macro-F1 is 0.77 for DeepSeek-V3 and 0.76 for GPT-4o, scored against three trained coders on German sentences. Lechner 2025 supplies the facet definitions.
+- The system runs claude-sonnet-5 against English congressional text. It has no human-labelled sentence test, so its macro-F1 is unknown. The functional gate (18/18) was written by the builder. Ornstein 2024 asks for checks against hand labels the prompt was not tuned on, and that check is missing.
 
-The validated performance does not carry over:
-- Birkenmaier's macro-F1 of .76 to .77 belongs to GPT-4o and DeepSeek-V3 on German sentences scored against three trained coders.
-- The system runs claude-sonnet-5 on English congressional sentences and has no human-labelled sentence test, so its macro-F1 is unknown.
-- The 18/18 functional gate was written by the builder; the paper's Appendix J was not available.
+**Construct issues**
+- Lechner (VERIFIED) finds the Assertiveness facet is not unidimensional. The power-claiming item loads reversed, and in observer ratings alpha is .40. The self-test uses a power-claiming sentence as gold agency. This is a plausibility warning, not a measured defect.
+- The party signature (communion D .099 vs R .049) matches Birkenmaier's left-right gradient across six German parties. It also means persona carries party, so any pooled use is UNSTRATIFIED across D and R.
+- Scan lead (UNVERIFIED): Hargrave & Blumenau 2022 (UK MPs 1997 to 2019; downloaded) show gendered style shifting over time, with women adopting more agentic styles. Persona_z likely also carries sex and era, so it needs sex strata or an UNSTRATIFIED label.
 
-Ornstein 2024 says prompt-tuned LLM coding must be checked against hand labels the prompt was not tuned on.
+**Receptivity direction**
+- The positive communion sign has only mild support (Palm 2025, UNVERIFIED: agreeableness is the most susceptible trait).
+- The negative agency sign has none. Palm finds extraversion also above average in susceptibility.
+- Byrne concerns self-reported trait agreeableness, not rhetoric, so citing it here takes a second inferential step the paper does not cover.
+- Scan lead: Decter-Frain & Frimer 2016 (House floor 1996 to 2014; downloaded) find only the 'helping' form of communion relates to public approval, and only in an aggregate time series. The relevant point is construct-level: communion splits into belonging and helping. It is not member-level evidence.
+- PERSONA_W 0.30 is owner policy and is not in question here.
 
-**Strong versus weak cues.** Birkenmaier finds strong-only definitions perform slightly better (.77 vs .76, inside the SDs). A strong-only score can be computed from the existing cache at no API cost.
-
-**Agency is not one thing.** Lechner (VERIFIED) finds the Assertiveness facet splits. The "power-hungry, claims leadership" item loads reversed (Study 3, N=589), and observer alpha is .40 (Study 4, N=211). The system's self-test uses a power-claiming sentence as a gold agency unit. This is a plausibility warning only, because the split was measured in citizen trait ratings, not in sentences.
-
-**Party.** Birkenmaier (VERIFIED) shows communion share falling from left to right across six German parties. The system's D .099 against R .049 matches that, which supports convergent validity. It also means persona carries party, so pooled use is UNSTRATIFIED across D and R.
-
-**Signs in the susceptibility blend (.60 communion, -.40 agency)**
-- Byrne (VERIFIED, weak) concerns self-reported agreeableness, not communal rhetoric. Citing it for the persona direction is a second inferential step the paper does not cover.
-- Palm (UNVERIFIED lead) gives mild support for the communion sign. It gives none for the negative agency sign, and may run against it, since extraversion is above average in susceptibility.
-
-PERSONA_W 0.30 is an owner ruling and is not at issue. These points concern provenance and signs inside the channel.
-
-**Homophily.** Selfhout 2010 and Celli 2012 (both UNVERIFIED) do not overturn the measured null (|r| ≤ .015). They are not grounds to re-propose homophily edge weighting. The null holds for the cross-sectional test that was run.
+**Homophily**
+The homophily null (|r| ≤ 0.015) stands. Selfhout 2010 and Celli 2012 (both UNVERIFIED, different relations and populations) give no grounds to reopen persona-homophily edge weighting. The null covers the cross-sectional test that was run, not homophily in general.
 
 **Contradictions**
-- The design follows Birkenmaier, but the two validated models (GPT-4o, DeepSeek-V3) are not the model in use (claude-sonnet-5), and no system-side macro-F1 exists.
-- The agency self-test treats a power-claiming sentence as gold agency. PoliPers shows power-claiming loads reversed against leadership-taking in observer ratings (VERIFIED).
-- The communion→susceptibility direction is attributed to Byrne, but Byrne studied self-reported A, not projected rhetoric.
-- The negative agency sign has no support. An UNVERIFIED lead (Palm) points the other way for extraversion-like presentation.
+- Byrne 2014 is cited for the persona direction but covers only self-reported trait agreeableness, not communal rhetoric.
+- Palm 2025 (UNVERIFIED) finds extraversion is also above average in susceptibility, which works against the -0.40 agency sign.
 
 **Gaps**
-- A human-labelled sentence sample of English congressional statements, coded by at least 2 trained coders and held out from codebook writing, to give the system a macro-F1.
-- A behavioural criterion for the persona→susceptibility link: whether communal-persona members accept more outside requests or meetings, or cosponsor more with outside requesters, with D and R strata.
-- A text-level test of whether power-claiming and leadership-taking agency cues split.
-- Strong-only against strong-plus-weak member ordering (computable from cache).
+- No human-gold accuracy on congressional sentences. Needed: 300 to 500 English sentences from the Congressional Record, coded blind by 2 to 3 coders who did not write the prompt, reporting Krippendorff alpha and model macro-F1.
+- No behavioural test of the receptivity direction. Needed: a pre-registered test of whether high-communion members accept more outside meetings or cosponsor more bills from outside requesters, stratified by party.
+- Nobody has checked whether member rankings move under strong-only scoring. It can be computed from the existing cache at no API cost.
 
-**Paul's position vs the evidence**
-
-Paul sees this as the most direct transfer from his notes (pre-built codebooks and node design), and the evidence agrees on the codebook design. His two named weaknesses are both borne out:
-
-- **Trait-to-node conversion.** No paper supports the susceptibility signs, especially the negative agency sign.
-- **Ambiguous statements.** These correspond to the weak-cue category and the Assertiveness facet split.
-
-What his notes lack is the gap between Birkenmaier's validated models and the model actually in use, and the absence of any human-labelled test on congressional text.
+**Paul's position vs the evidence.** Paul's notes on Birkenmaier (pre-built codebooks; turning a trait into a node is hard; ambiguous statements are hard) agree with the evidence. His 'weaknesses' note is borne out: the paper validates sentence cues, and turning those into a member-level receptivity weight is not covered by it. No error.
 
 **Open questions**
-- Does Paul want a held-out human-coded sentence sample to estimate the system's macro-F1?
-- Should agency be split into leadership-taking and power-claiming cues for a pre-registered look?
-- Does member ordering change under strong-only scoring?
+- Does persona_z carry sex and era as well as party?
+- Does the agency score mix leadership-taking with power-claiming cues in congressional text?
+- What is the receptivity sign of agency once communion and party are held fixed?
 
-**Read first:** [[birkenmaier-2025-measuring-politicians-public]], [[lechner-2025-mapping-political-personality]], [[ornstein-2024-train-your-stochastic]], [[byrne-2014-chokes-under-pressure]], [[selfhout-2010-emerging-late-adolescent]]
+**Read first**
+- [[birkenmaier-2025-measuring-politicians-public]]
+- [[lechner-2025-mapping-political-personality]]
+- [[ornstein-2024-train-your-stochastic]]
+- [[palm-2025-influence-personality-traits]]
+- [[byrne-2014-chokes-under-pressure]]
 
 ## Interview weighting (C_INT_W) and gated shrinkage (P6)
 
-**What it computes:** Conscientiousness aggregates interview chunks at 2x. Members with fewer than 8 measurements are shrunk.
+**Computes.** Conscientiousness aggregates interview chunks at 2x. Members with fewer than 8 measurements are shrunk.
 
-**Method:** The P6 reliability claim (.748 -> .831) was retracted as double-shrink inflation; the change was kept on external criterion gains.
+**Method.** The P6 reliability claim (.748 -> .831) was retracted as double-shrink inflation; the change was kept on external criterion gains.
 
-**Code refs:** `big5_llm.py (C_INT_W)`, `fec/big5_improvements_eval.py --p6`
+**Code refs.** `big5_llm.py (C_INT_W)`, `fec/big5_improvements_eval.py --p6`
 
 **Assumptions**
 - Shrinkage is judged only on external criteria, not split-half reliability
@@ -531,72 +580,61 @@ What his notes lack is the gap between Birkenmaier's validated models and the mo
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
-| _none_ | | | | | | |
+| (none: GAP) | | | | | | |
 
 **Assessment**
 
-**GAP: no bearings.** No paper in the hub addresses interview up-weighting of C (C_INT_W = 2x) or gated shrinkage of members with fewer than 8 measurements (P6). The P6 reliability claim (.748 to .831) was retracted as double-shrink inflation. The change was kept on external-criterion gains, which is the correct standard, but no literature backs either constant.
+**GAP: no bearings.** No paper in the hub addresses C_INT_W (interview chunks weighted 2x for C) or P6 (shrinkage below 8 measurements).
 
-The nearest adjacent evidence comes from other components:
-- Ramey 2016's bootstrap shows CI width of about 0.3 only at about 5,000 or more words per member-year, so precision degrades sharply below that.
-- Pennebaker 2003 reports retest reliability of .24 for psychological-process word categories in student speech, which implies heavy noise at small samples.
+Two items elsewhere in the hub bear on it indirectly.
+- Ramey 2016 (VERIFIED-SOFTENED, filed under lexical-big5) ties precision to text volume: a CI width of about 0.3 or less above about 5,000 words per member-year. That is far above the lexical 1,500-token floor, which suggests thin-corpus shrinkage matters more than the system's threshold assumes.
+- The project's own retraction stands. The P6 reliability gain (.748 → .831) was double-shrink inflation, and the change was kept on external-criterion gains only. That is the right standard, since shrinkage toward the mean mechanically raises split-half agreement.
 
-Neither tests a shrinkage rule or a genre weight.
+Shrinkage itself is standard empirical-Bayes practice and needs no literature. What is missing is evidence specific to this system. The 2x interview weight has no basis. The genre literature (Osnabrügge 2021; the system's own failed N transfer) suggests interview and floor text measure different things, so the weight should be judged by criterion validity per genre, not assumed.
 
 **Contradictions**
-- None recorded.
+- (none)
 
 **Gaps**
-- Length-reliability curve: subsample long-corpus members down to 500, 1,500, 3,000 and 5,000 tokens, many draws each, and measure rank agreement with the full-corpus score. This gives an empirical floor in place of the 1,500-token and 8-measurement thresholds.
-- An empirical-Bayes shrinkage comparison judged only on a held-out external criterion (pre-registered, single look), with token count as the precision input.
-- Genre-weight study for C_INT_W: estimate the interview-versus-floor weight by multitrait-multimethod analysis or criterion-weighted regression, not by fiat.
-- A check that shrinkage toward 0 does not interact with party or seniority (thin-corpus members may be systematically junior).
+- Whether P6 improves criterion validity needs its own pre-registered test. Compare shrunk and unshrunk scores against k≥2 gold-panel senators and against votes_cast, with electoral-status strata, reporting n per token bin.
+- No reliability-by-volume curve. Needed: split-half reliability by token bin (for example under 1.5k, 1.5–5k and over 5k tokens per member-Congress) to set the shrinkage threshold from data.
+- C_INT_W 2x has no basis. Needed: genre-specific criterion validity for C (interview-only vs floor-only C against the same criterion) before choosing a weight.
 
-**Paul's position vs the evidence**
-
-Paul's position is 'No literature', and the hub confirms it. The constants rest on internal criterion gains only.
+**Paul's position vs the evidence.** Paul's position is 'no literature', and that is correct. The component needs its own validation study more than citations.
 
 **Open questions**
-- Which external criterion was used to keep P6 after the reliability retraction, and over what window and n?
-- Is C_INT_W = 2 a ruled constant or a candidate open to a weighting study?
+- What is the empirical reliability of C at 1,500, 5,000 and 11,000 tokens on this corpus?
+- Does the 2x interview weight beat equal weighting on any external criterion?
 
-**Read first:** [[ramey-2016-measuring-elite-personality]]
+**Read first**
+- [[ramey-2016-measuring-elite-personality]]
+- [[mondak-nd-online-appendix-personality]]
+- [[marrero-2022-evaluating-voice-samples]]
 
 ## Across components
 
-**Five patterns across the components**
+**Patterns across components**
 
-**1. Measurement loops.** Several validity checks reuse the same method or data on both sides:
-- RKH is Mairesse-SVR based, and the lexical reader is refit to it.
-- The Senate panels serve as external gold and also supply full-sample weights to shipped composites.
-- The affective-N gate checks LIWC-family terms against LLM facets.
-- Celli 2012 is the literature's own example of this circularity.
+1. **Shared method props up convergence.** Several components support each other with criteria built from the same method:
+   - the lexical traits are refit to RKH, which is itself Mairesse-type text scoring;
+   - the affective-N LIWC anchor converges with LIWC-family scores (the same circularity Celli 2012 shows);
+   - persona and the gold panels share public-persona cues with the text.
 
-Each loop makes convergence a fit statistic. Only out-of-fold or prospective criterion results count as validation.
-
-**2. Text measures perceived persona, not self.** Koutsoumpis, Pennebaker, Celli (Brunswik lens) and Rubio agree that text traits converge with observers far better than with self-report. That fits the receptivity use case, where what matters is what an outside requester meets. All trait wording should say perceived public persona, and panel PASSes should be described as shared-cue agreement.
-
-**3. Party is the dominant fault line in every component.** It shows up in the extreme-rating skew of the gold panels, in the persona D/R gap (.099 vs .049), in affective-N residualization (which may strip real ES signal, given Ramey's .20 Common Space loading), and in cooperation's link to ideological extremity (r -.250). Pooled coefficients in any of these should carry D and R strata or an UNSTRATIFIED label.
-
-**4. Electoral status is an unmodelled confound** shared by diligence_z, the C-vs-votes_cast PASS and the incentive term (Fouirnaies & Hall, VERIFIED). It enters pressure twice with opposite signs.
-
-**5. Provenance debt outweighs paper debt.** Several numbers quoted in hub component records could not be located: the .350 RKH CV, the .12 Pink bar, the .21 halo, the genre-transfer rhos, and "O reversed on party". Docstrings are also stale: the affective-N module docstring still says it combines LIWC, big5_llm.py claims "balanced keying", and behavioral_dispositions.py misattributes a C criterion to Ramey. Where numbers were checked, the committed artifacts (big5_v2.json, big5_v3_hybrid.json, big5_gold_anchored.json) tell a less flattering story than the hub text. Fix the records before citing any of these externally.
-
-**Guardrails**
-- No bearing argues for dropping regular cosponsorship edges or for per-edge volume normalization.
-- Cooperation_v2's member-level share must not be extended into edge normalization.
-- The homophily-adjacent papers (Selfhout, Celli 2012) do not reopen the measured null.
-- PERSONA_W 0.30 stays an owner ruling. Every bearing that touched it concerned provenance or signs only.
+   Only the Senate gold panels and behavioural criteria (votes_cast, LEP) are independent, and both carry confounds: party skew and k=1 raters for the panels, electoral situation for votes_cast.
+2. **Genre and situation, not trait.** The failed N transfer (interview to floor, rho .050), Pennebaker's 4-week retest of .24 for psychological-process words, and the scan leads (Osnabrügge, Rheault, Aroyehun) all suggest that affect and style in public speech follow audience, topic, period and electoral position. This bears on lexical-big5 (genre pooling), affective-n, C_INT_W (the 2x interview weight) and diligence (Fouirnaies). One MTMM study with genre as the method would answer it for all of them.
+3. **Party and sex are fault lines that are not stratified anywhere.** These include the panel extremes (Mondak), the communion signature (D .099 vs R .049), rater-ideology bias (Lechner) and gendered style (Hargrave & Blumenau; Peters & Matz on accuracy by sex). Every pooled coefficient should carry strata or an UNSTRATIFIED label.
+4. **Stale system descriptions.** The component texts disagree with the code and artifacts the verifiers read: the CV-against-RKH figures, active weights, the O party reversal, the composition of affective N, LLM keying, the Ramey participation citation and the gold-panel row count. Several of these are actual errors (see the overview). Fixing the descriptions comes before any further literature work.
+5. **Validation stance.** Behavioural dispositions replaced lexical traits for receptivity because lexical C reversed on participation (r_alerting -0.76). The evidence supports that move. It also means the remaining text-trait components (LLM reader, hybrid, persona) carry weight only if they beat dispositions on a pre-registered responsiveness look, which has not happened.
+6. **Rejected SNA proposals.** None of the bearings argues for dropping regular cosponsorship edges or for per-edge volume normalization. cooperation_v2's member-level share is not per-edge normalization. The homophily null stands, and Selfhout and Celli are not grounds to reopen it.
 
 ## Research agenda
 
-1. Provenance sweep (no new looks): locate or retract the .350 held-out CV against RKH (E .510 to O .214), the 0.12 Pink bar, the .21 text-tone halo, the genre-transfer rhos (.050, .161) and 'O reversed on party'. Correct the stale docstrings in emit_affective_n.py, big5_llm.py and behavioral_dispositions.py. Establish which lexical weight file is live.
-2. Gold-panel hygiene: count k=1 insider-only matches on the current roster, fix the silent Feingold academic-row drop, and report existing panel correlations with D/R strata or an UNSTRATIFIED label. Any k≥2 re-score is a new pre-registered look, and the decision is Paul's.
-3. Stop full-sample gold-fitted weights from flowing into b5_profile_basis.py so the Senate panels remain a clean holdout. This is an owner ruling.
-4. Electoral-status stratum for diligence_z and the C criterion: flag final-Congress and running-for-other-office member-Congresses (Fouirnaies & Hall). Quote the recorded C PASS (rho +.155) as UNSTRATIFIED on electoral status, and do not re-run it.
-5. Persona channel: hand-code a held-out sample of English congressional sentences (2 or more coders, kept out of codebook writing) to estimate macro-F1 for claude-sonnet-5. Compute strong-only scores from cache. Test whether power-claiming and leadership-taking agency cues split.
-6. Shrinkage GAP: build a length-reliability curve by subsampling long-corpus members (500 to 5,000 tokens), then a pre-registered external-criterion comparison of empirical-Bayes shrinkage against the current P6 rule and the C_INT_W = 2 weight.
-7. Cooperation_v2 GAP: test-retest of cross-party share across Congresses (ICC), convergent check against an independent bipartisanship index, and incremental validity over bpf (rho .888). Keep it member-level and never per-edge.
-8. Affective N: test interview-coverage selection (Amsalem's mechanism) against non-text reactivity proxies after leadership controls. Pre-register a facet-separated look (Anxiety and Volatility versus Depression and pessimism) and a prospective yielding-under-pressure criterion with party strata.
-9. LLM reader: run an acquiescence probe (content-free chunks) on the 20 observer items. If a yes-tendency appears, version a rebalanced itemset under a new cache key.
-10. Text traits against dispositions (H1/H2): adopt Yang 2023's design of the same learner with and without the trait block, a chronological split and paired tests, on a pre-registered responsiveness outcome. Do not quote Yang's effect sizes.
+1. Fix the actual errors first: the Ramey participation citation in behavioral_dispositions.py, the 'balanced keying' claim in big5_llm.py, the silent Feingold drop and wrong comment in build_big5_senate_gold.py, the stale LIWC wording in emit_affective_n.py, and the brain ruling's misreading of Birkenmaier's alpha. Then re-source or retract the CV-against-RKH figures and the O party-reversal claim in the component descriptions.
+2. Count k=1 insider matches on the current roster and report party-stratified panel correlations from the existing out-of-fold outputs (a description, not a new look). Any k≥2 or party-adjusted re-score is a new single look and needs a prereg.
+3. Genre MTMM study: traits × genres (floor, interview, hearing, social) on the same members. This one design answers lexical genre pooling, affective-N transfer and the C_INT_W 2x weight.
+4. Affective N: re-estimate within policy-topic × Congress cells and residualize on within-party ideology, following the Osnabrügge, Rheault and Aroyehun leads. Pre-register a within-member test of the yielding mechanism (behaviour after a primary-threat or press shock).
+5. Cooperation_v2: compute test-retest ICC across consecutive Congresses by majority status and chamber. Settle whether the directional share is attracted or offered, and check its added value over bpf (rho .888). Do not import Harbridge-Yong's reciprocity mechanism (D-104..D-108).
+6. Persona: hand-code 300 to 500 Congressional Record sentences blind to the prompt for agency and communion, with Krippendorff alpha and model macro-F1. Compute strong-only scores from the cache. Report persona_z by party and sex.
+7. LLM reader: run a named vs de-identified comparison on panel senators to measure reputational leakage (Cao & Kosinski lead), and a content-free prompt to measure acquiescence.
+8. Shrinkage: build a split-half reliability-by-token-bin curve on this corpus, then pre-register a look of shrunk vs unshrunk scores against k≥2 panel senators.
+9. Ingest the eight scan downloads into papers/ with UNVERIFIED status and an adversarial verification pass. Fetch Cao & Kosinski 2024 (PNAS Nexus) and Park et al. 2015 (JPSP) manually; scripted fetch is blocked or paywalled.

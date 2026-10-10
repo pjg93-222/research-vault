@@ -6,7 +6,7 @@ The empirical backbone of Paul's systems: Melange (path-finding, SNA, allocation
 - [[missing]]
 - [[excluded]]
 
-Counts: 20 systems, 14 themes, 4 research notes, 4 non-articles, 135 papers, 689 excluded.
+Counts: 20 systems, 14 themes, 4 research notes, 4 non-articles, 144 papers, 689 excluded.
 
 ## Systems
 
@@ -220,3 +220,12 @@ Counts: 20 systems, 14 themes, 4 research notes, 4 non-articles, 135 papers, 689
 | [[zeileis-nd-various-versatile-variances]] |  | causal-methodological | mentat-sector-growth-study | no | VERIFIED |
 | [[zeileis-nd-object-oriented-computation]] |  | causal-methodological | mentat-sector-growth-study | no | VERIFIED |
 | [[zeileis-nd-econometric-computing-with]] |  | causal-methodological | mentat-giving-forecast, mentat-sector-growth-study | no | VERIFIED |
+| [[sutton-2018-reinforcement-learning-introduction]] | 2018 | adaptive-influence-maximization | melange-allocation, melange-validation | no | VERIFIED |
+| [[ng-1999-policy-invariance-reward-transformations]] | 1999 | optimization | melange-pathfinding | no | VERIFIED |
+| [[watkins-1992-q-learning]] | 1992 | optimization | melange-allocation, melange-influence-engine | no | VERIFIED |
+| [[dai-2017-learning-combinatorial-optimization-graphs]] | 2017 | optimization | melange-allocation, melange-pathfinding | no | VERIFIED |
+| [[manchanda-2020-gcomb-learning-budget-constrained]] | 2020 | optimization | melange-allocation, melange-pathfinding | no | VERIFIED |
+| [[mairesse-2007-automatic-recognition-personality]] | 2007 | machine-learning-sentiment-analysis | melange-audio-speech, melange-psychometrics | no | VERIFIED |
+| [[kempe-2015-maximizing-spread-influence]] | 2015 | adaptive-influence-maximization | melange-allocation, melange-influence-engine, moneyball-rank-pillars | no | VERIFIED |
+| [[burnham-2023-stance-detection-practical-guide]] | 2023 | machine-learning-sentiment-analysis | melange-stance | no | VERIFIED |
+| [[bouton-2022-small-campaign-donors]] | 2022 | campaign-politics | melange-influence-engine, mentat-fec-attribution, mentat-sector-growth-study | no | VERIFIED |

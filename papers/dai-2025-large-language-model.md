@@ -121,4 +121,4 @@ Paul has no annotation of Dai et al. The paper does not support replacing the SV
 - [[kim-2025-measuring-interest-group]] — same-method — Both use LLMs to extract positions toward a named target. Kim reports 96.9 percent agreement with two human coders, but only on the 391 items both coders agreed. Dai reports no equivalent agreement for its stance outputs.
 
 ### Linked from
-_None._
+- [[burnham-2023-stance-detection-practical-guide]] — complements — Title matches a logic tensor network stance paper with LLM enhancement. The claim that it extends the in-context family Burnham benchmarks was not verified, so relation is softened from extends.

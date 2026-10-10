@@ -1,343 +1,329 @@
 ---
 type: theme
 name: "Adaptive Influence Maximization"
-paper_count: 15
+paper_count: 16
 tags: [theme]
 ---
 
 # Adaptive Influence Maximization
 
-**Adaptive Influence Maximization: synthesis of 15 works**
+This theme covers 16 works that take influence maximization (IM) past the one-shot static problem. They add sequential and adaptive seeding, learned (RL/GNN) seeding policies, and competitive or temporal settings where the classic greedy guarantee may or may not survive. Paul's two addendum notes organize it in three tiers that he maps onto Melange's architecture:
 
-Paul's addendum (two notes, sha12 d09295bf5960 and 46c7c53ceb7f) gives this theme a three-tier spine that mirrors Melange:
+1. **One-shot greedy.** The problem is static and submodular, and greedy gets (1-1/e), about 63% of optimal ([[kempe-2015-maximizing-spread-influence]]).
+2. **Adaptive greedy.** This tier replans within a campaign as outcomes are observed, and adaptive submodularity carries the same factor against the best *policy* ([[golovin-2011-adaptive-submodularity-theory]]).
+3. **The RL envelope.** A learned policy handles cross-campaign, non-submodular compounding, where no greedy guarantee reaches ([[chen-2021-contingency-aware-influence]], [[chen-2023-complex-contagion-influence]], [[kamarthi-2020-influence-maximization-unknown]], [[arya-2025-relink-edge-activation]], grounded in [[sutton-2018-reinforcement-learning-introduction]]).
 
-- **Tier 1, one-shot greedy.** The problem is static and submodular, and greedy carries the 1-1/e bound (about 63%).
-- **Tier 2, adaptive greedy.** This is the bridge tier: replanning within a campaign as intelligence arrives, with a guarantee from adaptive submodularity and lazy (CELF-style) evaluation.
-- **Tier 3, a learned RL envelope.** It handles compounding across campaigns, where no greedy guarantee reaches.
+The works agree more than the three tiers suggest, and the synthesis is mostly about where each guarantee stops. Classic greedy is provably good only under the following conditions:
+- monotone submodular spread: IC or uniform-threshold LT ([[kempe-2015-maximizing-spread-influence]]), a concave threshold CDF ([[ma-2022-adversarial-attack-graph]]), or the last mover against a fixed rival in competitive IC ([[bharathi-nd-competitive-influence-maximization]]);
+- marginals estimated well enough;
+- in the adaptive case, a known prior and the right feedback model.
 
-His unifying claim is: static inner problem submodular, sequential inner problem adaptive submodular, full cross-campaign problem non-submodular. He says RL4CCIM confirms the last point for complex contagion, and he places the durable moat in that non-submodular regime.
+The guarantee breaks under complex contagion ([[chen-2023-complex-contagion-influence]]), most competitive threshold variants ([[borodin-nd-threshold-models-competitive]]), edge-activation routing ([[arya-2025-relink-edge-activation]]) and noisy, under-sampled Monte Carlo ([[almazaydeh-2026-heuristic-centrality-methods]]).
 
-**What the 15 works support.** The two Golovin-Krause papers ([[golovin-2011-adaptive-submodularity-theory]], [[golovin-2011-adaptive-submodularity-theory]]) supply the tier-2 guarantee. A cluster of papers maps where the guarantee ends:
-- competitive linear-threshold models ([[borodin-nd-threshold-models-competitive]]);
-- complex contagion ([[chen-2023-complex-contagion-influence]]);
-- edge activation in closed networks ([[arya-2025-relink-edge-activation]]);
-- threshold CDFs that are not concave ([[ma-2022-adversarial-attack-graph]], Proposition 2).
+RL earns its keep in two ways:
+- **Speed:** it runs fast on unseen graphs. In the submodular regime it only *matches* greedy ([[chen-2021-contingency-aware-influence]]).
+- **Quality:** a real quality advantage is shown only in non-submodular regimes ([[chen-2023-complex-contagion-influence]]).
 
-[[bharathi-nd-competitive-influence-maximization]] shows the guarantee survives competition, but only for the last mover. A learned-policy lineage from the Tambe group ([[chen-2021-contingency-aware-influence]], [[kamarthi-2020-influence-maximization-unknown]], [[chen-2023-complex-contagion-influence]]) plus [[arya-2025-relink-edge-activation]] and [[kumar-2022-influence-maximization-social]] shows where RL earns its keep: a non-submodular objective, a graph that is not observed, or a runtime budget on new graphs.
+Voter-model work ([[moreno-2021-shadowing-shielding-effective]], [[cai-2025-competitive-influence-maximization]]) adds two further points. Continuous allocation is spread out rather than hub-concentrated, and timing and reversibility change who wins under a fixed budget.
 
-Two strands sit outside the spine but bear on the system:
-- **Cheap heuristics against greedy:** [[trivedi-2020-efficient-influence-maximization]] and [[almazaydeh-2026-heuristic-centrality-methods]].
-- **Competition over time in voter models:** [[cai-2025-competitive-influence-maximization]] and [[moreno-2021-shadowing-shielding-effective]]. These are the only works where timing and reversible opinions change who wins.
+**No work in the theme uses observed legislative, lobbying or persuasion outcomes.** Every spread figure is a simulated model output, under assumed edge probabilities, on co-authorship, social, village or synthetic graphs. For Melange the theme mostly sets the scope of guarantees the code already claims. It does not calibrate any constant.
 
-[[zareie-2023-influence-maximization-social]] is a taxonomy that exposes design choices the system already made.
-
-**Where the evidence falls short of Paul's claim.** No work in this set studies compounding across campaigns. RL4CCIM ([[chen-2023-complex-contagion-influence]]) proves non-submodularity for a *single* seeding under its K-complex model. It does not prove it for repeated campaigns, so "confirms" overstates it. The cross-campaign claim stays an open hypothesis. The tier-2 bridge also has a practical hole. Adaptive greedy needs observed outcomes, a known prior and near-exact marginals. No Melange engine observes real take-up today, so the adaptive half of tier 2 is unbuilt (bearing from [[golovin-2011-adaptive-submodularity-theory]]).
-
-No paper in the set uses observed legislative, lobbying or persuasion outcomes. Every quantitative result is a simulated or proven property of a model kernel on synthetic or public non-political graphs. The one apparent exception is Cai's "Congress votes" mentions graph, which is still pure simulation.
-
-The set covers only four of the ten works Paul's addendum anchors: Golovin-Krause, Kamarthi, Chen 2021 and Chen 2023. The other six are missing (Leskovec/CELF, Sutton-Barto, Ng 1999, Watkins, Khalil, GCOMB/Manchanda); see Gaps.
+**Online scan (2026-10-10).** A light web check turned up three things:
+- **Retracted myopic-feedback result has since been settled.** The myopic-feedback IM result in Golovin-Krause, which they retracted, was settled by Peng and Chen (NeurIPS 2019, arXiv 1905.11663). Under myopic feedback, IC is *not* adaptive submodular. Adaptive greedy is guaranteed only at least (1-1/e)/4 of the optimal adaptive policy, and the adaptivity gap is between e/(e-1) and 4.
+- **Batch-adaptive algorithms with guarantees exist.** Han et al., "Efficient Algorithms for Adaptive Influence Maximization" (PVLDB 11(9), 2018), give practical batch-adaptive algorithms with guarantees (AdaptGreedy/EPIC).
+- **MaDGNN could not be found.** No Scientific Reports paper by that name turned up, so the frontier citation remains unanchored.
 
 ## Strands
 
-### Guarantee theory: submodularity and adaptive submodularity (Tier 1 to Tier 2)
+### Static greedy and its cost-quality trade-off
 
-This strand supplies the formal backbone of Paul's tiers 1 and 2.
+**The foundation.** [[kempe-2015-maximizing-spread-influence]] proves that expected spread is monotone submodular for every triggering-set model, including IC and LT with uniform thresholds. Greedy therefore reaches (1-1/e-eps) of the optimal k-seed set. The guarantee has hard edges:
+- General threshold models are inapproximable within n^(1-eps).
+- Competing cascades are left open.
+- Edge parameters are set by rule, not estimated.
 
-**The Golovin-Krause theorem and its costs.** [[golovin-2011-adaptive-submodularity-theory]] (COLT extended abstract) and [[golovin-2011-adaptive-submodularity-theory]] (JAIR version) prove that under adaptive monotonicity and adaptive submodularity, alpha-approximate adaptive greedy run for l steps gets at least (1 - e^{-l/(alpha k)}) of the best k-item policy. That is 1-1/e when alpha = 1 and l = k. The guarantee has a price:
-- The prior must be known.
-- Marginals estimated with additive error epsilon cost l*epsilon (COLT text after Thm 4).
-- Without adaptive submodularity there is no polynomial approximation within O(|E|^(1-eps)) (JAIR Thm 26 / COLT Thm 9).
+On one 10,748-node hep-th graph (10,000 simulations per evaluation, k up to 30), greedy beats high-degree seeds by about 18% and distance centrality by over 40% under LT.
 
-**What the JAIR version corrects.** It replaces the earlier logarithmic average-cost cover bounds with squared-log bounds (flaw identified by Nan and Saligrama 2017). It also retracts the myopic-feedback viral-marketing model that the COLT version's Thm 6 covered. That second point matters for Paul: a design that seeds, observes take-up and replans most naturally uses myopic feedback, and that is exactly the case no longer certified. The lazy greedy (Algorithm 2) is the CELF analogue Paul cites as what makes tier 2 practical. It ran about 3.5-7x faster on 46 sensors and 30-38x faster on 357 sensors (sensor-placement experiments only).
+**The cost question.** The other three works ask whether cheap rankings can stand in for greedy.
+- [[trivedi-2020-efficient-influence-maximization]] (degree-discount DHICM) finishes 12.5% below CELF at k=10 and 7.9% below at k=30 on NetHept. The number of Monte Carlo (MC) runs is not reported and there are no error bars.
+- [[almazaydeh-2026-heuristic-centrality-methods]] puts PageRank and Betweenness at about 96.5% of IMM spread on a 1,000-node Facebook subgraph (IC p=0.1, k=10, 10 runs × 50 MC). CELF++ collapses to 12.9% of IMM, which the authors untestedly blame on 50-MC marginals and a Python implementation.
+- [[kumar-2022-influence-maximization-social]] trains a GNN regressor on struc2vec embeddings to predict each node's standalone spread, then takes the top-k. All of its performance claims are from a preview only and are UNVERIFIED.
 
-**Competition.** [[bharathi-nd-competitive-influence-maximization]] extends the independent cascade to several players. With the opponent's seeds fixed, a player's reach is monotone and submodular in its own seeds (Lemma 1). Greedy is therefore a (1-1/e) best response, but only for the last player to commit. The price of competition is at most 2. Pure Nash equilibria need not exist, and first-mover strategy is solved only on disjoint lines.
+**Where they agree.** Exact lazy greedy is the quality reference, and its practical weak point is Monte Carlo noise in the marginals, not the algorithm.
 
-**Threshold models.** [[ma-2022-adversarial-attack-graph]] reaches the guarantee from an unrelated domain, a black-box attack on a GNN recast as linear-threshold influence maximization. Its Proposition 2 gives the cleanest condition in the set: the objective is submodular when every threshold CDF is concave on [0, inf).
+**Where they disagree.** They differ on how close heuristics come: 18–40% behind (Kempe, LT), 8–12% behind (Trivedi, IC p=0.01), or within 3.5% (Almazaydeh, IC p=0.1 on dense ego subgraphs).
 
-**Where the four agree.** The guarantee is a property of the objective's structure, not of greedy itself. It survives randomness, adaptivity and a fixed opponent. It does not survive an opponent who responds, sampled marginals with unbounded error, or weights layered on top of marginal gain.
+**The lesson Paul's notes draw.** Rankings by standalone spread (Kumar's top-k, singleton marginals) ignore overlap between seeds. That is exactly the failure Kempe's experiments penalize and degree-discount exists to fix. At Melange's scale (533 nodes, a 45-member stance-gated shortlist, a 60-seed cap), the cost argument for heuristics or learned rankers mostly does not apply.
 
-Works: [[golovin-2011-adaptive-submodularity-theory]], [[golovin-2011-adaptive-submodularity-theory]], [[bharathi-nd-competitive-influence-maximization]], [[ma-2022-adversarial-attack-graph]]
+Works: [[kempe-2015-maximizing-spread-influence]], [[trivedi-2020-efficient-influence-maximization]], [[almazaydeh-2026-heuristic-centrality-methods]], [[kumar-2022-influence-maximization-social]]
 
-### Where submodularity breaks (the boundary of Tier 3)
+### Adaptive submodularity: replanning under observation
 
-Four works map the edge of the guarantee. Each uses a different mechanism.
+**The bridge.** [[golovin-2011-adaptive-submodularity-theory]] is Paul's Tier-2 bridge. If the conditional expected marginal gain never rises as more outcomes are observed, adaptive greedy gets (1-1/e) of the best adaptive policy. That requires a known prior, and sampled marginals carry only additive error. The paper also gives the following:
+- squared-log min-cost cover bounds (corrected from an earlier, flawed log claim);
+- a 4α min-sum bound;
+- data-dependent upper bounds;
+- a lazy variant, 30–38x faster on 357 sensors;
+- Theorem 26: without adaptive submodularity, no polynomial approximation within O(|E|^(1-eps)) exists.
 
-**Competitive linear-threshold models.** [[borodin-nd-threshold-models-competitive]] shows that most competitive extensions lose the guarantee:
-- The weight-proportional adoption split is not even monotone. Adding an A seed lowers the root's A-probability from 11/40 to 103/400 on a small tree counterexample.
-- The separated-threshold model is monotone but not submodular, and no forcing or tie-breaking rule fixes that.
-- With technology-specific weights, the follower problem is NP-hard to approximate within N^(1/2-eps).
-- Only the OR model, where each technology spreads independently and a submodular rule picks the winner at the end, keeps 1-1/e.
+**Correction to Paul's note.** The IM application under myopic feedback was retracted. Peng and Chen (NeurIPS 2019) later showed myopic-feedback IC is not adaptive submodular and adaptive greedy gets only at least (1-1/e)/4. Paul's Tier-2 claim, "adaptive greedy gives 63% of the optimal policy", holds for IM only under full-adoption feedback. That is a real scope error in the addendum, not a style point.
 
-**Complex contagion.** [[chen-2023-complex-contagion-influence]] proves non-submodularity (Thm 1) and NP-hardness (Thm 2) under K-complex adoption, where a node joins once at least K neighbours are active. Paul's addendum leans on this paper.
+**Two extensions of the observation model.**
+- [[chen-2021-contingency-aware-influence]] is about willingness, not spread. An invited seed accepts with a known, uniform q, revealed at the end of each of T rounds. The paper explicitly contrasts itself with adaptive IM, which it says does not handle willingness uncertainty.
+- [[kamarthi-2020-influence-maximization-unknown]] is about the graph. Edges are hidden and must be discovered by querying 5 nodes before greedy seeds 10.
 
-**Closed-network edge activation.** [[arya-2025-relink-edge-activation]] states that its problem is non-submodular and offers no guarantee.
+**Shared assumption.** All three need the stochastic model to be known or learnable from many episodes. None supplies a real-world prior.
 
-**Threshold shape.** [[ma-2022-adversarial-attack-graph]] states the converse of its own condition: S-shaped adoption, a threshold CDF that is not concave, falls outside Proposition 2.
+**Bearing on Melange (Paul's notes).** Melange's joint optimizer correctly says it is not an adaptive policy (observations=[]). The adaptive half of this strand is unbuilt, because no Melange system observes real outcomes.
 
-**What these papers do not dispute.** They mark the scope of [[golovin-2011-adaptive-submodularity-theory]]; they do not contradict it. The verification notes on every record in the file downgrade the earlier 'contradicts' labels to 'complements' for this reason.
+Works: [[golovin-2011-adaptive-submodularity-theory]], [[chen-2021-contingency-aware-influence]], [[kamarthi-2020-influence-maximization-unknown]]
 
-**Bearing on Paul's claim.** Non-submodularity arrives *within* a single campaign once adoption is threshold-like or competition is linear-threshold. It does not need cross-campaign compounding. That makes the tier-3 boundary closer than the addendum implies. It also means RL4CCIM shows complex contagion is non-submodular, not that the cross-campaign problem is.
+### The RL envelope: learned seeding policies
 
-Works: [[borodin-nd-threshold-models-competitive]], [[chen-2023-complex-contagion-influence]], [[arya-2025-relink-edge-activation]], [[ma-2022-adversarial-attack-graph]], [[golovin-2011-adaptive-submodularity-theory]]
+**Foundation.** [[sutton-2018-reinforcement-learning-introduction]] supplies the vocabulary: MDPs, DQN-family function approximation, the deadly triad and off-policy evaluation. The IM papers built on it share one recipe: a graph encoder (S2V, GAT, GCN+DiffPool, Node2Vec features), then a DQN or Double-DQN, plus a reward-shaping trick to make training tractable.
 
-### Learned policies: the RL and GNN envelope (Tier 3)
+**The lineage.**
+- [[chen-2021-contingency-aware-influence]] (RL4IM) uses a surrogate reward to cut computation from O(2^b) to O(1). Its gap bound becomes arbitrarily loose as q approaches 0 or 1.
+- [[chen-2023-complex-contagion-influence]] (RL4CCIM) builds directly on RL4IM, adding solution filtering, reward-prioritised replay, a global marginal reward and a GAT encoder.
+- [[kamarthi-2020-influence-maximization-unknown]] learns a node-query policy.
+- [[arya-2025-relink-edge-activation]] learns edge activation under a per-node out-degree budget.
 
-**The Tambe-group lineage.** Paul's addendum names a progression: Khalil -> GCOMB -> Kamarthi -> Chen 2021 -> Chen 2023. Three of its links are in this set.
+**What each claims.**
+- **RL4IM:** parity with the CHANGE greedy (200-node synthetic graphs, q=0.6, budget 8). The case for RL is runtime on unseen graphs, where CHANGE takes about 10 hours at 20 seeds on 1,000 nodes.
+- **RL4CCIM:** best normalized influence on all nine small networks, deterministic cascades with p0=1, p1=0 (some ties). Greedy collapses on India (0.0396 vs 0.5347). RL4CCIM matches the MIP optimum on 2 networks and comes within about 6–8% on 3 others.
+- **Kamarthi:** 7.91–26.6% of the CHANGE-to-optimal gap closed, best variant per family. The text alternates between 7–23 and 7–26.
+- **RELINK:** beats PSNA in 456 of 480 configurations, with the smallest edge at large k and on dense graphs.
 
-[[kamarthi-2020-influence-maximization-unknown]] (arXiv 2019, AAMAS 2020) learns which nodes to query when the graph is hidden. The setup is 5 queries from 5 random starts, then greedy picks 10 seeds on the discovered subgraph. Geometric-DQN closes 7.91-26.6% of the gap between CHANGE and greedy-optimal, depending on network family (Table 4, best variant per family). The paper's own text quotes this range inconsistently, as 7-23% in some places and 7-26% in others.
+**The pattern.** Learned policies win on quality only where greedy's premise fails: non-submodular objectives, or hidden information. Elsewhere their advantage is test-time speed.
 
-[[chen-2021-contingency-aware-influence]] (RL4IM) casts seeding with probabilistic take-up as an MDP. Each invited node accepts with a known, uniform q. Training is made tractable by a state abstraction and a surrogate reward (O(2^b) -> O(1); the Thm 3 gap bound grows arbitrarily loose as q nears 0 or 1). On 200-node synthetic graphs (IC p=0.1, q=0.6, budget 8, 200 runs per setting), it only *matches or slightly beats* CHANGE greedy. Its case rests on runtime on unseen graphs: CHANGE takes about 10 hours at 20 seeds on 1,000 nodes.
+**Learned ranking without sequence.** [[kumar-2022-influence-maximization-social]] is the non-sequential cousin: a learned ranker, not a policy.
 
-[[chen-2023-complex-contagion-influence]] (RL4CCIM, IJCAI-23) builds on RL4IM and gives RL a real quality win. Under deterministic K-complex cascades on nine small networks, it posts the best normalised influence on every network (some ties). On India it scores 0.5347 against greedy's 0.0396. On DC and DOSIM it matches the MIP optimum, and it sits about 6-8% below the optimum on CHANGE, MFP and SPY.
+**Feasibility limit.** Sutton-Barto sharpens a constraint on Paul's Tier-3 'moat'. The book's successes needed about 3×10^5 to 5×10^6 episodes, while a real CU campaign yields roughly one episode per two-year cycle. Any learned policy would therefore be trained inside the same unvalidated simulator. Off-policy evaluation from logged contacts and funding (Sec. 16.7) is the more transferable idea.
 
-**Outside the lineage.** [[arya-2025-relink-edge-activation]] (RELINK) trains a Double DQN on 40 small synthetic graphs and transfers it to 20 real ones. It beats Random, Degree and FoF in about 462-464 of 480 configurations and PSNA in 456 of 480. The margin narrows as the edge budget grows, and PSNA can win on dense graphs at small seed sets. [[kumar-2022-influence-maximization-social]] (SGNN) regresses each node's standalone influence from struc2vec embeddings and takes the top-k. Only a preview of this paper was available, so all of its claims are UNVERIFIED.
+Works: [[sutton-2018-reinforcement-learning-introduction]], [[chen-2021-contingency-aware-influence]], [[chen-2023-complex-contagion-influence]], [[kamarthi-2020-influence-maximization-unknown]], [[arya-2025-relink-edge-activation]], [[kumar-2022-influence-maximization-social]]
 
-**What the strand shows.** RL beats greedy on quality only where greedy has no guarantee (complex contagion) or no graph (Kamarthi). Where the objective is submodular, RL reaches parity and its advantage is runtime. None of these papers models compounding across campaigns or temporal credit assignment across multiple votes, which is Paul's research question (d).
+### Competition and the limits of submodularity
 
-Works: [[chen-2021-contingency-aware-influence]], [[chen-2023-complex-contagion-influence]], [[kamarthi-2020-influence-maximization-unknown]], [[arya-2025-relink-edge-activation]], [[kumar-2022-influence-maximization-social]]
+**Positive results.** This strand marks where greedy guarantees survive once there is a rival or a threshold.
+- [[bharathi-nd-competitive-influence-maximization]]: under competitive IC with exponential delays and random tie-breaking, the *last* mover's reach is monotone submodular in its own seeds. Greedy gets (1-1/e) of the best response, and the price of competition is at most 2. Pure Nash equilibria need not exist, and the first-mover problem is solved only on disjoint lines.
+- [[ma-2022-adversarial-attack-graph]] gives the precise single-campaign condition for threshold models: submodularity holds iff the threshold CDF is concave on the positive domain (Proposition 2). Saturating-coverage objectives beat raw centrality.
 
-### Cheap heuristics against greedy
+**Negative results.**
+- [[borodin-nd-threshold-models-competitive]] shows the competitive LT extensions mostly lose the guarantee. The weight-proportional model is not even monotone: one seed lowers A's root probability from 11/40 to 103/400. The separated-threshold model is monotone but not submodular, and the follower problem is NP-hard to approximate within Ω(N^(1/2-eps)). Only the OR model keeps the guarantee.
+- [[chen-2023-complex-contagion-influence]] proves K-complex contagion IM non-submodular and NP-hard.
+- [[kempe-2015-maximizing-spread-influence]] had already flagged general thresholds as inapproximable.
 
-This strand asks how much spread a cheap rule gives up against greedy.
+**What the works agree on.** The diffusion model, not the algorithm, decides whether greedy is principled.
 
-**Trivedi.** [[trivedi-2020-efficient-influence-maximization]] has a degree-discount rule (DHICM) that lands 12.5% below CELF at k=10 and 7.9% below at k=30 on NetHept (15,233 nodes, IC p=0.01). It beats plain degree by 10-16% on the same graph. The Monte Carlo run count is not reported. The paper's MICM edge-probability formula raises every algorithm's spread, which follows mechanically from leaving a deliberately low baseline p.
+**Where Melange sits (Paul's notes, leads not findings).** Melange's two-colour cascade cites Bharathi but departs from it in three ways:
+- it uses synchronous hops with A winning every tie;
+- the frontier greedy scales marginals by leverage or competitiveness factors;
+- the coalition allocator water-fills on singleton marginals.
 
-**Almazaydeh.** [[almazaydeh-2026-heuristic-centrality-methods]] tests Facebook ego subgraphs at 1,000 nodes (IC p=0.1, k=10, 10 runs x 50 MC simulations). PageRank reaches 921.78/954.90 = 96.5% of IMM in 0.4 s; the paper itself says 96.3%. CELF++ collapses to 12.9% of IMM, with CV up to 71.5% at 500 nodes. The authors blame 50 MC draws per marginal plus Python but never test that explanation. The paper also has several internal inconsistencies: percentages, the 794x speed-up and Table 4 against its text.
+Melange's flip term pflip = a/(a+b) has Borodin's weight-proportional form, but it has no propagation.
 
-**Ma.** [[ma-2022-adversarial-attack-graph]] points the other way on a saturated-coverage objective. Degree and betweenness are the weakest selectors there, and greedy coverage beats PageRank.
+Works: [[bharathi-nd-competitive-influence-maximization]], [[borodin-nd-threshold-models-competitive]], [[ma-2022-adversarial-attack-graph]], [[chen-2023-complex-contagion-influence]], [[kempe-2015-maximizing-spread-influence]]
 
-**Kumar.** [[kumar-2022-influence-maximization-social]] shows the main failure mode of learned and heuristic rankers. Ranking by standalone spread ignores overlap between seeds, which is the problem degree-discount exists to fix.
+### Continuous and temporal competition in voter dynamics
 
-**Reading across the four.** Centrality comes close to greedy when the objective is plain single-colour IC spread and greedy's marginals are noisy. It falls behind when the objective saturates or seeds overlap. The surviving lesson for Melange is about Monte Carlo noise more than about centrality. A greedy loop is only as good as its marginal estimates, and comparing marginals under common random numbers is what protects it.
+Both papers come from the Brede group, use non-progressive voter models with a budgeted active controller, and use no political, lobbying or money data.
 
-Works: [[trivedi-2020-efficient-influence-maximization]], [[almazaydeh-2026-heuristic-centrality-methods]], [[kumar-2022-influence-maximization-social]], [[ma-2022-adversarial-attack-graph]]
+**Allocation in space.** [[moreno-2021-shadowing-shielding-effective]] studies one 1,133-node email network against a passive, known opponent.
+- The continuous optimum is spread out: about 111 of 1,133 nodes get above-average allocation, with std/mean 0.11 elsewhere.
+- It beats the best discrete plan by 5–10% when the opponent targets fewer than 100 nodes.
+- Hub targeting explains discrete optima, while shadowing (spend where the opponent spends) and shielding (spend on the opponent's targets' neighbours) explain continuous ones.
+- Continuous shadowing plus shielding gets within 1.89e-3 of optimal vote share, against 2.09e-2 for degree targeting.
+- A richer controller shadows the opponent and a poorer one avoids its nodes. The two-sided Nash equilibrium is uniform allocation.
 
-### Competition, timing and continuous allocation
+**Allocation in time.** [[cai-2025-competitive-influence-maximization]] adds the time dimension that Moreno explicitly lists as a limitation.
+- Against a fixed opponent, the best strategy is to hold budget back and spend late.
+- In Table 2, an optimized start beats t=0 in every dataset, horizon and budget ratio. On the 'Congress votes' mentions graph at T=16 with equal budgets, vote share is 0.705 vs 0.500.
+- Richer controllers start earlier, and high-degree nodes relax more slowly.
+- In the two-player game, the richer side moves first and the second mover can only offset its lead, not overtake it.
 
-**Two formalisms.**
-- *Progressive cascades:* [[bharathi-nd-competitive-influence-maximization]] and [[borodin-nd-threshold-models-competitive]]. A node, once coloured, stays coloured.
-- *Non-progressive voter models:* [[moreno-2021-shadowing-shielding-effective]] and [[cai-2025-competitive-influence-maximization]] (same Brede group). Opinions can flip back, and controllers allocate a continuous budget against an opponent.
+**Bearing on Melange.** This strand is the most direct design critique of Melange's money layer. It is a stationary, single-node a/(a+b) form against fixed industry money, with no spread to neighbours and no time term. Moreno supports the concept of an opponent-response ('shadowing') term. Cai shows timing and reversibility change outcomes. Neither calibrates anything.
 
-**Moreno.** On a single 1,133-node email network with zealots, the continuous optimum spreads out. About 111 of 1,133 nodes get above-average allocation, and the rest is near uniform (std/mean 0.11). This beats the best discrete K-node plan by 5-10% when the passive opponent targets fewer than 100 nodes. Hub targeting explains discrete optima, but continuous optima follow *shadowing* (spend where the opponent spends) and *shielding* (spend on the neighbours of the opponent's targets). In the low-allocation limit the best response is linear in the opponent's spend with coefficient (Ba/Bb - 1): a richer controller shadows the opponent, and a poorer one avoids the opponent's nodes. With two active controllers, the unique pure Nash equilibrium is uniform allocation.
+Works: [[moreno-2021-shadowing-shielding-effective]], [[cai-2025-competitive-influence-maximization]]
 
-**Cai.** Cai adds time. Against a fixed opponent, the best strategy is to hold budget and spend late. An optimized start beat t=0 in every row of Table 2: five public graphs, T in {16, 256}, budget ratio in {0.1, 1, 10}. On the 'Congress votes' mentions graph at T=16 with equal budgets, the vote share is 0.705 against 0.500. High-degree nodes settle slowly, so short horizons stay far from equilibrium (degree of equilibrium at most 0.82 at T=16). In the two-controller game, the side with more budget moves first, and the second mover can only offset its lead, not overtake it.
+### Behaviour-aware framing
 
-**Where they disagree with the cascade papers.** The cascade papers make competition a question of who reaches a node first, and they give guarantees only for a fixed opponent. The voter papers show that once opinions can flip back, timing and whether a budget is concentrated or spread matter as much as seed choice. Both camps agree on one point: an opponent that responds removes the clean guarantees. Bharathi solves only lines; Moreno and Cai find equilibria only numerically.
+[[zareie-2023-influence-maximization-social]] is a data-free narrative survey. It splits IM into behaviour-agnostic and behaviour-aware methods, and the behaviour-aware side into four families: interest-aware, opinion-aware, money-aware and physical-world-aware.
 
-Works: [[bharathi-nd-competitive-influence-maximization]], [[borodin-nd-threshold-models-competitive]], [[cai-2025-competitive-influence-maximization]], [[moreno-2021-shadowing-shielding-effective]]
-
-### Behaviour-aware framing and seed take-up
-
-[[zareie-2023-influence-maximization-social]] is a narrative survey with no data. It splits influence maximization into behaviour-agnostic and behaviour-aware methods. The behaviour-aware side has four families: interest-aware, opinion-aware (trust-agnostic vs signed friend/foe), money-aware (cost-aware vs profit-aware) and physical-world-aware. It judges three things:
+**Judgments useful against the rest of the theme:**
 - Topic-aware edge probabilities are the most realistic but need rich history.
-- Trust-agnostic models, which treat every tie as positive, are unrealistic.
-- Profit-aware IM needs per-user valuations that are rarely available.
+- Trust-agnostic (all-positive-tie) models are unrealistic.
+- Profit-aware IM needs per-user valuations that are rarely available, so cost-aware IM is the more practical option.
+- Changing the diffusion model can change accuracy substantially.
 
-The Melange code pairs this survey with [[chen-2021-contingency-aware-influence]] as 'Chen/SNAM' to back contingency-aware seeding. Neither paper supplies an empirical take-up rate. Chen's q=0.6 is an arbitrary simulation default, and the survey gives no magnitudes.
+**Its place in the theme.** It is the only work that raises silent users and adaptive diffusion as open problems. It also places every other paper here: all of them are behaviour-agnostic structural IM except the contingency-aware work, which adds a uniform take-up q.
 
-[[kamarthi-2020-influence-maximization-unknown]] is the other form of behavioural uncertainty: an unknown graph instead of unknown willingness. Paul's research question (b) asks whether unknown relationship or persuasion costs can be learned by probing. Kamarthi probes edges, not costs, so it is at best an analogue.
+**Bearing on Melange (Paul's notes).** Melange's single topic-independent kernel across 18 CU categories is trust-agnostic: edge magnitude varies, never sign. Its optimizer is profit-aware in shape (owner-set PERS, IMP weights), which is exactly the data the survey says is usually missing.
 
-The strand's message is that member features belong in influence maximization, and that the hardest inputs (take-up, signed ties, valuations) are exactly the ones the literature leaves unestimated.
-
-Works: [[zareie-2023-influence-maximization-social]], [[chen-2021-contingency-aware-influence]], [[kamarthi-2020-influence-maximization-unknown]]
+Works: [[zareie-2023-influence-maximization-social]]
 
 ## Agreements and debates
 
-**1. Is the full problem non-submodular, and does RL4CCIM show it?**
+**1. Greedy vs. cheap heuristics: how big is the gap?**
+- [[kempe-2015-maximizing-spread-influence]] (greedy +18% over degree, +40% over distance under LT) and [[ma-2022-adversarial-attack-graph]] (degree and betweenness are the weakest selectors) find greedy-type selection clearly better.
+- [[trivedi-2020-efficient-influence-maximization]] finds degree-discount 8–12% short of CELF.
+- [[almazaydeh-2026-heuristic-centrality-methods]] finds PageRank at 96.5% of IMM and CELF++ at 12.9%.
 
-*Paul's position:* the cross-campaign problem is non-submodular, RL4CCIM confirms this, and the moat lives there.
+These are not direct contradictions. The results differ by diffusion parameter (p=0.01 vs 0.1), graph density, objective, and especially Monte Carlo budget. Almazaydeh's CELF++ collapse is most plausibly under-sampled marginals; the authors offer that explanation but never test it. What they share is that the estimation regime governs whether a guarantee shows up in practice. Almazaydeh also has internal arithmetic errors: 96.3% stated vs 96.5% computed, 794x vs 809x, 11.2% vs 12.9%.
 
-*The evidence:* [[chen-2023-complex-contagion-influence]] proves non-submodularity for one seeding under deterministic or probabilistic K-complex adoption. It says nothing about compounding across campaigns. [[borodin-nd-threshold-models-competitive]] reaches non-submodularity by a different route, competitive linear threshold, also within a single campaign. Against both, [[bharathi-nd-competitive-influence-maximization]] keeps last-mover submodularity under competitive IC.
+**2. Greedy vs. RL: speed or quality?**
+- [[chen-2021-contingency-aware-influence]] reaches only parity with greedy. Its argument for RL is runtime.
+- [[chen-2023-complex-contagion-influence]] shows greedy collapsing (India 0.0396 vs 0.5347) once spread is non-submodular.
+- [[arya-2025-relink-edge-activation]] and [[kamarthi-2020-influence-maximization-unknown]] beat heuristic baselines, not greedy optima. RELINK's margin is narrowest at large k and on dense graphs.
 
-*Resolution:* which regime applies depends on the adoption kernel (IC vs threshold) and on whether the opponent responds. Repetition is not the deciding factor. The cross-campaign claim is untested by anything in this set. The record for [[chen-2021-contingency-aware-influence]] adds a further note: that paper *assumes* submodularity, so any attribution of the non-submodular argument to the 2021 paper rather than the 2023 one is a misattribution.
+Read together: RL beats greedy on quality only where greedy's premise fails. Paul's claim that RL4CCIM "confirms" the cross-campaign problem is non-submodular overstates it. RL4CCIM proves non-submodularity for a stylized K-complex model on 9 small simulated graphs. Whether congressional coalition formation follows that model is the untested hypothesis (a).
 
-**2. Does RL beat greedy?**
+**3. Does competition preserve submodularity?**
+- Yes for the last mover in competitive IC ([[bharathi-nd-competitive-influence-maximization]]).
+- Mostly no for competitive LT ([[borodin-nd-threshold-models-competitive]]).
 
-- [[chen-2021-contingency-aware-influence]]: parity with CHANGE greedy on 200-node synthetic graphs. The advantage is runtime.
-- [[chen-2023-complex-contagion-influence]]: large quality wins where greedy finds no effective seed set (India: 0.5347 vs 0.0396 normalised influence).
-- [[arya-2025-relink-edge-activation]]: beats hand heuristics in about 96% of 480 configurations. The margin is smallest at large edge budgets and on dense graphs.
-- [[kamarthi-2020-influence-maximization-unknown]]: wins only because the graph is hidden.
+The results hinge on the diffusion model and on whether the rival is fixed. Both papers treat the opponent as fixed for the guarantee. Bharathi shows equilibrium reasoning is only tractable on lines.
 
-*Consensus:* RL wins on quality only outside the submodular, fully observed regime.
+**4. Concentrate or spread?** Kempe-style discrete seeding favours selected nodes. [[moreno-2021-shadowing-shielding-effective]] shows the continuous optimum is diffuse and opponent-shaped, and [[cai-2025-competitive-influence-maximization]] says to spend late. Discrete hub logic is an artefact of the fixed-gain, single-shot regime.
 
-**3. Do centrality heuristics nearly match greedy?**
+**5. Is adaptivity worth much?** [[golovin-2011-adaptive-submodularity-theory]] gives a policy-level guarantee. Peng and Chen (2019, outside the vault) bound the adaptive advantage in myopic IC to at most a factor of 4. They also show adaptive greedy's guarantee drops to at least (1-1/e)/4 there. Tier 2's value depends on what is observed, and the addendum does not specify that.
 
-- [[almazaydeh-2026-heuristic-centrality-methods]]: yes. PageRank reaches 96.5% of IMM (1,000-node Facebook subgraphs, IC p=0.1, k=10).
-- [[trivedi-2020-efficient-influence-maximization]]: mostly. DHICM is 7.9-12.5% below CELF on NetHept (k=30 and k=10).
-- [[ma-2022-adversarial-attack-graph]]: no. Degree and betweenness are weakest on a saturated-coverage objective.
+**6. Can Tier 3 be trained at all?** [[sutton-2018-reinforcement-learning-introduction]]'s case studies need 10^5–10^6 or more episodes. A real campaign yields about one per cycle, so a learned outer policy would learn the simulator, not Congress.
 
-The disagreement is mostly about objectives: plain spread vs saturating coverage. Almazaydeh's CELF++ collapse (12.9% of IMM) is very likely an artifact of its Monte Carlo budget, a cause the paper names but never tests. It should not be read as a verdict on greedy.
-
-**4. Concentrate or spread?**
-
-- [[moreno-2021-shadowing-shielding-effective]]: continuous optima spread widely, and hub targeting explains only discrete optima.
-- [[cai-2025-competitive-influence-maximization]]: small budgets go to low-degree nodes.
-- [[ma-2022-adversarial-attack-graph]]: good selectors spread seeds across communities.
-- [[kumar-2022-influence-maximization-social]]: its top-k-by-standalone-spread rule pulls the other way, and the cluster reads it as a caution against that rule.
-
-**5. Progressive or reversible adoption.**
-
-Bharathi and Borodin assume a reached node stays reached. Cai and Moreno let opinions flip back, and Cai finds timing (spend late) dominant. No work in the set tests which assumption fits cosponsorship.
-
-**6. Reliability of the source texts.**
-
-Several works contradict themselves internally:
-- [[almazaydeh-2026-heuristic-centrality-methods]]: 96.3% vs 96.5%, 11.2% vs 12.9%, a stated 794x speed-up vs the 809x its own times give, and Table 4 vs its text.
-- [[kamarthi-2020-influence-maximization-unknown]]: 7-23% vs 7-26%, plus the multi-network training claim against Table 3.
-- [[chen-2023-complex-contagion-influence]]: 24.3% vs 24.2%.
-
-The Golovin-Krause pair corrects itself between versions: squared-log bounds replace log bounds, and the myopic-feedback result is retracted.
+**Flagged errors (actual, not stylistic):**
+- **Chen 2021 author list.** The hub citation for [[chen-2021-contingency-aware-influence]] gives the authors as Chen, Kamarthi, Wilder, Tambe. The paper is by Haipeng Chen, Wei Qiu, Han-Ching Ou, Bo An and Milind Tambe (UAI 2021, PMLR 161:1535-1545; arXiv 2106.07039).
+- **Tier-2 63% claim.** It is stated without the full-adoption-feedback condition.
+- **"Four entries sufficient" sentence.** It contradicts the seven RL-IM entries actually listed.
+- **Kamarthi's range.** It is reported internally as both 7–23% and 7–26%.
 
 ## Methods
 
-**Dominant methods.**
+**Dominant methods:**
+1. **Formal proofs.** Submodularity and monotonicity via live-edge or triggering-set coupling, hardness reductions, and approximation and price-of-competition bounds: [[kempe-2015-maximizing-spread-influence]], [[golovin-2011-adaptive-submodularity-theory]], [[bharathi-nd-competitive-influence-maximization]], [[borodin-nd-threshold-models-competitive]], and the theory sections of [[ma-2022-adversarial-attack-graph]] and [[chen-2023-complex-contagion-influence]].
+2. **Monte Carlo IC/LT simulation benchmarks** on public or synthetic graphs: [[trivedi-2020-efficient-influence-maximization]], [[almazaydeh-2026-heuristic-centrality-methods]], [[kumar-2022-influence-maximization-social]].
+3. **Deep RL (DQN or Double-DQN) with graph encoders**, trained on many small graphs and tested on held-out ones: [[chen-2021-contingency-aware-influence]], [[chen-2023-complex-contagion-influence]], [[kamarthi-2020-influence-maximization-unknown]], [[arya-2025-relink-edge-activation]].
+4. **Mean-field, gradient and hill-climbing optimization in voter models**: [[moreno-2021-shadowing-shielding-effective]], [[cai-2025-competitive-influence-maximization]].
 
-1. **Formal proofs and reductions.** The Golovin-Krause pair, [[bharathi-nd-competitive-influence-maximization]], [[borodin-nd-threshold-models-competitive]], and the theory sections of [[ma-2022-adversarial-attack-graph]] and [[chen-2023-complex-contagion-influence]]. They use Nemhauser-style telescoping, counterexamples on small trees, Vertex Cover and Set Cover reductions, and Vetta's utility-system theorem.
-   - *Weakness:* they establish properties of a model kernel and say nothing about whether real adoption follows that kernel.
+**Shared weaknesses:**
+- **No ground truth.** No work observes real diffusion, adoption or persuasion. Edge probabilities are fixed by rule: p=0.01 or 0.1, uniform 0.5, structural formulas like MICM, or random-walk powers. Take-up q is an arbitrary simulation default (0.6 in Chen 2021, which Melange's seed_prob baseline mirrors).
+- **Thin Monte Carlo reporting.** Trivedi does not report R. Almazaydeh uses 50 per marginal. Error bars are often absent.
+- **Small or single graphs.** RL4IM uses 200-node synthetic graphs, RL4CCIM 9 small networks with deterministic cascades, Moreno one email network, Kempe one co-authorship graph.
+- **Selective reporting.** Kamarthi reports the best variant per test set without confidence intervals.
+- **Internal numeric inconsistencies** in Almazaydeh, Kamarthi and Chen 2023 (24.3% vs 24.2%).
+- **RL baselines are often heuristics, not greedy optima.** RELINK and Kamarthi compare against heuristics, and Chen 2023 reimplements DPIM itself.
+- **Opponents are fixed or passive** in every competitive paper except the Moreno and Cai equilibrium sections.
+- **Static, fully known graphs** everywhere except Kamarthi.
 
-2. **Monte Carlo simulation of IC, SIR or LT on synthetic and public graphs.** Used by every empirical paper.
-   - *Weaknesses:*
-     - Edge probabilities are fixed by convention (p=0.01 in Trivedi; p=0.1 in Almazaydeh, Kamarthi and Chen 2021; uniform 0.5 or random in RELINK).
-     - Take-up rates are arbitrary (q=0.6).
-     - Run counts are sometimes unreported ([[trivedi-2020-efficient-influence-maximization]]) or too small for greedy marginals ([[almazaydeh-2026-heuristic-centrality-methods]], 50 per marginal).
-     - Error bars are often missing.
-     - No paper calibrates its kernel to an observed diffusion.
-
-3. **Deep RL (DQN or Double-DQN with structure2vec, GAT, GCN+DiffPool, or Node2Vec embeddings).** Used by [[chen-2021-contingency-aware-influence]], [[chen-2023-complex-contagion-influence]], [[kamarthi-2020-influence-maximization-unknown]] and [[arya-2025-relink-edge-activation]]; the GNN regressor of [[kumar-2022-influence-maximization-social]] is a relative.
-   - *Weaknesses:*
-     - Small training graphs: 200 nodes, and 25-150 nodes for RELINK.
-     - Reward shaping and solution filtering that bake in assumptions.
-     - Best variant reported per test set ([[kamarthi-2020-influence-maximization-unknown]]).
-     - No guarantees.
-     - Expensive training: RELINK took 6,257 s for 2,000 epochs.
-     - Evaluation against greedy baselines that are themselves approximate.
-
-4. **Continuous optimisation and mean-field analysis in voter models.** Used by [[cai-2025-competitive-influence-maximization]] and [[moreno-2021-shadowing-shielding-effective]]: gradient ascent with simplex projection, hill climbing, heterogeneous mean-field, relaxation times, and iterated best response for Nash start times.
-   - *Weaknesses:* full knowledge of the network, unit edge weights, abstract time units, no noise, and in Moreno's case a single network.
-
-5. **Narrative taxonomy.** [[zareie-2023-influence-maximization-social]].
-   - *Weakness:* no data and no magnitudes.
-
-**Cross-cutting weakness.** No study uses observed outcomes in any political, legislative or lobbying setting. Every "spread", "vote share" or "influence" figure in this theme is a simulated output of the authors' model on the authors' graphs. It is never measured influence. It is never a closeness, access or introduction probability (D-025).
+**Strength:** the theory results are exact. They tell you precisely when a guarantee applies, which is the theme's main transferable value.
 
 ## How the works relate
 
-- [[golovin-2011-adaptive-submodularity-theory]] — extends-and-corrects — [[golovin-2011-adaptive-submodularity-theory]]: Same authors. The JAIR version extends the COLT abstract, replaces its logarithmic average-cost cover factors with squared-log factors (flaw found by Nan and Saligrama 2017), and retracts the myopic-feedback viral-marketing model that COLT Thm 6 covered.
-- [[chen-2023-complex-contagion-influence]] — builds-on — [[chen-2021-contingency-aware-influence]]: RL4CCIM takes RL4IM as its base architecture and uses it as a baseline (Sec. 5.2, 6.1). Same Tambe group.
-- [[chen-2023-complex-contagion-influence]] — cites — [[kamarthi-2020-influence-maximization-unknown]]: RL4CCIM cites Kamarthi et al. (AAMAS 2020) on learned graph sampling. Same lineage; Wilder and Tambe co-author both.
-- [[borodin-nd-threshold-models-competitive]] — cites / bounds-scope — [[bharathi-nd-competitive-influence-maximization]]: Borodin cites Bharathi-Kempe-Salek among greedy approaches to competition. Bharathi keeps last-mover submodularity under competitive IC; Borodin shows most competitive linear-threshold variants lose it.
-- [[cai-2025-competitive-influence-maximization]] — extends — [[moreno-2021-shadowing-shielding-effective]]: Same Brede group and voter-model line of continuous influence maximisation. Cai adds timing, which Moreno names as its time-invariance limitation (p.14). Cai cites a different Moreno 2020 zealotry paper, not this one.
-- [[cai-2025-competitive-influence-maximization]] — cites / contrasts-formalism — [[bharathi-nd-competitive-influence-maximization]]: Cai cites Bharathi only for budget constraints. Cai's non-progressive voter model is an alternative to Bharathi's progressive competitive IC, not a contradiction of it.
-- [[chen-2023-complex-contagion-influence]] — marks-boundary-of — [[golovin-2011-adaptive-submodularity-theory]]: K-complex contagion is non-submodular (Thm 1), so it falls outside the adaptive-submodular class. This sets the scope of the theorem and does not contradict it.
-- [[arya-2025-relink-edge-activation]] — marks-boundary-of — [[golovin-2011-adaptive-submodularity-theory]]: RELINK states that edge activation in closed networks is non-submodular, so the Thm 4 bound does not carry over (consistent with Thm 9 hardness).
-- [[ma-2022-adversarial-attack-graph]] — complements — [[chen-2023-complex-contagion-influence]]: Ma's Proposition 2 (a concave threshold CDF gives submodularity) is the converse of Chen's S-shaped complex-contagion case, where submodularity fails.
-- [[almazaydeh-2026-heuristic-centrality-methods]] — tension — [[ma-2022-adversarial-attack-graph]]: Almazaydeh finds PageRank within 96.5% of IMM; Ma finds degree, betweenness and PageRank weaker than greedy coverage. The objectives differ (IC spread vs saturated coverage), so this is a tension, not a direct contradiction.
-- [[trivedi-2020-efficient-influence-maximization]] — agrees (same question) — [[almazaydeh-2026-heuristic-centrality-methods]]: Both find cheap heuristics close to greedy under IC: DHICM 7.9-12.5% below CELF on NetHept; PageRank 96.5% of IMM on Facebook subgraphs.
-- [[kumar-2022-influence-maximization-social]] — contrasts — [[trivedi-2020-efficient-influence-maximization]]: Trivedi's degree-discount explicitly corrects for overlap between seeds; Kumar's top-k-by-standalone-influence ignores it.
-- [[chen-2021-contingency-aware-influence]] — contrasts — [[golovin-2011-adaptive-submodularity-theory]]: Chen positions RL4IM against adaptive IM, which it says does not handle willingness uncertainty. This is a contrast of approach, not a refutation.
-- [[arya-2025-relink-edge-activation]] — same-method — [[chen-2021-contingency-aware-influence]]: Both are deep-RL (DQN-family) influence maximization with learned graph embeddings. Topical link; RELINK does not cite Chen.
-- [[kumar-2022-influence-maximization-social]] — same-method — [[arya-2025-relink-edge-activation]]: Both use graph embeddings and GNN-style encoders to rank nodes or edges for influence maximization.
-- [[kamarthi-2020-influence-maximization-unknown]] — same-lineage / complements — [[chen-2021-contingency-aware-influence]]: Both are Tambe-group RL for influence maximization under uncertainty: Kamarthi over an unknown graph, Chen over uncertain take-up.
-- [[zareie-2023-influence-maximization-social]] — co-cited-in-code — [[chen-2021-contingency-aware-influence]]: Melange code cites the pair as 'Chen/SNAM' for contingency-aware seeding. The survey itself does not cite Chen.
-- [[moreno-2021-shadowing-shielding-effective]] — complements — [[bharathi-nd-competitive-influence-maximization]]: Continuous competitive allocation in a voter model against discrete competitive seeding in a progressive cascade; two formalisms for the same rival-campaign problem.
-- [[chen-2021-contingency-aware-influence]] — agrees — [[almazaydeh-2026-heuristic-centrality-methods]]: Both point to the learned or cheap method's advantage being runtime, not spread: RL4IM reaches parity with greedy, and PageRank comes near IMM at a fraction of the cost.
-- [[borodin-nd-threshold-models-competitive]] — agrees — [[chen-2023-complex-contagion-influence]]: Both show that threshold-type adoption, competitive or complex, breaks submodularity within a single campaign.
+- [[golovin-2011-adaptive-submodularity-theory]] — extends — [[kempe-2015-maximizing-spread-influence]]: Generalizes the submodular greedy guarantee for IM to adaptive policies; reduces to the classical notion for deterministic priors.
+- [[trivedi-2020-efficient-influence-maximization]] — builds-on — [[kempe-2015-maximizing-spread-influence]]: Speeds up Kempe-style greedy under IC with a degree-discount heuristic benchmarked against CELF.
+- [[bharathi-nd-competitive-influence-maximization]] — extends — [[kempe-2015-maximizing-spread-influence]]: Extends IC submodularity to a follower facing a fixed competing cascade, a case Kempe leaves open.
+- [[borodin-nd-threshold-models-competitive]] — extends — [[kempe-2015-maximizing-spread-influence]]: Extends the Kempe-Kleinberg-Tardos LT model to two technologies and shows the greedy guarantee mostly fails.
+- [[borodin-nd-threshold-models-competitive]] — cites — [[bharathi-nd-competitive-influence-maximization]]: Borodin cites Bharathi-Kempe-Salek among greedy approaches to competitive extensions; the IC follower result and the LT negative results bracket the guarantee.
+- [[chen-2023-complex-contagion-influence]] — builds-on — [[chen-2021-contingency-aware-influence]]: RL4CCIM uses RL4IM as base architecture and baseline (same Tambe group).
+- [[chen-2023-complex-contagion-influence]] — complements — [[kempe-2015-maximizing-spread-influence]]: Leaves the triggering-set regime Kempe proves submodular; a different model, not a contradiction of Kempe's theorems.
+- [[chen-2023-complex-contagion-influence]] — complements — [[golovin-2011-adaptive-submodularity-theory]]: Shows the submodularity premise behind G-K bounds fails under complex contagion.
+- [[chen-2021-contingency-aware-influence]] — complements — [[golovin-2011-adaptive-submodularity-theory]]: Explicitly contrasts with adaptive IM, which it says does not model seed willingness uncertainty.
+- [[chen-2021-contingency-aware-influence]] — extends — [[kempe-2015-maximizing-spread-influence]]: Adds a probabilistic seed take-up step that Kempe's model lacks.
+- [[kamarthi-2020-influence-maximization-unknown]] — builds-on — [[kempe-2015-maximizing-spread-influence]]: Relaxes the known-graph assumption; uses greedy IC IM as its influence oracle.
+- [[kamarthi-2020-influence-maximization-unknown]] — complements — [[chen-2021-contingency-aware-influence]]: Same Tambe-group RL-for-IM program: one handles uncertain graph structure, the other uncertain seed willingness.
+- [[arya-2025-relink-edge-activation]] — same-method — [[chen-2023-complex-contagion-influence]]: Deep Q-learning for a non-submodular IM objective with no optimality guarantee.
+- [[arya-2025-relink-edge-activation]] — complements — [[golovin-2011-adaptive-submodularity-theory]]: RELINK's edge-activation objective is non-submodular, so G-K-style bounds do not carry over.
+- [[kumar-2022-influence-maximization-social]] — complements — [[trivedi-2020-efficient-influence-maximization]]: Both trade greedy's cost for a cheaper ranker under IC; one learned (GNN), one degree-discount.
+- [[almazaydeh-2026-heuristic-centrality-methods]] — contradicts — [[kempe-2015-maximizing-spread-influence]]: Finds centrality heuristics within ~3.5% of IMM and CELF++ collapsing, whereas Kempe finds greedy clearly beats centrality; tension driven by different graphs, p and MC budgets.
+- [[almazaydeh-2026-heuristic-centrality-methods]] — same-method — [[trivedi-2020-efficient-influence-maximization]]: Both are IC Monte Carlo benchmarks of heuristics versus greedy on spread and runtime.
+- [[ma-2022-adversarial-attack-graph]] — contradicts — [[almazaydeh-2026-heuristic-centrality-methods]]: Ma finds degree, betweenness and PageRank weaker than greedy coverage selection; Almazaydeh finds PageRank near-optimal. Different objectives, so a tension rather than a head-on contradiction.
+- [[ma-2022-adversarial-attack-graph]] — complements — [[borodin-nd-threshold-models-competitive]]: Ma gives the single-campaign threshold condition for submodularity (concave CDF); Borodin shows competitive threshold variants lose it.
+- [[ma-2022-adversarial-attack-graph]] — complements — [[kumar-2022-influence-maximization-social]]: Opposite directions at the GNN-IM junction: IM to attack a GNN versus a GNN to solve IM.
+- [[cai-2025-competitive-influence-maximization]] — extends — [[moreno-2021-shadowing-shielding-effective]]: Same Brede-group voter-model line; adds the timing dimension Moreno lists as a limitation.
+- [[cai-2025-competitive-influence-maximization]] — complements — [[bharathi-nd-competitive-influence-maximization]]: Non-progressive voter-model competition with timing versus progressive competitive IC; Cai cites Bharathi only for budget constraints.
+- [[moreno-2021-shadowing-shielding-effective]] — complements — [[borodin-nd-threshold-models-competitive]]: Heuristic responses (shadowing, shielding) for competitive settings where Borodin-type results remove greedy guarantees.
+- [[sutton-2018-reinforcement-learning-introduction]] — complements — [[chen-2021-contingency-aware-influence]]: Supplies the MDP/DQN foundations RL4IM applies; no confirmed citation.
+- [[sutton-2018-reinforcement-learning-introduction]] — complements — [[chen-2023-complex-contagion-influence]]: Same RL foundations (Double-DQN, reward shaping, replay).
+- [[zareie-2023-influence-maximization-social]] — cites — [[kempe-2015-maximizing-spread-influence]]: Survey of behaviour-aware methods built on the Kempe diffusion models.
+- [[zareie-2023-influence-maximization-social]] — complements — [[chen-2021-contingency-aware-influence]]: Paired in Melange code as 'Chen/SNAM' backing for contingency-aware seeding; the survey does not cite Chen.
 
 ## What it means for the systems
 
-**Status of every point below.** The bearing tags in the file are VERIFIED or VERIFIED-SOFTENED. However, every summary describes its code mapping as one agent's reading, and several say outright that it is UNVERIFIED (DE-062). Treat each point as a lead to confirm, not a finding.
+All bearings below come from Paul's per-work notes. Most are VERIFIED-SOFTENED or UNVERIFIED single-agent readings of the code. Under DE-062 they are leads, not findings. Spread, activation and pflip figures are model outputs under assumed parameters. They are not closeness, access, introduction or persuasion probabilities (D-025).
 
-**Joint optimizer (`fec/engine/optimize.py`)** — see [[systems/melange-allocation]].
-- [[golovin-2011-adaptive-submodularity-theory]] is its method source: lazy greedy plus the G-K data-dependent bound as a diagnostic.
-- The code already scopes its claims correctly. In a fixed stance state the objective is separable and concave, so the grid optimum is exact, which is stronger than 1-1/e. Once a modeled conversion can occur, it reports no guarantee, consistent with Thm 26/Thm 9.
-- `observations` is empty, so it is not an adaptive policy.
-- [[borodin-nd-threshold-models-competitive]] bites only on modeled-conversion replanning. There, the max-normalized neighbour term can make adding pro mass *lower* other members' pflip.
+**Joint optimizer** (`fec/engine/optimize.py`; [[systems/melange-allocation]])
+- **Best-supported part.** Lazy greedy over a separable concave objective in a fixed stance state gives an exact grid optimum, which is stronger than (1-1/e) ([[kempe-2015-maximizing-spread-influence]] supports it; [[golovin-2011-adaptive-submodularity-theory]] is its method source for the data-dependent bound).
+- **It is not adaptive.** It correctly says so (observations=[]). Modeled threshold conversions void the certificate, and [[borodin-nd-threshold-models-competitive]] says why: the max-normalized neighbour term can make adding pro mass lower others' pflip.
+- **No case for a learned replacement.** [[arya-2025-relink-edge-activation]] and [[sutton-2018-reinforcement-learning-introduction]] weaken the case for swapping it for a learned policy, because the greedy is already exact.
+- **Design gaps.** [[moreno-2021-shadowing-shielding-effective]] and [[cai-2025-competitive-influence-maximization]] point to a missing opponent-response term and a missing time dimension. The w_b 'shadowing' field exists but no engine reads it. Per D-021, LDA cannot supply that opponent-placement weight; it would need money or position data such as per-bill interest-group positions (relevant to [[systems/mentat-fec-attribution]]).
 
-**Dashboard budgetRecruit (strongest single lead)** — [[systems/melange-allocation]].
-- It claims the full 1-1/e, but multiplies each candidate's gain by a target-proximity weight in [1,3].
-- By Thm 4 of [[golovin-2011-adaptive-submodularity-theory]], the supportable bound with a target set is about 0.28.
-- This bearing is tagged 'contradicts: VERIFIED'. The fix is a wording or scope correction in the dashboard claim.
+**Budget frontier and per-topic coalition allocators** ([[systems/melange-allocation]], [[systems/melange-validation]])
+- **Guarantees claimed but not supplied.** These claim or imply submodular guarantees that the literature does not supply, for several reasons:
+  - only 20 Monte Carlo worlds (MC=20);
+  - a two-colour race with A winning every same-hop tie, unlike [[bharathi-nd-competitive-influence-maximization]]'s random tie-breaking;
+  - marginals scaled by leverage or competitiveness;
+  - removal of opponent seeds in electoral mode;
+  - the coalition allocator water-filling on singleton marginals, which is the overlap-blind pattern [[kempe-2015-maximizing-spread-influence]] and [[trivedi-2020-efficient-influence-maximization]] penalize.
+- **Stale MC-stability evidence.** [[almazaydeh-2026-heuristic-centrality-methods]] motivates `mc_stability_check.py`, but the recorded cross-seed pass (MEA-7) predates the 2026-10-01 SEED-keying fix. The cross-seed leg therefore did not test independent draws and should be re-run.
+- **Cheap ablation the system lacks.** Run a PageRank, degree or Katz-Bonacich seed baseline through the same CRN cascade.
+- **Complex-contagion risk.** If cosponsor joining is threshold-like, these greedy paths miss jointly valuable seed sets and drop zero-solo-marginal candidates ([[chen-2023-complex-contagion-influence]]). Read every greedy guarantee as a property of the model kernel only until hypothesis (a) is tested.
 
-**Budget frontier** — [[systems/melange-allocation]], [[systems/melange-validation]].
-- It runs lazy greedy at MC=20 with common random numbers. Ranking by marginal spread times a leverage or competitiveness factor voids the clean guarantee ([[bharathi-nd-competitive-influence-maximization]], [[golovin-2011-adaptive-submodularity-theory]]).
-- [[almazaydeh-2026-heuristic-centrality-methods]] motivates `mc_stability_check.py`. The recorded MEA-7 pass predates QME fix 3 (2026-10-01): before that fix, the splitmix keys ignored SEED, so the "different RNG seed" leg reused the same draws. **The cross-seed stability check should be re-run.** The MC=100 leg still stands.
-- Suggested ablation only: run PageRank, degree and Katz-Bonacich seed baselines through the same CRN cascade. Any centrality rank used there is a heuristic model output, never closeness or access (D-025).
+**Seed gate (SGATE)** ([[systems/melange-influence-engine]])
+- [[chen-2021-contingency-aware-influence]] is the method source. The gate goes beyond the paper: q varies by member, there is one round, and committed allies are ungated. The paper's theorems do not cover that model, and the system does not need them because it estimates spread by Monte Carlo.
+- The 0.60 baseline equals the paper's arbitrary default and is not a measured take-up rate.
+- The planned H1 test measures unconditional new cosponsorships, not take-up conditional on invitation.
+- [[golovin-2011-adaptive-submodularity-theory]] Theorem 16's independent per-seed structure matches the gate.
 
-**Per-topic coalition allocator** — [[systems/melange-allocation]].
-- It water-fills money in proportion to single-seed marginals and ignores overlap between seeds. This is the failure [[trivedi-2020-efficient-influence-maximization]] (degree-discount) and [[kumar-2022-influence-maximization-social]] warn about.
-- No greedy runs, so no guarantee applies.
+**LT priming** ([[systems/melange-influence-engine]])
+- Its deterministic tier thresholds fall outside [[kempe-2015-maximizing-spread-influence]]'s uniform-threshold condition and [[ma-2022-adversarial-attack-graph]]'s concave-CDF condition. Any greedy claim over it carries no guarantee.
 
-**Competitive cascade and scenario runner (`scenario.py`)** — [[systems/melange-influence-engine]].
-- It cites [[bharathi-nd-competitive-influence-maximization]]. Three departures from the paper:
-  1. Synchronous hops process A first, so pro-CU wins every same-hop tie. The paper breaks ties randomly.
-  2. Electoral mode removes opponent seeds, which Lemma 1 does not cover.
-  3. Industry is a fixed opponent that never responds. Once it does respond, only line graphs are solved.
+**Cosponsor route and closedCascadeRoute** ([[systems/melange-pathfinding]])
+- These borrow [[arya-2025-relink-edge-activation]]'s framing (edge as action, per-node out-degree budget) but are hand-tuned greedy heuristics.
+- They sit in the dense-graph, large-k regime where RELINK's edge is smallest.
+- The paper backs the code's own disclaimer that no (1-1/e) guarantee applies. It gives no support for K=5, fan-out 2 or the kernel probabilities.
 
-**Seed gate (SGATE)** — [[systems/melange-influence-engine]].
-- [[chen-2021-contingency-aware-influence]] is its method source, used non-adaptively.
-- The 0.60 baseline in seed_prob equals the paper's arbitrary simulation default; it is not validated.
-- The planned H1 test correlates seed_prob with *unconditional* new cosponsorships. That is not the conditional-on-invitation quantity the paper models, so H1 as designed cannot validate q.
-- The adaptive step (seed, observe take-up, replan) is the unbuilt part of Paul's tier 2. If built, note that the myopic-feedback case is the one [[golovin-2011-adaptive-submodularity-theory]] retracted.
+**Cascade kernel** ([[systems/melange-influence-engine]])
+- It is one topic-independent, trust-agnostic kernel ([[zareie-2023-influence-maximization-social]]).
+- [[trivedi-2020-efficient-influence-maximization]]'s MICM is a structural edge-probability rule, not a calibration. It is not a per-edge volume normalization and must not be read as support for that REJECTED proposal.
+- No work in this theme argues for dropping regular cosponsorship edges.
 
-**Flip model (pflip = a/(a+b))** — [[systems/melange-influence-engine]].
-- Its functional form matches Borodin's weight-proportional split, but it has no random thresholds or propagation.
-- It has no time term. [[cai-2025-competitive-influence-maximization]] is the clearest case that timing and reversibility change outcomes under a fixed budget. Use it as a design critique and hypothesis source, not as calibration.
+**Staffer network** ([[systems/melange-pathfinding]])
+- [[kamarthi-2020-influence-maximization-unknown]] applies only to deciding which directories or people to research next on the partially observed staffer graph. It licenses no access or influence reading. The cosponsor graph is fully observed, so its learned policy does not pay there.
 
-**Contested bills and the shadowing layer** — [[systems/melange-lobbying]], [[systems/mentat-fec-attribution]].
-- [[moreno-2021-shadowing-shielding-effective]] is cited for a counterparty term. The w_b opponent-share field exists, but no engine reads it.
-- Money acts only on the funded member's own pflip, so shielding cannot emerge.
-- If built, opponent spend must come from money data. LDA may identify the opponent but supplies no edge or weight (D-021).
+**Prospective contract** ([[systems/melange-validation]])
+- [[sutton-2018-reinforcement-learning-introduction]] Sec. 16.7 suggests off-policy evaluation of allocation policies from logged contacts and funding, with propensities. The contract does not do this.
 
-**Cosponsor route and closedCascadeRoute** — [[systems/melange-pathfinding]].
-- [[arya-2025-relink-edge-activation]] supplies only the framing: edges as actions, with a per-node out-degree budget.
-- The builds are hand-tuned greedy heuristics on a dense 533-node graph, the regime where RELINK's edge is smallest.
-- The paper supports the non-submodular disclaimer, but gives no support for K=5, fan-out 2 or the kernel probabilities.
-
-**LT priming** — [[systems/melange-influence-engine]].
-- [[ma-2022-adversarial-attack-graph]] Prop 2: deterministic tier thresholds are not concave CDFs, so greedy claims built on them are uncertified.
-- [[chen-2023-complex-contagion-influence]] supplies the test to run before any method swap: do CU-bill join hazards jump with the count of already-joined close partners? This is Paul's research question (a). Until it is tested, read greedy guarantees as properties of the model kernel only.
-
-**Staffer graph** — [[systems/melange-staffer-network]].
-- [[kamarthi-2020-influence-maximization-unknown]] fits only as a way to order which directories or people to research next.
-- It is never a reading of access or influence. Influence language is barred on revolving-door edges.
-
-**Flags under the two rejected SNA proposals** — [[systems/melange-sna]].
-- *Per-edge volume normalization (rejected):* [[trivedi-2020-efficient-influence-maximization]]'s MICM replaces observed edge probabilities with a structural formula, (d_i+d_j)/n + CN/n. **FLAG:** this sits next to that rejected proposal, and the paper gives no evidence MICM is realistic. Do not adopt it for the kernel, which uses weighted cosponsorship with saturation.
-- *Dropping regular cosponsorship edges (rejected):* RELINK's edge *activation* is a per-campaign decision about which existing edges carry an ask. It is not a graph-construction rule and gives no licence to prune cosponsorship edges.
-
-**Overall.** For a fixed, fully observed 533-member chamber, the RL runtime argument ([[chen-2021-contingency-aware-influence]], [[kumar-2022-influence-maximization-social]]) does not apply. RL is justified only if coalition formation proves threshold-like, or once real outcomes are observed across campaigns.
+**Tier mapping overall**
+- Paul's mapping of D* Lite/LPA* to adaptive submodularity, MCTS/orienteering to RL-IM, and the political-capital budget to GCOMB is architectural analogy, not a result any work here establishes.
 
 ## Gaps
 
-**Anchors named in the addendum but missing from this theme set.** Leskovec et al. 2007 (CELF), Khalil et al. 2017 (S2V-DQN), Manchanda et al. (GCOMB, the budget-constraint analogue Paul maps to the political-capital budget), Ng-Harada-Russell 1999 (reward shaping, which licenses marginal-influence shaping into the outer MDP), Sutton-Barto, Watkins (Q-learning), Kempe-Kleinberg-Tardos 2003 and Nemhauser-Wolsey-Fisher 1978. That leaves the Khalil -> GCOMB -> Kamarthi -> Chen 2021 -> Chen 2023 progression with two of its five links absent. The frontier work MaDGNN (Scientific Reports 2026) is named without authors or DOI and is unanchored.
+**1. Hypothesis (a) is untested.** Whether coalition formation in Congress is a complex contagion is unsettled. The online scan found no study that directly estimates a cosponsorship adoption threshold. The nearest designs are:
+- a threshold 'toppling' model of Congress (arXiv 1001.3732);
+- Canen-Trebbi's structural cosponsorship networks;
+- 'Diffusion in Congress' on discharge petitions (PSRM);
+- Traag's complex contagion of campaign donations (arXiv 1601.07679), the clearest transferable test design.
 
-**Unsupported or loose claims in the addendum.**
-- "RL4CCIM confirms" cross-campaign non-submodularity: it shows single-campaign non-submodularity under complex contagion only.
-- The "four anchored entries are sufficient" sentence is inconsistent with the seven RL-IM entries actually anchored.
-- "Golovin-Krause was first to study adaptive IM" is an unverified priority claim.
-- Kamarthi's slug year (2019) differs from its published venue (AAMAS 2020).
+The decisive in-house test is whether CU-bill join hazards jump with the count of already-joined partners, stratified by party and chamber. This is the single most important missing piece, because it decides whether Tier 1/2 guarantees apply at all.
 
-**Research questions the set does not answer.**
-- (a) Whether congressional coalition formation is a complex contagion. No paper uses legislative join data, and the join-hazard test against the count of already-joined partners has not been run.
-- (b) Learning persuasion or relationship costs by probing. [[kamarthi-2020-influence-maximization-unknown]] probes topology, not costs.
-- (c) Real take-up rates. [[chen-2021-contingency-aware-influence]] uses an arbitrary q; no work estimates it empirically.
-- (d) Temporal credit assignment across campaigns, meaning which early investments deserve credit when a vote flips. No paper touches it.
+**2. No real take-up or edge-probability estimates** for q, the seed_prob baseline, or the kernel probabilities. Hypothesis (c), probabilistic commitment, has no empirical anchor.
 
-**Missing method families.**
-- Adaptive influence maximization with a responding opponent: adaptive and competitive at once.
-- Robust influence maximization under uncertainty in kernel parameters.
-- RIS/IMM theory papers (they appear only as benchmarks in [[almazaydeh-2026-heuristic-centrality-methods]]).
-- Signed (trust-aware) influence maximization beyond the taxonomy in [[zareie-2023-influence-maximization-social]].
-- Topic-specific kernels: the system uses one topic-independent kernel across 18 CU categories.
-- Non-progressive cascade models that tie timing to legislative calendars.
+**3. Adaptive feedback model unspecified.**
+- Tier 2 needs a stated feedback model.
+- The Golovin-Krause myopic IM result was retracted, and Peng and Chen, "Adaptive Influence Maximization with Myopic Feedback" (NeurIPS 2019, arXiv 1905.11663), settle it at (1-1/e)/4 with an adaptivity gap of at most 4. Not in the vault; a strong candidate addition.
+- Also missing: Han et al., "Efficient Algorithms for Adaptive Influence Maximization" (PVLDB 11(9), 2018), batch-adaptive AdaptGreedy/EPIC with guarantees; and Chen, Peng, Schoenebeck and Tao, "Adaptive Greedy versus Non-adaptive Greedy for IM" (JAIR).
 
-**Empirical gap.** No work validates a diffusion kernel against observed political adoption ([[systems/melange-validation]]). All numbers are simulated outputs on synthetic or public non-political graphs, so none of them calibrates or refutes a Melange constant (K, fan-out, seed_prob 0.60, kernel saturation, leverage factor).
+**4. Anchored entries absent from the theme.** Paul's addendum anchors these, but they are not works in this theme file: Leskovec et al. 2007 (CELF), Khalil et al. 2017 (S2V-DQN), Manchanda et al. 2020 (GCOMB, the political-capital budget mapping), Ng-Harada-Russell 1999 (reward shaping, which licenses greedy-as-shaping-reward), Watkins (Q-learning) and Nemhauser-Wolsey-Fisher 1978. Hypothesis (b), cost learning by probing, rests on Kamarthi, which probes graph structure, not costs. Nothing here learns persuasion costs.
 
-**Internal follow-ups this synthesis surfaces.**
-- Re-run the cross-seed MC stability leg after QME fix 3.
-- Correct the budgetRecruit 1-1/e claim (about 0.28 with a target set).
-- Make tie-breaking in the competitive cascade random rather than A-first, or document it.
-- Redesign the H1 seed_prob test around conditional-on-invitation take-up.
+**5. MaDGNN is unanchored and could not be located** in Scientific Reports by the scan. Treat it as unverified until a title and authors are supplied.
+
+**6. Adaptive opponents.** No adaptive or RL work handles an opponent that best-responds. Bharathi solves only lines, and Moreno and Cai give equilibria only in voter models. Melange treats industry money as fixed.
+
+**7. Temporal credit assignment.** Which early investment deserves credit when a vote flips is named in Paul's notes, but no work addresses it on real data.
+
+**8. Sample efficiency for Tier 3.** No work shows an RL-IM policy learning from on the order of 10 episodes. Off-policy evaluation from logs is the realistic substitute and is absent.
+
+**9. Behaviour-aware and signed diffusion.** Signed (friend/foe) and topic-aware diffusion is flagged as an open area by [[zareie-2023-influence-maximization-social]] and is untreated in the theme.
+
+**10. Download note.** No files were downloaded in this pass. The open-access copies identified by the scan (arXiv 1905.11663, 2106.07039, 1601.07679, 1001.3732) are candidates if Paul wants them pulled into the vault.
 
 ## All works
 
@@ -346,13 +332,14 @@ The Golovin-Krause pair corrects itself between versions: squared-log bounds rep
 - [[golovin-2011-adaptive-submodularity-theory]] (2011) — Adaptive Submodularity: Theory and Applications in Active Learning and Stochastic Optimization
 - [[ma-2022-adversarial-attack-graph]] (2022) — Adversarial Attack on Graph Neural Networks as An Influence Maximization Problem
 - [[arya-2025-relink-edge-activation]] (2025) — RELINK: Edge Activation for Closed Network Influence Maximization via Deep Reinforcement Learning
-- [[golovin-2011-adaptive-submodularity-theory]] (2011) — Adaptive Submodularity: A New Approach to Active Learning and Stochastic Optimization
 - [[chen-2021-contingency-aware-influence]] (2021) — Contingency-Aware Influence Maximization: A Reinforcement Learning Approach
-- [[borodin-nd-threshold-models-competitive]] (n.d.) — Threshold Models for Competitive Influence in Social Networks
+- [[borodin-nd-threshold-models-competitive]] () — Threshold Models for Competitive Influence in Social Networks
 - [[cai-2025-competitive-influence-maximization]] (2025) — Competitive Influence Maximization in Voter Dynamics: The Role of Timing and Network Heterogeneity
 - [[moreno-2021-shadowing-shielding-effective]] (2021) — Shadowing and shielding: Effective heuristics for continuous influence maximisation in the voting dynamics
 - [[zareie-2023-influence-maximization-social]] (2023) — Influence maximization in social networks: a survey of behaviour-aware methods
 - [[almazaydeh-2026-heuristic-centrality-methods]] (2026) — Heuristic centrality methods challenge greedy optimization in influence maximization
-- [[bharathi-nd-competitive-influence-maximization]] (n.d.) — Competitive Influence Maximization in Social Networks
-- [[chen-2023-complex-contagion-influence]] (n.d.) — Complex Contagion Influence Maximization: A Reinforcement Learning Approach
-- [[kamarthi-2020-influence-maximization-unknown]] (2019) — Influence maximization in unknown social networks: Learning Policies for Effective Graph Sampling
+- [[bharathi-nd-competitive-influence-maximization]] () — Competitive Influence Maximization in Social Networks
+- [[chen-2023-complex-contagion-influence]] (2023) — Complex Contagion Influence Maximization: A Reinforcement Learning Approach
+- [[kamarthi-2020-influence-maximization-unknown]] (2020) — Influence maximization in unknown social networks: Learning Policies for Effective Graph Sampling
+- [[sutton-2018-reinforcement-learning-introduction]] (2018) — Reinforcement Learning: An Introduction (2nd ed.)
+- [[kempe-2015-maximizing-spread-influence]] (2015) — Maximizing the Spread of Influence through a Social Network (Theory of Computing extended version)

@@ -2,21 +2,16 @@
 
 ## Cited but not on disk
 
+Web-scan results: see _work/missing_sources.md
+
 - Rongkuan, LI et al. 2024, BigDIA 'Tactical environment path planning based on improved A*' (Curated, Path-Finding; Priority-Structure-Augmentation)
 - Oropeza-Martinez et al. 2024, CIMPS personality-trait evacuation pathfinding (Path-Finding; Priority-Structure-Basis)
 - Leskovec et al. 2007, KDD CELF (addendum; cited in fec/engine/optimize.py)
-- Sutton & Barto 2018, Reinforcement Learning (addendum)
-- Ng, Harada & Russell 1999, ICML reward shaping (addendum)
-- Watkins & Dayan 1992, Q-learning (addendum)
-- Khalil et al. 2017, NeurIPS S2V-DQN (addendum)
-- Manchanda et al. 2020, GCOMB (addendum; cited in dashboard capstone)
 - MaDGNN, Scientific Reports 2026 (addendum frontier, no authors)
-- Kempe, Kleinberg & Tardos 2003, KDD (addendum; systems)
 - Nemhauser, Wolsey & Fisher 1978 (addendum; optimize.py)
 - Amoore 2022, Review of International Studies (Adjacent)
 - Raychaudhuri 2008, WSC Monte Carlo (Adjacent; disk holds Harrison 2010 instead)
 - Bischof & Senninger 2018, EJPR (Campaign Politics)
-- Bouton et al. 2022, NBER small donors (Campaign Politics)
 - Ceron et al. 2014, SSCR (Campaign Politics)
 - Denton et al. 2024 (Campaign Politics)
 - Gibson 2020 (Campaign Politics)
@@ -24,6 +19,7 @@
 - Nai 2018 (Campaign Politics)
 - Nickerson & Rogers 2014 (Campaign Politics)
 - Keele 2015, Political Analysis (Causal & Methodological)
+  - Download failed (slug keele-2015-identifying-mechanisms-behind-policy): MIT DSpace bitstream URLs (bitstreams/23111c5a-.../download and aed466a6-.../download) return HTTP 405 on GET; dtingley.scholars.harvard.edu returns 403. No challenge bypass or unofficial mirror used; empty folder removed.
 - Alkazzi & Okumura 2024, IEEE Access (ML & Sentiment)
 - Peng et al. 2022, Digital Communications and Networks (ML & Sentiment)
 - Borg et al. 2015, Forest Policy and Economics (SNA)
@@ -41,9 +37,7 @@
 - Hall & Wayman 1990 (flip_model / money_response)
 - Fowler, Garro & Spenkuch 2020 (money_response)
 - Coppock persuasion effect sizes (scenario calibration)
-- Mairesse et al. 2007, JAIR (big5_traits)
 - Pennebaker & King 1999; Yarkoni 2010 (big5_traits)
-- Burnham 2024, 'Stance detection: a practical guide' (DEBATE)
 - Stanceformer arXiv 2410.07083; TSE ACL 2023.acl-long.560
 - Soroka et al. Lexicoder LSD2015 dictionary documentation
 - Volden & Wiseman federal LES / Center for Effective Lawmaking (only the Bucchianeri et al. 2025 state study is on disk)

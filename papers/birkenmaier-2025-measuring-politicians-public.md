@@ -248,3 +248,4 @@ The highlight about role transitions changing displayed personality points to a 
 - [[kumari-nd-five-personality-predictions]] — complements — Provides the validation framework (codebook, Krippendorff alpha, macro-F1) that this paper entirely lacks.
 - [[vanderdoes-2022-strategic-identity-signaling]] — complements — Birkenmaier validates text-based measures of politicians' public traits. This paper's warning that classifiers catch overt speech only bounds what such text measures can see.
 - [[yang-2023-getting-personal-deep]] — complements — Thematic link only: Yang does not cite Birkenmaier in the text file. Item existence checked; content not read. The politician-validation framing is not something Yang supplies, so the complement is in one direction only.
+- [[burnham-2023-stance-detection-practical-guide]] — complements — Title matches. XLM-RoBERTa and GPT-4o are confirmed in the text; the SVM comparison was not verified.

@@ -1,0 +1,1048 @@
+---
+type: paper
+title: "Small Campaign Donors"
+authors: ["Laurent Bouton", "Julia Cagé", "Edgard Dewitte", "Vincent Pons"]
+year: "2022"
+venue: "NBER Working Paper 30050 (May 2022, revised June 2026; no journal version found in online scan)"
+doi: ""
+category: "Campaign Politics"
+systems: ["melange-influence-engine", "mentat-fec-attribution", "mentat-sector-growth-study"]
+components: ["melange-influence-engine.competitiveness-multiplier", "mentat-fec-attribution.collection-completeness", "mentat-fec-attribution.dedup-and-versions", "mentat-fec-attribution.identity-ladder", "mentat-sector-growth-study.seats-weekly-test"]
+paul_annotated: false
+paul_markup_count: 0
+evidence_status: "verified"
+source: "[[_sources/bouton-2022-small-campaign-donors.pdf]]"
+original_paths: []
+sha12: ["6b1c738e4575"]
+tags: [paper, campaign-politics]
+---
+
+# Small Campaign Donors
+
+**Laurent Bouton, Julia Cagé, Edgard Dewitte, Vincent Pons (2022).** *NBER Working Paper 30050 (May 2022, revised June 2026; no journal version found in online scan).* Theme: [[themes/campaign-politics|Campaign Politics]].
+
+> [!abstract] Summary
+> Bouton, Cage, Dewitte and Pons (NBER WP 30050, revised June 2026) build a contribution-level panel of about 340 million FEC individual contributions (2005-2020) by parsing ActBlue and WinRed earmark memos, which makes sub-200-dollar donors visible. Their main finding is that small donors are a passive force. They tripled to 21.8 million by 2020 but supplied only 12.8 percent of 2020 money. They back the same kinds of candidates as large donors, send about 88 percent of their money out of district, and do not concentrate on close races (close-seat coefficient +0.11 pp, not significant, versus +0.18 pp for large donors; Democratic congressional candidates 2012-2020). Their giving spikes on salient events, while large donors spike at quarterly deadlines. TV ads raise small-dollar giving by 6.3 percent of the mean per 1,000 ads, and Meta ads do so only in primaries. For Paul's systems the substantive results are background. The data appendix matters more for Mentat. First, it documents that an earmarked gift from a donor above the 200-dollar aggregate appears in both the conduit report and the recipient committee report. The authors pair and drop 87 percent of these duplicates, whereas Mentat counts both legs under ruling R8; this is flagged, not recommended. Second, the donor-grouping rules always require a street address and reject employer and occupation as grouping keys. Mentat's identity ladder auto-accepts on exact name plus ZIP alone. Third, conduit coverage changes over time (76.4 percent of contributions 2006-2020, 91.1 percent in 2020, WinRed only from 2019), so cross-cycle partisan comparisons of employee giving carry a visibility artifact. The paper says nothing about whether dollars buy access or alignment.
+
+## Paul's annotation
+
+_Not in Paul's annotated bibliographies._
+
+## Study
+
+**Question:** Are small campaign donors (giving at most 200 dollars to any committee per two-year cycle) a new force that could transform U.S. elections, in terms of their number, sociodemographic profile, candidate and race targeting, and responsiveness to events and ads?
+
+**Theory:** Contrasts strategic and expressive motives: large donors are often expressive, while strategic giving would favor close races. Small donors may be a passive response to campaign solicitations and external events rather than active policy agency. Cites Ansolabehere et al. (2003), Grossman and Helpman (1994, 1996), Coate (2004), and Bouton, Castanheira and Drazen (2024) for the passive-response view. Hypotheses are not formally modeled in this paper.
+
+**Data:** FEC individual contribution records, 2005-2020: about 340 million contributions, 42.9 million donor-cycles (23.2 million small, 19.7 million large), 30 million unique donors. Unit is the donor-cycle, and donor-candidate pair for targeting. Main sample is donations to congressional Democratic candidates, 2012-2020 (11.3 million donor-cycles, 4.4 billion dollars). Coverage relies on conduits such as ActBlue and WinRed, which report earmarked contributions; conduits account for 76.4 percent of individual contributions 2006-2020 and 91.1 percent in 2020. Candidate-donor pairs number 2.7 billion (general) and 4.8 billion (primary). Also county-level TV ad data (Wesleyan Media and Wisconsin Advertising Projects, border county pairs in 204 DMA clusters) and Meta/Facebook and Instagram ad data for 2020 (20,579 events, 402 candidates). Census, ACS, Zillow ZTRAX home values, BLS SOC occupations and wages, Bonica CFscores.
+
+**Method:** Section 2: descriptive counts with imputed unobserved unitemized totals. Section 3: descriptive comparison of gender, ethnicity, occupation, wage, home value and geography. Section 4: OLS linear probability model of the share of a donor's contributions going to a candidate (equation 1), with election year, state, House/Senate and donor fixed effects, two-way clustered at seat and donor. Section 4.5: Herfindahl-Hirschman index by donor decile. Section 5.1: weekly timing and abnormal-week flags. Section 5.2: TV ads via border-county pairs in different DMAs (Spenkuch and Toniatti 2018 design), OLS with county-pair-by-year and county-by-office fixed effects, clustered at DMA. Section 5.3: social media ads event study with the heterogeneity-robust de Chaisemartin and D'Haultfoeuille (2024) estimator, week-state fixed effects, clustered at candidate-week.
+
+**Identification:** Donor fixed effects compare a given donor's support for same-gender, same-race or same-district candidates against other candidates. TV ads: differences in ad volume across adjacent counties in different media markets, argued to be as-good-as-random because DMAs cover many counties and candidates set ads at DMA level; validated by replicating Spenkuch and Toniatti (2018) for 2012. Social media: staggered-adoption event study, with parallel trends assessed with pre-event placebo estimates (pre-trends not visible in Figure 8 for three weeks before ads).
+
+**Scope:** U.S. federal campaign finance, individual donors to presidential, House, Senate and party committees, 2005-2020 cycles. Main targeting and timing analysis is congressional Democratic candidates 2012-2020 general and primary elections. Republican analysis is limited to 2020 (WinRed era). TV ad effects estimated for Democratic ads only; Republican ad effects on Republican races not estimated. Social media analysis covers 2020 only.
+
+## Key findings
+
+- Small donors rose from 5.0 million (2006 cycle) to 21.8 million (2020); large donors rose from 2.3 million to 7.0 million (Section 2.2, p. 9).
+- Small donor contributions were 12.8 percent of all contributions in the 2020 cycle and 14.9 percent for Democratic congressional candidates; small contributions grew from 362 million to 1.664 billion dollars 2006-2020 versus large from 2.084 to 11.307 billion (Section 2.2, p. 10).
+- Unitemized contribution totals overstate small donor contributions by a factor of 1.8 to 3.1 (Section 2.2, p. 8).
+- Among Democratic congressional donors 2012-2020, 23.1 percent of small donors are non-white, about 13 percent more than large donors, but 42.1 percent less than the voting-age population; small donors are 56.9 percent female versus 47.2 percent for large donors (Section 3, p. 12, Table 2).
+- Median 2020 home value is 289,900 dollars for small donors, 419,910 for large donors and 176,838 for the population; 44.5 percent of small donors have high-SOC occupations versus 54.1 percent for large donors (Table 2, p. 13).
+- About 88 percent of small-donor contributions go to out-of-district candidates; same-district matching raises small donor shares by 16.8 percentage points versus 20.4 for large donors (Section 4.1-4.3, p. 17-18).
+- Close races do not attract more small-donor money: the close-seat coefficient is 0.11 (not significant) for small donors versus 0.18 for large donors (Table 3, p. 16-17; Section 4.3).
+- Small donors give 135 and 52 percent more (relative to mean) to left and center ideology tercile candidates than to right tercile candidates (Section 4.3, p. 18).
+- Small donor shares are concentrated in a few candidates: 12.2 percent of candidates receive more than one quarter of donations from small donors; bottom deciles show higher concentration (HHI) (Sections 4.1 and 4.5, p. 15, 23-24).
+- Timing: 13.0 percent of 2020 small-donor contributions fell in the week of Justice Ginsburg's death versus 5.9 percent for large donors; 30 of 31 large-donor abnormal weeks coincide with quarterly deadlines versus 27 of 43 for small donors (Section 5.1, p. 25).
+- TV ads: 1,000 additional Democratic ads raise small-donor contributions by 10.86 dollars per 10,000 adults (6.3 percent of mean, significant at 1 percent), with large-donor effect 27.87 (not significant); Republican ads have no significant effect (Table 4, p. 28). Turnout effects of TV ads are null, while congressional vote shares rise about 0.55 percentage points per 1,000 net ads (Appendix C, Table C.1, p. 18).
+- Social media: an event of Democratic Meta ads raises weekly small-donor contributions by 3.0 dollars per 10,000 (8.3 times mean) in general elections but not significantly; in primaries small donors rise 1.3 times mean and large donors 0.5 times, both significant (Section 5.3, p. 30-31).
+
+## Limitations
+
+- A
+- u
+- t
+- h
+- o
+- r
+- s
+-  
+- n
+- o
+- t
+- e
+-  
+- t
+- h
+- a
+- t
+-  
+- d
+- o
+- n
+- o
+- r
+-  
+- g
+- r
+- o
+- u
+- p
+- i
+- n
+- g
+-  
+- r
+- e
+- l
+- i
+- e
+- s
+-  
+- o
+- n
+-  
+- c
+- o
+- n
+- s
+- e
+- r
+- v
+- a
+- t
+- i
+- v
+- e
+-  
+- r
+- u
+- l
+- e
+- s
+- ,
+-  
+- a
+- n
+- d
+-  
+- t
+- h
+- a
+- t
+-  
+- F
+- E
+- C
+-  
+- c
+- o
+- m
+- m
+- i
+- t
+- t
+- e
+- e
+-  
+- t
+- o
+- t
+- a
+- l
+- s
+-  
+- m
+- i
+- s
+- m
+- a
+- t
+- c
+- h
+-  
+- i
+- n
+-  
+- 4
+- 2
+- .
+- 8
+-  
+- p
+- e
+- r
+- c
+- e
+- n
+- t
+-  
+- o
+- f
+-  
+- c
+- o
+- m
+- m
+- i
+- t
+- t
+- e
+- e
+- -
+- c
+- y
+- c
+- l
+- e
+- s
+-  
+- (
+- A
+- p
+- p
+- e
+- n
+- d
+- i
+- x
+-  
+- A
+- .
+- 2
+- .
+- 1
+- )
+- .
+-  
+- R
+- a
+- c
+- e
+-  
+- i
+- s
+-  
+- i
+- m
+- p
+- u
+- t
+- e
+- d
+-  
+- f
+- r
+- o
+- m
+-  
+- s
+- u
+- r
+- n
+- a
+- m
+- e
+-  
+- a
+- n
+- d
+-  
+- c
+- e
+- n
+- s
+- u
+- s
+-  
+- g
+- e
+- o
+- g
+- r
+- a
+- p
+- h
+- y
+- ,
+-  
+- w
+- i
+- t
+- h
+-  
+- a
+-  
+- 2
+- 6
+-  
+- p
+- e
+- r
+- c
+- e
+- n
+- t
+-  
+- f
+- a
+- l
+- s
+- e
+- -
+- p
+- o
+- s
+- i
+- t
+- i
+- v
+- e
+-  
+- r
+- a
+- t
+- e
+-  
+- f
+- o
+- r
+-  
+- W
+- h
+- i
+- t
+- e
+-  
+- i
+- n
+- d
+- i
+- v
+- i
+- d
+- u
+- a
+- l
+- s
+-  
+- (
+- A
+- p
+- p
+- e
+- n
+- d
+- i
+- x
+-  
+- A
+- .
+- 4
+- .
+- 2
+- )
+- ;
+-  
+- g
+- e
+- n
+- d
+- e
+- r
+-  
+- i
+- s
+-  
+- i
+- m
+- p
+- u
+- t
+- e
+- d
+-  
+- f
+- r
+- o
+- m
+-  
+- f
+- i
+- r
+- s
+- t
+-  
+- n
+- a
+- m
+- e
+- s
+- .
+-  
+- U
+- n
+- i
+- t
+- e
+- m
+- i
+- z
+- e
+- d
+-  
+- s
+- m
+- a
+- l
+- l
+- -
+- d
+- o
+- n
+- o
+- r
+-  
+- e
+- s
+- t
+- i
+- m
+- a
+- t
+- e
+- s
+-  
+- r
+- e
+- l
+- y
+-  
+- o
+- n
+-  
+- w
+- e
+- i
+- g
+- h
+- t
+- e
+- d
+-  
+- a
+- v
+- e
+- r
+- a
+- g
+- e
+- s
+-  
+- a
+- c
+- r
+- o
+- s
+- s
+-  
+- c
+- y
+- c
+- l
+- e
+- s
+- .
+-  
+- D
+- o
+- n
+- o
+- r
+- -
+- c
+- a
+- n
+- d
+- i
+- d
+- a
+- t
+- e
+-  
+- r
+- e
+- g
+- r
+- e
+- s
+- s
+- i
+- o
+- n
+- s
+-  
+- c
+- a
+- n
+- n
+- o
+- t
+-  
+- s
+- t
+- u
+- d
+- y
+-  
+- t
+- h
+- e
+-  
+- n
+- o
+- n
+- -
+- d
+- o
+- n
+- o
+- r
+-  
+- p
+- o
+- p
+- u
+- l
+- a
+- t
+- i
+- o
+- n
+-  
+- a
+- n
+- d
+-  
+- d
+- o
+-  
+- n
+- o
+- t
+-  
+- o
+- b
+- s
+- e
+- r
+- v
+- e
+-  
+- d
+- o
+- n
+- o
+- r
+-  
+- i
+- d
+- e
+- o
+- l
+- o
+- g
+- y
+-  
+- (
+- f
+- o
+- o
+- t
+- n
+- o
+- t
+- e
+- s
+-  
+- 2
+- 0
+-  
+- a
+- n
+- d
+-  
+- 2
+- 4
+- )
+- .
+-  
+- D
+- o
+- n
+- o
+- r
+-  
+- f
+- i
+- x
+- e
+- d
+-  
+- e
+- f
+- f
+- e
+- c
+- t
+- s
+-  
+- l
+- e
+- a
+- v
+- e
+-  
+- c
+- a
+- n
+- d
+- i
+- d
+- a
+- t
+- e
+- -
+- l
+- e
+- v
+- e
+- l
+-  
+- c
+- o
+- n
+- f
+- o
+- u
+- n
+- d
+- e
+- r
+- s
+-  
+- p
+- a
+- r
+- t
+- l
+- y
+-  
+- u
+- n
+- c
+- o
+- n
+- t
+- r
+- o
+- l
+- l
+- e
+- d
+- ,
+-  
+- a
+- n
+- d
+-  
+- e
+- l
+- e
+- c
+- t
+- o
+- r
+- a
+- l
+-  
+- r
+- a
+- c
+- e
+-  
+- f
+- i
+- x
+- e
+- d
+-  
+- e
+- f
+- f
+- e
+- c
+- t
+- s
+-  
+- d
+- r
+- o
+- p
+-  
+- r
+- a
+- c
+- e
+- -
+- l
+- e
+- v
+- e
+- l
+-  
+- c
+- o
+- v
+- a
+- r
+- i
+- a
+- t
+- e
+- s
+-  
+- (
+- f
+- o
+- o
+- t
+- n
+- o
+- t
+- e
+-  
+- 2
+- 9
+- )
+- .
+-  
+- T
+- V
+- -
+- a
+- d
+-  
+- s
+- a
+- m
+- p
+- l
+- e
+-  
+- e
+- x
+- c
+- l
+- u
+- d
+- e
+- s
+-  
+- R
+- e
+- p
+- u
+- b
+- l
+- i
+- c
+- a
+- n
+- -
+- r
+- a
+- c
+- e
+-  
+- o
+- u
+- t
+- c
+- o
+- m
+- e
+- s
+-  
+- d
+- u
+- e
+-  
+- t
+- o
+-  
+- p
+- o
+- w
+- e
+- r
+- .
+-  
+- S
+- o
+- c
+- i
+- a
+- l
+-  
+- m
+- e
+- d
+- i
+- a
+-  
+- e
+- f
+- f
+- e
+- c
+- t
+- s
+-  
+- a
+- r
+- e
+-  
+- s
+- i
+- g
+- n
+- i
+- f
+- i
+- c
+- a
+- n
+- t
+-  
+- o
+- n
+- l
+- y
+-  
+- i
+- n
+-  
+- p
+- r
+- i
+- m
+- a
+- r
+- i
+- e
+- s
+- .
+-  
+- S
+- u
+- b
+- s
+- a
+- m
+- p
+- l
+- e
+- s
+-  
+- d
+- e
+- f
+- i
+- n
+- e
+- d
+-  
+- b
+- y
+-  
+- i
+- m
+- p
+- r
+- e
+- s
+- s
+- i
+- o
+- n
+- s
+-  
+- m
+- a
+- y
+-  
+- b
+- e
+-  
+- e
+- n
+- d
+- o
+- g
+- e
+- n
+- o
+- u
+- s
+-  
+- t
+- o
+-  
+- a
+- d
+-  
+- q
+- u
+- a
+- l
+- i
+- t
+- y
+-  
+- (
+- f
+- o
+- o
+- t
+- n
+- o
+- t
+- e
+-  
+- 4
+- 5
+- )
+- .
+-  
+- T
+- h
+- e
+-  
+- p
+- a
+- p
+- e
+- r
+-  
+- i
+- s
+-  
+- a
+- n
+-  
+- N
+- B
+- E
+- R
+-  
+- w
+- o
+- r
+- k
+- i
+- n
+- g
+-  
+- p
+- a
+- p
+- e
+- r
+-  
+- w
+- i
+- t
+- h
+-  
+- r
+- e
+- v
+- i
+- s
+- i
+- o
+- n
+- s
+-  
+- t
+- h
+- r
+- o
+- u
+- g
+- h
+-  
+- J
+- u
+- n
+- e
+-  
+- 2
+- 0
+- 2
+- 6
+- .
+
+## Short quotes
+
+- "small donors appear to occupy the passenger seat rather than the driver's seat."
+- "they are unlikely to transform U.S. elections."
+- "Small donors do not target close races to a greater extent than large donors."
+
+## Bearing on the systems
+
+| Component | Relation | Paper shows | System does | Transfers when | Strength | Check |
+|---|---|---|---|---|---|---|
+| [[systems/mentat-fec-attribution#Conduit legs, memo dedup, filing-version identity and transfer rule\|Conduit legs, memo dedup, filing-version identity and transfer rule]] | qualifies | A recipient committee must itemize an earmarked contribution when the donor's cycle aggregate to it exceeds 200 dollars, so the same gift appears in both the conduit report and the committee report. The authors coupled 87 percent of earmarked committee-itemized donations to their conduit twin and dropped the committee leg. The remaining committee-itemized donations are 3 percent of all contributions. (Appendix A.3.1 Earmarked contributions (Processing), appendix pp. 5-6) | Code comment at export_guards.R:110-113 says a conduit leg is a real row that counts, and that guard G3 against conduit double counting was removed 2026-07-27 under the R5/R8 recipient-as-shown ruling. report.R:1566-1568 keeps the downstream-earmark mask as an analytical flag only. report.R:1601-1606 is a sub_id duplicate guard. Not shown in code: that the two legs carry different sub_ids, and that the committee leg is counted. A report.R:2775-2786 comment says the receipt counts once, to the row's recipient. `C:/Users/pgoff/Mentat/mentat/R/export_guards.R:110-113; C:/Users/pgoff/Mentat/mentat/R/report.R:1566-1568,1601-1606,2775-2786` | Paper population is employees whose cycle aggregate to the recipient exceeds 200 dollars. Sub-200 gifts are visible only through the conduit (paper Appendix A.4.3). The size of the double count in Mentat books is unmeasured. Money collection is frozen; any change needs Paul's per-change OK. | moderate | VERIFIED-SOFTENED |
+| [[systems/mentat-fec-attribution#Contributor identity match ladder\|Contributor identity match ladder]] | method-source | Donor grouping uses explicit rules. Two records are one person if they match exactly on three of first name, surname, full street and ZIP and fuzzily on the fourth (first-name variant index, fuzzy surname, fuzzy street, or city-state in place of ZIP). Occupation and employer are too inconsistent to use as grouping variables. The authors expect a very small false-positive rate but do not measure it. (Appendix A.4.1 Grouping, Steps 1-2 and footnote 4) | collect.R:2087-2157 (identity_match_ladder) returns AUTO on exact name plus same ZIP with no street check, and HIGH on exact name plus same city or nickname plus same ZIP. Employer contradiction only changes the grade (collect.R:2120-2134). AUTO and HIGH are kept (collect.R:2896). Street fields are collected (collect.R:1415-1416) but this ladder does not read them. `C:/Users/pgoff/Mentat/mentat/R/collect.R:2087-2157,2120-2134,2896; C:/Users/pgoff/Mentat/mentat/R/collect.R:7,1415-1416` | The paper groups across all committees; Mentat links same-name rows to a seed within a company run (seed logic not traced in this check). A false merge adds a stranger's money to a company total, so the cost is higher. The paper's rules have no measured precision, so they are a design benchmark, not a validated standard. | moderate | VERIFIED |
+| [[systems/mentat-fec-attribution#Collection completeness (zero provenance, count reconciliation, key pool)\|Collection completeness (zero provenance, count reconciliation, key pool)]] | measurement-source | Conduits must report every contribution they collect, whatever its amount. Conduit contributions were 76.4 percent of individual contributions 2006-2020 and 91.1 percent in 2020, and processing them more than doubles observed contributions. WinRed launched in 2019. Committee-reported unitemized totals overstate small-donor contributions by a factor of 1.8 to 3.1. (Introduction, Section 2.1 (rise of conduit contributions), Section 2.2 (unitemized totals), Appendix Figure E.1a) | collect.R:1452-1454 sets is_conduit_leg for the two conduit committee IDs. export_guards.R:447-449 treats an empty Conduit category as a real zero for industries or cycles with no earmark-platform giving. No cycle- or party-varying coverage adjustment was found in the cited lines. `C:/Users/pgoff/Mentat/mentat/R/collect.R:1452-1454; C:/Users/pgoff/Mentat/mentat/R/export_guards.R:447-449` | Matters for cross-cycle or partisan splits of individual employee giving that span the 2019 WinRed launch. The paper limits its Republican analysis to 2020. It does not affect PAC-to-candidate totals. Direct gifts under 200 dollars stay invisible in itemized data (paper footnote 12). | moderate | VERIFIED-SOFTENED |
+| [[systems/mentat-sector-growth-study#SEATS-W weekly seat-gain test (2022 House)\|SEATS-W weekly seat-gain test (2022 House)]] | suggests-extension | Weekly giving is dominated by calendar and event shocks. 30 of 31 abnormal weeks for large donors coincide with quarterly deadlines, against 27 of 43 for small donors. The week of Justice Ginsburg's death carried 13.0 percent of 2020 small-donor contributions versus 5.9 percent for large donors. (Section 5.1 Timing (Figure 6)) | sgs_seats.R:511-515 builds a formula of the form y on a focal term plus a base term. For multi-cycle level models the base is cycle fixed effects plus cycle-specific linear week-of-cycle trends. Single-cycle models use one common week trend. Change and lag variants exist. No quarter-end or salient-event term appears in these lines. The outcome definition (D share of giving) was not traced. `C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:511-515` | Relevant only if the weekly series includes individual employee receipts and if deadline or event surges differ by party. Dobbs in 2022 is an example event. A quarter-end and event-week sensitivity is a candidate check, not a demonstrated bias. Unverified agent analysis (DE-062). | weak | VERIFIED-SOFTENED |
+| [[systems/melange-influence-engine#Competitiveness multiplier c (COMPET_MULT)\|Competitiveness multiplier c (COMPET_MULT)]] | context | Relative to safe Democratic seats, close races (mean Democratic winning margin between -10 and 10 percent over the last two elections) receive 0.11 pp more of a small donor's giving (48 percent of mean, not significant) and 0.18 pp more of a large donor's (75 percent of mean, significant at the 5 percent level). Sample is Democratic congressional candidates 2012-2020 with donor fixed effects. (Section 4.3, pp. 16-18; Table 3) | moneyball_core.py:74-93 implements c = 1 + AMPLITUDE times exp(minus max(lean,0) over SCALE), with AMPLITUDE 1.0 and SCALE 5.0. The header calls these Paul's uncalibrated judgment constants and says the reciprocity they encode is not validated. c scales effective dollars on both money legs (cu and ind). `fec/moneyball_core.py:74-93` | The paper measures where individual donors send money, not what a dollar buys from a legislator, so it neither supports nor refutes c. Quote the close-seat figures only as Democratic candidates only, UNSTRATIFIED by party. | weak | VERIFIED-SOFTENED |
+
+> [!failure]- Claims that did not survive verification
+> - Summary issue: Summary says small donors 'tripled' to 21.8 million. The paper gives 5.0 million (2006 cycle) to 21.8 million (2020 cycle), a rise of about 4.4 times. Correct to more than four-fold.
+> - Summary issue: Author name misspelled: 'Cage' should be Cagé (Julia Cagé).
+> - Summary issue: 'The paper says nothing about whether dollars buy access or alignment' is too strong. The paper discusses access as theory (intro, citing Grossman and Helpman and Kalla and Broockman) and tests no access or alignment outcome. Reword to 'does not estimate access or alignment'.
+> - Summary issue: TV-ad figure lacks its window and units. The 6.3 percent of mean is for general elections only (primaries 3.7 percent), per 1,000 additional Democratic ads, with dollars expressed per 10,000 adults (10.86 dollars). Add the general-election qualifier.
+> - Summary issue: 'Send about 88 percent of their money out of district' should read 88 percent of their contributions, a count share from the paper's introduction and Section 4 (paper p. 17).
+> - Summary issue: 'Mentat counts both legs under ruling R8' is stronger than the code shows. Code comments say the conduit leg counts and that G3 was removed, and the committee leg is expected to appear. A report.R comment says the receipt counts once to the recipient. Reword as expected, not verified end to end.
+> - Summary issue: 'Re-ratified 2026-07-27' attaches that date to R8. The code gives 2026-07-27 only for removal of G3 (export_guards.R:110-113). The ratification date was not verified here.
+> - Summary issue: Meta-ad summary should add that the paper finds the small-donor and large-donor primary effects both significant (1.3 and 0.5 times mean) and the difference between them not significant.
+> - Summary issue: The 'passive force' framing is the authors' theory and metaphor (passenger seat), not a measured finding. Attribute it as such.
+> - Summary issue: Bearing transfer_conditions named a pending WinRed petition (REG 2022-05). The paper does not mention it and the status was unconfirmed. Removed.
+> - Summary issue: Related link bonica-2025-money-campaign-finance removed. That work (Bonica and Grumbach, Old money, Journal of Public Economics 2025) is not cited by Bouton et al., and the shared-data claim is not shown in the Bouton text.
+> - Summary issue: Related link cagala-2021 kept as a vault-level complement only; it is not cited by Bouton et al.
+> - Summary issue: Coverage note: the ext file reports the paper as fully read; this verifier read the claimed sections and tables by search and excerpt, and did not transcribe Appendix F tables.
+
+## Gaps and flags
+
+- Mentat has no measured estimate of how many employer-matched dollars appear twice (conduit leg plus earmark-target leg) under R8. A read-only count pairing conduit rows with committee rows that carry an EARMARKED THROUGH memo, by company and cycle, would size it.
+- The identity ladder has no street-address tier. It auto-accepts exact name plus ZIP and keeps exact name plus city, and its precision against a hand-coded sample is unmeasured (component question still open).
+- No cycle-varying coverage note on individual-giving partisan splits across the 2019 WinRed launch. Direct sub-200 gifts stay invisible.
+- SEATS-W has no quarter-end or salient-event indicators in its weekly specification.
+- The paper's both-legs evidence sits against Paul's ruling R8 (conduit legs COUNT, re-ratified 2026-07-27, G3 deleted). It is reported as evidence only. Money collection is frozen, so nothing changes without Paul's per-change OK.
+- The close-seat coefficients are pooled over Democratic candidates only and do not test whether money buys access or alignment. They must not be cited as validating reciprocity or the competitiveness multiplier (D-104..D-108).
+- The paper's donor-grouping rules are described as conservative, but no precision or recall is reported, so they are a design benchmark, not a validated standard.
+- All bearings are new agent analysis and remain UNVERIFIED until a second path reproduces them (DE-062).
+
+No Paul entry or markup exists for this work, so there is no takeaway to check and nothing stale. Identity ladder: he highlighted false-positive-limiting matching, and the paper requires a street address where the ladder accepts name plus ZIP. Dedup: he flagged duplicate filings as a hazard; the paper shows the two conduit legs are one gift, against his R8 ruling (flagged only). Competitiveness: Bouton finds only modest close-race overweighting by individual donors and says nothing on what dollars buy.
+
+## Related papers
+
+- [[bonica-2013-mapping-ideological-marketplace]] — same-data — Bouton et al. use Bonica's CFscores for candidate ideology terciles and describe them as built from contribution records. The paper cites Bonica 2014 (AJPS); the vault note dates the work 2013 (SSRN draft), so the year label differs. Their close-race result is Democratic-only, so it bears on Bonica's donor-steering account only for Democratic individual donors 2012-2020.
+- [[kalla-nd-campaign-contributions-facilitate]] — complements — Bouton et al. cite Kalla and Broockman (2016), a randomized field experiment titled Campaign Contributions Facilitate Access to Congressional Officials, in their introduction on elite responsiveness. Bouton et al. study where donor money goes, not whether it buys access.
+- [[cagala-2021-optimal-targeting-fundraising]] — complements — Bouton et al. describe small donors as responding to candidate fundraising requests and external events. Cagala et al. (2021, arXiv, Optimal Targeting in Fundraising) study the supply side of solicitation. Bouton et al. do not cite this work, so the link is a vault-level complement.
+
+### Linked from
+_None._

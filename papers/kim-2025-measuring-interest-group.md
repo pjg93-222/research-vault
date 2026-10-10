@@ -298,3 +298,4 @@ Partly aligned, and partly stale. Paul's three findings (stage, firm size and Mo
 - [[moreno-2021-shadowing-shielding-effective]] — complements — Item title matches (Measuring Interest Group Positions on Legislation, 2025); it supplies per-bill opponent placement, which is the input the shadowing response would need.
 - [[park-2025-automatic-construction-direction]] — complements — Real item (bill-level Support/Oppose/Engage positions from Lobbying Disclosure Act reports). Its link to bill-sign handling in Paul's system was not verified here.
 - [[delano-2025-bicam-congressional-lobbying]] — complements — Real item. BICAM does not cite it. The complement judgment is the analyst's inference from the title, not a BICAM statement.
+- [[burnham-2023-stance-detection-practical-guide]] — complements — Title matches. Text reports accuracy 96.93 and F1 97.19, which the analyst rounds to 96.9; the versus-human comparison was not checked.

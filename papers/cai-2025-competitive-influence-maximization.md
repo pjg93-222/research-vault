@@ -142,3 +142,4 @@ Paul has not annotated this paper.
 ### Linked from
 - [[borodin-nd-threshold-models-competitive]] — complements — Competitive influence maximization in voter dynamics with timing and network heterogeneity. Its text does not cite Borodin or discuss submodularity, so it is a neighbouring competitive-IM study on a different diffusion model, not a follow-up to Borodin.
 - [[madsen-2017-strategic-advantages-micro]] — extended-by — A two-candidate competitive voter-dynamics model on networks. It adds the voter-to-voter interaction this paper leaves out and says targeting would benefit from.
+- [[kempe-2015-maximizing-spread-influence]] — complements — Competitive IM under voter dynamics, where timing matters; Kempe lists competition and timing as open (Conclusions pp.137-138). Item exists; not re-read here.

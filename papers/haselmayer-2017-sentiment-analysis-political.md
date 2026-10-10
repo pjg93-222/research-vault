@@ -129,3 +129,4 @@ Paul has no annotation of this paper. It adds one point to the system's tone que
 ### Linked from
 - [[pennebaker-2003-psychological-aspects-natural]] — complements — Real item (2017, German-language Austrian political text; dictionary plus crowd-coded negativity). It pairs a dictionary with crowd judgments but does not test the review judge-versus-self-report finding. Link is loose.
 - [[taherdoost-2023-artificial-intelligence-sentiment]] — complements — Combines a political-communication dictionary with crowdcoding validation, the validation step that the review never addresses for dictionary tone.
+- [[burnham-2023-stance-detection-practical-guide]] — complements — Title matches a dictionary-plus-crowdcoding sentiment study. Neither text cites the other; Burnham's sentiment-is-not-stance argument bears on it indirectly, so contradicts was softened.
