@@ -133,4 +133,5 @@ Paul has not annotated this paper. The paper supports the idea that public prese
 - [[lechner-2025-mapping-political-personality]] — complements — Item confirms PoliPers as a facet-level inventory of ideal and actual politician personality. It is a measurement alternative, but nothing in the item shows it addresses TIPI brevity or social desirability as Amsalem's limitations do.
 
 ### Linked from
-_None._
+- [[cao-2024-language-models-personality]] — complements — Politicians' Big Five personality predicts national media coverage. Cao does not test popularity against it. The perceived-personality-drives-visibility gloss is the analyst's; the excerpt read does not establish that the traits are perceived.
+- [[decter-frain-2016-impressive-words-linguistic]] — complements — Politician personality and media visibility relate to this paper's finding that media tone mediates the language-approval link.

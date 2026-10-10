@@ -240,3 +240,4 @@ Mostly aligned, but Paul overstates the paper's empirical weight. His takeaway t
 
 ### Linked from
 - [[ahmad-nd-shortest-path-algorithms]] — complements — Both treat tie strength (Granovetter) and direction as core tie properties. Paul cites Haythornthwaite for directionality, and in the staffer-closeness-routes and SNA components.
+- [[montgomery-2017-effects-congressional-staff]] — complements — Vault item exists; title confirms information-exchange framing of ties. Montgomery does not cite it, so the link is conceptual only.

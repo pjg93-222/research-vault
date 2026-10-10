@@ -124,6 +124,7 @@ No bibliography entries; this is Paul's own report. Its focus on employee giving
 ### Linked from
 - [[harrison-2018-application-data-mining]] — same-data — Paul's report draws on LDA disclosures, so the same caution about mixing the two series and about rounding applies.
 - [[anon-2025-cross-industry-political]] — complements — Paul-authored cross-industry finance and lobbying report (author Goff) covering credit unions and community banks. Overlap with this memo may be real, but the memo names are redacted, so shared data lineage is unverified.
+- [[fremeth-2018-spillovers-regulating-corporate]] — complements — Real item (title: Cross Industry Finance and Lobbying Disclosure Report). Complement claim not re-read.
 - [[note-request-for-review-industry-economic-performance]] — complements — Paul earlier report on five financial sectors using FEC, FDIC, SEC and LDA data. Overlapping sectors and sources, but a snapshot report, not the sector-year panel.
 - [[note-industry-growth-and-political-spending-research]] — same-data — Item record exists (Goff, Cross Industry Finance and Lobbying Disclosure Report). Title checked only; the same-data claim was not re-read.
 - [[note-review-industry-growth-and-political-spending]] — same-data — Paul's client report on LD-2 lobbying disclosure is plausibly built on the same LDA filings. The review does not mention it and no data-level match was checked.

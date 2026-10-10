@@ -149,4 +149,5 @@ The evidence partly agrees with Paul's takeaway. His highlights (stable firm par
 - [[bombardini-2020-empirical-models-lobbying]] — complements — The review discusses Bertrand et al. (2014) on connections versus expertise, which this paper extends from individual lobbyists to firms.
 
 ### Linked from
-_None._
+- [[defigueiredo-2013-advancing-empirical-research]] — complements — The partisan ties of lobbying firms (Research and Politics, 2019). Connection-based evidence; the loss-of-ties-when-party-loses-control claim was not verified against the item.
+- [[snowberg-2006-partisan-impacts-economy]] — complements — Furnas et al. estimate revenue effects for party-tied lobbying firms after House-control flips, a control-shock design close to the SEATS and SHIFT question; the outcome is firm revenue, not donations.

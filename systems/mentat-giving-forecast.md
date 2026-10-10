@@ -1,10 +1,10 @@
 ---
 type: system
-name: Mentat giving and PAC forecast
+name: "Mentat giving and PAC forecast"
 slug: mentat-giving-forecast
 components: [mentat-giving-forecast.cycle-model, mentat-giving-forecast.slope-anchor-selection, mentat-giving-forecast.calculator-and-nowcast, mentat-giving-forecast.refit-gates, mentat-giving-forecast.pac-accuracy-attempts, mentat-giving-forecast.seasonal-naive-baseline]
-brain_notes: [C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md, C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md, C:/Users/pgoff/Documents/brain/topics/2026-10-feature-forecast-giving-redesign-giving-by-cycle-live-model.md, C:/Users/pgoff/Documents/brain/topics/2026-09-feature-forecast-giving-redesign-six-year-lookback-lane.md]
-paper_count: 14
+brain_notes: ["C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md", "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md", "C:/Users/pgoff/Documents/brain/topics/2026-10-feature-forecast-giving-redesign-giving-by-cycle-live-model.md", "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-forecast-giving-redesign-six-year-lookback-lane.md"]
+paper_count: 16
 tags: [system]
 ---
 
@@ -12,33 +12,37 @@ tags: [system]
 
 Forecasts of industry and PAC political giving by election cycle. Covers the R refit (cycle-phase log models, 50/50 growth rule, slope and anchor auto-pick, G0-G9 gates), the console calculator's application rules, the company-PAC nowcast and BLEND, the PAC-to-candidate accuracy attempts under a rolling three-cycle cap, the remainder fix, and the Insights seasonal-naive baseline.
 
-Brain notes: [actors/giving-forecast-pipeline](obsidian://open?vault=brain&file=actors%2Fgiving-forecast-pipeline); [projects/forecast-redesign](obsidian://open?vault=brain&file=projects%2Fforecast-redesign); [topics/2026-10-feature-forecast-giving-redesign-giving-by-cycle-live-model](obsidian://open?vault=brain&file=topics%2F2026-10-feature-forecast-giving-redesign-giving-by-cycle-live-model); [topics/2026-09-feature-forecast-giving-redesign-six-year-lookback-lane](obsidian://open?vault=brain&file=topics%2F2026-09-feature-forecast-giving-redesign-six-year-lookback-lane)
+**Brain notes:** [actors/giving-forecast-pipeline](obsidian://open?vault=brain&file=actors/giving-forecast-pipeline); [projects/forecast-redesign](obsidian://open?vault=brain&file=projects/forecast-redesign); [topics/2026-10-feature-forecast-giving-redesign-giving-by-cycle-live-model](obsidian://open?vault=brain&file=topics/2026-10-feature-forecast-giving-redesign-giving-by-cycle-live-model); [topics/2026-09-feature-forecast-giving-redesign-six-year-lookback-lane](obsidian://open?vault=brain&file=topics/2026-09-feature-forecast-giving-redesign-six-year-lookback-lane)
 
 ## Mentat giving and PAC forecast: evidence assessment
 
-**What the evidence base is.** The hub holds 18 evidence rows from 14 distinct papers for 6 components. 5 rows are VERIFIED and 13 are VERIFIED-SOFTENED. 0 are UNVERIFIED, but several rows point to UNVERIFIED sub-claims inside them, and those stay leads. The rows sit on only 3 components:
+**Scope.** The hub file lists 6 components and 21 evidence rows covering 16 distinct papers or notes. By status: 6 VERIFIED, 15 VERIFIED-SOFTENED. Several rows contain sub-claims marked unverified, kept as leads below.
 
-| Component | Rows |
-|---|---|
-| cycle-model | 8 |
-| slope-anchor-selection | 0 (**GAP**) |
-| calculator-and-nowcast | 9 |
-| refit-gates | 1 |
-| pac-accuracy-attempts | 0 (**GAP**) |
-| seasonal-naive-baseline | 0 (**GAP**) |
+**Where the rows fall.** Rows per component: 10 in Cycle-aware giving refit (phase and drift log models, 50/50 growth); 0 in Slope (R0/R1/R2) and anchor auto-pick; 9 in Calculator rules, company-PAC nowcast and BLEND; 2 in Refit gates G0-G9; 0 in PAC-to-candidate accuracy attempts (rolling three-cycle cap); 0 in Insights seasonal-naive baseline and remainder fix. Components with no direct rows are gaps.
 
-9 of the 18 rows (7 of 14 distinct papers) are Paul's own or grey documents, not independent literature: 4 `note-*` research notes (5 rows), `goff-nd-cross-industry-finance`, the `anon-2025` memo and the 2018 Harrison data-mining paper's form-level description. The notes are useful as design rules. They are **not** external evidence that the model is right.
+**Overall reading.** The literature in the vault strongly supports the system's accounting rules:
+- Lobbying in-house expenses and outside-firm income are kept separate and never summed.
+- LDA filings are grouped by filing time, and amendments supersede the original.
+- Giving and lobbying are treated as distinct measures.
 
-**Bottom line.**
+The literature does **not** yet support the system's forecasting choices: the presidential/midterm phase effect on dollars, the 50/50 IBISWorld growth rule, partial pooling of slopes, the pace-nowcast timing, and the 2022 common-shock reading.
 
-1. **The no-sum rule has the strongest support in the base.** Lobbying is shown as in-house expenses beside outside-firm fees and never added, and it is kept apart from PAC giving. Several sources describe the same federal LD-2 accounting, and all of them transfer.
-2. **The forecasting claims have almost no external support.** These are the presidential-phase effect on dollars, the 50/50 IBISWorld growth rule, the pace nowcast, partial pooling, the gate criterion and the PAC accuracy bar.
-3. **The citation Paul relies on for the cycle claim does not say what it is used for.** Bacik et al. find election-cycle "synchronization" in *whom* lobbyists target, using annual data with PAC channels excluded. The paper reports no phase effect on lobbying dollars and nothing on PAC giving.
-4. **The two citations next to Bacik do not supply it either.** Huneeus & Kim and Furnas, LaPira & Brock support persistence and the separation of measures, not phase.
-5. **The pieces that do bear on forecasting point toward naive baselines being hard to beat.** These are firm-level lobbying persistence plus Mentat's own lobbying MAE results, where the refit (4.050) and the growth term (3.99) both lose to naive (3.936 and 3.63).
+Every forecasting paper in the hub is about firm-level lobbying **participation** (Kerr 2014: 92% persistence in a balanced 3,260-firm Compustat panel, 1998-2006; Huneeus & Kim 2018: more than 80% of 2016 lobbiers lobbied again in 2017). None is about sector-level PAC dollars, so transfer to industry PAC-to-candidate giving by cycle is weak throughout.
 
-All quoted coefficients are pooled across sectors unless stated otherwise and should carry an UNSTRATIFIED label. This covers the presidential uplift of +9% (D-119), the u = 1.8635 general-giving factor and the lobbying refit.
+**Contradictions to fix first.**
+1. Paul's reading of Bacik: the verified bearing says its synchronization is in lobbying *targets*, with no election-phase effect on lobbying *dollars*, annual aggregation, and no PACs.
+2. The live system already exempts lobbying from the phase adjustment (Phase 6 rulings of 2026-10-01), so the position and the code disagree about lobbying.
+3. The "3.63 vs 3.99 MAE" figure is labeled seasonal-naive vs growth in the component question, but the evidence rows describe a last-year naive on LobbyView lobbying targets for 2014-2023, and it was not found under sector_growth_study. Treat it as an unverified lead with the wrong label.
 
+## Component status at a glance
+| Component | Rows | Status counts |
+|---|---|---|
+| Cycle-aware giving refit (phase and drift log models, 50/50 growth) | 10 | 1 VERIFIED, 9 VERIFIED-SOFTENED |
+| Slope (R0/R1/R2) and anchor auto-pick | 0 | GAP |
+| Calculator rules, company-PAC nowcast and BLEND | 9 | 5 VERIFIED, 4 VERIFIED-SOFTENED |
+| Refit gates G0-G9 | 2 | 2 VERIFIED-SOFTENED |
+| PAC-to-candidate accuracy attempts (rolling three-cycle cap) | 0 | GAP |
+| Insights seasonal-naive baseline and remainder fix | 0 | GAP |
 
 ## Cycle-aware giving refit (phase and drift log models, 50-50 growth)
 
@@ -60,57 +64,72 @@ All quoted coefficients are pooled across sectors unless stated otherwise and sh
 | [[chohan-2025-crypto-oligarchy-cryptocurrency]] | 2025 | supports | Fairshake raised a record $203 million for the 2024 cycle, reported as more than MAGA Inc. and Senate Majority PAC. These are receipts. The paper also reports $78 million raised toward the 2026 midterms 'to date' as of its January 2025 date. The text gives no FEC source for either figure and cites press items. | The figures show a large money series appearing for 2024 and early 2026. They do not establish a level break, a first cycle, or any per-cycle history before 2024, so they cannot by themselves justify a break term. Any admission would still need FEC-sourced totals. | moderate | VERIFIED-SOFTENED |
 | [[goff-nd-cross-industry-finance]] |  | qualifies | Crypto industry giving is projected north of 175 million dollars for 2025-2026, versus 145.5 million in 2023-2024, an off-year rise the report calls an outlier and attributes to the CLARITY Act push. | Only applies if crypto giving is run through the general_giving measure, which was not checked. The report's 175 million is a projection with no stated method, window or source, so it is a counterexample to test, not evidence. | moderate | VERIFIED-SOFTENED |
 | [[zeileis-nd-econometric-computing-with]] |  | qualifies | On the public schools data (51 states, Wisconsin NA dropped, N=50), the quadratic income term has SE 830, z 1.91, p 0.056 under HC0 and SE 5489, z 0.29, p 0.77 under HC4. Paper attributes the gap to one high-leverage outlier (Alaska) and HC4's leverage correction. It cites Long and Ervin (2000) for HC3 as best in small samples and makes HC3 the vcovHC default. | The paper's HC0 vs HC4 contrast is an estimator-choice comparison on one 50-state cross-section with one outlier. It does not show HC1 understates SEs in the refit's ~11 df regressions. The HC1 understatement point is the analyst's inference from cited small-sample literature, not a result in this paper. The paper has no simulation. | weak | VERIFIED-SOFTENED |
+| [[ansolabehere-2002-little-money-politics]] | 2002 | qualifies | In the gubernatorial panel, campaign spending scales with per-capita income at an elasticity of 1.07 to 1.17, and government spending adds nothing once income and state FE are included. In aggregate, campaign spending shows no trend relative to national income over 1976-2000, and presidential spending as a share of GDP was flat over 1912-2000. | The paper's evidence is aggregate and state-level spending, not industry-attributed giving. Industry revenue proxies firm size and stakes, not donor income, so the bearing is weak. The elasticity should be attributed to the gubernatorial panel, not to campaign spending in general. | weak | VERIFIED-SOFTENED |
+| [[kerr-2014-dynamics-firm-lobbying]] | 2014 | supports | Participation persistence: P(lobby this year given lobbied last year) = 92 percent in a balanced 3,260-firm Compustat panel, 1998-2006 (6.2 percent lobby in a given year; 10.0 percent ever lobby). Above 80 percent in almost all two-digit NAICS industries. 96 percent of expenditures in a typical year come from prior-year lobbyists. Entry clusters in the year before an election, not the election year; exit is unrelated to the cycle. | Evidence is participation for 1998-2006 public firms, not sector dollars. The 96 percent is one sample's expenditure share. Election timing in the paper concerns entry, a small share of dollars, so it does not show phase has zero effect on spend; that stays untested here. | moderate | VERIFIED |
 | [[note-request-for-review-industry-economic-performance]] | 2026 | supports | Election-cycle controls use Pres and Midterm dummies with odd years as the baseline. Industry forecasts (IBISWorld, trade outlooks) are used only to predict 2026 spending after estimation and are never mixed into the estimated growth variable. | Supports only the forecast product split between estimation and projection. Does not cover the sector study C3 and L3 tests, and the presidential-difference term is not the memo Midterm and Pres dummy set. | internal (design doc) | VERIFIED-SOFTENED |
 | [[note-industry-growth-and-political-spending-research]] | 2026 | qualifies | Predicted industry growth is the variable of direct interest, and the sign of the growth-spending relation is to be estimated, not assumed; IBISWorld forecasts proxy public expectations only and do not establish any company's private forecast or whether a donor read the report. | The plan supplies a design principle, not evidence for the 50/50 term. The rel's claim that Paul ruled roster mismatch a stated limitation does not appear in the plan and is unverified. The build's no-stable-effect reading is single path and UNVERIFIED under DE-062. No backtest of the 50/50 term was checked here. | internal (design doc) | VERIFIED-SOFTENED |
 | [[note-review-industry-growth-and-political-spending]] | 2026 | qualifies | Value added, gross output, profits and assets are different quantities; output growth is not spare cash; corporate PAC budgets come from voluntary SSF contributions, so a capacity mechanism fits lobbying more than PAC giving. | The backtest does not isolate any revenue-to-spending link, so it cannot be cited as evidence that the IBIS budget rule is weak. Use only as a fact about the growth term's forecast error in that window. | internal (design doc) | VERIFIED-SOFTENED |
 | [[note-sector-growth-and-political-spending-source]] | 2026 | measurement-source | IBISWorld U.S. Key Statistics revenue is in constant prices, so growth ratios need no CPI adjustment. Previous-year growth (k = 1) is one of two actual-growth timings. Predicted growth uses the prior-year forecast for year t; 55 sector-year values, 53 passing the main checks. | The note supplies only the measurement and lag convention. It says nothing about forecasting giving. The analyst's backtest figures (MAE 3.63 vs 3.99; growth beats naive in 45 percent of targets; LobbyView 2014-2023) were not found in the sector_growth_study folder and are removed. The D-113 attribution for the 50/50 weight is unverified. | internal (design doc) | VERIFIED-SOFTENED |
 
-**Assessment.**
+**What the system does.** The live bundle is refit-20261007, with projection M = B exp(phi dP + d_h)(1 + x/2). Here dP is the presidential-cycle difference and x is IBISWorld real growth lagged one year. The growth weight is 50/50 between the prior cycle and the IBISWorld budget. Company PACs take x = 0 (D-116). Lobbying is exempt from the phase adjustment.
 
-### Cycle-aware giving refit
+**Evidence weight.** There are 10 rows from 10 distinct papers or notes: 1 VERIFIED, 9 VERIFIED-SOFTENED.
 
-**Evidence weight on the core claim is weak.** The core claim is that giving and lobbying dollars depend on presidential vs midterm phase (D-092). The one external paper on periodicity, `bacik-2025-measuring-dynamical-evolution` (VERIFIED-SOFTENED, qualifies), finds four-year, administration-linked blocks in *which agencies* registrants target. Its data are annual federal LDA, and it reports **no** effect of election phase on lobbying dollars. It excludes PAC channels, so it says nothing about the PAC side of D-092. A phase coefficient on dollars therefore has to rest entirely on Mentat's own backtests. No external study in this base tests whether PAC-to-candidate giving is higher in presidential cycles net of inflation.
+**1. The phase effect.** Nothing in the hub measures a presidential-vs-midterm difference in industry PAC dollars net of inflation.
+- Bacik et al. 2025 (moderate): the four-year, administration-linked periodicity is in *whom* lobbyists target. The paper reports no phase effect on lobbying dollars, uses annual aggregation, and excludes PACs. It cannot justify a phase coefficient on dollars and says nothing about D-092 (PAC giving).
+- Kerr et al. 2014 (moderate): lobbying *entry* clusters in the year **before** an election, not the election year, and exit is unrelated to the cycle. The window is 1998-2006 and the denominator is public firms, so this concerns participation, not sector dollars. Entry is a small share of dollars, so it neither confirms nor refutes the lobbying exemption.
+- Bottom line: the PAC phase term (D-092) and the +9% presidential uplift (D-119) rest entirely on Mentat's own fits.
 
-**The growth term (50/50 IBISWorld, one-year lag, D-113) has no external empirical support.** The related rows are all Paul's own notes:
-- `note-industry-growth-and-political-spending-research` says the sign of the growth-spending relation is "to be estimated, not assumed". The live rule assumes a positive 0.5 pass-through.
-- `note-review-industry-growth-and-political-spending` argues that output growth is not spare cash. Corporate PAC budgets come from voluntary SSF contributions, so a capacity mechanism fits lobbying better than PAC giving. This is consistent with D-116 setting x = 0 for company PACs. It cuts against keeping x for general giving, which includes PAC-like money.
-- `note-sector-growth-and-political-spending-source` confirms only the measurement convention: IBIS revenue is in constant prices, k = 1 lag, and 53 of 55 sector-year values pass the main checks.
-- `note-request-for-review-industry-economic-performance` supports keeping forecast growth out of estimation. The cycle model complies.
+**2. The growth term.** The evidence qualifies it rather than supporting it.
+- Ansolabehere, de Figueiredo & Snyder 2002 (weak): campaign spending scales with per-capita income at an elasticity of 1.07-1.17, but in a *gubernatorial* state panel. Aggregate spending shows no trend relative to national income over 1976-2000. Industry revenue is not donor income.
+- Review note (moderate): output growth is not spare cash. Corporate PAC budgets come from voluntary SSF contributions, so a capacity mechanism fits lobbying better than PAC giving. This is consistent with D-116 dropping x for company PACs and implies the term should be questioned for general giving too.
+- Research-plan note: the sign of the growth-spending relation is to be *estimated, not assumed*. The 50/50 rule assumes a positive half-weight.
+- Source-check note: confirms only the measurement (constant-price revenue, k = 1 lag; 55 sector-year values, 53 passing the main checks). The D-113 attribution for the 50/50 weight is unverified.
+- Bombardini & Trebbi 2020 (filed under calculator): elasticity of lobbying expenditure to firm sales is about 1, conditional on lobbying. Firm-level and lobbying-only; it does not cover PACs.
 
-The "no stable effect" reading of the build is single-path and UNVERIFIED (DE-062), so it is a lead, not a finding.
+**3. Specification departures.**
+- The review-request memo specifies Pres and Midterm dummies with an odd-year baseline and keeps industry forecasts out of estimation. The live model keeps forecasts out of estimation, but uses a presidential *difference* dP, not the memo's dummy set.
+- The sector study puts predicted_growth_pct on the right-hand side in C3 and L3, which the memo prohibits.
+- Zeileis (weak): with about 11 df, HC1 standard errors are suspect; HC3 is the small-sample default. The refit prints CR1, CR2 and a wild cluster bootstrap beside HC1, so read the CR2/bootstrap rows.
 
-**Inference.** The robustness block reports an HC1 row on models with about 11 degrees of freedom. `zeileis-nd-econometric-computing-with` shows that HC estimators diverge sharply under leverage: the quadratic-income SE is 830 under HC0 and 5489 under HC4, on a 50-state cross-section with one outlier. The paper does not show that HC1 understates SEs here, so it is a weak lead. The same block already prints CR2 and a wild cluster restricted bootstrap; headline inference should rest on those rather than HC1.
-
-**Counterexamples to test (not evidence).** Two rows bear on crypto:
-- `goff-nd-cross-industry-finance` projects crypto giving above $175M for 2025-26, against $145.5M in 2023-24. The source is unmethodical: no window, no source.
-- If crypto ran through general_giving, the u = 1.8635 factor would scale the midterm step down by about 46%.
-- `chohan-2025-crypto-oligarchy-cryptocurrency` reports Fairshake receipts of $203M for 2024 and $78M toward 2026 as of January 2025, sourced to press, not FEC.
-- Crypto is currently excluded from the pac, control and lobbying models, and that exclusion was verified.
-
-Neither row establishes a level break.
+**4. Counterexamples.**
+- Goff (n.d.) projects crypto giving above $175M for 2025-26 vs $145.5M for 2023-24, an off-year rise. Its window and method are unstated, so it is a test case, not evidence.
+- If crypto ever runs through general_giving, the code's u = 1.8635 factor on both steps would scale the midterm step by about -46%, the opposite direction.
+- Chohan 2025: Fairshake's $203M in 2024-cycle receipts is press-sourced. Mentat's registry correctly declines crypto for now.
 
 **Contradictions.**
-- Paul cites Bacik et al. for 'lobbying synchronizes with the election cycle and more money is given in election years'. Bacik reports synchronization of target portfolios by administration, not of dollars, and reports no election-phase effect on lobbying spending (annual data, PAC channels excluded). The citation does not support the dollar claim.
-- The other two system citations for this component (Huneeus & Kim 2018; Furnas, LaPira & Brock 2025) bear on firm-level lobbying persistence and on keeping lobbying and PAC measures separate. Neither addresses election-phase effects.
-- Inconsistent uplift figures. The component states a presidential uplift of +9% (D-119), while the goff-nd bearing reads code applying u = 1.8635 to general_giving on both cycle steps (giving_forecast.py:1425, gate at 1888), about -46% on the midterm step. These may be different measures (company-PAC phi vs general giving), but the record does not reconcile them, and both are pooled (UNSTRATIFIED) figures.
-- Paul's own research plan says the growth-spending sign is to be estimated, not assumed. The live 50/50 rule fixes a positive 0.5 weight from an owner ruling (2026-10-07), and the D-113 attribution for the weight is itself unverified per the source-check bearing.
-- The memo specification (Pres and Midterm dummies, odd-year baseline) differs from the live dP = Pres(c) - Pres(c-2) difference term. The sector study puts predicted_growth_pct on the right-hand side in C3/L3 (sgs_registry.R:30), which the memo prohibits. That departure is outside this component but is the same research program.
+- Paul cites Bacik et al. for 'lobbying synchronizes with the election cycle and more money is given in election years'. The verified bearing says Bacik's synchronization is in lobbying targets (agency blocks by administration), with no reported election-phase effect on lobbying dollars, annual aggregation, and no PAC data.
+- Paul's position applies the cycle to lobbying, but the live system exempts lobbying from the midterm/presidential phase adjustment (Phase 6 rulings 2026-10-01, per the Kerr row).
+- Kerr et al. 2014 find lobbying entry clusters in the year BEFORE an election, not the election year (participation, public firms, 1998-2006). This cuts against an election-year spending peak for lobbying, though entry is a small share of dollars.
+- The method states a presidential uplift of +9% (D-119), but the Goff row reports the code applies u = 1.8635 to general_giving on both cycle steps (giving_forecast.py about line 1425), scaling the midterm step by about -46%. These may be different measures, but the hub does not reconcile them.
+- The review-request memo specifies Pres and Midterm dummies with an odd-year baseline; the live model uses a presidential difference dP. The sector study's C3/L3 put predicted growth on the right-hand side, which the memo prohibits.
+- The research-plan note says the sign of the growth-spending relation must be estimated, not assumed; the 50/50 rule fixes a positive half-weight a priori.
 
 **Gaps.**
-- No external study tests whether industry or corporate PAC-to-candidate giving is higher in presidential cycles than in the preceding midterm, net of inflation. Needed: a multi-cycle FEC panel (for example 2000-2024), sector-stratified, real dollars, with company PAC and general giving estimated separately.
-- No evidence that industry revenue growth improves giving forecasts over seasonal naive. Needed: a pseudo-out-of-sample forecast comparison with a named target window and denominator (sectors x cycles), reporting per-sector errors rather than a pooled MAE.
-- No evidence on the lobbying log refit's phase term beyond the system's own backtests.
+- No study in the hub measures industry PAC giving in presidential vs preceding midterm cycles, net of inflation. Fill with an FEC panel of industry PAC-to-candidate totals by two-year cycle (e.g., 2004-2024), estimating the phase contrast with industry and trend controls, stratified by industry or labeled UNSTRATIFIED if pooled.
+- No out-of-sample test isolates the IBISWorld 50/50 growth term against the same model with x = 0, for general giving. Fill with a rolling-origin backtest naming its target window, horizon and number of industries.
+- Furnas, LaPira & Brock 2025 and Huneeus & Kim 2018 are cited by Paul for this component, but neither has a bearing on the cycle/phase question in the hub.
+- No source attributes the 50/50 weight to D-113; the attribution is marked unverified.
 
-**Paul's position vs the evidence.** Paul's position is that lobbying synchronizes with the election cycle and more money flows in election years. The verified reading of his own source supports only the first half, and only for *targets*. Bacik finds administration-linked periodicity in which agencies are lobbied, not in amounts, and does not cover PAC giving. The 'more money in election years' half has no supporting evidence in this base. It currently rests on Mentat's internal fits (+9% presidential uplift, D-119, UNSTRATIFIED). The 50/50 growth rule is not supported by any external study, and Paul's own plan says the sign should be estimated, not assumed.
+**Paul's position vs the evidence.**
+
+Paul's stated position is that lobbying synchronizes with the election cycle and more money is given in election years, citing Bacik 2026 (the hub's Bacik is 2025), Furnas, LaPira & Brock 2025 and Huneeus & Kim 2018.
+
+- Bacik does not support the dollar claim. Its synchronization is about which agencies are targeted, by administration. It reports no phase effect on dollars and covers no PACs.
+- No hub row shows Furnas/LaPira/Brock bearing on cycle timing. Huneeus & Kim speak to persistence, not phase.
+- Kerr points the other way on timing. Entry peaks in the pre-election year, not the election year.
+- The system has already diverged from the position for lobbying, which it exempts from the phase adjustment.
+
+For PAC giving, 'more money in presidential years' is plausible and is what D-092 encodes, but the only support is Mentat's own backtests, not the cited literature.
 
 **Open questions.**
-- Are the +9% (D-119) uplift and the u = 1.8635 general_giving factor different measures, and which is live for which series?
-- Does any crypto series flow through general_giving, where the 1/1.8635 midterm scaling would apply?
-- What is the out-of-sample error of the 50/50 IBIS term for general giving against seasonal naive, by sector, over a stated window?
-- Is the presidential uplift stable across sectors, or does the pooled figure hide sector-level sign differences?
-- Should headline inference switch from HC1 to CR2 or the wild cluster bootstrap, given about 11 df?
+- Is the +9% presidential uplift (D-119) a pooled coefficient across industries? If so, quote it per industry or label it UNSTRATIFIED.
+- How do D-119's +9% and the code's u = 1.8635 on general_giving relate? Different measures, or is one stale?
+- Does the growth term x improve general-giving forecasts over x = 0 out of sample? Over what target window and how many industries?
+- Should general giving also drop x, given the SSF-capacity argument that justified D-116 for company PACs?
+- If crypto is ever admitted, would its giving route through general_giving and inherit the both-steps presidential factor?
 
-**Read first:** [[bacik-2025-measuring-dynamical-evolution]], [[note-review-industry-growth-and-political-spending]], [[note-industry-growth-and-political-spending-research]], [[note-sector-growth-and-political-spending-source]], [[note-request-for-review-industry-economic-performance]], [[zeileis-nd-econometric-computing-with]]
+**Read first.** [[bacik-2025-measuring-dynamical-evolution]], [[kerr-2014-dynamics-firm-lobbying]], [[note-review-industry-growth-and-political-spending]], [[note-industry-growth-and-political-spending-research]], [[ansolabehere-2002-little-money-politics]], [[note-request-for-review-industry-economic-performance]]
 
 ## Slope (R0-R1-R2) and anchor auto-pick
 
@@ -129,37 +148,36 @@ Neither row establishes a level break.
 |---|---|---|---|---|---|---|
 | (none: GAP) | | | | | | |
 
-**Assessment.**
+**GAP: no evidence rows.**
 
-### Slope (R0/R1/R2) and anchor auto-pick: GAP
+**What the system does.** It chooses among a pooled slope (R0), own industry slopes (R1) and a DerSimonian-Laird partially pooled slope (R2). The same-phase anchor is used only when it wins by 5% in both backtest designs. The reported result is that own slopes beat the blend, LOEO 10.8 vs 14.3. The hub does not restate that figure's window or the number of industries and elections in its denominator, so it must not be quoted bare.
 
-No evidence row bears on this component. The DerSimonian-Laird estimator is cited in the system as a method reference, but no paper in the base tests whether partially pooling industry slopes reduces forecast error in small sectors. Nothing tests the auto-pick rule either: the same-phase anchor is chosen only when it wins by 5% in both backtests.
+**Methodological cautions** (general methods knowledge, not hub evidence).
+- DerSimonian-Laird is known to estimate between-group variance poorly with few groups or few observations per group. Paule-Mandel/REML with Hartung-Knapp intervals are common alternatives.
+- LOEO is noisy: it runs over a handful of elections, so a gap like 10.8 vs 14.3 may not be stable.
+- Choosing a rule because it wins both backtests by 5% is itself a model-selection step; its out-of-sample error is optimistic unless the selection is nested inside the backtest.
+- R0 and the blend pool across industries, a known fault line. Any pooled slope reported should carry industry strata or be labeled UNSTRATIFIED.
 
-The only supporting figure is internal: own slopes beat the blend, LOEO 10.8 vs 14.3. The record does not state that figure's unit, sector set or election window, so it cannot be quoted as is.
-
-Two design risks follow from the structure, not from evidence:
-1. A rule chosen because it won two backtests on the same short history is a selection step, and its generalization needs a nested or forward holdout.
-2. Random-effects variance estimators behave differently when the number of groups is small. That is a reason to compare estimators (DL vs REML or Paule-Mandel), not a finding against DL here.
-
-The reading list names adjacent papers only: persistence, small-sample inference and the growth measurement source. None of them bears directly.
+**Adjacent hub evidence (indirect).** Kerr 2014: entry-heavy sectors break naive anchors. Kerr 2014 and Huneeus 2018: incumbent persistence is high. Together these suggest industries differ in regime, which argues for own slopes in incumbent-dominated sectors and fits the finding that own slopes beat the blend. These rows are filed under other components.
 
 **Contradictions.**
-- None recorded.
+- The component's empirical question presumes partial pooling should help small-sample sectors. The system's own result (own slopes beat the blend, LOEO 10.8 vs 14.3) runs the other way. No external evidence in the hub adjudicates.
 
 **Gaps.**
-- No study of partial pooling (DL or otherwise) against own-slope models for forecasting political giving in small-sample sectors. Needed: a simulation plus a historical pseudo-out-of-sample comparison of R0/R1/R2 by sector, with sector size as a moderator.
-- No evidence that the two-backtest, 5% margin auto-pick rule generalizes. Needed: a nested holdout in which the rule is chosen on early cycles and scored once on a later cycle.
-- The LOEO 10.8 vs 14.3 comparison lacks a named window and denominator in the record.
+- No study on partial pooling of industry-level political-spending trend slopes. Fill with a nested rolling-origin backtest comparing no-pool, full-pool and empirical-Bayes/REML partial-pool slopes, error per industry, window and industry count stated, auto-pick rule refit inside each fold.
+- No evidence that the 'wins both backtest designs by 5%' rule generalizes. Fill with a simulation or held-out-cycle check of the selection rule itself.
+- No literature on same-phase vs previous-cycle anchors for two-year electoral series.
 
-**Paul's position vs the evidence.** Paul states no literature for this component, and the evidence base agrees: there is none. The design rests entirely on Mentat's internal LOEO backtests.
+**Paul's position vs the evidence.**
+
+Paul states no literature, and the hub has none. The design is defensible on internal backtests only. The current 'own slopes win' result is consistent with the indirect persistence/heterogeneity evidence (Kerr, Huneeus), but rests on a small LOEO comparison whose window and denominator are not stated in the hub.
 
 **Open questions.**
-- What are the unit, sector count and election window behind LOEO 10.8 vs 14.3?
-- How many sectors fall into R2, and with how many cycles each?
-- Would REML or Paule-Mandel tau-squared change which slope wins in small sectors?
-- Has the auto-pick rule ever been scored on a cycle that was not used to choose it?
+- What are the window, number of elections and number of industries behind LOEO 10.8 vs 14.3?
+- Is the anchor/slope auto-pick performed inside each backtest fold, or once on the full sample?
+- Would a REML or Paule-Mandel tau-squared estimator change the R2 result relative to DerSimonian-Laird?
 
-**Read first:** [[zeileis-nd-econometric-computing-with]], [[huneeus-2018-effects-firms-lobbying]], [[note-sector-growth-and-political-spending-source]]
+**Read first.** [[kerr-2014-dynamics-firm-lobbying]], [[huneeus-2018-effects-firms-lobbying]], [[zeileis-nd-econometric-computing-with]]
 
 ## Calculator rules, company-PAC nowcast and BLEND
 
@@ -186,43 +204,48 @@ The reading list names adjacent papers only: persistence, small-sample inference
 | [[anon-2025-cross-industry-political]] | 2025 | context | Credit unions have the lowest CEO and executive averages of the four industries (CEO $5,147, executive $3,009). Their giving is coordinated through the ACU trade association, with a near-perfect bipartisan balance (memo gives no figure), emphasis on open seats and special elections, and hedging across opposing candidates. | Supports treating credit-union political money as PAC- and association-led, so the panel cohort is the right unit. The near-perfect ratio and the volatility claims have no figures, so they cannot check the pinned split. | weak | VERIFIED |
 | [[note-review-industry-growth-and-political-spending]] | 2026 | supports | LDA in-house expenses include retained-firm payments and lobbying-related association dues, so adding client expenses, firm revenues and association expenses double-counts; keep the series separate or deduplicate. | Direct for any sector total. Trade-association overlap is not yet handled separately, per the bearing; not confirmed by code read here. | internal (design doc) | VERIFIED |
 
-**Assessment.**
+**Evidence weight.** There are 9 rows from 7 distinct papers or notes: 5 VERIFIED, 4 VERIFIED-SOFTENED. All of them bear on the **accounting** rules. None bears on the **pace nowcast** itself.
 
-### Calculator rules, company-PAC nowcast and BLEND
+**1. Strongly supported: the no-sum rule for lobbying.**
+- Harrison et al. 2018 (strong): the federal LD-2 XML amounts do not separate income from expenses. A form-level fact that transfers fully to current Senate LDA data. It supports D-064 but does not measure the overlap.
+- Bacik et al. 2025 (moderate): firms report income and self-filers report expenses, under different thresholds. Bacik also imputes a threshold value for low-cost reports as an upper bound. If any sector_spend values come from LobbyView, check for that imputation.
+- Review note (moderate): in-house expenses include retained-firm payments and association dues, so summing double-counts. Trade-association overlap is not yet handled separately.
+- Sector-study config: records a median 9-26% double count by sector in undifferentiated LobbyView sums.
 
-**The accounting rules are well supported.** Several rows independently support keeping LDA outside-firm fees (income_total) and in-house expenses (expenses_total) separate and never summed:
-- `harrison-2018-application-data-mining`: the LD-2 XML amounts do not distinguish expenses from income. This is a form-level description, so it transfers fully.
-- `note-review-industry-growth-and-political-spending`: in-house expenses include retained-firm payments and association dues, so summing double-counts.
-- `bacik-2025-measuring-dynamical-evolution` (VERIFIED): K-Street firms report income, self-filers report expenses, and the two face different reporting thresholds.
-- `bombardini-2020-empirical-models-lobbying`: the in-house lobbyist share fell from nearly 60% to under 40%, 1999-2008. That is a share of headcount, not dollars, across all federal LDA, so its strength is weak.
-- `furnas-nd-conflating-lobbying-pacs`: lobbying and PAC spending have different distributions and timing and should be modelled separately. This is descriptive.
+**2. Supported: filing-time grouping and amendment handling.**
+- Harrison 2018: LDA records group by filing time, not activity time; late filings for 2002-2008 appeared in Q4 2009 files.
+- Mentat is stricter than the paper: it keeps the latest dt_posted per (registrant, client, year, period), so amendments supersede originals, and applies the D-130 quarter-coverage rule.
 
-The amendment handling is stricter than Harrison's. Harrison groups records by filing time and only year-filters; sector_spend keeps the latest dt_posted per registrant, client, year and period.
+**3. Supported but weak: keeping giving and lobbying as separate models.**
+- Furnas (n.d.) (weak): PAC giving is lumpier and often one-off; lobbying is concentrated between $10K and $1M and spans months.
 
-**The nowcast itself has no evidence.** The formula is O + (1-s)B, with s the geometric mean of pace shares. No row tests within-cycle pace or the month at which a pace nowcast beats a model. Bombardini's 92% persistence figure (Kerr et al. 2014) is an extensive-margin, firm-level rate: does a firm lobby at all in year t+1. It is not persistence of dollars at sector level, and the bearing explicitly says the review offers nothing on within-cycle dollar movement.
+**4. Context only.**
+- Bombardini & Trebbi (Bertrand et al.): the in-house share of *lobbyists* fell from about 60% to under 40% over 1999-2008, a headcount share, not dollars.
+- Bombardini (Kerr): 92% persistence is firm participation, not industry dollars.
+- Furnas et al. 2019 (weak): House control flips move revenue *between* partisan contract firms; the effect is distributional and does not show a sector-total step.
+- Cross-industry memo (weak): credit-union money is PAC- and association-led, supporting the 16-PAC cohort (D-117) as the unit, but it has no figures to check the pinned D/R split.
 
-**Lobbying projection.** `furnas-2019-partisan-ties-lobbying` shows House control flips moving contract-lobbying revenue *between* partisan firms (2011: about +$10k per lobbyist at R-aligned firms, more than -$40k at D-aligned firms). This is distributional and firm-level, and the paper does not identify a change in sector totals. Before any control-flip term is added, test whether outside-firm totals step after the 2011, 2015 and 2019 flips.
-
-**Credit-union cohort.** `anon-2025-cross-industry-political` is a grey memo with no figures for its balance or volatility claims. It is consistent with treating CU money as PAC- and association-led, so the 16-PAC panel cohort (D-117) is a sensible unit. It cannot check the pinned D/R split.
+**5. Not addressed: the pace nowcast.** The nowcast is O + (1-s)B with s the geometric mean of pace shares, and it overrides BLEND (D-099) via D-116. No evidence in the hub speaks to when in the cycle a pace nowcast beats the model.
 
 **Contradictions.**
-- The bombardini-2020 system_side records that the earlier year-effect slope model never beat last-period naive (G9). The lobbying projection is now a nowcast carried forward unchanged, so the model path it replaced had already failed against naive. This is consistent with the evidence, but it means the lobbying 'forecast' is effectively persistence plus pace.
-- Trade-association overlap is not handled separately, per the note-review bearing (not confirmed by a code read), even though that note identifies association dues as a double-count source. The no-sum rule covers the firm vs self-filer overlap only.
+- None between evidence and code on the accounting rules. One minor provenance caveat: the side-by-side lobbying display claim in the review-note row comes from a Melange commit message and was not read in Mentat code. The Harrison row clarifies that the telecom 2025 de-summing ($139.4M -> $102.4M in-house + $37.0M outside-firm fees) was a Melange industry-page change (commit 914623152), not a change to Mentat's card.
 
 **Gaps.**
-- No evidence on when a within-cycle pace nowcast outperforms the model forecast. Needed: a month-by-month backtest across past cycles of O + (1-s)B against the model and seasonal naive, by sector, with error reported per month of the cycle.
-- No evidence that the geometric-mean pace share s is a better estimator than alternatives such as the median, the last cycle, or phase-matched pace.
-- The LobbyView threshold imputation (Bacik: low-cost reports assigned a threshold value as an upper bound) has not been checked against Mentat sector_spend rows.
+- No evidence on within-cycle pace nowcasting: at what month a pace-share nowcast beats the model forecast. Fill with a backtest over past cycles (e.g., 2014-2024) scoring nowcast vs model at each month, per measure and industry, stating target window and denominator.
+- No evidence on the geometric-mean pace-share construction vs alternatives (median, last-cycle share).
+- Trade-association lobbying overlap is identified as a double-count risk but has no measured size in the hub.
+- No test of whether outside-firm sector totals step after the 2011, 2015 and 2019 House control flips (the Furnas 2019 row recommends this before any control term is added).
 
-**Paul's position vs the evidence.** Paul states no literature. In fact the accounting side is well covered: the D-064 no-sum rule and the separation of lobbying from PAC giving are supported by VERIFIED and VERIFIED-SOFTENED rows on the same LD-2 structure. The nowcast and BLEND logic, which is the forecasting part, has no literature, so his statement is accurate for that part.
+**Paul's position vs the evidence.**
+
+Paul states no literature, but the evidence is stronger here than in any other component. Harrison 2018, Bacik 2025 and the review note independently support the in-house/outside never-sum rule (D-064) and filing-time handling, and Paul can cite them. The nowcast's core empirical bet, that within-cycle pace is informative, remains uncited and untested by any external source.
 
 **Open questions.**
-- Do any sector_spend values come from LobbyView with Bacik's threshold-value imputation?
-- At what month of the cycle does the pace nowcast first beat the model, by sector?
-- Do outside-firm fee totals step after the 2011, 2015 and 2019 House control flips?
-- Should trade-association dues be deduplicated from in-house expenses for sectors with large associations (CU, banking)?
+- Do any sector_spend values come from LobbyView, and do they carry Bacik's low-cost-report threshold imputation?
+- How are trade-association dues inside in-house expenses handled for sectors with large associations (e.g., credit unions via ACU)?
+- Is the D/R split pinned to the 16-PAC cohort stable across cycles?
 
-**Read first:** [[harrison-2018-application-data-mining]], [[bacik-2025-measuring-dynamical-evolution]], [[note-review-industry-growth-and-political-spending]], [[bombardini-2020-empirical-models-lobbying]], [[furnas-2019-partisan-ties-lobbying]], [[furnas-nd-conflating-lobbying-pacs]]
+**Read first.** [[harrison-2018-application-data-mining]], [[bacik-2025-measuring-dynamical-evolution]], [[note-review-industry-growth-and-political-spending]], [[furnas-nd-conflating-lobbying-pacs]], [[bombardini-2020-empirical-models-lobbying]], [[furnas-2019-partisan-ties-lobbying]]
 
 ## Refit gates G0-G9
 
@@ -240,39 +263,41 @@ The amendment handling is stricter than Harrison's. Harrison groups records by f
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
 | [[huneeus-2018-effects-firms-lobbying]] | 2018 | context | Firm lobbying is persistent. Fact 4 (printed p.10): more than 80 percent of firms that lobbied in 2016 also lobbied in 2017. Figure 3 (printed p.10): adjacent-year intensive-margin log-lobbying slope 0.922 (t = 157.88, conditional on lobbying in both years). The Figure 3 caption says over 70 percent of firms lobby in two consecutive years. Persistence dropped during the 2007-2009 financial crisis. The paper does not address forecasting. | The paper's persistence is firm-level on public firms in a 1999-2018 sample; the forecast works on sector aggregates. The claim that naive is a strong baseline is the analyst's inference from persistence, not the paper's. The 2007-2009 break lies outside the 2014-2023 target window but may fall in training data for later origins; the backtest start year was not checked, so 'regime shifts are not in the backtest' is not established. Persistence says nothing about whether growth adds signal. | moderate | VERIFIED-SOFTENED |
+| [[kerr-2014-dynamics-firm-lobbying]] | 2014 | supports | Lagged lobbying status raises current-year lobbying probability by 0.84 to 0.88 in Blundell-Bond columns 2-6 (baseline column 2 = 0.8848; column 6 = 0.8810), 26,080 firm-years, 1998-2006 public firms (Table 2 and note). Table 7 Panel E: 0.00 entry 2004-2006 among the most dependent firms not lobbying in 2001-2003, on both LCA and patenting measures. Entry is not zero elsewhere: 4th-quintile LCA non-lobbyists show 0.08, and Nike entered without prior lobbying (fn 26). | Persistence evidence is for binary participation, not dollars. The naive-anchor result for dollars holds only while incumbents dominate sector totals; entrant-heavy sectors (crypto before 2015, fintech) break that. The no-entry result holds only for the top dependency quintile, not all dependent firms. | moderate | VERIFIED-SOFTENED |
 
-**Assessment.**
+**Evidence weight.** There are 2 rows from 2 distinct papers or notes: 2 VERIFIED-SOFTENED. Both are about lobbying persistence, not about the gate criteria themselves.
 
-### Refit gates G0-G9
+**What the rows say.**
+- Kerr et al. 2014 (moderate): lagged lobbying status raises current-year lobbying probability by 0.84-0.88 (Blundell-Bond; 26,080 firm-years; 1998-2006 public firms). In Table 7 Panel E the most dependent non-lobbying firms show zero entry; entry elsewhere is not zero (0.08 in the 4th LCA quintile).
+- Huneeus & Kim 2018 (moderate, context): more than 80% of 2016 lobbiers lobbied again in 2017. The adjacent-year intensive-margin log slope is 0.922, conditional on lobbying in both years (sample 1999-2018). Persistence dropped in the 2007-2009 crisis.
 
-One row bears on this component, as context only. `huneeus-2018-effects-firms-lobbying` (VERIFIED-SOFTENED) documents strong firm-level lobbying persistence:
-- More than 80% of firms that lobbied in 2016 also lobbied in 2017.
-- The adjacent-year intensive-margin log-lobbying slope is 0.922, conditional on lobbying in both years.
-- The sample is public firms, 1999-2018.
-- Persistence dipped in 2007-2009.
+**What follows.** Strong persistence makes naive a hard baseline, consistent with G9's warning that the log-lobbying refit (MAE 4.050) does not beat naive (3.936; README, pinned in test-08). That is the analyst's inference, not either paper's claim. Neither paper addresses forecasting, and both are firm-level participation or intensity, not sector aggregates.
 
-That persistence makes it plausible that naive is a strong baseline. The paper does not say so and does not address forecasting, so the link is the analyst's inference, and it is at firm level, not for the sector aggregates the gates score.
-
-The internal record agrees with that inference. The README records the log-lobbying refit at MAE 4.050 against naive 3.936, so G9 fires and the refit does not beat naive; this is a warning only, and waivers were applied. Whether the 2007-2009 break sits in the training data for later rolling origins was not checked.
-
-No row tests whether LOEO MAE is a valid gate criterion, meaning whether refits that pass G6 forecast the next cycle better than the published calculator. With few elections per industry, LOEO MAE differences are noisy, and no row supplies a significance or stability standard for them.
+**Caveats.**
+- Naive anchoring holds only while incumbents dominate sector totals. Entrant-heavy sectors (crypto before 2015, fintech) break it.
+- Whether the 2007-2009 break sits in training data for later origins was not checked.
+- Leave-one-election-out MAE as a criterion has no external support or critique in the hub. With few elections, the G6 rule is a many-comparisons gate whose false-fail and false-pass rates are unknown.
+- Unverified lead: the sector-study triple (MAE 3.63 / 3.99 / 6.55 with control terms) was not found under sector_growth_study.
 
 **Contradictions.**
-- Waivers let a refit go forward even though G9 shows the lobbying refit failing to beat naive (MAE 4.050 vs 3.936, window and unit as recorded in the README, not re-checked). The gate system flags the failure but does not block on it, and Huneeus-type persistence makes this failure expected rather than incidental.
+- None with the gates' logic. One provenance conflict: the sector-study backtest triple (3.63 vs 3.99 vs 6.55) is referenced in other rows and in a brain note, but was not found in any file under sector_growth_study. It must not be used as gate evidence until located.
 
 **Gaps.**
-- No study validates LOEO MAE as a predictor of next-cycle performance. Needed: prospective scoring of G6-passing refits against the published calculator on the next realized cycle (2026), recorded as a single pre-committed look.
-- No standard for whether an MAE difference between refit and calculator exceeds noise at the available number of elections. Needed: a forecast-comparison test (Diebold-Mariano-type or a bootstrap over elections) with the window and denominator stated.
-- Persistence evidence is firm-level, so sector-aggregate persistence of LDA dollars needs its own descriptive check.
+- No evidence on whether refits that pass G6 forecast the next cycle better than the published calculator. Fill with a prospective, one-look comparison: record G6-passing refits and the calculator at each origin, then score both on the next realized cycle.
+- No study of LOEO MAE's reliability as a gate with few elections. Fill with a simulation of G6 false-fail/false-pass rates under the observed number of elections and industries.
+- Waivers are applied, but no criterion for granting a waiver is evidenced.
 
-**Paul's position vs the evidence.** Paul states no literature, and the base has only contextual support. The persistence finding is consistent with what the gates observe (refits struggle to beat naive), but it does not validate LOEO MAE as the criterion.
+**Paul's position vs the evidence.**
+
+Paul states no literature. The persistence evidence (Kerr, Huneeus) is consistent with the system's own finding that the lobbying refit does not beat naive (4.050 vs 3.936), pointing toward the naive/nowcast route already taken for lobbying. Nothing in the hub validates LOEO MAE as the publication criterion.
 
 **Open questions.**
-- Which waivers were applied, and to which industries?
-- Does the rolling-origin training data for later origins include 2007-2009?
-- How many elections enter LOEO per industry, and what is the sampling noise of the MAE gap?
+- What target window and how many industries/elections underlie the 4.050 vs 3.936 log-lobbying MAE?
+- What is the backtest start year, and does the 2007-2009 persistence break fall in training data for later origins?
+- Which waivers were applied in refit-20261007, and on what grounds?
+- Where do the 3.63 / 3.99 / 6.55 figures come from?
 
-**Read first:** [[huneeus-2018-effects-firms-lobbying]], [[bombardini-2020-empirical-models-lobbying]], [[zeileis-nd-econometric-computing-with]], [[note-review-industry-growth-and-political-spending]]
+**Read first.** [[kerr-2014-dynamics-firm-lobbying]], [[huneeus-2018-effects-firms-lobbying]], [[zeileis-nd-econometric-computing-with]], [[note-review-industry-growth-and-political-spending]]
 
 ## PAC-to-candidate accuracy attempts (rolling three-cycle cap)
 
@@ -291,35 +316,35 @@ No row tests whether LOEO MAE is a valid gate criterion, meaning whether refits 
 |---|---|---|---|---|---|---|
 | (none: GAP) | | | | | | |
 
-**Assessment.**
+**GAP: no evidence rows.**
 
-### PAC-to-candidate accuracy attempts: GAP
+**What the system does.** It scores ORIGIN and nowcast forecasts of PAC-to-candidate giving over 2018-2024, under a rolling three-cycle cap. The bar is A >= 90 overall and >= 75 per phase. In v6 (ORIGIN B1 plus N/(N+1) cross-sector pace shrinkage), only telecom passes. A common 2022 drop defeats window rules (DE-066/067).
 
-No evidence row bears on this component. The central empirical question has no study behind it: was the 2022 drop in industry PAC-to-candidate giving a common shock across sectors? The record (DE-066/067) says the drop defeats window rules. It is plausible that something cycle-specific hit corporate PACs between 2020 and 2022, and announced pauses after January 2021 are an obvious hypothesis. That is a lead to check against FEC data, not a finding.
+**Literature.** None in the hub addresses whether 2022 was a common shock, accuracy bars for PAC forecasts, or cross-sector shrinkage.
 
-The accuracy bar is A >= 90 overall and >= 75 per phase, scored over 2018-2024. That is 4 cycles, roughly 2 per phase, so per-phase accuracy rests on very few targets. Only telecom passes under v6 (ORIGIN B1 plus N/(N+1) cross-sector pace shrinkage), and that pass should be read with the same small-n caution.
+**Adjacent rows (indirect, filed elsewhere).** Furnas (n.d.): PAC giving is uneven and often one-off, implying high irreducible error per PAC, which makes a 90% bar demanding. Review note: PAC budgets come from voluntary SSF contributions, bounding what revenue- or capacity-based predictors can add.
 
-Adjacent papers give context only:
-- `furnas-nd-conflating-lobbying-pacs`: PAC giving is lumpier than lobbying, with many groups under $10k, which bears on volatility.
-- `chohan-2025` and `goff-nd`: new money series, such as crypto, can appear abruptly.
-- `anon-2025`: CU giving is association-coordinated.
+**A candidate explanation for 2022.** Many corporate PACs announced pauses in candidate giving after January 2021, and 2022 was also the first cycle after redistricting. Both would produce a cross-sector 2022 dip. These are hypotheses from general knowledge, **not hub evidence**, offered as leads to test.
 
 **Contradictions.**
-- None recorded.
+- (none)
 
 **Gaps.**
-- No study of a common 2022 shock. Needed: a sector-by-sector FEC decomposition of corporate PAC-to-candidate giving for 2018, 2020, 2022 and 2024, separating the number of active PACs from dollars per active PAC, and testing whether the 2022 change is common across sectors or concentrated.
-- No literature on forecasting PAC-to-candidate totals at all, including the rolling three-cycle cap. Needed: a forecast-comparison study across sectors with a pre-registered, single-look holdout.
-- No evidence on whether cross-sector pace shrinkage, N/(N+1), is appropriate when sectors share a common shock. Shrinking toward a shocked mean could transmit the shock.
+- No study tests whether the 2022 drop in industry PAC-to-candidate giving was a common cross-sector shock. Fill with a variance decomposition (cycle fixed effects vs sector-by-cycle residuals) on FEC PAC-to-candidate receipts by sector, 2014-2024, stating the sector count.
+- No external evidence on the post-January-2021 corporate PAC pauses as the cause. Fill with an event-study on corporate PAC disbursements by announced-pause status.
+- No literature on forecast-combination or shrinkage for short electoral panels to justify N/(N+1) cross-sector pace shrinkage. Fill with a methods review plus a nested backtest under the three-cycle cap.
+- No basis in the hub for the A >= 90 / >= 75 per-phase bar.
 
-**Paul's position vs the evidence.** Paul states no literature, and that is correct. The 'gains must come from method, not more history' rule (the six-year lookback directive) is a design choice. No evidence row tests it against longer-history alternatives.
+**Paul's position vs the evidence.**
+
+Paul states no literature, and the hub has none. Paul's directive that gains must come from method, not more history (the rolling three-cycle cap), is a design constraint, not an empirical claim, and nothing in the evidence argues for or against it. If 2022 was a single common shock, it is exactly what a three-cycle window cannot learn from; an explicit common-shock term is the method-side response consistent with the cap, but remains to be tested.
 
 **Open questions.**
-- Was the 2020-2022 drop driven by fewer active corporate PACs, smaller per-PAC giving, or a few large PACs?
-- How many targets per phase does the 2018-2024 window give each sector, and what is the sampling uncertainty of A at that n?
-- Does telecom pass because of method or because it was least affected by the 2022 shock?
+- What is metric A precisely, and what denominator (PACs, candidate-PAC pairs, dollars) does the >= 90 bar use?
+- Does the 2022 drop appear in all sectors, or only in sectors with prominent corporate PAC pauses?
+- Why does telecom pass when others do not? Cohort size, pause exposure, or lower volatility?
 
-**Read first:** [[furnas-nd-conflating-lobbying-pacs]], [[anon-2025-cross-industry-political]], [[chohan-2025-crypto-oligarchy-cryptocurrency]], [[goff-nd-cross-industry-finance]]
+**Read first.** [[furnas-nd-conflating-lobbying-pacs]], [[note-review-industry-growth-and-political-spending]], [[anon-2025-cross-industry-political]], [[chohan-2025-crypto-oligarchy-cryptocurrency]]
 
 ## Insights seasonal-naive baseline and remainder fix
 
@@ -338,84 +363,68 @@ Adjacent papers give context only:
 |---|---|---|---|---|---|---|
 | (none: GAP) | | | | | | |
 
-**Assessment.**
+**GAP: no evidence rows filed directly.**
 
-### Insights seasonal-naive baseline and remainder fix: GAP on direct evidence
+**What the system does.** The Insights baseline repeats the same-phase prior cycle and is withheld when fewer than 4 complete cycles exist. The remainder fix (a conditional additive remainder) replaced subtraction after 7 of 19 shares had gone negative.
 
-No evidence row bears on this component. Paul's stated support is Bacik, which shows four-year, administration-linked periodicity in lobbying *targets*, aggregated annually. That is a reason to expect some four-year structure. It is not evidence that dollar levels repeat by election phase, and it does not cover PAC giving.
+**The periodicity claim.** Paul cites Bacik for four-year electoral periodicity. The only Bacik bearing in the hub (filed under the cycle model) says the periodicity is in lobbying *targets*, by administration, and does not cover dollars or PACs. It supports a four-year rhythm in *what is lobbied*, not a four-year seasonal pattern in giving or lobbying amounts.
 
-The persistence literature (Huneeus & Kim; Bombardini) concerns *adjacent-year* persistence. That supports a last-period naive more than a same-phase, four-year-lag naive. These are different baselines and should not be conflated.
+**Bearing on lobbying.** Kerr and Huneeus show strong year-over-year persistence, favoring a *last-year* naive for lobbying over a same-phase naive, consistent with the system exempting lobbying from phase.
 
-The comparison quoted in the empirical question (3.63 vs 3.99 MAE) has disputed provenance:
-- `note-sector-growth-and-political-spending-source` records that the figures were **not found** in the sector_growth_study folder and removes them.
-- `note-review-industry-growth-and-political-spending` carries them as a brain-note fact (LobbyView targets 2014-2023) and warns that they test the study's growth term, not the IBIS budget rule.
-- Either way, that comparison is last-year naive against growth, not seasonal naive.
+**The quoted 3.63 vs 3.99 MAE.** The component's own empirical question misattributes it:
+- The evidence rows describe it as last-year naive vs growth-augmented on LobbyView lobbying targets, 2014-2023, not same-phase seasonal naive on giving.
+- Two rows report it was not found in any sector_growth_study file.
+- It is an unverified lead and does not test this component.
 
-The remainder fix replaced subtraction with a conditional additive remainder after 7 of 19 shares went negative. It is an accounting correction and needs no literature, only a check that shares now sum and stay non-negative.
+**The remainder fix.** An arithmetic correction; it needs no literature, only a regression test that shares stay non-negative.
 
 **Contradictions.**
-- Provenance conflict over the MAE 3.63 vs 3.99 backtest. One VERIFIED-SOFTENED row says the figures were not found in the sector_growth_study folder and removes them; another treats them as a recorded brain-note fact. Until the source is located, the figure should not be quoted.
-- Mismatched baselines. The component's empirical question asks whether *seasonal* naive beats growth models, but the 3.63 figure is a *last-year* naive (per note-review), so it does not test the seasonal-naive baseline Insights uses.
-- The citation to Bacik for election-cycle periodicity applies to target portfolios, not to the dollar levels the seasonal-naive baseline repeats.
+- The empirical question frames 'seasonal naive beats growth-augmented models (3.63 vs 3.99 MAE)', but the evidence rows identify that comparison as last-year naive vs growth on LobbyView lobbying targets (2014-2023), not same-phase seasonal naive on giving. The figures were also not found in the sector_growth_study files.
+- Paul cites Bacik for four-year electoral periodicity of the series; Bacik's periodicity is in lobbying targets by administration, with no reported phase effect on dollars.
 
 **Gaps.**
-- No evidence that same-phase seasonal naive beats last-period naive or growth-augmented models for giving or lobbying dollars. Needed: a three-way pseudo-out-of-sample comparison (seasonal naive, last-period naive, growth model) by sector and measure, with the window and denominator named.
-- No evidence on the 4-complete-cycles withholding threshold. Needed: an error-vs-history-length check showing where seasonal naive stabilizes.
+- No study shows same-phase (four-year) seasonal naive outperforms last-cycle naive or growth-augmented models for industry PAC giving. Fill with a rolling-origin comparison of seasonal-naive, last-cycle naive and model forecasts on FEC industry giving, per industry, stating target cycles and industry count.
+- No evidence on whether the four-complete-cycle withholding threshold is the right minimum. Fill with an error-vs-history-length curve from the same backtest.
+- Locate or regenerate the 3.63 / 3.99 MAE figures with code, window and denominator before citing them anywhere.
 
-**Paul's position vs the evidence.** Paul says Bacik highlights election-cycle periodicity. That is true for lobbying targets (which agencies, by administration), not for spending amounts or PAC giving. As support for a same-phase dollar baseline, the citation overreaches. The baseline may still be a good choice, but that has to be shown by Mentat's own backtests, and the quoted backtest is of a different naive with disputed provenance.
+**Paul's position vs the evidence.**
+
+Paul's position is that election-cycle periodicity is highlighted in Bacik. The verified reading is narrower: Bacik shows administration-linked periodicity in lobbying targets, not in amounts and not in PAC giving. The persistence literature (Kerr, Huneeus) favors last-year naive for lobbying. For PAC giving the four-year seasonal assumption is plausible but unevidenced in the hub, and the MAE figure cited in support tests a different baseline on a different series.
 
 **Open questions.**
-- Where is the source of the 3.63 vs 3.99 figures, and what exactly were the baseline and the target window?
-- Does seasonal naive beat last-period naive for PAC giving, where a phase effect is more plausible than for lobbying?
-- After the remainder fix, do all 19 shares stay non-negative and sum correctly across sectors?
+- Which series does the Insights seasonal-naive baseline apply to: giving, lobbying, or both?
+- Does a same-phase naive beat a last-cycle naive on industry PAC giving out of sample?
+- Where are the 3.63 / 3.99 figures generated, and over what window and denominator?
 
-**Read first:** [[bacik-2025-measuring-dynamical-evolution]], [[huneeus-2018-effects-firms-lobbying]], [[bombardini-2020-empirical-models-lobbying]], [[note-review-industry-growth-and-political-spending]]
+**Read first.** [[bacik-2025-measuring-dynamical-evolution]], [[kerr-2014-dynamics-firm-lobbying]], [[huneeus-2018-effects-firms-lobbying]], [[note-review-industry-growth-and-political-spending]]
 
 ## Across components
 
-1. **Bacik is load-bearing in two places and supports neither as cited.** Paul uses Bacik et al. for the cycle model ("more money in election years") and for the seasonal-naive baseline (periodicity). The verified reading supports administration-linked periodicity in *lobbying targets* only. The data are annual, PAC channels are excluded, and the paper reports no phase effect on dollars. The same paper *does* firmly support the in-house vs outside-firm no-sum rule, which is not where Paul cites it.
+**1. Accounting is evidenced; forecasting is not.** Every VERIFIED or strong bearing concerns *measurement*: LD-2 income vs expenses, filing-time grouping, amendment supersession, giving vs lobbying as distinct measures. Every *forecasting* choice (phase term, 50/50 growth, slope pooling, pace nowcast, seasonal naive, the 2022 shock) rests on Mentat's own backtests. Paul marks four components 'No literature'; that is accurate for the forecasting parts but understates support for the calculator's accounting rules.
 
-2. **The citations sit on the wrong components.** The three citations the cycle model uses each have VERIFIED-SOFTENED bearings, but all of them land elsewhere:
-   - Bacik: targets, not dollars.
-   - Huneeus & Kim: firm-level persistence. This is relevant to the gates and baselines.
-   - Furnas, LaPira & Brock: keep PAC and lobbying measures apart. This is relevant to the calculator.
+**2. Firm participation is not sector dollars.** The persistence results (Kerr 2014: 92%; Huneeus & Kim 2018: more than 80% re-lobby rate; Blundell-Bond 0.84-0.88) are firm-level, public-firm, lobbying-only, never PACs. They favor naive, last-period anchors for **lobbying**, which matches what the system does (lobbying exempt from phase, G9 shows the refit does not beat naive, in-year nowcast). They say nothing about **PAC** forecasting.
 
-   The presidential phase effect on PAC giving (D-092) has **no** external support in the base.
+**3. The Bacik citation is overloaded.** Paul uses Bacik for both the cycle model and the seasonal baseline, but the one verified reading supports administration-linked periodicity in lobbying *targets* only.
 
-3. **One consistent signal: naive is hard to beat for lobbying dollars.** It shows up in three internal results and one paper:
-   - The lobbying refit loses to naive (MAE 4.050 vs 3.936, G9).
-   - The year-effect slope model never beat last-period naive.
-   - The growth term loses to last-year naive (3.63 vs 3.99, provenance disputed).
-   - Firm-level persistence (Huneeus: slope 0.922, more than 80% repeat lobbying, 2016 to 2017, public firms) fits this pattern.
+**4. The growth term and capacity.** The SSF-capacity argument justified D-116 (x = 0 for company PACs). The only revenue-to-spending elasticity in the hub (about 1) is firm-level *lobbying*. The sign should be estimated, not fixed at a 50/50 positive weight, and the lobbying refit does not beat naive, so the term is unproven even there.
 
-   This is consistent with the shift to the lobbying nowcast. It cuts against keeping the IBIS 50/50 growth term in general giving without an out-of-sample test.
+**5. One provenance hole runs through three components.** The '3.63 vs 3.99 MAE' (and the 6.55 control-term figure) is cited in the seasonal-naive question, the refit-gates row and the review-note row, described inconsistently, and not found under sector_growth_study. Resolve it once, centrally.
 
-4. **The growth rule conflicts with Paul's own research plan.** The plan says the growth-spending sign is to be estimated. The review note says a capacity mechanism fits lobbying more than PAC giving. D-116 already drops x for company PACs, and the remaining x for general giving rests on an owner ruling, not evidence. The D-113 attribution for the 50/50 weight is unverified.
+**6. Pooling across a known fault line.** R0 pooled slopes, the D-119 +9% uplift and the N/(N+1) cross-sector pace shrinkage may pool industries that differ in regime (incumbent-dominated vs entrant-heavy, per Kerr). Quote them per industry or label UNSTRATIFIED.
 
-5. **Small-n and pooling discipline applies everywhere.** The affected figures are:
-   - LOEO 10.8 vs 14.3, which has no window or denominator in the record.
-   - The +9% uplift, which is pooled (UNSTRATIFIED).
-   - The u = 1.8635 factor, which is pooled and does not reconcile with +9%.
-   - The PAC accuracy bar, scored on 4 cycles with about 2 per phase.
-   - The about 11 df refit regressions with an HC1 row.
+**7. Small-sample inference.** About 11 df in refit regressions and few elections in LOEO make HC1 SEs and LOEO MAE gaps fragile; report CR2 and the wild bootstrap.
 
-   None of these should be quoted without its window, its denominator, and either strata or an UNSTRATIFIED label.
-
-6. **Internal documents are not independent evidence.** 9 of the 18 rows are Paul's notes, his report or a grey memo. They are good as design rules and as statements of intent. They cannot corroborate the model they were written to guide.
-
-7. **No row in this base touches the SNA proposals that the project has rejected**, so nothing needs flagging under that rule. LDA is used here only as an accounting and identity source, consistent with D-021.
+No evidence row argues for either of the two REJECTED SNA proposals, and none uses LDA as an edge or weight source.
 
 ## Research agenda
 
-1. Sector-stratified FEC panel test of the presidential vs preceding-midterm effect on industry and corporate PAC-to-candidate giving, in real dollars, over at least 2000-2024. Estimate company PAC and general giving separately; this is the missing evidence for D-092.
-2. Pseudo-out-of-sample forecast comparison of seasonal naive, last-period naive and growth-augmented (IBIS 50/50) models by sector and measure, with a named target window, a sectors x cycles denominator and a Diebold-Mariano-type or bootstrap-over-elections test.
-3. Locate the source of the MAE 3.63 vs 3.99 backtest. One bearing says it is absent from sector_growth_study. Record exactly which naive and which window it used before quoting it again.
-4. Reconcile the +9% presidential uplift (D-119) with the u = 1.8635 general_giving factor (giving_forecast.py:1425, 1888). Record which series each applies to, and report sector strata or label them UNSTRATIFIED.
-5. Sector-by-sector FEC decomposition of the 2020-2022 corporate PAC-to-candidate drop (active-PAC count vs dollars per PAC) to test the common-shock hypothesis behind DE-066/067. Treat post-January-2021 PAC pauses as a hypothesis to check, not a finding.
-6. Month-by-month backtest of the company-PAC pace nowcast O + (1-s)B against the model and naive across past cycles, to find when pace starts to win; compare the geometric-mean s with alternatives.
-7. Simulation plus historical comparison of own vs pooled vs partially pooled (DL, REML, Paule-Mandel) industry slopes, with sector size as moderator; nested holdout for the two-backtest 5% auto-pick rule.
-8. Single pre-committed prospective look: score the G6-passing refits against the published calculator on the realized 2026 cycle, to test LOEO MAE as a gate criterion.
-9. Before adding any House-control term, test whether outside-firm LDA fee totals step after the 2011, 2015 and 2019 control flips (anon-2019 lead).
-10. Check whether any sector_spend values inherit LobbyView's threshold-value imputation for low-cost reports (Bacik), and decide on trade-association dues deduplication for association-heavy sectors.
-11. Move headline inference in the about 11 df refit regressions from HC1 to the CR2 and wild cluster bootstrap rows already printed (Zeileis lead; small-sample case not yet shown for these models).
-12. Literature search for any published study of electoral-cycle timing or levels in corporate PAC contributions and in forecasting political giving. The current base has none on either.
+1. Locate or regenerate the '3.63 vs 3.99 (and 6.55) MAE' backtest with code, target window (LobbyView 2014-2023), horizon and denominator; correct the seasonal-naive empirical question.
+2. Estimate the presidential-vs-midterm contrast in industry PAC-to-candidate giving net of inflation on an FEC panel (e.g., 2004-2024), per industry with stated industry count, to test D-092 and D-119. Reconcile D-119's +9% with the code's u = 1.8635 factor.
+3. Run a nested rolling-origin backtest of general giving with x (IBISWorld 50/50 growth) vs x = 0, estimating the sign rather than fixing it. Report per industry.
+4. Decompose the 2022 PAC-to-candidate drop into a cross-sector cycle effect vs sector residuals (2014-2024), and event-study the post-January-2021 corporate PAC pauses. This explanation is a lead, not hub evidence.
+5. Score the pace nowcast vs the model forecast month by month within past cycles to find the crossover month, per measure and industry.
+6. Compare seasonal (same-phase) naive vs last-cycle naive vs model forecasts for industry PAC giving out of sample, and plot error against history length to test the four-complete-cycle threshold.
+7. Test slope pooling with a nested backtest (no-pool / full-pool / REML or Paule-Mandel partial-pool, auto-pick inside each fold). State the window and industry and election counts behind LOEO 10.8 vs 14.3.
+8. Simulate G6 false-fail and false-pass rates under the observed number of elections and industries, then run a prospective one-look test of whether G6-passing refits beat the calculator on the next realized cycle.
+9. Test for a step in outside-firm lobbying sector totals after the 2011, 2015 and 2019 House control flips before considering any control term.
+10. Measure trade-association overlap inside in-house LDA expenses for association-led sectors (e.g., credit unions via ACU), and confirm whether any LobbyView-sourced values carry Bacik's low-cost-report threshold imputation.

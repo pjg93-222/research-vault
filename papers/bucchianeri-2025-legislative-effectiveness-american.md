@@ -133,3 +133,7 @@ The paper agrees with Paul's takeaway that effectiveness should be measured by s
 - [[aref-2021-identifying-hidden-coalitions]] — same-method — Applies the Volden-Wiseman LES framework, the source of this paper's outcome measure, to state legislatures. It is not the same data, since this paper uses CEL US House scores.
 - [[ramey-2016-measuring-elite-personality]] — same-data — Ramey's Table 3 outcome uses Volden and Wiseman 2014 ceremonial coding (p.16 and refs). Whether Bucchianeri uses the same coding was not checked.
 - [[aref-2020-detecting-coalitions-optimally]] — complements — Real item. Not cited by this paper (a 2025 work cannot be cited by a 2020 paper); the state-level extension of the effectiveness framing is analyst judgment.
+- [[aroyehun-2026-politics-of-feelings]] — complements — Not cited by this paper. This paper names subnational legislatures as a future test (Limitations); the item is an LES study of American state legislatures.
+- [[battaglini-2018-effectiveness-connected-legislators]] — same-data — Item exists (title match, Legislative Effectiveness in the American States). It applies the Volden-Wiseman effectiveness framework to the states.
+- [[harbridge-yong-2023-bipartisan-path-effective]] — same-method — Bucchianeri, Volden and Wiseman extend the Volden-Wiseman effectiveness framework to American state legislatures (SLES).
+- [[montgomery-2017-effects-congressional-staff]] — same-method — Vault item exists; applies the Volden-Wiseman LES framework to American states, the same outcome method with a different population.

@@ -897,4 +897,5 @@ Paul has no annotation entry for this paper. His position on the DEBATE reader (
 - [[rice-2018-corpus-based-dictionaries]] — complements — Title matches corpus-based sentiment dictionaries for specialized vocabularies. The intensity-side link is the analyst's design choice, not a claim in Burnham.
 
 ### Linked from
-_None._
+- [[burnham-2024-political-debate-zero]] — built-on-by — Same first author. The paper defers to Burnham (2024), Stance detection: a practical guide in Political Science Research and Methods, for NLI best practice and cites its finding that larger NLI models generalize better to unseen tasks. The item is dated 2023 (arXiv 2305.01723, PSRM 2025); the paper cites 2024.
+- [[lemens-2025-positioning-political-texts]] — complements — This guide covers target-specific stance classification. Le Mens covers continuous positioning; together they frame the categorical versus scaled choice for the CU rater.

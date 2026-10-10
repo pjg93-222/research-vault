@@ -2,9 +2,16 @@
 type: system
 name: "Melange path-finding (recruitment and introduction routes)"
 slug: melange-pathfinding
-components: [melange-pathfinding.member-recruitment-path, melange-pathfinding.multi-target-and-budget-modes, melange-pathfinding.cosponsor-route-pareto, melange-pathfinding.staffer-closeness-routes, melange-pathfinding.staffer-overlap-routes]
-brain_notes: [actors/melange-dashboard-june-capstone.md, actors/staffer-live-sidecar.md]
-paper_count: 28
+components:
+  - melange-pathfinding.member-recruitment-path
+  - melange-pathfinding.multi-target-and-budget-modes
+  - melange-pathfinding.cosponsor-route-pareto
+  - melange-pathfinding.staffer-closeness-routes
+  - melange-pathfinding.staffer-overlap-routes
+brain_notes:
+  - actors/melange-dashboard-june-capstone.md
+  - actors/staffer-live-sidecar.md
+paper_count: 29
 tags: [system]
 ---
 
@@ -12,69 +19,45 @@ tags: [system]
 
 Route search over two graphs: member-to-member recruitment chains on the cosponsor kernel (dashboard pathfinder modes and cosponsor_route.py), and staffer introduction routes on the people/office graph (closeness routes, ordered overlap routes and the employment-routing overlay). Route objectives, tie rules and coverage rules live here; the graphs themselves are built in melange-sna and melange-staffer-network.
 
-Brain notes: [actors/melange-dashboard-june-capstone.md](obsidian://open?vault=brain&file=actors%2Fmelange-dashboard-june-capstone); [actors/staffer-live-sidecar.md](obsidian://open?vault=brain&file=actors%2Fstaffer-live-sidecar)
+Brain notes: [actors/melange-dashboard-june-capstone](obsidian://open?vault=brain&file=actors%2Fmelange-dashboard-june-capstone); [actors/staffer-live-sidecar](obsidian://open?vault=brain&file=actors%2Fstaffer-live-sidecar)
 
-## Melange path-finding: evidence assessment (2026-10-10)
+## Melange path-finding: evidence assessment
 
-**Scope.** This covers 54 evidence rows across 5 components: 12 VERIFIED, 34 VERIFIED-SOFTENED and 8 UNVERIFIED, from 28 distinct papers. I also ran a short online scan for the empirical gaps. Scan papers are leads only: I read the abstract and first pages myself, with no adversarial pass (DE-062). Open-access copies are in `C:\Users\pgoff\Documents\research\_work\downloads\scan_2026-10-10\`:
-- Box-Steffensmeier, Christenson & Craig 2019 (AJPS)
-- Montgomery & Nyhan (JOP)
-- Battaglini, Leone Sciabolazza & Patacchini (NBER w24442)
-- the Zelizer 2019 APSR supplement
+**Scope.** This covers 5 components and 55 evidence rows (29 distinct papers): 13 VERIFIED, 34 VERIFIED-SOFTENED and 8 UNVERIFIED. UNVERIFIED rows are single-agent leads, not findings (DE-062).
 
-Fowler 2006 failed on a DNS error. No open copy was found for Zelizer's main article or for McCrain 2018.
+**What the evidence is.** No row gives an empirical estimate of anything the router assumes about Congress or congressional staff. That includes the direct-ask lift ASKM, per-hop ask success, hop independence, recruiter whip capacity, and whether route cost or shared tenure predicts a real introduction. The rows fall into three groups:
+- **Algorithm papers** from roads, grids, UAVs, ships and online graphs (Chen 2016, Ren 2022, Luo 2020, Xu 2024, Duan 2025, GCOMB, RELINK, Golovin 2011, Ng 1999). These are good for checking whether a search is correct and whether its guarantees hold.
+- **Lobbying and access studies** (Furnas 2019, Kalla & Broockman, Blanes i Vidal through Bombardini 2020 and de Figueiredo 2013, Holyoke 2015, Bacik 2025). These concern access, revenue or how disclosure works, not routes.
+- **One congressional cosponsorship paper** (Sotoudeh 2024). Its outcome is whether a bill passes, not whether a member joins.
 
-**Main finding.** The literature supports the **algorithms** far better than the **quantities** they run on.
-- **Algorithms.** Dijkstra on -log p, h = 0 with additive costs, greedy coverage under (1-1/e), and exact tie rules are all standard and correctly chosen for graphs of this size.
-- **Quantities.** None of the following is estimated from data, and no paper in the corpus estimates them:
-  - ASKM 0.07 (the active-ask lift)
-  - K = 5 (whip capacity)
-  - CEDGE
-  - HOP_FACTOR 0.8
-  - MEMBER_BETA 0.15
-  - the overlay costs 1 / 2 / 3 / 5 / 8
-  - the log2(1 + days/30) tenure form
+So every edge probability, cost constant and dial in this system remains an unestimated heuristic. Its outputs are heuristic scores, never closeness, access, introduction or ask-success probabilities (D-025).
 
-  Every route score is therefore a heuristic model output. None is a closeness, access, ask-success or introduction probability (D-025).
+**The main results are about correctness and citations, not empirical support.**
+1. **The member chain can return a wrong path.** It is labelled PROVABLY-OPTIMAL, but it is not optimal once any member is dropped. A toy replica of buildPath gave a chain product of 0.009 where the best chain avoiding the dropped member is 0.36. In a second case it reported "unreachable" when a path existed. The replica reproduces the logic only; the failure in the live browser page is UNVERIFIED.
+2. **The chain may also be traced against the edge direction.** This is a second, unconfirmed defect, from single-path code readings. The PE matrix is asymmetric, and the size of the effect is bounded by EMU 0.80-1.20.
+3. **Several citations claim more than the papers show.** Furnas 2019 is cited for recruitCost. Sotoudeh 2024 is cited for "mathematical certainty". Chen 2016's deadline-reliability method is not the max-product object the chain uses. Kim & Kunisky and Porter 2005 are cited for cosponsor communities that the code does not use. The GCOMB label, the MOPBD* and RELINK docstrings, and the (1-1/e) claim on the target-weighted call also overstate.
+4. **Paul's D* Lite and LPA* replanning layer is not supported at this scale.** Every replanning paper's own results say a full recompute is enough on a 533-node graph.
+5. **One rule conflict found in the code.** The overlay's filing hops are built from LDA source filings. That makes LDA an edge source, which D-021 forbids. The hops are off by default and review-only, but this needs Paul's ruling.
 
-**Real errors found** (code-level, not annotation issues):
-1. **Dropped members break the recruitment chain.** In the recruitment path, `distToTarget` ignores the dropped set but `tracePath` skips dropped members. With any member dropped, the "PROVABLY-OPTIMAL" chain can be suboptimal or wrongly unreachable.
-   - The logic was reproduced in a JS replica: chain product 0.009 against a best drop-avoiding chain of 0.36.
-   - Not yet confirmed in the browser.
-2. **Edge direction may be reversed (UNVERIFIED).** `dT` appears to be computed in the reverse edge direction from the one `tracePath` needs while PE is asymmetric. The effect is bounded by EMU 0.80–1.20 and only one agent has read the code.
-3. **chainHold may not be a floor.** The code calls chainHold a "conservative floor", but that holds only if asks are independent. Asks on the same bill and in the same party context are likely positively correlated, and then the product is not a floor.
-4. **Code comments claim more than the code does:**
-   - `budgetRecruit` is called "cost-bounded", but the loop stops at nSeeds.
-   - (1-1/e) is claimed for the target-weighted branch. The live caller passes target -1, so the live call is unaffected.
-   - MOPBD* is named as if it produced an exact Pareto front. The code is a five-lambda greedy whose front is approximate and misses non-convex points.
-
-**Misattributed citations.** Several citations do not show what they are cited for:
-- Sotoudeh 2024 measures passage, not recruitment probability.
-- Chen 2016 solves a different reliability problem.
-- Furnas 2019 does not ground the $1k–$10k cost.
-- Kim & Kunisky 2020 and Porter 2005 describe a lobbying bipartite graph and a committee graph, not the cosponsor graph, and the code contains no community term.
-- GCOMB is a label for plain greedy.
-
-**Paul's stated directions:**
-- **A\*, learned heuristics, D\* Lite / LPA\*.** The evidence weighs against building these now. At 533 members a full recompute is cheap. The staffer-router bottleneck measured on 2026-10-02 was memory (7.0 → 17.5 GB from pair_cache), not search time. The replanning papers show the incremental advantage shrinking as changes grow, and they need a live event stream that does not exist.
-- **Turning lobbying and bipartite data into a graph.** This must respect D-021: LDA is an identity source, not an edge or weight source.
-
-**Largest gap.** Neither graph has any outcome data: no record of asks made and answered, and no outreach or introduction log. Without one, no route parameter can be fitted or validated.
+**What the rows do support.**
+- The staffer router uses additive costs, heuristic 0 and exact Dijkstra, and the papers back that as correct.
+- The overlay treats undated filing years as weak, opt-in ties, which Bacik 2025 (VERIFIED) supports.
+- The untargeted budget greedy (the only live call) carries the classical (1-1/e) guarantee on its coverage proxy, but not on real recruitment.
 
 ## Sponsor-to-target max-product path and chain hold
 
-**Computes.** The most reliable recruitment chain from a sponsor to a target, with per-hop $ and probability; chainHold = product of activeP per hop.
+**What it computes.** The most reliable recruitment chain from a sponsor to a target, with per-hop $ and probability; chainHold = product of activeP per hop.
 
 **Method.** Dijkstra on -log p. activeP(p) = p/(p + (1-p) x ASKM) with ASKM 0.07 (about a 14x odds shift, unestimated). recruitCost(p) = 1000 + 9000(1-p), clamped to $1k-$10k.
 
-**Code refs.** `fec/templates/make_dashboard_html_00.tpl (buildPath, chainHold, recruitCost)`
+**Code refs:** `fec/templates/make_dashboard_html_00.tpl (buildPath, chainHold, recruitCost)`
 
-**Assumptions.**
+**Assumptions**
 - Cosponsor-kernel edge probabilities proxy ask success
 - Active asks raise odds by a constant factor (no study pins it)
 - Money is capped by FEC limits; difficulty shows up in reliability, not dollars
 
-**Evidence weight:** 15 rows (4 VERIFIED, 8 VERIFIED-SOFTENED, 3 UNVERIFIED); 13 distinct papers.
+**Evidence** (15 rows, 13 distinct papers; UNVERIFIED 3, VERIFIED 4, VERIFIED-SOFTENED 8)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -94,54 +77,78 @@ Fowler 2006 failed on a DNS error. No open copy was found for Zelizer's main art
 | [[abdelrahman-2025-conflict-based-search]] | 2025 | suggests-extension | D* Lite reuses earlier search results when costs change, so a route can be repaired instead of recomputed. The authors credit this for faster conflict resolution in dynamic settings, but they report no replanning counts. | The extension would need an observed event: a failed ask or a stance move that changes edge probabilities while a campaign is under way. Only then would incremental repair, or simply recomputing the route, give a reroute-aware chain hold. The paper gives no evidence about recruitment success. Edge p values are heuristic kernel outputs, not ask-success probabilities (D-025 wording applies). | weak | UNVERIFIED |
 | [[ng-1999-policy-invariance-reward-transformations]] | 1999 | qualifies | Corollary: shaped Q' = Q - Phi and V' = V - Phi, with Phi(absorbing) = 0 in the undiscounted case, so the shaped and original problems share the same argmax over actions. Remark (Robustness and learning): the identities hold for arbitrary policies, so an epsilon-accurate potential keeps policies epsilon-near-optimal. Choosing Phi = V* makes V' identically zero, which the authors call an easy value function to learn. | Deterministic max-product over per-ask probabilities, equivalent to a -log p shortest path (comment at line 735). Applies only when the dropped set is non-empty. Drops are set only from the drop text box in applyShocks (line 1165); the URL parameter read at line 1537 is coal, not drops, so the earlier URL claim is removed. The browser-level failure stays UNVERIFIED under DE-062; the logic failure is reproduced in a replica. | strong | VERIFIED-SOFTENED |
 
-**Assessment.** Strong rows, Chen 2016 and Sotoudeh 2024, *qualify* the system rather than support it.
+**Assessment**
 
-**What holds.** A max-product path over independent per-hop probabilities is additive in -log p, so exact Dijkstra is the right tool (Chen 2016; Baptista 2022 confirms the ordering). At N = 533 an O(N^2) array scan is fine; Duan 2025 adds nothing. With an empty dropped set and a symmetric PE, the greedy trace is exact (Ng 1999: dT satisfies the Bellman equation).
+**Evidence weight.** 15 rows: 4 VERIFIED, 8 VERIFIED-SOFTENED, 3 UNVERIFIED (Cao 2025, Zeller 2016, Abdel-Rahman 2025). None of them tests the assumptions empirically. The only congressional paper is Sotoudeh 2024 (VERIFIED, strong), and it does not transfer: its outcome is bill passage, and its score is not a probability.
 
-**What does not hold.**
-- *Dropped-member defect (actual error).* `distToTarget` (tpl ~line 734) does not exclude `dropped`; `tracePath` (~740) skips dropped members, so the greedy descent follows dT values that route through excluded members. A logic replica gave chain 0.009 vs a best drop-avoiding chain of 0.36, and reached=false while a path existed (Ng 1999 row; Luo 2020 and Xu 2024 rows independently describe the same mechanism). Browser-level reproduction is still UNVERIFIED. Fix: recompute dT with dropped members excluded; that is cheap at this size, and no D* Lite is needed.
-- *Direction mismatch (UNVERIFIED lead).* PE is directed (receiver EMU[v], source_shock/target_resistance), but dT[v] is computed along t -> v rather than v -> t (Ahmad, Chen-2016 suggests-extension rows). Bounded by EMU 0.80-1.20; vanishes with neutral multipliers. Needs a second-path test: Dijkstra on -log of transposed PE vs the traced chain.
-- *'Conservative floor' wording.* chainHold multiplies activeP as if asks were independent. Chen 2016 names independence as its own main limitation; asks in one chain share the bill, salience, party context and the ASKM lever, so they are likely positively correlated, and under positive correlation the product is not a floor. Zeller 2016 (UNVERIFIED, analogy) points the same way. Paths are also ranked on passive reliability while chainHold is shown on the active-ask scale.
-- *ASKM = 0.07 (about a 14x odds shift) has no source.* No corpus paper estimates the ask lift.
+**Correctness.** The main result is a defect.
+- Lawande 2022, Xu 2024, Luo 2020 and Ng 1999 agree on the mechanism. distToTarget ignores the dropped set while tracePath skips dropped members, so the greedy trace reads a field that still routes through excluded members.
+- The Ng 1999 row reproduced this in a replica of the functions: a chain product of 0.009 against a best drop-avoiding chain of 0.36, and reached=false while a path existed.
+- The defect is real at the logic level. The browser-level failure stays UNVERIFIED. It is live only when the drop text box (applyShocks, line 1165) is used.
+- The second defect, a direction mismatch, rests on single-path readings (Ahmad, Chen 2016 extension row). distToTarget relaxes PE[u][v] outward from the target, but the trace needs the reverse direction, and PE is asymmetric through EMU[v] and the role priors. The EMU range [0.80, 1.20] bounds the effect, and its size is unmeasured.
+- Duan 2025 (VERIFIED) is relevant only as the reminder that directed SSSP must relax edges in the query direction.
+- Chen 2016's validation design (an exact solver checked against an independent exact solver) transfers directly as a software check.
 
-**Online scan (leads, not findings):** Zelizer 2019 APSR, two randomized field experiments, finds cue-taking spreads through a self-selected legislator communication network. It is the closest causal design for an ask lift, but it is **state-legislature** evidence with an information treatment, not a member-to-member ask in Congress. Rogowski & Sinclair 2012 (Political Analysis), using the House office lottery for the 105th-112th Houses, finds **no** effect of proximity on cosponsorship. That cautions against reading kernel edges as ask channels. Box-Steffensmeier, Christenson & Craig 2019 (AJPS) archive about 94k House Dear Colleague letters (106th-111th; 44% solicit cosponsors). It is observational, but it is the data that could measure ask lift in Congress.
+**Citations.**
+- Chen 2016 solves deadline reliability, a non-additive objective, with label-setting. The chain's product of independent p is the classical -log p shortest path. The cited paper supports the method in name only.
+- Furnas 2019 never discusses dollar amounts. The $1k-$10k clamp rests on FEC limits, which are law.
+- Sotoudeh 2024 is cited for 'mathematical certainty' about chain probability, which also breaks the D-025 wording.
 
-**Contradictions.**
-- The code comment says 'PROVABLY-OPTIMAL'. That is false whenever the dropped set is non-empty (reproduced in the logic replica), and possibly false when PE is asymmetric (UNVERIFIED).
-- The code comment calls chainHold a 'conservative floor', but a product of per-hop probabilities is a floor only under independence or negative correlation. Correlated asks in one chain contradict it (Chen 2016 limitation).
-- Sotoudeh 2024 is cited for the chain and for 'mathematical certainty' probability wording. The paper measures bill passage, not recruitment or per-edge probability, and the wording conflicts with D-025.
-- Chen 2016 is cited as grounding for the most-reliable chain. It solves a deadline on-time-arrival problem that is non-additive and cannot be solved by Dijkstra, which is a different object.
-- recruitCost cites Furnas 2019 for 'money is capped, info is the lever'. The paper never tests dollar amounts; the $1k-$10k bound rests on FEC law.
+**chainHold semantics.** Chen 2016 (VERIFIED-SOFTENED) flags independence as its own main limitation. The asks in one chain share a bill, its salience, the party context and the ASKM lever, so they are plausibly positively correlated. If so, the product is not the 'conservative floor' the comment claims.
 
-**Gaps.**
-- ASKM (the active-ask lift): no study estimates it. Fill with a design that records asks: (a) observational, Dear Colleague cosponsor solicitations (Box-Steffensmeier et al. archive) linked to BILLSTATUS cosponsor dates, estimating join hazard for solicited vs unsolicited members with party, ideology and committee controls; (b) causal, a Zelizer-style randomized information or ask treatment, which exists only for a state legislature and cannot be borrowed for Congress without a transfer caveat.
-- Hop independence: untested. Fill by checking observed cosponsor join sequences for correlated joining along kernel paths, for example whether a second-hop member's join probability conditional on the first hop exceeds the product.
-- Path length vs time-to-join (the component's second empirical question): no evidence. Fill with a survival analysis of cosponsor join dates on kernel path length from the sponsor, reported with its window and denominator.
-- Kernel edge p as an ask-success proxy: no evidence. Rogowski & Sinclair 2012 (scan lead) is a null for proximity effects on cosponsorship, so homophily vs contagion must be separated before any causal reading.
+There is also a scale mismatch. Paths are ranked on passive reliability, but chainHold is shown on the active-ask scale.
 
-**Paul's position vs the evidence.** Paul's central gap is turning lobbying and bipartite data into a graph where path-finding can run. The corpus does not support this as an edge source, and D-021 forbids it: LDA is an identity source, not an edge or weight source. Kim & Kunisky's communities live in an organisation x member bipartite graph and cannot become member-member edges. Paul's interest in A* heuristics that cope with unstable information is not supported at this scale: exact Dijkstra on 533 nodes is cheap, and no paper shows a learned heuristic helping a graph this size. Ng 1999 only shows that potential-based shaping keeps optimal routes. The defect that matters is the dropped-set and direction bug, which needs a correct exact recompute, not a heuristic. Paul's note that the built chain is most-reliable-path Dijkstra matches the code.
+**Extensions (leads only).**
+- RWR over multiple walks (Baptista, weak).
+- Multi-path trust aggregation (Cao, UNVERIFIED).
+- Path-level versus step-level selection (Zeller, UNVERIFIED). This motivates testing hop independence against observed join sequences.
 
-**Open questions.**
-- Is the direction mismatch real in the browser build? Second-path test: compare the traced chain against Dijkstra on -log(PE transposed) with emult and role priors on.
-- Should chainHold be relabelled from 'conservative floor' to 'scenario product under independence'? The UI already says scenario output (tpl:1119, 1155).
-- Does Paul want ASKM estimated, which needs ask data, or kept as an explicit scenario dial with a sensitivity band?
-- Should the Sotoudeh and Chen 2016 citations be re-scoped in the template comments to classical max-product / -log p shortest path?
+**Gap.** Nothing estimates ASKM 0.07 (about a 14x odds shift). Nothing tests whether path length predicts how fast a member joins. Filling this needs an observational House study, within one Congress: link targeted asks (Dear Colleague letters or sponsor outreach records) to cosponsor join timing in an event-history model. Report it by majority/minority and co-/out-party strata, or label it UNSTRATIFIED.
 
-**Read first.** [[ng-1999-policy-invariance-reward-transformations]], [[chen-2016-most-reliable-path]], [[sotoudeh-2024-network-based-measure]], [[ahmad-nd-shortest-path-algorithms]], [[furnas-2019-moneyed-interests-information]], [[xu-2024-improved-lite-based]]
+**Contradictions**
+- The code comment labels the chain 'PROVABLY-OPTIMAL'. A logic replica shows it is not optimal when the dropped set is non-empty (0.009 vs 0.36; reached=false while a path exists). The browser-level failure is UNVERIFIED (DE-062).
+- The rows disagree about the no-drop case. The Ng 1999 row says the greedy step is exact when nothing is dropped. The Ahmad and Chen 2016 rows say the field is computed against the edge direction when PE is asymmetric. Both readings are single-path, so the question is unresolved.
+- Chen 2016 is cited as grounding, but it solves a non-additive deadline-reliability problem that Dijkstra cannot solve. The chain is a -log p additive path.
+- Furnas 2019 is cited for 'money is capped, info is the lever' in recruitCost. The paper tests requester identity, never dollar amounts.
+- Sotoudeh 2024 is cited for a 'mathematical certainty' chain probability. The paper's outcome is bill passage and its score is not a probability. The wording conflicts with D-025.
+- chainHold is called a 'conservative floor', but it assumes independent asks. Under positive correlation the product is not a floor (Chen 2016's own stated limitation).
+- Ranking and display use different scales: paths are ranked by passive pathReliability, while the displayed chainHold uses active-ask activeP.
+
+**Gaps**
+- No estimate of the direct-ask lift ASKM. Needs an observational study linking documented member-to-member asks (Dear Colleague letters, sponsor outreach) to cosponsor join timing, House, within one Congress, stratified by party and majority status.
+- No test of whether most-reliable path length or chainHold predicts whether or how fast a target joins. Needs a prospective holdout on bills with observed cosponsor accrual.
+- No test of hop independence. Needs to check whether joins along observed recruitment sequences are correlated beyond what the product rule implies.
+- No second-path reproduction of the direction-asymmetry defect. Needs a test that compares Dijkstra on -log of the transposed PE with the traced chain under non-unit EMU and role priors.
+
+**Paul's position vs the evidence**
+
+Paul's central gap is turning lobbying and bipartite data into a graph that path-finding can run on. No row addresses it directly. D-021 also limits the route: LDA can serve as an identity source, not an edge or weight source. Kim & Kunisky's communities live on exactly that organisation-by-member lobbying graph, so building path edges from it would conflict with D-021.
+
+Paul wants A* heuristics that cope with unstable information. The evidence gives no reason to add one to a 533-node exact search, where a full recompute is cheap (Luo 2020, Xu 2024). Ng 1999 shows that only a potential-based reweighting keeps the optimum. A learned or inadmissible heuristic would break the 'provably optimal' contract that the code already fails to meet under drops.
+
+The evidence points first to fixing the existing exact search: honour the dropped set and the edge direction inside distToTarget. Learned heuristics come after that.
+
+**Open questions**
+- Under the default bundle, is PE actually asymmetric, through emult or non-unit role priors? If not, the direction concern is moot in practice.
+- How often is the dropped set non-empty in real use?
+- Should chainHold be reported on the same passive scale used for ranking, or should ranking switch to the active scale?
+- Is there any source of attributed member-to-member asks that could estimate ASKM without breaking D-021?
+
+**Read first:** [[ng-1999-policy-invariance-reward-transformations]], [[chen-2016-most-reliable-path]], [[ahmad-nd-shortest-path-algorithms]], [[sotoudeh-2024-network-based-measure]], [[furnas-2019-moneyed-interests-information]], [[xu-2024-improved-lite-based]]
 
 ## Best-sponsor, multi-target tree and budget max-coverage modes
 
-**Computes.** Recruitment trees and budget-bounded recruit sets with coverage cov[v] = 1 - prod(1 - p).
+**What it computes.** Recruitment trees and budget-bounded recruit sets with coverage cov[v] = 1 - prod(1 - p).
 
 **Method.** Greedy max coverage (1-1/e) with locality and degree pruning (GCOMB), plus grow() spread with recruitability x log(deg) x proximity.
 
-**Code refs.** `fec/templates/make_dashboard_html_00.tpl (budgetRecruit, multiTarget, grow)`
+**Code refs:** `fec/templates/make_dashboard_html_00.tpl (budgetRecruit, multiTarget, grow)`
 
-**Assumptions.**
+**Assumptions**
 - Approximate submodularity on the cosponsor graph
 - Community structure is exploitable (Porter-Mucha-Newman; Kim-Kunisky)
 
-**Evidence weight:** 10 rows (2 VERIFIED, 8 VERIFIED-SOFTENED, 0 UNVERIFIED); 10 distinct papers.
+**Evidence** (10 rows, 10 distinct papers; VERIFIED 2, VERIFIED-SOFTENED 8)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -156,52 +163,65 @@ Fowler 2006 failed on a DNS error. No open copy was found for Zelizer's main art
 | [[dai-2017-learning-combinatorial-optimization-graphs]] | 2017 | qualifies | On set covering built from the MemeTracker-derived graph, averaged over 1000 test graphs, Dai et al. report ratios of S2V-DQN 1.001, LP 1.0009 and Greedy 1.03. This is minimum set cover, not budgeted maximum coverage, and the paper makes no general claim about coverage objectives. | Dai's set cover is minimum cover; budgetRecruit is budgeted maximum coverage with a target reweighting and degree pruning, so the 3 percent greedy gap does not transfer directly. 533 nodes is inside Dai's tested range of up to 1200, but there is no training distribution. The guarantee does not hold strictly under the reweighting and pruning. | weak | VERIFIED-SOFTENED |
 | [[manchanda-2020-gcomb-learning-budget-constrained]] | 2020 | method-source | Locality is neighbours not yet covered by the partial solution (Eq 3). Greedy reaches at least 99 percent of optimal on small graphs (Table 1b: BP-500 b=20 GCOMB 0.998, greedy 0.99, optimal 1). GCOMB matches greedy on real graphs and wins mainly on time at scale. | The 1-1/e bound holds for cardinality-constrained monotone submodular coverage, which this objective is. Paper evidence for greedy near-optimality is only on 500 to 900 node graphs (Table 1b); applying it to a 533-member graph is an extrapolation. The GCOMB Eq 3 locality is a Q-learning state feature. The code uses the plain coverage marginal, which greedy already contains, so the GCOMB label overstates the mapping. The degree prune is a fixed rule, not the learned noise predictor. | strong | VERIFIED-SOFTENED |
 
-**Assessment.** The rows agree with each other, and the evidence is fairly firm on the algorithm.
+**Assessment**
 
-**What holds.** Noisy-OR coverage cov = 1 - prod(1-p) is monotone submodular, so plain cardinality-bounded greedy carries the (1-1/e) bound **on that coverage proxy** (Golovin 2011; Manchanda 2020). With the graph known, greedy is the reference standard and no learned policy is needed (Kamarthi 2020). The one live call passes target -1, so the live path is plain greedy.
+**Evidence weight.** 10 rows: 2 VERIFIED (Golovin 2011, Chen 2023), 8 VERIFIED-SOFTENED, none UNVERIFIED. All of it is theory or method. None of it concerns Congress.
 
-**What does not hold.**
-- The guarantee is about the proxy, not about real recruitment. Under complex or threshold joining no such guarantee exists (Chen 2023).
-- When a target is set, marginals are multiplied by (1 + 2 dT). That score is not the marginal of a fixed submodular function, so the (1-1/e) comment overstates the targeted branch (Golovin, Ma 2022, Chen 2023, Dai 2017).
-- The comment says 'cost-bounded', but the loop stops at nSeeds; the $k budget becomes a seed count via CEDGE (Ma 2022, Dai 2017).
-- The GCOMB label overstates the mapping. The code uses the plain coverage marginal plus a fixed degree prune (max(1, 0.1 x mean degree)), not GCOMB's learned locality or noise predictor, and greedy's near-optimality is shown only on 500-900 node graphs (Manchanda Table 1b).
-- Coverage is one hop; there is no multi-hop reach (Trivedi 2020, Ma 2022).
-- **Community grounding has no code counterpart.** Kim & Kunisky's communities are latent memberships in an interest-group x politician lobbying graph, and Porter 2005 is committee co-membership. Neither is the cosponsor graph, and `budgetRecruit` and `multiTarget` contain no community term. Louvain exists only in press_hcoi.py.
+**What holds.** budgetRecruit maximises Noisy-OR coverage 1 - prod(1-p), which is monotone submodular. Plain greedy therefore carries (1-1/e) on that coverage proxy (Golovin 2011, VERIFIED). The one live call passes target -1, so the live path is the classical case (Chen 2023, VERIFIED).
 
-**Flags.** Ma 2022's multi-hop extension (an L-step walk weight) must not reintroduce per-edge volume normalization, which was measured and REJECTED in this project. A community term built from the Kim-Kunisky lobbying graph would make LDA an edge or weight source, which D-021 bars.
+GCOMB Table 1b shows greedy reaching at least 99% of optimal, but only on 500-900 node synthetic graphs. Applying that to the 533-member graph is an extrapolation. Kamarthi 2020 adds that greedy is the reference standard only when the graph is known. The guarantee holds for the observed cosponsor graph, not for any latent network.
 
-**Contradictions.**
-- The comment claims (1-1/e) for the target-weighted branch. Golovin 2011 and Chen 2023 show the guarantee applies only to unweighted monotone submodular greedy.
-- The comment calls budgetRecruit cost-bounded, but the code is cardinality-bounded at nSeeds.
-- Kim & Kunisky 2020 and Porter 2005 are cited (brain note, component assumption) for exploitable cosponsor community structure. They describe a lobbying bipartite graph and a committee co-membership graph, and the code uses no communities.
+**What is overstated.**
+- With a target set, marginals are multiplied by (1 + 2 dT). That is not greedy on any fixed submodular function, so (1-1/e) should not be claimed for targeted calls (Golovin, Ma 2022, Chen 2023, Dai 2017).
+- The comment says 'cost-bounded', but the loop is cardinality-bounded (nSeeds).
+- The objective is one-hop (Trivedi 2020, VERIFIED-SOFTENED). Trivedi's claim that the kernel reaches p of about 0.52 traces to a note not found in the repo, so it is unchecked.
+- The 'GCOMB' label overstates the mapping. GCOMB's Eq. 3 locality is a Q-learning state feature, and the code's degree prune is a fixed rule, not GCOMB's learned noise predictor.
+- (1-1/e) applies to the coverage proxy, not to real recruitment. If joining follows a threshold (complex contagion), no guarantee holds (Chen 2023).
 
-**Gaps.**
-- Community-local vs cross-community recruitment (the component's empirical question): no evidence. Fill with an observational join-rate study on BILLSTATUS cosponsor dates. Partition the cosponsor graph itself (not the LDA graph), compare join rates of within- vs cross-community targets of a sponsor's existing cosponsors, and control for party, ideology and committee overlap, because homophily is the main confound (Rogowski & Sinclair 2012 null, scan lead). Report by party stratum or label UNSTRATIFIED.
-- Whether real joining is threshold-like (complex contagion), which would void the guarantee for real outcomes: untested. Fill by testing whether a member's join hazard rises nonlinearly with the number of already-joined neighbours.
-- Greedy approximation quality on the 533-member kernel at its actual p-range: not measured. Fill with an exact or ILP comparison on this graph; the cited 0.52 p-range figure was not verified.
+**Community grounding does not transfer.**
+- Kim & Kunisky 2020 find communities on the bipartite interest-group-by-politician lobbying graph (k = 8, 113th Congress), not on the member-member cosponsor graph.
+- Porter 2005 studies committee co-membership.
+- Neither citation appears in the template, and the code has no community term. Louvain exists only in press_hcoi.py.
+- If a community term is ever added, Kim & Kunisky argue for mixed membership over a hard partition, because hub actors are the ones a partition misassigns. Building it from LDA lobbying edges would conflict with D-021.
 
-**Paul's position vs the evidence.** Paul's position is that GCOMB pruning and community structure are the grounding and match his addendum. The evidence partly disagrees. GCOMB maps only loosely: the built code is plain greedy max coverage with a fixed degree prune, which is fine and well grounded by Nemhauser and Golovin, but it is not GCOMB. Community structure is not used by the code at all. Its two cited sources describe different graphs, and building it from the lobbying bipartite graph would breach D-021. The stronger, accurate grounding is the classical submodular coverage result, scoped to the proxy and the untargeted call.
+**Flag.** Ma 2022's multi-hop extension, which uses L-step walk weights, must not reintroduce per-edge volume normalization. That proposal was measured and REJECTED in this project.
 
-**Open questions.**
-- Re-scope the brain note's Kim-Kunisky and Porter citations, or add a community term built from the cosponsor graph itself?
-- Drop the (1-1/e) claim from the targeted branch's comment, or restrict the comment to target = -1?
-- Rename 'cost-bounded' to 'seed-count-bounded (budget / CEDGE)'?
+**Gap.** Nothing tests whether members recruited through community-local paths join at higher rates than cross-community targets. Filling this needs a community partition built on the cosponsor graph itself, plus observed cosponsor accrual per bill. Join rates would be compared within one Congress and stratified by party.
 
-**Read first.** [[golovin-2011-adaptive-submodularity-theory]], [[manchanda-2020-gcomb-learning-budget-constrained]], [[chen-2023-complex-contagion-influence]], [[kim-2020-mapping-political-communities]], [[porter-2005-network-analysis-committees]], [[kamarthi-2020-influence-maximization-unknown]]
+**Contradictions**
+- Paul's addendum and the brain note (melange-dashboard-june-capstone.md line 83) say the pathfinder exploits community structure (Porter-Mucha-Newman; Kim-Kunisky). The code has no community term, and both papers study different graphs: committee co-membership, and organisation-by-politician lobbying.
+- The budgetRecruit comment claims a (1-1/e) guarantee and 'cost-bounded' selection. With a target set, the (1 + 2 dT) reweighting voids the guarantee, and the loop is bounded by cardinality, not cost.
+- The 'GCOMB' label implies GCOMB's learned locality and noise pruning. The code uses the plain coverage marginal and a fixed degree prune.
+
+**Gaps**
+- No study of community-local versus cross-community recruitment success. Needs a cosponsor-graph partition (mixed membership preferred) and per-bill join outcomes, within one Congress, stratified by party.
+- No measure of how one-hop coverage relates to realised multi-hop recruitment on the kernel's actual p range. Needs simulated cascades compared with observed join sets.
+- No evidence on whether joining is simple or complex contagion. That decides whether any (1-1/e) language applies to real recruitment.
+
+**Paul's position vs the evidence**
+
+The hub says GCOMB pruning and community structure match Paul's addendum. The evidence agrees only on paper. GCOMB is a fair loose source for greedy-with-pruning, but the label overstates the mapping. The community claim is not implemented, and the two cited papers do not show community structure on the cosponsor graph. The position is sound as a design intent. As a description of the built system it is inaccurate, and its grounding should be re-scoped.
+
+**Open questions**
+- Should the brain note's Kim-Kunisky and Porter community citations be withdrawn, or should a cosponsor-graph community term be built and tested?
+- Should the targeted budgetRecruit call keep the (1 + 2 dT) weighting and drop the (1-1/e) wording, or switch to a constrained submodular objective that keeps a guarantee?
+- Where does the p of about 0.52 kernel figure come from? The cited sector-networks note is not in the repo.
+
+**Read first:** [[golovin-2011-adaptive-submodularity-theory]], [[manchanda-2020-gcomb-learning-budget-constrained]], [[kim-2020-mapping-political-communities]], [[chen-2023-complex-contagion-influence]], [[kamarthi-2020-influence-maximization-unknown]], [[porter-2005-network-analysis-committees]]
 
 ## Cosponsor recruitment route finder (Pareto front)
 
-**Computes.** Greedy routes from champion seeds with at most K = 5 recruits per recruiter, giving a Pareto front over cost, expected cosponsors and risk.
+**What it computes.** Greedy routes from champion seeds with at most K = 5 recruits per recruiter, giving a Pareto front over cost, expected cosponsors and risk.
 
 **Method.** Edge cost = CEDGE/max(0.1, p); value = (gain - lambda(1-p))/cost for lambda in {0, 0.5, 1, 2, 4}. Optional MC reach. MOPBD* (Ren et al.) is cited as concept only.
 
-**Code refs.** `fec/engine/cosponsor_route.py:1-89`
+**Code refs:** `fec/engine/cosponsor_route.py:1-89`
 
-**Assumptions.**
+**Assumptions**
 - Recruiter whip capacity is bounded
 - Edge activations are independent
 
-**Evidence weight:** 9 rows (2 VERIFIED, 6 VERIFIED-SOFTENED, 1 UNVERIFIED); 8 distinct papers.
+**Evidence** (9 rows, 8 distinct papers; UNVERIFIED 1, VERIFIED 2, VERIFIED-SOFTENED 6)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -215,50 +235,58 @@ Fowler 2006 failed on a DNS error. No open copy was found for Zelizer's main art
 | [[abdelrahman-2025-conflict-based-search]] | 2025 | suggests-extension | Replacing A* with incremental D* Lite inside CBS cuts mean execution time from 5.575 s to 0.04 s (99.2%) and nodes explored from 2142 to 250.5 (88.3%), at about 0.8% longer paths (15.73 vs 15.6). However, the 8-point case explores more nodes with D* Lite (198 vs 178). The number of runs is not reported. | The speedup does not transfer. It was measured on 3D voxel grids with moving obstacles, while this graph has 533 nodes and recomputing it costs very little. What carries over is the idea of repairing a route when a member joins, declines or changes stance, rather than rebuilding it. The K=5 whip cap loosely resembles a CBS conflict over a shared resource, but CBS resolves conflicts between agents competing for space and time, not recruiter bandwidth. Treat the paper as a design pointer only (weak, single-source, unreplicated, UNVERIFIED). | weak | UNVERIFIED |
 | [[dai-2017-learning-combinatorial-optimization-graphs]] | 2017 | suggests-extension | A Q-function over a graph embedding, trained by n-step Q-learning with fitted Q-iteration, can serve as a greedy evaluation function and generalizes from 50-100 node training graphs to 1000-1200 node test graphs, with MaxCut BA ratio 1.0038 and MVC BA ratio 1.0062 (Table 2, 1000 test instances). | Requires a simulated instance distribution, for example cascades on perturbed or topic-specific kernels, as training data, which the system lacks. A learned Q-value is a heuristic score, never an ask-success or access probability (D-025). Any result stays UNVERIFIED until a second path reproduces it (DE-062). | weak | VERIFIED-SOFTENED |
 
-**Assessment.** Every row qualifies the component or is context. None supports the method as built.
+**Assessment**
 
-**What is built.** A greedy recruitment-tree builder runs once for each lambda in {0, 0.5, 1, 2, 4}, scoring (gain - lambda(1-p))/cost under a K = 5 per-recruiter cap. Non-dominated (cost, expected cosponsors, risk) points are kept. MC reach is off by default (MCMODE=1). K and CEDGE = 10000 are unestimated env defaults.
+**Evidence weight.** 9 rows: 2 VERIFIED (Lawande 2022 context, Chen 2016 extension), 6 VERIFIED-SOFTENED, 1 UNVERIFIED (Abdel-Rahman 2025). All of it is algorithmic. Nothing bears on recruiter capacity or edge independence in Congress.
 
-**Against the cited sources.**
-- Ren 2022 (MOPBD*) returns the **exact** Pareto set of source-to-goal paths with additive vector costs. The route finder works on recruitment *sets* with a product-form reach and a mean-p risk, so MOPBD* cannot be dropped in. The docstring's 'RELINK + MOPBD*' overstates the method: the front is a heuristic approximation.
-- Scalarizing over five lambdas cannot reach points in non-convex parts of the front (Chen 2016, Xu 2024).
-- RELINK (Arya 2025) transfers as framing only: edge activation under a per-node budget. Its numbers come from a trained DDQN on simulated IC over public graphs. Quoting '15%' or '456/480' for Melange routes would be a misattribution, and the paper's abstract and Sec 6.3 disagree with each other about the 15% figure.
-- Incremental replanning: Ren 2022 shows the MOPBD* advantage shrinks as changes grow, and from-scratch search wins at M = 4. Luo 2020's own result says plain D* Lite suits small, local changes. At 533 nodes with batch refresh, full recompute is cheap, so the evidence argues **against** building a D* Lite layer now. Abdel-Rahman 2025 (UNVERIFIED; run count not reported) is a design pointer only: repair a route when a member joins, declines or moves stance.
-- Dai 2017 (learned greedy) needs a training distribution of instances that the system lacks.
+**Method versus citation.**
+- The docstring credits 'RELINK + MOPBD*'. Ren 2022 (VERIFIED-SOFTENED, strong) proves that MOPBD* returns the exact Pareto set of source-to-goal paths with additive vector costs.
+- cosponsor_route.py instead runs a greedy recruitment-set builder five times (lambda in {0, 0.5, 1, 2, 4}) and keeps the non-dominated (cost, spread, risk) points. That is a heuristic approximate front over recruitment sets, not a path search. Product-form reach and mean-p risk do not fit MOPBD*.
+- Scalarised runs cannot reach points in non-convex regions of the front (Chen 2016, Xu 2024).
+- RELINK (Arya 2025) contributes only the framing: edge actions under a per-node budget. Its results are a trained DDQN beating baselines in 456-464 of 480 configurations, and 'up to 15%' more spread, on simulated IC over public online graphs. Neither figure may be cited for Melange routes. The paper's abstract and Sec. 6.3 also state the 15% figure differently.
 
-**Assumptions with no evidence:** bounded whip capacity (K = 5) and independent edge activations.
+**Replanning.**
+- Ren 2022 itself shows MOPBD*'s edge over from-scratch NAMOA* shrinking as more obstacles change, with from-scratch winning at M = 4. Its worst case can exceed from-scratch search. This was on grid mazes with a 5-minute limit.
+- Luo 2020 says plain D* Lite suits small, local changes, and its speed comes from coarsening million-cell grids.
+- Abdel-Rahman (UNVERIFIED) reports a 99.2% time cut on 3D voxel grids, with run counts not reported.
+- None of these transfers to a 533-node graph where each run already rebuilds cheaply.
+- The idea that does carry over is repairing a route when a member joins, declines or changes stance. A plain recompute triggered by that observed event would do it.
 
-**Contradictions.**
-- The docstring credits 'RELINK + MOPBD*', but the code is a lambda-parameterised greedy over recruitment sets with no path search and no replanning. Ren 2022 returns an exact Pareto set, which this code does not produce.
-- The output is presented as a Pareto front, but weighted-sum scalarization over five lambdas cannot reach non-convex front points. The front is illustrative, not complete.
+**Gap.** K = 5 recruits per recruiter and CEDGE = 10000 are unestimated environment defaults. Edge independence is assumed. No row tests either.
 
-**Gaps.**
-- Whip capacity (K = 5): no study. Fill with an observational yield curve: per sponsor and Congress, count cosponsor solicitations (Dear Colleague archive, scan lead) against cosponsors gained, and test whether marginal recruits fall off past some count. Report window and denominator.
-- Edge-activation independence: untested. This is the same gap as the recruitment path; correlated joining on a shared bill would bias the MC reach.
-- CEDGE = 10000 and the lambda grid: no grounding. They are scenario dials; at minimum, run a sensitivity sweep showing how the front moves.
+**Contradictions**
+- The docstring names 'RELINK + MOPBD*'. The code is a greedy builder swept over lambda with a dominance filter, which gives a heuristic, approximate front, not MOPBD*'s exact Pareto set (Ren 2022, Theorem 1).
+- Paul made D* Lite and LPA* the operational layer and called D* 'Very interesting'. Every replanning paper in the evidence (Ren 2022, Luo 2020, Xu 2024) indicates that incremental reuse does not pay at this graph size or under whole-network batch refresh.
 
-**Paul's position vs the evidence.** Paul marked D* dynamic replanning 'Very interesting' and made D* Lite and LPA* the operational layer in his addendum. The evidence does not support building it at the current scale. Every replanning paper is grid robotics; the incremental advantage shrinks with many changes; and a 533-node recompute is trivial. The valid kernel of Paul's idea is reroute-on-event: update the plan when an ask fails or a stance moves. That needs a stream of observed ask outcomes, which does not exist. Once it does, a plain recompute delivers the same answer as D* Lite at this size. The multi-objective concept is reasonable, but it should be described as an approximate front.
+**Gaps**
+- Whip capacity is untested: do prolific recruiters' marginal recruits drop off? Needs recruiter attribution, such as Dear Colleague signatories or sponsor outreach records, plus cosponsor join data, within one Congress. Raw cosponsor lists do not identify who recruited whom.
+- Edge-activation independence is untested. Needs evidence on whether joins cluster beyond what independent activation predicts.
+- No exact or epsilon-dominance front exists to measure how much of the true front the five-lambda sweep misses. This is a software benchmark, not an empirical study.
 
-**Open questions.**
-- Should the docstring drop 'MOPBD*' and describe the method as a 'lambda-scalarized greedy front (approximate)'?
-- Does Paul want an exact front (which needs a recruitment-set dominance relation, not Chen or Ren path labels), or is illustrative enough?
-- Is there any planned live in-campaign event feed? Without one, the D* Lite layer has nothing to replan on.
+**Paul's position vs the evidence**
 
-**Read first.** [[ren-2022-multi-objective-path]], [[arya-2025-relink-edge-activation]], [[chen-2016-most-reliable-path]], [[luo-2020-path-planning-algorithm]], [[abdelrahman-2025-conflict-based-search]]
+Paul's interest in D* dynamic replanning is sound as a concept for a live campaign, where asks fail and stances move. The evidence does not support building incremental D* Lite or LPA* here. On a 533-node graph a recompute triggered by an observed event is cheaper and stays exact, and MOPBD*'s own results lose to from-scratch search once enough changes pile up. The multi-objective idea is the right one to keep. If Paul wants the front to be exact rather than illustrative, the next step is an exact or epsilon-dominance front over the recruitment-set objective, not incremental replanning.
+
+**Open questions**
+- Is the Pareto front meant to be illustrative or exact? That decides whether a dominance-based exact method is worth building.
+- Is there any observable event stream (stance changes, declined asks) that would make reroute-on-failure meaningful?
+- Should the RELINK citation be dropped from the docstring, given that no RELINK result applies?
+
+**Read first:** [[ren-2022-multi-objective-path]], [[arya-2025-relink-edge-activation]], [[chen-2016-most-reliable-path]], [[luo-2020-path-planning-algorithm]], [[abdelrahman-2025-conflict-based-search]]
 
 ## Staffer closeness route search
 
-**Computes.** The least-cost introduction route to staff anchored at a member office. Hop cost = -ln(0.8 x strength) + w x uncertainty; terminal cost includes a member-context modifier (beta 0.15).
+**What it computes.** The least-cost introduction route to staff anchored at a member office. Hop cost = -ln(0.8 x strength) + w x uncertainty; terminal cost includes a member-context modifier (beta 0.15).
 
 **Method.** Bidirectional Dijkstra with heuristic 0 (labelled A*) and Yen loopless alternatives. The default route search is one-directional to a virtual sink (staffer_closeness_routes.py:110-138). Ties within 1e-12 relative: fewer steps wins, then lower cost. The office search excludes uncovered staffers and reports the count.
 
-**Code refs.** `fec/surfaces/staffer_closeness_routes.py:1-30,78-138,911-999`, `fec/surfaces/staffer_routing.py:381`
+**Code refs:** `fec/surfaces/staffer_closeness_routes.py:1-30,78-138,911-999`, `fec/surfaces/staffer_routing.py:381`
 
-**Assumptions.**
+**Assumptions**
 - The minimum-cost path approximates the most usable introduction
 - The prestige modifier is a bonus, not access evidence
 
-**Evidence weight:** 16 rows (2 VERIFIED, 11 VERIFIED-SOFTENED, 3 UNVERIFIED); 13 distinct papers.
+**Evidence** (16 rows, 13 distinct papers; UNVERIFIED 3, VERIFIED 2, VERIFIED-SOFTENED 11)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -279,65 +307,72 @@ Fowler 2006 failed on a DNS error. No open copy was found for Zelizer's main art
 | [[ng-1999-policy-invariance-reward-transformations]] | 1999 | method-source | Theorem (sufficiency and necessity): adding gamma*Phi(s') - Phi(s) for any real Phi leaves every optimal policy unchanged, and without prior knowledge of T and R no other additive shaping term guarantees this. The paper does not discuss A*, heuristics used in search, or bidirectional search. | Holds for deterministic additive costs. Bidirectional search, the 10^12 tie band and Yen ranking are outside the paper and need their own checks in original cost units. The premise that Paul wants learned or landmark heuristics is not in the item (paul_entries is empty) and is unverified here. | moderate | VERIFIED-SOFTENED |
 | [[ng-1999-policy-invariance-reward-transformations]] | 1999 | qualifies | Necessity: for any non-potential additive shaping term there exist dynamics and rewards under which the shaped optimum is not optimal in the original problem (Appendix A proves the two-action case). A constant added to every terminal arc telescopes to a potential term Phi(goal) and leaves route ranking unchanged. A term that varies by staffer or per step is not a potential and can change the winner. | Deterministic costs. The code calls the modifier member_context_max_bonus (line 1014) and comments prestige bonus (line 917). D-025 is not cited in this file, so the D-025 wording is not verified here. | moderate | VERIFIED-SOFTENED |
 
-**Assessment.** Most rows are weak or moderate and qualify the component. On the algorithm the evidence is consistent and favourable; on route *meaning* there is nothing.
+**Assessment**
 
-**Algorithm: sound.**
-- Hop cost = -ln(0.8 x strength) + w x uncertainty is a per-hop sum, so exact bidirectional Dijkstra with h = 0 is correct (Chen 2016, as a boundary condition). That stops being true only if uncertainty were restated as a route-level SD or a dated probability.
-- A person graph has no geometry, so the Euclidean heuristics in Lawande 2022 and Luo 2020 do not apply. An admissible heuristic would have to be something like ALT landmarks, which are deferred.
-- Duan 2025 does not touch early-stopping point-to-sink, bidirectional, Yen or exact-tie passes. The measured bottleneck was memory (pair_cache, 7.0 -> 17.5 GB), not heap cost.
-- Incremental replanning (Xu 2024; Abdel-Rahman 2025, UNVERIFIED) buys nothing for stateless queries with differing origins on a fixed snapshot, and Xu's approximate update would break the exact-cost contract.
-- The routing cache is FIFO, not LRU (Luo row).
+**Evidence weight.** 16 rows: 2 VERIFIED (Chen 2016, Xu 2024), 11 VERIFIED-SOFTENED, 3 UNVERIFIED (both Zeller rows, Abdel-Rahman). No row shows that a cheaper route corresponds to a successful introduction.
 
-**Objective: partly borrowed, mostly Paul's design.**
-- Only the log-inverse-product term matches Ahmad et al. The per-hop ln(1/0.8) decay has no counterpart in Ahmad's printed algorithm, where log(1/D) is a per-path constant.
-- Ahmad never measures whether strongest paths succeed more often.
-- On Ng 1999: dividing all terminal arcs by (1 + MEMBER_BETA) is a constant shift, so the line-916 comment is correct for that step. But line 919 adds a target-varying anchor uncertainty term, the member-context modifier is per-staffer, and staffer_routing.py:424-425 adds a balance step penalty in the ranking key. All three are non-potential terms that **can change the winning route**. They are legitimate design choices, but they are not ranking-neutral.
-- Tie rule (D-082): the system puts steps *before* exact cost inside a 1e-12 band. Duan's lexicographic ordering is a proof device and does not validate this.
+**The search design holds up.**
+- Chen 2016 (VERIFIED) is a boundary condition, not a criticism. Because the uncertainty penalty is a per-hop sum, bidirectional Dijkstra stays exact. If uncertainty were restated as a route-level SD, or as a probability of introduction by a date, Dijkstra would stop being exact.
+- Lawande 2022 and Luo 2020: a person-tie graph has no coordinates, so geometric A* heuristics do not apply. ALT landmarks would be the only admissible candidate, and they are deferred.
+- Xu 2024 and Abdel-Rahman: incremental replanning pays only when the same origin and goal are re-queried after small edge changes. Staffer requests vary in origin and run on a fixed snapshot.
+- Duan 2025 does not reach the measured bottleneck, which is memory (pair_cache 7.0 to 17.5 GB), not heap cost.
+- Ahmad (nd) supports only the log-inverse-product part of the hop cost. The per-hop ln(1/0.8) decay is the system's own design, and Ahmad never shows that strongest paths succeed more often.
 
-**Meaning of a route: no evidence.**
-- Zeller 2016 (UNVERIFIED, analogy): the probability-to-cost inversion is an untested assumption, and route choice is sensitive to it.
-- Furnas 2019: reaching a staffer gives access to a contact point at most; a meeting predicts little about action.
-- Kalla & Broockman: which tier takes a meeting varies with who asks. That supports recording the seniority of the person reached as a validation target, not converting cost to a probability.
-- Bombardini 2020 (Blanes i Vidal): former staffers' lobbying revenue drops 24% when their senator leaves office. The router does not read whether the anchoring member still serves (checked in two files only). Any added term may be described only as dependence on the patron's current office, never as access or influence, because these are revolving-door edges.
+**Ranking terms.** Ng 1999 (VERIFIED-SOFTENED) separates the terms:
+- Dividing by (1 + MEMBER_BETA) is a constant terminal shift and keeps the ranking.
+- The per-staffer member-context modifier, the per-target anchor uncertainty term (line 919) and the balance step penalty in staffer_routing.py:424-425 are not potentials, and each can change the winner.
 
-**Scan leads:**
-- McCrain 2018 JOP: shared-office staff connections still on the Hill predict lobbyist first-year revenue (+18% per SD). The outcome is revenue, not introductions.
-- Montgomery & Nyhan (JOP): offices that exchange senior staff are more alike in effectiveness and voting.
+That is acceptable if it is intended, since the prestige modifier is meant to act as a bonus. It does mean the documented rule (ties broken by fewer steps, then cost) is not the only ranking rule in force. Duan 2025's lexicographic tie order is analogous but does not validate the 1e-12 band or the step-first rule (decision D-082, Paul's).
 
-Both are leads only. Neither measures introductions, and both concern revolving-door or staff-exchange ties, where influence wording is barred.
+**Substantive bearings.**
+- Furnas 2019: route outputs are routes to a contact point only. A meeting barely varies with requester identity and predicts little about action (DC staff, 2017, stated responses).
+- Kalla & Broockman: who asks changes which tier of staff takes the meeting. The donor label raised meetings with chief of staff or above from 2.4% to 12.5% (p = .006) but not district-staff meetings (43.3% vs 48.4%, p = .26), in the paper's field sample of meeting requests. The sample size is not recorded in the row. This supports recording the seniority of the person reached as a validation target.
+- Bombardini 2020 reports Blanes i Vidal: former Senate staffers turned lobbyists lose about 24% of lobbying revenue when their connected senator leaves office. The effect is significant only for Finance, Appropriations and Ways & Means connections. de Figueiredo 2013 reports the same study at about 23%, so this is one study, not two.
+- Neither router file reads whether the anchoring member is still serving. That was checked in two files only, not repo-wide (UNVERIFIED system-wide).
+- If a patron-in-office term is added, it may be described only as dependence on the patron's current office, never as access or influence.
 
-**Contradictions.**
-- The member-context comment says the modifier leaves ranking unchanged. That holds for the constant (1 + MEMBER_BETA) shift, but the per-staffer modifier, the target-varying anchor uncertainty (line 919) and the balance step penalty (staffer_routing.py:424-425) are non-potential terms that can change the winner (Ng 1999).
-- The documentation says the router is 'labelled A*', but it runs heuristic 0, so it is Dijkstra. The label is harmless but inaccurate.
+**Description drift (checked in the live file).** The component text says the default search is one-directional to a virtual sink (staffer_closeness_routes.py:110-138). The live module docstring and ALGORITHM constant (line 79) say bidirectional Dijkstra, heuristic 0. The rows describe _search_reference as a one-way test oracle only, and lines 110-138 hold the _Meter class.
 
-**Gaps.**
-- Do cheaper or shorter routes correspond to successful introductions (the component's empirical question)? There is zero evidence. Fill with an outreach log of attempted and completed introductions, and fit hop-cost weights with a path-selection conditional logit (Zeller PathSF design): each used route against its Yen alternatives as the choice set, scored on a single-look holdout. Outputs stay heuristic scores (D-025).
-- HOP_FACTOR 0.8, the uncertainty weight w, the 5-year staleness half-life and MEMBER_BETA 0.15: none is fitted, and no paper supplies them. They are filled by the same outreach-log study; until then, run sensitivity sweeps.
-- Patron-still-in-office dependence: there is evidence for lobbyist revenue (Blanes i Vidal via Bombardini) but none for introductions. Whether the router reads member tenure was checked only in two files; it needs a repo-wide check.
-- Robustness to node loss (Paul's 'centerless' goal): no paper in the corpus evaluates it. Fill with a node-removal simulation on the staffer graph that reports how often top-k routes survive, which Yen alternatives partly provide already.
+**Gap.** The open question (do shorter or cheaper routes match successful introductions?) has no evidence. Zeller 2016 (UNVERIFIED) supplies a design: record each attempted introduction, pair the route used with its Yen alternatives as the choice set, and fit hop-cost weights by conditional logit (path selection function), with a single-look holdout. The fitted scores would remain heuristic, never introduction probabilities (D-025).
 
-**Paul's position vs the evidence.** Paul wants a centerless design that survives losing a node, and learned heuristics. On robustness there is no evidence in the corpus, which makes it a gap rather than a contradiction. Yen loopless alternatives are the existing mechanism, and a node-removal simulation would measure it. On learned heuristics the evidence weighs against: the router's contract is exact optimal routes; a learned heuristic keeps that only if admissible; no paper tests learned heuristics on person graphs; and the measured bottleneck is memory, not search. ALT landmarks (deferred) are the one admissible option. Note that the premise that Paul wants learned heuristics on this specific router was flagged in one row as not traceable to his own entries.
+**Contradictions**
+- The component description says the default route search is one-directional to a virtual sink (staffer_closeness_routes.py:110-138). The live module docstring and the ALGORITHM constant (line 79) say bidirectional Dijkstra with heuristic 0. The rows describe the one-way search as a test oracle only. The memory note on the latency lane ('one-way Dijkstra') conflicts as well.
+- The documented tie rule is fewest steps, then least cost, within 1e-12. Ng 1999 shows that non-potential terms (the per-staffer member-context modifier, the anchor uncertainty term at line 919, and the balance step penalty at staffer_routing.py:424-425) can also change the winner. So the documented rule is not the only ranking rule in force.
+- The Ng 1999 row says the premise that Paul wants learned heuristics is not evidenced in the item (paul_entries empty). The hub's position text asserts it.
 
-**Open questions.**
-- Should the router read whether the anchoring member is still in office, worded as patron-office dependence only?
-- Are the non-potential terms (per-staffer modifier, anchor uncertainty, balance penalty) intended to change winners? If so, the line-916 comment should say that ranking changes beyond the constant shift.
-- Is any outreach or introduction log being kept? It is the only route to validating this component.
+**Gaps**
+- No outreach log links route cost or rank to completed introductions. Needs recorded attempts and outcomes, with the seniority tier reached (Kalla's coding), and a path-selection fit against Yen alternatives on a single-look holdout.
+- No test of the probability-to-cost transform (-ln(0.8 x strength)). Zeller warns that route choice is sensitive to it.
+- No test of whether the anchoring member still holding office should enter the cost. Needs a repo-wide check first, then a study using member exits as events.
+- No evidence on robustness to node loss (Paul's centerless goal). Needs a simulation of route availability and cost inflation when top-k hub staffers or offices are removed.
 
-**Read first.** [[chen-2016-most-reliable-path]], [[ng-1999-policy-invariance-reward-transformations]], [[ahmad-nd-shortest-path-algorithms]], [[zeller-2016-step-path-selection]], [[bombardini-2020-empirical-models-lobbying]], [[kalla-nd-campaign-contributions-facilitate]]
+**Paul's position vs the evidence**
+
+Paul wants a centerless design that stays intact when a node is lost. No row tests node-loss robustness on the staffer graph, so this is an open gap. It could be measured directly by removal simulations on the existing graph.
+
+Paul also wants learned heuristics. The evidence cuts against them for this router. There is no admissible geometric heuristic. ALT landmarks are the only exact-preserving option, and they are deferred. Ng 1999 shows that only potential-form terms leave the optimum unchanged, and a learned inadmissible heuristic would break the router's 'route proven or shown absent' contract. The memory bottleneck, not search effort, is the measured latency problem. Heuristic 0 with exact search is the better-supported choice today.
+
+**Open questions**
+- Is the balance step penalty in staffer_routing.py:424-425 meant to override the documented tie rule? If so, should the docstring say so?
+- Does any file outside the two checked ones read whether the anchoring member is still serving?
+- Is an outreach log being recorded, or could one be, so that a route-validation study becomes possible?
+- Should the component description be corrected to say bidirectional Dijkstra as the default?
+
+**Read first:** [[furnas-2019-moneyed-interests-information]], [[kalla-nd-campaign-contributions-facilitate]], [[ng-1999-policy-invariance-reward-transformations]], [[zeller-2016-step-path-selection]], [[bombardini-2020-empirical-models-lobbying]], [[chen-2016-most-reliable-path]]
 
 ## Ordered person-overlap routes and employment-routing overlay
 
-**Computes.** Routes through dated Politico-reconciled co-work. distance = ceil(1e6 x 128 / strength), with strength = proximity x log2(1 + days/30). Overlay costs: current co-worker 1, historical 3, reported activity 2, filing 5, policy 8.
+**What it computes.** Routes through dated Politico-reconciled co-work. distance = ceil(1e6 x 128 / strength), with strength = proximity x log2(1 + days/30). Overlay costs: current co-worker 1, historical 3, reported activity 2, filing 5, policy 8.
 
 **Method.** Bidirectional Dijkstra on (cost, steps). User-asserted current co-worker hop at cost 1.
 
-**Code refs.** `fec/surfaces/staffer_overlap_routes.py:1-280`, `fec/surfaces/staffer_routing.py:153-640`, `fec/surfaces/staffer_routing_evidence.py:157-162`
+**Code refs:** `fec/surfaces/staffer_overlap_routes.py:1-280`, `fec/surfaces/staffer_routing.py:153-640`, `fec/surfaces/staffer_routing_evidence.py:157-162`
 
-**Assumptions.**
+**Assumptions**
 - Log-scaled shared work days proxy relationship strength
 - Only Politico career-history evidence creates work ties
 
-**Evidence weight:** 4 rows (2 VERIFIED, 1 VERIFIED-SOFTENED, 1 UNVERIFIED); 4 distinct papers.
+**Evidence** (5 rows, 5 distinct papers; UNVERIFIED 1, VERIFIED 3, VERIFIED-SOFTENED 1)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -345,84 +380,79 @@ Both are leads only. Neither measures introductions, and both concern revolving-
 | [[holyoke-2015-learnable-skills-unteachable]] | 2015 | qualifies | Relationships with lawmakers are built on mutual need and each side's ability to supply something, and are targeted, not personal friendships (p.17-18, introduced as 'arguably'). A lobbyist's market value is their portfolio of relationships (citing Blanes i Vidal et al. 2012). About 52% of roughly 30,000 DC lobbyists (2012, Rehr) came through government, and 48% of those held two or more posts (LaPira and Thomas 2014, as cited p.5). These figures are secondary and the authors did not re-derive them. | Conceptual only. The paper never measures whether shared tenure produces usable relationships. It implies that co-work measures the opportunity for contact, not the mutual need that keeps a relationship going. Its revolving-door share is a federal DC figure from about 2012-2014 and fits the router's staff-to-lobbyist population. It does not support any cost constant or the log-days form. Route cost must stay a heuristic, not an introduction probability (D-025). No influence wording on revolving-door edges. | weak | UNVERIFIED |
 | [[duan-2025-breaking-sorting-barrier]] | 2025 | qualifies | The result is for real weights in the comparison-addition model. For integer weights in the word RAM model, the related-work line culminates in Thorup's O(m + n log log min{n, C}) for directed graphs [Tho04], where C is the maximum edge weight. | With integer weights the tighter asymptotic line is integer/word-RAM SSSP (Thorup), not this paper. Matters only if overlap-route latency becomes heap-bound, which has not been shown. | weak | VERIFIED |
 | [[ahmad-nd-shortest-path-algorithms]] |  | context | Hop-count shortest paths ignore tie strength and asymmetry (Abstract). Tie strength matters for social search (Granovetter motivation, Sec. 1.1). The strongest path uses the product of normalized influences (Sec. 4). | Context only. The paper does not compare inverse-strength costs with log-product costs, and the overlap router is a deliberate design choice. Shared work days and shared background are heuristic tie scores, not measures of closeness, access or introduction probability (D-025). Influence language is barred on revolving-door edges. | weak | VERIFIED-SOFTENED |
+| [[defigueiredo-2013-advancing-empirical-research]] | 2013 | qualifies | Blanes i Vidal, Draca and Fons-Rosen (2012): lobbyist revenue of former Senate staffers falls about 23 percent when the senator they served is defeated or retires, in a 22-period panel with lobbyist and party-chamber-time fixed effects (pp.18-20). The essay reads this as the value of who you know (p.20). | The essay's evidence is a revenue effect for lobbyists, not a route-cost or access measure. Influence language stays barred on revolving-door edges. | weak | VERIFIED |
 
-**Assessment.** This is the thinnest component.
+**Assessment**
 
-**What holds.**
-- Bacik 2025 (supports): LDA covered-position disclosures are made once and are undated, so filing co-listing shows contracts, not dated co-work. The system's handling matches: filing-year episodes are routed separately as weak `co_reported_firm_association`, are off by default (include_weak False), and carry cost 5, above historical 3. This also matches D-021 (LDA is an identity source, not an edge or weight source).
-- Duan 2025 (weak): costs are integers, so the relevant asymptotic line is integer-weight SSSP (Thorup), not Duan. It matters only if latency becomes heap-bound, which has not been shown.
-- Ahmad (context): costs are additive inverse strengths, ceil(1e6 x 128 / strength), not -log of a bounded weight. They cannot be read as products of per-hop reliabilities, so no probability reading exists.
+**Evidence weight.** 5 rows: 3 VERIFIED (Bacik 2025, Duan 2025, de Figueiredo 2013), 1 VERIFIED-SOFTENED (Ahmad), 1 UNVERIFIED (Holyoke 2015). This is the thinnest component, and nothing tests its central assumption.
 
-**What is unsupported.**
-- Holyoke 2015 (UNVERIFIED, secondary figures): lobbying relationships rest on mutual need and are targeted. Co-work therefore measures the *opportunity* for contact, not a working relationship. Nothing supports the log2(1 + days/30) tenure form or the overlay costs (current 1, reported activity 2, historical 3, filing 5, policy 8).
-- The assumption that only Politico career history creates work ties is a sourcing choice. No paper tests it, but Bacik supports excluding filing co-listing as dated co-work.
+**What is supported.** Bacik 2025 (VERIFIED, supports) shows that covered-position disclosures have no dates and that co-listing on filings records registrant-lobbyist contracts, not dated co-work. That directly supports routing filing-year episodes as weak and opt-in: include_weak defaults to False, filing_cost is 5 and at least historical_cost (3), and the episodes are labelled 'filing_year_association_only'. Bacik says nothing about the dated payroll-overlap hops.
 
-**Scan leads:** McCrain 2018 counts connections as shared-office staff still on the Hill, a presence measure, and links them to revolving-door revenue. It does not test overlap *duration*, so it neither supports nor refutes the log-days form. No influence wording is allowed on these edges.
+**Rule conflict (checked in live code).** staffer_routing_evidence.py builds those filing episodes from LDA source filings: lda_source_person_id, confidence 'SOURCE_NATIVE_FILING_ASSOCIATION', review_only True. staffer_routing.py:346-367 then turns shared employer-year filings into route hops at filing_cost. That makes LDA an edge source, which D-021 forbids, even though it is off by default and marked review-only. The ruling is Paul's.
 
-**Contradictions.**
-- (none)
+**What is not supported.**
+- Holyoke 2015 (UNVERIFIED, conceptual) says lawmaker relationships are targeted and rest on mutual need, not personal friendship. On that reading, co-work measures opportunity for contact, not the need that keeps a relationship going. That undercuts treating log-scaled shared days as relationship strength.
+- Holyoke's revolving-door share (about 52% of roughly 30,000 DC lobbyists came through government, 2012, from secondary sources) is population context only.
+- Ahmad (nd): the inverse-strength integer costs are additive, so they cannot be read as a product of per-hop reliabilities.
+- Duan 2025: integer weights make Thorup-style integer SSSP the relevant asymptotic line, which matters only if overlap routing becomes heap-bound. It has not been shown to be.
+- de Figueiredo 2013 and Bombardini (through Blanes i Vidal, one study) measure lobbyist revenue that depends on the patron's office. That is not route cost, closeness or access. Influence language stays barred on revolving-door edges.
 
-**Gaps.**
-- Does shared tenure length (log days) predict a successful warm introduction (the component's empirical question)? There is no evidence. Fill with the outreach-log design used for closeness routes, testing tenure length against presence-only and linear-days forms on a held-out look.
-- Overlay cost constants (1 / 2 / 3 / 5 / 8) and DISTANCE_SCALE: unestimated. Until outcome data exist, the only fill is a sensitivity sweep showing how often top routes change.
-- Proximity weights inside strength: no source. Fill alongside the tenure-form test.
-- As a proxy outcome before any introduction log exists, a McCrain-style design could test whether overlap duration, not just presence, predicts a downstream observable. Any result would describe the value of a tie, never access or influence.
+**Gap.** No row supports the log2(1 + days/30) form, the 128 scale, the overlay costs (current co-worker 1, reported activity 2, historical 3, filing 5, policy 8), or the assumption that only Politico career history creates work ties.
+- Coverage could be measured: compare Politico-reconciled co-work against an independent payroll source for one window and report recall by chamber.
+- Validity needs the same outreach-log design as the closeness routes, testing whether shared-tenure length predicts warm introductions, with a single-look holdout.
 
-**Paul's position vs the evidence.** Paul treats professional and revolving-door ties as central to lobbying. The evidence agrees that these ties carry market value: Blanes i Vidal via Bombardini, Holyoke's secondary figures on government-to-lobbying flows, and McCrain 2018 as a scan lead. But it measures lobbyist revenue, not introduction success. Holyoke's own framing (targeted, mutual-need relationships) implies that shared tenure is only a proxy for the opportunity for contact. So Paul's premise is supported, but the specific route mechanics (log-days strength, overlay constants) are not. Revolving-door edges must carry no influence language.
+**Contradictions**
+- The overlay's filing hops come from LDA source filings (staffer_routing_evidence.py lda_source_person_id; staffer_routing.py:346-367 filing_cost). That uses LDA as an edge source, contrary to D-021. Default-off and review-only mitigate it but do not resolve it.
+- Holyoke 2015 (UNVERIFIED) says relationships rest on mutual need and are targeted, which cuts against the assumption that log-scaled shared work days proxy relationship strength.
+- The hub's citation list gives 'Bacik et al. 2026'. The evidence slug and the arXiv id (2503.11745) date the paper 2025.
 
-**Open questions.**
-- Is the log2(1 + days/30) form a deliberate prior Paul wants to keep, or should it be tested against presence-only, which is what McCrain uses?
-- Should the 'reported activity' (cost 2) and 'policy' (cost 8) overlay hops be checked against D-021, to confirm neither derives an edge from LDA records?
+**Gaps**
+- No test of whether shared tenure length (log days) predicts successful warm introductions. Needs an outreach log with attempted and completed introductions, the route used and its alternatives, and a single-look holdout.
+- No coverage audit of 'Politico career history as the only work-tie source'. Needs a comparison with an independent staff payroll or disbursement source over a named window, reporting recall of co-work ties.
+- No basis for the overlay cost constants (1/2/3/5/8) or the 128 scale. Needs a path-selection fit or a sensitivity study of how route rankings move under plausible constant ranges.
 
-**Read first.** [[bacik-2025-measuring-dynamical-evolution]], [[holyoke-2015-learnable-skills-unteachable]], [[ahmad-nd-shortest-path-algorithms]], [[duan-2025-breaking-sorting-barrier]]
+**Paul's position vs the evidence**
+
+Paul treats professional and revolving-door ties as central to lobbying. The VERIFIED evidence (Blanes i Vidal, through two reviews) supports one narrower point: former staff turned lobbyists earn revenue that depends on their patron's current office. It does not show that co-work ties carry access or influence, and wording rules bar influence language on these edges.
+
+The Holyoke reading Paul highlights (relationships are targeted and rest on mutual need) is UNVERIFIED. If it holds, it argues that shared tenure measures opportunity, not relationship strength. Paul's position and the router's log-days proxy pull in different directions.
+
+Bacik 2025 supports the conservative handling of undated filing ties, but the source of those ties (LDA) needs a D-021 ruling.
+
+**Open questions**
+- Paul's ruling: should the LDA-derived filing-year hops be removed, kept as review-only, or exempted from D-021?
+- What evidence produces the 'policy 8' overlay hop, and is it subject to the same LDA rule?
+- Is there an independent payroll source for a coverage audit of the Politico co-work ties?
+
+**Read first:** [[bacik-2025-measuring-dynamical-evolution]], [[holyoke-2015-learnable-skills-unteachable]], [[defigueiredo-2013-advancing-empirical-research]], [[ahmad-nd-shortest-path-algorithms]], [[bombardini-2020-empirical-models-lobbying]]
 
 ## Across components
 
-## Cross-component patterns
+**1. No empirical anchor anywhere.** All five components rest on hand-set constants: ASKM 0.07, recruitCost, K = 5, CEDGE, HOP_FACTOR 0.8, MEMBER_BETA 0.15, the overlay costs 1/2/3/5/8, and log2(1 + days/30). None has an estimate in the evidence base. One outreach log (attempted and completed introductions and asks, the route used, its alternatives, and the seniority reached) would supply validation data for the closeness routes, the overlap routes and, through member asks, ASKM. Until that exists, every route score is a heuristic model output, never a closeness, access, introduction or ask-success probability (D-025).
 
-1. **The algorithms are right; the numbers have no grounding.** All five components use textbook-correct search or greedy procedures for their graph sizes. None has a single empirically estimated parameter: ASKM, K, CEDGE, HOP_FACTOR, MEMBER_BETA, the staleness half-life, the overlay costs and the log-days form are all unestimated. Every output is a heuristic model output (D-025). Evidence on algorithm choice cannot substitute for evidence on parameters.
+**2. The replanning question gets the same answer in every component.** Ren 2022, Luo 2020, Xu 2024 and Abdel-Rahman 2025 all show that incremental D* Lite / MOPBD* pays only when the same query is repeated after small local changes on large graphs. The member graph has 533 nodes and the staffer router is stateless on snapshots. What carries over is a recompute triggered by an observed event, not an incremental algorithm. That also fixes the one real correctness defect: the member chain's dropped set.
 
-2. **One missing data asset blocks validation of everything.** The member graph needs observed asks and their outcomes. The staffer graph needs an outreach or introduction log. Both are the same kind of asset. Without them:
-   - no hop-independence test
-   - no ask-lift estimate
-   - no route-to-success check
-   - no fitted costs (a Zeller PathSF-style conditional logit would need them)
-   - nothing for incremental replanning to replan on
+**3. Node-loss handling is where the system currently fails, and where Paul's goal sits.** Paul wants routing that stays intact when a node is lost. In the member chain, the member-out scenario is exactly where the replica shows PROVABLY-OPTIMAL failing. For staffers, no robustness test exists. One work item covers both: honour removed nodes in the field computation, and measure route survival under hub removal.
 
-   The Dear Colleague archive (scan lead) is the only existing congressional record of asks, and it is observational.
+**4. Citations drift between the brain note, the code comments and the papers.** Chen 2016, Furnas 2019, Sotoudeh 2024, Kim & Kunisky, Porter 2005, GCOMB, MOPBD* and RELINK are each cited for more than the paper shows. Several mismatches sit in the brain vault rather than the code (Kim-Kunisky, Porter-Mucha-Newman). Re-scoping them is a documentation change for Paul to apply.
 
-3. **Code comments claim more than the code does,** and this repeats across components:
-   - 'PROVABLY-OPTIMAL' fails with drops.
-   - 'conservative floor' fails under correlation.
-   - '(1-1/e)' fails on the targeted branch.
-   - 'cost-bounded' is actually a seed count.
-   - 'MOPBD*' implies an exact front the code does not produce.
-   - 'GCOMB' labels plain greedy.
-   - 'A*' labels an h = 0 search.
+**5. Some sources appear twice.** Blanes i Vidal et al. 2012 reaches the hub twice, through Bombardini 2020 (about 24%) and de Figueiredo 2013 (about 23%). It is one study and should be counted once.
 
-   Citations overstate in the same way: Sotoudeh, Chen 2016, Furnas, Kim & Kunisky, Porter. These are wording fixes, apart from the dropped-set defect, which is a real logic error.
-
-4. **The speed literature does not apply.** D* Lite, Duan's SSSP bound, A* and learned greedy all target scales or dynamics this system lacks: 533 members, and a staffer router whose measured bottleneck is memory. This consistently weighs against Paul's interest in replanning layers and learned heuristics as next steps. Correctness fixes and outcome data matter more.
-
-5. **Independence is assumed in two places.** chainHold and the cosponsor-route MC reach both assume independent per-edge events. Chen 2016 flags independence as its own main limitation, and correlated asks on a shared bill are the plausible default. Both components share the same untested gap.
-
-6. **Transfer conditions.**
-   - Zelizer's causal cue-taking evidence comes from a state legislature. The state-level staff-sharing non-replication noted in the scan shows that congressional and state results can diverge.
-   - Kim & Kunisky's and Porter's graphs are not the cosponsor graph.
-   - The revolving-door value evidence (Blanes i Vidal, McCrain) measures revenue, not introductions.
-
-7. **Rule checks.**
-   - D-021: LDA must stay identity-only. This constrains Paul's 'lobbying/bipartite data into a graph' aim and any community term built from Kim & Kunisky.
-   - REJECTED proposals: Ma 2022's multi-hop walk weights must not reintroduce per-edge volume normalization. No paper here argues for dropping regular cosponsorship edges.
-   - Revolving-door wording: no influence language on the staffer edges.
+**6. Project-rule flags.**
+- **D-021.** The overlap overlay builds route hops from LDA filing co-listings. Separately, any future community term built from Kim & Kunisky's lobbying graph would make LDA a weight source.
+- **Rejected SNA proposals.** No paper here argues for dropping regular cosponsorship edges. Ma 2022's multi-hop reach extension must not reintroduce per-edge volume normalization, which was measured and rejected.
+- **Reciprocity (D-104..D-108).** No row bears on it.
+- **UNVERIFIED rows.** All 8 are leads only: Cao 2025, Zeller 2016 x3, Abdel-Rahman 2025 x2, Holyoke 2015.
 
 ## Research agenda
 
-1. Fix and test, not literature: exclude dropped members inside distToTarget, then run a second-path test (Dijkstra on -log of transposed PE, with emult and role priors on) to confirm or kill the direction-mismatch lead. Add a regression test that drops a bridging member.
-2. Ask-lift study (fills ASKM and whip capacity K): link the Box-Steffensmeier/Christenson/Craig Dear Colleague archive (106th-111th, ~94k letters, 44% cosponsor solicitations; copy in scan_2026-10-10) to BILLSTATUS cosponsor dates. Estimate join hazard for solicited vs unsolicited members and a per-sponsor yield curve, controlling for party, ideology and committee. Report window and denominator, and stratify by party or label UNSTRATIFIED.
-3. Hop-independence test: from observed cosponsor join sequences, test whether joins along kernel paths are positively correlated. If they are, relabel chainHold and the MC reach as products under independence, not floors.
-4. Start an outreach/introduction log (attempted, completed, seniority of contact reached) as the outcome asset for both staffer components. Pre-register a PathSF-style conditional logit (used route vs Yen alternatives) with a single-look holdout to fit HOP_FACTOR, w, MEMBER_BETA, the overlay costs and the log-days form.
-5. Get Zelizer 2019 APSR main text (only the supplement is downloaded) and McCrain 2018 JOP (no open copy found; try the Emory ETD dissertation chapter). Retry Fowler 2006 'Connecting the Congress', which failed on DNS. Put Rogowski & Sinclair 2012 (office-lottery null on cosponsorship) through adversarial verification before citing.
-6. Community-local recruitment study: partition the cosponsor graph itself (not the LDA graph; D-021) and compare within- vs cross-community join rates against homophily controls, before any community term enters budgetRecruit or multiTarget.
-7. Node-removal robustness simulation on the staffer graph (Paul's centerless goal): how often top-k routes survive removal of high-betweenness people. This is reporting only, with no ranking claims.
-8. Wording pass on code comments and citations: PROVABLY-OPTIMAL, conservative floor, (1-1/e) on the targeted branch, cost-bounded, MOPBD*, GCOMB, A*, and the Sotoudeh / Chen 2016 / Furnas / Kim-Kunisky / Porter citations.
+1. Second-path verification of buildPath (software check, no data). Write a test that drops a bridging member, and a second test that compares Dijkstra on -log of the transposed PE with the traced chain under non-unit EMU and role priors. If both confirm, the fix is to exclude dropped members and relax edges in the query direction inside distToTarget, then retire or re-scope the PROVABLY-OPTIMAL comment. The fix is Paul's to apply.
+2. Re-scope citations. Drop Furnas 2019 from recruitCost (FEC limits are the basis). Remove Sotoudeh's 'mathematical certainty' and probability wording (D-025). Ground the chain in the classical -log p reliable path rather than Chen 2016. Withdraw or re-scope the Kim-Kunisky and Porter community claims in the brain note. Soften the GCOMB, MOPBD* and RELINK labels. Limit the (1-1/e) claim to the untargeted coverage call on the coverage proxy.
+3. Paul's D-021 ruling on the LDA-derived filing-year hops in the staffer overlay (staffer_routing_evidence.py and staffer_routing.py:346-367).
+4. Estimate ASKM with an observational House study within one Congress: link documented member-to-member asks (Dear Colleague letters, sponsor outreach) to cosponsor join timing in an event-history model, stratified by majority and party, or labelled UNSTRATIFIED. Run the same data to test hop independence along join sequences.
+5. Test recruiter whip capacity: do prolific recruiters' marginal recruits drop off? This needs recruiter attribution, which raw cosponsor lists do not provide.
+6. Start an outreach log: record attempted and completed introductions, the route used, its Yen alternatives, and the seniority tier reached (Kalla & Broockman coding). Fit hop-cost weights by path-selection conditional logit (Zeller design, UNVERIFIED lead) with a single-look holdout. Outputs remain heuristic scores (D-025).
+7. Coverage audit of Politico-reconciled co-work against an independent staff payroll source over a named window, reporting recall of work ties by chamber.
+8. Node-loss robustness simulation on the staffer graph (Paul's centerless goal): route availability and cost inflation under removal of the top-k hub staffers or offices.
+9. Repo-wide check of whether the anchoring member still serving enters staffer route cost. If a term is added, describe it only as dependence on the patron's current office (Blanes i Vidal, one study), never as access or influence.
+10. Correct the component description: the live closeness router defaults to bidirectional Dijkstra with heuristic 0, not one-directional search. Document that the non-potential member-context, anchor-uncertainty and balance-step terms can change the winner beyond the documented tie rule.

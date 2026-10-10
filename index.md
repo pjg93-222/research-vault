@@ -6,7 +6,8 @@ The empirical backbone of Paul's systems: Melange (path-finding, SNA, allocation
 - [[missing]]
 - [[excluded]]
 
-Counts: 20 systems, 14 themes, 4 research notes, 4 non-articles, 144 papers, 689 excluded.
+Counts: 20 systems, 14 themes, 4 research notes, 4 non-articles, 163 papers, 689 excluded.
+
 
 ## Systems
 
@@ -229,3 +230,22 @@ Counts: 20 systems, 14 themes, 4 research notes, 4 non-articles, 144 papers, 689
 | [[kempe-2015-maximizing-spread-influence]] | 2015 | adaptive-influence-maximization | melange-allocation, melange-influence-engine, moneyball-rank-pillars | no | VERIFIED |
 | [[burnham-2023-stance-detection-practical-guide]] | 2023 | machine-learning-sentiment-analysis | melange-stance | no | VERIFIED |
 | [[bouton-2022-small-campaign-donors]] | 2022 | campaign-politics | melange-influence-engine, mentat-fec-attribution, mentat-sector-growth-study | no | VERIFIED |
+| [[ansolabehere-2002-little-money-politics]] | 2002 | campaign-politics | melange-allocation, melange-influence-engine, mentat-giving-forecast, mentat-sector-growth-study | no | VERIFIED |
+| [[aroyehun-2026-politics-of-feelings]] | 2026 | machine-learning-sentiment-analysis | melange-legislative-data, melange-psychometrics, melange-stance | no | VERIFIED |
+| [[battaglini-2018-effectiveness-connected-legislators]] | 2018 | social-network-analysis | melange-influence-engine, melange-legislative-data, melange-sna, moneyball-rank-pillars | no | VERIFIED |
+| [[burnham-2024-political-debate-zero]] | 2024 | machine-learning-sentiment-analysis | melange-stance | no | VERIFIED |
+| [[callaway-2025-difference-differences-continuous]] | 2025 | causal-methodological | melange-influence-engine, mentat-sector-growth-study | no | VERIFIED |
+| [[cao-2024-language-models-personality]] | 2024 | machine-learning-sentiment-analysis | melange-psychometrics | no | VERIFIED |
+| [[decter-frain-2016-impressive-words-linguistic]] | 2016 | machine-learning-sentiment-analysis | melange-psychometrics | no | VERIFIED |
+| [[defigueiredo-2013-advancing-empirical-research]] | 2013 | lobbying | melange-influence-engine, melange-lobbying, melange-pathfinding, mentat-sector-growth-study, moneyball-rank-pillars | no | VERIFIED |
+| [[fremeth-2018-spillovers-regulating-corporate]] | 2018 | lobbying | melange-allocation, melange-influence-engine, melange-lobbying, mentat-fec-attribution | no | VERIFIED |
+| [[harbridge-yong-2023-bipartisan-path-effective]] | 2023 | causal-methodological | melange-allocation, melange-influence-engine, melange-legislative-data, melange-psychometrics, melange-sna | no | VERIFIED |
+| [[hargrave-2022-longer-conforming-stereotypes]] | 2022 | machine-learning-sentiment-analysis | melange-psychometrics | no | VERIFIED |
+| [[kerr-2014-dynamics-firm-lobbying]] | 2014 | lobbying | melange-lobbying, mentat-giving-forecast, mentat-sector-growth-study | no | VERIFIED |
+| [[lemens-2025-positioning-political-texts]] | 2025 | machine-learning-sentiment-analysis | melange-psychometrics, melange-stance | no | VERIFIED |
+| [[mackinnon-2017-wild-bootstrap-inference]] | 2017 | causal-methodological | mentat-sector-growth-study | no | VERIFIED |
+| [[montgomery-2017-effects-congressional-staff]] | 2017 | social-network-analysis | melange-legislative-data, melange-staffer-network | no | VERIFIED |
+| [[osnabrugge-2021-playing-gallery-emotive]] | 2021 | machine-learning-sentiment-analysis | melange-psychometrics, melange-stance, moneyball-rank-pillars | no | VERIFIED |
+| [[peters-2024-language-models-infer]] | 2024 | machine-learning-sentiment-analysis | melange-psychometrics | no | VERIFIED |
+| [[rheault-2016-measuring-emotion-parliamentary]] | 2016 | machine-learning-sentiment-analysis | melange-psychometrics, melange-stance | no | VERIFIED |
+| [[snowberg-2006-partisan-impacts-economy]] | 2006 | campaign-politics | mentat-sector-growth-study | no | VERIFIED |

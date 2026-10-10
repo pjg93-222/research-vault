@@ -139,6 +139,8 @@ The direction agrees: lobbying and PAC firms hold larger industry shares under i
 ### Linked from
 - [[bombardini-2020-empirical-models-lobbying]] — complements — Both relate firm lobbying to firm size, the stylized fact the review reports from Huneeus and Kim.
 - [[alexander-2009-lobbying-analysis-under]] — complements — Item exists. Link between corporate lobbying and firm size or concentration is plausible; content not checked beyond existence.
+- [[fremeth-2018-spillovers-regulating-corporate]] — same-data — Real item (title: Corporate lobbying, political action committees, and market concentration). Same-data claim not verified beyond title.
+- [[kerr-2014-dynamics-firm-lobbying]] — complements — Item title links corporate lobbying and PACs to firm size and market concentration, extending Kerr's size gradient. Kerr does not cite it.
 - [[note-industry-growth-and-political-spending-research]] — complements — Item record exists as an ext file only. Content and the rel's market-concentration link were not re-read.
 - [[note-review-industry-growth-and-political-spending]] — complements — Title covers corporate lobbying, PACs and market concentration; the review asks for concentration and active-actor counts, so the topical link holds.
 - [[note-sector-growth-and-political-spending-source]] — complements — Its title covers corporate lobbying, PAC spending and market concentration, a related economic-driver design.

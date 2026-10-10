@@ -291,4 +291,4 @@ Partly aligned. Paul reads Kim and Kunisky as a tool for identifying champions (
 - [[aref-2021-identifying-hidden-coalitions]] — complements — Signed partitioning of the House co-sponsorship network supplies a sign Kim-Kunisky's co-lobbying lacks, but is a hard partition without mixed membership.
 
 ### Linked from
-_None._
+- [[defigueiredo-2013-advancing-empirical-research]] — complements — Kim and Kunisky on lobbying networks built from bill-level LDA links. The essay's targeting gap in transaction data applies to member edges built this way; the item's content was not re-read.

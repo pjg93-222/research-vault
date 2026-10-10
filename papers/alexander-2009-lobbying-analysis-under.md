@@ -139,4 +139,6 @@ Partly aligned. In his Trey bibliography Paul calls this study an outlier in the
 - [[pritoni-2025-lobbying-coalitions-determinants]] — complements — Item exists and its summary is a review of lobbying coalition research (80 articles). Relevant to the coalition-gap point; confirmed from summary.
 
 ### Linked from
-_None._
+- [[ansolabehere-2002-little-money-politics]] — contradicts — Lobbying ROI analysis under the 2004 American Jobs Creation Act. Its text reports positive, significant lobbying returns, set against this paper's small-return account. The link is a framing contrast, not a direct test. Item exists.
+- [[defigueiredo-2013-advancing-empirical-research]] — complements — Lobbying ROI under the American Jobs Creation Act of 2004 (Alexander, Scholz, Mazza). A single-policy return estimate, to which the essay's selection and omitted-channel warnings apply.
+- [[kerr-2014-dynamics-firm-lobbying]] — complements — Item title covers lobbying ROI under the 2004 American Jobs Creation Act, a 2004 policy event; Kerr does not cite it. Returns view versus Kerr's participation view is consistent with the title.

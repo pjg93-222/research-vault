@@ -122,3 +122,4 @@ Paul has no annotation of Dai et al. The paper does not support replacing the SV
 
 ### Linked from
 - [[burnham-2023-stance-detection-practical-guide]] — complements — Title matches a logic tensor network stance paper with LLM enhancement. The claim that it extends the in-context family Burnham benchmarks was not verified, so relation is softened from extends.
+- [[burnham-2024-political-debate-zero]] — complements — Paul's vault describes it as fusing three LLM decisions by attention routing for stance on VAST, not an NLI method. It is a possible comparator for the NLI reader, not the same method.

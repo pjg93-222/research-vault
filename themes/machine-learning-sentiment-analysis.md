@@ -1,350 +1,580 @@
 ---
 type: theme
 name: "Machine Learning & Sentiment Analysis"
-paper_count: 24
+paper_count: 33
 tags: [theme]
 ---
 
 # Machine Learning & Sentiment Analysis
 
-**Scope.** The theme file holds 24 extracted works. Paul's own annotated bibliography for this category lists 8 citations. Only 4 have his annotation text: Birkenmaier & Lechner, Kim et al., Peng et al. and Ramey et al. Of those 4, only Ramey ([[ramey-2016-measuring-elite-personality]]), Birkenmaier ([[birkenmaier-2025-measuring-politicians-public]]) and Kim ([[kim-2025-measuring-interest-group]]) appear here, and only as related links, not as extracted works. Peng et al. and Alkazzi & Okumura are absent. Three of the 24 works are in Paul's bibliography: [[steinertthrelkeld-2018-twitter-data]], [[joo-2022-image-data-automated]] and [[taherdoost-2023-artificial-intelligence-sentiment]]. All three were citation-only there. So most of this synthesis comes from the extractions, not from Paul's words.
+## Machine Learning & Sentiment Analysis: synthesis
 
-**Paul's argument.** Paul says machine learning and NLP on public political text (floor speech, press statements, lobbying filings) can produce actor-level attributes: personality, position and emotion. Those attributes would sit on the nodes of an SNA graph and be used for political intelligence, such as lobbying strategy, industry alignment and how to pitch a member. The gap he names most often is the **conversion step**: how a model's output becomes a node attribute or vector. He raises it for Birkenmaier, Peng and Ramey.
+**What the theme is for, in Paul's words.** Paul's annotated bibliography for this category makes one argument. Machine learning and NLP, run on public political text such as floor speech, press releases, public statements and lobbying filings, can produce actor-level attributes: personality traits, policy positions and emotion. Those attributes can then sit on the nodes of a social-network graph and serve political intelligence work, such as lobbying strategy, industry alignment, and how to pitch a policy to a particular member. His most repeated gap is the **conversion step**: how a model's output becomes a node attribute or vector. He also names gaps on ambiguity, inter-industry conflict, temporal lag, model limits (long-distance dependency) and venue coverage. He wrote no annotation text for the three works his bibliography shares with this theme ([[joo-2022-image-data-automated]], [[taherdoost-2023-artificial-intelligence-sentiment]], [[steinertthrelkeld-2018-twitter-data]]). The four works he did annotate (Birkenmaier and Lechner, Kim et al., Peng et al., Ramey et al.) are not among the 33 works filed here. Their ideas reach this synthesis only through cross-references such as [[ramey-2016-measuring-elite-personality]] and [[birkenmaier-2025-measuring-politicians-public]].
 
-**What the 24 works say, in one paragraph.** The literature splits into four measurement programmes plus a group of data-source and application papers:
-- (1) Big Five from text, the personality-computing lineage.
-- (2) Voice and audio as data.
-- (3) Stance detection.
-- (4) Sentiment and tone dictionaries.
+**What the 33 works add up to.** The corpus falls into seven strands:
+- personality computing and its validity ceilings;
+- LLMs used as raters of personality and position;
+- stance detection (supervised classifiers vs NLI vs in-context LLMs);
+- audio and voice as data;
+- domain-built sentiment and emotion dictionaries;
+- emotion and style in legislatures, read as performance for an audience;
+- a weaker tier of platform-data tutorials and applied pipelines.
 
-Across all four, the strongest shared result is a **ceiling**:
-- Closed-vocabulary text explains about 5% of self-reported trait variance ([[koutsoumpis-2024-kernel-truth-text]]).
-- Text-based trait recognition sits at about r 0.30 ([[celli-nd-twenty-years-personality]]).
-- Voice adds at most low double digits of variance in students ([[marrero-2022-evaluating-voice-samples]]).
+Four conclusions run across the corpus:
+1. **Text-derived personality carries little signal against self-report criteria.**
+   - LIWC categories explain about 5.1% of self-reported trait variance (31 samples, N = 85,724) [[koutsoumpis-2024-kernel-truth-text]].
+   - Text recognition peaks at about rho .30 [[celli-nd-twenty-years-personality]].
+   - Zero-shot GPT gets r ≈ .29 on 1,000 Facebook users [[peters-2024-language-models-infer]].
+   - Observer and perception criteria look much stronger, but partly because raters and models share the same cues, and because of reputation [[cao-2024-language-models-personality]].
+2. **For stance and position, transformer NLI models and LLMs beat bag-of-words and general dictionaries on most benchmarks.**
+   - MCC: about 0.49–0.51 for bag-of-words vs 0.60–0.68 for transformers vs 0.78 for GPT-4, on about 2,135 Trump-approval items [[burnham-2023-stance-detection-practical-guide]].
+   - 88.4% for GPT-3 vs 38.3% for the best dictionary on 945 SCOTUS tweets [[ornstein-2024-train-your-stochastic]].
+   - Small domain-adapted NLI encoders can match LLMs [[burnham-2024-political-debate-zero]].
+   - Classical models stay competitive on small labelled sets ([[naz-2025-machine-deep-learning]], and the system's own LinearSVC result).
+3. **Generic sentiment lexicons misfire in political and specialised domains.** Corpus-built or crowd-built dictionaries consistently beat them ([[rice-2018-corpus-based-dictionaries]], [[haselmayer-2017-sentiment-analysis-political]], [[rheault-2016-measuring-emotion-parliamentary]]).
+4. **Emotional language in legislatures is largely state and strategy, not trait.** It moves with:
+   - venue and audience [[osnabrugge-2021-playing-gallery-emotive]];
+   - opposition status and economic shocks [[rheault-2016-measuring-emotion-parliamentary]];
+   - majority status, chamber and gender [[aroyehun-2026-politics-of-feelings]];
+   - gender, in a way that itself changes over time [[hargrave-2022-longer-conforming-stereotypes]].
 
-These measures improve sharply when the criterion is an **observer** rather than a self-report, and when the dictionary or model is **domain-built** rather than general. In stance, the works agree on two points: stance is not sentiment ([[burnham-2023-stance-detection-practical-guide]]), and transformer, NLI or LLM readers beat bag-of-words on political text. They disagree on whether an LLM should be the primary labeller. Melange's own small-sample results run against the literature's "transformer wins" headline. Those results are LinearSVC 0.816 versus transformer 0.757 macro-F1, and DEBATE 0.839 / kappa 0.742 on n=87 held-out, member-grouped. Every system-side figure is a project report, not a literature finding.
+   This directly challenges any reader that pools a member's affect words across venues and calls the result a disposition.
 
-**What this means for the systems.** The theme mostly **qualifies** existing Melange choices rather than proposing new ones:
-- Lexical Big Five is retired from receptivity.
-- Audio stays display-only.
-- DEBATE NLI sets stance direction, and LSD2015 is used for intensity only.
+**For Paul's systems.** Most of these works are method sources or qualifiers for components already built:
+- the lexical Big Five reader, its Mairesse/RKH lineage and the LLM trait readers;
+- the Political DEBATE stance reader, the supervised stance ladder, the two-hop rule and the LSD2015 tone intensity;
+- the audio lane;
+- the frame-alignment diagnostic.
 
-It also exposes a few actual errors and some open validation debts. Those are listed under "What it means for the systems".
+None of them validates a component on legislators against an outcome related to lobbying. On the conversion step, the corpus offers aggregation recipes: probability vectors [[ornstein-2024-train-your-stochastic]], score averaging with NA handling [[lemens-2025-positioning-political-texts]], and chunk-then-average [[peters-2024-language-models-infer]]. It offers no validated mapping from text output to a graph node. Paul's central gap is therefore still open.
 
 ## Strands
 
-### Big Five from text: the personality-computing lineage and its ceiling
+### Personality computing and its validity ceilings
 
-**Lineage.** [[mairesse-2007-automatic-recognition-personality]] is the root. It runs LIWC, MRC and prosody features through SMOreg/Naive Bayes/RankBoost on 2,479 student essays (self-report) and 96 EAR speakers (self-report plus 18 observers). Ramey, Klingler and Hollibaugh ran these pretrained models on congressional floor speech, and Melange's lexical reader is fitted to their RKH estimates. [[celli-nd-twenty-years-personality]] confirms that this is still the field's core. Among 45 text systems, SVM was the most common learner (20) and psycholinguistic features the most common feature type (16).
+**The question.** How much Big Five signal can be recovered from language, and against which criterion?
 
-**Agreement: the signal is small and depends on the criterion.**
-- [[koutsoumpis-2024-kernel-truth-text]] pools 31 samples (N=85,724). The 52 shared LIWC categories explain a mean 5.1% of **self-reported** trait variance, with the strongest |rho| at .08-.14. They explain 38.5% of **observer** ratings, but that figure rests on only 5 samples (n=1,637). Only 20 of 260 trait-by-category markers agree in direction across the two criteria.
-- [[mairesse-2007-automatic-recognition-personality]] finds the same asymmetry. On EAR conversation, observer-rated traits reach 73-74% binary accuracy for E and ES, while no self-report model beats the baseline.
-- [[celli-nd-twenty-years-personality]] puts text recognition at r of about 0.30 against a 0.133 baseline. Computer perception reaches 0.30 against 0.38 for human judges.
-- [[azucar-2017-predicting-personality-traits]] reports higher pooled r of .29-.40 across 16 lay-user social-media studies. The authors admit these are optimistic, because each study contributed its best model or strongest feature. Heterogeneity is I² ≥ 93 for every trait, and the result is UNSTRATIFIED by platform.
-- Agreeableness is the least recoverable trait in Azucar, and Emotional Stability has the lowest inter-observer agreement in Mairesse.
+**The lineage.** [[mairesse-2007-automatic-recognition-personality]] is the root. It trained LIWC/MRC/prosody models on two corpora: 2,479 student essays with self-reports, and 96 EAR speakers with self-reports plus ratings from 18 observers. Ramey, Klingler and Hollibaugh later ran its SMOreg models on congressional floor speech ([[ramey-2016-measuring-elite-personality]]), and the system's lexical Big Five is now fitted to those RKH estimates. Mairesse's own results are weak:
+- On essays, only openness (r .33) and emotional stability (r .24) beat the mean baseline in regression.
+- Ramey's footnote says RKH used the EAR observer-trained models. In Mairesse's own table, SMOreg regression on EAR observer ratings is worse than predicting the mean for every trait, with relative errors of 131.75–213.20%.
+- So the reference instrument behind the system's held-out r = .350 against RKH had no demonstrated out-of-sample accuracy in its source paper. This is a single-agent reading, UNVERIFIED per DE-062.
 
-**Disagreement: architecture.**
-- [[yang-2023-getting-personal-deep]] (DeepPerson) reports AUC 75.0 versus 64.6 for the best comparator on PANDORA, with feature-based rows lowest. LIWC-type concept embeddings still add about 2 pp inside the deep model.
-- [[naz-2025-machine-deep-learning]] says transformers and Bi-LSTMs lead, while classical TF-IDF stays competitive on small labelled sets. Its own experiment is accuracy-only on MBTI-labelled data, with no split reported and screening counts that do not reconcile.
-- [[kumari-nd-five-personality-predictions]] is a design sketch with no data or results. Its follower and tweet-count features are volume proxies of the kind the system already rejects.
+**The meta-analyses agree on a low ceiling against self-report.**
+- [[koutsoumpis-2024-kernel-truth-text]] (31 samples, N = 85,724; 52 LIWC categories):
+  - Cue validity against self-report: |rho| .08–.14 and R² of about 5.1%.
+  - Cue utilization against observer ratings (only 5 samples, n = 1,637): |rho| .18–.39 and R² of about 38.5%.
+  - Only 20 of 260 trait-by-category markers agree in direction across the two (the "kernel of truth").
+  - Formality weakens some markers.
+- [[azucar-2017-predicting-personality-traits]] (16 studies of lay social-media users, searched to May 2017): pooled r of .29 (A) to .40 (E). Two cautions:
+  - The figures are inflated by best-model selection.
+  - They are UNSTRATIFIED across platforms, with I² ≥ 93.
+  - Agreeableness is the least recoverable trait. Demographics raise "accuracy" for A and N.
+- [[celli-nd-twenty-years-personality]] (PRISMA review; the screening arithmetic gives 126 papers where the paper reports 129):
+  - Text Recognition state of the art is about rho .30, against a .133 baseline.
+  - Computer Perception is .30, against .38 for human judges.
+  - SVMs on LIWC-type features dominate.
+  - The review places these tasks on Brunswik's lens model.
 
-**Instrument side.** [[rammstedt-2025-going-global-language]] is the only questionnaire paper. Its comparability rests on the translation procedure, not on data. Its one transferable point is that small item-wording changes are treated as material, which matches the itemset versioning of the LLM reader.
+**Deep models do better on self-report labels, but not on politicians.**
+- [[yang-2023-getting-personal-deep]] (DeepPerson):
+  - AUC 75.0 vs 64.6 for the best comparator on PANDORA (1,568 Reddit users, labels median-split self-report).
+  - Closed-vocabulary feature models rank lowest, yet LIWC-type concept embeddings still add about 2 pp inside the deep model.
+- [[naz-2025-machine-deep-learning]] reports transformer accuracies near 90% on MBTI-labelled Kaggle data, with no split, no class balance and no variance reported, so the figures are not usable as benchmarks.
 
-**Unsettled.** No work here has an **elite** self-report criterion. Every effect size comes from students or lay users, so none of them is a like-for-like benchmark for Melange's held-out r .350 against RKH.
+**Weak tier.**
+- [[kumari-nd-five-personality-predictions]] is an unvalidated design sketch: no N, no labels, no metrics. Its volume-proxy profile features (follower count, tweet frequency) are the kind the system already rejected.
+- [[rammstedt-2025-going-global-language]] documents the translation of a self-report instrument (39 BFI-2-XS versions). Its only lesson here is that comparability across administrations is asserted procedurally, not shown.
+
+**Agreement.** The strand agrees that:
+- text gives modest signal against self-report and larger agreement against observer ratings;
+- Agreeableness and Openness are hard;
+- Neuroticism and Emotional Stability have the weakest criteria (Mairesse's inter-observer pair r is .29; [[naz-2025-machine-deep-learning]] says datasets rarely measure N directly).
+
+**Disagreement.** The strand splits on what the observer advantage means. Koutsoumpis reads it as cue utilization (raters and models using the same cues), not validity. Celli's and Yang's state-of-the-art framings treat it as progress.
 
 Works: [[mairesse-2007-automatic-recognition-personality]], [[koutsoumpis-2024-kernel-truth-text]], [[azucar-2017-predicting-personality-traits]], [[celli-nd-twenty-years-personality]], [[naz-2025-machine-deep-learning]], [[yang-2023-getting-personal-deep]], [[kumari-nd-five-personality-predictions]], [[rammstedt-2025-going-global-language]]
 
-### Voice and audio as data: trait, state and identity
+### LLMs as raters of personality and political position
 
-The four works ask three different questions, and they should not be pooled.
+**The question.** Can instruction-tuned LLMs replace coders or trained models as measurement instruments?
 
-**Trait.** [[marrero-2022-evaluating-voice-samples]] uses 614 students, about 51 s of speech each, XGBoost with SHAP selection and 100-fold CV R². The joint feature set explains 10.67% of trait variance, vocal features 6.24% and LIWC 3.13%. E, C and N reach 10-20%, and gender is predicted at over 90%. The headline claim is super-additivity of voice and text. [[salam-2022-learning-personalised-models]] runs UDIVA dyadic video through architecture search. Splitting models by gender lowers average MSE from 0.818 to 0.690, and age barely helps. The evidence is thin: one test split, with no test N or intervals.
+**Position and sentiment.**
+- [[ornstein-2024-train-your-stochastic]] (GPT-3/GPT-4 few-shot):
+  - 88.4% sign accuracy on 945 SCOTUS tweets, against 64.3% for TweetNLP and 38.3% for the best dictionary.
+  - Ideology scores correlate with experts at rho .92 (economic) and .80 (social) across 18 UK manifestos.
+  - Costs are about 1000x lower than crowd coding.
+  - Its method points matter more than these numbers: build continuous measures from the label-probability vector, not the argmax; GPT-4 (RLHF) is overconfident (>99% on one label for over 70% of posts); validate in three steps.
+- [[lemens-2025-positioning-political-texts]] asks directly for a 0–100 score with NA allowed, then averages to the document or actor.
+  - Overall: r .92 on 899 Congress tweets against the crowd mean, and r .97 for 117th-Congress senators against Nokken-Poole dimension 1. These figures are UNSTRATIFIED by party.
+  - Within party they fall to .66–.72.
+  - On the anti-subsidy group, every model except GPT-4o drops to .04–.07.
 
-**State.** [[dietrich-2019-pitch-perfect-vocal]] measures arousal, not trait. It z-scores mean F0 within each speaker across 74,158 House floor speeches (2009-2014). Women members speak about +0.09 to 0.11 SD above baseline when they mention women, and partisans about +0.29 to 0.38 SD on topics their party owns. The day-level response models are explicitly non-causal.
+**Personality.**
+- [[peters-2024-language-models-infer]] (zero-shot GPT-3.5/4, 1,000 MyPersonality users with 200+ posts, 20-message chunks averaged):
+  - Mean r .29 against self-report; supervised in-domain models reach about .37.
+  - Level biases by gender and age, but not rank-order biases.
+  - LLM–observer agreement (about .27, n = 68) is close to self–observer agreement (.30).
+- [[cao-2024-language-models-personality]] predicts *perceived* Big Five for 226 public figures from GPT-3 **name embeddings alone**:
+  - Corrected r .78–.88; .53–.70 after controlling for likability and demographics.
+  - So an LLM reading a famous politician carries a reputational prior that can stand in for reading the text.
 
-**Identity and pipeline.** [[mestre-2026-potential-pitfalls-audio]] is a methods paper on 45 presidential and VP debates (1960-2020):
-- Aeneas forced alignment gets 85.3% percentage agreement, with about 5% of pairs not aligned at all.
-- wav2vec2 embeddings reach 0.914 speaker-ID accuracy across 156 speakers, against 0.081 for an MFCC CNN.
-- Off-the-shelf emotion models are biased by gender and pitch.
+**Agreement.** All four find strong concurrent correlation with human benchmarks at low cost, and all rely on concurrent validity only.
 
-**Agreement.**
-- Within-speaker normalisation is required (Dietrich, Mestre).
-- Speaker sex confounds acoustic features (Marrero's gender result, Salam's gender split, Mestre's pitch ranking).
-- Extraversion carries the most vocal cue. Mairesse and Celli say the same: prosody helps E most.
+**The joint warning.** Headline correlations are between-group (party, figure fame), and observer agreement may reflect shared impressions rather than traits. No paper here tests whether de-identifying text removes the prior Cao demonstrates. Ornstein also notes that the GPT-3 models were retired in January 2024, so the results cannot be reproduced. That is a structural weakness of the whole strand.
 
-**Disagreement.** The only clear disagreement is between Marrero's super-additivity and Melange's own replication. At N=90 legislators, vocal features added +0.001 over linguistic for E against the Pink criterion. That is a project report, not a literature finding.
+Works: [[ornstein-2024-train-your-stochastic]], [[lemens-2025-positioning-political-texts]], [[peters-2024-language-models-infer]], [[cao-2024-language-models-personality]]
 
-Works: [[marrero-2022-evaluating-voice-samples]], [[dietrich-2019-pitch-perfect-vocal]], [[mestre-2026-potential-pitfalls-audio]], [[salam-2022-learning-personalised-models]]
+### Stance detection: supervised vs NLI vs in-context LLMs
 
-### Stance detection: supervised vs NLI vs LLM
+**The question.** Which classifier family should classify a document's position toward a target?
 
-**Framing.** [[burnham-2023-stance-detection-practical-guide]] (published in PSRM 2025) frames stance as entailment toward a proposition, kept separate from sentiment. On about 2,135 Trump-approval items, scored by MCC:
-- Bag-of-words gets 0.49-0.51 and supervised transformers 0.60-0.68.
-- Zero-shot NLI gets 0.40 with DeBERTaV3 Base and 0.65 with Large.
-- GPT-4 gets 0.78-0.80.
-- Human coders disagree more when the target is not named: 34.0% versus 19.5% conflicting codes.
-- NLI degrades most in that low-context case.
+**[[burnham-2023-stance-detection-practical-guide]]** defines stance as entailment, separate from sentiment, and benchmarks three families on about 2,135 Trump-approval items scored by MCC:
+- bag-of-words: .49–.51;
+- fine-tuned transformers: .60–.68;
+- zero-shot NLI: DeBERTaV3 base .40, large .65;
+- GPT-4: .78–.80.
 
-**Agreement that transformers or LLMs beat classical models on political text.**
-- [[ornstein-2024-train-your-stochastic]]: GPT-3 few-shot reaches 88.4% sign accuracy on 945 SCOTUS tweets, against 64.3% for TweetNLP and 38.3% for the best dictionary. This is sentiment, not stance.
-- [[dai-2025-large-language-model]] (FOLAR): small in-target gains of +1.7 and +2.0 F_avg, and larger zero-shot VAST gains of +4.2 and +6.2.
-- [[b-2025-comparing-fine-tuned]] (Khan et al., Roman Urdu): RoBERTa 0.97 against RF 0.95. The comparison is not like-for-like, because RoBERTa was scored on a different, augmented test set (support 6,699 against 1,675).
+The key finding concerns context. Human coders disagree more when the target is not named (34.0% vs 19.5%), and NLI degrades most in that case. Burnham recommends NLI as the reproducible default. He treats LLMs as tools for expanding or validating training data, not as the main label source.
 
-**Disagreement: the role of the LLM.**
-- Burnham says NLI should be the reproducible default, with LLMs used for augmentation or validation, not as primary labels. GPT-4 cost $12.52 per run and cannot be archived.
-- Ornstein treats few-shot LLM labels as a usable measure, provided a tune-then-check validation is run. It also documents GPT-4 overconfidence: more than 70% of posts get over 99% on one label. It warns that its GPT-3 models were retired in January 2024, so the results cannot be reproduced.
-- Dai fuses three LLMs to hedge single-model bias. Its ~5.8-point fusion ablation compares fusion against a single GPT-3.5, so fusion is confounded with the choice of LLM.
+**[[burnham-2024-political-debate-zero]]** releases Political DEBATE (DeBERTa V3 base 86M and large 304M, trained on PolNLI, 201,691 documents) — the checkpoint behind the system's CU press-stance reader.
+- On quote-tweet stance: MCC .29 for Claude 3.5, .62 for base, .88 for large.
+- 10–25 labelled examples often suffice.
+- But the base model failed a bespoke concept (COVID threat minimization) even at 100 examples, while the large model matched the supervised classifier (MCC .66) at 10.
 
-**Shared weakness.** The benchmarks are tweets and short sentences, not long multi-actor press releases. Khan, Dai and Naz report no variance across seeds or splits.
+**[[b-2025-comparing-fine-tuned]]** (Khan et al., Roman Urdu tweets; the method source for `train_stance_domain.py`) claims RoBERTa 0.97 over random forest 0.95.
+- RoBERTa was scored on a different, augmented test set (support 6,699 vs 1,675), so the comparison is not like-for-like.
+- There is one split and no confidence intervals.
+- On Paul's data the claim reversed: tuned LinearSVC 0.816 vs transformer 0.757 macro-F1. This is a project-side figure.
 
-Works: [[burnham-2023-stance-detection-practical-guide]], [[b-2025-comparing-fine-tuned]], [[dai-2025-large-language-model]], [[ornstein-2024-train-your-stochastic]]
+**[[dai-2025-large-language-model]]** (FOLAR) elicits first-order-logic rules from LLMs into a logic tensor network and fuses three LLMs.
+- Gains are small in-target (+1.7 to +2.0 F_avg) and larger zero-shot on VAST (+4.2 and +6.2).
+- No variance is reported.
+- It is the soft, learned version of the system's hard-sign two-hop rule.
 
-### Sentiment and tone dictionaries: domain beats general
+**Agreement.** Implicit, sarcastic or unnamed-target stance is the shared failure mode (Burnham's ambiguity finding; Khan's error notes; Dai's error on unrelated positive words). This is Paul's ambiguity gap, measured.
 
-**Three works agree that general lexicons misfire on specialised text.**
-- [[rice-2018-corpus-based-dictionaries]] seeds GloVe on the domain corpus. It gets 79.5% held-out accuracy on IMDB, against about 70% for LIWC and AFINN. It needs about 5,000 or more documents. On Supreme Court opinions, justice-level polarity ranks correlate only 0.29 with LIWC and 0.16 with AFINN, so the choice of dictionary reorders the units.
-- [[haselmayer-2017-sentiment-analysis-political]] builds a crowd-rated negativity dictionary from 12,713 sentences, 10 ratings each, for about 2,000 EUR. It reaches r 0.65 with experts at 84% coverage, against r 0.13 and 0.19 for translated general dictionaries. Its regression keeps the expert-coded signs but shrinks the effects (-0.13 versus -0.40).
-- [[park-2025-automatic-construction-direction]] pairs direction words with direction-dependent nouns ("cost decrease" is positive). This lifts Loughran-McDonald weighted F1 from about 0.60 to 0.71-0.82 on headline-length financial sentences. It stays below 0.5 on SemEval and FiQA, and fine-tuned RoBERTa leads by a wide margin.
+**Disagreement.**
+- Reproducibility: Burnham argues for NLI over LLM labels; [[ornstein-2024-train-your-stochastic]] and [[lemens-2025-positioning-political-texts]] argue for LLM coding.
+- Model size: Burnham 2024's own evidence favours *large* over the base checkpoint the system runs.
 
-**Agreement.**
-- Ornstein's 38.3% dictionary result points the same way.
-- Burnham adds that document polarity cannot locate its target, a limit Rice concedes in its own text.
+Works: [[burnham-2023-stance-detection-practical-guide]], [[burnham-2024-political-debate-zero]], [[b-2025-comparing-fine-tuned]], [[dai-2025-large-language-model]]
 
-**The outliers.**
-- [[zhang-2022-data-assisted-social]] applies the general Affin lexicon to 882,371 retail tweets with no domain check, no holdout and no metrics. It also mis-cites Affin.
-- [[taherdoost-2023-artificial-intelligence-sentiment]] is a bibliometric scoping review. It never separates sentiment from stance and never addresses target-dependent valence. Its one useful point is borrowed from Alantari et al.: neural models predict well but diagnose poorly, and dictionaries do the reverse.
+### Voice and audio as political data
 
-Works: [[rice-2018-corpus-based-dictionaries]], [[haselmayer-2017-sentiment-analysis-political]], [[park-2025-automatic-construction-direction]], [[taherdoost-2023-artificial-intelligence-sentiment]], [[zhang-2022-data-assisted-social]]
+**The question.** Does the voice carry trait or state information beyond the words?
 
-### Platform data, images and persuasion applications
+**[[marrero-2022-evaluating-voice-samples]]** (614 students, about 51 s each; XGBoost with Tree-SHAP; 100-fold CV out-of-sample R²):
+- joint features 10.67%, vocal alone 6.24%, LIWC alone 3.13%, averaged across the Big Five;
+- the authors claim super-additivity, but the paper gives no permutation null;
+- the LIWC-alone figure sits close to Koutsoumpis's 5.1% ceiling.
 
-These works sit on the edge of the theme. Two are 'X as data' tutorials by the same author:
-- [[steinertthrelkeld-2018-twitter-data]] gives 2016 API limits: a 1% stream sample and a 3,200-tweet cap. It also gives elite coverage (every Senator and 430 House members) and the caveat that author metadata reflects request time, not post time.
-- [[joo-2022-image-data-automated]] covers images: label-API chi-squared tests on 15,647 candidate photos, and a duplication-rate framing measure on protest images.
+Melange's three one-look audio tests at N = 90 legislators (July 2026, project-side) partly reproduced it and largely failed:
+- Pink-E: held-out r +.284;
+- super-additivity missed every time (+0.001 and −0.004);
+- voice did not measure C (r −.081);
+- the A–ES halo worsened (|r| .819 and .946).
 
-The framing hypotheses in Joo hold in 3 of 5 events. There is no correction for testing about 1,700 labels, and the duplicate threshold of 0.2 was picked from one histogram.
+**[[salam-2022-learning-personalised-models]]** (UDIVA dyadic video, 147 participants; mean squared error, lower is better):
+- per-gender models give the lowest error (0.690, against 0.818 for the generic fusion model);
+- almost all of the gain comes from the gender split;
+- there is one test split and no N is reported.
 
-[[simchon-2024-persuasive-effects-political]] is the one application paper. Across four UK Prolific experiments, a mismatch between ad openness and reader openness lowers *perceived* persuasiveness. Effects are small: b -0.07 to -0.08 per SD of mismatch with real ads, -0.03 with ChatGPT rewrites, and not significant with GPT-3 (p .057). The outcome is self-rated persuasiveness, not attitude change. The paper puts the effect in a **message-by-trait interaction**. [[celli-nd-twenty-years-personality]] lists this same personality-aware election persuasion as an ethical threat.
+The transferable lesson is that acoustic features partly encode speaker sex.
 
-Works: [[steinertthrelkeld-2018-twitter-data]], [[joo-2022-image-data-automated]], [[simchon-2024-persuasive-effects-political]]
+**[[dietrich-2019-pitch-perfect-vocal]]** (74,158 House floor speeches, 2009–2014):
+- mean F0 is z-scored within speaker as a measure of arousal;
+- women rise 0.09–0.11 SD when mentioning women;
+- partisans rise 0.29–0.38 SD on topics their party owns;
+- it relies on roughly 120 speeches per speaker and a cross-speaker contrast.
+
+**[[mestre-2026-potential-pitfalls-audio]]** (45 presidential and VP debates, 1960–2020):
+- validates Aeneas forced alignment (85.26% agreement);
+- wav2vec2 speaker ID reaches 0.914 across 156 speakers, against 0.081 for MFCC;
+- warns that off-the-shelf emotion models carry gender and pitch bias.
+
+**Agreement.** All four support within-speaker normalisation and sex conditioning. They also support treating emotion-from-voice as unreliable.
+
+**Disagreement.** Marrero's trait claims rest on student self-report. Dietrich and Mestre deliberately measure states, not traits. Melange's own replication sides with the state reading: audio stays display-only.
+
+**System contrast (UNVERIFIED).** Melange's neural speaker ID reached EER .226 on fresh congressional audio, against Mestre's in-domain .914 accuracy. Its Dietrich-style per-topic deviation floors (5 units per member, 2 topics) cannot detect effects of 0.1–0.4 SD.
+
+Works: [[marrero-2022-evaluating-voice-samples]], [[salam-2022-learning-personalised-models]], [[dietrich-2019-pitch-perfect-vocal]], [[mestre-2026-potential-pitfalls-audio]]
+
+### Domain-built sentiment and emotion dictionaries
+
+**The question.** Can lexicons be made valid for specialised political vocabularies?
+
+**[[rice-2018-corpus-based-dictionaries]]**: seed words plus corpus-trained GloVe vectors.
+- Accuracy: 79.5% held out on IMDB vs about 70% for LIWC and AFINN; it needs ≥5,000 documents.
+- Court opinions: justice-level ranks correlate only .29 and .16 with LIWC and AFINN, so the choice of dictionary reorders the units.
+- Dictionary terms drift over time: only 19.6–34.0% carry over between Court eras.
+
+**[[haselmayer-2017-sentiment-analysis-political]]**: a crowd-rated negativity dictionary for Austrian German (12,713 sentences, about 2,000 EUR).
+- Agreement with experts on 200 sentences: r .65 at 84% coverage.
+- Translated generic dictionaries score r .13–.19.
+- Preprocessing choices alone move r from .13 to .65.
+- Effects shrink against expert coding (−0.13 vs −0.40).
+
+**[[rheault-2016-measuring-emotion-parliamentary]]**: GloVe seed expansion on Hansard 1909–2013.
+- Recessions lower annual polarity change (−0.198, N = 104 years, pooled over government and opposition, so UNSTRATIFIED).
+- Split by side, labor disputes Granger-cause polarity only through the opposition.
+- The lexicon is validated only on film reviews.
+
+**[[park-2025-automatic-construction-direction]]**: direction-dependent pairs ("cost decrease" is positive).
+- Raises Financial PhraseBank weighted F1 from about .60 to .71–.82, still far below RoBERTa (.96).
+- Below .50 on longer or other sets.
+- Its whole-text adaptation in the system made 46 sign changes on gold, 3 good and 43 bad, and was rejected.
+
+**[[taherdoost-2023-artificial-intelligence-sentiment]]** is a thin scoping review. Its one useful borrowed point is that neural classifiers predict well but diagnose poorly, and topic or dictionary models do the reverse.
+
+**Agreement.** Every empirical paper here says domain construction beats generic lexicons and that validation against human coding is needed.
+
+**The weaknesses.**
+- Dictionaries cannot tell which target the sentiment is about (Rice says so; Burnham's sentiment-is-not-stance argument applies).
+- They drift over time.
+- They fail on long multi-actor texts (Park). This is Paul's long-distance-dependency gap, now on the lexicon side.
+
+Works: [[rice-2018-corpus-based-dictionaries]], [[haselmayer-2017-sentiment-analysis-political]], [[park-2025-automatic-construction-direction]], [[rheault-2016-measuring-emotion-parliamentary]], [[taherdoost-2023-artificial-intelligence-sentiment]]
+
+### Emotion and style in legislatures as audience performance
+
+**The question.** What drives affective and stylistic language on the floor, and does it relate to outcomes?
+
+**[[osnabrugge-2021-playing-gallery-emotive]]** (958,925 UK Commons speeches 2001–2019; 945,734 Irish Dáil speeches):
+- Prime Minister's Questions speeches are 1.56–1.66 points more emotive *within the same MP* (MP fixed effects).
+- Topic fixed effects do not remove the gap.
+- Reading: emotive rhetoric is strategic and depends on the audience.
+
+**[[aroyehun-2026-politics-of-feelings]]** (1,766,113 Congressional Record speeches, 1973–2024; transformer emotion classifier built on German political text):
+- Nearly all emotions rise in both parties.
+- Topic effects are tiny (epsilon² .013–.034).
+- Majority status, chamber, gender and ideology shift emotion scores.
+- Against Volden-Wiseman LES (member-Congress n = 13,671), anger is the only negative correlate. Emotion lifts marginal R² only from about .113 to .119.
+
+**[[decter-frain-2016-impressive-words-linguistic]]** (206 months 1996–2014, House floor language against Gallup approval of Congress):
+- Broad communion correlates negatively (r −.36).
+- The prosocial (helping) facet correlates positively (r +.55, β +.14 with controls).
+- So "communion" splits into facets that behave in opposite directions.
+
+**[[hargrave-2022-longer-conforming-stereotypes]]** (UK Commons 1997–2019, 418,147 MP-debate observations):
+- Gender gaps in communal and agentic styles shrank for six of eight styles: gender explains 29–60% less of the between-MP variation after 2007.
+- The negative-emotion gap grew (gender explains about 2% of the variation before 2007, about 9% after).
+
+**Agreement.** All four are observational and say so. All four find affect and style rates moving with venue, role, period and gender. That fits Paul's call for venue-specific frameworks and argues against treating pooled affect rates as stable traits.
+
+**Disagreement, on what the signal is worth.**
+- Aroyehun finds emotion barely adds to effectiveness models.
+- Decter-Frain finds facet-level language tracks institutional approval.
+- Neither outcome is a member's receptivity to lobbying.
+
+Works: [[osnabrugge-2021-playing-gallery-emotive]], [[aroyehun-2026-politics-of-feelings]], [[decter-frain-2016-impressive-words-linguistic]], [[hargrave-2022-longer-conforming-stereotypes]]
+
+### Platform data, applied pipelines and persuasion
+
+**The question.** How do you acquire and use platform data, and what is it for?
+
+**[[steinertthrelkeld-2018-twitter-data]]** is a 2016-era Twitter API tutorial. It covers the 1% stream sample, the 3,200-tweet cap and metadata taken at request time. These limits do not bind on the system, which uses a licensed Quorum export and Bluesky collection. Two points carry over: 2016 elite coverage (every Senator and 430 House members) and the provenance timing of metadata.
+
+**[[joo-2022-image-data-automated]]** is the image counterpart by the same author:
+- 15,647 candidate Facebook photos;
+- chi-squared tests of label against party, run separately by gender, with no correction for testing about 1,700 labels;
+- a near-duplicate framing rate across five protest episodes, with hypotheses holding in 3 of 5.
+
+The system ported both instruments to press text (`frame_alignment.py`), and the port breaks on the unit of analysis:
+- 816 of 2,388 rows are americascreditunions.org articles attributed to every member they mention.
+- In a single-path recompute (UNVERIFIED), the General CU duplication rate falls from 60.2% (n = 442) to 5.2% (n = 116) once only official .senate.gov and .house.gov rows are kept.
+
+**[[zhang-2022-data-assisted-social]]** chains generic components:
+- the general Affin lexicon;
+- Louvain on a co-occurrence graph thresholded at 0.1;
+- a burst hotness index;
+- 882,371 retail tweets;
+- no holdout, no baseline and no metrics behind its "highest accuracy" claim.
+
+**[[simchon-2024-persuasive-effects-political]]** (four UK Prolific experiments, n = 440–804):
+- Matching an ad's openness to the reader's openness raises *perceived* persuasiveness slightly (b −0.07 to −0.08 per SD of mismatch).
+- The effect sits in the trait-by-message **interaction**.
+- The outcome is self-reported perceived persuasion, not attitude change.
+
+**Shared weakness.** Thin or absent validation. [[celli-nd-twenty-years-personality]] separately lists personality-aware persuasion in elections as an ethical threat, which bears on how Simchon-style ideas are framed.
+
+Works: [[steinertthrelkeld-2018-twitter-data]], [[joo-2022-image-data-automated]], [[zhang-2022-data-assisted-social]], [[simchon-2024-persuasive-effects-political]]
 
 ## Agreements and debates
 
-**1. Does the criterion decide the answer? (self-report vs observer)**
-- [[koutsoumpis-2024-kernel-truth-text]]: LIWC explains about 5% of self-reported trait variance and about 38.5% of observer ratings. The observer figure rests on only 5 samples.
-- [[mairesse-2007-automatic-recognition-personality]]: observer ratings are learnable in conversation and self-reports are not.
-- [[celli-nd-twenty-years-personality]] places both on Brunswik's lens model.
+**1. Classical vs transformer vs LLM: which wins?**
+- *The majority view* is that transformers and LLMs win:
+  - bag-of-words MCC .49–.51 vs transformers .60–.68 vs GPT-4 .78 [[burnham-2023-stance-detection-practical-guide]];
+  - GPT-3 88.4% vs dictionary 38.3% [[ornstein-2024-train-your-stochastic]];
+  - LLMs > BERT > tf-idf on tweets (overall r) [[lemens-2025-positioning-political-texts]];
+  - RoBERTa .96 vs lexicon .82 [[park-2025-automatic-construction-direction]].
+- *The dissent:*
+  - [[naz-2025-machine-deep-learning]] finds classical models competitive on small labelled sets.
+  - The system's own CU stance stack measured LinearSVC 0.816 > transformer 0.757 macro-F1 (project-side, held-out n = 87–156).
+  - The pro-transformer claim in [[b-2025-comparing-fine-tuned]] does not compare like with like, because RoBERTa was scored on a different test set.
+- *Resolution the corpus supports:* the winner depends on how many clean labels you have and whether the concept is bespoke. [[burnham-2024-political-debate-zero]] shows the base NLI model failing a bespoke concept that the large model learns from 10 examples.
 
-All three agree that observer convergence is easier to get. Koutsoumpis warns that this convergence can reflect raters and models using the **same cues**, which is cue utilization, not validity. So a high correlation with an observer panel does not show that the trait itself is measured. Melange's checks against the Senate expert and insider panels fall under this caveat.
+**2. Are LLM labels a primary measurement or a validation aid?**
+- [[ornstein-2024-train-your-stochastic]] and [[lemens-2025-positioning-political-texts]] treat LLM coding as the instrument.
+- [[burnham-2023-stance-detection-practical-guide]] argues against making LLMs the main label source, on reproducibility and archiving grounds. Ornstein concedes that point: GPT-3 was retired in January 2024.
+- [[dai-2025-large-language-model]] fuses several LLMs, a design that implicitly treats any one LLM's labels as biased.
 
-**2. Are transformers worth it on small labelled sets?**
-- For: [[burnham-2023-stance-detection-practical-guide]], [[ornstein-2024-train-your-stochastic]], [[yang-2023-getting-personal-deep]], [[park-2025-automatic-construction-direction]] and [[dai-2025-large-language-model]].
-- Partly against: [[naz-2025-machine-deep-learning]] (classical stays competitive on small data).
-- [[b-2025-comparing-fine-tuned]] claims a transformer win, but its test sets are unequal.
+**3. Self-report vs observer criteria for personality.**
+- [[koutsoumpis-2024-kernel-truth-text]]: observer R² of about 38.5% vs self-report about 5.1%.
+- [[mairesse-2007-automatic-recognition-personality]]: observer ratings are easier to model.
+- [[peters-2024-language-models-infer]]: LLM–observer agreement (about .27) is close to self–observer agreement (.30).
+- These look like support for observer gold panels. But Koutsoumpis warns that observer convergence is partly cue *utilization*, and [[cao-2024-language-models-personality]] shows perceived personality is predictable from a name alone.
+- Live tension: is the system's convergence with the Senate panels validity, or shared cues plus reputation?
 
-Melange's own numbers sit with Naz: LinearSVC 0.816 against transformer 0.757 macro-F1 on the augmented press set. That is a project report on a small held-out set. Burnham cites Laurer et al.: about 500 examples let language models win. That is consistent with the system's finding that fine-tuning DEBATE on 552 labels fixed zero-shot implicit-oppose recall (F1 0.08).
+**4. Sentiment is not stance.**
+- [[burnham-2023-stance-detection-practical-guide]] separates the two explicitly.
+- [[taherdoost-2023-artificial-intelligence-sentiment]] and [[zhang-2022-data-assisted-social]] collapse them.
+- [[ornstein-2024-train-your-stochastic]] measures sentiment toward rulings, not stance, so its accuracy should not be read as stance accuracy.
+- [[park-2025-automatic-construction-direction]] and [[dai-2025-large-language-model]] each attack the gap between valence and direction from a different side (lexical direction pairs vs soft logic).
 
-**3. Should an LLM be the primary labeller?**
-- Burnham: no. Use NLI for reproducibility, and LLMs only to augment or validate.
-- Ornstein: yes, with a tune-then-check validation, using the probability vector rather than the argmax label. But GPT-4 is overconfident and the GPT-3 models are retired.
-- Dai fuses several LLMs, which concedes the single-model bias problem.
+**5. Generic vs domain dictionaries.**
+- Consensus for domain dictionaries: [[rice-2018-corpus-based-dictionaries]], [[haselmayer-2017-sentiment-analysis-political]], [[rheault-2016-measuring-emotion-parliamentary]], [[osnabrugge-2021-playing-gallery-emotive]], [[hargrave-2022-longer-conforming-stereotypes]].
+- Only [[zhang-2022-data-assisted-social]] applies a general lexicon (Affin) without checking it, and Rice's evidence contradicts that practice.
+- The live disagreement is whether dictionaries should survive at all. Ornstein's 38.3% suggests not for direction. [[taherdoost-2023-artificial-intelligence-sentiment]]'s point that neural models predict while dictionaries diagnose suggests keeping them only for transparent intensity.
 
-This is a live disagreement. It bears directly on the Claude pre-labels that the DEBATE reader distils.
+**6. Does voice add to text?**
+- [[marrero-2022-evaluating-voice-samples]] claims super-additivity in students.
+- Melange's N = 90 legislator replication did not reproduce it (project-side).
+- [[dietrich-2019-pitch-perfect-vocal]] and [[mestre-2026-potential-pitfalls-audio]] use voice for *state*, not trait. Mestre says emotion models are biased by gender and pitch.
 
-**4. Does voice add trait information beyond text?**
-- [[marrero-2022-evaluating-voice-samples]]: yes, super-additively, in students.
-- [[mestre-2026-potential-pitfalls-audio]]: emotion models are biased and recording conditions confound cross-speaker comparison.
-- [[dietrich-2019-pitch-perfect-vocal]] measures state (arousal), not trait, and needs about 120 speeches per speaker.
+**7. Trait or performance?**
+- Trait readers ([[mairesse-2007-automatic-recognition-personality]], [[yang-2023-getting-personal-deep]]) assume a stable person-level signal.
+- The legislative-speech papers find affect varies with:
+  - audience [[osnabrugge-2021-playing-gallery-emotive]];
+  - opposition role and recession [[rheault-2016-measuring-emotion-parliamentary]];
+  - majority status, chamber and gender [[aroyehun-2026-politics-of-feelings]];
+  - era [[hargrave-2022-longer-conforming-stereotypes]].
 
-Melange's N=90 legislator replication did not reproduce the super-additivity. That is a project result, not a literature result.
+  [[koutsoumpis-2024-kernel-truth-text]]'s formality moderator points the same way.
 
-**5. Personalise by subgroup or not?**
-- [[salam-2022-learning-personalised-models]]: gender-split models win on self-report.
-- [[azucar-2017-predicting-personality-traits]]: demographics raise "accuracy" for A and N only because group membership correlates with self-reported traits.
-
-Read together, a demographic gain can be confound capture rather than measurement. Melange's affective-N gate removes that signal on purpose.
-
-**6. Trait as main effect or interaction?**
-[[simchon-2024-persuasive-effects-political]] finds the effect in message × trait congruence. A main-effects susceptibility composite cannot represent this. The evidence is small, comes from UK lay raters, and uses a perceived-persuasion outcome, so it is a design contrast, not a recommendation.
-
-**Not present.** No work in this theme argues for either of the two SNA proposals this project rejected: dropping regular cosponsorship edges, or per-edge volume normalization. There is nothing to flag on that front.
+**8. Main effects vs interaction in persuasion.**
+- [[simchon-2024-persuasive-effects-political]] places the effect in the trait-by-message interaction. That differs from a model where traits act as person-level main effects. The population (UK public rating ads) and the effect size (small) limit transfer.
 
 ## Methods
 
-**Dominant methods**
-- **Closed-vocabulary feature rates + linear/SVM learners** (LIWC, MRC; SMOreg, SVM, Naive Bayes): [[mairesse-2007-automatic-recognition-personality]], and catalogued by [[celli-nd-twenty-years-personality]] and [[naz-2025-machine-deep-learning]]. They are cheap and interpretable, but the ceiling is low ([[koutsoumpis-2024-kernel-truth-text]]: about 5% of self-report variance).
-- **Fine-tuned transformers and NLI zero-shot:** [[burnham-2023-stance-detection-practical-guide]], [[b-2025-comparing-fine-tuned]], [[yang-2023-getting-personal-deep]]. NLI results depend on model size (MCC 0.40 for Base, 0.65 for Large) and on whether the target is named in the text.
-- **Few-shot / chain-of-thought LLMs:** [[ornstein-2024-train-your-stochastic]], [[dai-2025-large-language-model]]. Their weaknesses are poor calibration, model retirement (results cannot be reproduced), cost and single-vendor bias.
-- **Domain-built dictionaries:** corpus embeddings in [[rice-2018-corpus-based-dictionaries]], crowd ratings in [[haselmayer-2017-sentiment-analysis-political]], PMI direction pairs in [[park-2025-automatic-construction-direction]]. They are transparent and validate well in-domain. They fail on long multi-actor texts and cannot tell which target the sentiment is about.
-- **Within-speaker acoustic normalisation and pretrained speech embeddings:** [[dietrich-2019-pitch-perfect-vocal]], [[mestre-2026-potential-pitfalls-audio]], [[marrero-2022-evaluating-voice-samples]].
-- **Random-effects meta-analysis:** [[koutsoumpis-2024-kernel-truth-text]], [[azucar-2017-predicting-personality-traits]].
+**Closed-vocabulary rates (LIWC, MRC, LSD2015, ANEW)**
+- Used in: [[mairesse-2007-automatic-recognition-personality]], [[koutsoumpis-2024-kernel-truth-text]], [[decter-frain-2016-impressive-words-linguistic]], [[marrero-2022-evaluating-voice-samples]].
+- Weaknesses:
+  - small effects against self-report (about 5% R² in the meta-analysis);
+  - sensitivity to formality, genre and spoken vs written text;
+  - no target attribution.
 
-**Recurring weaknesses**
-- **Criterion problems.** Most trait criteria are lay self-report, and Mairesse and Yang use median splits. Celli recommends rank correlation instead of median splits. No elite self-report exists anywhere in the theme.
-- **Weak evaluation designs.**
-  - A single split with no CIs, seeds or variance: Khan, Naz, Salam.
-  - Unequal test sets: Khan.
-  - Best-model-per-study pooling: Azucar.
-  - No correction for testing many labels: Joo, about 1,700.
-  - A threshold picked from one histogram: Joo.
-  - No significance test named: Dai.
-- **Heterogeneity.** I² ≥ 93 in Azucar, and 96% of self-report effects heterogeneous in Koutsoumpis. Pooled figures are therefore UNSTRATIFIED across platform and genre, and should be quoted that way.
-- **Reporting errors.** Screening counts do not reconcile in Naz (305 → 270 → 171 with 184 excluded), Taherdoost (133 vs 90) and Celli (129 vs 126). Simchon swaps the study 2a/2b sample sizes between text and figure. Zhang's equations are garbled and its Affin citation is wrong.
-- **Genre mismatch.** Almost every benchmark is tweets, essays, reviews, headlines or debates. None is congressional press releases or floor speech scored against a human-coded gold standard, except Dietrich, which measures pitch, not stance.
-- **No reliability disattenuation.** Validity coefficients are not corrected for reliability, except in Marrero and Koutsoumpis.
-- **Causal identification.** Essentially none. Dietrich's response models and Yang's downstream forecasts are explicitly predictive or observational.
+**Corpus-expanded seed dictionaries (GloVe or skip-gram)**
+- Used in: [[rice-2018-corpus-based-dictionaries]], [[rheault-2016-measuring-emotion-parliamentary]], [[osnabrugge-2021-playing-gallery-emotive]], [[hargrave-2022-longer-conforming-stereotypes]]. Crowd-built and PMI-built variants: [[haselmayer-2017-sentiment-analysis-political]], [[park-2025-automatic-construction-direction]].
+- Weaknesses:
+  - validation is often outside the domain (Rheault validates only on film reviews);
+  - drift over time (Rice: 19.6–34% of terms carry over between eras);
+  - corpus-size floors (≥5,000 documents);
+  - failure on long multi-actor texts (Park).
+
+**Supervised classifiers (TF-IDF with SVM, LR or RF, up to fine-tuned RoBERTa or DeBERTa)**
+- Used in: [[b-2025-comparing-fine-tuned]], [[burnham-2023-stance-detection-practical-guide]], [[naz-2025-machine-deep-learning]], [[yang-2023-getting-personal-deep]].
+- Weaknesses:
+  - single splits with no CIs or seeds (Khan, Naz);
+  - test sets that differ between models;
+  - median-split self-report labels (Yang);
+  - MBTI labels mapped to the Big Five with no stated mapping (Naz).
+
+**NLI zero-shot and few-shot**
+- Used in: [[burnham-2023-stance-detection-practical-guide]], [[burnham-2024-political-debate-zero]].
+- Weaknesses:
+  - degrades when the target is not named;
+  - sensitive to hypothesis wording;
+  - the base model fails on bespoke concepts;
+  - PolNLI labels were validated by GPT-4o, so GPT-4o could not be benchmarked.
+
+**In-context LLM prompting**
+- Used in: [[ornstein-2024-train-your-stochastic]], [[lemens-2025-positioning-political-texts]], [[peters-2024-language-models-infer]], [[dai-2025-large-language-model]]. Embeddings variant: [[cao-2024-language-models-personality]].
+- Weaknesses:
+  - concurrent validity only;
+  - headline correlations are between-group and drop sharply within party (Le Mens: .92/.97 overall, UNSTRATIFIED by party, vs .66–.72 within);
+  - RLHF overconfidence (GPT-4 puts >99% on one label for over 70% of posts);
+  - level biases by gender and age (Peters);
+  - model retirement, which makes results irreproducible;
+  - a reputational prior for famous names (Cao).
+
+**Acoustic features (F0, MFCC, eGeMAPS, wav2vec2)**
+- Used in: [[dietrich-2019-pitch-perfect-vocal]], [[mestre-2026-potential-pitfalls-audio]], [[marrero-2022-evaluating-voice-samples]], [[salam-2022-learning-personalised-models]].
+- Weaknesses:
+  - recording-channel and microphone confounds;
+  - features that partly encode speaker sex;
+  - in-domain accuracy that does not transfer;
+  - small within-speaker effects (0.1–0.4 SD) that need about 100+ speeches per speaker.
+
+**Meta-analysis and review**
+- Used in: [[koutsoumpis-2024-kernel-truth-text]], [[azucar-2017-predicting-personality-traits]], [[celli-nd-twenty-years-personality]], [[naz-2025-machine-deep-learning]], [[taherdoost-2023-artificial-intelligence-sentiment]].
+- Weaknesses:
+  - I² ≥ 82–96%;
+  - best-model selection inflates pooled effects (Azucar);
+  - screening arithmetic that does not reconcile (Celli, Naz, Taherdoost);
+  - pooling across platforms that is UNSTRATIFIED.
+
+**Observational regression on legislative text**
+- Used in: [[aroyehun-2026-politics-of-feelings]], [[osnabrugge-2021-playing-gallery-emotive]], [[rheault-2016-measuring-emotion-parliamentary]], [[decter-frain-2016-impressive-words-linguistic]], [[hargrave-2022-longer-conforming-stereotypes]], [[dietrich-2019-pitch-perfect-vocal]].
+- Weaknesses:
+  - no identification;
+  - reverse causation not addressed;
+  - tiny marginal R² gains (Aroyehun: about .113 to .119);
+  - coefficients pooled over government and opposition (Rheault), which must be quoted as UNSTRATIFIED.
+
+**Cross-cutting.** Almost no paper reports calibration, test–retest reliability of the machine score, or validity within the group of interest. [[marrero-2022-evaluating-voice-samples]] and [[koutsoumpis-2024-kernel-truth-text]] disattenuate their effects for reliability. The system never applies that correction to its own validity coefficients.
 
 ## How the works relate
 
-- [[koutsoumpis-2024-kernel-truth-text]] — complements — [[mairesse-2007-automatic-recognition-personality]]: Both find closed-vocabulary LIWC/MRC signal is small for self-report and larger for observer ratings; Koutsoumpis quantifies the ceiling meta-analytically (5.1% vs 38.5%) that Mairesse found per-corpus.
-- [[celli-nd-twenty-years-personality]] — cites — [[mairesse-2007-automatic-recognition-personality]]: Celli cites Mairesse 2007 (ref 179) as the foundation of personality computing.
-- [[naz-2025-machine-deep-learning]] — cites — [[yang-2023-getting-personal-deep]]: Naz cites DeepPerson as the deep-learning artifact for text personality measurement.
-- [[yang-2023-getting-personal-deep]] — extends — [[mairesse-2007-automatic-recognition-personality]]: DeepPerson embeds LIWC/MRC-type psychological concepts (the Mairesse feature families) inside a deep encoder and shows they still add about 2 pp AUC, while feature-only baselines rank lowest.
-- [[naz-2025-machine-deep-learning]] — extends — [[azucar-2017-predicting-personality-traits]]: Naz covers ML/DL trait-detection methods after Azucar's May 2017 search cutoff; Azucar supplies the pooled effect sizes Naz lacks.
-- [[koutsoumpis-2024-kernel-truth-text]] — complements — [[azucar-2017-predicting-personality-traits]]: Parallel meta-analyses: closed-vocabulary LIWC against self/observer reports versus broader social-media footprints against self-report; both report very high heterogeneity.
-- [[celli-nd-twenty-years-personality]] — same-method — [[naz-2025-machine-deep-learning]]: Both are reviews of personality-computing pipelines (SVM/LIWC through transformers) with similar method taxonomies.
-- [[kumari-nd-five-personality-predictions]] — complements — [[azucar-2017-predicting-personality-traits]]: Kumari proposes Twitter-text Big Five prediction with no reported numbers; Azucar supplies the real pooled effect sizes for that design.
-- [[kumari-nd-five-personality-predictions]] — builds-on — [[steinertthrelkeld-2018-twitter-data]]: Kumari's pipeline is a downstream use of the Twitter acquisition and processing that Steinert-Threlkeld teaches.
-- [[rammstedt-2025-going-global-language]] — complements — [[koutsoumpis-2024-kernel-truth-text]]: Rammstedt documents self-report instrument comparability without validity data; Koutsoumpis supplies the text-to-trait validity side it omits.
-- [[marrero-2022-evaluating-voice-samples]] — complements — [[mairesse-2007-automatic-recognition-personality]]: Both combine linguistic and prosodic features for Big Five; both find voice helps Extraversion most and self-report criteria are hard.
-- [[marrero-2022-evaluating-voice-samples]] — complements — [[dietrich-2019-pitch-perfect-vocal]]: Marrero tests vocal trait information; Dietrich measures vocal state (arousal) within speaker. Different questions, shared acoustic toolkit.
-- [[mestre-2026-potential-pitfalls-audio]] — same-method — [[dietrich-2019-pitch-perfect-vocal]]: Both normalise pitch to each speaker's own baseline; Mestre cites Dietrich for pitch tracking emotional state.
-- [[salam-2022-learning-personalised-models]] — complements — [[marrero-2022-evaluating-voice-samples]]: Both predict self-reported Big Five from audio/behavioural features; both find speaker gender is a dominant signal (Marrero gender >90%, Salam gains concentrate in the gender split).
-- [[salam-2022-learning-personalised-models]] — complements — [[azucar-2017-predicting-personality-traits]]: Salam's demographic-split gains and Azucar's demographics-raise-accuracy moderator together suggest demographic gains can be confound capture rather than trait measurement.
-- [[celli-nd-twenty-years-personality]] — complements — [[marrero-2022-evaluating-voice-samples]]: Celli's modality cue tables (Extraversion carries the most audio-visual cues) agree with Marrero's trait-by-trait voice results.
-- [[burnham-2023-stance-detection-practical-guide]] — same-method — [[b-2025-comparing-fine-tuned]]: Both benchmark bag-of-words classifiers against fine-tuned transformers for political-tweet stance; Burnham does it with MCC and repeated runs, Khan with a single split and unequal test sets.
-- [[burnham-2023-stance-detection-practical-guide]] — contradicts — [[ornstein-2024-train-your-stochastic]]: Burnham recommends NLI as the reproducible default and LLMs only for augmentation or validation; Ornstein treats validated few-shot LLM labels as a primary measure.
-- [[burnham-2023-stance-detection-practical-guide]] — complements — [[dai-2025-large-language-model]]: Dai's LLM-elicited logic rules target the implicit, low-context stance where Burnham shows NLI degrades most.
-- [[ornstein-2024-train-your-stochastic]] — same-method — [[dai-2025-large-language-model]]: Both use LLM prompting for political stance/sentiment labelling; Dai adds logic-tensor training and multi-LLM fusion.
-- [[dai-2025-large-language-model]] — complements — [[b-2025-comparing-fine-tuned]]: Same task family (stance in political tweets); Khan supplies the classical-versus-fine-tuned comparison Dai omits, Dai addresses the implicit-stance errors Khan reports but does not solve.
-- [[naz-2025-machine-deep-learning]] — complements — [[b-2025-comparing-fine-tuned]]: Same classical-versus-transformer comparison; Naz says classical stays competitive on small labelled sets, tempering Khan's transformer-wins headline.
-- [[burnham-2023-stance-detection-practical-guide]] — qualifies — [[haselmayer-2017-sentiment-analysis-political]]: Burnham's stance-is-not-sentiment argument limits what a tone dictionary can deliver: it can inform intensity, not direction toward a target.
-- [[rice-2018-corpus-based-dictionaries]] — complements — [[haselmayer-2017-sentiment-analysis-political]]: Both argue for domain-built sentiment dictionaries, via corpus word vectors versus crowd ratings; Melange's legacy scorer cites both.
-- [[park-2025-automatic-construction-direction]] — same-method — [[rice-2018-corpus-based-dictionaries]]: Both construct domain lexicons from corpus statistics (PMI on direction tags versus seed-word GloVe similarity).
-- [[park-2025-automatic-construction-direction]] — complements — [[dai-2025-large-language-model]]: Clause-level polarity direction is one of FOLAR's named error types; Park's direction-aware pairs address it lexically.
-- [[ornstein-2024-train-your-stochastic]] — supports — [[rice-2018-corpus-based-dictionaries]]: Ornstein's general dictionary at 38.3% against GPT-3 at 88.4% on tweet sentiment is consistent with Rice's argument that general lexicons fail on specialised text.
-- [[ornstein-2024-train-your-stochastic]] — complements — [[haselmayer-2017-sentiment-analysis-political]]: Ornstein offers LLM few-shot coding as a cheaper alternative to the crowdcoding step Haselmayer uses for gold intensity labels.
-- [[zhang-2022-data-assisted-social]] — contradicts — [[rice-2018-corpus-based-dictionaries]]: Zhang applies the general Affin lexicon to retail tweets with no domain check, the practice Rice shows misfires.
-- [[taherdoost-2023-artificial-intelligence-sentiment]] — cites — [[zhang-2022-data-assisted-social]]: The review cites a 2022 social-media analytics competitive-decision paper (ref 16) that appears to be this work.
-- [[taherdoost-2023-artificial-intelligence-sentiment]] — contradicts — [[burnham-2023-stance-detection-practical-guide]]: Taherdoost collapses sentiment and stance; Burnham argues they must be measured separately.
-- [[zhang-2022-data-assisted-social]] — complements — [[steinertthrelkeld-2018-twitter-data]]: Steinert-Threlkeld gives the Twitter collection limits that Zhang's 882,371-tweet case study never discusses.
-- [[joo-2022-image-data-automated]] — complements — [[steinertthrelkeld-2018-twitter-data]]: Same author, matching 'X as data' tutorial format; text versus image.
-- [[joo-2022-image-data-automated]] — complements — [[mestre-2026-potential-pitfalls-audio]]: Same methods-tutorial genre for a non-text modality (images versus audio).
-- [[joo-2022-image-data-automated]] — complements — [[dietrich-2019-pitch-perfect-vocal]]: Joo cites Dietrich's video work as a computer-vision polarization measure; Dietrich 2019 is the audio counterpart.
-- [[simchon-2024-persuasive-effects-political]] — complements — [[azucar-2017-predicting-personality-traits]]: Microtargeting assumes recipient traits can be inferred from footprints, the step Azucar quantifies.
-- [[simchon-2024-persuasive-effects-political]] — complements — [[koutsoumpis-2024-kernel-truth-text]]: Koutsoumpis bounds how much openness signal closed-vocabulary text carries, which limits both Simchon's ad scoring and any text-derived recipient openness.
-- [[celli-nd-twenty-years-personality]] — complements — [[simchon-2024-persuasive-effects-political]]: Celli lists personality-aware persuasion in elections as an ethical threat; Simchon measures a small version of it.
+- [[celli-nd-twenty-years-personality]] — cites — [[mairesse-2007-automatic-recognition-personality]]: Celli cites Mairesse 2007 (ref 179) as a foundation of personality computing with accuracy below 62%.
+- [[celli-nd-twenty-years-personality]] — cites — [[peters-2024-language-models-infer]]: Celli's state-of-the-art table uses Peters and Matz's zero-shot GPT r = .29 on Facebook posts.
+- [[peters-2024-language-models-infer]] — cites — [[azucar-2017-predicting-personality-traits]]: Peters cites Azucar et al. as ref 15 for the digital-footprint benchmark.
+- [[naz-2025-machine-deep-learning]] — cites — [[yang-2023-getting-personal-deep]]: Naz cites DeepPerson as the deep-learning artifact for text-based personality measurement.
+- [[naz-2025-machine-deep-learning]] — extends — [[azucar-2017-predicting-personality-traits]]: Naz covers ML and DL methods after Azucar's May 2017 search cutoff, but adds no pooled effect sizes.
+- [[koutsoumpis-2024-kernel-truth-text]] — complements — [[azucar-2017-predicting-personality-traits]]: parallel meta-analyses of Big Five recovery: closed-vocabulary LIWC (about 5.1% R² against self-report) and multi-type social-media footprints (r .29–.40, best-model inflated).
+- [[koutsoumpis-2024-kernel-truth-text]] — agrees — [[mairesse-2007-automatic-recognition-personality]]: both find observer ratings easier to recover from LIWC-type features than self-reports. Koutsoumpis quantifies the gap as cue utilization vs cue validity.
+- [[koutsoumpis-2024-kernel-truth-text]] — agrees — [[marrero-2022-evaluating-voice-samples]]: Marrero's LIWC-alone 3.13% out-of-sample R² sits at the meta-analytic ceiling of about 5% for self-report.
+- [[yang-2023-getting-personal-deep]] — complements — [[koutsoumpis-2024-kernel-truth-text]]: Yang shows closed-vocabulary linear scoring is the weakest family, yet LIWC concept embeddings add about 2 pp inside a deep model, consistent with a small but real LIWC signal.
+- [[kumari-nd-five-personality-predictions]] — same-method — [[naz-2025-machine-deep-learning]]: both describe shallow-ML and transformer trait prediction from social text. Kumari lists the models without comparing them or reporting any metric.
+- [[rammstedt-2025-going-global-language]] — complements — [[koutsoumpis-2024-kernel-truth-text]]: Rammstedt documents comparability of a self-report instrument procedurally; Koutsoumpis supplies the validity side for text-derived traits that Rammstedt omits.
+- [[cao-2024-language-models-personality]] — complements — [[peters-2024-language-models-infer]]: Peters reads traits from users' text; Cao shows LLM perception of public figures is predictable from names alone, a reputational prior that bears on how LLM–observer agreement is read.
+- [[lemens-2025-positioning-political-texts]] — builds-on — [[ornstein-2024-train-your-stochastic]]: Le Mens benchmarks against Ornstein's GPT-3 probability-based manifesto scaling (rho .92/.80) and replaces token probabilities with a direct 0–100 score query.
+- [[lemens-2025-positioning-political-texts]] — same-method — [[peters-2024-language-models-infer]]: both ask an LLM about each short text and average the answers to place a person or document.
+- [[burnham-2024-political-debate-zero]] — builds-on — [[burnham-2023-stance-detection-practical-guide]]: same first author; DEBATE operationalizes the guide's NLI-as-default recommendation and cites its finding that larger NLI models generalize better.
+- [[burnham-2023-stance-detection-practical-guide]] — contradicts — [[ornstein-2024-train-your-stochastic]]: Burnham advises against LLMs as the primary label source, on reproducibility grounds; Ornstein advocates LLM few-shot coding as the instrument, though it concedes that its GPT-3 models were retired.
+- [[burnham-2023-stance-detection-practical-guide]] — agrees — [[b-2025-comparing-fine-tuned]]: both rank fine-tuned transformers above bag-of-words classifiers for political-tweet stance. Burnham's comparison is like-for-like by MCC; Khan's is not, because RoBERTa was scored on a different test set.
+- [[naz-2025-machine-deep-learning]] — contradicts — [[b-2025-comparing-fine-tuned]]: Naz concludes classical TF-IDF models stay competitive on small labelled data; Khan headlines that the transformer beats all classical models.
+- [[dai-2025-large-language-model]] — complements — [[burnham-2024-political-debate-zero]]: alternative designs for the same stance-reader slot: fused LLM-elicited soft logic vs a small domain-adapted NLI encoder.
+- [[lemens-2025-positioning-political-texts]] — complements — [[burnham-2024-political-debate-zero]]: generative direct-query positioning and NLI classification are competing options for the system's stance reader.
+- [[park-2025-automatic-construction-direction]] — complements — [[dai-2025-large-language-model]]: both address valence vs direction: Park via direction-dependent lexicon pairs, Dai via LLM-elicited first-order-logic rules. Dai's error analysis names clause-level direction failures that Park targets.
+- [[park-2025-automatic-construction-direction]] — complements — [[rice-2018-corpus-based-dictionaries]]: both build domain lexicons from corpus statistics: PMI on direction tags vs seed words plus GloVe similarity.
+- [[rice-2018-corpus-based-dictionaries]] — same-method — [[rheault-2016-measuring-emotion-parliamentary]]: both use seed words expanded by corpus-trained GloVe vectors to build domain sentiment lexicons.
+- [[haselmayer-2017-sentiment-analysis-political]] — complements — [[rice-2018-corpus-based-dictionaries]]: both argue for domain dictionaries. Haselmayer derives word scores from crowd-rated sentences, Rice from embeddings.
+- [[rice-2018-corpus-based-dictionaries]] — contradicts — [[zhang-2022-data-assisted-social]]: Rice shows general lexicons misfire on specialized vocabulary; Zhang applies the general Affin lexicon to retail tweets with no domain check.
+- [[ornstein-2024-train-your-stochastic]] — complements — [[haselmayer-2017-sentiment-analysis-political]]: Ornstein's LLM coding at about 1000x lower cost is an alternative to the crowdcoding step Haselmayer uses to build and validate intensity labels.
+- [[osnabrugge-2021-playing-gallery-emotive]] — builds-on — [[rheault-2016-measuring-emotion-parliamentary]]: Osnabrugge takes its 2001–2014 Commons speech data from Rheault et al. and cites them for embedding-based seed scoring.
+- [[osnabrugge-2021-playing-gallery-emotive]] — same-method — [[rice-2018-corpus-based-dictionaries]]: Osnabrugge expands its ANEW dictionary following Rice and Zorn's corpus-based approach.
+- [[hargrave-2022-longer-conforming-stereotypes]] — cites — [[osnabrugge-2021-playing-gallery-emotive]]: Hargrave cites Osnabrugge et al. on emotive rhetoric in parliaments.
+- [[hargrave-2022-longer-conforming-stereotypes]] — same-method — [[rice-2018-corpus-based-dictionaries]]: Hargrave cites Rice and Zorn for its embedding-expanded seed dictionaries.
+- [[aroyehun-2026-politics-of-feelings]] — cites — [[rheault-2016-measuring-emotion-parliamentary]]: Aroyehun cites Rheault et al. for emotion in parliamentary debate and moves the question to the US Congress with a transformer classifier.
+- [[aroyehun-2026-politics-of-feelings]] — cites — [[osnabrugge-2021-playing-gallery-emotive]]: Aroyehun cites Osnabrugge for emotive rhetoric; both read affect as varying with institutional context rather than as fixed member traits.
+- [[decter-frain-2016-impressive-words-linguistic]] — complements — [[aroyehun-2026-politics-of-feelings]]: both link congressional floor language to an outcome: chamber-month approval vs member-level legislative effectiveness.
+- [[decter-frain-2016-impressive-words-linguistic]] — complements — [[hargrave-2022-longer-conforming-stereotypes]]: both score agentic and communal style in parliamentary speech. Decter-Frain splits communion into opposing facets; Hargrave shows gender gaps in those styles change over time.
+- [[dietrich-2019-pitch-perfect-vocal]] — complements — [[aroyehun-2026-politics-of-feelings]]: acoustic (within-speaker F0) and textual measures of emotional intensity in US congressional floor speech.
+- [[mestre-2026-potential-pitfalls-audio]] — same-method — [[dietrich-2019-pitch-perfect-vocal]]: both normalize pitch within speaker to read emotional state from political audio; Mestre cites Dietrich for pitch tracking emotional state.
+- [[marrero-2022-evaluating-voice-samples]] — complements — [[salam-2022-learning-personalised-models]]: both predict self-reported Big Five from voice or multimodal features. Salam shows most of the gain comes from conditioning on speaker sex.
+- [[dietrich-2019-pitch-perfect-vocal]] — complements — [[marrero-2022-evaluating-voice-samples]]: Dietrich measures a vocal state (arousal) in Congress; Marrero tests vocal trait information in students. They answer different questions.
+- [[mestre-2026-potential-pitfalls-audio]] — complements — [[joo-2022-image-data-automated]]: same 'X as data' methods-tutorial genre (audio vs images) for political research.
+- [[joo-2022-image-data-automated]] — complements — [[steinertthrelkeld-2018-twitter-data]]: same author (Steinert-Threlkeld) and matching tutorial format, extending from tweet text to images of political actors.
+- [[taherdoost-2023-artificial-intelligence-sentiment]] — cites — [[zhang-2022-data-assisted-social]]: the review cites a 2022 Inf Process Manag social-media analytics paper for competitive decisions that appears to be the same work, with the first author listed differently.
+- [[taherdoost-2023-artificial-intelligence-sentiment]] — complements — [[b-2025-comparing-fine-tuned]]: Khan supplies the direct transformer-vs-classical comparison the review only narrates, on political rather than consumer text.
+- [[simchon-2024-persuasive-effects-political]] — complements — [[azucar-2017-predicting-personality-traits]]: Simchon's microtargeting assumes recipient traits can be inferred; Azucar quantifies how well digital footprints recover them.
+- [[simchon-2024-persuasive-effects-political]] — complements — [[koutsoumpis-2024-kernel-truth-text]]: the LIWC–Big Five ceiling bounds how much openness signal text-based scoring can carry, for both ad scoring and author-trait readers.
 
 ## What it means for the systems
 
-The status in brackets is the extraction's bearing tag. UNVERIFIED bearings are single-agent leads, not findings (DE-062).
+All system-side figures below are the project's own reports. Bearings tagged UNVERIFIED are single-agent leads, not findings (DE-062).
 
-**Psychometrics: lexical Big Five, gold panels, receptivity** ([[systems/melange-psychometrics]], [[systems/melange-validation]])
-- *The reference instrument is weaker than assumed* [VERIFIED-SOFTENED, contradicts]. [[mairesse-2007-automatic-recognition-personality]] Table 19 shows SMOreg on EAR observer ratings doing worse than predicting the mean for every trait, with relative error 131.75-213.20%. Ramey footnote 4 says RKH used these observer-trained models. So the lexical reader's held-out mean r .350 against RKH measures agreement with an instrument that showed no out-of-sample accuracy in its own paper. It is not validity.
-  - Ramey's own text is internally inconsistent: footnote 4 says observer-trained models, line 191 says essays. Worth a note in the brain.
-- *The ceiling is low* [VERIFIED-SOFTENED]. Three works support retiring the lexical basis from the receptivity layer and keeping status labels on any external trait claim:
-  - [[koutsoumpis-2024-kernel-truth-text]]: about 5% of self-report variance.
-  - [[celli-nd-twenty-years-personality]]: r of about 0.30.
-  - [[azucar-2017-predicting-personality-traits]]: Agreeableness lowest. This supports moving A from lexical to behavioural cooperation.
+Systems touched: [[systems/melange-psychometrics]] (lexical Big Five, LLM readers, affective N, receptivity, audio lane), [[systems/melange-stance]] (DEBATE NLI, supervised stack, two-hop rule, LSD tone), [[systems/melange-sna]] (frame alignment, salience, communities), [[systems/melange-lobbying]] (LDA identity-only, D-021), [[systems/moneyball-rank-pillars]] (press pillar).
 
-  Two more points from the same works:
-  - Koutsoumpis gives a direction check for the active SMOreg weights. Some weights point the opposite way, which is worth a look.
-  - Convergence with the Senate panels may be cue utilization rather than validity. Celli's lens model classes the RKH comparison as Recognition against a same-method target, and the panels as Perception.
-- *Affective N* [supports, VERIFIED/SOFTENED].
-  - Mairesse: ES has the lowest inter-observer agreement (pair r .29).
-  - Naz: datasets do not measure N directly.
-  - Azucar: demographics inflate N "accuracy".
+### Melange psychometrics: lexical Big Five, LLM readers, affective N, receptivity
 
-  Together these support the N gate and the record that no gold criterion exists for N.
-- *Receptivity design gap* [UNVERIFIED]. [[simchon-2024-persuasive-effects-political]] locates the persuasion effect in a message × trait interaction. The receptivity layer has trait main effects only. This is a modelling gap, not a recommendation: UK lay raters, small effects, a perceived-persuasion outcome, and openness is Melange's weakest text trait.
-- *Never present .350 as matching Azucar's .29-.40.* The scales coincide but the designs do not.
+- **Lexical Big Five (`big5_traits.py`).** This is the Mairesse → Ramey closed-vocabulary pipeline applied to formal congressional speech.
+  - [[koutsoumpis-2024-kernel-truth-text]], [[azucar-2017-predicting-personality-traits]], [[celli-nd-twenty-years-personality]] and [[yang-2023-getting-personal-deep]] set a low ceiling on this method.
+  - [[mairesse-2007-automatic-recognition-personality]] adds a sharper qualifier (UNVERIFIED). The EAR observer SMOreg models that RKH reportedly used were worse than predicting the mean in their own paper. So the held-out r = .350 against RKH measures agreement with a same-method reference, not validity.
+  - This supports existing choices: moving receptivity off the lexical basis onto behaviour, token shrinkage, and status labels on any external claim.
+  - The .350 must never be presented as matching Azucar's r .29–.40. The populations, criteria and designs differ, and Azucar's figures are UNSTRATIFIED across platforms.
+- **Observer gold panels.** [[koutsoumpis-2024-kernel-truth-text]] (cue utilization), [[peters-2024-language-models-infer]] (LLM–observer ≈ self–observer) and [[cao-2024-language-models-personality]] (name-based reputational prior) together say that convergence with the Senate expert and insider panels can partly reflect shared cues and halo. This fits the CT-CM halo-plus-traits design.
+- **LLM trait reader.**
+  - [[peters-2024-language-models-infer]] backs the chunk-then-average design and sets a realistic zero-shot ceiling of r ≈ .29 against self-report.
+  - [[cao-2024-language-models-personality]] is the motivation for de-identification. No work tests whether de-identification removes the prior, and the repo's `--named` probe has no output artifact (UNVERIFIED).
+  - The code cites Cao as PNAS Nexus with r .76–.87. The vault copy is Scientific Reports with corrected r .78–.88, so the citation needs checking.
+- **Affective N and the persona channel.** The slot controls for party, but this corpus shows affect and style vary with:
+  - venue: [[osnabrugge-2021-playing-gallery-emotive]];
+  - opposition role and period: [[rheault-2016-measuring-emotion-parliamentary]];
+  - majority status, chamber and gender: [[aroyehun-2026-politics-of-feelings]];
+  - gender, changing over time: [[hargrave-2022-longer-conforming-stereotypes]];
+  - gender bias in LLM inferences: [[peters-2024-language-models-infer]].
 
-**Audio** ([[systems/melange-audio-speech]]; display-only is supported)
-- [[marrero-2022-evaluating-voice-samples]] is the benchmark the audio lane already failed to reproduce at N=90 (project report).
-  - Its top features (MFCC, chroma, spectral entropy) are mostly missing from eGeMAPS-88. That is an open lead.
-- [[dietrich-2019-pitch-perfect-vocal]]: `b5_audio_descriptors_candidate.py` cites it, but runs at floors of 5 units per member, 2 topics and 2 units per topic.
-  - Effects of 0.1-0.4 SD cannot be detected at those floors.
-  - With two topics, the sign of each topic's deviation is fixed by construction.
-  - Clerk floor video is a better identity source [suggests-extension].
-- [[mestre-2026-potential-pitfalls-audio]]:
-  - The neural speaker-ID head copies its method. Melange's fresh-21 EER was .226 against a ≤5% bar, so the paper's in-domain 0.914 is not a reachable benchmark.
-  - It cautions against cross-member pooled eGeMAPS z-scores that have no loudness or channel control.
-- [[salam-2022-learning-personalised-models]]: pace and volume are sex-clean; pitch variability and jitter are not. The semitone-SD fix sits on an unmerged branch. That is an open item, not a new proposal.
+  Pooling social posts, floor speech and interviews per member before z-scoring is exactly what these papers caution against. The interview-to-floor transfer of N has already failed. Paul's venue-coverage gap is directly supported.
+- **Communion is not one construct.** [[decter-frain-2016-impressive-words-linguistic]] shows communion splits into facets with opposite signs. The persona codebook sits near the helping facet. The paper's outcome is institutional approval, not receptivity, so it neither validates nor undercuts the PERSONA_W = 0.30 mapping. It offers a cheap dictionary second path for checking the LLM cue shares.
+- **Receptivity layer.** [[simchon-2024-persuasive-effects-political]] places persuasion in a trait-by-message interaction, while the layer uses main effects. This is a modelling gap to note, not a recommendation: the population, outcome and effect size do not transfer.
 
-**Stance stack** ([[systems/melange-stance]])
-- [[burnham-2023-stance-detection-practical-guide]] [VERIFIED] supports DEBATE NLI as the main reader. Open items it raises:
-  - Base versus Large model size (Base 0.40 vs Large 0.65 MCC in Burnham).
-  - No MCC or hypothesis-wording sensitivity check.
-  - Fallback to Claude pre-labels.
-- [[ornstein-2024-train-your-stochastic]]:
-  - `run_stage5.R` discards DEBATE's per-label probabilities and keeps only a sign. Ornstein's continuous measure comes from the probability vector.
-  - The Claude rater reports self-stated confidence, not a calibrated probability, and GPT-4-class overconfidence is documented.
-  - Regex topic routing has never been checked against human labels.
-  - **Possible anchoring error:** the tweet gold queue shows model labels next to the human gold columns.
-- [[dai-2025-large-language-model]]: FOLAR is the soft, learned version of the hard sign-multiplication rule in `apply_two_hop_stance.py`. Its fusion design suggests a cheap multi-labeller check on single-labeller bias. It does not show FOLAR would beat fine-tuned DEBATE on 87-156 held-out CU items.
-- [[b-2025-comparing-fine-tuned]]: **actual error.** The `train_stance_domain.py` docstring repeats Khan's 0.93-0.97 as comparable numbers. RoBERTa was scored on a different, augmented test set (support 6,699 vs 1,675), so the docstring should say so.
-  - What transfers: "unrelated" as its own class and macro-F1 as the headline.
-  - What does not transfer: the model ranking. Khan-style augmentation was rejected on 2026-07-03.
+### Melange stance: DEBATE NLI, supervised stack, two-hop rule, LSD tone
 
-**Tone and press value** ([[systems/melange-stance]])
-- `press_value` = DEBATE sign × stock LSD2015 intensity.
-  - [[haselmayer-2017-sentiment-analysis-political]] [measurement-source]: LSD intensity has only a three-case smoke test and has never been compared with human-coded intensity. Haselmayer's crowd design would supply that test cheaply.
-  - [[rice-2018-corpus-based-dictionaries]] [UNVERIFIED single-path check on 1,563 text-bearing releases]: the domain terms ("credit", "debt*", "risk*", "fraud*") account for 4.5% of positive mass and 7.0% of negative mass. Rank correlation with and without them is .953, and the net sign flips on 4.1% of releases. The effect is real but small, and it is not a reason to change rankings.
-- *Actual error* [VERIFIED, contradicts]: the retired legacy regex scorer cites Haselmayer but departs from it. It sums cues instead of taking the strongest cue, uses a two-token negator window and about 45 hand-weighted patterns. Its Rice corpus-expansion helper was never run.
-- [[park-2025-automatic-construction-direction]]: the whole-text direction override made 46 sign changes on gold, 3 good and 43 bad. It was rejected, and the curated target registry (cfpb_reform +1, cfpb_expansion −1, cfpb_institution 0) survives. Park's evidence covers headlines only. The open question of restricting the rule to the sentence or headline that names the bill is exactly the condition under which Park would transfer.
+- **DEBATE reader.** [[burnham-2024-political-debate-zero]] is the checkpoint itself, and it points to four open choices:
+  - base vs large, given that base failed bespoke concepts;
+  - short single-condition hypotheses vs the compound neutral hypothesis;
+  - MCC against humans vs accuracy and kappa against Claude pre-labels;
+  - per-label probabilities, which `run_stage5.R` discards ([[ornstein-2024-train-your-stochastic]]).
 
-**Frame alignment and salience shock** ([[systems/melange-influence-engine]])
-- [[joo-2022-image-data-automated]] **actual error** [VERIFIED / VERIFIED-SOFTENED]. `fec/network/frame_alignment.py` reads `cu_press_stance_tone.csv` with no source filter. 816 of its 2,388 rows are americascreditunions.org articles, each attributed to every member it mentions, so one ACU headline counts as many members echoing one script.
-  - In an UNVERIFIED single-path recompute that keeps only *.senate.gov and *.house.gov rows:
-    - General CU duplication falls from 60.2% (n=442) to 5.2% (n=116).
-    - CU Tax Status falls from 64.7% (n=190) to 38.1% (n=42).
-  - The output is a diagnostic, last written 2026-07-01. It reaches `salience_shock` only under `--intensity auto`, which the chain does not pass. Live impact is currently nil, but the diagnostic is wrong as written.
-- [[zhang-2022-data-assisted-social]] [UNVERIFIED]: a sentiment × volume burst index is a possible time-varying salience trigger. The paper validates nothing, so it cannot justify any threshold, half-life or weight.
+  [[burnham-2023-stance-detection-practical-guide]] explains why zero-shot missed implicit anti-CU stance (oppose F1 0.08) and why fine-tuning on 552 labels fixed it. [[lemens-2025-positioning-political-texts]] adds two things the stack lacks: NA kept separate from neutral, and validity reported within party.
+- **Supervised stack.** [[b-2025-comparing-fine-tuned]] is cited as the method source (`train_stance_domain.py`). Its transferable value is the evaluation conventions: an 'unrelated' class and macro-F1. Its ranking claims did not hold on Paul's data. The code docstring should flag that RoBERTa was scored on a different test set.
+- **Two-hop rule and bill sign.**
+  - [[dai-2025-large-language-model]] is the soft, learned version of the hard-sign registry. Its fusion result suggests a cheap check on single-labeller bias in the Claude pre-labels.
+  - [[park-2025-automatic-construction-direction]] explains the rejected 3-good / 43-bad whole-text override. Its evidence transfers only to short headline-scope text, which is the system's open sentence-scope option.
+- **LSD2015 tone intensity.**
+  - [[rice-2018-corpus-based-dictionaries]] shows domain terms ('credit' positive; 'debt*', 'risk*', 'fraud*' negative) are scored unmasked. A one-path check (UNVERIFIED) found 4.5% of positive mass and 7.0% of negative mass come from these terms, with a sign flip on 4.1% of 1,563 releases and a rank correlation of .953.
+  - [[haselmayer-2017-sentiment-analysis-political]] gives a cheap human-validation design for the intensity term, which so far has only a three-case smoke test.
+  - [[osnabrugge-2021-playing-gallery-emotive]] warns that press heat may index performance for the public rather than commitment.
+  - [[taherdoost-2023-artificial-intelligence-sentiment]]'s predictive/diagnostic split frames the current division: NLI decides direction, the dictionary supplies intensity.
 
-**SNA and data provenance** ([[systems/melange-influence-engine]], [[systems/melange-pathfinding]])
-- [[steinertthrelkeld-2018-twitter-data]]: API limits do not bind on the Quorum and Bluesky channels. Author metadata reflects collection time, which is a provenance caveat for handle-to-member attribution.
-- Social edges come from reposts and @mentions in post text, not follower lists. Nothing here bears on edge weighting.
-- The two rejected SNA proposals are not argued for by any work.
-- LDA stays an identity source, not an edge or weight source (D-021). This matters for Paul's Kim et al. note ([[kim-2025-measuring-interest-group]]), because LDA-derived positions should not become edge weights.
-- Reciprocity is not touched and remains unvalidated (D-104..D-108).
+### Melange audio lane
 
-**Wording guard.** Any trait, stance or tone score derived from these methods is a heuristic model output. It is never closeness, access or an introduction probability (D-025).
+- [[marrero-2022-evaluating-voice-samples]] is the benchmark the lane tested and largely failed to reproduce at N = 90.
+- [[dietrich-2019-pitch-perfect-vocal]] supports within-speaker F0 and keeping absolute F0 out of the score. The system's floors (5 units per member, 2 topics) cannot detect 0.1–0.4 SD effects.
+- [[mestre-2026-potential-pitfalls-audio]] is copied in `b5_audio_neural_head.py`. Its 0.914 accuracy is in-domain debate audio and is not a target (system EER .226).
+- [[salam-2022-learning-personalised-models]] supports sex-conditioned comparison. The semitone-SD fix is on an unmerged branch.
+- Together these keep audio display-only. Two leads remain open: MFCC, chroma and spectral features that eGeMAPS lacks, and reliability disattenuation.
+
+### SNA, frame alignment and salience
+
+- [[joo-2022-image-data-automated]]'s duplication instrument, ported into `frame_alignment.py`, breaks on attribution. ACU articles credited to every member they mention inflate echo rates (UNVERIFIED recompute: General CU 60.2% → 5.2%). It reaches `salience_shock` only under `--intensity auto`, which the chain does not pass.
+- [[zhang-2022-data-assisted-social]]'s burst hotness index is at most an UNVERIFIED lead for a time-varying salience trigger. Its Louvain-on-correlation-graph step adds nothing beyond `press_hcoi.py`'s existing 0.6 threshold.
+- Any community or rank output from such graphs is a heuristic model output. Per D-025 it is never closeness, access or introduction probability.
+- No work in this theme argues for dropping regular cosponsorship edges or for per-edge volume normalization, so there is nothing to flag on those REJECTED proposals.
+- Nothing here bears on reciprocity, which remains unvalidated (D-104..D-108).
+- Paul's inter-industry-conflict gap (from Kim et al., which uses LDA filings) must respect D-021: LDA identifies actors and cannot supply edges or weights.
+
+### Moneyball press pillar
+
+[[haselmayer-2017-sentiment-analysis-political]] and [[osnabrugge-2021-playing-gallery-emotive]] qualify any press-tone input. Tone validity is unshown in US congressional press, and affect is audience-driven.
 
 ## Gaps
 
-**Paul's stated gaps against what the 24 works cover**
-1. **Conversion step (model output → node attribute or vector).** Still open. No work here maps a measure onto a graph node. The nearest pieces are aggregation rules:
-   - [[yang-2023-getting-personal-deep]]: person-level attention over posts.
-   - [[ornstein-2024-train-your-stochastic]]: a continuous score from the label-probability vector.
-   - [[haselmayer-2017-sentiment-analysis-political]]: the max-word rule, sentence to document.
-   - [[marrero-2022-evaluating-voice-samples]] and [[koutsoumpis-2024-kernel-truth-text]]: reliability disattenuation.
+1. **Paul's conversion step is still unspecified.** The corpus offers aggregation recipes:
+   - probability vectors [[ornstein-2024-train-your-stochastic]];
+   - score averaging with NA handling [[lemens-2025-positioning-political-texts]];
+   - chunk-then-average [[peters-2024-language-models-infer]].
 
-   A node-attribute spec could assemble these, but no work validates one.
-2. **Ambiguity.** [[burnham-2023-stance-detection-practical-guide]] quantifies it: 34.0% versus 19.5% coder disagreement when the target is unnamed. [[b-2025-comparing-fine-tuned]] concentrates its errors on sarcastic and implicit text. Neither separates ambiguous statements as a class, so Paul's Birkenmaier gap is unresolved.
-3. **Inter-industry conflict over a bill.** No work in the theme addresses it.
-4. **Temporal lag / prediction.** All stance work here is static. Zhou 2026 on stance dynamics ([[zhou-2026-measuring-stance-dynamics]]) is linked from [[dai-2025-large-language-model]] but is not in the theme.
-5. **Long-distance dependency (Peng).** Peng et al. is not in the theme file. [[dai-2025-large-language-model]] and [[park-2025-automatic-construction-direction]] touch only clause-level direction.
-6. **Venue and auditory constraints (Ramey).** The audio strand covers floor ([[dietrich-2019-pitch-perfect-vocal]]) and debates ([[mestre-2026-potential-pitfalls-audio]]). No work gives a cross-venue framework, and Melange's pooled interview-channel baseline is exactly the uncontrolled case.
+   No work validates how a text-derived attribute should become a node attribute or edge in a political graph, or tests whether doing so improves any downstream prediction. [[joo-2022-image-data-automated]]'s port into the system shows the failure mode: an attribution error in the unit of analysis.
+2. **No criterion of any kind for legislators.**
+   - Every trait-validity number comes from students, lay users or public perception: [[azucar-2017-predicting-personality-traits]], [[peters-2024-language-models-infer]], [[marrero-2022-evaluating-voice-samples]], [[cao-2024-language-models-personality]].
+   - No legislator self-report exists.
+   - No work links a text-derived trait to receptivity to lobbying.
+3. **Validity within the group that matters.** Headline correlations are between-party or between-figure. Only [[lemens-2025-positioning-political-texts]] reports within-party validity, and it drops to .66–.72. Nothing reports within-member, across-venue reliability.
+4. **A venue-specific framework.** Paul asks for one, and [[osnabrugge-2021-playing-gallery-emotive]], [[koutsoumpis-2024-kernel-truth-text]] (formality) and [[dietrich-2019-pitch-perfect-vocal]] (a single venue) show why it is needed. No work supplies a method for harmonising floor speech, press, social posts and interviews.
+5. **Staff authorship.** Member posts and press are largely staff-written. No work models the author vs speaker vs office distinction for trait or affect readings.
+6. **Ambiguity and long multi-actor texts.** Ambiguity is measured: 34.0% vs 19.5% coder disagreement [[burnham-2023-stance-detection-practical-guide]]. Long multi-actor text is shown to fail [[park-2025-automatic-construction-direction]]. Neither is solved for press releases that quote the opposing side. This connects to Paul's long-distance-dependency gap from Peng et al.
+7. **Temporal drift and lag.**
+   - [[rice-2018-corpus-based-dictionaries]]: dictionary terms turn over between eras.
+   - [[aroyehun-2026-politics-of-feelings]]: emotion trends rise over time.
+   - [[hargrave-2022-longer-conforming-stereotypes]]: gender gaps change.
 
-**Coverage gaps in the file itself**
-- Paul's four annotated works lack extracted entries in this theme: Birkenmaier & Lechner, Kim et al., Peng et al. and Ramey et al. Alkazzi & Okumura (path-finding) is also absent. The synthesis therefore cannot use his annotations against their content.
-- No elite self-report criterion exists anywhere. No congressional press-release stance benchmark with human gold exists outside the system's own n=87/156 held-out sets.
-- No work on calibrating LLM or NLI probabilities for political text beyond Ornstein's overconfidence observation.
-- No multiple-comparison or seed-variance standard in the stance benchmarks.
-
-**Online scan (single search, UNVERIFIED leads only, not read)**
-- Walker, Angst et al., PLOS ONE (Nov 2025), "Promises and pitfalls of using LLMs to identify actor stances in political discourse". It uses zero-shot LLM actor stance on 1,710 human-annotated German newspaper paragraphs, and results vary heavily by prompt chain and model. It is the closest human-gold design to the CU press task. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12629487/
-- Cal Poly thesis (Pramuk, 2026). It does LLM stance from California legislators' press releases toward specific bills and flags inconsistencies with votes. It is validated only via a ParlVote vote-proxy, with no human-coded press gold. https://digitalcommons.calpoly.edu/theses/3372
-- Harvard "StrideStance": zero-shot legislator stance on speeches in the 117th Congress, validated against roll-call-style measures. https://dash.harvard.edu/entities/publication/7f242c13-abbb-4283-be50-5ec9ef2eb017
-- Multimodal study of U.S. legislators' cross-platform persona strategies (arXiv 2509.10720). It is relevant to the social channel, not to validation. https://arxiv.org/pdf/2509.10720
-- The scan found **no** 2024-2025 LLM-based Big Five measurement of members of Congress. RKH (PSRM 2019) remains the field's elite reference, which makes the Mairesse/RKH instrument weakness above more consequential.
-
-**Small factual corrections worth recording (errors only)**
-- [[koutsoumpis-2024-kernel-truth-text]]: the slug says 2024, but the PDF is Psychological Bulletin 2022.
-- [[burnham-2023-stance-detection-practical-guide]] was published in PSRM 13 (2025), 611-628.
-- [[ornstein-2024-train-your-stochastic]] was published in PSRM 2025.
-- [[simchon-2024-persuasive-effects-political]] swaps the study 2a/2b sample sizes between text and figure.
+   No work offers a refresh or recalibration protocol. Paul's temporal-lag gap (Kim et al.) has no predictive counterpart here.
+8. **Inter-industry conflict over a bill.** Nothing in this theme measures it. Any LDA-based approach must keep LDA as an identity source only (D-021).
+9. **Calibration and reproducibility of LLM readers.**
+   - GPT-4 overconfidence is documented [[ornstein-2024-train-your-stochastic]].
+   - So are model retirement and LLM-label circularity (PolNLI was validated by GPT-4o [[burnham-2024-political-debate-zero]]).
+   - No work calibrates self-reported LLM confidence, as the Claude stance rater uses.
+10. **De-identification is untested.** [[cao-2024-language-models-personality]] shows the reputational prior exists. No work tests whether stripping names, party and state removes it.
+11. **Causal designs.** Every legislative-speech paper is associational. Persuasion evidence uses perceived persuasion in the UK public [[simchon-2024-persuasive-effects-political]], not attitude or vote change among elites.
+12. **Paul's own coverage.**
+    - The three works shared with his bibliography (Joo, Taherdoost, Steinert-Threlkeld) are citation-only, with no annotation from him.
+    - The four he annotated (Birkenmaier and Lechner, Kim et al., Peng et al., Ramey et al.) are not filed under this theme.
+    - He plans a second reading of Peng et al. once he has more technical background.
+    - The Alkazzi and Okumura path-finding link is not in his words.
+    - Re-filing or annotating these works would close the gap between his stated argument and the corpus.
 
 ## All works
 
@@ -355,7 +585,7 @@ The status in brackets is the extraction's bearing tag. UNVERIFIED bearings are 
 - [[dai-2025-large-language-model]] (2025) — Large Language Model Enhanced Logic Tensor Network for Stance Detection
 - [[rammstedt-2025-going-global-language]] (2025) — Going Global: 39 Language Versions of the BFI-2-XS
 - [[koutsoumpis-2024-kernel-truth-text]] (2024) — The Kernel of Truth in Text-Based Personality Assessment: A Meta-Analysis of the Relations Between the Big Five and the Linguistic Inquiry and Word Count (LIWC)
-- [[celli-nd-twenty-years-personality]] (n.d.) — Twenty Years of Personality Computing: Threats, Challenges and Future Directions
+- [[celli-nd-twenty-years-personality]] () — Twenty Years of Personality Computing: Threats, Challenges and Future Directions
 - [[azucar-2017-predicting-personality-traits]] (2017) — Predicting the Big 5 personality traits from digital footprints on social media: A meta-analysis
 - [[b-2025-comparing-fine-tuned]] (2025) — Comparing Fine-Tuned RoBERTa with Traditional Machine Learning Models for Stance Detection in Political Tweets
 - [[taherdoost-2023-artificial-intelligence-sentiment]] (2023) — Artificial Intelligence and Sentiment Analysis: A Review in Competitive Research
@@ -368,7 +598,16 @@ The status in brackets is the extraction's bearing tag. UNVERIFIED bearings are 
 - [[park-2025-automatic-construction-direction]] (2025) — Automatic construction of direction-aware sentiment lexicon using direction-dependent words
 - [[haselmayer-2017-sentiment-analysis-political]] (2017) — Sentiment analysis of political communication: combining a dictionary approach with crowdcoding
 - [[salam-2022-learning-personalised-models]] (2022) — Learning Personalised Models for Automatic Self-Reported Personality Recognition
-- [[kumari-nd-five-personality-predictions]] (n.d.) — Big Five Personality Predictions From Twitter Using Regression
+- [[kumari-nd-five-personality-predictions]] () — Big Five Personality Predictions From Twitter Using Regression
 - [[yang-2023-getting-personal-deep]] (2023) — Getting Personal: A Deep Learning Artifact for Text-Based Measurement of Personality
 - [[mairesse-2007-automatic-recognition-personality]] (2007) — Using Linguistic Cues for the Automatic Recognition of Personality in Conversation and Text
 - [[burnham-2023-stance-detection-practical-guide]] (2023) — Stance Detection: A Practical Guide to Classifying Political Beliefs in Text
+- [[aroyehun-2026-politics-of-feelings]] (2026) — Politics of Feelings: Emotional Expression and Legislative Effectiveness in the U.S. Congress
+- [[burnham-2024-political-debate-zero]] (2024) — Political DEBATE: Efficient Zero-shot and Few-shot Classifiers for Political Text
+- [[cao-2024-language-models-personality]] (2024) — Large language models know how the personality of public figures is perceived by the general public
+- [[decter-frain-2016-impressive-words-linguistic]] (2016) — Impressive Words: Linguistic Predictors of Public Approval of the U.S. Congress
+- [[hargrave-2022-longer-conforming-stereotypes]] (2022) — No Longer Conforming to Stereotypes? Gender, Political Style, and Parliamentary Debate in the UK
+- [[lemens-2025-positioning-political-texts]] (2025) — Positioning Political Texts with Large Language Models by Asking and Averaging
+- [[osnabrugge-2021-playing-gallery-emotive]] (2021) — Playing to the Gallery: Emotive Rhetoric in Parliaments
+- [[peters-2024-language-models-infer]] (2024) — Large Language Models Can Infer Psychological Dispositions of Social Media Users
+- [[rheault-2016-measuring-emotion-parliamentary]] (2016) — Measuring Emotion in Parliamentary Debates with Automated Textual Analysis

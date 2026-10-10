@@ -122,3 +122,4 @@ _Not in Paul's annotated bibliographies._
 ### Linked from
 - [[rubio-2024-feasibility-data-analytics]] — complements — Real item (title confirmed: threats and challenges in personality computing). Its reproducibility framing fits; the specific selection-leakage attribution was not checked.
 - [[mairesse-2007-automatic-recognition-personality]] — cited-by — Cites Mairesse 2007 as reference 179 and calls it the foundation of personality computing with accuracy below 62 percent. Celli discusses threats in general, not Mairesse-specific validity threats.
+- [[cao-2024-language-models-personality]] — complements — Review of personality computing that lists data privacy among its threats. Cao's privacy framing (Discussion p.6) rests on Kosinski's work instead, so the two are complementary rather than sources for each other.

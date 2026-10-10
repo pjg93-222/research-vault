@@ -124,4 +124,4 @@ There are no bibliography entries; this is Paul's own note. The built study foll
 - [[chohan-2025-crypto-oligarchy-cryptocurrency]] — complements — Its title and tags cover the cryptocurrency lobby and PAC spending, the sector the note handles only through a proxy.
 
 ### Linked from
-_None._
+- [[ansolabehere-2002-little-money-politics]] — complements — Paul's sector growth source note. The paper's null for stakes and its income elasticity bear on the growth-giving hypothesis. Item exists.

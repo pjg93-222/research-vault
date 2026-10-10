@@ -2,9 +2,24 @@
 type: system
 name: "Moneyball four-pillar influence rank"
 slug: moneyball-rank-pillars
-components: [moneyball-rank-pillars.score-blend, moneyball-rank-pillars.committee-pillar, moneyball-rank-pillars.legislative-pillar, moneyball-rank-pillars.press-pillar, moneyball-rank-pillars.demographic-pillar, moneyball-rank-pillars.sublayer-efficiency-repair, moneyball-rank-pillars.network-centrality-influencescore, moneyball-rank-pillars.undervaluation-lens, moneyball-rank-pillars.legacy-workbook-cascade]
-brain_notes: [concepts/four-pillar-percentile-blend, concepts/influence-vs-alignment-axes, actors/moneyball-workbook, actors/moneyball-workbook-rules-scoring-and-sublayer-surgery, actors/moneyball-workbook-lineage-and-june-audit, topics/2026-07-rfc-melange-architecture-system-of-record-model-config-and-committee-formula]
-paper_count: 24
+components:
+  - moneyball-rank-pillars.score-blend
+  - moneyball-rank-pillars.committee-pillar
+  - moneyball-rank-pillars.legislative-pillar
+  - moneyball-rank-pillars.press-pillar
+  - moneyball-rank-pillars.demographic-pillar
+  - moneyball-rank-pillars.sublayer-efficiency-repair
+  - moneyball-rank-pillars.network-centrality-influencescore
+  - moneyball-rank-pillars.undervaluation-lens
+  - moneyball-rank-pillars.legacy-workbook-cascade
+brain_notes:
+  - C:/Users/pgoff/Documents/brain/concepts/four-pillar-percentile-blend.md
+  - C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md
+  - C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md
+  - C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-rules-scoring-and-sublayer-surgery.md
+  - C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-lineage-and-june-audit.md
+  - C:/Users/pgoff/Documents/brain/topics/2026-07-rfc-melange-architecture-system-of-record-model-config-and-committee-formula.md
+paper_count: 27
 tags: [system]
 ---
 
@@ -12,51 +27,55 @@ tags: [system]
 
 The official 533-member CU-influence rank. It blends Legislative, Press, Influence (committee) and Demographic pillars into a score; ranks_python.json (fec/engine/compute_pillars.py) is the rank authority and the workbook is a view of it. Includes each pillar's construction, the legacy workbook cascade and the underdog lens. Code paths are relative to C:/Users/pgoff/OneDrive/Desktop/Melange Systems.
 
-Brain notes: [concepts/four-pillar-percentile-blend](obsidian://open?vault=brain&file=concepts/four-pillar-percentile-blend); [concepts/influence-vs-alignment-axes](obsidian://open?vault=brain&file=concepts/influence-vs-alignment-axes); [actors/moneyball-workbook](obsidian://open?vault=brain&file=actors/moneyball-workbook); [actors/moneyball-workbook-rules-scoring-and-sublayer-surgery](obsidian://open?vault=brain&file=actors/moneyball-workbook-rules-scoring-and-sublayer-surgery); [actors/moneyball-workbook-lineage-and-june-audit](obsidian://open?vault=brain&file=actors/moneyball-workbook-lineage-and-june-audit); [topics/2026-07-rfc-melange-architecture-system-of-record-model-config-and-committee-formula](obsidian://open?vault=brain&file=topics/2026-07-rfc-melange-architecture-system-of-record-model-config-and-committee-formula)
+**Brain notes:** [concepts/four-pillar-percentile-blend](obsidian://open?vault=brain&file=concepts/four-pillar-percentile-blend); [concepts/influence-vs-alignment-axes](obsidian://open?vault=brain&file=concepts/influence-vs-alignment-axes); [actors/moneyball-workbook](obsidian://open?vault=brain&file=actors/moneyball-workbook); [actors/moneyball-workbook-rules-scoring-and-sublayer-surgery](obsidian://open?vault=brain&file=actors/moneyball-workbook-rules-scoring-and-sublayer-surgery); [actors/moneyball-workbook-lineage-and-june-audit](obsidian://open?vault=brain&file=actors/moneyball-workbook-lineage-and-june-audit); [topics/2026-07-rfc-melange-architecture-system-of-record-model-config-and-committee-formula](obsidian://open?vault=brain&file=topics/2026-07-rfc-melange-architecture-system-of-record-model-config-and-committee-formula)
 
-Evidence census (computed from the hub file): 30 rows, 24 distinct papers; UNVERIFIED 2, VERIFIED 8, VERIFIED-SOFTENED 20.
+**Moneyball four-pillar influence rank: evidence assessment (35 rows, 27 distinct works; 2 UNVERIFIED, 8 VERIFIED, 25 VERIFIED-SOFTENED)**
 
-**System:** Moneyball four-pillar influence rank. Score = w·Leg% + w·Press% + w·Influence% + w·Demo% over 533 members. `ranks_python.json` is the rank authority.
+**Overall: the literature supports the system's direction but none of its numbers.** Every weight in the system is owner policy: the pillar weights, the committee tier map (3.0 / 1.8 / 0.9), the 1/6 subcommittee factor, the leadership ladder, the 4:2:1 sponsor-role ratio, the 0.7/0.3 agenda/efficiency blend, the press category tiers and the 0.60/0.25/0.15 centrality mix. No paper in the evidence set estimates any of them, and none of them has been checked against an outcome. That matches Paul's own position on the blend ("owner policy that no literature tests"). It holds equally for every pillar.
 
-**How much evidence there is.** The hub has 30 bearing rows. 28 are VERIFIED or VERIFIED-SOFTENED. Two are UNVERIFIED leads: van der Does 2022 on press, and the House Committee Requests codebook on committee. Almost no verified row tests a pillar against an outcome. The papers back premises, such as "lobbying attention is organised by committee jurisdiction" and "direction-blind centrality does not separate passed from failed bills." They do not back the numbers, such as the pillar weights, the tier weights, the 1/6 subcommittee factor, the leadership ladder, the 4:2:1 role weights or the sign×LSD product. Most of the strong-looking support comes from settings that do not transfer directly:
-- state legislatures (Bucchianeri on North Carolina, Fouirnaies & Hall);
-- firms (Kim et al., Huneeus & Kim, Azaiez);
-- other countries' parliaments (Amsalem, Haselmayer);
-- simulated cascades (Kempe, Trivedi, Kumar).
+**Where the evidence is strongest**
+- **Retiring direction-blind cosponsor centrality from Influence.** Battaglini et al. 2018 is the only federal study in the set with a legislative-effectiveness outcome (House, 109th-113th, N = 2,176, pooled, UNSTRATIFIED by party). After correcting for endogenous tie formation, betweenness and eigenvector centrality lose all significance against LES. Sotoudeh et al. 2024 (House 2009-2019, UNSTRATIFIED) finds that eigenvector, closeness and strength barely separate passed from failed bills.
+- **Committee position as the place where money and lobbying concentrate.** Kim et al. 2020/2023, de Figueiredo 2013 and Kim & Kunisky 2020 support this qualitatively.
+- **A chair premium in effectiveness.** It survives Battaglini's correction: OLS 1.97 falls to 1.61 LES points, about 18% smaller (House 109th-113th).
 
-**Bottom line.** The rank is defensible as owner policy built on well-motivated premises. It has **no external validity evidence** at the composite level. The single federal convergence figure is ρ = +0.10 against CEL LES. It is recorded only in the brain and is unverified in this pass. If real, it falls in the null band of the system's own bar B (lep_criterion.py:17-19).
+**Where the evidence cuts against the build**
+1. **House and Senate are pooled into one scale** (one percentile for Leg%, one raw/max for Influence%). Bucchianeri et al. 2025 says effectiveness scores are relative to each chamber-term and should not be compared across chambers. Its chair premium also differs sharply by chamber: pooled 0.507, strata 0.609 lower chamber and 0.307 upper (NC 2005-2012).
+2. **Majority status is ignored.** It is a large effectiveness covariate: Bucchianeri reports +0.370 pooled, strata 0.362 / 0.387 (NC 2005-2012). Box-Steffensmeier et al. 2018 reports a majority-sponsor logit of 1.353 on House passage (106th-111th, N = 6,597 letter-bearing bills, UNSTRATIFIED). Neither the efficiency term nor the committee score has a majority term. That raw advancement rates therefore reward majority status is an analyst inference, not a paper finding.
+3. **The underdog lens keeps the measure that was retired.** It still uses centrality as "intrinsic" influence, which is the same centrality the evidence says carries no corrected signal. Its conceptual anchor (Aref & Neal 2021) defines the hidden bloc by majority alignment, which is closer to what the lens subtracts than to what it rewards.
+4. **Hit-rate efficiency underperforms in the one test available.** In NC, hit-rate metrics did worse than stage-based effectiveness scores against expert rankings (Bucchianeri). The efficiency term is a hit-rate-style metric.
 
-**Errors to fix (not literature questions):**
-1. The pillar weights disagree across three sources:
-   - `pillar_policy.py:11-16` has 45/10/40/5 (live, unratified, S-5 open).
-   - `MATHEMATICAL_SPECIFICATION.md:12` has 25 Leg / 30 Press / 40 / 5.
-   - The ratified record says 30/25/40/5.
-2. The press pillar is described as "signed raw/max". The verified code path (`normalize_signed_extrema`) divides positive values by the largest positive and negative values by the absolute largest negative. Those are two different scales, not one raw/max.
-3. In the legacy cascade, Primary Layer H2 = 0.80, which is probably meant to be 0.08. The weight row sums to 1.72, and the cascade is orphaned but not retired.
-4. Two verified rows (Sotoudeh, Battaglini) searched `fec/` and could not find the AB13 = 0 centrality retirement or the underdog-lens use of centrality. Both exist only in the workbook, and the lens has no code file.
+**Gaps (no evidence rows)**
+- **Demographic pillar:** no evidence.
+- **Sub Layer repair and legacy cascade:** engineering only; no literature applies.
+- **Press pillar:** no paper tests own-domain filtering, or whether press stance predicts later CU behaviour. The two verified press rows (Haselmayer 2017; Osnabrugge et al. 2021) only qualify the LSD intensity multiplier.
+- **Weighted out-degree (60% of InfluenceScore):** no paper tests it against any outcome.
 
-**Online scan.** The scan was light. Its leads are marked as leads in the components and the agenda; none is verified. They are:
-- the composite-indicator sensitivity literature (Saisana, Saltelli & Tarantola 2005; Paruolo, Saisana & Saltelli 2013; OECD-JRC Handbook 2008);
-- Kessler & Krehbiel 1996 on cosponsorship timing;
-- CEL's congressional LES benchmarks;
-- Grier & Munger 1991 and Kroszner & Stratmann 1998 on committee self-selection;
-- district financial-sector employment and TARP votes, where the evidence is mixed and comes from a student journal and a working paper.
+**Unresolved internal contradiction.** Three pillar weight sets disagree:
+- code (pillar_policy.py:11-16): 45/10/40/5;
+- MATHEMATICAL_SPECIFICATION.md:12: 25 Leg / 30 Press / 40 / 5;
+- ratified set as implied by the code docstring: 30 Leg / 25 Press / 40 / 5.
+
+This is Paul's ruling to make (code-review S-5). No literature resolves it.
+
+**Verification note.** Several evidence agents could not find the AB13 = 0 retirement or the underdog-lens wiring anywhere under fec/. Both live in the workbook (rows on Sotoudeh, Battaglini 2016 and Christopher). The lens has no code file. These facts rest on brain notes, not code reads.
+
+**Flags.** No paper in this set argues for either rejected SNA proposal (dropping regular cosponsorship edges; per-edge volume normalization), so there is nothing to flag. Kim & Kunisky 2020 and Huneeus & Kim 2018 use LDA lobbying data. Under D-021 they may inform reading only, never edges or weights.
 
 ## Four-pillar score blend and rank
 
-**What it computes:** Score = w2*Leg% + w3*Press% + w4*Influence% + w5*Demo%; Rank = descending competition rank over 533 members. ranks_python.json is the rank authority.
+**Computes.** Score = w2*Leg% + w3*Press% + w4*Influence% + w5*Demo%; Rank = descending competition rank over 533 members. ranks_python.json is the rank authority.
 
-**Method:** Linear weighted sum of normalized pillars. Normalization differs by pillar: legislative uses Excel PERCENTRANK.INC truncated to 5 decimals, committee uses raw/max, press uses signed raw/max, and demographic uses PERCENTRANK. Weight history: .40/.30/.20/.10 (2026-06-29, historical); 30/25/40/5 (ratified 2026-07-07); 45/10/40/5 (Leg/Press/Inf/Demo), live in fec/engine/pillar_policy.py since 2026-09-03 and unratified (code-review S-5 open). VERIFIED: pillar_policy.py:11-16 reads leg .45, press .10, inf .40, demo .05. Its docstring says 10 of the original 25 press points remain and 15 moved to legislative, which implies the ratified set was Leg .30 / Press .25. MATHEMATICAL_SPECIFICATION.md:12 instead writes 0.25*Leg + 0.30*Press, and brain notes disagree on the order. Unresolved.
+**Method.** Linear weighted sum of normalized pillars. Normalization differs by pillar: legislative uses Excel PERCENTRANK.INC truncated to 5 decimals, committee uses raw/max, press uses signed raw/max, and demographic uses PERCENTRANK. Weight history: .40/.30/.20/.10 (2026-06-29, historical); 30/25/40/5 (ratified 2026-07-07); 45/10/40/5 (Leg/Press/Inf/Demo), live in fec/engine/pillar_policy.py since 2026-09-03 and unratified (code-review S-5 open). VERIFIED: pillar_policy.py:11-16 reads leg .45, press .10, inf .40, demo .05. Its docstring says 10 of the original 25 press points remain and 15 moved to legislative, which implies the ratified set was Leg .30 / Press .25. MATHEMATICAL_SPECIFICATION.md:12 instead writes 0.25*Leg + 0.30*Press, and brain notes disagree on the order. Unresolved.
 
-**Code refs:** `fec/engine/compute_pillars.py:11-14,36-59,195-216`, `fec/engine/pillar_policy.py:11-16`, `fec/engine/apply_weights.py:11-13`, `MATHEMATICAL_SPECIFICATION.md:12`, `ranks_python.json`
+**Code refs.** `fec/engine/compute_pillars.py:11-14,36-59,195-216`, `fec/engine/pillar_policy.py:11-16`, `fec/engine/apply_weights.py:11-13`, `MATHEMATICAL_SPECIFICATION.md:12`, `ranks_python.json`
 
-**Assumptions:**
+**Assumptions**
 - Pillar values after normalization are commensurable, so fixed weights are meaningful
 - Weights are owner policy, not estimated from outcomes
 - Rank measures influence; stance (alignment) is a separate axis
 - Min-max was rejected because one outlier set each pillar's scale (effective variance shares at 06-25: Press 40 / Leg 6 / Committee 52 / Demo 2)
 
-**Evidence (3 rows, 3 distinct papers: VERIFIED-SOFTENED 3)**
+**Evidence** (3 rows, 3 distinct works; 3 VERIFIED-SOFTENED)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -66,57 +85,54 @@ Evidence census (computed from the hub file): 30 rows, 24 distinct papers; UNVER
 
 **Assessment**
 
-**Evidence weight: thin and indirect.** Three verified rows bear on this component, and none tests the blend against an outcome.
-- **Bucchianeri 2025** (VERIFIED-SOFTENED, moderate) shows that stage-based effectiveness is a valid, persistent construct in North Carolina. In 2005-2012, SLES explains about half the variation in expert rankings, with lagged ρ of 0.38 to 0.66. That is a state result and does not validate the federal blend. The federal analogue is ρ = +0.10 between the blend and CEL LES. It is recorded only in the brain and was not verified here. Under bar B (lep_criterion.py:17-19) it would fall in the null band, below 0.15.
-- **Christopher 2016** (VERIFIED-SOFTENED, method-source) supplies a usable robustness recipe: change one weight in 0.1 steps, rescale the others proportionally and track rank. Its AHP weights are themselves unvalidated, so AHP could only document owner judgment, reported with its consistency ratio (CR).
-- **Becker** (context) is an analogy from redistricting metrics. When metrics are contestable, the advice is to pin one documented definition and report sensitivity.
+**Four-pillar score blend and rank: 3 rows, 3 distinct works; 3 VERIFIED-SOFTENED. None tests the blend.**
 
-**Online scan, UNVERIFIED leads.** Saisana, Saltelli & Tarantola (2005, JRSS A) propagate normalisation, weighting and aggregation choices by Monte Carlo and decompose rank variance with Sobol indices. Paruolo, Saisana & Saltelli (2013, JRSS A) find that nominal weights rarely match effective importance (main effects) when the inputs are correlated and heteroscedastic. This is the published form of the system's own 06-25 finding that min-max gave effective variance shares of Press 40 / Leg 6 / Committee 52 / Demo 2 against nominal 40/30/20/10.
+**What the evidence offers**
+- **Bucchianeri et al. 2025 (moderate).** Shows that stage-based effectiveness is a valid and fairly persistent construct in one US state. SLES explains about half the variation in NC expert rankings (2005-2012). Lagged persistence is rho 0.38 to 0.66 depending on changes in control. This supports using a federal effectiveness score (CEL LES) as the external criterion the blend's first empirical question asks for. It does not validate the federal blend.
+- **The project's own convergence result is unverified.** Per the brain, the blend correlates with CEL LES at about +0.10. That falls in the null band of lep_criterion bar B (below 0.15). The value and its n were not verified in this check. If it holds, the blend is close to orthogonal to the main published effectiveness measure.
+- **Christopher 2016 and Becker (method and context only).**
+  - Christopher's one-weight proportional-rescale sweep is a ready method for the open top-133 sensitivity question. AHP would only document owner judgment with a consistency ratio; it is never an estimate.
+  - Becker's gameability argument supports pinning one documented weight set and reporting rank sensitivity across the competing sets.
 
-**Why it matters here.** Several sources point to majority status and chair position as drivers of legislative effectiveness:
-- Bucchianeri reports +0.370 for majority status (pooled, UNSTRATIFIED; strata 0.362 lower and 0.387 upper chamber) and +0.507 for chairs (pooled; strata 0.609 and 0.307).
-- Box-Steffensmeier reports a majority-sponsor logit coefficient of 1.353 (House, 106th-111th Congress, N = 6,597 bills).
-
-The same positional advantage therefore probably loads on both Leg% (through advancement) and Influence% (through chairs). The *effective* weight of position is then likely above the nominal 40%. That is an inference to test, not a finding.
-
-**Actual error.** The weight set is inconsistent across code, spec and ratification record (see the contradictions).
+**Contradictions inside the system, not with the literature**
+- **Three weight sets are in play.** Code is 45/10/40/5; MATHEMATICAL_SPECIFICATION.md:12 is 25/30/40/5; the docstring implies a ratified 30/25/40/5. The live set is unratified (S-5).
+- **The commensurability assumption fails by construction.** The pillars are normalized four different ways: PERCENTRANK truncated (Leg), raw/max (Committee), signed raw/max (Press) and PERCENTRANK (Demo). Raw/max pillars keep their skew while percentile pillars are uniform, so the effective variance shares will not equal the nominal weights. The 06-25 min-max episode (Press 40 / Leg 6 / Committee 52 / Demo 2) shows how far they can drift. This is an internal computation, not a literature question.
+- **House and Senate share one rank.** Bucchianeri says effectiveness scores are relative to each chamber-term and not comparable across chambers.
 
 **Contradictions**
-- Weight set: pillar_policy.py:11-16 = Leg .45 / Press .10 / Inf .40 / Demo .05 (live, unratified, S-5 open); MATHEMATICAL_SPECIFICATION.md:12 = .25 Leg / .30 Press / .40 / .05; ratified 2026-07-07 record = 30/25/40/5 (and the pillar_policy docstring arithmetic implies Leg .30 / Press .25). At most one of these can be right; the spec line is wrong against both the code and the docstring.
-- Normalisation is not uniform across pillars (PERCENTRANK for Leg and Demo, raw/max for committee, signed extrema for press), so the 'commensurable pillars' assumption is unmet by construction: a percentile pillar is uniform on [0,1] while a raw/max pillar is skewed toward 0 (245/533 members have committee score 0). Nominal weights therefore cannot equal effective shares (Paruolo et al. 2013 lead).
-- The only federal convergence figure (rho +0.10 vs CEL LES, brain-only, unverified) sits in the null band of the system's own bar B, while the state-level analogue (Bucchianeri, NC) is strong; the system's 'rank measures influence' assumption is not supported at the federal level by anything verified.
+- Code pillar weights 45/10/40/5 (pillar_policy.py:11-16) vs MATHEMATICAL_SPECIFICATION.md:12 at 25 Leg / 30 Press / 40 / 5 vs the ratified 30 Leg / 25 Press / 40 / 5 implied by the docstring; unresolved, Paul's ruling (S-5).
+- The assumption that normalized pillars are commensurable conflicts with the mixed normalizations (percentile vs raw/max vs signed raw/max), so nominal weights are not effective weights.
+- Bucchianeri 2025 says effectiveness scores are chamber-term relative and not comparable across chambers; the blend ranks House and Senate members on one 533-member scale.
 
 **Gaps**
-- No study tests the blended rank, or any pillar, against an external federal influence criterion (CEL LES for the 119th Congress, CU-bill advancement, CU-aligned final-passage votes). Fill with a preregistered single-look criterion study: Spearman between rank and LES, reported by chamber and by majority/minority (UNSTRATIFIED if pooled), with each pillar alone as a comparator.
-- No sensitivity analysis exists for top-133 membership across the 30/25/40/5 and 45/10/40/5 sets. Fill with Christopher's one-weight proportional-rescale sweep plus a Saisana-style Monte Carlo over weights and normalisation; report Kendall tau-b and top-133 overlap (window: current roster, denominator 533).
-- No measurement of effective vs nominal pillar importance under the current mixed normalisation (Paruolo main-effect / correlation-ratio check).
+- No study, in the literature or in the project, validates the blended rank against an external federal criterion (CEL LES, CU-bill advancement, CU-aligned final-passage votes), chamber-stratified. Fill with a preregistered single look: blend and each single pillar vs criterion, Spearman with bootstrap CI, House and Senate separately.
+- No measurement of effective variance shares under the current normalizations. Fill by internal computation (share of score variance by pillar), not literature.
+- No sensitivity analysis of top-133 membership across the three candidate weight sets. Fill with Kendall tau-b and overlap counts plus a Christopher-style one-weight proportional-rescale sweep.
 
-**Paul's position vs the evidence**
-
-Paul's position is that no literature underwrites the weights and that they are owner policy. The evidence agrees, and that is the honest framing. His reading favours measuring effectiveness, citing Aref & Neal and Sotoudeh against LES. The only federal figure points the other way: the blend is roughly orthogonal to CEL LES (+0.10, unverified). So either the rank measures something other than effectiveness, or the pillars need re-weighting. Paul should choose which claim the rank makes before the weights are ratified, and S-5 should be closed against one documented weight set.
+**Paul's position vs the evidence.** Consistent. Paul says no annotated work underwrites the weights, and the evidence confirms it: no row estimates or tests pillar weights. His wish to measure effectiveness (Aref & Neal; Sotoudeh vs LES) is supported in principle by Bucchianeri (NC 2005-2012) as a construct-validity argument for using an effectiveness criterion. The evidence adds one thing Paul has not stated: if the brain's roughly +0.10 rho with CEL LES holds (unverified here), the blend sits in bar B's null band. The blend would then rank something other than published legislative effectiveness. That should be stated, not hidden.
 
 **Open questions**
-- Which weight set is ratified: 30/25/40/5 or 45/10/40/5? (S-5, Paul's ruling.)
-- Is the +0.10 rho vs CEL LES real? Which window and n, and is it stratified by chamber?
-- Should the rank claim to measure 'effectiveness' (testable against LES) or 'CU-specific leverage' (needs a CU outcome criterion)?
-- How much of Leg% and Influence% is shared majority/chair variance?
+- Which weight set is ratified: 30/25/40/5, 25/30/40/5 or the live 45/10/40/5? (Paul's ruling, S-5.)
+- Is the brain's roughly +0.10 rho between the blend and CEL LES reproducible, and on what n and Congress window?
+- Should House and Senate be percentile-ranked within chamber before blending?
+- What are the effective variance shares of the four pillars under current normalizations?
 
-**Read first:** [[bucchianeri-2025-legislative-effectiveness-american]], [[christopher-2016-mathematical-modeling-analysis]], [[becker-nd-gameability-redistricting-criteria]], [[boxsteffensmeier-2018-taking-congress-interest]]
+**Read first:** [[bucchianeri-2025-legislative-effectiveness-american]], [[christopher-2016-mathematical-modeling-analysis]], [[becker-nd-gameability-redistricting-criteria]], [[battaglini-2018-effectiveness-connected-legislators]], [[sotoudeh-2024-network-based-measure]]
 
 ## Committee - Influence pillar
 
-**What it computes:** Influence% = committee_raw / MAX(committee_raw), where committee_raw = (Membership + Leadership)/2 from seats held.
+**Computes.** Influence% = committee_raw / MAX(committee_raw), where committee_raw = (Membership + Leadership)/2 from seats held.
 
-**Method:** Seat weight by CU-relevance tier: Highly 3.0, Moderately 1.8, Slightly 0.9; subcommittee seats (names containing ' - ') weigh 1/6. Leadership = seat weight x multiplier: Chair 3.0 full / 7.5 sub, Ranking 2.0 / 4.5, Vice 1.0 / 2.0 (Paul applied chair/ranking x1.5 by hand on 2026-06-30). Replaced a double-PERCENTRANK version (CMTEFIX). Centrality was retired from Influence on 2026-06-25 (AB13 = 0) as direction-blind. The formal-office party-elite bonus is display-only (set to 0 at compute_pillars.py:163). Judiciary was added at tier Slightly.
+**Method.** Seat weight by CU-relevance tier: Highly 3.0, Moderately 1.8, Slightly 0.9; subcommittee seats (names containing ' - ') weigh 1/6. Leadership = seat weight x multiplier: Chair 3.0 full / 7.5 sub, Ranking 2.0 / 4.5, Vice 1.0 / 2.0 (Paul applied chair/ranking x1.5 by hand on 2026-06-30). Replaced a double-PERCENTRANK version (CMTEFIX). Centrality was retired from Influence on 2026-06-25 (AB13 = 0) as direction-blind. The formal-office party-elite bonus is display-only (set to 0 at compute_pillars.py:163). Judiciary was added at tier Slightly.
 
-**Code refs:** `fec/engine/committee_scores.py:1-185`, `fec/engine/apply_committee_fix.py:3-18`, `fec/engine/apply_committee_reweight.py:15-37`, `fec/engine/add_judiciary_seats.py:3-27`, `fec/engine/influence_roles.py:11-30`
+**Code refs.** `fec/engine/committee_scores.py:1-185`, `fec/engine/apply_committee_fix.py:3-18`, `fec/engine/apply_committee_reweight.py:15-37`, `fec/engine/add_judiciary_seats.py:3-27`, `fec/engine/influence_roles.py:11-30`
 
-**Assumptions:**
+**Assumptions**
 - Committee seat relevance and leadership measure structural CU power
 - Subcommittee seats are worth 1/6 of a full seat
 - Tier labels and multipliers are owner judgment, not estimated
 
-**Evidence (10 rows, 8 distinct papers: UNVERIFIED 1, VERIFIED 4, VERIFIED-SOFTENED 5)**
+**Evidence** (12 rows, 10 distinct works; 1 UNVERIFIED, 4 VERIFIED, 7 VERIFIED-SOFTENED)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -130,62 +146,70 @@ Paul's position is that no literature underwrites the weights and that they are 
 | [[thakur-2025-matching-theory-perspective]] | 2025 | qualifies | Committees differ in common value. Rules, Finance, Governmental Affairs and Appropriations are the most sought after even after excluding the most senior members. In the Republican reduced-form model, Finance and Appropriations have large common value and small idiosyncratic spread, while Constituency committees such as Small Business have lower common value. Sample: 426 assignments, 25 committees, 97 senators, 104th-114th. | Tables A7 and A8 numeric cells are garbled in extraction, so the lower-common-value claim for Small Business is verified only as text, not numerically. Republican Senate 1995-2017 only. Use as a validity caveat, not a re-tiering input. | weak | VERIFIED-SOFTENED |
 | [[bucchianeri-2025-legislative-effectiveness-american]] | 2025 | qualifies | Committee chairs score 0.507 above rank-and-file in the pooled full-sample estimate (strata: 0.609 lower chamber, 0.307 upper). The chair gap widens with log chamber size (0.205, p<0.05) and narrows where chambers vote on committee appointments (-0.180, p<0.01). Majority status adds 0.370 (strata 0.362 and 0.387). | The paper's estimates are associational with endogeneity unaddressed (p. 34) and do not estimate multipliers. The chamber-size transfer to a 435-seat House and 100-seat Senate is the analyst's extrapolation, not the paper's claim. The Ranking-to-Chair ratio of two-thirds holds only for full weights; for sub weights it is 4.5 over 7.5, or 0.60. | moderate | VERIFIED-SOFTENED |
 | [[anon-nd-house-committee-requests]] |  | suggests-extension | UNVERIFIED and unread: the codebook (0 chars extracted) could not be opened. Paul's annotation names it 'Frisch & Kelly 2007, House Committee Request Data'. From general knowledge only, it records House members' committee-assignment requests next to the assignments they received. No numbers can be quoted. | This applies only if the codebook confirms request-vs-assignment fields. Even then the data are historical (not the 119th Congress) and House-only, and they cover new assignments and transfers rather than continuing seats. They could support a design check: whether high committee scores reflect pre-existing interest (selection). They could not be used as a live input or an edge or weight source. Strength is weak until the document is read and a second path reproduces any result (DE-062). | weak | UNVERIFIED |
+| [[battaglini-2018-effectiveness-connected-legislators]] | 2018 | qualifies | Committee-chair coefficient on LES: OLS 1.9669 (SE 0.1147) falls to 1.6107 (SE 0.1545) in the corrected network model, about 18 percent smaller. Chair susceptibility cell in Table 5b is -0.5981 (SE 0.1588). Seniority susceptibility in Table 5a is -0.0339 (SE 0.0123). House, 109th-113th. | The paper uses LES as the outcome, while the Influence pillar is a prestige proxy, so the 18 percent figure is indicative only. House only. | weak | VERIFIED-SOFTENED |
+| [[defigueiredo-2013-advancing-empirical-research]] | 2013 | supports | De Figueiredo and Silverman (2006), academic earmarks 1997-1999: lobbying raises earmarks when the district legislator sits on an appropriations committee and has no statistically significant independent effect when not (pp.22-24). Powerful, allied and marginal legislators are the ones lobbied (pp.10-11). | The evidence is from academic earmarks on appropriations and supports the conditioning logic only. It does not validate the tier weights or the 1/6 subcommittee ratio, which remain owner judgment. | weak | VERIFIED-SOFTENED |
 
 **Assessment**
 
-**Evidence weight: moderate for the premise, none for the parameters.**
+**Committee / Influence pillar: the most-evidenced pillar by rows. 12 rows, 10 distinct works; 1 UNVERIFIED, 4 VERIFIED, 7 VERIFIED-SOFTENED.** The evidence supports the premise and leaves every number untested.
 
-**Support for the premise that committee jurisdiction is where interest-group attention and money concentrate:**
-- Kim 2020 'Strategic' (VERIFIED, moderate);
-- Kim 2023 'Systemic' (VERIFIED, weak; manufacturing firms, federal, 2008-2018);
-- Kim 2020 'Mapping' (VERIFIED-SOFTENED; 113th Congress, descriptive; Finance & Insurance community concentrated in House Financial Services).
+**Supports the premise: money and lobbying concentrate on jurisdiction**
+- **Kim et al. 2020 and 2023, best read as one line of evidence.** These are two versions of the Kim, Stuckatz and Wolters donation-lobbying work, so they are not independent confirmation. In both, the committee channel is the largest and grows over time (PAC 0.103 to 0.147 over t+0 to t+3; manufacturing firms, federal, 2008-2018). Caveat: the committee outcome has a higher base rate, so "stronger" partly tracks how broad the channel is.
+- **de Figueiredo 2013.** Lobbying raises earmarks only when the district legislator sits on Appropriations (1997-1999).
+- **Kim & Kunisky 2020.** Finance-community legislators concentrate on Financial Services (113th Congress, descriptive). This is LDA-derived, so it is reading only under D-021.
 
-All three are about *where lobbying goes*. None shows that seats *produce* CU outcomes. Kim's power-committee covariate is Groseclose-Stewart (Appropriations, Armed Services, Finance, Rules), not Financial Services or Banking. Kim's committee channel also has a higher base rate, so 'stronger' partly tracks breadth.
+**The best federal outcome evidence: Battaglini et al. 2018**
+The committee-chair premium on LES is 1.97 (OLS), falling to 1.61 after the network endogeneity correction, about 18% smaller (House, 109th-113th, N = 2,176, pooled, UNSTRATIFIED by party). A chair premium is therefore real at the federal level. Whether a 3.0 full / 7.5 sub multiplier is the right size is untested: the Influence pillar is a prestige proxy and LES is a different outcome.
 
-**Bearing on the parameters:**
-- **Bucchianeri 2025** (VERIFIED-SOFTENED, moderate; NC state legislature) puts chairs 0.507 above rank-and-file. That figure is pooled; the strata are 0.609 lower chamber and 0.307 upper. The chair gap varies with chamber size and with appointment rules. This undercuts using identical multipliers for the House and Senate pooled under one max. It does not estimate the multipliers.
-- **Online scan, UNVERIFIED.** CEL's 117th Congress House averages are 0.58 for the minority, 1.40 for the majority and 2.55 for chairs. Senate averages are 0.77, 1.23 and 1.51. The direction matches a chair premium, and the size differs by chamber.
-- **Porter 2005** (two rows, weak). Subcommittee nesting is shown for one parent committee (Intelligence, 107th Congress), so it cannot justify or refute additive 1/6 counting. Committees vary in partisan extremism, which is descriptive.
-- **Thakur 2025** (two rows; Senate 104th-114th, suggestive). Seat assignment differs by party mechanism. Finance and Appropriations carry high common value; constituency committees such as Small Business carry lower common value. Small Business seats are tiered Highly (74 of 74). That is a validity caveat, not a re-tiering input; the Thakur A7/A8 numbers are garbled.
-- **Huneeus & Kim 2018** (VERIFIED, extension). Committee relevance can be *measured* as the lagged share of relevant bills referred to each committee (first-stage F 14.30, all years). Ported here, that means CU-category referral shares from congress.gov billstatus, not LDA (D-021), as a sensitivity check that needs its own look.
-- **House Committee Requests codebook** (UNVERIFIED lead; unread, 0 characters extracted). This would be the selection test: do members request CU-relevant seats because of prior interest?
+**Qualifiers**
+- **Bucchianeri 2025 (NC 2005-2012).**
+  - The chair premium differs by chamber: pooled 0.507, strata 0.609 lower and 0.307 upper.
+  - It narrows where chambers vote on appointments.
+  - Majority status adds 0.370 (strata 0.362 / 0.387).
+  - The system uses identical multipliers in both chambers, pools them under one raw/max, and has no majority term.
+- **Thakur 2025** (Senate Republicans, 104th-114th, 426 assignments). Small Business has low common value while Finance and Appropriations have high value. The system tiers 74 of 74 Small Business seats as Highly. Treat this as a validity caveat, not a re-tiering input: the paper's tables were garbled in extraction.
+- **Porter et al. 2005.** Subcommittees are heavily nested in their parents (Intelligence, 107th), so additive seat counting may double-count. This rests on one committee in one Congress and is weak.
+- **Huneeus & Kim 2018.** Offers a data-driven alternative to the tier map: each committee's lagged share of referred bills. For CU bills that share must come from congress.gov billstatus, not LDA (D-021). It is validated only as an instrument for firm revenue.
+
+**Lead, not a finding**
+The Frisch & Kelly House committee-request codebook is UNVERIFIED and unread. If it confirms request-vs-assignment fields, it could support a selection check on whether high scores reflect prior interest rather than seat leverage.
 
 **Contradictions**
-- Pooled cross-chamber normalisation (committee_raw / one max across House and Senate, identical multipliers) vs Bucchianeri's strata (chair premium 0.609 lower vs 0.307 upper chamber, NC) and CEL's federal averages (unverified lead: chairs 2.55 House vs 1.51 Senate). The evidence says the chair premium differs by chamber; the system assumes it does not.
-- Small Business seats tiered Highly (74/74) vs Thakur's reading of Small Business as a low-common-value constituency committee (Senate, Republican, 1995-2017; text-verified only). Not a refutation of CU relevance, but a prestige mismatch.
+- Bucchianeri 2025 reports a chamber-dependent chair premium (pooled 0.507; strata 0.609 lower vs 0.307 upper, NC 2005-2012). The system applies identical Chair/Ranking/Vice multipliers in House and Senate and normalizes both under one raw/max.
+- Thakur 2025 finds Small Business is a low-common-value committee (Senate Republicans, 104th-114th). The system tiers all 74 Small Business seat tokens as Highly. Weak: Senate-only, tables garbled, and CU relevance is a different axis from prestige.
+- Majority status is a large effectiveness covariate in both the NC data (+0.370, strata 0.362/0.387) and House passage data (Box-Steffensmeier, majority-sponsor logit 1.353, UNSTRATIFIED). The committee score has no majority term.
 
 **Gaps**
-- No study links committee score to CU-bill markup or advancement for bills referred to those committees. Fill with an as-of panel: CU-category bills referred, 119th Congress, outcome = reported/advanced, predictor = committee score of the referred committee's members, stratified by chamber and majority status.
-- Leadership ladder (Chair 3.0/7.5, Ranking 2.0/4.5, Vice 1.0/2.0) and the 1/6 subcommittee factor have no empirical source. Fill by estimating chair/ranking/subcommittee-chair premiums on federal LES or CU advancement, by chamber.
-- Selection vs conferred leverage is untested. Fill with House committee request data (once the codebook is actually read) or a Grier & Munger 1991 / Kroszner & Stratmann 1998-style test (online-scan leads, UNVERIFIED) of whether financial-sector money and interest precede assignment.
-- 245/533 members have no committee row (score 0). No study checks whether they differ in CU outcomes beyond the zero.
+- No study estimates the tier weights, the 1/6 subcommittee factor or the leadership ladder. Fill: compare the tier map against a billstatus referral-share map (Huneeus-style, lagged share of CU-category bills referred to each committee) on CU-bill markup and advancement for bills referred to that committee, chamber-stratified, as a single preregistered look.
+- No evidence on the 245/533 members with no committee row. Fill: compare their CU outcomes with low-score members, by chamber and majority status.
+- Selection vs leverage (Paul's chicken-or-egg point) is untested. Fill: read the Frisch & Kelly codebook first; if usable, a historical House check of whether request patterns predict committee score beyond the seat itself.
+- How tax-writing and appropriations seats (Ways and Means, Finance, Appropriations) are tiered was not verified. CU Tax Status is a top press category, so their tier matters.
 
-**Paul's position vs the evidence**
-
-Paul's position is that committees are the structural layer and that money and lobbying effects concentrate in committee activity. The verified Kim rows and Kim's mapping paper support this as a statement about *attention*. They do not support it as a statement about *outcomes*. His chicken-or-egg concern about partisanship versus committee selection is well placed. Porter's extremism heterogeneity and Thakur's party-specific assignment mechanisms both bear on it, and no evidence resolves it. Paul cited Huneeus & Kim for the committee-assignment instrument. That paper actually offers a data-derived relevance weight (referral shares), which could replace or check the hand tiers.
+**Paul's position vs the evidence.** Largely consistent. Paul says committees are the structural layer (Porter) and that money and lobbying effects are strongest in committee activity (Kim et al.; Huneeus & Kim). The verified rows bear this out qualitatively, though Kim 2020 and 2023 are one study line, not two. His chicken-or-egg flag is well founded: Porter's extremism heterogeneity and Thakur's party-specific seat selection both show that seats are not randomly assigned, and no row resolves it. The Frisch & Kelly lead he annotated is the right kind of data but is unread. No evidence row speaks to his Gaynor leadership-insulation point. Where the evidence goes beyond his position: chamber pooling and the missing majority term are concrete, testable weaknesses he has not raised.
 
 **Open questions**
-- Should the House and Senate be normalised separately, or should multipliers differ by chamber?
-- Should tiers be checked against CU-category referral shares from billstatus? Is that Paul's call, and does it need its own look?
-- Is Small Business correctly tiered Highly for CU relevance, given that the override forcing it was removed?
-- Should Judiciary at Slightly and tax-writing or appropriations seats be re-examined, given Kim's high-entropy power-committee finding?
+- Should Chair/Ranking multipliers differ by chamber, given the NC strata (0.609 lower vs 0.307 upper)? Paul's call after a federal check.
+- Does a billstatus referral-share weighting outperform the owner tier map on CU-bill advancement?
+- Are Small Business seats correctly Highly for CU relevance even though Senate demand for them is low? Relevance and prestige may simply be different axes.
+- Does additive counting of nested subcommittee seats over-reward members with many subcommittee seats on one parent?
+- What does the Frisch & Kelly codebook actually contain?
 
-**Read first:** [[kim-2020-strategic-sequential-links]], [[huneeus-2018-effects-firms-lobbying]], [[bucchianeri-2025-legislative-effectiveness-american]], [[kim-2020-mapping-political-communities]], [[thakur-2025-matching-theory-perspective]], [[porter-2005-network-analysis-committees]]
+**Read first:** [[battaglini-2018-effectiveness-connected-legislators]], [[bucchianeri-2025-legislative-effectiveness-american]], [[kim-2020-strategic-sequential-links]], [[huneeus-2018-effects-firms-lobbying]], [[thakur-2025-matching-theory-perspective]], [[defigueiredo-2013-advancing-empirical-research]]
 
 ## Legislative pillar (stance-gated agenda plus efficiency)
 
-**What it computes:** Leg% = percentile of a blend of agenda% and efficiency% (0.7/0.3 at 2026-06-25; live blend read from workbook AB10/AB11). Agenda = sum over topics of IMP[topic] x activity x stanceMult, so opponents go negative.
+**Computes.** Leg% = percentile of a blend of agenda% and efficiency% (0.7/0.3 at 2026-06-25; live blend read from workbook AB10/AB11). Agenda = sum over topics of IMP[topic] x activity x stanceMult, so opponents go negative.
 
-**Method:** Activity weights by role: sponsor 0.286, original cosponsor 0.143, cosponsor 0.0714 (letters count at original-cosponsor weight). stanceMult is signed from category_stance.json. Efficiency per category = decay-weighted sign of advanced sponsored or original-cosponsored bills over total decay weight; advancement is tri-state and unknown outcomes are excluded. The pillar stays PERCENTRANK because raw/max (tried 2026-07-01) squashed the mid-board. The live routing implementation is fec/engine/live_legislative_pillar.py.
+**Method.** Activity weights by role: sponsor 0.286, original cosponsor 0.143, cosponsor 0.0714 (letters count at original-cosponsor weight). stanceMult is signed from category_stance.json. Efficiency per category = decay-weighted sign of advanced sponsored or original-cosponsored bills over total decay weight; advancement is tri-state and unknown outcomes are excluded. The pillar stays PERCENTRANK because raw/max (tried 2026-07-01) squashed the mid-board. The live routing implementation is fec/engine/live_legislative_pillar.py.
 
-**Code refs:** `fec/apply_leg_stance.py`, `fec/apply_legstance_undo.py`, `fec/engine/live_legislative_pillar.py:17-124`
+**Code refs.** `fec/apply_leg_stance.py`, `fec/apply_legstance_undo.py`, `fec/engine/live_legislative_pillar.py:17-124`
 
-**Assumptions:**
+**Assumptions**
 - Sponsorship and cosponsorship in a CU topic reveal the direction of advocacy once signed by stance
 - Advancement past introduction measures legislative efficacy
 - category_stance.json is current when the step runs (known staleness trap)
 
-**Evidence (4 rows, 4 distinct papers: VERIFIED 2, VERIFIED-SOFTENED 2)**
+**Evidence** (4 rows, 4 distinct works; 2 VERIFIED, 2 VERIFIED-SOFTENED)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -196,195 +220,202 @@ Paul's position is that committees are the structural layer and that money and l
 
 **Assessment**
 
-**Evidence weight: weak to moderate, with every row qualifying the pillar rather than supporting it.**
+**Legislative pillar: 4 rows, 4 distinct works; 2 VERIFIED, 2 VERIFIED-SOFTENED. The evidence qualifies the pillar; none validates it.**
 
-- **Bucchianeri 2025** (VERIFIED, moderate) is the most relevant row and it is a caution. In North Carolina 2005-2012, the stage-based SLES *outperforms hit-rate metrics* against expert rankings. The pillar's efficiency term is a decay-weighted hit rate. Scores are relative to each chamber-term, but the system puts the House and Senate in one percentile. Transfer to Congress is assumed.
-- **Box-Steffensmeier 2018** (VERIFIED-SOFTENED, moderate; House, 106th-111th Congress, N = 6,597 letter-bearing bills) finds that passage is driven by hot-bill status (2.428), commemorative bills (1.386) and majority-party sponsor (1.353). The efficiency term has no majority, salience or commemorative adjustment, so it likely rewards majority status. That is an inference. Any adjustment is Paul's call.
-- **Sotoudeh 2024** (VERIFIED, weak) supports the idea that a decayed success ratio carries outcome information: the cosponsor pass-ratio separates passed from failed bills in every window. Its ratio is pairwise and includes each bill's own outcome. It is pooled across parties for 2009-2019 (UNSTRATIFIED), and the authors report a decline after about 2015.
-- **Fouirnaies & Hall 2022** (VERIFIED-SOFTENED, weak; US state legislatures, N = 16,727) finds sponsorship falls about 6% when reelection incentives end, with no ideological change. Volume partly reflects electoral advertising. This supports keeping volume and direction separate, which signing by stance does. Because agenda volume is not normalised per member, Leg% also carries some electoral-incentive variance.
+**Efficiency term**
+- **Sotoudeh et al. 2024 (VERIFIED, weak).** A decayed pass/total ratio is informative about bill outcomes: relative difference 0.139 mean / 0.248 max at a 6-month half-life (House 2009-2019). The figure is pooled across parties and years, so label it UNSTRATIFIED. The authors note a decline from about 2015 that they tie to polarization. Their ratio is pairwise and bill-level and includes each bill's own outcome. It does not show that a member's CU-topic success rate measures CU influence.
+- **Bucchianeri 2025 (VERIFIED, moderate) cuts the other way.** In NC (2005-2012), stage-based scores outperform hit-rate metrics against expert rankings, and the efficiency term is a hit-rate-style metric. Bucchianeri also shows majority status adds 0.370 (strata 0.362 / 0.387), and Box-Steffensmeier 2018 shows a majority-sponsor logit of 1.353 on House passage (106th-111th, N = 6,597 letter-bearing bills, UNSTRATIFIED). The efficiency block has no majority term, so it plausibly partly measures majority membership. That is an analyst inference.
+- **Chamber pooling.** House and Senate share one percentile, against Bucchianeri's chamber-term caution.
 
-**4:2:1 role weights: no verified evidence.**
-- *Online-scan leads (UNVERIFIED).* Kessler & Krehbiel (1996, APSR) find that early cosponsorship fits intralegislative signalling, which bears on original vs later cosponsors. Russo et al. (2022/ACL 2023, already in the system's cosponsor-refinement citations) separate active from passive cosponsorship.
-- **FLAG:** if either paper is read as arguing for dropping regular cosponsorship, that proposal was measured and REJECTED in this project. Use these papers only to inform the weight *ratio*, never to drop the edge or row class.
+**Agenda term**
+- **Fouirnaies & Hall 2022 (weak).** Sponsorship volume falls about 6% when reelection incentives end, with no ideological change (US state legislatures, N = 16,727). Volume partly reflects electoral advertising. This qualifies the unnormalized agenda sum for members in their final Congress, and it supports keeping volume and direction separate, which the stance sign does.
+
+**Not addressed by any row**
+- The 4:2:1 sponsor / original / cosponsor ratio.
+- Treating letters at original-cosponsor weight.
+- The 0.7/0.3 agenda/efficiency blend.
+- Whether stance-signed activity predicts CU-aligned votes better than unsigned activity.
 
 **Contradictions**
-- Bucchianeri (NC): stage-based effectiveness beats hit-rate metrics vs the system's efficiency term, which is a hit rate (advanced/total, decay-weighted). State-level, so a caution rather than a refutation.
-- Bucchianeri: scores are only comparable within chamber-term vs the system's single cross-chamber percentile over 533 members.
-- Box-Steffensmeier: majority-party sponsorship is a large passage predictor (1.353, House 106th-111th) vs no majority-status term in live_legislative_pillar.py:60-81, so efficiency% partly encodes majority status, which the committee pillar also rewards (double loading).
+- Bucchianeri 2025 (NC 2005-2012): hit-rate metrics underperform stage-based effectiveness against expert rankings. The efficiency term is a decay-weighted hit rate.
+- Bucchianeri says scores are chamber-term relative; the pillar percentile-ranks House and Senate members together.
+- Majority status is a large predictor of advancement (NC +0.370, strata 0.362/0.387; House passage logit 1.353, UNSTRATIFIED). The efficiency term has no majority adjustment, so part of it may index party control rather than skill.
 
 **Gaps**
-- No test of whether stance-signed activity predicts CU-aligned final-passage votes better than unsigned activity. Fill with a holdout look on 119th CU roll calls, stratified by party.
-- No evidence for the 0.286 : 0.143 : 0.0714 role weights. Fill by estimating role-specific effects (sponsor / original / later cosponsor) on subsequent CU votes, or by a cosponsorship-timing signal model (Kessler & Krehbiel lead), without dropping any role class.
-- No test that efficiency adds validity beyond agenda volume. Fill with nested-model comparison against an external criterion, within chamber and majority strata.
-- No federal check of hit-rate vs stage-based efficiency. CEL's five-stage LES is the available comparator.
+- No study estimates role weights (sponsor vs original vs cosponsor) by effort or effect. Fill: compare the advancement association of bills by the count of sponsors vs original cosponsors vs later cosponsors, or survey staff time per role.
+- No test that stance-signed agenda predicts CU-aligned final-passage votes better than unsigned agenda. Fill: preregistered comparison on the 119th, chamber-stratified.
+- No test that efficiency adds validity beyond agenda volume. Fill: incremental Spearman or partial correlation against CEL LES and CU votes, controlling majority status.
+- Paul's Ramey (conscientiousness and sponsorship) citation has no evidence row in this set.
 
-**Paul's position vs the evidence**
-
-Paul favours observable effort (sponsorship, committee work) as a signal that responds to incentives. Fouirnaies & Hall support that framing and also show volume moves with electoral incentives, not position. Signing by stance protects direction, but the agenda magnitude still moves with those incentives. Paul notes that nothing addresses the 4:2:1 weights, and the evidence confirms it. The efficiency design runs against Bucchianeri's state-level finding that stage-based scoring beats hit rates. Paul's own reading of Sotoudeh contrasts it with LES, but the verified evidence favours the LES-style approach for validity.
+**Paul's position vs the evidence.** Partly consistent. Paul favours observable effort (sponsorship, committee work) as an incentive-sensitive signal. Fouirnaies & Hall support the incentive sensitivity (about -6% at the state level), but that cuts both ways: volume is partly electoral advertising, not just effort. Sotoudeh supports a decayed success ratio as informative at the bill level. Bucchianeri warns that hit-rate metrics underperform stage-based scores and that majority status dominates. Paul's note that no annotation addresses the 4:2:1 weights is confirmed. No row on Ramey was produced, so his conscientiousness link is uncorroborated in this set.
 
 **Open questions**
-- Should the efficiency term be computed within chamber and majority strata, or benchmarked as CEL does (on majority status, seniority and chair)?
-- Should efficiency move from a hit rate to stage counts (introduced, action in committee, passed committee, passed chamber, law)?
-- Is category_stance.json fresh at every run? This is the known staleness trap.
-- What is the live agenda/efficiency blend? It is read from AB10/AB11 and is not in code.
+- Should the efficiency term be majority-adjusted or computed within majority/minority strata? Paul's call.
+- Should Leg% be percentile-ranked within chamber?
+- Would a stage-based (LES-style) progression score outperform the binary advanced/not-advanced hit rate?
+- Does the final-Congress volume drop (Fouirnaies) materially move any top-133 member?
 
-**Read first:** [[bucchianeri-2025-legislative-effectiveness-american]], [[boxsteffensmeier-2018-taking-congress-interest]], [[sotoudeh-2024-network-based-measure]], [[fouirnaies-2022-electoral-incentives-affect]]
+**Read first:** [[bucchianeri-2025-legislative-effectiveness-american]], [[sotoudeh-2024-network-based-measure]], [[boxsteffensmeier-2018-taking-congress-interest]], [[fouirnaies-2022-electoral-incentives-affect]]
 
 ## Press pillar (own-domain, signed raw-max)
 
-**What it computes:** Press% = signed press_value / MAX, where press_value = sum over categories of (stance sign x LSD tone intensity) x tiered category weight, for the member's own-domain statements only.
+**Computes.** Press% = signed press_value / MAX, where press_value = sum over categories of (stance sign x LSD tone intensity) x tiered category weight, for the member's own-domain statements only.
 
-**Method:** Only *.senate.gov and *.house.gov rows count; 819 third-party rows were dropped, 816 of them americascreditunions.org. 1,310 synthetic billstatus rows were de-duplicated out. Category weights tiered 2026-07-02: Interchange, CU Tax Status, Credit-Card Mandates 0.30; Charter/FOM 0.15; Exam/NCUA 0.10; medium 0.08; low 0.02-0.05. Speech channel normalized at 1/n per event (a3174bc). Press is the only directional signal in the original design. Display-only overrides do not feed the pillar.
+**Method.** Only *.senate.gov and *.house.gov rows count; 819 third-party rows were dropped, 816 of them americascreditunions.org. 1,310 synthetic billstatus rows were de-duplicated out. Category weights tiered 2026-07-02: Interchange, CU Tax Status, Credit-Card Mandates 0.30; Charter/FOM 0.15; Exam/NCUA 0.10; medium 0.08; low 0.02-0.05. Speech channel normalized at 1/n per event (a3174bc). Press is the only directional signal in the original design. Display-only overrides do not feed the pillar.
 
-**Code refs:** `fec/apply_press_dedup.py`, `fec/apply_raw_max_norm.py`, `fec/moneyball_core.py:214-241`, `fec/engine/pillar_policy.py:2-55`
+**Code refs.** `fec/apply_press_dedup.py`, `fec/apply_raw_max_norm.py`, `fec/moneyball_core.py:214-241`, `fec/engine/pillar_policy.py:2-55`
 
-**Assumptions:**
+**Assumptions**
 - A member's own-domain statements represent the member's stance; third-party mentions do not
 - Stance labels are the owner's domain (never relabelled)
 - Tone intensity x stance sign is a valid single press measure
 
-**Evidence (2 rows, 2 distinct papers: UNVERIFIED 1, VERIFIED-SOFTENED 1)**
+**Evidence** (3 rows, 3 distinct works; 1 UNVERIFIED, 2 VERIFIED-SOFTENED)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
 | [[haselmayer-2017-sentiment-analysis-political]] | 2017 | qualifies | Dictionary-based tonality runs in the same direction as expert coding but compresses effects. In App. 3 Table 6 the government-pair coefficient is -0.13 with the dictionary vs -0.40 with expert coding, and electoral losses are 0.12 vs 0.23. Authors call dictionary estimates more conservative than manual coding. Pooled regression with party fixed effects, standard errors clustered by party pair; adjusted R2 0.03 with n = 619 (Table 3 and Table 6 dictionary columns). | The evidence is one Austrian campaign, in German, on negativity only. It suggests dictionary intensity carries a weaker, noisier version of the human-coded signal, so multiplying stance sign by that intensity may add noise. The paper does not test a stance x intensity product, so this is a caution, not a refutation. The paper's pooled coefficients should be labelled as pooled across parties with party fixed effects if quoted. | weak | VERIFIED-SOFTENED |
 | [[vanderdoes-2022-strategic-identity-signaling]] | 2022 | qualifies | As cross-partisan outgroup share rose from 1 to 9 of 10, participants shared fewer tweets overall (AME -5.38, 95 percent CI -6.04 to -4.72) and shifted toward covert ones (AME 0.73). Covert tweets drew fewer outgroup dislikes but also fewer ingroup likes, so the message is lower-affect for the ingroup. | Requires that legislators in politically mixed districts or states reduce or code their CU statements the way the experiment participants did. The experiment paid at most 20 cents of cost and fixed audiences with no feedback, which is far from electoral stakes. Test by correlating own-domain press volume and LSD charge with district lean before acting; any pooled correlation across chambers is quoted with chamber strata or labelled UNSTRATIFIED. | weak | UNVERIFIED |
+| [[osnabrugge-2021-playing-gallery-emotive]] | 2021 | qualifies | Hypothesis H (p. 4): legislators use more emotive rhetoric in high-profile debates with a larger general audience. The theory section adds that overt emotion can signal weak credibility, so speakers balance ethos, logos and pathos by audience. The paper studies parliamentary speech only, not press releases. | Holds only to the extent that between-member intensity differences reflect style rather than commitment. The paper shows within-speaker venue shifts in parliament, not between-member style differences within one venue. | weak | VERIFIED-SOFTENED |
 
 **Assessment**
 
-**Evidence weight: weak. One verified caution and one unverified lead.**
+**Press pillar: thin evidence. 3 rows, 3 distinct works; 1 UNVERIFIED, 2 VERIFIED-SOFTENED.** None is a US congressional study, and none tests the pillar's core claims.
 
-- **Haselmayer & Jenny 2017** (VERIFIED-SOFTENED, weak; one Austrian campaign, German, negativity only, n = 619, adjusted R² 0.03, pooled with party fixed effects) finds that dictionary tone runs in the same direction as expert coding but compresses effects. On the government pair, the coefficient is −0.13 with the dictionary vs −0.40 with expert coding. Multiplying stance sign by LSD intensity may therefore add noise relative to sign alone. The paper does not test a sign×intensity product, so this is a caution, not a refutation.
-- **van der Does 2022** (UNVERIFIED lead) is a low-stakes online experiment. It suggests members facing mixed audiences post less and more covertly, which would lower Press% for hedging members. Its transfer to electoral stakes is unshown. Test this by correlating own-domain press volume and LSD charge with district lean, by chamber.
+**What the rows say about the intensity term (stance sign x LSD tone)**
+- **Haselmayer & Jenny 2017.** Dictionary tonality points the same way as expert coding but compresses effects: government-pair coefficient -0.13 vs -0.40; electoral losses 0.12 vs 0.23. Adjusted R2 is 0.03 (n = 619, one Austrian German-language campaign, negativity only; pooled across parties with party fixed effects). If this transfers to LSD on English press releases, multiplying the stance sign by dictionary intensity adds a weaker, noisier copy of the signal. It is a caution, not a refutation: the paper never tests a sign x intensity product.
+- **Osnabrugge et al. 2021.** Emotive rhetoric rises with audience size (parliamentary debate, within-speaker venue shifts). Between-member intensity differences in press releases may index messaging style rather than commitment. That is analyst inference; the paper does not study press releases or between-member style.
 
-**Actual description/code mismatch.** The component calls the method 'signed raw/max'. The verified code path is `normalize_signed_extrema` (fec/stance/media_rules.py, via moneyball_core.py:214-237), and it scales positive and negative values by separate extrema. A +x and a −x therefore get different magnitudes whenever the two extrema differ. The R rollup (run_stage5.R:171-182) is a decay-weighted *mean* per category, not a sum. The description should say so, because a mean removes volume while the 1/n per-event speech normalisation also removes volume.
+**Lead only**
+- **van der Does 2022 (UNVERIFIED).** In an experiment, participants facing a mixed audience posted less and more covertly. If legislators in mixed districts hedge CU statements the same way, Press% would score a hedger like a lukewarm member. Stakes in the experiment were trivial (at most 20 cents), so this is a hypothesis to test against district lean, not a finding.
 
-**No verified row on own-domain filtering.** Paul notes the same. Dropping 819 third-party rows (816 from americascreditunions.org) is a validity choice that no study has tested.
+**Untouched by any row**
+- Own-domain filtering (dropping 819 third-party rows, 816 of them from americascreditunions.org).
+- The 1/n per-event speech normalization.
+- The tiered category weights.
+- Whether press stance predicts later CU cosponsorship or votes.
 
-**Online scan lead (UNVERIFIED).** Grimmer's work on Senate press releases and representational style shows press releases are a distinct representational channel. Whether they predict votes was not established in this scan.
-
-**Contradictions**
-- Component text 'signed raw/max' vs code normalize_signed_extrema (asymmetric: positives / max positive, negatives / |max negative|). A member's negative and positive press are on different scales.
-- Component text 'sum over categories of (sign x tone) x weight' vs run_stage5.R per-category rollup as a decay-weighted mean; the volume semantics differ from the description.
-
-**Gaps**
-- No test of whether own-domain press stance predicts later CU-aligned cosponsorship or votes. Fill with a time-ordered holdout: press in window t, CU cosponsorship/votes in t+1, stratified by party and chamber.
-- No test of sign alone vs sign×LSD intensity against an external criterion (Haselmayer suggests intensity may be noise). Fill with a nested comparison on the same holdout.
-- No test of whether excluding third-party CU-lobby rows raises or lowers validity. Fill with an ablation using the same outcome.
-- No evidence that high-volume speakers are not proportionally more aligned, which the 1/n per-event normalisation assumes. Fill by regressing alignment on statement volume, by chamber.
-
-**Paul's position vs the evidence**
-
-Paul wants press, news cycles and social feeds, scored by sentiment, added as determinants of pathway change (the Bacik augmentation). He treats public statements as the observable persona. The verified evidence counsels caution on the sentiment-intensity part: dictionary tone is a compressed, noisier proxy. The unverified van der Does lead implies the persona shown in press is strategically shaped by audience. Neither refutes using press, but both argue for testing sign alone before adding more sentiment channels. Stance labels are Paul's domain and were not evaluated here.
-
-**Open questions**
-- Is the asymmetric signed-extrema scaling intended? If not, should the pillar use a single |max| divisor?
-- Should the description be corrected to say the R rollup is a mean, not a sum?
-- Does sign alone predict CU behaviour as well as sign×LSD intensity?
-
-**Read first:** [[haselmayer-2017-sentiment-analysis-political]], [[vanderdoes-2022-strategic-identity-signaling]]
-
-## Demographic pillar input (Demo%)
-
-**What it computes:** Demo% = PERCENTRANK of Blended Model column F (5% weight).
-
-**Method:** Column F is formula-backed and edited by hand; no Python producer writes it. Sub Layer V:AF holds hard-coded values. The DEMO_POTENTIAL dial does not move this input. A 06-21 bias audit found a mild Democratic tilt (bucket mean D 0.52 vs R 0.34), accepted at 5% weight.
-
-**Code refs:** `Moneyball Main Version - Blended.xlsx Blended Model col F; Sub Layer V:AF`
-
-**Assumptions:**
-- District demographics carry a small legitimate influence signal
-- Demographic Potential is a market score, not a support prediction
-
-**Evidence (0 rows, 0 distinct papers)**
-
-| Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
-|---|---|---|---|---|---|---|
-| (none: GAP) | | | | | | |
-
-**Assessment**
-
-**GAP. There is no evidence row for this component.** Paul's only citation is Huneeus & Kim's state layer, and it is the conceptual origin of Demographic Potential. Demographic Potential does not feed Demo%.
-
-Demo% comes from a hand-edited column F with no Python producer. Sub Layer V:AF is hard-coded. The DEMO_POTENTIAL dial does not move it. The 06-21 bias audit found bucket means of D 0.52 vs R 0.34 (party buckets over the 533-member roster; 06-21 snapshot) and accepted the result at 5% weight. At that weight it is small, but it is an uncontrolled party loading.
-
-**Online scan, UNVERIFIED leads.**
-- District financial-sector employment predicts TARP votes in a student-journal paper and a working paper. The evidence is mixed: it holds for the Senate but not the House in one probit.
-- A state-legislature study finds that an industry's employment share predicts legislators' ties to that industry.
-
-None measures credit-union presence. These leads justify a test, not the current input.
-
-**Contradictions**
-- Demographic Potential, the method Paul's state-layer idea produced, does not feed Demo%; the pillar runs on an unproduced hand-edited column. That breaks the lineage between Paul's stated position and the live input.
-
-**Gaps**
-- No study shows district demographics or CU market presence predict CU-aligned behaviour. Fill with a partial correlation or logit: CU-aligned votes/cosponsorship on Demo% (or district CU membership share or branch density from NCUA Call Reports), controlling for party, stratified by chamber.
-- No reproduction path: column F has no producer, so the input cannot be audited or refreshed. This is an engineering gap, not a literature gap.
-- No rank-impact check of swapping column F for Demographic Potential v3.0. Fill with a Kendall tau and top-133 overlap comparison (denominator 533).
-
-**Paul's position vs the evidence**
-
-Paul proposed a state or industry-presence layer to show whom to target. The idea is reasonable and has some indirect support in the literature (leads only). The live Demo% is not that layer: it is a hand-maintained column with a known mild Democratic tilt. Neither the position nor the input has verified evidence.
-
-**Open questions**
-- Should Demo% be produced by code, from Demographic Potential or an NCUA-based CU-presence measure? This is Paul's call.
-- After controlling for party, does the D 0.52 / R 0.34 tilt leave any residual signal?
-
-**Read first:** [[huneeus-2018-effects-firms-lobbying]]
-
-## Sub Layer legislative-efficiency formulas and off-by-one repair
-
-**What it computes:** Per-member legislative efficiency from Sub Layer - Raw AG:AW, normalized by Table1 min-max.
-
-**Method:** A 2026-07-15 row shift made every member use the neighbour's record. Repair c6dc6b2 (2026-07-17) repointed 9,061 formulas, fixed AH (Q->P) and AI (AI->X), and anchored on each formula's own Table1 basis column. Independent recompute matches 533/533; 520/533 ranks moved, all legislative-only.
-
-**Code refs:** `fec/repair_sublayer_references.py (--plan/--apply)`
-
-**Assumptions:**
-- Each formula's Table1 basis names the intended column (the majority pattern was the bug)
-- A stale pillar snapshot can shield downstream consumers from an unrepaired reference plane
-
-**Evidence (0 rows, 0 distinct papers)**
-
-| Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
-|---|---|---|---|---|---|---|
-| (none: GAP) | | | | | | |
-
-**Assessment**
-
-**No literature is needed. This is an engineering repair**, and Paul's position matches.
-
-The evidence that matters is internal. The 2026-07-17 repair (c6dc6b2) repointed 9,061 formulas. An independent recompute matches 533/533. Ranks moved for 520/533 members, all legislative-only. That shows internal consistency after the repair. It does not show the efficiency values match raw congress.gov outcomes.
-
-The underlying efficiency construct is assessed under the legislative pillar, where Bucchianeri's hit-rate caution applies.
+The 1/n per-event normalization is member-level, not per-edge SNA normalization, so the rejected per-edge proposal does not bear on it. Stance labels remain Paul's domain; nothing here argues for relabelling.
 
 **Contradictions**
 - (none)
 
 **Gaps**
-- No reproduction of post-repair efficiency values from raw congress.gov billstatus in an independent pipeline (the component's own open question). Fill with a second-path recompute (Python from billstatus) and a byte or rank match against the Sub Layer values.
+- No study tests whether own-domain press stance predicts subsequent CU-aligned cosponsorship or votes. Fill: preregistered single look, press stance at t vs CU cosponsorship and votes at t+1, chamber-stratified.
+- No test of sign-only vs sign x LSD intensity. Fill: compare both versions against the same criterion; Haselmayer predicts intensity adds noise.
+- No evidence on own-domain filtering. Fill: compare criterion validity with and without the third-party rows (the 816 americascreditunions.org rows are lobby-authored, so they are the obvious contamination case).
+- No evidence on 1/n per-event normalization. Fill: test whether high-volume speakers are proportionally more aligned on the criterion.
+- No US congressional press-release sentiment validation in the set. Fill: hand-code a stratified sample of own-domain CU releases and measure LSD agreement.
 
-**Paul's position vs the evidence**
-
-Paul says there is no literature and this is an engineering repair. That is correct, and the internal recompute supports the repair. External reproduction is still open.
+**Paul's position vs the evidence.** Paul wants press, news-cycle and social sentiment added as determinants of pathway change (the Bacik augmentation), and treats public statements as the observable persona. None of his press citations (Bacik et al. 2026; Birkenmaier & Lechner 2025; Ramey et al.; Merkley & Stecula) produced an evidence row here, so his position is uncorroborated in this set. The rows that do exist push toward caution, not expansion. Dictionary sentiment compresses the human-coded signal (Haselmayer), and intensity tracks audience and venue (Osnabrugge), so more sentiment channels would add style-driven noise unless validated against behaviour. His note that nothing he annotated addresses own-domain filtering is confirmed.
 
 **Open questions**
-- Do any downstream consumers still read a stale pre-repair pillar snapshot?
+- Does sign-only press stance validate as well as or better than sign x LSD intensity against CU votes?
+- Does press volume or LSD charge correlate with district lean (van der Does hedging), with chamber strata?
+- Should the press weight (now 0.10) wait for a validation look before any sentiment channels are added?
+
+**Read first:** [[haselmayer-2017-sentiment-analysis-political]], [[osnabrugge-2021-playing-gallery-emotive]], [[vanderdoes-2022-strategic-identity-signaling]]
+
+## Demographic pillar input (Demo%)
+
+**Computes.** Demo% = PERCENTRANK of Blended Model column F (5% weight).
+
+**Method.** Column F is formula-backed and edited by hand; no Python producer writes it. Sub Layer V:AF holds hard-coded values. The DEMO_POTENTIAL dial does not move this input. A 06-21 bias audit found a mild Democratic tilt (bucket mean D 0.52 vs R 0.34), accepted at 5% weight.
+
+**Code refs.** `Moneyball Main Version - Blended.xlsx Blended Model col F; Sub Layer V:AF`
+
+**Assumptions**
+- District demographics carry a small legitimate influence signal
+- Demographic Potential is a market score, not a support prediction
+
+**Evidence** (no rows)
+
+| Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
+|---|---|---|---|---|---|---|
+| (none: GAP) | | | | | | |
+
+**Assessment**
+
+**Demographic pillar: GAP, no rows.**
+
+Nothing in the set speaks to whether district demographics carry a legitimate influence signal, to the 5% weight, or to the input itself. Column F is hand-edited, has no Python producer, and the Sub Layer V:AF values are hard-coded.
+
+**Bias audit.** The 06-21 audit found a mild Democratic tilt: bucket mean D 0.52 vs R 0.34, over the 533-member roster. It was accepted at 5% weight. The audit is internal, and no literature tests whether that tilt is signal or partisan confound.
+
+**Paul's state-layer idea.** Paul's linked citation (Huneeus & Kim 2018) appears in this set only as committee-pillar evidence. There, headquarters-state x committee-seat interactions instrument firm revenue. That points, as analyst inference, to geography mattering through an interaction with jurisdiction rather than as an additive pillar. No row tests it.
+
+**Contradictions**
+- (none)
+
+**Gaps**
+- No study tests whether Demo% correlates with CU-aligned behaviour after controlling for party. Fill: partial correlation (or ordinal regression shown as summary output) of Demo% against CU-aligned final-passage votes and cosponsorship with party and chamber controls, reported with strata.
+- No comparison of column F with Demographic Potential v3.0. Fill: rank-delta and Kendall tau-b of the top 133 under each input. This is an internal computation.
+- No evidence on whether district CU presence works additively or through committee jurisdiction (the Huneeus & Kim interaction logic). Fill: test Demo x CU-relevant committee seat against CU-bill outcomes.
+- Provenance gap: no reproducible producer for column F. Fill by engineering, not literature.
+
+**Paul's position vs the evidence.** Paul proposed a state layer showing whom to target by general industry presence (via Huneeus & Kim). It became Demographic Potential, which does not feed Demo%. The evidence set has nothing on Demo% itself, so his position is neither supported nor contradicted. The one related row uses Huneeus & Kim's geography only as an interaction with committee seats, which differs from the additive 5% pillar.
+
+**Open questions**
+- Should Demo% be replaced by Demographic Potential v3.0, left as is, or dropped pending validation? Paul's call.
+- Does the D 0.52 vs R 0.34 tilt survive a party control, or is the pillar a party proxy at 5% weight?
+
+**Read first:** [[huneeus-2018-effects-firms-lobbying]]
+
+## Sub Layer legislative-efficiency formulas and off-by-one repair
+
+**Computes.** Per-member legislative efficiency from Sub Layer - Raw AG:AW, normalized by Table1 min-max.
+
+**Method.** A 2026-07-15 row shift made every member use the neighbour's record. Repair c6dc6b2 (2026-07-17) repointed 9,061 formulas, fixed AH (Q->P) and AI (AI->X), and anchored on each formula's own Table1 basis column. Independent recompute matches 533/533; 520/533 ranks moved, all legislative-only.
+
+**Code refs.** `fec/repair_sublayer_references.py (--plan/--apply)`
+
+**Assumptions**
+- Each formula's Table1 basis names the intended column (the majority pattern was the bug)
+- A stale pillar snapshot can shield downstream consumers from an unrepaired reference plane
+
+**Evidence** (no rows)
+
+| Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
+|---|---|---|---|---|---|---|
+| (none: GAP) | | | | | | |
+
+**Assessment**
+
+**Sub Layer efficiency repair: GAP by nature, no rows.**
+
+This is an engineering repair, not a modelling claim, and no literature applies. Repair c6dc6b2 (2026-07-17) repointed 9,061 formulas. An independent recompute matched 533/533, and 520/533 ranks moved, all legislative-only.
+
+The open question is reproducibility from raw congress.gov billstatus data in an independent pipeline. Papers cannot answer that; only a second-path reproduction can (DE-062 logic: one path is a lead, two agreeing paths are a finding).
+
+The assumption that each formula's Table1 basis names the intended column is plausible. It rests on the majority pattern having been the bug, so it should be confirmed against raw data, not reasoning.
+
+**Contradictions**
+- (none)
+
+**Gaps**
+- No independent reproduction of post-repair efficiency values from raw congress.gov billstatus. Fill: a second pipeline that recomputes per-member efficiency from billstatus and compares member by member (exact match count over 533, max absolute deviation).
+- No check that the live Python efficiency (live_legislative_pillar.py) and the Sub Layer AG:AW values agree. Fill: cross-pipeline diff.
+
+**Paul's position vs the evidence.** Paul's position (no literature; engineering repair) is correct, and the evidence set confirms it: no rows.
+
+**Open questions**
+- Does the Sub Layer still feed anything live, or is live_legislative_pillar.py now the sole authority for efficiency?
+- Do post-repair values reproduce from billstatus in an independent path?
 
 **Read first:** (none)
 
 ## Cosponsor-network InfluenceScore (computed, weight 0)
 
-**What it computes:** InfluenceScore = 0.60 x weighted out-degree + 0.25 x betweenness + 0.15 x eigenvector, joined to 494/533 members; the 39 absent fall back to committee%.
+**Computes.** InfluenceScore = 0.60 x weighted out-degree + 0.25 x betweenness + 0.15 x eigenvector, joined to 494/533 members; the 39 absent fall back to committee%.
 
-**Method:** Computed from the congress_centrality output. It was retired from Influence on 2026-06-25 (AB13 = 0) because it is direction-blind. It still feeds the underdog lens.
+**Method.** Computed from the congress_centrality output. It was retired from Influence on 2026-06-25 (AB13 = 0) because it is direction-blind. It still feeds the underdog lens.
 
-**Code refs:** `congress_centrality_*.xlsx; Blended Model AB12/AB13`
+**Code refs.** `congress_centrality_*.xlsx; Blended Model AB12/AB13`
 
-**Assumptions:**
+**Assumptions**
 - Cosponsor centrality reflects influence regardless of stance direction
 
-**Evidence (9 rows, 9 distinct papers: VERIFIED 2, VERIFIED-SOFTENED 7)**
+**Evidence** (10 rows, 10 distinct works; 2 VERIFIED, 8 VERIFIED-SOFTENED)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -397,108 +428,109 @@ Paul says there is no literature and this is an engineering repair. That is corr
 | [[christopher-2016-mathematical-modeling-analysis]] | 2016 | qualifies | Expert-weighted centralities: out-degree 0.50199, total degree 0.14517, eigenvector 0.11045, betweenness 0.07489 (CR 0.062). TOPSIS on this composite matches the plain out-degree order only for the top two of eight. Corner Table LLC (out-degree 7) ranks 3rd and TC4 Trust (out-degree 38) ranks 7th. The authors state that no significant changes resulted, and they validate the composite against no outcome. | Both composites use judgment weights led by out-degree, so the structural comparison holds. The paper adds a consistency check and a sensitivity sweep but no outcome test, so it cannot justify the 0.60/0.25/0.15 weights or reverse the retirement. Its ties are dollar flows among nonprofits, not cosponsorship. The outcome test that matters is Sotoudeh 2024: does centrality predict bill passage. | weak | VERIFIED |
 | [[ringe-nd-pinpointing-powerful-voting]] |  | qualifies | In a three-voter single-party legislature the leader's centrality is at least each follower's, with the condition reducing to q2 below 1 and q3 below 1; the result is extended to n voters by a term-by-term argument. In simulation, absolute-value centrality correlates highly with closeness and weighted degree (no coefficients reported) and about 0.25 with betweenness. | The proof is in signed phi terms (leader-follower correlation at least follower-follower), while simulations use the absolute-value measure; the appendix does not show the inequality holds for that version. The algebra is omitted (line 344). The result concerns co-voting correlations, not cosponsorship weights. The paper's 0.25 is a simulated correlation with betweenness, not a weight, so it says nothing about InfluenceScore's 0.25 betweenness weight. Any revived centrality rank is a heuristic model output, never a closeness, access or influence probability (D-025). | weak | VERIFIED-SOFTENED |
 | [[kempe-2015-maximizing-spread-influence]] | 2015 | context | Under LT, greedy beats high-degree seeding by about 18 percent and distance-centrality seeding by over 40 percent (Sec 8.4, p.134). The base of these percentages is not stated, so high-degree is not 18 percent below greedy; it is about 15 percent below greedy if 18 is measured against greedy. Under IC with p=10%, random seeds beat both centrality heuristics beyond about 12 targets (p.135). | Paper evidence comes from one physics co-authorship graph, window winter 2002, denominator 10748 researchers, k = 1 to 30. Under D-025 centrality scores are heuristic outputs, not influence or access probabilities. | weak | VERIFIED-SOFTENED |
+| [[battaglini-2018-effectiveness-connected-legislators]] | 2018 | supports | Naive OLS: betweenness 0.0079 (SE 0.0007), closeness 0.0011 (SE 0.0001) and eigenvector 0.1203 (SE 0.0073), all significant; coefficients are on centralities scaled by 100, 10,000 and 10,000 per the Table 4 note. After the endogeneity correction none is significant: betweenness -0.2599 (SE 0.1662), closeness 0.0085 (SE 0.0086), eigenvector -0.4122 (SE 0.2500). Weighted out-degree is not tested. House, 109th-113th, N = 2,176. | The paper tests these centralities against LES, not against CU-relevant influence. The 2026-06-25 retirement rested on edge direction, which the paper does not address, so this is independent corroboration of the null only, not the original reason. Weighted out-degree is untested here. | moderate | VERIFIED-SOFTENED |
 
 **Assessment**
 
-**Evidence weight: moderate and consistent with retiring centrality from Influence. None of it validates keeping centrality in the underdog lens.**
+**Cosponsor-network InfluenceScore: the best-evidenced component on outcomes. 10 rows, 10 distinct works; 2 VERIFIED, 8 VERIFIED-SOFTENED.** The evidence supports retiring it from Influence (AB13 = 0), though for a different reason than the one recorded.
 
-**Rows that bear on the retirement:**
-- **Sotoudeh 2024** (VERIFIED-SOFTENED, moderate; House 2009-2019). Eigenvector, closeness and strength barely separate passed from failed bills: relative difference about 0.004 vs 0.139 for the paper's own influence score. The paper never tests betweenness or weighted out-degree, and it uses a different, undirected ratio matrix.
-- **Battaglini & Patacchini 2016** (VERIFIED-SOFTENED, weak; House committee and alumni networks, 2004-2012). Unweighted degree, closeness and betweenness do not explain PAC money. That is neutral on influence.
-- **Azaiez 2025** (VERIFIED-SOFTENED, moderate). Centrality tracks resources (lobbying FTE, assets) rather than influence, on EC company nodes (N = 1,178). This matches the project's finding that the raw Katz ranking measured activity (Spearman with tie volume +0.845).
-- **Christopher 2016** (VERIFIED). An out-degree-led judgment composite like this one has no outcome test.
+**Outcome evidence**
+- **Battaglini et al. 2018 (moderate; the key paper).** Naive OLS shows betweenness, closeness and eigenvector all significant against LES. After correcting for endogenous tie formation none is: betweenness -0.26 (SE 0.17); eigenvector -0.41 (SE 0.25). House, 109th-113th, N = 2,176, pooled, UNSTRATIFIED by party. Only the model-weighted Katz-Bonacich term carries signal (cf. the system's kb_benchmark.py).
+- **Sotoudeh et al. 2024.** Eigenvector, closeness and strength barely separate passed from failed bills: relative difference 0.004 mean vs 0.139 for their influence score (House 2009-2019, UNSTRATIFIED).
+- **Battaglini et al. 2016.** Standard centralities do not explain PAC money (House 2004-2012). This is a different outcome.
+- **Azaiez 2025.** Centrality tracks resources and embeddedness rather than influence (EC companies, N = 1,178). This agrees with the project's own finding that the all-bills Katz ranking measured activity: Spearman +0.845 with tie volume.
 
-**Context rows** (Haythornthwaite, Ringe appendix, Kumar, Trivedi, Kempe 2015) are taxonomy or simulated-cascade evidence. Kempe adds that, under IC at p = 10%, random seeds beat centrality heuristics beyond about 12 targets. That evidence comes from one physics co-authorship graph (winter 2002; denominator 10,748 researchers; k = 1-30).
+**Context only**
+Kempe 2015, Trivedi 2020 and Kumar 2022 concern simulated diffusion on co-authorship or social graphs. Haythornthwaite 1996 is a taxonomy. Ringe concerns co-voting, not cosponsorship. Christopher 2016 uses hand-weighted composites like the system's 0.60/0.25/0.15, with no outcome test, so it cannot justify those weights.
 
-**Circularity warning (Sotoudeh row).** A passage test on the system graph would be circular, because weighted out-degree already triples ties on passed bills. Any test needs an as-of network built only from bills resolved before the outcome window.
+**The untested 60%.** Weighted out-degree, 60% of the score, appears in no outcome test anywhere in the set. Testing it on the system graph would be circular: out-degree sums ties on the member's own sponsored bills, which are already weighted x3 when the bill passed. A valid test needs an as-of network built only from bills resolved before the outcome window.
 
-**Wording.** Any revived centrality score is a heuristic model output, never a closeness, access or influence probability (D-025).
+**Reason mismatch.** The recorded retirement reason is direction-blindness. The evidence supports a different reason: a null after endogeneity correction. It is independent corroboration, not the original rationale.
 
-**Record vs code.** Two verified rows searched `fec/` and found the weights at build_legislation_base_network.py:818-840. They did not find the AB13 = 0 retirement or the lens feed, which exist only in the workbook.
+**Verification.** Agents could not locate AB13 or the lens feed under fec/. Both live in the workbook only.
+
+Per D-025, any revived centrality rank is a heuristic model output, never closeness, access or influence probability.
 
 **Contradictions**
-- The system retires centrality from Influence as direction-blind, yet the same InfluenceScore enters the underdog lens's Intrinsic composite at 0.5 weight as a measure of intrinsic influence. The evidence supporting the retirement (Sotoudeh, Azaiez) argues equally against the lens use.
-- The AB13 = 0 retirement and lens feed are recorded in brain notes but not found in fec/ code (Sotoudeh and Battaglini rows); they live only in the workbook, so the rank authority's (ranks_python.json) treatment of centrality cannot be confirmed from code.
+- The evidence supports retirement on endogeneity and null-outcome grounds (Battaglini 2018; Sotoudeh 2024), not the recorded direction-blindness reason. Same conclusion, different basis.
+- The same centrality retired from Influence still feeds the underdog lens as half of 'Intrinsic' influence. The evidence that justifies retirement equally undercuts that use.
 
 **Gaps**
-- No federal test of whether cosponsor centrality predicts passage of a member's sponsored bills beyond committee position. Fill with an as-of network built only from bills resolved before the outcome window, testing weighted out-degree and betweenness (untested anywhere in the verified set), stratified by chamber and majority.
-- Paul's requested Viral Centrality test (Fink) and a stance-gated (signed) centrality have no evidence either way. Any signed variant must keep regular cosponsorship edges and not apply per-edge volume normalisation: both proposals were measured and REJECTED here.
+- Weighted out-degree (60% of InfluenceScore) is tested against no outcome in any paper. Fill: build an as-of cosponsor network from bills resolved before the outcome window, then test out-degree against subsequent passage of sponsored bills beyond committee position (the component's own question), with a tie-formation endogeneity control in the Battaglini style, chamber-stratified.
+- No test of a signed or stance-gated centrality. Fill: compare a stance-gated variant with the unsigned one on CU-bill outcomes. Paul's directionality interest (Haythornthwaite) and the Viral Centrality idea (Fink) both need such a test.
+- Code location of the AB13 retirement and the lens feed is unverified. Fill: open the workbook cells and record them.
 
-**Paul's position vs the evidence**
-
-Paul says more research on forms of centrality is needed. He values directionality and highlighted Sotoudeh's line that eigenvector centrality is not a strong indicator of passage. The verified evidence agrees and supports the retirement. The underdog lens still uses the retired measure, which conflicts with the reasoning Paul endorsed.
+**Paul's position vs the evidence.** Consistent, and better supported than Paul states. He cites Sotoudeh's highlight that eigenvector is 'not a strong indicator of bill passage', which the verified row confirms (relative difference 0.004 vs 0.139, House 2009-2019, UNSTRATIFIED). Battaglini 2018, which he does not cite in this position, gives the stronger federal result: no centrality survives endogeneity correction against LES. His call for more research on forms of centrality (Ardekani) and his wish to test Viral Centrality (Fink) are reasonable but have no evidence rows. His directionality interest (Haythornthwaite) matches the retirement reason, though the paper itself offers no outcome evidence.
 
 **Open questions**
-- Should centrality be removed from the underdog lens for the same reason it was retired from Influence?
-- Should the retirement be moved from the workbook into code (compute_pillars.py or pillar_policy.py) so the rank authority records it?
-- Is a signed or stance-gated centrality worth a prereg, and what outcome would it be tested on?
+- Does weighted out-degree on an as-of network predict passage of a member's sponsored bills beyond committee position?
+- Should the Katz-Bonacich benchmark, the only term Battaglini found significant, be the comparison object for any revived network signal?
+- Where exactly in the workbook are AB12/AB13 and the lens Centrality% column, and which centrality column feeds the lens?
 
-**Read first:** [[sotoudeh-2024-network-based-measure]], [[azaiez-2025-hypergraph-analysis-european]], [[battaglini-2016-influencing-connected-legislators]], [[christopher-2016-mathematical-modeling-analysis]], [[kempe-2015-maximizing-spread-influence]]
+**Read first:** [[battaglini-2018-effectiveness-connected-legislators]], [[sotoudeh-2024-network-based-measure]], [[battaglini-2016-influencing-connected-legislators]], [[azaiez-2025-hypergraph-analysis-european]], [[christopher-2016-mathematical-modeling-analysis]], [[ringe-nd-pinpointing-powerful-voting]]
 
 ## Undervaluation (underdog) lens
 
-**What it computes:** Underdog rank = Intrinsic - Visibility, where Intrinsic = 0.5 Leg% + 0.5 Centrality% and Visibility = 0.5 Press% + 0.5 Committee%.
+**Computes.** Underdog rank = Intrinsic - Visibility, where Intrinsic = 0.5 Leg% + 0.5 Centrality% and Visibility = 0.5 Press% + 0.5 Committee%.
 
-**Method:** Difference of two equal-weight composites, ranked. The brain note gives no code file.
+**Method.** Difference of two equal-weight composites, ranked. The brain note gives no code file.
 
-**Code refs:** (none)
+**Code refs.** 
 
-**Assumptions:**
+**Assumptions**
 - Legislative activity and centrality measure intrinsic influence; press and committee measure visibility
 
-**Evidence (2 rows, 2 distinct papers: VERIFIED-SOFTENED 2)**
+**Evidence** (3 rows, 3 distinct works; 3 VERIFIED-SOFTENED)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
 | [[aref-2021-identifying-hidden-coalitions]] | 2021 | qualifies | Third-coalition members are usually ideologically aligned with the majority party. The paper attributes the majority party's effectiveness to agenda-setting power, and says a substantial portion of the apparent majority advantage comes from the third coalition. Third-coalition effectiveness drops temporarily during majority transitions and rests on a few ultra-effective members. | The paper defines its 'hidden' bloc by signed-tie structure, not by low press or committee visibility, and its effectiveness tracks majority alignment. That is closer to what the lens subtracts (committee position) than to what it rewards. The link is an analogy and is not evidence for the lens's formula. | weak | VERIFIED-SOFTENED |
 | [[amsalem-2018-effect-politicians-personality]] | 2018 | qualifies | Holding office is the strongest predictor of visibility: minister beta .369 (b 3.122), about three times the trait betas. Party leader beta .195 is only slightly stronger than the personality effects. Office here means minister, party leader and house speaker; committee position is not tested. | The paper's evidence is MPs in three parliamentary systems, not US House members. Its visibility construct is press mentions, which Press% does not capture. Committee% is a visibility input the paper never tests. Any reading of personality as part of the underdog residual is an inference, not a finding. | weak | VERIFIED-SOFTENED |
+| [[battaglini-2018-effectiveness-connected-legislators]] | 2018 | qualifies | After correcting for endogenous tie formation, eigenvector and betweenness centralities lose significance for LES (Table 4). Only the model-weighted Katz-Bonacich term carries signal. House only, 109th-113th. | Applies only if the lens treats Centrality% as hidden effectiveness. If it is a descriptive visibility contrast, the endogeneity point weakens. The paper covers the House only. | weak | VERIFIED-SOFTENED |
 
 **Assessment**
 
-**Evidence weight: weak. Both rows are analogies, and both cut against the formula.**
+**Underdog lens: 3 rows, 3 distinct works; 3 VERIFIED-SOFTENED, all weak or moderate. The evidence weakens the lens rather than supporting it.**
 
-- **Aref & Neal 2021** (VERIFIED-SOFTENED) define their 'hidden' third coalition by signed-tie structure, not by low press or committee visibility. Its effectiveness tracks *majority alignment and agenda-setting*, which is close to what the lens subtracts (committee position), not what it rewards. The bloc also rests on a few ultra-effective members.
-- **Amsalem 2018** (VERIFIED-SOFTENED; MPs in Belgium, Canada and Israel) finds office holding is the strongest driver of media visibility (minister β = .369). Committee position is not tested, and the paper's visibility construct is press *mentions*, which Press% does not measure. Press% is own-domain statements.
+**Formula and status.** Underdog = Intrinsic (0.5 Leg% + 0.5 Centrality%) minus Visibility (0.5 Press% + 0.5 Committee%). The lens has no code file. Which centrality column feeds it is unconfirmed.
 
-So neither paper supports Intrinsic = 0.5 Leg% + 0.5 Centrality% minus Visibility = 0.5 Press% + 0.5 Committee%.
+**What the rows show**
+- **Aref & Neal 2021, the conceptual anchor, is an analogy only.** Its hidden third coalition is defined by signed-tie structure, not low visibility. Its effectiveness tracks majority alignment and agenda-setting, and it rests on a few ultra-effective members. That is closer to what the lens subtracts (committee position) than to what it rewards.
+- **Battaglini et al. 2018.** Centrality has no corrected association with LES (House, 109th-113th). Half of 'Intrinsic' therefore rests on a measure with no corrected signal.
+- **Amsalem et al. 2018.** Office is the strongest driver of media visibility: minister beta .369, about three times the personality betas (MPs in Belgium, Canada and Israel). The paper does not test committee position and measures press mentions, which Press% (own-domain statements) does not capture.
 
-The lens also has internal problems:
-- it has no code file;
-- it rewards centrality the system retired as direction-blind;
-- it classifies own-domain press output as 'visibility', when that output is the member's own advocacy, not media attention.
+**Conclusion.** Nothing validates Committee% as 'visibility' or Leg% + Centrality% as 'intrinsic'. The lens is an unvalidated contrast and should be labelled as such.
 
 **Contradictions**
-- The lens treats Press% (own-domain statements by the member) as 'visibility', while the visibility literature (Amsalem) measures third-party media mentions, which the press pillar explicitly excludes.
-- Aref & Neal's hidden effective bloc derives effectiveness from majority alignment, the same positional advantage the lens subtracts via Committee%.
-- Centrality, retired from Influence as direction-blind, is half of the lens's Intrinsic.
+- Aref & Neal's hidden effective bloc owes its effectiveness to majority alignment and agenda-setting power. That is structurally closer to the Visibility side (committee position) than to the Intrinsic side the lens rewards.
+- Centrality was retired from Influence because it lacks a valid influence reading, and Battaglini 2018 finds no corrected LES signal. Yet it is half of the lens's Intrinsic composite.
 
 **Gaps**
-- No test that high-underdog members show higher realised effectiveness per dollar of PAC attention than their visibility predicts (the component's own question). Fill with: underdog score in Congress t vs CEL LES (or CU advancement) in t+1, divided by PAC receipts (FEC, same window), stratified by chamber and majority.
-- No code producer, so the lens cannot be reproduced or audited.
+- No test that underdog rank predicts realized effectiveness beyond visibility. Fill: prospective single look comparing high-underdog members' next-Congress CEL LES or CU-bill advancement with what their visibility predicts, chamber- and majority-stratified.
+- No implementation record: no code file and an unconfirmed Centrality% column. Fill: document the producer before any test.
+- Committee% as 'visibility' is untested. Fill: correlate Committee% with an actual media-mention count for US members.
 
-**Paul's position vs the evidence**
-
-Paul reads Aref & Neal's hidden effective coalition as the conceptual twin of the lens and as the responsive or vulnerable seats. The verified reading does not support the twin claim. The paper's bloc is structurally defined and majority-aligned. It is not defined by low headlines and high intrinsic activity. The analogy is a motivation, not evidence for the formula.
+**Paul's position vs the evidence.** Contradicted on the anchor. Paul reads Aref & Neal's hidden bloc, whose actions 'otherwise avoid typical headlines', as the conceptual twin of the underdog lens, and as the responsive or vulnerable seats. The verified row says the bloc is defined by signed ties, is usually aligned with the majority, and draws its effectiveness from agenda-setting. That is not a low-visibility, under-priced group in the lens's sense, and nothing in the paper links it to responsive or vulnerable seats. The link is an analogy and is not evidence for the formula.
 
 **Open questions**
-- Should the lens be rebuilt in code, with centrality removed or replaced?
-- Should 'visibility' be measured by third-party media mentions rather than own-domain Press%?
-- Is the target construct 'undervalued by the press' or 'undervalued by PAC money'? The two need different denominators.
+- Which centrality column feeds Centrality%: the retired InfluenceScore or another measure?
+- Should Centrality% be dropped from Intrinsic given the retirement evidence, leaving Leg% vs visibility? Paul's call.
+- Is the lens a ranking claim or a display-only descriptive contrast? The evidentiary bar differs.
 
-**Read first:** [[aref-2021-identifying-hidden-coalitions]], [[amsalem-2018-effect-politicians-personality]]
+**Read first:** [[battaglini-2018-effectiveness-connected-legislators]], [[aref-2021-identifying-hidden-coalitions]], [[amsalem-2018-effect-politicians-personality]]
 
 ## Legacy Sub Layer -> Primary Layer -> Rank & Allocation cascade
 
-**What it computes:** Legacy 11-dimension SUMPRODUCT score and rank (Rank & Allocation cols K/L/M).
+**Computes.** Legacy 11-dimension SUMPRODUCT score and rank (Rank & Allocation cols K/L/M).
 
-**Method:** This cascade is orphaned in the Blended version but not retired. Its rankings disagree with Blended. Primary Layer - Normalized H2 = 0.80 (likely meant to be 0.08), so the weight row sums to 1.72.
+**Method.** This cascade is orphaned in the Blended version but not retired. Its rankings disagree with Blended. Primary Layer - Normalized H2 = 0.80 (likely meant to be 0.08), so the weight row sums to 1.72.
 
-**Code refs:** `Rank & Allocation cols C-M; Primary Layer - Normalized row 2`
+**Code refs.** `Rank & Allocation cols C-M; Primary Layer - Normalized row 2`
 
-**Assumptions:**
+**Assumptions**
 - Superseded design; recorded for lineage only
 
-**Evidence (0 rows, 0 distinct papers)**
+**Evidence** (no rows)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -506,74 +538,67 @@ Paul reads Aref & Neal's hidden effective coalition as the conceptual twin of th
 
 **Assessment**
 
-**No literature is needed. It is recorded for lineage**, and Paul's position matches.
+**Legacy cascade (Sub Layer to Primary Layer to Rank & Allocation): GAP, no rows.**
 
-**There is one actual error.** Primary Layer - Normalized H2 = 0.80, which is probably meant to be 0.08, so the weight row sums to 1.72. The cascade is orphaned but not retired, and its rankings disagree with the Blended version.
+The cascade is orphaned but not retired. Its 11-dimension SUMPRODUCT ranking disagrees with the Blended rank. It also carries a known defect: Primary Layer - Normalized H2 = 0.80, likely meant to be 0.08, so the weight row sums to 1.72 instead of 1.
 
-A reader of Rank & Allocation columns K/L/M could take a mis-weighted rank as current. The component's open question about which rank better tracks CU-aligned votes is answerable only after the H2 error is fixed. Otherwise the comparison is against a broken baseline.
+Any comparison of legacy vs Blended rank is distorted until that cell is fixed or the cascade is formally retired. No literature bears on the question. It is an internal head-to-head that needs a single preregistered look against an external criterion.
 
 **Contradictions**
-- Weight row sums to 1.72 (H2 = 0.80, likely 0.08), so the legacy rank is mis-weighted by construction; legacy and Blended ranks disagree partly because of this error, not only design.
+- The weight row sums to 1.72 because of the probable 0.80/0.08 typo in H2, so the legacy rank as it stands is not the intended design.
 
 **Gaps**
-- No comparison of the legacy (with H2 corrected) vs the blended rank against CU-aligned final-passage votes in the 119th Congress. Fill once with a single-look Spearman per rank, by chamber, or retire the cascade and skip it.
+- No comparison of legacy vs Blended rank against CU-aligned final-passage votes in the 119th Congress. Fill: fix or flag H2 first, then run one preregistered look with Spearman and bootstrap CIs, chamber-stratified.
+- Retirement status is undecided. Fill: Paul's ruling on retire vs repair.
 
-**Paul's position vs the evidence**
-
-Paul says there is no literature, which is correct. The open issue is housekeeping, not evidence. The cascade should be either corrected (H2) and labelled legacy, or formally retired. That is Paul's call under change control.
+**Paul's position vs the evidence.** Paul's position (no literature) is correct: no rows. The evidence set adds nothing beyond confirming that this is an internal lineage question.
 
 **Open questions**
-- Retire the cascade or correct H2 to 0.08? This is Paul's ruling.
+- Retire the legacy cascade formally, or repair H2 and keep it as a comparison baseline? Paul's call.
+- If kept, which external criterion should arbitrate legacy vs Blended?
 
 **Read first:** (none)
 
 ## Across components
 
-**1. Positional advantage is counted twice.**
-- Majority status and chair position raise advancement:
-  - Box-Steffensmeier: majority sponsor 1.353 (House, 106th-111th Congress);
-  - Bucchianeri: majority +0.370 (pooled, UNSTRATIFIED) and chair +0.507 (pooled; strata 0.609 and 0.307; North Carolina).
-- Advancement feeds Leg% efficiency, and chair and ranking seats feed Influence% directly.
-- The composite has no term that separates the two, so position likely carries more than its nominal 40%. This is an inference, testable with a Paruolo-style main-effect check.
-- CEL benchmarks on majority status, seniority and chair precisely so that effectiveness is not just position. The Moneyball rank deliberately rewards position as 'structural power', which is a defensible owner choice. It should be stated as such and not compared to LES as if the two were the same construct.
+**Three problems cut across the pillars.**
 
-**2. House and Senate are pooled everywhere.**
-- Leg% is one percentile over 533 members, committee% uses one max, and Press% uses one set of signed extrema.
-- Every verified effectiveness source reports chamber-specific magnitudes (Bucchianeri strata; CEL averages from the scan, unverified).
-- Any figure quoted from the rank across both chambers should carry an UNSTRATIFIED label until per-chamber normalisation is tested.
+**1. Chamber pooling is a fault line at every stage.**
+- Leg% is one percentile over House and Senate.
+- Influence% is one raw/max over both chambers, with identical leadership multipliers.
+- The blend ranks 533 members on one scale.
 
-**3. Normalisation is mixed, so nominal weights are not effective weights.**
-- The pillars use PERCENTRANK, raw/max (skewed, with 245/533 committee zeros) and asymmetric signed extrema.
-- The 06-25 min-max finding already showed effective shares can depart sharply from nominal ones.
-- No variance-share or main-effect audit has been run on the current mix.
+The only evidence on cross-chamber comparability (Bucchianeri et al. 2025, NC 2005-2012) says effectiveness scores are chamber-term relative. Its own chair premium splits 0.609 lower vs 0.307 upper. Any validation look the project runs should report chamber strata, or label pooled results UNSTRATIFIED.
 
-**4. Centrality is treated inconsistently.**
-- It is retired from Influence as direction-blind, and the verified evidence (Sotoudeh, Azaiez, Battaglini) supports that.
-- It is still half of the underdog lens's Intrinsic.
-- Both the retirement and the lens feed exist only in the workbook, not in code.
+**2. Majority status is absent from every pillar.**
+It is the most consistent covariate across the effectiveness papers: NC +0.370 (strata 0.362 / 0.387); House passage logit 1.353 for majority sponsors (106th-111th, UNSTRATIFIED); the chair LES premium in the House (Battaglini 2018). Two pillars probably carry it implicitly: the efficiency term (advancement rates) and the committee score (chairs are majority by construction). The blend may therefore partly rank majority membership. This is an analyst inference to test, not a finding.
 
-**5. There is no outcome criterion anywhere.**
-- Every empirical question in the hub needs the same missing object: a preregistered, time-ordered CU outcome set for the 119th Congress (CU-bill advancement, CU-aligned final-passage votes), plus CEL LES as a general comparator.
-- Building that once would answer the blend, legislative, press, committee, demo, lens and legacy questions in one look per question.
+**3. The centrality retirement is applied inconsistently.**
+Battaglini 2018 and Sotoudeh 2024 justify removing direction-blind centrality from Influence. The same family of measures remains half of the underdog lens's 'Intrinsic' composite. Either the lens should drop Centrality%, or it should be explicitly labelled a descriptive contrast with no influence reading (D-025).
 
-**Guardrails for the follow-up work:**
-- Any centrality or graph rank is a heuristic model output, never closeness, access or introduction probability (D-025).
-- Any proposal to drop regular cosponsorship rows or edges, or to apply per-edge volume normalisation, was measured and REJECTED. That includes readings of Russo et al. or Kessler & Krehbiel on active vs passive cosponsorship; flag such a proposal, never adopt it.
-- LDA lobbied-bill lists may not supply committee relevance weights (D-021); use billstatus referrals.
-- UNVERIFIED rows (van der Does, the Committee Requests codebook) and all online-scan items are leads only (DE-062).
+**Shared overlap and limits**
+- **Overlap.** Bucchianeri 2025 and Battaglini 2018 bear on several components each and are the two load-bearing works for this system. Kim et al. 2020 and 2023 are one study line and should not be double-counted.
+- **Transfer limits.** Most evidence transfers imperfectly: NC state legislature (Bucchianeri), US state legislatures (Fouirnaies), Senate Republicans only (Thakur), EC lobby network (Azaiez), Austria (Haselmayer), Belgium, Canada and Israel (Amsalem), simulated diffusion (Kempe, Trivedi, Kumar). The federal House rows (Battaglini 2016 and 2018, Sotoudeh, Box-Steffensmeier, Kim et al.) carry the most weight. None of them uses a CU-specific outcome.
+- **No CU outcome anywhere.** No paper in the set tests anything against CU-specific outcomes (CU-bill advancement or CU-aligned votes). That is the single largest gap, and it applies to every component.
+- **Owner policy.** Every weight is owner policy. The honest label for the rank today is "owner-weighted composite, unvalidated against an external criterion, with House and Senate pooled".
+
+**Rule checks**
+- No paper argues for either rejected SNA proposal.
+- LDA-derived papers (Kim & Kunisky; Huneeus & Kim) are usable as reading only (D-021). A Huneeus-style referral-share weighting must use congress.gov billstatus.
+- Reciprocity does not arise in this system's evidence.
+- The UNVERIFIED rows are leads only (DE-062): van der Does on press hedging, and the Frisch & Kelly codebook on committee selection.
 
 ## Research agenda
 
-1. Fix the pillar-weight record. Rule on S-5 (30/25/40/5 vs 45/10/40/5), then make pillar_policy.py:11-16, MATHEMATICAL_SPECIFICATION.md:12 and the brain agree. Paul's ruling; this is the error-level item.
-2. Weight sensitivity. Run a one-weight proportional-rescale sweep (Christopher 2016 recipe) plus a Monte Carlo over weights and normalisation (Saisana et al. 2005, web-scan lead) on the 533-member roster. Report Kendall tau-b and top-133 overlap between the two candidate weight sets.
-3. Effective-vs-nominal weight audit. Compute each pillar's main effect or variance share in the composite under the current mixed normalisation (Paruolo, Saisana & Saltelli 2013, web-scan lead). Report by chamber.
-4. Build a preregistered outcome criterion set for the 119th Congress: CU-category bill advancement by stage, CU-aligned final-passage votes, and CEL LES. Then run a single look of the blend and of each pillar against it, stratified by chamber and majority/minority. Verify or retire the brain-only +0.10 rho vs LES.
-5. Committee: estimate chair, ranking and subcommittee premiums by chamber on the outcome set. As a sensitivity check (needs its own look), compare the hand tiers with CU-category referral shares from billstatus, following Huneeus & Kim; never use LDA for this (D-021).
-6. Committee selection: obtain and actually read the House Committee Request data (Frisch & Kelly codebook; UNVERIFIED and unread). Pull Grier & Munger 1991 and Kroszner & Stratmann 1998 (web-scan leads) to design a selection-vs-conferred-leverage check.
-7. Legislative: test stage counts against the hit-rate efficiency term, and the efficiency term against agenda volume alone, within chamber and majority strata. Estimate role-specific effects to check the 4:2:1 ratio, using Kessler & Krehbiel 1996 as a lead, and never drop regular cosponsorship.
-8. Press: correct the description to match the code (asymmetric signed extrema; per-category mean rollup). Run a time-ordered test of sign alone vs sign x LSD intensity on later CU cosponsorship and votes. Ablate the third-party-row exclusion. Correlate own-domain press volume and LSD charge with district lean by chamber (van der Does lead).
-9. Demographic: give Demo% a code producer. Test Demo% or an NCUA-based CU-presence measure against CU-aligned behaviour, controlling for party and stratified by chamber. Report the rank impact of swapping in Demographic Potential v3.0.
-10. Centrality and underdog lens: move the AB13 retirement into code; write the lens in code. Decide whether centrality stays in Intrinsic. If any centrality test is run, build an as-of network from bills resolved before the outcome window, to avoid passage circularity. Wording per D-025.
-11. Sub Layer: run an independent recompute of post-repair efficiency from raw congress.gov billstatus and match it against the Sub Layer values.
-12. Legacy cascade: Paul rules either to correct Primary Layer H2 (0.80 to 0.08; the weight row now sums to 1.72) and label the cascade legacy, or to retire it formally.
-13. Copies to fetch (web-scan leads, not yet downloaded): Saisana, Saltelli & Tarantola 2005 (JRSS A 168(2)); Paruolo, Saisana & Saltelli 2013 (JRSS A 176(3)); OECD-JRC Handbook on Constructing Composite Indicators 2008; Kessler & Krehbiel 1996 (APSR, Dynamics of Cosponsorship); Russo et al. arXiv 2205.09674; CEL LES 119th Congress data and methodology (thelawmakers.org); Grier & Munger 1991; Kroszner & Stratmann 1998.
+1. Prerequisite (Paul's ruling, S-5): name the ratified pillar weight set (30/25/40/5, 25/30/40/5 or the live 45/10/40/5) and reconcile pillar_policy.py, MATHEMATICAL_SPECIFICATION.md:12 and the brain notes.
+2. Weight sensitivity (internal, no look needed): Kendall tau-b and top-133 overlap across the three weight sets, plus a Christopher-style one-weight proportional-rescale sweep. Report effective variance shares per pillar under the current mixed normalizations.
+3. Preregistered single look, the external criterion: blended rank and each single pillar vs CEL LES (federal) and CU-aligned final-passage votes in the 119th Congress. Spearman with bootstrap CIs, reported separately for House and Senate and by majority status. Verify or replace the brain's roughly +0.10 rho with CEL LES.
+4. Chamber and majority structure: re-run Leg% and Influence% percentiles within chamber, and add or stratify by majority status. Measure the rank change and the change in criterion validity.
+5. Committee weights: build a billstatus referral-share committee map (Huneeus-style, lagged share of CU-category bills referred; no LDA per D-021) and compare it with the owner tier map on CU-bill markup and advancement for referred bills, chamber-stratified. Also check the tier of Ways and Means, Finance and Appropriations seats, and test additive counting of nested subcommittees.
+6. Committee selection: read the Frisch & Kelly House Committee Request codebook (currently unread, UNVERIFIED). If it has request-vs-assignment fields, test whether committee scores reflect prior interest rather than seat leverage (historical, House only).
+7. Network: build an as-of cosponsor network from bills resolved before the outcome window, and test weighted out-degree (60% of InfluenceScore, untested anywhere) against subsequent passage of sponsored bills beyond committee position, with a Battaglini-style endogeneity control and Katz-Bonacich as the comparator. Outputs remain heuristic (D-025).
+8. Underdog lens: locate its producer and the Centrality% column in the workbook, along with AB12/AB13. Decide whether to drop Centrality% from Intrinsic. Then run a prospective test of whether high-underdog members outperform their visibility on next-Congress LES or CU advancement.
+9. Legislative pillar: test incremental validity of efficiency over agenda volume, and stage-based progression vs binary advancement, controlling majority status. Test sign-only vs stance-signed agenda against CU votes.
+10. Press pillar: preregistered look of own-domain press stance at t vs CU cosponsorship and votes at t+1. Compare sign-only vs sign x LSD intensity, and with vs without the third-party (americascreditunions.org) rows. Correlate press volume and LSD charge with district lean to test the van der Does hedging lead, chamber-stratified.
+11. Demographic pillar: partial correlation of Demo% with CU-aligned behaviour controlling party and chamber. Compute the rank delta from swapping column F for Demographic Potential v3.0, and give column F a reproducible producer.
+12. Engineering: reproduce post-repair Sub Layer efficiency from raw congress.gov billstatus in an independent pipeline (533-member match count, max deviation). Fix or formally retire the legacy cascade (H2 0.80 vs 0.08; weights sum to 1.72) before any legacy-vs-Blended comparison.

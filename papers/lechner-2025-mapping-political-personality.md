@@ -131,3 +131,5 @@ Paul's note treats Birkenmaier & Lechner as the most direct transfer and names t
 
 ### Linked from
 - [[ramey-2016-measuring-elite-personality]] — complements — Not cited in the Ramey text; the ideal-versus-actual personality point is analyst opinion and was not checked against the item.
+- [[decter-frain-2016-impressive-words-linguistic]] — complements — The PoliPers framework for politicians' agency and communion profiles is the source of the codebook Melange uses, per the agency_communion_llm.py docstring. This paper adds the belonging versus helping split.
+- [[hargrave-2022-longer-conforming-stereotypes]] — complements — Item exists (PoliPers framework, title confirmed). Not cited in the Hargrave text; analyst judgement link to the agency and communion codebook.

@@ -174,3 +174,4 @@ Paul recorded no takeaways for this paper in either annotated bibliography. His 
 ### Linked from
 - [[bombardini-2020-empirical-models-lobbying]] — complements — The review's access-versus-expertise evidence (Bertrand et al. 2014) bears on which lobbying skills are teachable.
 - [[furnas-2019-moneyed-interests-information]] — complements — Holyoke et al. treat lobbying as largely relationship building. This paper adds staff-side evidence that the information a lobbyist brings, and its ideological source, shapes siding; its point that lobbyists are more persistent than donors is the authors' speculation (p.17), not a finding.
+- [[defigueiredo-2013-advancing-empirical-research]] — complements — Holyoke, Brown and LaPira (2015) on what can and cannot be taught in lobbying. Addresses the expertise side of the essay's expertise-versus-connections question.

@@ -191,3 +191,4 @@ _Not in Paul's annotated bibliographies._
 
 ### Linked from
 - [[vanderdoes-2022-strategic-identity-signaling]] — complements — Merkley and Stecula show outgroup backlash to overt partisan elite cues in news. This paper explains why senders facing mixed audiences shift to covert cues to avoid that backlash.
+- [[rheault-2016-measuring-emotion-parliamentary]] — complements — Uses Lexicoder plus a custom dictionary of party names and leaders to detect party cues, not sentiment, and validates that dictionary against hand-coded articles. Verified in the Merkley item; the link is about dictionary practice, not about tone measurement.

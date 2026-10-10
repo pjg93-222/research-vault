@@ -139,3 +139,5 @@ Paul has no annotations on this paper. The paper found GPT-3 beat a fine-tuned R
 ### Linked from
 - [[taherdoost-2023-artificial-intelligence-sentiment]] — complements — Gives the political-text LLM evidence that the review does not cover, and is relevant to Paul's LLM-extraction stance.
 - [[porter-2025-campaignview-campaign-platforms]] — complements — Vault file confirms it is about LLMs for political texts (Political Science Research and Methods, 2025). The analyst's use as a scalable check on CampaignView's hand codes is a suggestion, not a claim in either paper.
+- [[burnham-2024-political-debate-zero]] — complements — Covers using LLMs to label political text, the pre-labelling step behind PolNLI (GPT-4 and GPT-4o) and the CU stance set (Claude). Its models are GPT-3 and GPT-4 on sentiment, not NLI.
+- [[lemens-2025-positioning-political-texts]] — same-method — This is the GPT-3 probability-based scaling the paper benchmarks against (its footnote 2 reports expert correlations of .92 and .8). Both position political texts with LLMs; this paper replaces token probabilities with a direct score query.

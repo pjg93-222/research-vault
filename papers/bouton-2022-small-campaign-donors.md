@@ -1045,4 +1045,4 @@ No Paul entry or markup exists for this work, so there is no takeaway to check a
 - [[cagala-2021-optimal-targeting-fundraising]] — complements — Bouton et al. describe small donors as responding to candidate fundraising requests and external events. Cagala et al. (2021, arXiv, Optimal Targeting in Fundraising) study the supply side of solicitation. Bouton et al. do not cite this work, so the link is a vault-level complement.
 
 ### Linked from
-_None._
+- [[ansolabehere-2002-little-money-politics]] — built-on-by — Studies small individual donors, the consumer contributor this paper puts at the center of campaign finance. Item exists.

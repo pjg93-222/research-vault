@@ -3,8 +3,8 @@ type: system
 name: "Mentat sector growth vs political spending study"
 slug: mentat-sector-growth-study
 components: [mentat-sector-growth-study.growth-spending-regressions, mentat-sector-growth-study.seats-weekly-test]
-brain_notes: ["topics/2026-09-feature-sector-growth-study"]
-paper_count: 18
+brain_notes: ["C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"]
+paper_count: 24
 tags: [system]
 ---
 
@@ -12,43 +12,38 @@ tags: [system]
 
 An exploratory R regression family in C:/Users/pgoff/Mentat/sector_growth_study. It relates industry growth, election timing and expected party control to giving, partisan share and lobbying, and adds the 2022 weekly seat-gain test (SEATS-W). Results are reported trend-first.
 
-Brain notes: [topics/2026-09-feature-sector-growth-study](obsidian://open?vault=brain&file=topics%2F2026-09-feature-sector-growth-study)
+Brain notes: [topics/2026-09-feature-sector-growth-study](obsidian://open?vault=brain&file=topics/2026-09-feature-sector-growth-study)
 
-**Mentat sector growth vs political spending study: evidence assessment (2026-10-10)**
+**System:** Mentat sector growth vs political spending study. This is an exploratory R regression family in `C:/Users/pgoff/Mentat/sector_growth_study`, reported trend-first.
 
-Several rows still mark particular numbers as single-path under DE-062: the L3-LV reference values, the hand-coded two-way CR1, and the SEATS-W report figures. Those numbers are leads until a second path reproduces them.
+**Evidence base:** 50 bearings from 24 distinct sources. There are 37 on the growth regressions and 13 on SEATS-W. 11 are VERIFIED and 39 VERIFIED-SOFTENED. No row is UNVERIFIED as a whole, but many rows mark parts of their system-side reading as UNVERIFIED under DE-062 (single analysis path).
 
-The external literature here, all firm-level or cross-sectional (Huneeus & Kim, Bickmore, Alexander, Bombardini & Trebbi, Bonica, Furnas et al.), mostly *qualifies* the study. It does not test it. No paper in the vault asks either component's own question:
-- whether sector growth predicts giving once year shocks are absorbed;
-- whether donors move partisan share as within-cycle seat forecasts move.
+The sources fall into three groups:
+- **Paul's own design notes (4).** These are the strongest bearings, because they cover the same study and panel.
+- **Econometric method sources.** Imai & Kim, Callaway et al., Blackwell, MacKinnon & Webb, and three Zeileis sandwich papers.
+- **Substantive political-economy sources.** Huneeus & Kim, Bombardini & Trebbi, Bickmore, Alexander, Kerr et al., de Figueiredo, Ansolabehere et al., Furnas et al., Bonica, Bouton et al., Snowberg et al., plus a 2024 Cook table and an anonymous memo.
 
-The strongest rows are the study's own design documents: the request-for-review memo, the plan note and the external review. These are where the plain contradictions sit.
-- **Design drift from the memo.** The build departs from the memo in several ways: separate single-timing models, no Tossup, Neg or Trend terms, levels rather than logs, and a signed expected-control term. Build results therefore cannot be read as tests of memo H1 or H3.
-- **SEATS-W headline weighting.** The -3.47 pp SEATS-W figure is the equal-sector variant (2022 House, 17 weeks). The pooled-dollar estimate is -3.36 pp with block-bootstrap p 0.10 to 0.11, which is not significant. Any headline must name the weighting.
-- **SHIFT preview.** The -0.04 (p .76) result is the preview SHIFT-Chamber-PV: 2021-25, 80 rows, 4 residual df, below the 6-year minimum. The core SHIFT-House and SHIFT-Senate tests are NOT ESTIMABLE.
-
-**Online scan (standard WebSearch).** I found no US study that tests donor response to within-cycle forecasts, and no sector-level growth-to-giving study with year fixed effects. Cox & Magar 1999 and Grier, Munger & Roberts 1994 are still paywalled with no author copy. Fouirnaies & Hall 2014 (JOP) is not free on LSE.
-
-**Downloaded this pass** (each in its own folder under C:\Users\pgoff\Documents\research\_work\downloads\scan_2026-10-10). These are not yet in the vault evidence and are UNVERIFIED leads:
-- snowberg_wolfers_zitzewitz_2006_iza_dp1996\dp1996.pdf: IZA DP 1996 version of the QJE 2007 paper, 24 pp.
-- fremeth_richter_schaufele_2018_mpra\MPRA_paper_87612.pdf: firms held at PAC contribution limits spend more on lobbying, per the abstract. That makes PAC giving and lobbying substitutes, not independent outcomes.
-- callaway_goodmanbacon_santanna_contdid_arxiv\2107.02637v8.pdf: DiD with a continuous treatment. This is the continuous-treatment extension the Imai & Kim row says is missing.
-- mackinnon_webb_2017_qed_wp1314\qed_wp_1314.pdf: wild cluster bootstrap with unbalanced clusters. Note that its 2019 appendix flags a simulation-program error in the published version.
-- kerr_lincoln_mishra_2014_nber_w17577 was already on disk from the earlier scan.
-
-Computed from the hub file: 38 evidence rows (9 VERIFIED, 29 VERIFIED-SOFTENED) over 18 distinct papers.
+**Bottom line**
+1. **No substantive paper tests the study's estimand.** The estimands are within-sector, over-time growth to spending (annual) and within-cycle forecast movement to partisan share (weekly). The returns literature Paul cites is firm-level and cross-sectional, or runs in the reverse causal direction. It neither supports nor contradicts the sector-year null. The deep-pockets motivation is a lead, not evidence.
+2. **The method literature strongly backs the study's caution.** A two-way-FE or one-way-FE slope on a continuous, non-absorbing growth dose is a weighted contrast that can flip sign through weighting, heterogeneity or feedback. Wild-bootstrap sizing at 3 to 9 sector clusters with Webb weights is not established by any paper on disk.
+3. **Two things the system says clash with its own sources.**
+   - The component description of the growth model (log DVs, tossup, trend, AR lobbying term) is the memo design, not the build. The build uses levels, separate timing models, no tossup or trend, and no lagged DV.
+   - The SEATS-W headline of -3.47 pp per seat is the equal-sector weighting. The pooled-dollar House estimate is -3.36 pp, p 0.11 / 0.10, not significant.
+4. **The SEATS-W sign is negative.** The Democratic share of giving falls as expected Democratic seats rise. That is the opposite of what the component's stated access-seeking hypothesis predicts. A common-shock confound (Snowberg) means it cannot be read as donor intent either way.
 
 ## Sector growth vs giving, partisan share and lobbying regressions
 
-**What it computes.** log giving ~ sector FE + growth(t-1, t) + phase + tossup + trend; RShare ~ growth + Shift (P - RMajNow); log lobbying with an AR term.
+**What it computes:** log giving ~ sector FE + growth(t-1, t) + phase + tossup + trend; RShare ~ growth + Shift (P - RMajNow); log lobbying with an AR term.
 
-**Method.** Wild sector-cluster bootstrap with Holm adjustment; two-way cluster SE as sensitivity; FD sensitivity. Results: no stable partisan shift (-0.04, p .76); the lobbying lead flips sign under year FE; growth adds no adjusted R2.
+**Method:** Wild sector-cluster bootstrap with Holm adjustment; two-way cluster SE as sensitivity; FD sensitivity. Results: no stable partisan shift (-0.04, p .76); the lobbying lead flips sign under year FE; growth adds no adjusted R2.
 
-**Code refs.** `C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R`, `C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R`
+**Code refs:** `C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R`, `C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R`
 
-**Assumptions**
+**Assumptions:**
 - Lagged growth predicts giving
 - Expected control is known at the time (retrospective for 2023/2025)
+
+**Evidence:** 37 rows (8 VERIFIED, 29 VERIFIED-SOFTENED) from 22 distinct papers.
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -67,6 +62,16 @@ Computed from the hub file: 38 evidence rows (9 VERIFIED, 29 VERIFIED-SOFTENED) 
 | [[zeileis-nd-various-versatile-variances]] |  | suggests-extension | Exp IV: for small G the coverage order is HC3 best, then HC2, HC1, HC0. The authors say their results are not consistent with HC3 being overly aggressive, though HC3 slightly over-corrects at G = 10 for binomial. The clustered bootstrap (R = 250) is somewhat better than HC0 and HC1 at small G. Pustejovsky and Tipton (2018) is cited as recommending HC2 with Satterthwaite t. | The paper's bootstrap is a clustered bootstrap with R = 250; its resampling type is not stated for the simulations, and wild or Webb bootstrap-t is not tested. So the paper cannot rank WCR against CR2 or CR3. The HC3 ranking is for linear and GLM fits with balanced clusters of 5, not two-way designs with about 9 sector clusters. | weak | VERIFIED-SOFTENED |
 | [[zeileis-nd-object-oriented-computation]] |  | method-source | Meat is the outer product of estimating functions with optional n/(n-k) adjustment (Eq. 10, p.6); sandwich errors lose power under correct specification and are useful only if estimates stay consistent; probit age p moves from .033 to .051 (n = 601, Sec 5.2). | HC1 and CR1 formulas match Eq. 10 with cluster sums added. The paper's meat assumes independent rows, so within-sector dependence needs CR1, which the paper does not treat. Statsmodels cross-check is in code/tests/test_estimate.py lines 44-45, not tests/ at repo root. | moderate | VERIFIED-SOFTENED |
 | [[zeileis-nd-econometric-computing-with]] |  | context | HC variants use the sandwich form (X'X)^-1 X' Omega X (X'X)^-1 with diagonal Omega weights built from residuals and the hat-matrix diagonal; HC0 to HC4 differ only in these weights. | Context only. Any HC3 column for DESCRIPTIVE fits is an UNVERIFIED suggestion until a second path reproduces it (DE-062). | weak | VERIFIED |
+| [[ansolabehere-2002-little-money-politics]] | 2002 | supports | In the gubernatorial panel (N = 326, state FE) the income elasticity of spending is 1.07 and 1.17 across Table 3 specifications, and per-capita state government spending has no independent effect (-0.09). Real campaign spending roughly doubled 1976-2000 but shows no trend relative to national income. 94 top executives at 12 large firms gave about 7500 dollars per cycle, or 51 dollars per 100000 of annual compensation (0.05 percent), against 0.04 percent of national income in 2000. | The paper's units are states and aggregate federal spending, not industry sectors. The consumption account predicts that employee and executive giving follows donor income rather than industry fortunes, consistent with the study's null. A real-dollar trend may partly reflect income growth. The executive figure is a share of compensation, which the paper says overstates the income share. | moderate | VERIFIED-SOFTENED |
+| [[callaway-2025-difference-differences-continuous]] | 2025 | qualifies | The TWFE slope on a continuous dose is a weighted integral of ATT(d/d). In the levels form the weights integrate to zero and are negative for doses below the mean dose (Thm 3.4b). Under PT the causal-response form is a convex average of ACRT(d/d) plus a selection-bias term (Thm 3.4a). With no untreated units only differences relative to the lowest dose are identified (Remarks 3.1, 3.2). Application: TWFE 1.14 (s.e. 0.099), ATT_loc 0.80 (s.e. 0.05), ACRT_glob -0.08 (s.e. 0.19); dropping untreated units shrinks TWFE by 78 percent; recoding dose from 0-1 to 0-100 shrinks it to 0.0114. | The paper's formal results cover two-period and staggered absorbing doses. Sector growth is non-absorbing and changes every year, so the decomposition does not carry over exactly; the de Chaisemartin and D'Haultfoeuille estimators the paper cites fit that case. The qualitative lesson transfers: a null or sign-changing pooled growth slope under FE can reflect implicit weighting across sector-years and heterogeneous sector responses, not only zero response. Window and denominator: sector-years in each test's gated sample. | moderate | VERIFIED-SOFTENED |
+| [[defigueiredo-2013-advancing-empirical-research]] | 2013 | supports | Kerr, Lincoln and Mishra as cited: a firm that lobbied last year lobbies this year with 92 percent probability (firm-level, federal). Within-group variation in lobbying is little, so fixed-effects designs need external shocks; omitted channels and endogenous selection into lobbying bias naive estimates. | The 92 percent is a firm-level federal figure, not a sector-year figure. The essay gives no sign for any sector coefficient, so the sign reversal is a fixed-effects fragility the essay anticipates, not validation of either sign. Figures must name window and denominator. | moderate | VERIFIED |
+| [[kerr-2014-dynamics-firm-lobbying]] | 2014 | method-source | Short panel (T=9, 1998-2006). Within-firm FE OLS gives 0.44 (column 7; column 8 gives 0.34), which the authors expect to be biased downward following Nickell 1981. Blundell-Bond GMM with lag-two instruments gives 0.84-0.88 (columns 2-6). Arellano-Bond is more sensitive across variants; its point estimate is 0.52 (SE 0.18) in Appendix Table 3 column 2, which the analyst omitted. | The Nickell-bias order (1+rho)/(T-1) is a textbook approximation, not a Kerr result; applying it to Mentat is new agent analysis and stays UNVERIFIED (DE-062). The claim that GMM is not feasible with 5 clusters has no source in Kerr or the brain and was not verified. | moderate | VERIFIED-SOFTENED |
+| [[kerr-2014-dynamics-firm-lobbying]] | 2014 | suggests-extension | Mean annual sales 5,407 ($m) for lobbying firms vs 1,423 for non-lobbying firms (Table 1; 327 lobbying firms of 3,260, 1998-2006). Policy response identified from 2001 dependence times a 2004-2006 binding-cap dummy with firm and year FE; high-skilled lobbying 0.043 (SE 0.014) per log LCA count (Table 5, 846 core obs). Falsification on unrelated issues is null (pp.15-16). | Kerr shows size predicts who lobbies, and that the 2004 response came from already-lobbying firms changing issues. Kerr does not show that yearly changes follow shared issue shocks, which the analyst text claims. A dated CU or bank policy design would be a new preregistered estimand, not a rescue of the growth tests. | weak | VERIFIED-SOFTENED |
+| [[mackinnon-2017-wild-bootstrap-inference]] | 2017 | method-source | With unequal state-sized clusters (G = 50, Table 2) CRVE t(G-1) rejection at nominal .05 runs from 0.0567 to 0.1078 across the rho grid (0.10718 at rho_eps 0.9, rho_x 1); at G = 100 (Table 4) it reaches 0.08442; the restricted wild cluster bootstrap stays between 0.04905 and 0.05277 (Table 2). The conclusion recommends WCR over t(G-1) and says G* critical values often improve matters but do not always work as well. | The paper's size evidence is for Rademacher weights. The study uses Webb six-point weights, which this paper does not evaluate; it only cites Webb (2014) for G below about 12. Paper designs are linear models with G from 12 to 200. Whether the study's sector cluster sizes are near-balanced was not checked against study data in this pass; H5 bioguide clusters are the likely unequal-size case. | moderate | VERIFIED-SOFTENED |
+| [[mackinnon-2017-wild-bootstrap-inference]] | 2017 | qualifies | The paper says Rademacher weights should not be used when G is below about 12 and points to Webb (2014) for that regime, but does not itself test Webb six-point weights. Its evidence starts at G = 12 (Appendix A.6 uses G = 12, 16, 20, 25, 32; Sections 6 and 7 use larger G). It says the exact G1 cutoffs for safe bootstrap inference are data dependent. | The paper gives no rejection rates at G of 3 to 9 and no evidence on six-point weights. Bootstrap p-values at 3 to 9 sectors are therefore unverified by this paper and need the study's own placebo or simulated-null check, or Webb (2014), before being read as correctly sized. | moderate | VERIFIED-SOFTENED |
+| [[mackinnon-2017-wild-bootstrap-inference]] | 2017 | supports | With G1 = 1 (one treated cluster among 50 equal-sized clusters), the CRVE t(G-1) test rejects 77.75 percent of the time at .05, and the restricted wild bootstrap never rejects at any conventional level in these experiments. For equal-sized DiD the paper says the bootstrap can probably be used safely for 7 <= G1 <= G-7 and is likely misleading below 4 or above G-4. | The paper's G1 is a count of treated clusters for a binary DiD regressor. For continuous growth terms the analogue is how concentrated OLS weight is across sectors; the study reports this per year but not per sector. The 4-to-7 cutoffs are for the bootstrap in equal-sized DiD and do not transfer as numeric cutoffs to continuous terms. | moderate | VERIFIED-SOFTENED |
+| [[mackinnon-2017-wild-bootstrap-inference]] | 2017 | supports | Conclusion: cluster-robust t inference should not be trusted even when the sample is large and the rule of 42 is satisfied, because overrejection with wildly unequal cluster sizes is serious; the paper's results are for one-way clustering. | The paper tests one-way clustering only, so the claim that the two-way CRVE inherits the t(G-1) warning a fortiori is the analyst's reasoning, not a paper result. The about 7 years figure was not checked against study data. | weak | VERIFIED |
+| [[snowberg-2006-partisan-impacts-economy]] | 2006 | method-source | Partisan shock is the indicator of a Republican president minus the pre-election prediction-market probability of a Republican president. Table 3, 1880-2004: coefficient 0.0255 (SE 0.0082) without the incumbent term and 0.0248 (SE 0.0084) with it; incumbent-party term -0.0046 (SE 0.0084). Congressional control could not be tested because markets did not track it before 1994 (fn 19). | Shift is an expected change in control before the election. The paper's shock is realized outcome minus prior expectation, so it transfers only to post-election giving. Independent shocks equal the number of elections, so any estimate is few-cluster and must say so. The sign convention must be stated as Democratic control, not Republican P. | moderate | VERIFIED-SOFTENED |
 | [[note-request-for-review-industry-economic-performance]] | 2026 | method-source | Pooled sector-FE models: (1) log Contrib on G(t-1), G(t), Neg(t-1), Midterm, Pres, Tossup, Trend; (2) RShare by chamber on growth, Shift, RMajNow, Midterm, Pres; (3) log Lobby on lagged log Lobby, growth, Neg, Unified. Growth z-scored within sector; CPI-deflated dollars; wild cluster bootstrap by sector; proposed sample 2008-2025 with 5 initial sectors (expansion to about 70 BEA industries allowed). | Holds only as a statement of the memo design. The build departs from it (next bearing), so build results must not be read as memo tests. | internal (design doc) | VERIFIED |
 | [[note-request-for-review-industry-economic-performance]] | 2026 | contradicts | Both growth timings belong in one regression (distributed lag) because separate models would each pick up part of the other effect. Totals get Tossup = 1 - abs(2P - 1), not a signed Republican-gains term. A Neg dummy, a Trend and lagged log lobbying are included. Lobbying uses Unified control. | Applies to every CORE C and L result. Rulings R4-R8 and the 2026-09-26 rulings may supersede parts of the memo, but results from separate-timing, signed-control models should not be reported as tests of memo H1 or H3. | internal (design doc) | VERIFIED-SOFTENED |
 | [[note-industry-growth-and-political-spending-research]] | 2026 | method-source | Six core tests C1-C3 (contributions) and L1-L3 (lobbying), each with prior actual, same-year actual or predicted growth as the regressor; Y in millions of 2025 USD; X in percentage points; keep all six results including nulls; nine planned sectors give few independent groups so ordinary independent-row OLS errors are not sufficient for strong significance claims. | Direct for the six-test design and the inference rules. The plan asks for dollar levels as the main outcome, and the build keeps levels as the main outcome too, so the log departure is a robustness addition, not the main model. Label any log-based figure as robustness. | internal (design doc) | VERIFIED-SOFTENED |
@@ -80,78 +85,113 @@ Computed from the hub file: 38 evidence rows (9 VERIFIED, 29 VERIFIED-SOFTENED) 
 | [[note-sector-growth-and-political-spending-source]] | 2026 | method-source | Six core tests: Spending(sector, year) = sector baseline + b x Growth(sector, year-k) + c PresidentialYear + d MidtermYear + e ExpectedDemHouse + f ExpectedDemSenate, with k = 0 or k = 1, plus two predicted-growth tests; each run for contributions and lobbying; 72 sector-years (4 sectors x 2008-2025); no regressions run yet. | The built study is not the note's scope. The primary sector-year window is 2020-2025 with at least 6 distinct years (SGS_WINDOW_RULE, sgs_registry.R lines 17-18; ruling R8 per sgs_config.R line 34), with a fallback of 10 consecutive years inside 2008-2025 only if the primary fails. The LobbyView tests use the 2008-2025 fallback. The claim that same-year growth is outside a real forecast's information set is not in the note and could not be verified, so it is removed. | internal (design doc) | VERIFIED-SOFTENED |
 | [[note-sector-growth-and-political-spending-source]] | 2026 | measurement-source | Real growth = 100 x (rev_t / rev_t-1 - 1) on IBISWorld constant-price revenue with no further CPI adjustment. Spending in 2025 dollars = nominal x 321.9 / CPI_year. Democratic share = D / (D + R) by chamber, missing when the denominator is zero. Blanks stay missing, never zero. | IBISWorld covers whole industries while Mentat contributions cover a roster of companies, a population mismatch the note does not state. The attribution of this mismatch to ruling 6 is not in the note and was not verified. IBISWorld historical values may include estimates and later revisions (text line 38). | internal (design doc) | VERIFIED-SOFTENED |
 
-Rows: 27 (6 VERIFIED, 21 VERIFIED-SOFTENED); distinct papers: 16.
+### Assessment
 
-**Evidence weight: moderate on design and inference, nil on the substantive question.** No VERIFIED bearing tests whether sector growth predicts sector giving or lobbying within sectors over time. Everything else falls into three groups.
+**Evidence weight: moderate on method, weak to none on substance.**
 
-**1. The study's own design documents.** These are strong, mostly VERIFIED, and include two direct contradictions:
-- The external review wants log S = sector FE + year FE + beta g(t-1) as the main model. In the build that form exists only as robustness (R-yearFE, R-log, R-logFE).
-- The review wants corporate and trade PAC-to-candidate disbursements as the outcome. Ruling R4 instead uses Mentat general giving across all recipient categories. Only 5.6% of general-giving dollars reach House or Senate candidate committees (workbook 08, window 2019-2026, 2019-2020 missing). Company-PAC gifts are 8.84% of 2021-25 nominal giving.
-- Both documents point the same way, and both are overruled by Paul's rulings. The cost is that C1-C3 should not be read as a test of a capacity (deep-pockets) mechanism on PAC money.
-- The original memo specified joint distributed-lag timing with Tossup, Neg and Trend terms and logs. The build runs separate single-timing models in levels, so build results are not memo H1/H3 tests.
+**Design and spec (strong, from Paul's own notes).** Four design notes give direct, same-panel bearings:
+- The Research Plan sets six core tests (C1-C3, L1-L3). It keeps dollar levels as the main outcome, keeps nulls, and warns that 9 planned sectors give few independent groups.
+- The source check note gives the same equation with sector baselines and four national controls.
+- The Request-for-Review memo specified:
+  - a distributed lag with both growth timings in one model
+  - Tossup = 1 - |2P - 1|, a Neg dummy and a Trend
+  - log lobbying with an AR term
+  - Unified control
+- The Review recommends log S = sector FE + year FE + lagged raw growth as the main model, with PAC-to-candidate disbursements as the campaign outcome.
 
-**2. Inference-method sources.** These are moderate: Zeileis's sandwich papers and the review's few-cluster advice. They support the wild cluster restricted bootstrap with Webb weights and the DESCRIPTIVE label when p < 2/6^G cannot be reached. They also warn that cluster SEs are understated near G = 10, and the study has 4 to 9 sectors. The hand-coded two-way CR1 has not been cross-checked against sandwich::vcovCL (single path, DE-062).
+The build follows the Plan and source check, not the memo or the Review:
+- C1-C3 and L1-L3 are separate single-timing models.
+- Outcomes are levels (`contributions_real_m`, `lobby_lv_real_m`).
+- There is no Tossup, Neg, Trend or lagged DV.
+- Year FE, log and log-FE fits exist only as the robustness variants R-yearFE, R-log and R-logFE.
 
-**3. Firm-level lobbying-returns literature.** This qualifies the study but does not transfer:
-- Huneeus & Kim: IV log-sales elasticity 0.227 post-2007 (Compustat, 1999-2015). Its IV is 4.5 to 7.3 times its OLS, which shows that growth and lobbying are simultaneous. A growth-to-lobbying OLS with fixed effects cannot sign the lead.
-- Bickmore 2025: between-firm, within-NAICS share coefficients (1998-2016), pooled across industries, so UNSTRATIFIED.
-- Alexander 2009: one-era cross-section of firms winning a 2004-2006 tax benefit.
-- Bombardini & Trebbi: firm size elasticity about 1.
-- None has within-sector-over-time variation. A sector-year null therefore neither confirms nor contradicts them.
+**Recorded results (VERIFIED as hard-coded reference values in `sgs_review.R`; UNVERIFIED as a fresh re-estimation under DE-062).** These are UNSTRATIFIED pooled slopes unless the per-sector SLOPES strata are quoted beside them.
+- L3-LV: +0.352 (n = 77 sector-years) becomes -0.477 with sector + year FE. Log-FE gives -0.006. FDY gives -0.537 over 71 adjacent pairs.
+- Adjusted R2 is 0.884717 with predicted growth and 0.884690 without, on the same 77 rows.
+- In the latest run (analysis-R-20260926T221444Z), the L1-LV year-FE growth slope is -0.0014 (s.e. 0.123). Adjusted R2 is 0.8863 with the term and 0.8874 without.
+- The LobbyView tests use the 2008-2025 fallback window. The contribution core uses 2020-2025 (R8).
+- The SHIFT figure, -0.04 (p 0.76), is the preview SHIFT-Chamber-PV: 2021-25, 80 rows, 4 residual df, below the 6-year minimum, post-result exploratory. Core SHIFT-House and SHIFT-Senate are NOT ESTIMABLE in the latest report.
 
-**The results as recorded.** These are hard-coded reference values from the Codex review run analysis-R-20260926T070630Z. They are single-path and UNSTRATIFIED unless the per-sector SLOPES are quoted beside them.
-- L3-LV slope, LobbyView, 2008-2025 fallback window: +0.352 (n = 77 sector-years). It becomes -0.477 with sector + year FE, -0.006 log-FE, and -0.537 FDY (71 adjacent pairs).
-- Adjusted R2 is 0.884717 with growth vs 0.884690 without on the same rows, so growth adds almost nothing.
-- Imai & Kim 2021 and Blackwell 2026 say why a sign flip under year FE is expected under linear-additivity failure or feedback: neither sign is causal. Imai & Kim covers binary treatment only. The continuous-treatment extension Paul's design needs is Callaway, Goodman-Bacon & Sant'Anna, downloaded this pass and unread, so it is a lead. That paper argues TWFE slopes on a continuous dose are hard to interpret even with two periods.
+**Method literature (strong qualifier).**
+- Imai & Kim (2021): a 2FE slope's causal reading rests on linearity. One-way FE, two-way FE and FD fits target differently weighted contrasts. This is formally for a binary treatment.
+- Callaway et al. (2025): a TWFE slope on a continuous dose is a weighted integral whose levels-form weights go negative below the mean dose. A null or sign-flipping pooled slope can reflect weighting and heterogeneity, not zero response. Their theorems cover absorbing doses; for non-absorbing growth the de Chaisemartin-D'Haultfoeuille estimators fit.
+- Blackwell (2026): unit-FE regressions are biased under treatment-covariate feedback. A sign flip under year FE is consistent with that, so neither sign is causal.
+- Huneeus & Kim (2018): lobbying raises revenue. The preferred IV log-sales elasticity is 0.227 (post-2007; 0.319 all years), 4.5 to 7.3 times OLS. So growth to lobbying is simultaneous and FE-OLS cannot sign the lead.
+- Kerr et al. (2014) and de Figueiredo (2013): lobbying is highly persistent (92% firm-level, federal). Within variation is thin, so FE designs need external shocks. FE-OLS persistence (0.34-0.44) sits well below GMM (0.84-0.88).
 
-**SHIFT.** The reported -0.04 (p .76) is the post-result exploratory preview: 2021-25, 80 rows, 4 residual df. The House +0.68 is SATURATED (2023 vs 2025 only). The design also cannot separate expected from current control, because exp_shift enters the contribution model without cur_dem (f(P-M)+gM = fP+(g-f)M). Expected control for 2023-2025 is RETROSPECTIVE / NOWCAST, and the 2023 value was measured in Nov 2024. Any main-series figure needs the STRICT variant quoted beside it.
+**Inference literature (moderate).**
+- MacKinnon & Webb (2017): the restricted wild cluster bootstrap holds size where CRVE t(G-1) over-rejects. Its evidence starts at G = 12 with Rademacher weights. It gives no rejection rates at the study's 3 to 9 sector clusters and does not test Webb six-point weights.
+- Zeileis (Various Versatile Variances): clustered SEs are underestimated at G = 10, and HC3/HC2 cover best at small G.
+- The study's own rules (DESCRIPTIVE label below 3 clusters, the 2/6^G p floor, LOSO/LOYO) are sound but not shown to be correctly sized.
 
-**Online-scan lead.** Fremeth, Richter & Schaufele (MPRA 2018, downloaded, UNVERIFIED) report that firms held at PAC contribution limits shift money to lobbying. If so, modelling C and L as independent families misses substitution between them.
+**Substantive literature (weak transfer).**
+- Bombardini & Trebbi and Huneeus & Kim: a firm sales elasticity of about 1, cross-sectional.
+- Bickmore (2025): between-firm, with lobbying on the right-hand side, pooled across industries (UNSTRATIFIED).
+- Alexander (2009): cross-sectional and single-era, 2004-06.
+- None of these says anything about within-sector, over-time growth to spending once year shocks are absorbed. A sector-year null does not conflict with them.
+- Ansolabehere et al. (2002) is the one source that bears in the null's direction: income elasticity of state campaign spending about 1.07 to 1.17 (N = 326 gubernatorial panel), giving as consumption. This is states, not sectors.
+- The anonymous cross-industry memo is anecdote about executive-branch pressure, not congressional control. It is not citable as a finding.
 
-**Contradictions**
-- External review (VERIFIED) says the main model should be log dollars with sector and year FE on lagged raw growth. The build's core is dollar levels with national controls and no year effects; year-FE and log forms are robustness only. The review defers the promotion to Paul.
-- External review (VERIFIED) says the outcome should be corporate and trade PAC-to-candidate money, with channels kept separate. Ruling R4 uses general giving across all recipient categories and keeps non-giving other-receipt rows (for example Stripe $464K to NRSC, 2021-22). Only 5.6% of general-giving dollars reach candidate committees (window 2019-2026, 2019-2020 missing).
-- Request-for-review memo specifies a joint distributed lag, Tossup = 1 - |2P - 1|, Neg, Trend, lagged log lobbying and Unified control. The build runs C1-C3 as separate single-timing models, in levels, with signed exp_dem controls, no Tossup, Neg or Trend, and no lagged DV for lobbying. Build results are not memo H1/H3 tests.
-- L3-LV pooled slope is +0.352 in the base model (n = 77 sector-years, LobbyView, 2008-2025 fallback) and -0.477 under sector + year FE; FDY gives -0.537 (71 pairs). These are reference values from one Codex review run, single-path (DE-062), UNSTRATIFIED.
-- The component text quotes 'no stable partisan shift (-0.04, p .76)' as a result. It is the exploratory SHIFT-Chamber-PV preview (2021-25, 80 rows, 4 residual df, below the 6-year minimum). Core SHIFT-House and SHIFT-Senate are NOT ESTIMABLE, so it cannot be quoted as an annual test result.
-- SHIFT enters exp_shift without cur_dem in the contribution model, so it cannot separate expected from current control (review, VERIFIED-SOFTENED).
+**Measurement.**
+- IBISWorld whole-industry revenue is set against a Mentat company roster (a population mismatch). IBISWorld history may include estimates and revisions.
+- The LobbyView undifferentiated sum double counts self-filer fees (median 9 to 26% by sector). LDA here is an outcome, not an edge or weight (D-021 is untouched).
+- Expected control for 2023-2025 is RETROSPECTIVE / NOWCAST under Paul's ruling. The 2023 value was measured in Nov 2024. The STRICT variant should be quoted beside any main-series result.
 
-**Gaps**
-- No study, in the vault or found online, estimates sector-level (or firm-level) growth on political giving with year fixed effects. Filling it needs a long multi-industry panel (2000-2025, 20 or more BEA industries) with sector + year FE and log PAC-to-candidate outcomes. Alternatively, a firm-level panel with firm + year FE and plausibly exogenous revenue shocks (commodity price, trade or procurement shocks) used as instruments for growth.
-- No evidence on whether growth effects differ by sector: the per-sector SLOPES strata are not reported beside the pooled slope. Needs sector-stratified estimates or a random-slopes model, quoted with the pooled figure.
-- Two-way CR1 equivalence with sandwich::vcovCL, and whether sector-year cells are singletons (the multi0 question), are unchecked. Needs a second-path reproduction on the study design.
-- No evidence on substitution between giving and lobbying at sector grain. Fremeth et al. 2018 (downloaded, unread) is a firm-level lead; a joint or seemingly-unrelated C/L model would test it.
-- No timing-clean expected-control series for 2023-2025. The STRICT variant is the only clean check; a dated as-of forecast archive (IEM, Kalshi or Polymarket snapshots with timestamps) would fill it.
+### Contradictions
 
-**Paul's position vs the evidence**
+- The component's 'computes' text (log giving with tossup and trend; log lobbying with an AR term) describes the memo design, not the build. The build uses dollar levels, separate single-timing models, and has no Tossup, Neg, Trend or lagged DV (note-request-for-review-industry-economic-performance, contradicts, strong). Build results must not be reported as tests of memo H1 or H3.
+- The Review (note-review-industry-growth-and-political-spending, contradicts, strong) says the main model should be log dollars with sector and full year FE. The build keeps year FE and logs as robustness only. Under the Review's preferred spec the L3-LV sign is negative (-0.477) or near zero (log-FE -0.006), not +0.352. Promoting it is Paul's call.
+- Outcome scope: the Review wants corporate and trade PAC disbursements to candidates, with channels kept separate. Ruling R4 uses general giving across all recipient categories and keeps non-giving receipts. Only 5.6% of general-giving dollars reach House or Senate candidate committees (workbook 08, 2019-2026 window, 2019-2020 missing), and company-PAC gifts are 8.84% of 2021-25 nominal giving. Paul's ruling governs, but the C tests are then not a test of a PAC-capacity mechanism.
+- SHIFT: with Shift = P - M, f(P - M) + gM = fP + (g - f)M, so Shift adds nothing beyond P and M. The contribution core carries exp_dem but not cur_dem, so H4shift-C cannot separate expected from current power. The sign convention also differs: the code uses Democratic control, the brain contract uses Republican P.
+- The 'returns literature motivates deep-pockets' reading conflicts with what the papers measure. Huneeus & Kim runs lobbying to revenue (the reverse direction), and the others are between-firm and cross-sectional. Huneeus & Kim is evidence of simultaneity in the study's design, not support for its hypothesis.
+- Minor: some bearings could not find the Holm step in sgs_estimate.R, while the Research Plan bearing records Holm across pre-specified families in the build. The location of the Holm adjustment should be pinned.
 
-Paul says the returns literature motivates the deep-pockets hypothesis. It does so only loosely: Huneeus & Kim, Bickmore, Alexander and Bombardini & Trebbi are firm-level and cross-sectional (or firm-FE IV with Compustat public firms and no trade associations). They describe size and lobbying, or lobbying and revenue, not within-sector growth over time leading to more spending. The Bombardini row says outright that they should not be cited as support for deep-pockets at sector-year grain.
+### Gaps
 
-His second claim, that the null results cut against a confident ROI reading, overstates in the other direction. A sector-year null with year FE does not conflict with firm-level revenue returns, because the two answer different questions. The fair reading is that the study neither confirms nor refutes the returns literature.
+- No paper estimates a within-industry, over-time effect of revenue growth on political giving or lobbying with year shocks absorbed. Fill it with a firm-year or industry-year panel that uses plausibly exogenous demand shocks: shift-share or Bartik industry exposure, commodity-price or trade-tariff shocks, or a dated regulatory shock in the Kerr H-1B style. Use year FE, split outcomes by channel (PAC-to-candidate, individual employee, lobbying), and report heterogeneity-robust continuous-dose estimators (de Chaisemartin-D'Haultfoeuille or Callaway et al.).
+- No paper on disk tests whether expected change in congressional control shifts industry partisan giving share at annual grain. Snowberg's shock transfers only to post-election giving, and Cox & Magar 1999 (about $36,000 per member, cited, unverified) is not on disk. Fill it with an event study around surprise House control changes (2006, 2010, 2018), chamber-stratified, using realized-minus-expected control as the shock and corporate PAC partisan share as the outcome.
+- No evidence on the size of the wild cluster restricted bootstrap with Webb six-point weights at 3 to 9 clusters. Fill it with the study's own simulated-null or placebo battery at its actual sector cluster sizes, or by putting Webb (2014) on disk.
+- No source validates that IBISWorld industry revenue tracks the growth of the Mentat company roster. Fill it with a roster-level revenue reconstruction (Compustat or 10-K) checked against IBISWorld by sector-year.
 
-His third point, that Imai & Kim's 2FE caution bears on the design, is right and well supported (VERIFIED-SOFTENED, strong). Two limits apply. The paper is binary-treatment only, and it does not make the year-FE coefficient the 'true' effect. Callaway, Goodman-Bacon & Sant'Anna (downloaded) is the continuous-dose source to read next.
+### Paul's position vs the evidence
 
-On citations: Grier, Munger & Roberts 1994 is listed under a title mismatch. The actual APSR 88:911-932 title is 'The Determinants of Industry Political Activity, 1978-1986'. Kerr, Lincoln & Mishra 2014 is 'The Dynamics of Firm Lobbying', AEJ: Policy 6(4).
+Paul's position has three parts: (a) the returns literature (Huneeus & Kim, Bickmore, Alexander, Kerr) motivates the deep-pockets hypothesis; (b) Imai & Kim's 2FE caution bears on the design; (c) the null cuts against the confident ROI reading in his annotations.
 
-**Open questions**
-- Should the review's log year-FE model become primary, or stay robustness? This is Paul's ruling; the review says so.
-- Does the C family keep general giving (R4) or add a PAC-to-candidate primary? With 5.6% of dollars reaching candidates, the current DV mostly measures other channels.
-- Will per-sector SLOPES strata be quoted beside every pooled growth coefficient, as the wording rule requires?
-- Should SHIFT add cur_dem to the contribution model so expected and current control are separately identified?
-- Does the L family need a giving-lobbying substitution term (Fremeth et al. lead)?
+- **On (a):** the evidence says the motivation does not transfer. Every returns figure is firm-level and cross-sectional, or IV on lobbying to revenue. None predicts a within-sector growth-to-spending slope after year shocks. Huneeus & Kim in fact implies the growth-to-lobbying regression is simultaneous. These papers should be cited as context, not as support. A sector-year null does not contradict them, so the null does not refute deep pockets at firm grain either.
+- **On (b):** Paul's caution is well placed and, if anything, understated. Imai & Kim is formally binary-treatment. Callaway et al. (continuous dose, negative weights) and Blackwell (feedback bias) are the closer fits and imply that neither the +0.352 nor the -0.477 is causal.
+- **On (c):** the evidence agrees. Ansolabehere's consumption account fits a null, and the recorded adjusted-R2 gain is 0.000027 on 77 rows.
 
-**Read first:** [[note-review-industry-growth-and-political-spending]], [[imai-2021-fixed-effects-regression]], [[huneeus-2018-effects-firms-lobbying]], [[blackwell-2026-effect-political-advertising]], [[zeileis-nd-various-versatile-variances]], [[bombardini-2020-empirical-models-lobbying]]
+The review note Paul commissioned goes further than his position. It argues the year-FE log model should be primary, which would make the headline a negative or near-zero slope. That decision is open and Paul's.
+
+### Open questions
+
+- Should the year-FE log specification (Review) be promoted to primary, or stay robustness under the Plan? This is Paul's ruling.
+- Do the per-sector SLOPES strata show sign heterogeneity that explains the pooled flip? The pooled slopes are currently UNSTRATIFIED.
+- Has any second path (sandwich::vcovCL, fwildclusterboot) reproduced the CR1 two-way formula and the bootstrap p-values (DE-062)? Are the sector-year cells singletons, where Zeileis's multi0 advice applies?
+- Should H4shift-C add cur_dem so that expected and current power can be separated?
+- Does the general-giving DV include individual employee receipts, and how much of the C-test variance is non-candidate flows?
+
+### Read first
+
+- [[note-review-industry-growth-and-political-spending]]
+- [[callaway-2025-difference-differences-continuous]]
+- [[imai-2021-fixed-effects-regression]]
+- [[huneeus-2018-effects-firms-lobbying]]
+- [[mackinnon-2017-wild-bootstrap-inference]]
+- [[blackwell-2026-effect-political-advertising]]
 
 ## SEATS-W weekly seat-gain test (2022 House)
 
-**What it computes.** Weekly D share of giving vs expected D seats gained: -3.47 pp per seat (House), block-bootstrap p .0086-.0174; Senate null.
+**What it computes:** Weekly D share of giving vs expected D seats gained: -3.47 pp per seat (House), block-bootstrap p .0086-.0174; Senate null.
 
-**Method.** Fixed-X block bootstrap (3 and 5 weeks), Holm; HAC as secondary. One election.
+**Method:** Fixed-X block bootstrap (3 and 5 weeks), Holm; HAC as secondary. One election.
 
-**Code refs.** `C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R`
+**Code refs:** `C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R`
 
-**Assumptions**
+**Assumptions:**
 - As-of seat forecasts precede spending
+
+**Evidence:** 13 rows (3 VERIFIED, 10 VERIFIED-SOFTENED) from 12 distinct papers.
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -163,94 +203,115 @@ On citations: Grier, Munger & Roberts 1994 is listed under a title mismatch. The
 | [[zeileis-nd-object-oriented-computation]] |  | method-source | HAC meat is a weighted sum of lagged estimating-function cross-products (Eq. 11, p.7) behind NeweyWest-type wrappers; no coverage study is reported, and Kiefer-Vogelsang fixed-b testing is named as an alternative (Sec 6, p.14). | Lags, Bartlett weights and n/(n-p) factor match the paper's Eq. 11 setup. The paper gives no finite-sample guarantee, so the caveat that HAC is secondary applies. The 17-week figure appears in the code comment at sgs_seats.R lines 71-77 as an example of an interval, not as a stated cycle length. No second-path check against sandwich::NeweyWest was found in code/tests. | moderate | VERIFIED-SOFTENED |
 | [[zeileis-nd-econometric-computing-with]] |  | method-source | Eq. 6 HAC is a weighted sum of lagged products of estimating functions. Investment example RealGNP SE is 0.0168 (Newey-West lag 4, no prewhitening), 0.0236 (Newey-West automatic bandwidth with prewhitening) and 0.0208 (Parzen kernel, VAR(2) prewhitening, no finite-sample adjustment). Spread about 40 percent (0.0236 vs 0.0168). Coefficient 0.1691 is significant under all three; paper says the estimators give slightly different SEs but agree on the conclusion. | Paper examples are time series; RealInt has 103 quarterly obs (1961(1)-1986(3)); Investment length is not stated in the text (fitted series starts 1964). The text does not call the series stationary and gives no coverage evidence at weekly-panel sizes. The ~40 percent spread supports showing several lag settings, not validating any one lag. | moderate | VERIFIED-SOFTENED |
 | [[bouton-2022-small-campaign-donors]] | 2022 | suggests-extension | Weekly giving is dominated by calendar and event shocks. 30 of 31 abnormal weeks for large donors coincide with quarterly deadlines, against 27 of 43 for small donors. The week of Justice Ginsburg's death carried 13.0 percent of 2020 small-donor contributions versus 5.9 percent for large donors. | Relevant only if the weekly series includes individual employee receipts and if deadline or event surges differ by party. Dobbs in 2022 is an example event. A quarter-end and event-week sensitivity is a candidate check, not a demonstrated bias. Unverified agent analysis (DE-062). | weak | VERIFIED-SOFTENED |
+| [[snowberg-2006-partisan-impacts-economy]] | 2006 | qualifies | Table 2 daily-close campaign regressions give S&P coefficients 0.087 (daily), 0.128 (5-day) and 0.243 (20-day); oil -7.269 (5-day) and -12.570 (20-day). Text says the Table 2 equity effect is roughly a factor of ten larger than Table 1 (0.016 at 10-min differences, n=104). Authors attribute the gap to bias from reverse causation and common shocks. The OLS upper-bound statement (p.11, fn 14) concerns the reverse regression of the Bush probability on the S&P (2.3 and 3.3 pp per 10 percent rise), and holds if the shock correlation is non-negative, a sufficient condition. | The size of the bias does not transfer to PAC giving (lumpy, deadline-driven, different series), but the existence of a common-shock confound does: the as-of lag removes within-week ordering, not shared news moving forecasts and giving together. The negative slope cannot be read as donors moving toward or away from the expected winner. An upper-bound argument needs a stated correlation sign, which SEATS-W does not supply. | moderate | VERIFIED-SOFTENED |
+| [[snowberg-2006-partisan-impacts-economy]] | 2006 | context | Identification uses two discrete election-night jumps in the Bush probability: the 2004 exit-poll leak (about 55 to 30 percent, then 95) and the 2000 Florida calls. Equity effects are 10- and 30-minute regressions (Table 1); a Wald estimator is stated explicitly only for yields (TIP and IEF, p.8-9). Footnote 9 splits the sample at 8pm and 10pm to test feedback. The paper does not recommend event-window designs; footnote 13 names instrumental variables as the ideal and leaves it open. | An event-window design needs forecast jumps from news plausibly unrelated to donor behaviour, and transaction-dated giving fine enough around each jump. The 2022 538 run timestamps could support a search, which stays UNVERIFIED until a second path reproduces it (DE-062) and names its window and denominator. A Wald ratio needs a donor-side response series that the paper does not have. | moderate | VERIFIED-SOFTENED |
 | [[note-request-for-review-industry-economic-performance]] | 2026 | qualifies | Probability of majority control is the preferred projected-control measure because access comes with majority status (Cox and Magar 1999, about 36,000 USD per member, cited and not verified here). Expected seat change is kept only as a robustness check. Q4 asks how quickly PAC giving tracks changing expectations within a cycle; Q7 asks about an event study around expected flips. | Exploratory, one-cycle reading only, 2022 House. The report itself calls it EFFECTIVELY A ONE-ELECTION TEST. Any headline must state the weighting; the pooled-dollar result is not significant. | internal (design doc) | VERIFIED-SOFTENED |
 | [[note-industry-growth-and-political-spending-research]] | 2026 | context | Partisan direction is tested with a per-chamber Democratic share D over (D plus R), with zero denominators set missing; party, presidential and other committee flows are not assigned to a chamber without a defensible mapping. | The plan supplies only the outcome definition. SEATS-W and the SHIFT tests are extensions beyond the plan's annual design. The SHIFT preview is exploratory and below the 6-year minimum, so it must not be quoted as an annual test result. The 2022-only window for SEATS-W is not confirmed by the report. | internal (design doc) | VERIFIED-SOFTENED |
 | [[note-review-industry-growth-and-political-spending]] | 2026 | supports | Some 538 models use fundraising, so explaining contributions with them creates a feedback problem; prefer polls-only. More monthly rows improve timing resolution, not the number of independent elections (about 9 elections, 6 flips): exploratory. | Holds until 2018 and 2020 weekly money joins; even then each further cycle adds one independent election, per the code notes. | internal (design doc) | VERIFIED |
 
-Rows: 11 (3 VERIFIED, 8 VERIFIED-SOFTENED); distinct papers: 11.
+### Assessment
 
-**Evidence weight: weak. SEATS-W is a one-election exploratory result, and no paper tests its mechanism.**
+**Evidence weight: weak on substance, moderate on method. The headline needs restating.**
 
-**The result itself.** Report 221444 shows the headline depends on weighting. Both rows are 2022 House, 17 weeks, 538 Lite:
-- Equal-sector: -3.47 pp Democratic share per +1 expected Democratic seat, block-bootstrap p 0.0086 (3-week) and 0.0174 (5-week); Holm 0.034 and 0.070.
-- Pooled-dollar: -3.36 pp, p 0.10 and 0.11, not significant.
-- The component text and Paul's framing quote the equal-sector figure without that label. That is a framing error, not a judgment call.
-- The Senate is null in both weightings.
-- Two provenance points are unresolved. One row notes that the sgs_seats.R header marks SEATS-W NOT BUILT until stage 09 exists. Another says the 2022-only window is not confirmed by the report.
+**What the result is.** Weekly Democratic share of gross positive receipts is regressed on the prior-week change in 538 Lite expected Democratic seats, with a week-of-cycle trend. The test covers the 2022 House only, 17 weeks, and is EXPLORATORY. The report itself calls it effectively a one-election test.
 
-**Design support** (VERIFIED, strong).
-- The review flags a feedback problem: some 538 models use fundraising. Lite drops the Classic and Deluxe fundraising fundamentals but is not polls-only. The review prefers polls-only.
-- More weekly rows add timing resolution, not independent elections. That keeps the test exploratory until other cycles join.
-- Zeileis on HAC: the hand-coded Newey-West with lags 2, 4 and 8 matches Eq. 11. HAC SEs can spread about 40% across settings and carry no finite-sample guarantee, so keeping HAC secondary to the block bootstrap is right.
+| Model | Weighting | Estimate (pp per seat) | Block-bootstrap p (3 / 5 week) | Holm |
+|---|---|---|---|---|
+| House | equal-sector | -3.47 | 0.0086 / 0.0174 | 0.034 / 0.070 |
+| House (first row of the primary table) | pooled-dollar | -3.36 | 0.11 / 0.10, not significant | |
+| Senate | equal-sector | +6.23 | 0.65 | |
+| Senate | pooled-dollar | +3.99 | 0.81 | |
 
-**Literature.**
-- Furnas et al. 2019 (VERIFIED): House-majority ties are worth more than Senate ties (12 of 13 vs 3 of 13 tests). Data: 1,603 contract firms, 2008Q1-2016Q3. The 2011 flip cost Democratic-aligned firms over $40K per lobbyist for that year. This matches the House-yes, Senate-null pattern and supports separate chamber estimates. But it measures lobbying-firm revenue after control actually changed, not giving share as forecasts move, so it is not evidence for access-seeking in SEATS-W.
-- Bonica 2013: corporate and trade PACs fit an investor (strategic) model about as well as an ideological one; individuals are ideological (cross-sectional, 2004-2012). If the weekly series mixes employee gifts with PAC money, Bonica predicts dilution.
-- Bickmore's WinPAC/LosePAC split is classified after the fact and is a significant vs non-significant comparison, so it is a hypothesis only.
-- Bouton 2022: weekly giving is dominated by quarter-end deadlines and salient events. The SEATS-W formula has no quarter-end or event term (Dobbs in 2022), so a deadline/event sensitivity is a candidate check (UNVERIFIED, DE-062).
+- 538 Classic gives -3.58 in the same report.
+- One bearing (Bonica) could not find the result in the study's .md, .json or .csv files and notes a code header marking SEATS-W NOT BUILT until 09 exists. Another bearing locates it in report 221444. The result stands as a single-path reading (UNVERIFIED under DE-062) until reproduced.
 
-**Online scan.** No US study of donors responding to within-cycle forecasts turned up. The nearest US causal evidence is Fouirnaies & Hall 2014 (JOP): incumbency raises the incumbent party's share of donations by about 20-25 pp, driven by access-oriented, heavily regulated industries (House 1980-2006, RD design). That measures response to realized wins, not forecasts. The paper was not downloadable, so it is a lead. Snowberg, Wolfers & Zitzewitz (IZA DP 1996, now downloaded) is a design precedent: it identifies from high-frequency movement in election expectations. It is about asset prices, not giving.
+**Sign.** -3.47 means the Democratic share falls as expected Democratic seats rise. The component's empirical question asks about donors shifting toward the expected winner. A negative slope is the opposite of that prediction. Snowberg et al. show why it cannot be read as donor intent either way: shared news moves forecasts and giving together. The as-of lag removes within-week ordering, not common shocks, and SEATS-W supplies no sign for the shock correlation.
 
-**Contradictions**
-- Equal-sector -3.47 pp (p 0.0086 / 0.0174) vs pooled-dollar -3.36 pp (p 0.10 / 0.11, not significant), same 2022 House 17-week test. The component text quotes only the significant weighting.
-- One row says the sgs_seats.R header marks SEATS-W NOT BUILT until stage 09 exists and that the result was not found in the study's .md/.json/.csv files. Another row reads the result from report 221444. The build status needs reconciling.
-- Furnas et al. 2019 matches the chamber pattern (House yes, Senate null) but measures post-flip lobbying-firm revenue, not forecast-driven giving share. It cannot be cited as support for strategic access-seeking in SEATS-W.
-- 538 Lite is primary, but the review (VERIFIED) prefers a polls-only forecast to avoid fundraising feedback. Lite is not polls-only.
+**Substantive literature.**
+- Furnas et al. (2019) find a House-majority premium for contract lobbying firms (12 of 13 tests), against Senate 3 of 13, and a null for the 2015 Senate flip. In the 2011 House flip, ousted Democratic-aligned firms lost more than $40,000 per lobbyist for the year (1,603 firms, 2008 Q1-2016 Q3). This supports estimating chambers separately and matches the House-yes, Senate-null pattern. It does not predict SEATS-W's sign: the outcome is lobbying revenue after control actually changed, not giving share under moving forecasts.
+- Bonica (2013): the investor model fits corporate and trade PACs about as well as the ideological model, while individuals are ideological. If the series mixes individual receipts with PAC money, strategic reallocation is diluted.
+- Bickmore (2025): WinPAC 0.062 is significant and LosePAC 0.040 is not, without an equality test. It classifies money by realized outcome, so it is a hypothesis, not evidence of anticipation.
+- Bouton et al. (2022): weekly giving is dominated by quarterly deadlines (30 of 31 abnormal large-donor weeks) and salient events. The SEATS-W formula has no quarter-end or event-week term.
 
-**Gaps**
-- No evidence, in the vault or online, that US donors shift partisan giving as within-cycle majority forecasts move. Needs a multi-cycle weekly panel (2018, 2020, 2022, 2024) with a polls-only, timestamped forecast. Corporate/trade PAC receipts should be kept separate from individual employee gifts, with quarter-end and event-week controls. Each cycle adds one independent election.
-- No test of whether the effect runs through majority probability (which the memo prefers, citing Cox & Magar) rather than expected seat count. Needs a horse-race of P(majority) vs expected seats on the same weekly series.
-- Cox & Magar 1999 (majority value, about $36,000 per member per the memo) is cited, unverified, paywalled and not on disk. The figure cannot be quoted until the paper is read.
+**Forecast feedback.** The Review notes that some 538 models use fundraising. The code uses Lite, which omits the Classic/Deluxe fundraising fundamentals but is not polls-only (it imputes unpolled races). More weeks add timing resolution, not independent elections (about 9 elections, 6 flips in range).
 
-**Paul's position vs the evidence**
+**Inference.**
+- Primary inference is a fixed-X moving-block bootstrap (3 and 5 weeks) with Holm.
+- Bartlett Newey-West HAC at lags 2, 4 and 8 is secondary, with no p-value.
+- Zeileis shows HAC SEs spread about 40% across choices and carry no finite-sample guarantee. That supports showing several lags, not validating one. No sandwich::NeweyWest cross-check was found.
 
-Paul highlighted Furnas's finding that firms tied to a party lose about $40K per lobbyist when that party loses the House. That matches the paper: Democratic-aligned contract firms lost more than $40,000 in annual revenue per lobbyist after the 2011 flip, for one year. But it is a realized-flip lobbying-revenue effect in one episode. It supports separate chamber estimates, not SEATS-W's sign or its access-seeking reading.
+**Measurement.** The 2024 Cook At-A-Glance table gives one dated rating per race (2024-09-12). It is irrelevant to the live 2022 test and gives no weekly series.
 
-The Cox & Magar citation is still unread. It is paywalled, no author copy was found online this pass, and it is not on disk. Its role, valuing majority status, also argues for majority probability rather than the seat-count regressor SEATS-W uses.
+### Contradictions
 
-The position does not mention that the significant estimate is the equal-sector weighting and that the pooled-dollar estimate is not significant. That omission matters more than any citation.
+- The headline '-3.47 pp per seat (House), p .0086-.0174' is the equal-sector weighting. The pooled-dollar House estimate is -3.36 pp, p 0.11 / 0.10, not significant (note-request-for-review-industry-economic-performance). Any headline must name the weighting.
+- The negative sign runs against the component's own hypothesis that donors shift toward the expected winner as forecasts move. Paul's plan premise, from Cox & Magar, is that access follows majority status.
+- The memo Paul wrote prefers majority-control probability, with expected seat change only as robustness. SEATS-W uses expected seat change as its primary regressor.
+- Provenance conflict: one bearing found no stored result and a NOT BUILT header in sgs_seats.R. Another cites report 221444 with full figures. The output path should be pinned.
+- The memo frames access as following majority status. Furnas shows the premium appears after realized flips in lobbying revenue, not in giving share during the campaign, so it cannot be cited for SEATS-W's sign.
 
-**Open questions**
-- Which weighting is SEATS-W's pre-specified primary: equal-sector or pooled-dollar? Without that, the -3.47 pp headline cannot be quoted alone.
-- Is SEATS-W built (report 221444) or NOT BUILT per the sgs_seats.R header? Is the window 2022-only?
-- Can 2018, 2020 and 2024 weekly money be joined so the test covers more than one election?
-- Should a polls-only forecast replace 538 Lite as primary?
-- Does the weekly D-share series include individual employee receipts (Bonica dilution, Bouton deadline shocks)?
+### Gaps
 
-**Read first:** [[note-request-for-review-industry-economic-performance]], [[note-review-industry-growth-and-political-spending]], [[furnas-2019-partisan-ties-lobbying]], [[bonica-2013-mapping-ideological-marketplace]], [[bouton-2022-small-campaign-donors]], [[zeileis-nd-econometric-computing-with]]
+- No paper measures within-cycle response of partisan giving share to forecast movement. Fill it with a multi-cycle weekly panel (2018, 2020, 2022, 2024) that has transaction-dated corporate and trade PAC receipts kept separate from individual employee gifts, polls-only forecasts, quarter-end and event-week controls, and chambers stratified. Each added cycle adds one independent election.
+- No identification against common shocks. Fill it with an event-window design around large forecast jumps driven by news plausibly unrelated to donors, using transaction-dated giving inside each window. Any search over 538 timestamps stays UNVERIFIED until a second path reproduces it.
+- Cox & Magar (1999) is cited for the value of majority status but is not on disk. The approximately $36,000-per-member figure is unverified. Acquire and verify it.
+- Snowberg, Wolfers & Zitzewitz is on disk as the 2006 working-paper version (snowberg-2006), not the 2007 published version cited in the plan. Confirm the published version's figures match.
+
+### Paul's position vs the evidence
+
+Paul highlighted Furnas's figure: firms tied to a party lose about $40k per lobbyist when that party loses the House. The verified reading is more than $40,000 in annual revenue per lobbyist for ousted Democratic-aligned firms in the 2011 House flip. Republican-aligned firms gained just over $10,000. That is lobbying-firm revenue after a realized flip, not donor giving under forecast movement. It supports chamber separation, which SEATS-W already does, but it is not evidence for access-seeking in SEATS-W.
+
+The position says neither key paper is on disk. Furnas 2019 is now on disk and VERIFIED. Snowberg is on disk as the 2006 working paper, and it is the source of the common-shock caution that undercuts any intent reading. Cox & Magar remains off disk, so the majority-status premise is unverified.
+
+The result itself does not support the access-seeking premise. The significant estimate depends on equal-sector weighting, the dollar-weighted estimate is not significant, and the sign is opposite to what access-seeking predicts.
+
+### Open questions
+
+- Which weighting is primary, equal-sector or pooled-dollar, and was that fixed before the result was seen?
+- Does the weekly D-share series include individual employee receipts? If so, does a PAC-only series change the sign (Bonica dilution)?
+- Does adding quarter-end and Dobbs-week terms move the estimate (Bouton)?
+- Should SEATS-W be re-specified on majority-control probability, as the memo prefers, with seats as robustness?
+- Where is the stored SEATS-W output, and has a second path reproduced it?
+
+### Read first
+
+- [[note-request-for-review-industry-economic-performance]]
+- [[snowberg-2006-partisan-impacts-economy]]
+- [[note-review-industry-growth-and-political-spending]]
+- [[furnas-2019-partisan-ties-lobbying]]
+- [[bonica-2013-mapping-ideological-marketplace]]
+- [[bouton-2022-small-campaign-donors]]
 
 ## Across components
 
-**1. Same failure in both components.** A significant-looking estimate is quoted without its fragility label:
-- Growth regressions: the +0.352 L3-LV slope flips to -0.477 under year FE.
-- SHIFT: the -0.04 is a 4-df exploratory preview.
-- SEATS-W: the -3.47 pp holds only under equal-sector weighting.
+**Shared fault lines across both components**
 
-In each case the correct sentence names the window, the denominator, the weighting or specification, and EXPLORATORY/UNSTRATIFIED. Quoted that way, every recorded result in this study is a lead, not a finding.
-
-**2. Outcome-definition tension.**
-- Ruling R4's general giving mixes channels. Only 5.6% of dollars reach candidate committees and 8.84% are company-PAC gifts (2021-25).
-- Bonica predicts corporate/trade PAC money is strategic and individual money is ideological. Mixing them dilutes both the annual SHIFT test and the weekly SEATS-W test toward zero.
-- That gives one design change with payoff in both components: a PAC-only primary DV, or a channel-stratified one.
-
-**3. Endogeneity has the same shape in both.**
-- Lobbying feeds revenue (Huneeus & Kim IV vs OLS), so growth-to-lobbying is simultaneous.
-- Some forecasts use fundraising (review), so forecast-to-giving is simultaneous.
-- In both, the study's own documents already supply the right caution: no causal language, and year FE or a polls-only forecast as the check.
-
-**4. Few independent units.** The study has 4 to 9 sectors and roughly one election. No inference method repairs that (review, VERIFIED). MacKinnon & Webb (downloaded) adds that unbalanced cluster sizes make even the wild cluster bootstrap fragile when few clusters drive the variation.
-
-**5. Wording.** None of the external papers argues for dropping cosponsorship edges or per-edge volume normalization; those SNA proposals were rejected in the project. Nor do they bear on the LDA-identity rule (D-021). No barred influence or closeness language is needed here.
+1. **Few independent units.**
+   - The annual tests have 3 to 9 sector clusters, plus 6 primary years for contributions (2020-2025) or the 2008-2025 fallback for LobbyView.
+   - SEATS-W has 1 election.
+   - The Review and MacKinnon & Webb agree that no inference method repairs this. Every coefficient in both components is EXPLORATORY, and pooled figures are UNSTRATIFIED unless sector strata are shown.
+2. **The expected-control measure.**
+   - Both components lean on forecaster or market expectations. 2023-2025 annual values are RETROSPECTIVE / NOWCAST under Paul's ruling, so the STRICT variant should be quoted beside them.
+   - SEATS-W's 538 Lite is not polls-only. The fundraising-feedback risk is reduced, not removed.
+   - Snowberg's partisan shock (realized minus expected) and the system's Shift (expected minus current) are different objects.
+3. **Outcome definition.**
+   - Ruling R4 general giving mixes channels: only 5.6% reaches candidate committees, and company PAC money is 8.84% of 2021-25 giving.
+   - Bonica predicts strategic behaviour only for corporate and trade PACs, so mixing channels dilutes any access signal in both components.
+4. **Chamber stratification.** Furnas (House premium, Senate null) supports keeping chambers separate in SHIFT and SEATS-W. Both already do, though the SHIFT preview is chamber-stacked.
+5. **Coherence of the two results.**
+   - The annual SHIFT preview is null (-0.04, p 0.76, 80 rows, 4 residual df).
+   - The weekly House slope is negative and significant only under equal-sector weighting.
+   - Neither supports donors following the expected winner. Together they are weak evidence against a strong access-seeking effect at these grains, and not evidence for one.
+6. **Verification status.** Most recorded figures are hard-coded review reference values or single-path report readings, so they stay UNVERIFIED under DE-062 until a second path reproduces them.
 
 ## Research agenda
 
-1. Reconcile the SEATS-W headline. Fix which weighting (equal-sector or pooled-dollar) is primary and resolve the NOT BUILT header against report 221444. Until then, quote both: -3.47 pp (p .0086/.0174) and -3.36 pp (p .10/.11), 2022 House, 17 weeks.
-2. Extend SEATS-W to 2018, 2020 and 2024 weekly money with a polls-only, timestamped forecast. Add quarter-end and salient-event terms (Bouton), and split PAC receipts from individual employee gifts (Bonica).
-3. Add a P(majority) vs expected-seats horse-race on the weekly series, since the memo and Cox & Magar favour majority probability.
-4. Report the per-sector SLOPES strata beside every pooled growth coefficient, and label pooled figures UNSTRATIFIED otherwise.
-5. Second-path check of the L3-LV reference values (+0.352 / -0.477 / -0.006 / -0.537) and of the hand-coded two-way CR1 against sandwich::vcovCL. Also check whether sector-year cells are singletons (multi0).
-6. Read Callaway, Goodman-Bacon & Sant'Anna (downloaded) and decide whether a contdid-style estimate is feasible on the sector-year panel. If not, record that only descriptive TWFE contrasts are available.
-7. Paul's ruling: whether to add a PAC-to-candidate primary DV alongside R4 general giving, and whether to promote the review's log year-FE model from robustness.
-8. Add cur_dem to the SHIFT contribution model so expected and current control are separately identified. Quote the STRICT variant beside any 2023-2025 RETROSPECTIVE / NOWCAST result.
-9. Read Fremeth, Richter & Schaufele 2018 (downloaded) and decide whether C and L need a joint model for substitution.
-10. Get Cox & Magar 1999 and Fouirnaies & Hall 2014 through library access (no free copy found) before quoting their figures.
+- Reproduce the L3-LV reference values (+0.352, -0.477, -0.006, -0.537; adjusted R2 0.884717 vs 0.884690 on 77 rows) and the SEATS-W table by a second path (fixest + fwildclusterboot or sandwich) to lift them out of DE-062 UNVERIFIED status.
+- Run a simulated-null or placebo battery for the wild cluster restricted bootstrap with Webb six-point weights at the study's actual 3 to 9 sector cluster sizes, to establish test size before any p-value is read.
+- Re-estimate the growth tests with heterogeneity-robust continuous-dose estimators (de Chaisemartin-D'Haultfoeuille) and report per-sector strata beside every pooled slope.
+- Put the Review's year-FE log specification to Paul for a ruling on primary vs robustness. Add cur_dem to H4shift-C so expected and current power separate.
+- Restate the SEATS-W headline with its weighting. Rebuild the weekly series as PAC-only (corporate plus trade) vs individual. Add quarter-end and salient-event controls.
+- Extend SEATS-W to 2018, 2020 and 2024 with transaction-dated receipts and polls-only forecasts. Design an event-window test around large forecast jumps driven by exogenous news.
+- Design an annual event study around surprise House control changes (2006, 2010, 2018), chamber-stratified, as the test for the expected-control-to-partisan-share question.
+- Acquire and verify Cox & Magar (1999) and Webb (2014). Confirm the published Snowberg, Wolfers & Zitzewitz (2007) figures match the 2006 working paper on disk.
+- Validate IBISWorld industry growth against roster-level revenue (Compustat or 10-K) by sector-year to bound the population mismatch.

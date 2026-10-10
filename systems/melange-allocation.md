@@ -1,10 +1,19 @@
 ---
 type: system
-name: Melange budget allocation
+name: "Melange budget allocation"
 slug: melange-allocation
-components: [melange-allocation.joint-optimizer, melange-allocation.stance-money-gate, melange-allocation.per-topic-allocators, melange-allocation.budget-frontier, melange-allocation.workbook-allocator, melange-allocation.break-even-and-roi]
-brain_notes: ["actors/quant-model-evaluation-skill", "actors/melange-dashboard-june-capstone", "concepts/influence-vs-alignment-axes", "actors/moneyball-workbook-rules-scoring-and-sublayer-surgery"]
-paper_count: 27
+components:
+  - melange-allocation.joint-optimizer
+  - melange-allocation.stance-money-gate
+  - melange-allocation.per-topic-allocators
+  - melange-allocation.budget-frontier
+  - melange-allocation.workbook-allocator
+  - melange-allocation.break-even-and-roi
+brain_notes:
+  - C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md
+  - C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md
+  - C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md
+paper_count: 30
 tags: [system]
 ---
 
@@ -12,53 +21,47 @@ tags: [system]
 
 Spending decisions made on top of the influence engine: the joint CU pot optimizer, per-topic flip and coalition allocators, the budget frontier (including electoral contest and defend modes), the workbook top-N allocator, the stance money gate, break-even CU spend and the ROI floor.
 
-**Brain notes:** [actors/quant-model-evaluation-skill](obsidian://open?vault=brain&file=actors/quant-model-evaluation-skill); [actors/melange-dashboard-june-capstone](obsidian://open?vault=brain&file=actors/melange-dashboard-june-capstone); [concepts/influence-vs-alignment-axes](obsidian://open?vault=brain&file=concepts/influence-vs-alignment-axes); [actors/moneyball-workbook-rules-scoring-and-sublayer-surgery](obsidian://open?vault=brain&file=actors/moneyball-workbook-rules-scoring-and-sublayer-surgery)
+**Brain notes:** [actors/quant-model-evaluation-skill](obsidian://open?vault=brain&file=actors%2Fquant-model-evaluation-skill); [actors/melange-dashboard-june-capstone](obsidian://open?vault=brain&file=actors%2Fmelange-dashboard-june-capstone); [concepts/influence-vs-alignment-axes](obsidian://open?vault=brain&file=concepts%2Finfluence-vs-alignment-axes)
 
-**Melange budget allocation: evidence assessment (2026-10-10)**
+## Melange budget allocation: evidence assessment
 
-The evidence file has 46 bearings across six components: Joint CU budget optimizer 17, Stance money gate (F1) 3, Per-topic flip and coalition allocators 9, Budget frontier with knee and electoral modes 11, Workbook allocator (top-133 from fixed pot) 1, Break-even CU spend and ROI floor 5. Status split: 2 UNVERIFIED, 11 VERIFIED, 33 VERIFIED-SOFTENED. The 2 UNVERIFIED are Zeng (drones), which is irrelevant, and Madsen (micro-targeting), which is an analogy only. A short online scan filled the stance-gate and ROI gaps. Those hits are listed separately as **online leads**. Only abstracts and secondary summaries were read, so they count as leads, not findings (DE-062).
+**What the corpus covers.** There are 49 evidence rows across 6 components: 12 VERIFIED, 35 VERIFIED-SOFTENED, 2 UNVERIFIED. Most of them are algorithm theory: when greedy, lazy greedy and influence-maximization guarantees hold, and when they do not. Very few measure what allocated money actually does to legislators. Only one row speaks directly to legislator response to PAC money: Ansolabehere et al. 2002 (member fixed effects, business and labor PACs, CCUS scores, 1978-1994). The other money-outcome rows are firm-level returns (Alexander 2009, Bickmore 2025, Fremeth 2018) or a literature review (Bombardini 2020). None of them can calibrate WM, HALFF, PMAX or the saturating money term.
 
-**What the evidence says.** The *method* layer is well supported where the code is careful and unsupported where it is not.
+**Headline judgements.**
+1. **The joint optimizer's fixed-state exactness is well supported, and its scope is stated correctly.** Golovin-Krause lazy greedy (VERIFIED) and Kempe 2015 Thm 7.1 (VERIFIED) cover a separable, concave, deterministic objective in a fixed stance state. The code withholds the certificate once a modeled conversion fires, and the evidence agrees with that choice. The weak point is the claim's reach: it is exact for the model, not for the world (Sutton 2018). No row compares predicted gain with realized CU-aligned outcomes.
+2. **The budget frontier and the coalition allocator carry no transferable guarantee.** The reasons, each from VERIFIED or VERIFIED-SOFTENED rows (Kempe 2015, Borodin, Bharathi, Golovin 2011, Manchanda 2020):
+   - the kernel is a two-colour competitive race with bystander mobilization;
+   - marginals are fac-weighted and clamped at zero;
+   - MC is only 20;
+   - the opponent set changes with S;
+   - the coalition water-fill is not greedy at all.
 
-- **Joint optimizer (`optimize.py`).** Lazy greedy over separable, concave chunks. It checks concavity and withholds its certificate once a modeled conversion fires. That is exactly the scope the theory allows (Golovin & Krause; Kempe Thm 7.1).
-- **Budget frontier.** It inherits *no* guarantee. Five independent sources agree: Golovin, Kempe 2015, Borodin, Bharathi and Manchanda. The reasons are a two-colour competitive race, fac-weighted clamped marginals, an opponent set that changes as seeds are added, and MC=20 sampling. The frontier is a heuristic and has to be labelled as one.
-- **Coalition allocator.** A proportional water-fill on singleton marginals is *not* greedy, so no submodular bound applies to it. On hep-th, Kempe shows singleton or centrality ranking losing to greedy by roughly 18-40%.
-- **Missing layer.** No bearing validates any allocator against realized outcomes. The `observations` list is empty. Every gain, spread or flip figure is a model output, not influence, access or closeness (D-025).
+   Calling these the "submodular tier" overstates what is known.
+3. **The stance money gate is the best-aligned component.** Every row points the same way: do not pay to convert opponents. The rows are Ansolabehere 2002, Bonica 2013, Bombardini 2020 on Hall-Deardorff, and Madsen 2017 as an UNVERIFIED lead. Each is indirect for CU PAC money in the current Congress.
+4. **Break-even and ROI rest on an unvalidated functional form.** The share-type ratio a/(a+b) has no evidence row testing ratio against level. The ROI literature in the corpus warns that naive return figures run implausibly high (Bombardini 2020). `roi_verify.py` was not found in the repo.
+5. **The workbook allocator is effectively a GAP.** There is one weak conceptual row. The system side could not be reproduced: column U has no cached values and `fec/apply_alloc_cap.py` does not exist.
 
-**Contradictions with Paul's stated positions**
-
-- **GCOMB replacing greedy at scale.** GCOMB's advantage is wall-clock speed on graphs with 1M+ nodes. It shows no quality gain over greedy and names capacity-constrained problems as future work (Manchanda 2020). The joint optimizer is a capacity-capped allocation over about 533 members, where greedy is already exact.
-- **Submodular tier label.** Paul places the per-topic allocators in the static/submodular tier. The coalition allocator does not use greedy and its competitive kernel is not shown to be submodular.
-- **ROI.** Paul's scepticism about the Alexander 220x figure is confirmed. Bombardini 2020 says excessive returns are common in this literature, and adding an electoral-vote channel cuts the naive Farm Bill figure to $13.7 per dollar.
-
-**Actual errors found**
-
-1. **Lemma citation.** The Golovin-Krause reference in the code (JAIR Lemma 5.3 / A.9) does not match the text copy, where the bound is Lemma 6 Eq. 13 and the cost bound is Lemma 37.
-2. **Missing producer for the workbook column.** `fec/apply_alloc_cap.py`, cited as the producer of the workbook Allocation column, does not exist. The column holds no cached values, so the top-133 of 533 from a $2.0M pot claim was not reproduced.
-3. **Missing ROI checker.** `roi_verify.py`, said to check the ROI floors, was not found in the repo.
-4. **Lenient frontier audit.** `audit_frontier.py` passes up to 35% marginal inversions as MC noise, wide enough to hide genuine non-submodularity.
-5. **Unsourced crypto figure.** The crypto outspends allies 100x figure in Goff n.d. has no source, window or denominator, and its graph is a missing placeholder.
-6. **Citations with no bearing.** Huneeus & Kim 2018 is cited for three components, and Kim J. et al. 2025 for break-even. Neither has a bearing in the evidence file.
+**Paul's citations missing from the corpus.** Paul's positions cite five works that have no evidence row: Huneeus & Kim 2018, Furnas et al. 2022, Leskovec et al. 2007 (CELF), Kim J. et al. 2025 and Kempe et al. 2003. Until they are ingested, the positions that rest on them (ROI framing, fundraising goals, "cultivate champions") cannot be checked against their own sources.
 
 ## Joint CU budget optimizer
 
-**What it computes.** Allocation of a $2.5M pot in $500 steps maximizing total winnability, with a per-candidate cap PMAX $10k.
+**Computes.** Allocation of a $2.5M pot in $500 steps maximizing total winnability, with a per-candidate cap PMAX $10k.
 
 **Method.** CELF lazy greedy on per-member concave chunks. Modeled conversions rebuild the queue. Exact only in a fixed stance state. Golovin-Krause bound as a diagnostic. Knee at 20% of peak marginal.
 
 **Code refs.** `fec/engine/optimize.py:1-177`
 
-**Assumptions**
+**Assumptions.**
 - The objective is separable and concave in CU dollars (checked numerically)
 - The pot is one PAC's budget (F2 ruling)
 
-**Evidence**
+**Evidence table**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
 | [[pritoni-2025-lobbying-coalitions-determinants]] | 2025 | qualifies | The literature finds both positive (Junk 2019; Nelson and Yackee 2012) and negative (Bunea 2013; Haider-Markel 2006; Heinz et al. 1993; Junk 2020a) links between forming a coalition and policy influence, and calls the results contradictory. The review leaves coalitions as an explanatory variable for influence to future research. | The weapon-of-the-weak evidence might tempt someone to pool allied industries' dollars into the CU money leg. The review does not support that, because the effect of coalitions on outcomes is unresolved. The single-actor pot remains defensible on this evidence. | weak | VERIFIED |
 | [[golovin-2011-adaptive-submodularity-theory]] | 2011 | method-source | Lazy greedy (Algorithm 2) loses no solution quality because stale marginals upper-bound current ones. Speedups were about 3.5-7x fewer evaluations on 46 sensors (temperature) and 30-38x on 357 sensors (traffic) at 50 percent failure. The Lemma 6 data-dependent bound was tighter than the worst-case bound in the sensor runs. | Carries over in the deterministic fixed-state case where per-member chunk marginals are non-increasing, which the code's concavity check tests. It does not carry over once modeled conversions fire; the code then withholds the certificate. The code citation Golovin-Krause JAIR 11 Lemma 5.3 / A.9 does not match this text copy, which has Lemma 6 Eq.13 and Lemma 37 for costs. | strong | VERIFIED |
-| [[golovin-2011-adaptive-submodularity-theory]] | 2011 | qualifies | Theorem 5's (1-1/e) bound compares with the best adaptive policy and needs observed outcomes, an adaptive monotone submodular objective and a known prior (Def 2-3 p.8; Thm 5 p.11). Treasure-hunting instances with strong synergies fall outside the class (Sec 3.4 p.9). Theorem 26 shows no O(\|E\|^(1-eps/beta)) approximation for a constructed treasure-hunting family of pointwise-modular instances unless PH = Sigma_2^P (Sec 12 p.33). | The paper supports the refusal to claim a certificate in conversion mode, since a threshold jump can make a later chunk's marginal rise. Softened scope: Theorem 26 is a hardness result for one constructed family, not for every objective lacking adaptive submodularity. Sec 12 frames it more broadly, but the proof covers only that family. | strong | VERIFIED-SOFTENED |
+| [[golovin-2011-adaptive-submodularity-theory]] | 2011 | qualifies | Theorem 5's (1-1/e) bound compares with the best adaptive policy and needs observed outcomes, an adaptive monotone submodular objective and a known prior (Def 2-3 p.8; Thm 5 p.11). Treasure-hunting instances with strong synergies fall outside the class (Sec 3.4 p.9). Theorem 26 shows no O(/E/^(1-eps/beta)) approximation for a constructed treasure-hunting family of pointwise-modular instances unless PH = Sigma_2^P (Sec 12 p.33). | The paper supports the refusal to claim a certificate in conversion mode, since a threshold jump can make a later chunk's marginal rise. Softened scope: Theorem 26 is a hardness result for one constructed family, not for every objective lacking adaptive submodularity. Sec 12 frames it more broadly, but the proof covers only that family. | strong | VERIFIED-SOFTENED |
 | [[cagala-2021-optimal-targeting-fundraising]] | 2021 | qualifies | Warm-list targeting rule (2014 field experiment, first-year net donations; warm list N=2,354 with 1,180 gift and 1,174 control; 20-fold cross-validated out-of-sample): gift to 33 percent of warm-list individuals; expected net donation 17.61 euro, which is +2.14 (13.8 percent) vs all-gift, +2.20 (14.3 percent) vs no-gift and +2.17 (14.1 percent) vs random-half, all significant at 1 percent (Table 2, Panel B). On the full 2015 follow-up sample (N=3,616): expected 17.16 euro, -0.88 vs all-gift and +0.45 vs no-gift, neither significant (Table 8, Panel B2). | The transferable part is the evaluation design: benchmark-relative, net-of-cost gains on held-out units under randomized treatment. Effect sizes do not transfer (1.16-euro gift to German church donors in 2014-15, vs PAC dollars to members of Congress). FEC limits and the absence of randomization mean the system cannot replicate the identification. Any optimizer gain stays model-internal and UNVERIFIED (DE-062) until outcomes are scored against a benchmark allocation. | moderate | VERIFIED |
 | [[arya-2025-relink-edge-activation]] | 2025 | qualifies | RELINK's learned edge policy is slower than PSNA on small and medium graphs and becomes competitive or often faster on large graphs, which the paper attributes to GPU inference and PSNA's complexity (Sec 6.2 Q3, Fig 5). Training took 6,257.329 s for 2,000 epochs because exact marginal gains are computed (Sec 6.4). The objective is non-submodular (Introduction). | The paper gives no graph-size threshold, so the tens-of-thousands figure in the rel is not from the paper. RELINK's case for a learned policy rests on scale and on non-submodular edge choice. The separable allocation in optimize.py is neither, so this paper neither supports nor refutes replacing greedy there. All benchmarks are synthetic-trained IC simulations. | moderate | VERIFIED-SOFTENED |
 | [[borodin-nd-threshold-models-competitive]] |  | qualifies | In the weight-proportional competitive LT model (Eq. 1) the A-spread is not monotone (Theorem 1: root A-probability 11/40 before and 103/400 after adding one A seed, Appendix A Theorem 12) and not submodular (Theorem 2). The Nemhauser-Wolsey-Fisher greedy bound does not transfer to that model. | Structural analogy only. Borodin non-monotonicity runs through multi-step propagation under random thresholds, which pflip does not have. The conversion-path concern applies only when conversion_reachable is true. Whether the mAt renormalisation lowers total winnability after a conversion is not measured in this text. | moderate | VERIFIED-SOFTENED |
@@ -73,125 +76,132 @@ The evidence file has 46 bearings across six components: Joint CU budget optimiz
 | [[dai-2017-learning-combinatorial-optimization-graphs]] | 2017 | qualifies | Dai et al. report that S2V-DQN beats hand heuristics by wide margins on MemeTracker MVC (ratio 1.0021 vs 1.2220 for MVCApprox-Greedy and 1.4080 for MVCApprox) and on Ising MaxCut (1.0223 vs 1.2825 for MaxcutApprox), on one MemeTracker graph and ten Ising instances. The paper does not study budget allocation or separable resource objectives. | The paper's gains are on synthetic graphs and benchmark graph instances, scored against CPLEX best-found values with a one-hour cutoff. The paper says nothing about separable concave allocation, so it gives no support for the optimizer's exactness; that rests only on the code's own docstring and concavity check. A learned replacement would need many training instances, which the system does not have. | weak | VERIFIED-SOFTENED |
 | [[manchanda-2020-gcomb-learning-budget-constrained]] | 2020 | qualifies | GCOMB's advantage is wall-clock speed on large graphs: about 10 times faster than greedy on MCP; speed-up over CELF on YT falls from 4.0 at b=20 to 2.01 at b=200 (Table 2b). Training saturates within 10 minutes (Fig 2a, synthetic BP 5k). Sequential and capacity-constrained problems are named as future work (Conclusion p.9). | The 10x and 2.01 to 4.0 speed-ups are for MCP on real graphs of 1M+ nodes, not for a small capacity-constrained allocation. A GCOMB-style learned policy would fit only pure set selection without per-member caps at much larger scale. The paper reports no quality gain over greedy. | moderate | VERIFIED-SOFTENED |
 | [[kempe-2015-maximizing-spread-influence]] | 2015 | supports | Thm 7.1 (p.128): hill climbing with total budget k, taken in pieces of size delta, on a non-negative monotone non-decreasing g with diminishing returns, ends with g(x) >= (1 - exp(-k gamma/(k + delta m))) times g of the optimum under sum <= k. Each step picks a direction with gamma-approximately largest gradient. | Holds only in the fixed stance state where concavity is checked. Once money crosses a defection threshold, returns are non-concave steps and neither Thm 7.1 nor the exact certificate applies. The code states this scope. | moderate | VERIFIED |
+| [[fremeth-2018-spillovers-regulating-corporate]] | 2018 | qualifies | Per-candidate PAC limits bind for 14.4 percent of candidates receiving any PAC money (text Section 3, p.8; not in Table 1). Firm-cycles at the limit show +549,166 dollars of lobbying per cycle (Table 3 col 1, SE 225,013; 2000-2008, 787 firms, 2,783 firm-cycles, pooled across the 2002 BCRA break). Firms at the limit show CEO giving 0.066 more likely (Table 2, 1992-2008, 950 firms). Authors say PAC limits are effectively non-binding and all estimates are partial correlations. | Cap mechanics transfer if the 10,000 per-cycle limit is the same. The paper does not say the limit is unindexed; that is an assumption not stated in the paper. Spillover magnitudes come from large S&P 500 for-profit firms, not CU PACs, and are partial correlations. Supports a caveat that PMAX bounds PAC dollars only; does not justify reweighting. | moderate | VERIFIED-SOFTENED |
 
 **Assessment**
 
-**Overall: method well supported within its stated scope. Real-world performance is unvalidated.** 17 bearings: 1 UNVERIFIED, 5 VERIFIED, 11 VERIFIED-SOFTENED.
+**What it is.** A CELF-style lazy greedy over $500 chunks of a $2.5M pot, with a PMAX cap of $10k per member above existing CU money. The objective is modeled total winnability (expected weighted flips).
 
-**Supports the build**
-- **Golovin & Krause 2011 (VERIFIED, method-source, strong).** Lazy greedy loses no quality, because a stale marginal is always an upper bound on the current one. The data-dependent bound is tighter than the worst case. This matches `optimize.py`: a heap of $500 chunks under a $10k PMAX, with `dd_bound` computed only under the fixed-state certificate.
-- **Kempe 2015, Thm 7.1 (VERIFIED, supports).** Budgeted hill-climbing on a monotone function with diminishing returns has a bound. It holds only in the fixed stance state, and the code says so.
-- **Golovin, Thm 5 / Sec 3.4 / Thm 26.** These support the code's refusal to claim a certificate in `modeled_threshold_replanning` mode. A threshold jump can raise a later chunk's marginal, so the conditions for the bound fail.
+**Evidence: 18 rows (5 VERIFIED, 12 VERIFIED-SOFTENED, 1 UNVERIFIED).**
 
-**Qualifies it**
-- **Moreno 2021.** Industry money is frozen (`ind = fm.ind0`, never rewritten). The plan is a best response to a passive opponent. With two active controllers, the paper's numerical Nash result is uniform targeting, so the plan could be exploited if industry re-optimises.
-- **Sutton 2018 / Watkins 1992.** The optimum is exact for the model, not for the world. The optimizer has no exploration and no outcome feedback, because `observations=[]` is never appended to.
-- **Cagala 2021.** The transferable part is the evaluation design: net-of-cost gains against benchmark allocations on held-out units. The donor effect sizes do not transfer.
-- **Borodin.** The `a/(a+b)` flip form looks like a competitive LT model. After a conversion, `mAt = max(nA)` renormalises, and that can lower other members' terms. Structural analogy only; whether total winnability drops is not measured.
-- **Pritoni 2025.** The literature on whether coalitions affect influence is contradictory. Treating CU as a single-actor pot is defensible, and pooling allied industries' dollars is not supported.
-- **Almazaydeh 2026.** Monte Carlo noise is irrelevant here because this objective is deterministic. It would matter only if the objective were swapped for a simulated cascade.
+- **Mechanics (strong support).**
+  - Golovin & Krause 2011 (VERIFIED, method-source, strong): lazy greedy loses no quality, because stale marginals upper-bound the current ones. Their speedups were 3.5-7x fewer evaluations at 46 sensors and 30-38x at 357 sensors.
+  - Kempe 2015 Thm 7.1 (VERIFIED, supports): hill climbing in budget pieces on a monotone function with diminishing returns gets a (1 - exp(-k*gamma/(k + delta*m))) fraction of the optimum.
+  - Together these cover the fixed-state case, where the code's concavity check tests whether per-member chunk marginals are non-increasing. In that case the separable greedy is the exact grid optimum *of the model*.
+  - Golovin's Theorem 5 and Sec 3.4 (VERIFIED-SOFTENED, strong) support withholding the certificate in `modeled_threshold_replanning` mode. A threshold jump can make a later chunk's marginal rise. That mode also observes nothing (observations = []), so the adaptive theory does not apply.
+- **Scope cautions.**
+  - Borodin (VERIFIED-SOFTENED): after a conversion, the mAt = max(nA) renormalisation in `topic_setup` can lower other members' WP*nA/mAt terms. Whether that lowers total winnability is not measured.
+  - Moreno 2021 (VERIFIED-SOFTENED): industry money (`ind0`) is a frozen passive opponent. In their two-controller game the unique Nash equilibrium is uniform targeting (a numerical result), so the plan is a best response to a fixed opponent and could be exploited if industry re-optimises. Qualitative only.
+  - Sutton 2018 (VERIFIED-SOFTENED): greedy exploitation of a modeled response, with no exploration and no outcome feedback, is optimal for the model only.
+  - Watkins 1992 (VERIFIED-SOFTENED): tabular Q-learning guarantees need infinite sampling. Sparse per-cycle outcomes would not support a learned policy.
+  - Fremeth 2018 (VERIFIED-SOFTENED): per-candidate PAC limits bound 14.4% of PAC-receiving candidates (2000-2008, 787 S&P 500 firms, partial correlations, pooled across the 2002 BCRA break, so UNSTRATIFIED). Firms at the limit show +$549k of lobbying per cycle. So PMAX bounds PAC dollars only, not total political spending.
+  - Pritoni 2025 (VERIFIED): the coalition-to-influence link is contradictory in the literature. Treating the pot as one actor is defensible.
+- **Evaluation design.** Cagala 2021 (VERIFIED) is the only row that shows how to score an allocator against reality: net-of-cost gains on held-out units under random assignment, compared with all/none/random baselines. On their warm list (N = 2,354, 2014) targeting gave +13.8%. On the 2015 follow-up (N = 3,616) the gain was no longer significant. That fragility is itself the lesson. The effect sizes do not transfer.
+- **Learned-policy evidence.**
+  - Manchanda 2020 (VERIFIED-SOFTENED): GCOMB is about 10x faster than greedy on MCP, and 2.01-4.0x faster than CELF on YT, on graphs of 1M+ nodes. It reports no quality gain, and it names capacity-constrained problems as future work.
+  - Dai 2017 and Arya 2025 (VERIFIED-SOFTENED, weak to moderate): their wins are on non-separable graph problems at scale.
+  - Zeng (UNVERIFIED): a drone simulation. It is a lead with no transfer.
+- **Citation mismatch.** The code cites Golovin-Krause "Lemma 5.3/A.9". The text copy has the data-dependent bound at Lemma 6, Eq. 13, with costs in Lemma 37.
 
-**Contradicts Paul's GCOMB expectation:** Manchanda 2020, Arya 2025 (RELINK) and Dai 2017 (S2V-DQN). Their gains are speed on very large graphs or quality on non-separable set-selection problems. None applies to separable concave allocation over about 533 members with per-member caps.
-
-**Ignore:** Zeng (UNVERIFIED, drones).
-
-**Actual error:** the Golovin-Krause lemma cited in the code (5.3 / A.9) does not match the text, which has Lemma 6 Eq. 13 and Lemma 37 for costs.
+**Bottom line.** The exactness claim is sound within its own scope. Whether the optimizer helps in the real world is untested; no row bears on the empirical question.
 
 **Contradictions**
-- Paul expects GCOMB to replace greedy at scale. Manchanda 2020 reports only speed gains, 2-4x over CELF and about 10x over greedy, on graphs with 1M+ nodes. It reports no quality gain and names capacity-constrained problems as future work. The optimizer is a capacity-capped, separable allocation over about 533 members, where greedy is already the exact discrete optimum in a fixed state.
-- Paul's citations treat Golovin & Krause as the guarantee source. The code's lemma reference (JAIR Lemma 5.3 / A.9) does not match the text copy (Lemma 6 Eq. 13; Lemma 37 for costs). The citation itself is wrong.
-- Moreno 2021: with two active controllers the equilibrium is uniform targeting. The optimizer freezes industry money (`ind0`), so its optimal plan holds only against a passive opponent.
+- Paul expects a learned policy (GCOMB) to replace greedy at scale. Manchanda 2020 (VERIFIED-SOFTENED) shows GCOMB's gain is wall-clock speed on 1M+ node graphs with no quality gain over greedy, and lists capacity-constrained problems as future work. Dai 2017 and Arya 2025 qualify it the same way. The built problem is a separable, capped allocation over 533 members, where greedy is already exact in a fixed state. The evidence contradicts the expectation that a learned policy would add value here.
+- The code's citation of Golovin-Krause Lemma 5.3/A.9 does not match the text copy, which has Lemma 6 Eq. 13 and Lemma 37 (VERIFIED row). The proof the code relies on is cited at the wrong location.
+- "Exact optimum" in the docstring holds for the model state only. Sutton 2018 and Moreno 2021 show the plan is a best response to a frozen industry opponent and has no outcome feedback. That is not a contradiction of the code. It does contradict any reading of the output as a real-world optimum.
 
 **Gaps**
-- No outcome validation. Nothing compares the optimizer's allocation with uniform, random, no-spend or actual CU PAC allocations on realized outcomes. The study that would fill this is a retrospective benchmark-relative backtest over past cycles in the Cagala design, scored on member-level cosponsor joins or votes. Members are the denominator, and the window must be named.
-- Huneeus & Kim 2018 is cited for this component, but the evidence file has no bearing from it.
-- Whether the post-conversion `mAt` renormalisation lowers total winnability is unmeasured. It needs a read-only before/after diff on a conversion-reachable run.
-- There is no adversarial or re-optimising opponent model. A best-response check against an industry allocator would show how exploitable the plan is.
+- No row tests the empirical question: does predicted greedy gain track realized CU-aligned outcomes in funded vs comparable unfunded members? The study that would fill it is a prospective, preregistered comparison. Score the optimizer's allocation and a uniform, random or proportional benchmark against realized cosponsorship or votes on CU bills in the next cycle, with matched unfunded members as the comparison group. Name the window and denominator. Use the Cagala-style benchmark-relative, net-of-cost design. Randomization is not available under FEC rules, so this stays observational and labelled as such.
+- Not measured: whether the mAt renormalisation after a modeled conversion lowers total winnability. A read-only diagnostic on conversion-mode runs would settle it.
+- No evidence on an opponent that responds, such as industry re-allocating. A sensitivity run with a reactive opponent would bound how exploitable the plan is.
+- Paul's own citations for this component, Leskovec 2007 (CELF) and Huneeus & Kim 2018, have no evidence rows.
 
 **Paul's position vs the evidence**
 
-Paul's first claim is that adaptive greedy plus CELF is the operational layer. The evidence supports this, with the qualification that the build is a fixed-state lazy greedy, not adaptive. The adaptive label overstates it, because nothing is observed. His second claim is that a learned policy (GCOMB) will replace greedy at scale. The evidence does not support this at Melange's scale or for this problem shape. Every learned-policy paper in the set (GCOMB, RELINK, S2V-DQN) wins on speed on very large graphs or on non-separable objectives, and none on capped separable allocation. A learned policy would also need many training instances, which the system does not have.
+**First half (adaptive greedy plus CELF as the operational layer): matches the build and is well supported**, with one correction. The built optimizer is lazy greedy in a fixed stance state. It is not adaptive in the Golovin-Krause sense, because nothing is observed. The adaptive guarantee is correctly withheld in conversion mode.
+
+**Second half (GCOMB replacing greedy at scale): not supported for this component.** GCOMB's evidence is speed on graphs with millions of nodes and no quality gain. The problem here is small, separable and capped, and greedy is already exact for it. A learned policy would also need many training instances, which the system does not have.
+
+**Pritoni 2025** supports Paul's single-PAC pot ruling (F2). **Fremeth 2018** adds the caveat that PMAX caps PAC dollars only.
 
 **Open questions**
-- Should industry money stay frozen (passive opponent), or does Paul want a best-response or Nash check run as a diagnostic?
-- Does Paul want the GCOMB expectation formally retired for the joint optimizer and kept only for any future large-graph seed selection?
-- Is a multi-cycle objective, in which repeated giving changes later responsiveness, in scope? It is untested, and it needs owner authorization.
+- Should the code's Golovin-Krause lemma reference be corrected to the text's Lemma 6 / Eq. 13? This is an owner change under change-control.
+- Is a reactive-opponent sensitivity check wanted, given Moreno's Nash result? It is qualitative evidence only.
+- Would Paul accept an observational funded-vs-unfunded backtest as the scoring route, given that FEC limits rule out randomization?
 
-**Read first:** [[golovin-2011-adaptive-submodularity-theory]], [[kempe-2015-maximizing-spread-influence]], [[manchanda-2020-gcomb-learning-budget-constrained]], [[moreno-2021-shadowing-shielding-effective]], [[cagala-2021-optimal-targeting-fundraising]], [[sutton-2018-reinforcement-learning-introduction]]
+**Read first:** [[golovin-2011-adaptive-submodularity-theory]], [[kempe-2015-maximizing-spread-influence]], [[manchanda-2020-gcomb-learning-budget-constrained]], [[cagala-2021-optimal-targeting-fundraising]], [[moreno-2021-shadowing-shielding-effective]], [[fremeth-2018-spillovers-regulating-corporate]]
 
 ## Stance money gate (F1)
 
-**What it computes.** Members with overall tier Skeptic, Highly Skeptical or Opponent get zero money in every allocator.
+**Computes.** Members with overall tier Skeptic, Highly Skeptical or Opponent get zero money in every allocator.
 
 **Method.** Applied before the top-45 shortlist. Fails open for members with no matrix row. Before the gate 10 opposed members were funded $54,500; after it, 19 were gated and none funded.
 
 **Code refs.** `fec/moneyball_core.py:713-729`, `fec/engine/optimize.py:44-52`
 
-**Assumptions**
+**Assumptions.**
 - Overall stance should gate money; one topic cell should not
 
-**Evidence**
+**Evidence table**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
 | [[bombardini-2020-empirical-models-lobbying]] | 2020 | supports | Hall and Deardorff (2006) treat information as a subsidy to resource-strapped legislators, which explains why lobbyists lobby friendly legislators and questions the persuasion role. Hirsch et al. (2019; FARA contacts, 219 foreign-interest lobbyists, 110th-111th Congress) find any lobbying contact is more likely for lobbyists ideologically aligned with the politician. | The contact evidence concerns foreign-principal lobbyists under FARA, not domestic PAC dollars. It is consistent with funding allies but does not test whether contributions to opposed members change their positions. | weak | VERIFIED |
 | [[bonica-2013-mapping-ideological-marketplace]] | 2013 | supports | Text PDF p.18 (printed p.17): of 49,418 individuals with 25+ federal contributions (2004-2012), only 167 (0.3 percent) have money-weighted SD above the 0.577 random-giving baseline. Mean money-weighted SD is 0.20 for the sample. Descriptive evidence that active individual donors give on ideology. | Descriptive only: donors are ideological, but the paper does not test whether funding opponents converts them. Window is individual donors 2004-2012; PAC behavior differs (Table 2). | weak | VERIFIED-SOFTENED |
 | [[madsen-2017-strategic-advantages-micro]] | 2017 | supports | Contact spent on audiences with an unfavourable view of the source is wasted or counterproductive. The targeted campaign's advantage comes entirely from never contacting those voters. | An analogy only. Campaign contacts with voters are not PAC dollars to legislators, and the paper has no money mechanism. It agrees with Paul's Furnas reading ('cultivate champions') but adds no new evidence about legislator behaviour. | weak | UNVERIFIED |
+| [[ansolabehere-2002-little-money-politics]] | 2002 | supports | With member fixed effects, changes in donations to an individual legislator do not translate into changes in that legislator's roll-call voting. A third explanation for group giving is to elect sympathetic legislators rather than to change the views of sitting ones. | The evidence is general business and labor PAC money against CCUS scores (1978-1994), not CU-specific bills or the current Congress. It supports not paying to convert opposed members. It does not measure electoral help to allies. | moderate | VERIFIED-SOFTENED |
 
 **Assessment**
 
-**Overall: thin but consistent support, with the causal question untested.** 3 bearings: 1 UNVERIFIED, 1 VERIFIED, 1 VERIFIED-SOFTENED.
+**What it is.** Members whose overall tier is Skeptic, Highly Skeptical or Opponent get zero money in the allocators. The gate fails open when a member has no matrix row.
 
-**From the evidence file**
-- **Bombardini 2020** summarises Hall & Deardorff's legislative-subsidy theory and Hirsch et al.'s FARA contact data. Lobbyists contact ideologically aligned members. This is consistent with funding allies, but it concerns foreign-principal lobbyists, not domestic PAC dollars.
-- **Bonica 2013** shows that individual donors give on ideology. In 2004-2012, only 167 of 49,418 donors with 25+ federal contributions (0.3%) exceed the random-giving baseline for dispersion. Descriptive only, and PACs behave differently.
-- **Madsen 2017** is a voter-contact analogy and adds nothing on legislator behaviour.
+**Evidence: 4 rows (1 VERIFIED, 2 VERIFIED-SOFTENED, 1 UNVERIFIED).** All of them support the direction. None tests it directly on CU money.
 
-**Online leads (abstracts and summaries only, not findings)**
+- **Ansolabehere et al. 2002** (VERIFIED-SOFTENED, moderate) is the strongest row.
+  - With member fixed effects, changes in donations to a legislator did not translate into changes in that legislator's roll-call voting.
+  - Window and data: general business and labor PAC money against CCUS scores, 1978-1994.
+  - This is the closest available test of "do contributions convert members", and it says no. It is old, it uses a business-wide score rather than CU bills, and it is pooled across parties (UNSTRATIFIED).
+- **Bombardini 2020 on Hall-Deardorff** (VERIFIED, weak): lobbying works as a subsidy to friendly legislators. Its contact data are FARA, foreign-principal lobbyists, 110th-111th Congress, not domestic PAC dollars.
+- **Bonica 2013** (VERIFIED-SOFTENED, weak, descriptive): of 49,418 individuals with 25 or more federal contributions in 2004-2012, only 167 (0.3%) give across ideology above the random baseline. This is individual-donor behaviour, and PACs differ.
+- **Madsen 2017** (UNVERIFIED): contacting audiences with an unfavourable view is wasted. It is a voter-contact analogy and a lead, not a finding.
 
-In favour of the gate:
-- **Hall & Wayman 1990 (APSR).** Money buys committee participation by allies, not floor votes.
-- **Ansolabehere, de Figueiredo & Snyder 2003 (JEP).** Contributions have small effects on roll calls next to party and district.
-
-Cutting the other way:
-- **Stratmann 2002 (J. Law & Econ.).** Money shifted House votes on financial-services legislation, holding positions fixed across two near-identical Glass-Steagall repeal bills (1992, 1998). This is the closest domain match to credit unions.
-- **Grier, Grier & Mkrtchian 2023 (APSR).** With member fixed effects, rising sugar money raised the probability of voting against reform.
-
-These two suggest money can move marginal members on low-salience issues. That does not contradict the gate, which blocks only Skeptic and worse and leaves neutrals eligible. It does mean the case for the gate rests on the claim that opponents specifically cannot be moved, and nothing in the set tests that.
-
-**Design risk (system side):** the gate fails open. A member with no matrix row gets tier '-' and stays eligible.
+The code side was partly confirmed. `STANCE_GATE_BLOCKED` is defined at moneyball_core.py:717 and applied in optimize.py:52, per_topic_flip.py:37 and per_topic_coalition.py:26. The claim that gated members get zero money *in every allocator* and still count in the objective was not fully confirmed in the evidence pass. The workbook allocator is not shown to apply the gate.
 
 **Contradictions**
-- Online leads, not verified: Stratmann 2002 and Grier et al. 2023 report within-member vote shifts from contributions on low-salience economic legislation. They qualify a strong reading of never fund to convert. They do not contradict blocking Skeptic and worse, because neither paper isolates members who were opposed at baseline.
+- No evidence contradicts the gate's direction.
+- Scope tension: the gate tests the overall tier. The evidence (Ansolabehere's member FE on a general score) is about overall voting behaviour, which fits overall gating. No row addresses the assumption that one topic cell should not gate. That assumption is unevidenced, not contradicted.
 
 **Gaps**
-- No study tests whether PAC money to members opposed at baseline changes their positions. The study that would fill this is a within-member fixed-effects design (Stratmann / Grier style) on CU-relevant financial-services votes, with results split by prior stance tier. Window and member denominator must be named, and the result labelled UNSTRATIFIED if pooled.
-- Furnas et al. 2022 is Paul's cited basis, but the evidence file has no bearing from it.
-- There is no check on how many members the fail-open path admits, i.e. members with no matrix row.
+- The empirical question is untested: does funding opposed members change their positions or produce counter-strategy effects? The study that would fill it is a member fixed-effects panel of CU and allied PAC contributions against positions on CU bills (cosponsorship, votes) in recent Congresses. It should be stratified by party and chamber, with window and denominator stated, in the Ansolabehere design and updated to current data.
+- Fail-open behaviour is unevidenced. Nobody has counted how many members with no matrix row received money, or how much. A read-only audit would fill this.
+- Whether the workbook allocator applies the gate is unconfirmed.
+- Furnas et al. 2022, the citation Paul's position rests on, has no evidence row in the corpus.
 
 **Paul's position vs the evidence**
 
-Paul's reading is that ideological money cultivates champions rather than recruiting them. The VERIFIED evidence agrees in direction: aligned contact (Hall-Deardorff via Bombardini) and ideological donors (Bonica). Both are indirect, since one is FARA contacts and the other individual donors, not PAC-to-member conversion. The online leads add support (Hall & Wayman) and a qualification (Stratmann, Grier). Money appears to move marginal members on low-salience bills, which fits funding neutrals but has not been tested for opponents. The position is plausible but rests on analogy, not on a direct test.
+Paul reads ideological money as cultivating champions rather than recruiting them. **This agrees with every row.** Ansolabehere's member-FE null on conversion, Bonica's ideological donors and the Hall-Deardorff subsidy-to-friends view all point the same way. Madsen agrees too, but it is UNVERIFIED and an analogy.
+
+The support is indirect: old windows, non-CU money, and FARA or individual donors rather than CU PACs. **Paul's own source (Furnas 2022) is not in the corpus to check.**
 
 **Open questions**
-- Should the gate fail closed for members with no matrix row?
-- Are Hall & Wayman 1990 and Stratmann 2002 worth adding to the vault? Stratmann 2002 is financial services, the nearest domain match.
+- Should the fail-open default stand? A member with no matrix row is currently fundable.
+- Should Furnas et al. 2022 be ingested so the 'cultivate champions' reading can be checked against its text?
 
-**Read first:** [[bombardini-2020-empirical-models-lobbying]], [[bonica-2013-mapping-ideological-marketplace]], [[madsen-2017-strategic-advantages-micro]]
+**Read first:** [[ansolabehere-2002-little-money-politics]], [[bombardini-2020-empirical-models-lobbying]], [[bonica-2013-mapping-ideological-marketplace]], [[madsen-2017-strategic-advantages-micro]]
 
 ## Per-topic flip and coalition allocators
 
-**What it computes.** Per-topic diagnostic allocations: greedy $1k steps on flip gain; coalition water-fill over the top-45 neutral recruits weighted by marginal spread x (1 + 0.8 bpf).
+**Computes.** Per-topic diagnostic allocations: greedy $1k steps on flip gain; coalition water-fill over the top-45 neutral recruits weighted by marginal spread x (1 + 0.8 bpf).
 
 **Method.** Budget $2M per topic, cap $50k. Joint vs naive additive spread is reported (non-additivity).
 
 **Code refs.** `fec/engine/per_topic_flip.py:1-100`, `fec/engine/per_topic_coalition.py:28-130`, `fec/engine/build_im_allocation.py:31-47`
 
-**Assumptions**
+**Assumptions.**
 - Bridge-builders are better seeds
 - Topic budgets are diagnostic and not summable
 
-**Evidence**
+**Evidence table**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -204,62 +214,76 @@ Paul's reading is that ideological money cultivates champions rather than recrui
 | [[bharathi-nd-competitive-influence-maximization]] |  | qualifies | Reach is submodular in a player's own seeds, so summed single-seed marginals overstate the joint gain; the (1-1/e) guarantee belongs to greedy, not to individual marginals (Lemma 1, Theorem 1). | Submodularity implies the joint report is at most the naive additive sum, so the joint report is supported as inference. The paper gives no guarantee for a proportional water-fill. The bystander set excludes funded seeds, so the spread is not Lemma 1's fixed-opponent function. The figures are one allocation run per topic at MC 20. | moderate | VERIFIED-SOFTENED |
 | [[chen-2023-complex-contagion-influence]] | 2023 | suggests-extension | Credit sparseness in an 8-node toy (K=3, T=4): only 17 of 70 four-seed sets (24.3 percent) are effective, and the seed sequence 1,2,3,5 earns per-step rewards 1,1,1,2, so a seed's value shows only alongside specific other seeds. | A joint gain above naive-additive on a topic would show complementarity that solo ranking cannot see. Under pure IC the joint should stay at or below naive-additive, so the printout is a real check only if threshold effects exist. The 45-candidate cut uses engagement rather than marginal value, so a seed valuable only in combination can be dropped before any marginal is computed. | moderate | VERIFIED-SOFTENED |
 | [[kempe-2015-maximizing-spread-influence]] | 2015 | qualifies | Seeds picked by individual degree or distance centrality ignore clustering and overlap. On the hep-th graph under LT, greedy beats high-degree by about 18% and distance centrality by over 40%. Under IC with p=10%, the centrality heuristics level off near 2415 activations and random seeds beat them beyond about 12 targets. Greedy keeps rising because it prices overlap. | Evidence is one 10748-node co-authorship graph under uniform p, window winter 2002. Whether singleton ranking loses comparably on the 533-member cosponsor kernel is unverified; a check would compare the joint spread of the water-fill seed set against lazy greedy at equal seed count and the same CRN. The allocator is labelled diagnostic, which limits the harm. | moderate | VERIFIED |
+| [[harbridge-yong-2023-bipartisan-path-effective]] | 2023 | qualifies | Returns to bipartisan composition are nonlinear. One SD below the mean costs about 22 percent of LES in the House and 16 percent in the Senate; one SD above adds about 8 and 4 percent. Gains flatten and reverse past a 50/50 mix. | This holds only if the seed boost is meant to proxy a recruit's legislative effectiveness. The paper says nothing about diffusion seeding, so the link is an analogy and the allocators are diagnostic. | weak | VERIFIED |
 
 **Assessment**
 
-**Overall: the flip allocator is sound. The coalition allocator is a heuristic with a known loss mode.** 9 bearings: 3 VERIFIED, 6 VERIFIED-SOFTENED.
+**Two different allocators sit under this heading.**
 
-**Flip allocator.** An exact heap-based greedy over fixed-state separable `pflip` chunks. Golovin adds nothing here, because greedy is already exact.
+**1. Flip allocator.** A greedy in $1k steps on pflip chunks. In a fixed state it is separable and concave, so greedy is exact. Golovin 2011 (VERIFIED) adds nothing beyond that.
 
-**Coalition allocator (`per_topic_coalition.py`).** Its steps are:
-1. Shortlist the top 45 neutral members by engagement priority, not by marginal value.
-2. Score each candidate by singleton `spread({n}) - base`.
-3. Boost the score by `(1 + 0.8*bpf)`.
-4. Water-fill $2M with a $50k cap.
-5. Report the joint spread afterwards.
+**2. Coalition allocator.** The steps are:
+- shortlist the top 45 neutral members by engagement priority (ev);
+- score each by its singleton marginal, spread({n}) minus base;
+- boost by (1 + 0.8*bpf);
+- water-fill $2M with a $50k cap.
 
-The evidence agrees across sources:
-- **Kempe 2015** and **Bharathi**: singleton or centrality ranking ignores overlap. On hep-th, greedy beats high-degree by about 18% and distance centrality by over 40% under LT. Summed singletons overstate the joint gain.
-- **Golovin**: a proportional split is not greedy, so no submodular guarantee applies, even if spread were submodular.
-- **Chen 2023**: complex contagion means a seed may be valuable only alongside others. Pre-cutting by engagement can drop such a seed before any marginal is computed.
-- **Ma 2022 and Trivedi 2020**: discounting for already-chosen neighbours helps. This is an extension argument; there is no measured gain on this graph.
+It is **not greedy**, so no submodular guarantee applies even if spread were submodular (Golovin 2011 VERIFIED; Bharathi VERIFIED-SOFTENED).
 
-Reporting the joint spread is the right diagnostic. Its meaning is limited: under pure IC the joint should be at or below the naive sum, so the comparison tests for complementarity only if threshold effects exist.
+**Evidence: 10 rows (4 VERIFIED, 6 VERIFIED-SOFTENED).**
 
-**Cai 2025.** Budget size changes which nodes are optimal to target. The `bpf` boost does not depend on budget, so this maps only indirectly.
-
-**Zareie 2023.** Topic-aware IM is suggested, but the survey reports no accuracy evidence. The kernel is topic-independent.
+- **Overlap blindness.**
+  - Kempe 2015 (VERIFIED, moderate): on one co-authorship graph (10,748 nodes, winter 2002), greedy beats high-degree seeds by about 18% (LT) and distance centrality by over 40%. Under IC at p = 10%, centrality picks plateau and random seeds beat them beyond about 12 targets. Singleton-marginal ranking has the same overlap blindness.
+  - Trivedi 2020 and Ma 2022 (VERIFIED-SOFTENED) point the same way.
+  - The code already reports joint spread against the naive additive sum. That is the right diagnostic, but it does not shape the allocation.
+- **Joint vs naive.**
+  - Bharathi: if spread is submodular in own seeds, joint spread is at most the naive sum.
+  - Chen 2023 (VERIFIED-SOFTENED): under threshold-like joining, joint can exceed naive. A seed valuable only in combination can then be dropped by the engagement-based top-45 cut before any marginal is computed.
+- **Bridge boost.** Harbridge-Yong 2023 (VERIFIED, weak): returns to bipartisan composition are nonlinear. One SD below the mean costs about 22% of LES (House) and 16% (Senate). One SD above adds about 8% and 4%. Gains flatten and reverse past a 50/50 mix. The boost (1 + 0.8*bpf) is monotone. The transfer is analogical (LES, not diffusion seeding).
+- **Budget-dependent targeting.** Cai 2025 (VERIFIED, weak): degree targeting reverses with the budget ratio (N = 100 graphs, mean degree 6). bpf is not degree, so this maps only indirectly.
+- **Single kernel for all topics.** Zareie 2023 (VERIFIED-SOFTENED, weak) proposes topic-aware kernels but offers no accuracy evidence. Kernel sharing was verified for per_topic_coalition only.
+- **Gating inside spread().** Chen 2021 (VERIFIED-SOFTENED, context) confirms that seed non-additivity is real. Averaging willingness inside spread() removes the O(2^b) conditional dependence at allocation time.
 
 **Contradictions**
-- Paul places these allocators in the static and submodular tier. The coalition allocator runs no greedy, uses a proportional water-fill on singleton marginals, and runs on a bystander-filtered competitive kernel whose submodularity is unverified. No submodular guarantee applies to it as built. Golovin, Bharathi and Kempe all agree on this.
+- The 'submodular tier' label vs the build: the coalition allocator is a proportional water-fill on singleton marginals, not greedy. Its kernel is competitive, with bystander exclusion that depends on the funded set. The code comment asserts spread is submodular, but no row shows that for this kernel (Bharathi, Golovin, Kempe 2015 all VERIFIED or VERIFIED-SOFTENED).
+- Assumption 'bridge-builders are better seeds' with a monotone (1 + 0.8*bpf) boost, vs Harbridge-Yong 2023 (VERIFIED): bipartisan returns flatten and reverse past a 50/50 mix. Analogical transfer, but the shapes disagree.
+- The top-45 pre-cut uses engagement priority, not marginal value. Under complex contagion (Chen 2023) this can drop complementary seeds, and the assumption of diminishing returns would then fail.
 
 **Gaps**
-- Nobody has measured what singleton ranking loses on the 533-member cosponsor kernel. The study that would fill this is a read-only comparison under the same CRN and equal seed count. It would set the water-fill funded set against lazy greedy, and against degree, PageRank and Katz-Bonacich seed sets as an ablation. Results should be labelled UNSTRATIFIED, with topic, window and the 533 denominator named. Spread is modeled cascade reach, not influence (D-025).
-- There is no check of whether a seed outside the top-45 engagement shortlist would have a high marginal.
-- Topic-conditioned kernels are untested. That would require dense per-topic cosponsorship history, and any change would fall under change control.
+- The empirical question is untested: is multi-seed coalition spread sub-additive in *observed* cosponsorship data? One study: for CU bills, compare realized cosponsor joining after multiple sponsors from a member's neighbourhood joined with the sum of single-sponsor effects. Name the Congress, the bill set and the denominator. LDA may identify lobbied bills but must not supply edges or weights (D-021).
+- No same-CRN comparison exists of the water-fill seed set against lazy greedy at equal seed count on the 533-member kernel. It would be a read-only model-internal check.
+- Submodularity of the bystander-filtered competitive kernel is unverified in any row.
+- No evidence on whether topic-specific kernels outperform the shared kernel.
+- Kumar 2022 and Kempe 2003 (Paul's citations) appear only through Kempe 2015 and a Kumar row under the frontier.
 
 **Paul's position vs the evidence**
 
-For the flip allocator, the submodular tier label is accurate and even understated, since greedy there is exact. For the coalition allocator, the label is not earned: it uses proportional allocation on singleton marginals, which the cited theory (Kempe 2003/2015, Golovin) does not cover. The evidence would support relabelling it as a diagnostic heuristic, which the code partly does already, and comparing it against lazy greedy before calling it submodular.
+Paul places these allocators in the static and submodular tier of his three-tier architecture.
+
+- **The flip allocator** fits 'static'. Greedy is exact there in a fixed state.
+- **The coalition allocator** fits 'static' but not 'submodular' as built. It does not use greedy, and no row establishes submodularity for its competitive kernel.
+
+The evidence supports keeping both allocators diagnostic-only and non-summable, which matches the component's own assumption. Kempe 2015's centrality-vs-greedy gap is a reason to doubt that singleton ranking is a good proxy.
 
 **Open questions**
-- Should the coalition allocator be switched to lazy greedy, or kept as a diagnostic with a greedy comparison printed beside it?
-- Should the top-45 pre-cut rank by singleton marginal rather than by engagement priority?
+- Should the water-fill be replaced or compared with a sequential or degree-discount pass (DHICM-style)? This is an owner change under change-control, a candidate only.
+- Is the bpf boost meant to proxy legislative effectiveness? If so, Harbridge-Yong's nonlinearity suggests capping or bending it. That would be Paul's ruling.
+- Should the top-45 cut be re-ranked by marginal value rather than engagement?
 
-**Read first:** [[kempe-2015-maximizing-spread-influence]], [[bharathi-nd-competitive-influence-maximization]], [[golovin-2011-adaptive-submodularity-theory]], [[chen-2023-complex-contagion-influence]], [[trivedi-2020-efficient-influence-maximization]]
+**Read first:** [[kempe-2015-maximizing-spread-influence]], [[bharathi-nd-competitive-influence-maximization]], [[golovin-2011-adaptive-submodularity-theory]], [[chen-2023-complex-contagion-influence]], [[harbridge-yong-2023-bipartisan-path-effective]], [[trivedi-2020-efficient-influence-maximization]]
 
 ## Budget frontier with knee and electoral modes
 
-**What it computes.** Spread vs cumulative seeds per topic; knee where 4 x gain >= peak; contest factor REPFAC 0.6 x lev.
+**Computes.** Spread vs cumulative seeds per topic; knee where 4 x gain >= peak; contest factor REPFAC 0.6 x lev.
 
 **Method.** Lazy greedy up to 60 seeds under CRN.
 
 **Code refs.** `fec/engine/budget_frontier.py:1-188`, `fec/engine/mc_stability_check.py:1-44`
 
-**Assumptions**
+**Assumptions.**
 - Diminishing marginal returns to seeds
 
-**Evidence**
+**Evidence table**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -277,61 +301,71 @@ For the flip allocator, the submodular tier label is accurate and even understat
 
 **Assessment**
 
-**Overall: a non-adaptive heuristic. No approximation guarantee carries over, and every bearing agrees.** 11 bearings: 2 VERIFIED, 9 VERIFIED-SOFTENED.
+**What it is.** A lazy greedy up to 60 seeds (MAXSEEDS), at MC = 20, on edge-keyed CRN cascades over a two-colour, first-to-reach competitive kernel with money-mobilized bystanders.
+- Marginals are max(0, delta) times fac. fac is REPFAC*lev for contest seeds, 1.0 for defend seeds, and lev otherwise.
+- The knee is the last seed whose gain is at least a quarter of the peak gain.
 
-**How it is built.** `budget_frontier.py` runs a CELF-style lazy greedy, up to MAXSEEDS=60, over a stance-gated top-45 shortlist. Each marginal is a 20-draw Monte Carlo estimate on a two-colour competitive cascade with common random numbers (CRN). Marginals are clamped at zero and multiplied by `fac` (REPFAC x lev for contest seeds, 1.0 for defend seeds, lev otherwise). The knee is taken at a quarter of the peak marginal.
+**Evidence: 11 rows (2 VERIFIED, 9 VERIFIED-SOFTENED).** The evidence agrees that **no greedy guarantee carries over**:
+- Kempe 2015 (VERIFIED-SOFTENED, strong): the (1-1/e) bound needs monotone submodular single-cascade spread. Competing cascades are left open.
+- Borodin (VERIFIED-SOFTENED): most competitive extensions lose submodularity. Nothing is shown for the electoral contest and defend objective.
+- Bharathi (VERIFIED-SOFTENED): its competitive bound holds only for a fixed opponent set with fac = 1, the LEV-off case. Contest removal and the S-dependent bystander set fall outside Lemma 1.
+- Golovin 2011 (VERIFIED-SOFTENED): sampled marginals give only additive error.
+- Manchanda 2020 (VERIFIED, weak): its benchmarks use 10,000 MC simulations against this system's 20.
 
-**Why no guarantee transfers**
-- **Kempe 2015 and Manchanda 2020.** The (1-1/e) bound needs single-cascade submodular spread. A competitive race breaks that.
-- **Bharathi.** The guarantee holds only with a fixed opponent set and `fac = 1`. Here contest removal and the bystander exclusion both change with the seed set.
-- **Borodin.** Competitive threshold models lose submodularity and sometimes monotonicity. This hits the electoral contest and defend modes directly.
-- **Golovin.** Sampled marginals give only additive error. The zero clamp is itself a sign that sampled spread is not monotone.
+So the frontier is a **non-adaptive heuristic**, and the fac-weighted ranking optimizes no stated set function.
 
-**Monte Carlo noise**
-- **Almazaydeh 2026 (strong).** CELF++ at 50 MC draws reached only 12.9% of IMM at 1000 nodes, because each candidate's estimate had independent noise. Melange's edge-keyed CRN removes that failure mode for pairwise comparisons, and the brain records MEA-7 PASS (100% Jaccard at MC=100). The design is supported in principle.
-- **The audit is too lenient.** `audit_frontier.py` tolerates inversions in up to 35% of marginals as noise, which can hide real non-submodularity.
+**Noise.**
+- Almazaydeh 2026 (VERIFIED-SOFTENED, strong): CELF++ at 50 MC reached 12.9% of IMM at 1,000 nodes, a failure from independent noise.
+- The edge-keyed CRN design addresses that mechanism in principle.
+- The brain records MEA-7 PASS (100% Jaccard overlap at MC = 100; 98% across two RNG seeds), per the evidence row. That was at MC = 100, while the frontier runs at MC = 20.
+- `audit_frontier.py` tolerates up to 35% of marginals inverted as MC noise. That is a loose bar, and it was never separated from structural non-monotonicity.
 
-**Knee and stop rule.** Both presume diminishing returns. Chen 2023 shows greedy can be arbitrarily bad under complex contagion. That bites only if real cosponsor joining is threshold-like; under the per-edge IC kernel the rule is internally coherent.
+**Knee and stop rule.** Chen 2023 (VERIFIED): under complex contagion, greedy can be arbitrarily bad. On the India graph (202 nodes) greedy reaches 0.0396 normalized influence against 0.5347 for RL4CCIM. Zero-marginal stops and knees that presume diminishing returns would mislead if real joining is threshold-like. Under the system's per-edge IC kernel they are internally coherent.
 
-**Smaller points**
-- **Chen 2021.** Supports putting seed take-up uncertainty inside the expected-spread objective.
-- **Trivedi 2020.** Exact greedy is affordable because the pool is about 45 candidates.
-- **Almazaydeh, ablation finding.** PageRank reaches about 96.5% of IMM. Usable only as an UNSTRATIFIED ablation diagnostic, never as a reason to replace greedy.
+**Cost.**
+- Trivedi 2020 (VERIFIED-SOFTENED, supports) and Kumar 2022: exact greedy stays affordable because the candidate pool is about 45. The node-count thresholds in those papers are not what makes it affordable.
+- Almazaydeh's PageRank, at 96.5% of IMM, is usable only as an UNSTRATIFIED ablation, not as a replacement.
 
-**Online lead for the electoral modes:** Stromberg 2008 (AER), allocation weighted by pivot probability. A candidate benchmark for contest/defend targeting, not read in full.
+Spread is **modeled cascade reach**. It is not access, closeness or influence (D-025).
 
 **Contradictions**
-- The frontier is described with Golovin-Krause and GCOMB citations, which imply greedy guarantees. Kempe 2015, Manchanda 2020, Bharathi, Borodin and Golovin all say no guarantee carries over to a fac-weighted, clamped, MC=20, two-colour competitive cascade with an opponent set that changes as seeds are added. The citations are context, not certificates.
-- `audit_frontier.py` passes up to 35% marginal inversions as MC noise. Under CRN, inversions of that size are more likely to signal structural non-submodularity than noise. The audit threshold contradicts the claim that the objective behaves submodularly.
+- The code and system framing cite Golovin-Krause as backing for greedy seed selection. Kempe 2015, Borodin, Bharathi and Golovin's own scope rows say the guarantee does not hold for a sampled, fac-weighted, clamped, competitive objective. The zero clamp itself signals that sampled spread is not monotone.
+- The MEA-7 stability PASS (MC = 100) is cited where the frontier runs at MC = 20. The evidence row does not show stability at the operating MC.
+- The assumption 'diminishing marginal returns to seeds' is presumed by both the knee and the stop rule. Chen 2023 (VERIFIED) shows it can fail badly under threshold-like adoption. Whether CU cosponsor joining is threshold-like is untested.
 
 **Gaps**
-- Raw marginals under CRN have never been checked to separate noise from structure. The study: re-run the frontier read-only at MC=20 against MC=200 with the same CRN keys, and count inversions on unclamped marginals.
-- The electoral contest and defend modes have no outcome validation. The study: a retrospective comparison of contest/defend picks with realized race margins, or with a pivot-probability benchmark in the style of Stromberg 2008.
-- The orienteering (political-capital budget) formulation Paul describes is not built and has no evidence rows. GCOMB lists capacity-constrained and sequential problems as future work, so it does not cover this.
+- The empirical question is untested: where does the realized marginal return to additional cosponsors flatten for CU bills? One study: a per-bill curve of cosponsor joining over time against the number of early recruited sponsors, on CU bills across recent Congresses, with window and denominator named. LDA serves only to identify which bills were lobbied (D-021), not to weight edges.
+- There is no read-only check of raw marginals at MC = 20 against MC = 100 or higher under CRN that would separate noise from structural non-monotonicity. The 35% inversion tolerance is unexamined.
+- No same-CRN ablation of greedy against degree, PageRank or Katz-Bonacich seed sets on the 533-member kernel exists. The evidence row could not confirm the absence by a repo-wide search.
+- Paul's orienteering (political-capital budget) formulation is not built, and no row speaks to it.
 
 **Paul's position vs the evidence**
 
-Paul says GCOMB's budget framing maps onto a political-capital budget in an orienteering formulation. Manchanda 2020 evaluates only single-colour IC set selection and lists capacity-constrained and sequential variants as future work. GCOMB therefore supports neither the orienteering mapping nor the competitive frontier as built. The position is an unbuilt design idea with no evidential backing in this set.
+Paul says GCOMB's budget framing maps onto a political-capital budget in an orienteering formulation.
+
+**No evidence row bears on the orienteering mapping, and it is not built.** The GCOMB rows (Manchanda 2020, VERIFIED and VERIFIED-SOFTENED) qualify rather than support it. GCOMB assumes single-colour submodular IC, benchmarks against 10,000 MC runs, and its speed gain is measured against IMM on large graphs. None of that holds for a 45-candidate, two-colour, MC = 20 frontier.
+
+The position stays a design idea with no evidential base yet.
 
 **Open questions**
-- Should the frontier and the knee be labelled heuristic model output, no approximation guarantee on every surface?
-- Should the 0.35 inversion tolerance in `audit_frontier.py` be tightened, or replaced with an unclamped CRN inversion count?
-- Is the orienteering formulation still on Paul's roadmap?
+- Should the frontier's documentation drop any implied (1-1/e) guarantee and call it a heuristic? This is a docs and claims change.
+- Is an MC = 20 vs MC = 100+ stability check at the frontier's operating point authorized? It is read-only.
+- Does Paul still want the orienteering formulation, given that GCOMB's assumptions do not hold here?
 
-**Read first:** [[kempe-2015-maximizing-spread-influence]], [[bharathi-nd-competitive-influence-maximization]], [[borodin-nd-threshold-models-competitive]], [[almazaydeh-2026-heuristic-centrality-methods]], [[golovin-2011-adaptive-submodularity-theory]], [[chen-2023-complex-contagion-influence]]
+**Read first:** [[kempe-2015-maximizing-spread-influence]], [[borodin-nd-threshold-models-competitive]], [[bharathi-nd-competitive-influence-maximization]], [[almazaydeh-2026-heuristic-centrality-methods]], [[chen-2023-complex-contagion-influence]], [[manchanda-2020-gcomb-learning-budget-constrained]]
 
 ## Workbook allocator (top-133 from fixed pot)
 
-**What it computes.** Funds the top 133 of 533 members from a flat $2.0M in proportion to score (uncapped; max about $25.8k).
+**Computes.** Funds the top 133 of 533 members from a flat $2.0M in proportion to score (uncapped; max about $25.8k).
 
 **Method.** A capped variant ($10k cap, top 250) exists only in a backup and was not applied.
 
 **Code refs.** `Blended Model col U`, `fec/apply_alloc_cap.py (not applied)`
 
-**Assumptions**
+**Assumptions.**
 - Score ordering maps to funding priority
 
-**Evidence**
+**Evidence table**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -339,44 +373,58 @@ Paul says GCOMB's budget framing maps onto a political-capital budget in an orie
 
 **Assessment**
 
-**Overall: a GAP on both the evidence side and the system side.** 1 bearing: Cagala 2021 (VERIFIED-SOFTENED, weak, conceptual). Its point is that blanket treatment is net-negative or near zero: the all-gift minus no-gift difference is +0.05 to +0.08 euro on the warm list (not significant) and -0.97 euro per donor on the cold list (significant). Targeting rules must be evaluated against uniform and random benchmarks. The donor magnitudes do not transfer to legislators.
+**What it is.** The workbook allocator reportedly funds the top 133 of 533 members from a flat $2.0M in proportion to score: uncapped, with a maximum of about $25.8k.
 
-**System side, an actual error.** The cited producer `fec/apply_alloc_cap.py` does not exist. The Blended Model sheet's Allocation column (U) holds no cached values in the copy read. The top-133 of 533 from a flat $2.0M pot claim was not reproduced.
+**Evidence: 1 row (1 VERIFIED-SOFTENED).**
 
-Proportional allocation down a ranked list is the same structural move as the coalition allocator's water-fill. Kempe 2015 and Golovin 2011 therefore apply by extension: proportional or rank-based allocation carries no optimality guarantee, and greedy on marginals is the benchmark.
+Cagala 2021 shows that blanket treatment can be net-negative. On their cold list, all-gift minus no-gift was -0.97 euro per donor, significant. Targeted units differed only modestly on observables. The transferable point is methodological: **benchmark any proportional allocator against uniform and random allocations.** The donor magnitudes do not transfer.
 
-Huneeus & Kim 2018 is Paul's cited basis, but it has no bearing in the file.
+**The system side did not reproduce.**
+- The Blended Model sheet's Allocation column (column U) has no cached values in the copy read.
+- The cited producer, `fec/apply_alloc_cap.py`, does not exist in the repo.
+- The capped variant ($10k cap, top 250) exists only in a backup and was not applied.
+
+The component's own figures (133, $2.0M, about $25.8k maximum) are therefore **unverified**.
+
+This is effectively a GAP on two fronts: there is no evidence on proportional-to-score allocation, and the artifact itself is unconfirmed.
+
+One model-internal point needs no new paper. The proportional rule ignores PMAX ($10k), which the joint optimizer treats as the CU PAC per-candidate per-cycle limit (the F2 / 2026-09-30 ruling). A $25.8k maximum allocation would exceed that limit if both describe one PAC's money.
 
 **Contradictions**
-- The system description says the top 133 of 533 members are funded from a $2.0M pot. The producer script it cites (`fec/apply_alloc_cap.py`) does not exist, and the workbook column has no cached values. The claim is unsupported by the repo as read.
+- The workbook allocator is uncapped (maximum about $25.8k per member). The joint optimizer caps at PMAX = $10k, read as the CU PAC's per-candidate per-cycle limit. If both allocate the same PAC's money, the workbook figure breaches the limit the optimizer enforces. This is an internal inconsistency, not a literature contradiction.
+- The component's description (top 133, $2.0M) is not reproducible from the artifact: column U is empty, and `apply_alloc_cap.py` is missing.
 
 **Gaps**
-- No evidence addresses proportional top-N allocation for PAC money. The study that would fill this is a read-only comparison of the workbook allocation against uniform, random-N and joint-optimizer greedy allocations, scored on the same modeled objective and, if outcomes exist, on realized outcomes, following the Cagala benchmark design.
-- There is no Huneeus & Kim 2018 bearing to support Paul's fundraising goals reading.
-- The producer of the allocation column needs locating or rebuilding before any assessment is possible.
+- No study compares proportional-to-score allocation with greedy, uniform or random allocation. Model-internal fill: on the same objective and stance state, compute predicted winnability for proportional vs greedy (`optimize.py`) vs uniform vs random. Real-world fill: the same allocations scored against next-cycle CU-aligned outcomes, as in the joint-optimizer backtest.
+- Provenance gap: the producer of column U must be located, or the allocator documented as retired, before any claim about it is made.
+- Whether the workbook allocator applies the stance money gate is unconfirmed.
+- Huneeus & Kim 2018 (Paul's citation) is not in the evidence corpus.
 
 **Paul's position vs the evidence**
 
-Paul sees Huneeus & Kim as the basis for setting fundraising goals, and no annotation addresses proportional allocation. The evidence file contains nothing from Huneeus & Kim, so the position is untested here. The only bearing, Cagala, warns that rank-based or blanket allocation must beat simple benchmarks to justify itself. Nothing shows the workbook allocator does.
+Paul sees Huneeus & Kim as the basis for setting fundraising goals. **That paper is not in the evidence corpus**, and no annotation addresses proportional allocation.
+
+The position is about the size of the pot, not how it is split, so it neither supports nor contradicts the proportional rule. The only row (Cagala 2021) argues for benchmarking the split, not for proportionality.
 
 **Open questions**
-- Where is the workbook Allocation column actually produced now that `fec/apply_alloc_cap.py` is gone?
-- Should the workbook allocator be retired in favour of the joint optimizer's output, or kept as a simple communication device?
+- Is the workbook allocator still live? Where is its producer, given that `fec/apply_alloc_cap.py` does not exist and column U is empty?
+- Should the workbook allocation respect PMAX = $10k, to match the F2 single-PAC ruling?
+- Should Huneeus & Kim 2018 be ingested so the fundraising-goal position can be checked?
 
 **Read first:** [[cagala-2021-optimal-targeting-fundraising]], [[kempe-2015-maximizing-spread-influence]], [[golovin-2011-adaptive-submodularity-theory]]
 
 ## Break-even CU spend and ROI floor
 
-**What it computes.** The CU dollars that restore baseline flip odds against competitor spend (closed form, 'cannot offset' when q >= 1), and member ROI floor values.
+**Computes.** The CU dollars that restore baseline flip odds against competitor spend (closed form, 'cannot offset' when q >= 1), and member ROI floor values.
 
 **Method.** Solves a(CU)/(a(CU) + b(comp)) = pfbase with the saturating money term; ROI floor parity is checked by roi_verify.py.
 
 **Code refs.** `fec/templates/make_dashboard_html_00.tpl (break-even)`, `verify_finish/roi_verify.py`
 
-**Assumptions**
+**Assumptions.**
 - Competitor and CU money enter a share-type ratio
 
-**Evidence**
+**Evidence table**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -388,73 +436,100 @@ Paul sees Huneeus & Kim as the basis for setting fundraising goals, and no annot
 
 **Assessment**
 
-**Overall: the break-even algebra is internal to the model and needs no outside support. Any ROI figure shown as a real-world return is unsupported.** 5 bearings: 5 VERIFIED-SOFTENED.
+**What it is.** A closed-form solve for the CU dollars that restore baseline flip odds against competitor spend, using a(CU)/(a(CU) + b(comp)) = pfbase with a saturating money term. When q is at least 1, the display says CU money alone cannot fully offset the competitor spend. It also produces member ROI floor values.
 
-**Bombardini 2020 (moderate).** Naive return figures in this literature are routinely absurd: the Farm Bill comparison gives about 600,000%. Adding an electoral-vote channel cuts that to $13.7 per dollar, and Bombardini & Trebbi's simulations give 10-20% per year. Some structural models show symptoms of misspecification. Any ROI floor shown on the dashboard needs a model-output or UNVERIFIED label.
+**Evidence: 5 rows (5 VERIFIED-SOFTENED).** None tests the functional form.
 
-**Alexander 2009.** The 220x figure covers FY2004-2006, is computed over 93 repatriating firms, and comes from a one-time tax provision measured against LDA spend. The per-company median is 172 against a mean of 869. Nothing transfers numerically. `desk_roi` measures modeled weighted flips per $10k increment, which is not a firm return.
+- **Bombardini 2020** (moderate): naive lobbying-return figures are implausibly high across the literature.
+  - The Farm Bill comparison gives about 600,000% ($22bn in 2000 subsidies against under $3.7m in agribusiness PAC money that cycle).
+  - Adding an electoral-vote channel brings it to $13.7 per dollar. Bombardini-Trebbi simulations give 10%-20% per year.
+  - Some structural models show signs of misspecification.
+  - Any ROI floor shown as a return should carry a model-output label.
+- **Alexander 2009** (moderate): an overall return of 220 ($62.05bn estimated tax savings on $282.7M of LDA lobbying, 93 repatriating firms, FY2004-2006). The per-company median is 172 against a mean of 869. Its numerator, a one-time tax provision, and its denominator, LDA spend, do not map onto Melange's modeled member movement per FEC PAC dollar.
+- **Bickmore 2025** (moderate): a firm industry-share outcome (Compustat, 1998-2016, N = 62,198 election-year obs).
+  - PAC on ShareAssets is 0.110. In the Abramoff DiD, Treatment x Post is -0.0265 (SE 0.0096).
+  - It does not measure votes or flips, so it cannot calibrate WM, HALFF or LOSSFRAME.
+- **Cai 2025** (weak): in a two-controller game, a disadvantaged side can buffer but not overtake. That loosely agrees with the cannot-offset message. Its timing result (delay when disadvantaged) has no counterpart in a static break-even.
+- **goff-nd-cross-industry-finance** (Paul's own note, weak): "crypto outspends allies by about 100x" has no source, window or denominator, and its supporting graph is a placeholder.
 
-**Bickmore 2025.** Firm industry-share coefficients (Compustat x CRP, 1998-2016, N=62,198, pooled across industries, so quote as UNSTRATIFIED). They cannot calibrate WM, HALFF or LOSSFRAME. Framing use only, in share points.
+**System-side caveats.**
+- `roi_verify.py` was not found in the repo, so ROI floor parity is unconfirmed.
+- `desk_roi` returns expected weighted flips per $10k increment. That is not a dollar return.
 
-**Cai 2025 (weak).** A disadvantaged controller can buffer but not overtake. This loosely matches the cannot fully offset when q >= 1 message. The paper's timing result has no counterpart in a static break-even.
-
-**Goff n.d.** The 100x crypto outspending claim has no source, window or denominator, and the graph is a placeholder.
-
-**Online leads (unread in full):**
-- **Ansolabehere, de Figueiredo & Snyder 2003.** Small vote effects; contributions behave more like consumption than investment.
-- **Stratmann 2002 and Grier et al. 2023.** Measurable vote effects on low-salience bills.
-
-Together they bracket the plausible range and argue against presenting large ROI multiples.
-
-**Actual errors:**
-- `roi_verify.py`, said to check the ROI floors, was not found.
-- Kim J. et al. 2025 and Huneeus & Kim 2018 are cited but have no bearings.
+The break-even algebra is internally consistent. The share-type ratio assumption is **untested**.
 
 **Contradictions**
-- The ROI floors are said to be checked by `roi_verify.py`. No such file was found in the repo, so the claim is unconfirmed.
-- The head-to-head panel's saturating functional form, `(x+1)/((x+1)+HALFF*rcp)`, is an assumption that has not been validated against outcomes. The cannot offset message therefore reflects the functional form, not evidence that money decides outcomes.
+- Paul calls the Alexander 2009 figure an outlier. Bombardini 2020 (VERIFIED-SOFTENED) says excessive returns are common across this literature and attributes some of them to model misspecification. On that reading, Alexander's 220 is typical of a class of naive return estimates, not an isolated outlier.
+- The component says ROI floor parity is checked by `roi_verify.py`, but no such file was found in the repo (Bombardini row, system side).
+- The 'about 100x outspending' premise behind the cannot-offset framing has no source, window or denominator (Goff note), so the system cannot size the disadvantage it reports.
 
 **Gaps**
-- Competing-industry conflict, which Paul wants included, has only one weak bearing (Cai 2025: buffer, not overtake). The study that would fill it is a retrospective analysis of contested votes where CU and an opposing industry both gave. It would estimate whether relative money predicts outcomes, conditional on stance, with the window and vote denominator named.
-- No bearing exists for Huneeus & Kim 2018 or Kim J. et al. 2025, although both are cited.
-- The 100x crypto disadvantage needs a sourced figure: an FEC window, a denominator and the named allies.
+- The empirical question is untested: do member positions respond to the ratio of CU money to opposing-industry money rather than its level? One study: a member fixed-effects panel of position change on CU bills, regressed on both CU/(CU + opposing) and on CU and opposing levels separately. Stratify by party and chamber, name the Congresses and the industry set, and compare model fits. Given the Ansolabehere 2002 member-FE null on conversion, expect small effects and preregister the comparison.
+- No row calibrates WM, HALFF or the saturation constant against outcomes. All money-return rows are firm-level.
+- No source exists for the competitor-spend multiple. A dated FEC tabulation of CU vs crypto/fintech PAC receipts by cycle, with denominators, would fill it.
+- Kim J. et al. 2025 and Huneeus & Kim 2018 (Paul's citations) are not in the corpus.
 
 **Paul's position vs the evidence**
 
-Paul frames lobbying as ROI, calls the Alexander figure an outlier, and wants competing-industry conflict included. The evidence agrees that Alexander is an outlier: Bombardini says excessive returns are common and models are often misspecified, and Alexander's own median (172) is far below its mean (869). The evidence cautions against the ROI framing itself when figures are shown as real returns. Melange's ROI is modeled flips per dollar, not firm returns, and should be labelled that way. Competing-industry conflict is in the dashboard only as a static closed-form solve and has almost no evidential support.
+**Paul's ROI framing is qualified, not supported.**
+- Every return figure in the corpus is a firm-level or policy-value ratio with a different numerator and denominator from Melange's.
+- The review literature warns that such ratios run implausibly high.
+- His wish to include competing-industry conflict is consistent with Cai 2025's competitive framing, but no row validates the share-type ratio used to do it.
+- His view of Alexander as an outlier is contradicted in kind by Bombardini 2020.
+
+Recommended labelling: break-even and ROI floor values are model outputs, never returns. Quote the window and denominator of any external figure: Alexander FY2004-2006 across 93 firms, with median 172 next to mean 869.
 
 **Open questions**
-- Should dashboard ROI and break-even outputs carry a fixed model output, not a measured return label?
-- What is the source and window for the 100x crypto outspending figure?
-- Where did `roi_verify.py` go, or was it never built?
+- Where is `roi_verify.py`, or should the ROI-floor parity claim be retired?
+- Should dashboard ROI floors be relabelled as model output (expected weighted flips per $10k), given Bombardini's caution?
+- Can Paul source the about-100x crypto-vs-allies spending figure, with window and denominator?
 
-**Read first:** [[bombardini-2020-empirical-models-lobbying]], [[alexander-2009-lobbying-analysis-under]], [[bickmore-2025-corporate-lobbying-political]], [[cai-2025-competitive-influence-maximization]]
+**Read first:** [[bombardini-2020-empirical-models-lobbying]], [[alexander-2009-lobbying-analysis-under]], [[bickmore-2025-corporate-lobbying-political]], [[cai-2025-competitive-influence-maximization]], [[goff-nd-cross-industry-finance]]
 
 ## Across components
 
-**Patterns that run across components**
+## Patterns across components
 
-1. **Exact where separable, heuristic where competitive.** The joint optimizer and the flip allocator (separable, concave and deterministic in a fixed state) are the only places where a greedy guarantee or an exactness claim holds, and the code scopes both correctly. The budget frontier and the coalition allocator (a competitive two-colour cascade, Monte Carlo sampling, fac weighting, proportional splits) carry no guarantee. Every surface that shows frontier, knee or coalition output should say heuristic model output. The Golovin, Kempe and GCOMB citations are context there, not certificates.
+**1. Guarantees are stated for a cleaner problem than the one built.** The separable joint optimizer in a fixed state is the one place where a guarantee transfers: exact grid greedy, backed by Golovin 2011 and Kempe 2015 Thm 7.1, both VERIFIED. The frontier and the coalition allocator run on a two-colour competitive kernel with:
+- fac-weighted, zero-clamped marginals;
+- MC = 20;
+- a bystander set that depends on the seed set.
 
-2. **No outcome loop anywhere.** All six components optimize modeled quantities: winnability, spread, flips per $10k and break-even dollars. None is scored against realized outcomes or against simple benchmark allocations (uniform, random, actual CU giving). The single most valuable study for the whole system is one shared retrospective benchmark backtest in the Cagala design. Run read-only, it would score every allocator on the same held-out cycle with a named window and denominator.
+Kempe 2015, Borodin, Bharathi and Golovin all agree that no (1-1/e) bound covers that. Where the code or framing cites Golovin-Krause or calls these allocators submodular, it borrows a guarantee that only the joint optimizer has earned. The code's Lemma 5.3/A.9 citation also does not match the text, which has Lemma 6, Eq. 13.
 
-3. **The frozen opponent.** Industry money is static in the optimizer and the frontier, and the head-to-head break-even is a static ratio. Moreno 2021 and Cai 2025 both show the answer changes when the opponent re-optimises or when spending is timed. Every optimal plan is a best response to a passive industry.
+**2. Nothing is scored against reality.**
+- `observations = []` is never appended to.
+- No row compares any allocation with realized CU-aligned outcomes.
+- The only legislator-response evidence (Ansolabehere 2002, member FE, 1978-1994, UNSTRATIFIED) finds donations do not change roll-call voting.
 
-4. **GCOMB/learned-policy expectation.** Across the optimizer and the frontier, the learned-policy literature in the set (GCOMB, RELINK, S2V-DQN, Q-learning) offers speed on graphs of 1M+ nodes or quality on non-separable set selection. Melange's problem is about 533 nodes, capped and partly separable. The expectation has no evidential support at this scale.
+That null **supports** the stance gate. It **undercuts** any reading of allocator gains or ROI floors as real effects. All allocator outputs should carry model-output labels until a preregistered backtest exists (DE-062 discipline).
 
-5. **Ranking before marginals.** Both the frontier and the coalition allocator pre-cut to a top-45 shortlist by engagement priority before any marginal is computed. Chen 2023 and Kempe 2015 both identify this as the place where combination-dependent value is lost.
+**3. Learned-policy enthusiasm is not supported here.** GCOMB, S2V-DQN, RELINK and Q-learning win on speed at large scale or on non-separable graph problems, and they need many training instances. Melange is small (533 members, a candidate pool of about 45), capped, and mostly separable, and per-cycle outcomes are sparse. Sutton 2018's multi-cycle (LTV) idea would require money to change later responsiveness. That is a reciprocity-style mechanism, and reciprocity is NOT validated in this project (D-104..D-108). Any multi-cycle objective is blocked behind that, plus owner authorization.
 
-6. **Citation hygiene.** Huneeus & Kim 2018 is cited for three components, Furnas 2022 for the stance gate and Kim J. 2025 for ROI, and none of them has an extracted bearing. The code also has one wrong lemma reference (Golovin-Krause) and two missing scripts (`apply_alloc_cap.py`, `roi_verify.py`).
+**4. Internal inconsistencies to resolve before any claim.**
+- The workbook allocator is uncapped (max about $25.8k), while the optimizer enforces PMAX = $10k under the single-PAC ruling.
+- The workbook producer (`apply_alloc_cap.py`) and `roi_verify.py` were not found.
+- The stance gate's coverage of the workbook path is unconfirmed.
+- The gate fails open for members with no matrix row.
 
-**SNA guardrails.** No bearing in this set argues for dropping regular cosponsorship edges or for per-edge volume normalization, so nothing needed flagging. No bearing uses LDA as an edge or weight source. The Almazaydeh centrality result (PageRank at about 96% of IMM) must be quoted only as an UNSTRATIFIED ablation of modeled spread, never as access or closeness (D-025).
+**5. Wording.**
+- Spread, frontier reach and joint-vs-naive figures are modeled cascade reach, not access, closeness or influence (D-025).
+- Any centrality ablation (Almazaydeh's PageRank at 96.5% of IMM) is an UNSTRATIFIED diagnostic only.
+- LDA may identify lobbied bills in any backtest but cannot weight edges (D-021).
+
+**6. Flags on rejected SNA proposals.** No paper in this hub argues for dropping regular cosponsorship edges or for per-edge volume normalization. Zareie 2023's topic-aware kernel is a different proposal. It has no accuracy evidence and would be a change-controlled engine change, so it is listed as conjectural only.
+
+**7. Corpus gaps against Paul's own citations.** Huneeus & Kim 2018, Furnas et al. 2022, Leskovec 2007 (CELF), Kim J. et al. 2025 and Kempe et al. 2003 underpin Paul's positions but have no evidence rows. Ingesting them is the cheapest way to test the positions on their own terms.
 
 ## Research agenda
 
-1. Benchmark backtest (all allocators, read-only): score the joint optimizer, workbook top-N, coalition water-fill and the actual CU PAC allocation against uniform and random allocations of the same pot. Score on realized member-level outcomes, such as cosponsor joins or votes on CU-relevant bills, for one named past cycle. Members are the denominator. Results stay model-internal and labelled UNVERIFIED until a second path reproduces them (DE-062).
-2. Coalition allocator vs lazy greedy under identical CRN keys and equal seed count, plus degree, PageRank and Katz-Bonacich ablations. Report the joint modeled spread for each, labelled UNSTRATIFIED, with topic, window and the 533 denominator named.
-3. Frontier noise vs structure: re-run read-only at MC=20 and MC=200 with the same CRN keys, and count inversions on unclamped marginals. Use the result to decide whether the 0.35 inversion tolerance in `audit_frontier.py` should be tightened.
-4. Stance-gate causal test: a within-member fixed-effects design in the Stratmann 2002 / Grier et al. 2023 style on financial-services votes, split by prior stance tier, to test whether money to Skeptic/Opponent members moves votes. Separately, count how many members the gate admits via the fail-open (no matrix row) path.
-5. Opponent response: a diagnostic best-response or Nash check that lets industry money re-optimise against the CU plan (Moreno 2021), to measure how exploitable the frozen-opponent optimum is.
-6. Fix the actual errors: correct the Golovin-Krause lemma citation in `optimize.py`; locate or rebuild the producer of the workbook Allocation column (`fec/apply_alloc_cap.py` missing); locate or retire `roi_verify.py`; source or remove the 100x crypto figure.
-7. Extract bearings for cited papers that have none: Huneeus & Kim 2018, Furnas et al. 2022 and Kim J. et al. 2025.
-8. Online-scan leads to add to the vault and verify, since only abstracts and summaries were read. Stratmann 2002 (J. Law & Econ., financial-services votes): https://chicagounbound.uchicago.edu/jle/vol45/iss2/3. Grier, Grier & Mkrtchian 2023 (APSR, sugar contributions, open access): https://www.cambridge.org/core/journals/american-political-science-review/article/campaign-contributions-and-rollcall-voting-in-the-us-house-of-representatives-the-case-of-the-sugar-industry/DBB341572A3FC0A1D06705B5DDE5C497. Hall & Wayman 1990 (APSR, Buying Time): https://ideas.repec.org/a/cup/apsrev/v84y1990i03p797-820_19.html. Ansolabehere, de Figueiredo & Snyder 2003 (JEP; NBER w9409): https://www.nber.org/papers/w9409. Powell, Money in Exile (committee access): https://appliedstatsworkshopgov3009.hsites.harvard.edu/presentations/money-exile-campaign-contributions-and-committee-access. Kalla & Broockman 2016 (AJPS, donor access experiment; literature on access only, never applied to graph scores per D-025): https://ajps.org/2015/05/12/how-campaign-money-facilitates-access-to-policymakers. Stromberg 2008 (AER, pivot-probability allocation, a benchmark for frontier electoral modes): https://ideas.repec.org/a/aea/aecrev/v98y2008i3p769-807.html.
+1. Ingest and annotate Paul's cited-but-absent sources: Huneeus & Kim 2018, Furnas et al. 2022, Leskovec et al. 2007 (CELF), Kim J. et al. 2025, Kempe et al. 2003. Then re-run the position checks for the joint optimizer, stance gate, workbook allocator and ROI.
+2. Preregistered observational backtest: score the joint optimizer's allocation and uniform, random and proportional benchmarks against realized CU-aligned cosponsorship and votes in the next cycle. Use matched unfunded members, net of cost, with window and denominator named, stratified by party and chamber. Results stay UNVERIFIED until reproduced by a second path (DE-062).
+3. Member fixed-effects panel testing the share-type money ratio against levels (CU vs opposing-industry PAC money) on CU-bill positions in recent Congresses, stratified by party and chamber. This updates the Ansolabehere 2002 design and directly tests the break-even assumption and the stance-gate rationale.
+4. Read-only frontier noise check: raw marginals at MC = 20 against MC = 100 and 200 under the same CRN keys. Report inversion rates against the 35% audit tolerance, and confirm MEA-7 stability at the operating MC.
+5. Read-only coalition-allocator ablation: joint spread of the water-fill seed set against lazy greedy, and against degree, PageRank and Katz-Bonacich sets, at equal seed count and the same CRN, per topic. Label UNSTRATIFIED and report modeled reach only (D-025).
+6. Observed sub-additivity and threshold test on CU bills: do multiple early sponsors in a member's neighbourhood produce less (IC-like) or more (complex-contagion) cosponsor joining than the sum of single-sponsor effects? This decides whether the knee and zero-marginal stop rule are trustworthy. LDA is used for bill identity only (D-021).
+7. Model-internal comparison of proportional-to-score (workbook) against greedy (`optimize.py`) on the same objective and stance state, after the column-U producer is located or the allocator is declared retired. Reconcile the uncapped $25.8k maximum with PMAX = $10k.
+8. Provenance and code audit, read-only: locate `roi_verify.py` and `fec/apply_alloc_cap.py`. Count members passed by the fail-open stance gate and the money they received. Confirm the gate's coverage of the workbook path. Correct the Golovin-Krause lemma citation (owner change).
+9. Bridge-boost shape check: compare the monotone (1 + 0.8*bpf) boost with Harbridge-Yong 2023's nonlinear, reversing-past-50/50 pattern. Any change to BETA_C or its shape is Paul's ruling.
+10. Source the competitor-spend multiple (CU vs crypto/fintech PAC receipts by cycle, from FEC, with denominators) to replace the unsourced about-100x figure in the cannot-offset framing.

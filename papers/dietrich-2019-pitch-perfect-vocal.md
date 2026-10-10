@@ -125,3 +125,6 @@ Paul has no annotations on this paper. The paper shows that pitch can carry a si
 ### Linked from
 - [[pennebaker-2003-psychological-aspects-natural]] — complements — Real item (2019; vocal pitch and emotional intensity of 74,158 House floor speeches). Measures intensity without emotion-word counts, consistent with the review sparsity point.
 - [[rubio-2024-feasibility-data-analytics]] — complements — Real item (title confirmed: vocal pitch and emotional intensity of congressional speech). Supports the emotional-intensity, not trait, framing.
+- [[aroyehun-2026-politics-of-feelings]] — complements — Not cited by this paper. The item measures emotional intensity of congressional floor speech from vocal pitch, an acoustic counterpart to the text intensity measure here.
+- [[osnabrugge-2021-playing-gallery-emotive]] — complements — The paper cites Dietrich, Hayes and O'Brien (2019) for visual or audio measurement of political emotion. Verified in text; the vocal-pitch channel is the analyst's comparison.
+- [[rheault-2016-measuring-emotion-parliamentary]] — complements — Measures emotional intensity of congressional speech from vocal pitch rather than words, a non-lexical check on the intensity construct. Verified in the Dietrich item.

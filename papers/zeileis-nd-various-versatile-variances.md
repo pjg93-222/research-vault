@@ -114,4 +114,4 @@ There are no annotated-bibliography entries or annotations for this work (n_anno
 - [[zeileis-nd-econometric-computing-with]] — builds-on — The paper cites Zeileis 2004 for the HC and HAC estimators reused in vcovPL and the HC0-HC3 corrections (text ~line 336 and ~line 773). Verified.
 
 ### Linked from
-_None._
+- [[mackinnon-2017-wild-bootstrap-inference]] — complements — Checked: the Zeileis text documents an R implementation of clustered covariances including multiway clustering and CR1-type corrections, so it covers how the study's CR1 and two-way SEs are computed. Kept.

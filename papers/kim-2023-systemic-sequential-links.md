@@ -159,4 +159,5 @@ The paper agrees with Paul's core expectation that donations precede lobbying. I
 
 ### Linked from
 - [[furnas-nd-conflating-lobbying-pacs]] — complements — The later version of the same donations-then-lobbying sequencing argument. Furnas's low overlap bounds how much of the organizational population such sequencing can describe.
+- [[fremeth-2018-spillovers-regulating-corporate]] — complements — Real item (title: Systemic and Sequential Links between Campaign Donations and Lobbying). Only existence and title checked.
 - [[note-industry-growth-and-political-spending-research]] — complements — Item record exists (Kim, Stuckatz and Wolters Freiheyt 2023, donations and lobbying links). Title checked only.

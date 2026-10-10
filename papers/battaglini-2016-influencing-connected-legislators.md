@@ -148,3 +148,4 @@ Paul listed Battaglini and Patacchini twice in his Social Network Analysis bibli
 ### Linked from
 - [[azaiez-2025-hypergraph-analysis-european]] — complements — Battaglini and Patacchini model PAC allocation by legislators' Bonacich centrality; Azaiez finds interest-group resources associated with the groups' own centrality (associational, reverse causation acknowledged). The system's kb_benchmark is diagnostic only.
 - [[almazaydeh-2026-heuristic-centrality-methods]] — complements — Item exists; title matches (NBER 22739). Katz-Bonacich allocation rule; checked on title only, the equilibrium claim was not verified here.
+- [[battaglini-2018-effectiveness-connected-legislators]] — built-on-by — Same authors and equilibrium concept; the 2016 item exists in the vault (title and authors match). The benchmark docstring cites only the 2016 paper (NBER w22739).

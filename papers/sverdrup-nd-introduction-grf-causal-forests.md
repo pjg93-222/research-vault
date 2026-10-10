@@ -608,4 +608,4 @@ Paul has no annotated-bibliography entry and no PDF markup for this work (n_anno
 - [[imai-2021-fixed-effects-regression]] — complements — Vault item exists. Rel uses it for observational panel identification assumptions; kept on existence, content not re-read here.
 
 ### Linked from
-_None._
+- [[callaway-2025-difference-differences-continuous]] — complements — The grf vignette is an introduction to generalized random forests for heterogeneous effects; this paper points to Neyman-orthogonal and double machine learning routes for ACRT_glob as future work (p.22). Item exists; grf text not re-read here.

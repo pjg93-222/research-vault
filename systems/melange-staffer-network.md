@@ -10,11 +10,11 @@ components:
   - melange-staffer-network.access-uncertainty
   - melange-staffer-network.noisy-or-and-outreach
 brain_notes:
-  - concepts/concurrent-service-overlap-edge-rule
-  - actors/staffer-live-sidecar
-  - topics/2026-09-feature-staffer-network-data-and-math
-  - topics/2026-09-feature-staffer-network-data-and-math-sna-math-and-clique-lane
-paper_count: 8
+  - C:/Users/pgoff/Documents/brain/concepts/concurrent-service-overlap-edge-rule.md
+  - C:/Users/pgoff/Documents/brain/actors/staffer-live-sidecar.md
+  - C:/Users/pgoff/Documents/brain/topics/2026-09-feature-staffer-network-data-and-math.md
+  - C:/Users/pgoff/Documents/brain/topics/2026-09-feature-staffer-network-data-and-math-sna-math-and-clique-lane.md
+paper_count: 9
 tags: [system]
 ---
 
@@ -22,92 +22,82 @@ tags: [system]
 
 The people-only graph below members, built from House and Senate payroll and Quorum directories. Covers identity matching and consolidation, the concurrent-service OVERLAP edge rule, the co-tenure and exposure weights, layer-balanced PageRank, eigenvector and bridging measures, noisy-OR evidence, access uncertainty, and outreach ranking. It is descriptive only: there is no composite influence score.
 
-**Brain notes:** [concurrent-service-overlap-edge-rule](obsidian://open?vault=brain&file=concepts%2Fconcurrent-service-overlap-edge-rule) · [staffer-live-sidecar](obsidian://open?vault=brain&file=actors%2Fstaffer-live-sidecar) · [2026-09-feature-staffer-network-data-and-math](obsidian://open?vault=brain&file=topics%2F2026-09-feature-staffer-network-data-and-math) · [2026-09-feature-staffer-network-data-and-math-sna-math-and-clique-lane](obsidian://open?vault=brain&file=topics%2F2026-09-feature-staffer-network-data-and-math-sna-math-and-clique-lane)
+Brain notes: [concepts/concurrent-service-overlap-edge-rule](obsidian://open?vault=brain&file=concepts/concurrent-service-overlap-edge-rule); [actors/staffer-live-sidecar](obsidian://open?vault=brain&file=actors/staffer-live-sidecar); [topics/2026-09-feature-staffer-network-data-and-math](obsidian://open?vault=brain&file=topics/2026-09-feature-staffer-network-data-and-math); [topics/2026-09-feature-staffer-network-data-and-math-sna-math-and-clique-lane](obsidian://open?vault=brain&file=topics/2026-09-feature-staffer-network-data-and-math-sna-math-and-clique-lane)
 
-**Melange congressional staffer network: evidence assessment (hub read 2026-10-09)**
+## Melange congressional staffer network: evidence assessment
 
-The hub has 12 evidence bearings on 6 components. None of them comes from a study of congressional staff ties. They transfer from other settings: European Commission meeting attendance (Azaiez 2025), information-exchange SNA methods (Haythornthwaite 1996), House committee **member** assignments (Porter 2005), a biological and airport multilayer walk (Baptista 2022), a New Zealand statute network (Ardekani 2026), LDA lobbyist disambiguation (Bacik 2025), trust networks in expert panels (Cao 2025, **UNVERIFIED**) and influence maximisation by graph sampling (Kamarthi 2019).
+**Bottom line.** The literature in the vault is thin for this system. It has **15 bearing rows from 9 papers on 6 components**. Of these, 6 are VERIFIED, 8 are VERIFIED-SOFTENED and 1 is UNVERIFIED (a lead only). By their own strength field, 9 rows are weak and 6 moderate; none is strong. **No paper estimates any constant the system uses.** That covers the kappa proximity ladder, the 365.24-day co-tenure time constant, the 0.05 shared-role attenuation, the headcount dilution form or exponent, the equal-per-layer walk split, the 5-year half-life, the 0.8 per-hop route factor and the noisy-OR independence assumption. Each is still owner design, not something the evidence calibrates.
 
-By status: 4 are VERIFIED, 7 VERIFIED-SOFTENED and 1 UNVERIFIED. By strength: 4 moderate and 8 weak. No bearing **validates** any numeric constant in the system: the kappa ladder, tau = 365.24 d, the 1/(n-1)^gamma dilution, the shared-role factors, the damping value, equal layer allocation, the 5-year half-life, the 0.35 and 0.25 cost terms, or the 8-character title threshold. All of these remain owner design priors.
+**What the evidence does establish.**
+- **Montgomery & Nyhan 2017** is the only Congress-specific empirical result: House personal offices, 105th-111th Congresses, observational. A member-member tie built from shared staff carries a small signal only when the staff are *senior*: senior-tie LES pooled rho 0.043, 95% CI 0.0095 to 0.096. Ties through lower-level staff are a null placebo. A future-senior placebo CI (-0.033 to 0.071) overlaps the headline, so homophily is not ruled out. The outcome is member-level similarity, not transmission, and the paper says nothing about whether staffer-staffer ties stay usable.
+- **Azaiez & Mandel 2025** (EC lobby meetings) and **Porter et al. 2005** (House committee interlock) agree that treating a large group's co-presence as pairwise cliques inflates its members, so size has to be dealt with somewhere. Neither gives the form of the correction, and Azaiez's remedy is a hypergraph-native measure, not per-edge down-weighting.
+- **Baptista et al. 2022** shows top ranks from a multilayer random walk can move with the walk parameters, to be measured on each network.
+- **Haythornthwaite 1996** offers principles only: tie strength is a value, duration is one input, brokerage is separate from prominence, and organization membership is an *a priori* class, not an observed exchange.
 
-The strongest finding is about a mechanism, not a calibration. Projecting a large group onto pairwise cliques inflates the members of large groups (Azaiez, moderate, VERIFIED-SOFTENED). The project had already found this internally. In the v5 generation, before the admin exclusion, Pearson(co-tenure degree, largest office size - 1) = 0.8694 over 144,693 person nodes, and 54 admin containers held 70.8% of 12,498,349 guaranteed pairs. The v6 admin exclusion cut this to 4,660,388 guaranteed pairs.
+**Where the evidence pushes against the system.**
+1. The OVERLAP rule counts every concurrent pair in a container regardless of title. The one Congress study says only senior and policy staff carry signal.
+2. Under the evidence, co-presence in a container is a membership class, not observed contact.
+3. The scored co-tenure operator weights by container kind only, while the sidecar exposure math dilutes by concurrent headcount. This is a live internal inconsistency.
 
-Container-size normalisation is still Paul's OPEN ruling. **FLAG:** read as per-edge reweighting, the size-correction arguments in Azaiez and Porter come close to the **per-edge volume normalisation that this project measured and REJECTED**. They are evidence for Paul's ruling, not a recommendation. Azaiez's own remedy is a measure computed natively on the hypergraph, not per-edge down-weighting. The project's Katz finding also says per-edge reweighting cannot remove a degree artifact under sum-based centrality.
+**Wording that must hold (D-025, D-021, DE-062).** PageRank values, bridging diversity, exposure strength and the access-uncertainty factor are heuristic model outputs, not closeness, access or introduction probabilities. Revolving-door and office-move edges take no influence language. Haythornthwaite's "control of flow" wording and the "probability of influence" in Fink et al.'s title must not be carried onto staffer edges. LDA and LobbyView can supply identities, never edges or weights.
 
-Wording rules apply throughout. Every rank, exposure, strength, route cost and access-uncertainty factor is a heuristic model output, never closeness, access or introduction probability (D-025). Influence or control-of-flow language is barred on revolving-door edges. LDA may enter only as an identity source (D-021).
-
-Two components are effectively gaps. Identity resolution has one weak bearing and no precision/recall study. Noisy-OR and outreach have one weak bearing that applies only to data-collection priority, and nothing on whether the sources are independent. Access uncertainty has only an UNVERIFIED lead, so it is also a gap in evidential terms.
+**Flags.** Azaiez and Porter can be read as arguing for per-edge size normalization. This project measured per-edge volume normalization and REJECTED it, and the Katz finding is that per-edge reweighting cannot remove a degree artifact under sum-based centrality. They are evidence for Paul's open container-size ruling, **not a recommendation**. The 0.87 correlation between degree and largest office size is a v5, pre-admin-exclusion figure and must carry that label.
 
 ## Concurrent-service OVERLAP edge rule
 
 **What it computes.** A person-person edge exists only if two people share a container and their payroll intervals intersect.
 
-**Method.** Weight = guaranteed overlap x container proximity kappa (personal office 1.00, committee same side 0.75, unknown 0.60, opposite 0.40, leadership 0.75, admin 0.50). 16.0M of 31.1M candidate pairs rejected for zero overlap. After admin exclusion (v6) 4.66M guaranteed pairs remain. Admin containers carried 70.8% of pairs; degree vs largest office size r = 0.87 (v5, before admin exclusion).
+**Method.** Weight = guaranteed overlap x container proximity kappa (personal office 1.00, committee same side 0.75, unknown 0.60, opposite 0.40, leadership 0.75, admin 0.50). 16.0M of 31.1M candidate pairs rejected for zero overlap. After admin exclusion (v6) 4.66M guaranteed pairs remain. Admin containers carried 70.8% of pairs; degree vs largest office size r = 0.87.
 
-**Code refs.**
-- `audits/staffer_network/build_staffer_social_network.py:1150-1194`
-- `fec/staffer_network/employment_history.py:1965-2124`
-- `staffer_graph_snapshot.py:241-245`
+**Code refs.** `audits/staffer_network/build_staffer_social_network.py:1150-1194`, `fec/staffer_network/employment_history.py:1965-2124`, `staffer_graph_snapshot.py:241-245`
 
 **Assumptions.**
 - Concurrent service in a container indicates a real connection
 - Sequence is a career trajectory, not a tie
 - Very large containers are suspected catch-all buckets
 
-**Evidence.**
+**Evidence.** 4 rows from 3 distinct papers; VERIFIED 1, VERIFIED-SOFTENED 3.
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
 | [[azaiez-2025-hypergraph-analysis-european]] | 2025 | qualifies | Projecting meetings onto pairwise cliques inflates nodes that have low hypergraph degree but attend a few large meetings. Within each framework the measures agree (clique coreness C vs Cstak r = 0.93; hypercoreness R vs Rstak r = 0.79); cross-framework correlations are weaker (exact values only in Fig. 6). Separately, edge betweenness correlates 0.74 with meeting size. | The mechanism carries over: clique projection of any large hyperedge inflates its members. Magnitudes do not: EC meetings are single simultaneous events, payroll containers are multi-year co-presence. The paper's remedy is a hypergraph-native measure (hypercoreness), not per-edge down-weighting; the project's Katz finding (STATE.md:886-896) is that per-edge reweighting cannot remove a degree artifact under sum-based centrality. Evidence for Paul's open ruling, not a recommendation. The 0.87 figure is pre-admin-exclusion and must carry that label. | moderate | VERIFIED-SOFTENED |
-| [[haythornthwaite-1996-social-network-analysis]] | 1996 | qualifies | Structure is derived from observed relationships, not from a priori classes. The article lists membership in organizations among the a priori classifications it avoids as a basis for groups. Cliques form among similar people and limit nonredundant information. Density is actual over possible links, with n(n-1) possible directed ties (380 for n = 20). | The article would treat container co-presence as a membership-based classification, close to the a priori organizational class it warns against, not as an observed exchange. Density and clique statistics inside a container are produced by construction. The article gives no link between co-presence and actual exchange. No edge may be described in influence or access terms. The 1.00 to 0.40 kappa ladder and the 70.8 percent figure were not located by that verifier. | moderate | VERIFIED-SOFTENED |
+| [[haythornthwaite-1996-social-network-analysis]] | 1996 | qualifies | Structure is derived from observed relationships, not from a priori classes. The article lists membership in organizations among the a priori classifications it avoids as a basis for groups. Cliques form among similar people and limit nonredundant information. Density is actual over possible links, with n(n-1) possible directed ties (380 for n = 20). | The article would treat container co-presence as a membership-based classification, close to the a priori organizational class it warns against, not as an observed exchange. Density and clique statistics inside a container are produced by construction. The article gives no link between co-presence and actual exchange. No edge may be described in influence or access terms. | moderate | VERIFIED-SOFTENED |
+| [[montgomery-2017-effects-congressional-staff]] | 2017 | supports | The tie is a member-member count of senior or policy staffers who worked for both offices in the current or previous two Congresses, undirected and row-standardized (p.11, p.18). Senior-tie LES pooled rho is 0.043, 95% CI 0.0095 to 0.096; senior-only ideology is -0.003, CI -0.029 to 0.020. The future-senior placebo CI of -0.033 to 0.071 overlaps the headline, so homophily is not excluded (p.29). | House personal offices, 105th-111th Congresses; observational; member-level outcome similarity, not transmission. The text gives Congress numbers only, so the 1997-2010 window is a calendar inference, not the paper's statement. | moderate | VERIFIED-SOFTENED |
+| [[montgomery-2017-effects-congressional-staff]] | 2017 | qualifies | Only senior and policy staff carry signal. Lower-level staff ties are a placebo with a null LES lag (pooled -0.016, text CI -0.070 to 0.027). Adding policy staff to senior ties weakens the LES lag (pooled 0.013, CI -0.015 to 0.037; Table 2 p.24). | Applies if shared_with or shared_staff is ever read as a member relationship signal. The paper's senior-only and 3-Congress specification is the comparison; shipped counts are descriptive only. | moderate | VERIFIED |
 
-**Assessment.** **Evidence weight: low to moderate, and it qualifies the rule rather than supporting it.**
+**Assessment.**
 
-Two bearings apply, both VERIFIED-SOFTENED and both moderate, and both carry the relation *qualifies*:
+**Evidence weight: moderate, and it mostly qualifies the rule.** Montgomery 2017 appears twice (one VERIFIED, one VERIFIED-SOFTENED); Haythornthwaite 1996 and Azaiez 2025 are VERIFIED-SOFTENED.
 
-- **Azaiez 2025.** Projecting meetings onto pairwise cliques inflates nodes that attend a few large meetings. Within one framework the measures agree (clique coreness r = 0.93; hypercoreness r = 0.79). Edge betweenness correlates 0.74 with meeting size. The **mechanism** transfers to payroll containers, which are a clique expansion of a container hyperedge. The **magnitudes** do not: EC meetings are single simultaneous events, while containers are multi-year co-presence.
-- **Haythornthwaite 1996.** Structure should come from observed relationships, not a-priori classes, and organisational membership is named as such a class. Density and clique statistics inside a container are therefore produced by construction. The article gives no link between co-presence and actual exchange.
+- **Montgomery & Nyhan 2017 (VERIFIED, qualifies).** The only Congress result. The tie is undirected and row-standardized, and counts *senior or policy* staffers who worked for both member offices in the current or two previous Congresses (House personal offices, 105th-111th). Senior-tie LES lag 0.043 (95% CI 0.0095 to 0.096). Lower-level staff ties are a null placebo (pooled -0.016, CI -0.070 to 0.027). Adding policy staff to senior ties *weakens* the lag (0.013, CI -0.015 to 0.037). The system's `shared_staff` / `shared_with` counts have no title filter and no time window at the count stage.
+- **Montgomery (VERIFIED-SOFTENED, supports).** Treating a job sequence as not a social edge (office_moves emitted with canonical_eligible False) is consistent with the paper's homophily caution. The future-senior placebo CI (-0.033 to 0.071) overlaps the headline, so selection is not ruled out. The tie is member-member co-service, and the outcome is similarity, not transmission.
+- **Haythornthwaite 1996 (VERIFIED-SOFTENED, qualifies).** Structure should come from *observed* relationships. Organizational membership is the a priori class the article avoids. Clique and density statistics inside a container arise by construction.
+- **Azaiez 2025 (VERIFIED-SOFTENED, qualifies).** Projecting a large hyperedge onto pairwise cliques inflates its members. The mechanism transfers; magnitudes do not (EC meetings are single events, payroll containers are multi-year co-presence).
 
-**What the rule gets right.** The overlap predicate itself is sound and firing. In the v5 generation, 16,001,459 of 31,139,699 candidate same-container pairs (51.4%) were rejected for zero overlap. An internal check found 0 mismatches in 2,000 sampled pairs. No paper disputes the temporal-intersection requirement. Requiring concurrency is the conservative choice, and it is consistent with Haythornthwaite's warning against assuming ties from class membership.
-
-**What it does not establish.** No evidence shows that concurrent payroll co-presence is a real interpersonal tie. The kappa ladder (personal office 1.00 down to opposite side 0.40, admin 0.50) has no literature basis. The Haythornthwaite verifier could not locate the ladder values in ranking_math.py. The brain note records them only as design section 6.2.
-
-Figures must carry their window and denominator:
-- r = 0.87 is **v5, before admin exclusion**, over 144,693 nodes. The hub's method field quotes it without that label.
-- 70.8% is the share of v5 guaranteed co-tenure pairs held by 54 admin containers.
-- 4.66M is the v6 guaranteed-pair count after admin exclusion.
+**Net.** Concurrent service is defensible as a necessary condition, not as a sufficient one for a real connection. The evidence points to two missing restrictions, a seniority filter and a time window. Container size remains the open ruling (Paul's).
 
 **Contradictions.**
-- Haythornthwaite 1996 (VERIFIED-SOFTENED) treats organisational membership as an a-priori class to avoid as a basis for structure. The rule's assumption that concurrent service in a container indicates a real connection, and Paul's own framing of it as "pretty close... an immediate connection", rest on exactly that kind of class. Container-internal cliques are produced by construction, not observed.
-- Azaiez 2025 (VERIFIED-SOFTENED) shows that clique projection inflates members of large hyperedges. The rule enforces overlap in letter, but within an era it still produces whole-container cliques: the largest container had 3,373 people and the maximum degree was 4,321 (v5). Paul's 2026-09-07 clique finding is the internal confirmation.
-- The evidence rows disagree on what was verified in code. The Haythornthwaite row says the kappa ladder and the 70.8% figure were not located. The Porter row locates 70.8% at employment_history.py line 83. The kappa ladder is still unverified in code.
-- The hub's component method quotes r = 0.87 with no generation label. It is a v5 figure from before the admin exclusion and must not be read as describing the shipped v6 graph.
+- Montgomery 2017 (VERIFIED): only senior and policy staff ties carry signal; lower-level ties are a null placebo. The OVERLAP rule and the shared_staff count apply no seniority or title filter. Every concurrent pair counts, with kappa set by container kind only.
+- Haythornthwaite 1996: membership in an organization is an a priori class, not an observed relationship. The rule's first assumption treats membership as a tie.
+- Azaiez 2025: a clique projection of large hyperedges inflates their members. The rule is exactly a clique expansion of container hyperedges. Admin containers carried 70.8% of pairs (v5, before the admin exclusion), and degree vs largest office size had r = 0.87 (v5, pre-admin-exclusion; must carry that label).
 
 **Gaps.**
-- No study tests whether concurrent co-tenure among congressional staff produces interaction or exchange. To fill this, use a validation sample of staffer dyads, for example a survey or interview roster in the style of congressional staff surveys, comparing co-tenured same-office pairs with non-overlapping same-office pairs. The comparison must be stratified by chamber and container kind.
-- There is no predictive-validity test. Check whether GUARANTEED co-tenure pairs later re-co-locate (joint office moves in payroll) more often than matched non-overlapping peers, with container size held fixed. LDA may enter only as identity linkage, never as an edge or weight (D-021).
-- No source gives a basis for the kappa ladder values. A study would need to compare outcome association across container kinds (personal office, same-side committee, leadership, opposite side), stratified by chamber.
-- Two of Paul's cited sources have no extracted bearing on this component. Bacik et al. bears only on identity resolution. 'Furnas et al. 2022' does not resolve to a vault paper slug: the vault has furnas-2019-moneyed-interests-information and furnas-nd-conflating-lobbying-pacs. A citation check is needed.
+- No staffer-staffer validation that concurrent service predicts later joint activity (co-movement to the same office, joint later employment). Needed: a matched comparison of overlapping vs non-overlapping same-office peers on later co-movement, stratified by chamber and container kind, reporting window and denominator.
+- No evidence supports the kappa ladder values (1.00/0.75/0.60/0.40/0.75/0.50). Needed: a held-out estimate of later co-movement rates by container kind.
+- No study decomposes staffer degree into container size vs other structure after the admin exclusion (v6, 4.66M pairs). The 0.87 figure is pre-exclusion.
+- Bacik et al. 2026 and Furnas et al. 2022 are in Paul's citations for this component but have no bearing rows here.
 
-**Paul's position vs the evidence.** Paul's sources (Haythornthwaite 1996, Bacik et al. 2026, Furnas et al. 2022) treat staffers as gatekeepers and professional ties as conduits. He does not discuss the overlap rule in them.
+**Paul's position vs the evidence.**
 
-The hub says Paul's sources do not discuss the overlap rule. That is true of the cited literature, but the rule itself is Paul's ruling of record (2026-09-03, "REMEMBER, OVERLAP"), and his 2026-09-07 rulings excluded admin containers and relabelled the figure.
-
-The evidence agrees with the conservative half of his position: no edge without concurrency, and sequence treated as trajectory. No paper argues for edges between non-overlapping pairs.
-
-The evidence does not support the strong half, that concurrent co-presence is a close tie. Haythornthwaite would classify co-presence as membership, not observed exchange. Azaiez shows that large containers mechanically inflate degree.
-
-His cited sources frame staff as gatekeepers and ties as conduits. That is conceptual framing and does not validate this edge definition. Container-size normalisation remains his OPEN ruling.
-
-**FLAG:** if Azaiez is read as support for per-edge size down-weighting, that is the REJECTED per-edge volume-normalisation proposal and must not be recommended.
+Paul's sources frame staffers as gatekeepers and professional ties as conduits, and he does not discuss the overlap rule itself. The evidence does not support reading co-tenure edges as conduits: Montgomery's signal is member-level outcome similarity, homophily is not excluded, and the signal exists only for senior staff. Under D-025 and the revolving-door rule, conduit or influence wording cannot attach to these edges. The evidence is compatible with the rule as a *descriptive* co-presence graph, and argues for a seniority restriction and a time window if the graph is ever read as a relationship signal.
 
 **Open questions.**
-- Has the snapshot read at staffer_graph_snapshot.py:241-245 been filtered to status == GUARANTEED? The brain records that 2,639,891 POSSIBLE_ONLY edges were read back without a status filter in v5. Check the later landing record before quoting edge counts.
-- Was the Office of Congressional Accessibility Services catch-all bucket resolved? In v5 it held 3,373 people against a real office of about 10, and 18.1% of pairs. It is admin-kind and so excluded in v6, but the parse defect may affect other containers.
-- What is Pearson(degree, largest office size) on the v6 graph? Only the v5 pre-exclusion figure exists.
-- Should a hypergraph-native measure, such as Azaiez's hypercoreness, be computed as a diagnostic beside the clique projection, without changing edge weights? This is Paul's call, under the OPEN size-normalisation ruling.
+- Should the operator restrict person-person edges to senior or policy titles, or add a senior-only layer, to match the one Congress-validated specification (Montgomery 2017)? Paul's ruling.
+- Should edges carry a time window (Montgomery: current plus two prior Congresses) rather than lifetime overlap?
+- Container-size normalization is an OPEN ruling. The literature favors a hypergraph-native measure (Azaiez), not per-edge reweighting, which this project already REJECTED. Does Paul want a hypergraph treatment considered?
+- After the v6 admin exclusion, what is the current correlation between degree and largest office size? Re-measure under a named window and denominator.
 
-**Read first:** [[azaiez-2025-hypergraph-analysis-european]], [[haythornthwaite-1996-social-network-analysis]], [[porter-2005-network-analysis-committees]]
+**Read first.** [[montgomery-2017-effects-congressional-staff]], [[azaiez-2025-hypergraph-analysis-european]], [[haythornthwaite-1996-social-network-analysis]], [[porter-2005-network-analysis-committees]]
 
 ## Co-tenure weight and workplace exposure index
 
@@ -115,15 +105,13 @@ His cited sources frame staff as gatekeepers and ties as conduits. That is conce
 
 **Method.** Equal allocation across concurrent workplaces; headcount census of observed people. Shared factors: House 0.02, Senate 0.05.
 
-**Code refs.**
-- `fec/staffer_network/ranking_math.py:11-59`
-- `fec/staffer_network/closeness_math.py:16-200`
+**Code refs.** `fec/staffer_network/ranking_math.py:11-59`, `fec/staffer_network/closeness_math.py:16-200`
 
 **Assumptions.**
 - Shared days indicate contact opportunity with diminishing returns
 - Larger offices dilute pairwise contact (1/n)
 
-**Evidence.**
+**Evidence.** 3 rows from 3 distinct papers; VERIFIED-SOFTENED 3.
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -131,43 +119,37 @@ His cited sources frame staff as gatekeepers and ties as conduits. That is conce
 | [[haythornthwaite-1996-social-network-analysis]] | 1996 | supports | Relationship strength is its intensity, for example how many goods are exchanged or how often actors meet, and it can be kept as a value rather than dichotomized. At the tie level, measures combine frequency of contact, duration, intimacy, reciprocal services and kinship, and they depend on context. | Principle only: strength should be valued and duration is one input. The article gives no functional form, time constant or proximity multiplier, so tau and the kappa ladder remain owner design. The kappa ladder values were not located in ranking_math.py and are unverified here. The weight is a heuristic exposure score, not a contact probability (D-025). | weak | VERIFIED-SOFTENED |
 | [[porter-2005-network-analysis-committees]] | 2005 | supports | Porter et al. normalize shared membership against the count expected if same-size committees were assigned at random (normalized interlock, 1 = chance), so container size does not by itself produce strong ties. The paper does not claim that raw shared membership is uninformative. | Porter's normalization is an observed-over-expected ratio at the container level. The Melange dilution is a duration-weighted 1/n^gamma on person-person exposure. Different unit and functional form, and Porter gives no basis for the exponent. The output is exposure, not closeness or access (D-025). | weak | VERIFIED-SOFTENED |
 
-**Assessment.** **Evidence weight: directional support only. No functional form is supported.**
+**Assessment.**
 
-Three bearings apply, all VERIFIED-SOFTENED, with relation *supports*:
+**Evidence weight: weak, about direction only.** All three rows are VERIFIED-SOFTENED: Azaiez 2025 (moderate), Haythornthwaite 1996 (weak), Porter 2005 (weak).
 
-- **Haythornthwaite 1996 (weak).** Tie strength is intensity, should be kept as a value rather than dichotomised, and duration is one input. This supports a valued, duration-based weight in principle. It gives no functional form, time constant or proximity multiplier.
-- **Azaiez 2025 (moderate).** Clique projection of large groups inflates their members, and hypergraphs are warranted where simultaneous multi-actor interaction matters. This supports the *direction* of a headcount correction, not the 1/(n-1) form or any gamma.
-- **Porter 2005 (weak).** Normalised interlock compares shared committee membership with the count expected under random same-size assignment, where 1 = chance. That is a container-level observed-over-expected ratio for House **members**. It is a different unit and functional form from Melange's duration-weighted 1/n^gamma on person pairs. Porter does not say raw shared membership is uninformative.
+- **Haythornthwaite 1996.** Tie strength is an intensity value; duration and contact frequency are inputs. This supports a valued, duration-increasing weight in principle but gives no functional form, so the `1 - exp(-days/365.24)` saturation, the tier factor and the 0.05 shared-role attenuation are owner design.
+- **Porter et al. 2005.** Normalized interlock compares observed shared membership with the count expected from random assignment to same-size committees. This supports *some* size correction, but as a container-level observed/expected ratio. Melange's is a duration-weighted `1/max(1, n-1)^gamma` on pairwise exposure. Unit and form differ, and there is no basis for gamma.
+- **Azaiez & Mandel 2025.** Clique projection inflates nodes in a few large meetings. This supports the direction of headcount dilution, not its form.
 
-**Unsupported constants.** None of the following has a literature basis: tau = 365.2425 d, the 0.05 shared-role attenuation, the House 0.02 and Senate 0.05 shared factors, gamma, TAU, and equal allocation across concurrent workplaces.
+**Internal inconsistency (VERIFIED in the rows).** The sidecar closeness math dilutes each shared day by concurrent headcount. The scored co-tenure operator weights by container *kind* only, through kappa.
 
-The saturating form 1 - exp(-days/365.24) reaches about 0.95 after about 3 years, so tenure beyond 3 years adds almost nothing. That is a strong unexamined assumption, recorded as finding M3 in the 2026-09-05 SNA audit.
-
-The exposure index and the co-tenure weight disagree with each other (see contradictions). Every output here is a heuristic exposure score, not a contact probability (D-025).
+**Flag.** Inverse-headcount dilution sits close to the per-edge volume normalization this project measured and REJECTED. Nothing here recommends extending dilution to the scored operator. These papers are inputs to Paul's open container-size ruling. The output stays a heuristic exposure score, not a contact or closeness probability (D-025).
 
 **Contradictions.**
-- The system is internally inconsistent, as the Azaiez bearing records. The sidecar exposure index (closeness_math.py) dilutes each shared day by concurrent headcount, as duration / max(1, n-1)^gamma for peers. The scored co-tenure operator (ranking_math.py) uses a kappa that depends only on container KIND. The same pair in a 3,000-person container gets diluted exposure but undiluted co-tenure weight.
-- The hub's component text gives the exposure term as 1/max(1, n-1) with no exponent. The Porter bearing cites code using an exponent gamma (closeness_math.py:83-84), and peer and member terms differ (count-1 versus count). The hub description is incomplete.
-- **FLAG (rejected-proposal collision).** Porter's normalised interlock and Azaiez's clique-inflation argument both point toward size normalisation. Applied as per-edge reweighting, that is the per-edge volume normalisation this project measured and REJECTED. The project's Katz finding says per-edge reweighting cannot remove the degree artifact under sum-based centrality. Treat both papers as evidence for Paul's OPEN ruling, never as a recommendation.
+- The sidecar exposure index dilutes by concurrent headcount (closeness_math.py). The scored co-tenure operator uses kind-only kappa with no size term. The papers (Porter, Azaiez) side with a size correction in direction only.
+- The component text states 1/max(1, n-1). The verified code reading is duration / max(1, count-1)^gamma for peers and max(1, count)^gamma for members. Spec and code differ by the gamma exponent.
 
 **Gaps.**
-- No study estimates a dilution exponent, a saturation constant or a kind-specific proximity multiplier for workplace co-presence. To fill this, run a held-out predictive comparison of the kind-only kappa weight against the headcount-diluted exposure index and a hypergraph-native measure. The outcome would be later co-movement between offices in payroll data.
-- That comparison must be reported by chamber: House payroll is quarterly and Senate payroll semiannual, and the shared factors differ (0.02 vs 0.05). Any pooled coefficient must carry an UNSTRATIFIED label.
-- Nothing in the evidence tests whether tenure beyond about 3 years carries information. The saturation at about 3 years is untested, so a dose-response check of overlap length against the outcome is needed.
-- Equal allocation across concurrent workplaces has no source. An allocation sensitivity sweep on the staffer graph would cover it.
+- No study supports tau = 365.24 days, the tier factor, the 0.05 shared-role attenuation, or the House 0.02 / Senate 0.05 shared factors.
+- No study estimates a dilution exponent gamma or tests 1/(n-1) against alternatives. Needed: a predictive comparison of raw vs inverse-headcount exposure on later co-movement between offices, stratified by chamber, reporting window and denominator.
+- Equal allocation across concurrent workplaces (alloc_i) is not examined by any paper.
 
-**Paul's position vs the evidence.** Paul highlighted tie strength and the value of weak ties in Haythornthwaite (Haythornthwaite 1996, tie strength), and has no annotation on exposure weighting. The evidence agrees with valuing strength rather than dichotomising it.
+**Paul's position vs the evidence.**
 
-There is a tension with his weak-ties emphasis. In the weak-ties argument, weak ties matter because they *bridge* clusters. This component spends its design effort on grading strong ties: kappa, duration and the headcount correction. Weak-tie value would surface, if anywhere, in bridging or office-diversity measures, not in this weight. No evidence row tests weak-tie value on staffer data.
-
-The pending decay and container-size normalisation rulings remain Paul's, and nothing in the evidence decides them.
+Paul highlighted tie strength and the value of weak ties (Haythornthwaite). The evidence agrees that strength should be valued, not dichotomized, and that duration is a legitimate input. His weak-ties emphasis argues against designs that crush small ties toward zero; the 0.05 shared-role attenuation and steep headcount dilution do that, and no paper calibrates either. He has no annotation on exposure weighting, and the literature does not fill that gap beyond the direction of the size correction.
 
 **Open questions.**
-- Should the co-tenure operator and the exposure index share one size treatment, or is the divergence intended? This is Paul's ruling, and it is open.
-- What gamma value ships, and was it ever swept?
-- Is the shared-role attenuation (0.05) still applied after the v8 cutover, which damped shared-role cells instead of excluding them? The hub and the brain duration-ranking note should be reconciled.
+- Should the scored operator and the sidecar agree on container size, and which is the rule of record? Paul's ruling, tied to the open container-size question.
+- Is gamma documented anywhere with a rationale, and is it 1 in production?
+- Given the rejected per-edge volume normalization, should sidecar headcount dilution be re-examined under the same rejection, or is it distinct because it acts on exposure, not on edge weights fed to centrality?
 
-**Read first:** [[azaiez-2025-hypergraph-analysis-european]], [[porter-2005-network-analysis-committees]], [[haythornthwaite-1996-social-network-analysis]]
+**Read first.** [[porter-2005-network-analysis-committees]], [[azaiez-2025-hypergraph-analysis-european]], [[haythornthwaite-1996-social-network-analysis]], [[montgomery-2017-effects-congressional-staff]]
 
 ## Layer-balanced PageRank, eigenvector and bridging diversity
 
@@ -175,15 +157,13 @@ The pending decay and container-size normalisation rulings remain Paul's, and no
 
 **Method.** Duplicate support is collapsed by max. No composite influence score.
 
-**Code refs.**
-- `fec/staffer_network/network_math.py:25-339`
-- `fec/staffer_network/graph_build.py:236-461`
+**Code refs.** `fec/staffer_network/network_math.py:25-339`, `fec/staffer_network/graph_build.py:236-461`
 
 **Assumptions.**
 - Equal walk mass per layer is a modeling prior
 - Values are descriptive, with no causal direction
 
-**Evidence.**
+**Evidence.** 4 rows from 4 distinct papers; VERIFIED 3, VERIFIED-SOFTENED 1.
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -192,40 +172,36 @@ The pending decay and container-size normalisation rulings remain Paul's, and no
 | [[haythornthwaite-1996-social-network-analysis]] | 1996 | suggests-extension | Brokerage is a positional property separate from prominence. Actors on a path between networks, or spanning a structural hole between unconnected clusters, control flow between them, and betweenness measures this. A path that spans a structural hole is particularly useful. | Any span score added must describe graph structure only, not access or introduction probability (D-025). Staffer edges are co-tenure and revolving-door ties, so the paper's control-of-flow wording must not carry over. Payroll container cliques are built in by construction. The r = 0.87 degree versus office size figure was not checked. | weak | VERIFIED |
 | [[ardekani-2026-computational-graph-theoretic]] | 2026 | context | The authors argue against PageRank for legislative networks because its static formulation is sensitive to network growth, citing Mariani, Medo and Zhang 2015. No numerical comparison with PageRank is shown. | Weak. The growth critique applies to citation networks, where older nodes accumulate in-links. A co-tenure graph takes the argument only if snapshots across vintages are compared. The paper offers an argument, not evidence. The co-tenure graph description comes from project context and was not checked here. | weak | VERIFIED |
 
-**Assessment.** **Evidence weight: moderate on the method question (stability has to be measured), weak elsewhere. Nothing validates the ranks as meaningful.**
+**Assessment.**
 
-Four bearings apply:
+**Evidence weight: weak to moderate. Nothing validates the ranks.** Baptista 2022 (VERIFIED-SOFTENED, moderate); Azaiez 2025, Haythornthwaite 1996 and Ardekani 2026 (VERIFIED, weak).
 
-- **Baptista 2022 (VERIFIED-SOFTENED, moderate, qualifies).** The multilayer random walk with restart transfers as an operator: stochastic walks over typed layers and node kinds. Top-ranked nodes can shift with walk parameters, and stability depends on the network. Baptista explored 125 parameter sets, but only on the gene-disease network. The staffer graph sweeps damping (0.70 / 0.85 / 0.95, using L1 distance and top-1000 overlap). It does **not** sweep the layer-allocation prior or the teleport vector, the two parameters Baptista says must be checked. The paper gives no guidance on which allocation is correct.
-- **Azaiez 2025 (VERIFIED, weak, qualifies).** Measures on a clique projection diverge from hypergraph-native measures. This is shown for coreness, not PageRank, so it applies here only by implication.
-- **Haythornthwaite 1996 (VERIFIED, weak, suggests extension).** Brokerage is a positional property separate from prominence. No betweenness or Burt-constraint score exists in fec/staffer_network. Any span score added would describe structure only. The paper's control-of-flow wording is barred on revolving-door edges.
-- **Ardekani 2026 (VERIFIED, weak, context).** An argument against static PageRank because it is sensitive to network growth, with no numbers. It transfers only if snapshots are compared across vintages.
+- **Baptista et al. 2022 (moderate).** Closest operator match: random walk with restart over typed layers. Top ranks can move with walk parameters, and stability depends on the network. The 125-parameter-set exploration ran only on the gene-disease network, and airport rankings were highly variable (Fig S15). The current damping sweep (0.70/0.85/0.95, L1 distance and top-1000 overlap) covers damping only, *not* layer allocation or the teleport vector. The equal-per-layer split is labelled a modeling prior in graph_build.py but not in network_math.py.
+- **Azaiez 2025.** Coreness on a clique projection diverges from hypercoreness; applies to PageRank only by implication.
+- **Haythornthwaite 1996.** Brokerage is distinct from prominence, measured by betweenness. The system has no betweenness or Burt-constraint score. Bridging is Simpson diversity of walk mass across target kinds, a different quantity.
+- **Ardekani 2026 (context).** An argument against static PageRank because of sensitivity to network growth, borrowed from citation networks. No numbers; applies only if snapshots are compared across vintages.
 
-The project's own history matches Baptista's warning. In v5, the kind-balanced teleport gave 36 policy nodes the same restart mass as 144,693 persons, which inflated policy-linked persons' PageRank 11.6x. The v6 control reduced that to 1.74x. The teleport choice is a first-order lever and has never been swept.
-
-Ranks are heuristic descriptive outputs, not access, closeness or introduction probabilities (D-025).
+**Net.** The rows support labelling ranks as descriptive connectedness under a stated prior. No paper shows layer-balanced PageRank tracks any outcome. Ranks are heuristic outputs (D-025), never access or introduction probabilities.
 
 **Contradictions.**
-- Ardekani 2026, cited by Paul, argues against PageRank for legislative networks, yet the system uses PageRank(0.85) as the primary outreach ordering key. The paper provides no evidence, only argument, so this is a tension, not a refutation.
-- The modeling prior is documented in only one of two places. Baptista's verifier found the equal-layer split labelled as an explicit prior in graph_build.py but not in network_math.py.
-- The hub may be stale. It describes bridging as normalised Simpson diversity across target kinds (bridging_diversity). The brain records that v6 replaced bridging_diversity with office_diversity. Confirm which measure ships before quoting it.
+- Haythornthwaite 1996 treats brokerage or structural-hole spanning as a separate positional property measured by betweenness. The system's 'bridging' is a diversity-of-target-kinds score, so the label may suggest a brokerage reading the math does not compute.
+- Ardekani 2026 argues against PageRank for legislative networks. It is an argument only, citing citation-network growth literature, with no comparison. It matters only for cross-vintage comparisons.
 
 **Gaps.**
-- There is no external validity test of any staffer rank. A prospective check would test whether layer-balanced PageRank ranks staffers who later reach senior titles (chief of staff, staff director) in payroll above a degree baseline and a container-size baseline, reported by chamber. The ranks would still be described as heuristic either way.
-- There is no allocation or teleport sweep. To follow Baptista on this graph, vary the per-layer mass split and the teleport weights by node kind, and report top-k overlap.
-- There is no brokerage measure (betweenness or constraint). One could be added only as a structural descriptor, after removing admin cliques, which otherwise dominate shortest paths.
-- Ardekani's growth critique has not been tested across vintages: compare rank stability across rebuilds (v5, v6, v7, v8) with the same parameters.
+- No predictive validation. Needed: a prospective holdout freezing the graph at Congress t, with outcomes at t+1/t+2 (promotion to senior title, departure to registered lobbying), comparing PageRank vs degree vs size-adjusted degree, stratified by chamber, naming window and denominator. Lobbyist status may come from LDA only as an identity label (D-021), never as an edge or weight.
+- No allocation and teleport sensitivity sweep on the staffer graph. Baptista says stability must be measured for each network.
+- No measured comparison of the projection vs a hypergraph-native ranking.
 
-**Paul's position vs the evidence.** Paul (citing Haythornthwaite 1996 and Ardekani et al. 2026) notes that more research on forms of centrality is needed, and the evidence agrees. The one moderate bearing (Baptista) says stability cannot be assumed and must be measured per network. Haythornthwaite separates brokerage from prominence, which the system currently measures only through a diversity proxy. Ardekani, his own citation, questions PageRank outright.
+**Paul's position vs the evidence.**
 
-Nothing in the evidence argues that layer-balanced PageRank is the right centrality for staff, and nothing shows it tracks any outcome.
+Paul's note that more research on forms of centrality is needed matches the evidence: parameter sensitivity that depends on the network (Baptista), divergence between projection and hypergraph treatments (Azaiez), and a brokerage dimension the system does not measure (Haythornthwaite). Ardekani, which Paul cites, offers an argument rather than evidence and should not carry weight alone.
 
 **Open questions.**
-- Which ranking key does outreach use after v6: PageRank with the policy-link control, or a person-only variant? The 2026-09-05 audit judged the v5 key wrong (M1).
-- Is the component eigenvector still normalised per component and therefore not comparable across components (finding M5)? If so, should it be published at all, or kept diagnostic only?
-- Should an allocation and teleport sweep join the existing damping sweep? This is Paul's call.
+- Should the sensitivity sweep extend from damping to layer allocation and teleport weights, as Baptista indicates?
+- Should a betweenness or constraint score be added as a separate descriptive measure, labelled structural only, with no control-of-flow wording?
+- Should 'bridging diversity' be renamed so it is not read as structural-hole brokerage?
 
-**Read first:** [[baptista-2022-universal-multilayer-network]], [[azaiez-2025-hypergraph-analysis-european]], [[haythornthwaite-1996-social-network-analysis]], [[ardekani-2026-computational-graph-theoretic]]
+**Read first.** [[baptista-2022-universal-multilayer-network]], [[haythornthwaite-1996-social-network-analysis]], [[azaiez-2025-hypergraph-analysis-european]], [[ardekani-2026-computational-graph-theoretic]]
 
 ## Staff directory matching and identity consolidation
 
@@ -233,50 +209,44 @@ Nothing in the evidence argues that layer-balanced PageRank is the right central
 
 **Method.** A never-guess name ladder (nicknames, accents, surname + chamber uniqueness). A payroll-evidence pin plus record-pair title threshold >= 8 characters (raised from 6; the removals were bare 'counsel'). The web-reference loop has made 0 automatic merges. Exact-name candidates feed only an exploratory layer.
 
-**Code refs.**
-- `fec/build_staff_directory.py`
-- `staffer_identity_auto.py:148`
-- `staffer_payroll_identity.py`
+**Code refs.** `fec/build_staff_directory.py`, `staffer_identity_auto.py:148`, `staffer_payroll_identity.py`
 
 **Assumptions.**
 - Payroll account identity with a corroborating record pair means the same person
 - Short title matches are false matches
 
-**Evidence.**
+**Evidence.** 1 rows from 1 distinct papers; VERIFIED 1.
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
 | [[bacik-2025-measuring-dynamical-evolution]] | 2025 | qualifies | LobbyView's lobbyist name disambiguation is score-based and uncertain. Client matching relies on search-assisted lookup that resolves to third-party directories and fails for defunct firms. | The domains differ: LDA lobbyist names versus congressional payroll staff. Wherever LobbyView lobbyist IDs enter the staffer graph as identities (D-021 allows identity use), treat them as probabilistic merges, not ground truth. The system's ladder is stricter than LobbyView's. | weak | VERIFIED |
 
-**Assessment.** **Evidence weight: weak. Effectively a GAP for validation.**
+**Assessment.**
 
-One bearing applies: **Bacik 2025 (VERIFIED, weak, qualifies)**. LobbyView's lobbyist name disambiguation is score-based and uncertain. Client matching depends on search-assisted lookup that fails for defunct firms.
+**Evidence weight: weak, essentially a gap.** One row: Bacik et al. 2025 (VERIFIED, weak, qualifies).
 
-It transfers only as a caution. Wherever LobbyView lobbyist IDs enter the staffer graph as identities (permitted under D-021), they are probabilistic merges, not ground truth. The domains differ: LDA lobbyist names versus congressional payroll staff. The Melange ladder (never-guess names, payroll-evidence pins, record-pair titles of at least 8 characters) is stricter than LobbyView's.
+- **Bacik 2025.** LobbyView's lobbyist name disambiguation is score-based and uncertain. Client matching relies on search-assisted lookup that resolves to third-party directories and fails for defunct firms. The domain differs (LDA lobbyist names vs congressional payroll staff), but wherever LobbyView lobbyist IDs enter the staffer graph as identities (allowed under D-021) they are probabilistic merges, not ground truth. The system's never-guess ladder, with a payroll pin and a title threshold of at least 8 characters, is stricter than LobbyView's.
 
-No bearing gives a precision or recall estimate for any comparable ladder. None supports the 8-character threshold (raised from 6 after bare 'counsel' false matches).
-
-The web-reference loop has made 0 automatic merges. That keeps precision safe, but recall is unknown, and missed merges split one person into several nodes. That would deflate their degree and PageRank and inflate the node count.
+No paper in the vault measures precision or recall of a name-matching ladder on congressional staff. The 0 automatic merges from the web-reference loop and the threshold raised from 6 to 8 characters are internal choices, not literature-backed.
 
 **Contradictions.**
-- No contradiction with the evidence. Bacik's description of uncertain, score-based disambiguation is consistent with the system's never-guess design, and the system is the stricter of the two.
+- None identified.
 
 **Gaps.**
-- No precision or recall measurement exists. To fill this, hand-label an audit sample of matched and unmatched staffer-office and person-person pairs. Stratify it by chamber, name commonality (the John Smith problem) and source (Quorum vs payroll), and report precision and recall with denominators.
-- There is no evidence on threshold choice for title matching. Compare false-merge and missed-merge rates at thresholds 6, 8 and 10 on the labelled sample.
-- There is no estimate of downstream sensitivity: how much do degree and rank move under plausible missed-merge rates?
-- Paul cites Kim et al. graph clustering for donor identity. The vault holds kim-2020-strategic-sequential-links, which is mapped to mentat-fec-attribution.identity-ladder, but no bearing on this staffer component was extracted. Whether its identity method transfers is unassessed.
+- No precision and recall estimate for the matching ladder. Needed: a stratified hand-labelled sample of Quorum-to-payroll matches and auto-merges (by chamber, name commonness, title length), with CIs and the denominator named (candidate pairs, not people).
+- No evidence supports the 8-character title threshold. The same sample should measure false-match rates at 6 vs 8 characters.
+- Kim, Stuckatz & Wolters (graph clustering for donor identity) is cited in Paul's position but has no bearing row here. The vault note kim-2020-strategic-sequential-links is tagged to the mentat-fec-attribution identity ladder and should be checked for transfer.
 
-**Paul's position vs the evidence.** Paul (citing Bacik et al. 2026 and Kim, Stuckatz & Wolters 2020) highlighted LobbyView's lobbyist disambiguation (the John Smith problem) and Kim et al.'s graph clustering for donor identity. The one verified bearing agrees with his concern: LDA-side identity is uncertain.
+**Paul's position vs the evidence.**
 
-His interest in graph clustering points toward a probabilistic merge method. The system deliberately does not do this (never-guess; exact-name candidates only in an exploratory layer). The evidence does not decide between them. It supports treating any external IDs as probabilistic, and it leaves recall of the strict ladder unmeasured.
+Paul highlighted LobbyView's 'John Smith problem' and Kim et al.'s graph clustering for donor identity. The one verified row agrees: LobbyView identities are uncertain and must be treated as probabilistic when imported. The evidence does not test the system's own ladder. Kim's clustering is a lead for an alternative or cross-check, not evidence about the staffer ladder.
 
 **Open questions.**
-- What is the recall cost of 0 automatic merges from the web-reference loop? How many likely-same-person pairs remain split?
-- Do any LobbyView lobbyist IDs currently enter the staffer graph as identities? If so, are they flagged as probabilistic?
-- Should the exploratory exact-name layer ever be promoted? Only with a measured precision, and that is Paul's ruling.
+- Do any LobbyView lobbyist IDs currently enter the staffer graph as merged identities, and are they tagged as probabilistic?
+- Is a hand-labelled precision/recall sample planned, and who labels it?
+- Does Kim-Stuckatz-Wolters graph clustering transfer to payroll-name consolidation, where names come with dated office spans?
 
-**Read first:** [[bacik-2025-measuring-dynamical-evolution]], [[kim-2020-strategic-sequential-links]], [[kim-2018-lobbyview-firm-level]]
+**Read first.** [[bacik-2025-measuring-dynamical-evolution]], [[kim-2020-strategic-sequential-links]], [[kim-2018-lobbyview-firm-level]]
 
 ## Recency and access-uncertainty factor
 
@@ -284,46 +254,44 @@ His interest in graph clustering points toward a probabilistic merge method. The
 
 **Method.** Exposure-weighted last overlap per joint run.
 
-**Code refs.**
-- `fec/staffer_network/relationship_uncertainty.py:10-57`
+**Code refs.** `fec/staffer_network/relationship_uncertainty.py:10-57`
 
 **Assumptions.**
 - Relationship usability decays with a 5-year half-life
 
-**Evidence.**
+**Evidence.** 2 rows from 2 distinct papers; UNVERIFIED 1, VERIFIED 1.
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
 | [[cao-2025-social-network-group]] | 2025 | qualifies | Discount-factor and exponential-decay operators penalize long trust chains, but the drivers of decay (path length, node importance) and their effect on network reliability have not been systematically modelled. Narrative claim only; no decay rate is estimated. | Only the taxonomy transfers: the system uses a fixed-discount, exponential-decay operator of the kind the review names, and the review confirms that no literature-standard decay rate exists. SNGDM trust is trust elicited inside small expert panels. Staffer edges are dated employment exposure. Neither the 0.8 hop factor nor the 5-year half-life gains or loses support from this paper. Route costs stay heuristic and are never closeness or introduction probabilities (D-025). | weak | UNVERIFIED |
+| [[montgomery-2017-effects-congressional-staff]] | 2017 | context | Ties built over the current plus two prior Congresses carry the LES signal. Narrowing to a two-Congress horizon leaves the senior LES interval barely including zero (-0.0006 to 0.1088; 94% interval 0.0016 to 0.1066). This is window sensitivity, not a decay estimate. | Weak. The paper's window concerns member-member outcome similarity, not whether staffer-staffer relationships remain usable. It cannot calibrate the half-life. | weak | VERIFIED |
 
-**Assessment.** **Evidence weight: none verified. GAP. The only bearing is an UNVERIFIED lead.**
+**Assessment.**
 
-**Cao 2025 (UNVERIFIED, weak, qualifies)** is a single-agent lead, not a finding (DE-062). It says discount-factor and exponential-decay operators exist in trust networks, but the drivers of decay have not been systematically modelled and no decay rate is estimated. If verified, it would only place the system's operator in a taxonomy. It would neither support nor undercut the 5-year half-life, the 0.35 base cost, the 0.25 concentration term or the 0.8 route-hop factor. Trust networks in expert panels are also a poor match for dated employment exposure.
+**Evidence weight: very weak. This is a calibration gap.** Two rows: Montgomery 2017 (VERIFIED, weak, context) and Cao 2025 (UNVERIFIED, a lead only).
 
-The factor exp(-cost) is explicitly not a probability, and route costs stay heuristic (D-025).
+- **Montgomery & Nyhan 2017 (context).** The LES signal uses ties over the current plus two prior Congresses. Narrowing to two Congresses leaves the senior interval barely including zero (-0.0006 to 0.1088). That is *window sensitivity* for member-member outcome similarity, not a decay estimate for staffer-staffer relationships. It cannot calibrate the 5-year half-life. It suggests a horizon of a few Congresses (roughly 4-6 years), not inconsistent with the half-life's order of magnitude, but that is not support.
+- **Cao et al. 2025 (UNVERIFIED lead, DE-062).** A review saying discount-factor and exponential-decay operators penalize trust chains, with no standard decay rate. Not a finding.
 
-The half-life itself has drifted. The 2026-09-05 SNA audit (finding M3) records that design section 6.3 specified a **12-year** half-life that was never implemented. The current factor uses ln2 x years / 5, a **5-year** half-life. Neither value has an empirical source.
+The cost function (0.35 + ln2 x years/5 + 0.25 x concentration) and the 0.8 per-hop route factor are uncalibrated. The code correctly labels the result as not a probability. It must stay a heuristic factor, never an access or introduction probability (D-025).
 
 **Contradictions.**
-- The system has two half-lives. The design record (section 6.3, per the 2026-09-05 SNA audit) specified 12 years. relationship_uncertainty.py implements 5 years. Nothing in the evidence chooses between them, and the brain says the decay ruling stayed pending.
-- Paul's two citations for this component do not estimate tie decay. Kim, Stuckatz & Wolters is about firm donation-to-lobbying timing. Fink et al. 2023 is a Congressional Twitter network dataset, which the system uses elsewhere for volume-normalised press and social edges. Neither has an extracted bearing here.
+- None identified.
 
 **Gaps.**
-- No empirical half-life exists for former co-worker ties among congressional staff. To fill this, run a survival or hazard analysis of former co-tenured pairs, with the outcome being later joint activity (re-co-employment in the same new office, or a sequential move into the same office). The model should be a function of years since last overlap, overlap length and container kind, stratified by chamber, with non-overlapping same-office pairs as the baseline.
-- The concentration term and base cost have no basis. Run an ablation that holds out later joint moves and compares cost with and without each term.
-- The 0.8 per-hop route discount has no basis. Test path-length against later re-co-employment, as a descriptive check only.
-- The Kim, Stuckatz & Wolters paper, as summarised in the vault (not an extracted bearing), reports a firm-member donation-to-lobbying association. In the Senate matched difference-in-differences it is about 8.5 points at year t and about 3 points by t+3, over 2,703 firms, 2008-2017, against a base rate of about 0.05. That is an organisational money-to-lobbying sequence, not an interpersonal tie, so it cannot calibrate a staffer half-life.
+- No source estimates the half-life of former co-worker ties. Needed: a survival or hazard analysis on the payroll data: for pairs whose overlap ended at time t, model later joint activity (re-co-location, consecutive moves to the same destination) by years since overlap, stratified by chamber and seniority, reporting window and denominator.
+- The 0.35 base cost, the 0.25 concentration coefficient and the 0.8 per-hop factor have no empirical basis.
+- Kim, Stuckatz & Wolters and Fink et al. 2023 are in Paul's citations here, but neither has a bearing row. Fink is a Twitter interaction network and does not address decay.
 
-**Paul's position vs the evidence.** Paul (citing Kim, Stuckatz & Wolters 2020/2026 and Fink et al. 2023) wants relationship decay modelled, and the hub correctly states that no source estimates a half-life for staffer ties. The evidence supports his premise that decay is unmodelled in the literature. The only bearing, Cao (UNVERIFIED), says as much in another domain.
+**Paul's position vs the evidence.**
 
-The implemented 5-year half-life is therefore an owner prior. It also departs from the 12-year value in the original design. Neither value should be described as evidence-based.
+Paul wants relationship decay modeled and notes that no source estimates the half-life of staffer ties. The evidence confirms this: the only Congress result is window sensitivity for member-level similarity, and the review row is UNVERIFIED. The 5-year half-life is an assumption awaiting the study above.
 
 **Open questions.**
-- Which half-life is Paul's ruling, 5 years (implemented) or 12 years (design 6.3)? Or should it stay pending until an empirical estimate exists?
-- Should the access-uncertainty factor be shown on any surface before a decay study exists? If it is shown, it must carry a 'heuristic, not a probability' label (D-025).
-- Can Cao 2025 be promoted from UNVERIFIED by a second-path check? Even if it is, its bearing is taxonomy only.
+- Can the payroll history support the survival study without external data, and is that a lane Paul wants opened?
+- Should the 0.8 per-hop factor and the 5-year half-life be exposed as named dials with a sensitivity band on any surface that shows route costs?
 
-**Read first:** [[cao-2025-social-network-group]], [[kim-2020-strategic-sequential-links]], [[kim-2023-systemic-sequential-links]]
+**Read first.** [[montgomery-2017-effects-congressional-staff]], [[cao-2025-social-network-group]]
 
 ## Noisy-OR evidence combination and outreach ranking
 
@@ -331,91 +299,65 @@ The implemented 5-year half-life is therefore an owner prior. It also departs fr
 
 **Method.** Noisy-OR is defined but not in the build path.
 
-**Code refs.**
-- `fec/staffer_network/network_math.py:69-88`
-- `fec/staffer_network/ranking_math.py:62-82`
+**Code refs.** `fec/staffer_network/network_math.py:69-88`, `fec/staffer_network/ranking_math.py:62-82`
 
 **Assumptions.**
 - Distinct source systems are independent evidence
 
-**Evidence.**
+**Evidence.** 1 rows from 1 distinct papers; VERIFIED-SOFTENED 1.
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
-| [[kamarthi-2020-influence-maximization-unknown]] | 2019 | suggests-extension | A cheap query rule can prioritize which nodes to reveal under a fixed budget. H2 (minimum-degree node among those discovered in the last step) beats CHANGE on voles4 (72.8 vs 58.9), damascus (104.9 vs 95.2) and israel (34.2 vs 30.6), Table 5. The text says H2 picks nodes with higher true betweenness than CHANGE. | Usable only as a data-collection priority, judged on graph-completeness metrics. Never judged on spread, access or introduction probability (D-025). Influence language stays barred on revolving-door edges. Any learned policy stays UNVERIFIED until a second path reproduces it (DE-062). | weak | VERIFIED-SOFTENED |
+| [[kamarthi-2020-influence-maximization-unknown]] | 2020 | suggests-extension | A cheap query rule can prioritize which nodes to reveal under a fixed budget. H2 (minimum-degree node among those discovered in the last step) beats CHANGE on voles4 (72.8 vs 58.9), damascus (104.9 vs 95.2) and israel (34.2 vs 30.6), Table 5. The text says H2 picks nodes with higher true betweenness than CHANGE. | Usable only as a data-collection priority, judged on graph-completeness metrics. Never judged on spread, access or introduction probability (D-025). Influence language stays barred on revolving-door edges. Any learned policy stays UNVERIFIED until a second path reproduces it (DE-062). | weak | VERIFIED-SOFTENED |
 
-**Assessment.** **Evidence weight: weak and indirect. GAP on the core assumption.**
+**Assessment.**
 
-**Noisy-OR.** Noisy-OR evidence combination is defined but not in the build path. Its central assumption, that distinct source systems are independent evidence, has no bearing at all. Independence is doubtful on its face, because directory vendors and payroll records may share upstream sources. That is a hypothesis to test, not a finding.
+**Evidence weight: weak and indirect. This is a gap.** One row: Kamarthi et al. 2020 (VERIFIED-SOFTENED, weak, suggests-extension).
 
-**Outreach ranking.** Outreach ranking orders candidates by PageRank(0.85), then by origin-plus-target route cost. Its evidential standing is inherited from the PageRank component, so it rests on an unvalidated rank. In v5 that rank used a ranking key the 2026-09-05 audit judged wrong (M1).
+- **Kamarthi 2020.** A cheap query heuristic (H2, the minimum-degree node among those just discovered) beats CHANGE at revealing an unknown graph under a budget (voles4 72.8 vs 58.9, damascus 104.9 vs 95.2, israel 34.2 vs 30.6; Table 5). This transfers only as a *data-collection priority*, deciding which directories or people to resolve next, judged on graph-completeness metrics, never on spread, access or introduction probability (D-025). Any learned policy stays UNVERIFIED until a second path reproduces it (DE-062).
 
-**Kamarthi 2019 (VERIFIED-SOFTENED, weak, suggests extension).** A cheap query heuristic (H2, the minimum-degree node among those discovered in the last step) beat CHANGE on three graphs in Table 5 (72.8 vs 58.9, 104.9 vs 95.2, 34.2 vs 30.6). This transfers only as a **data-collection priority**: which directories or people to resolve next. It must be judged on graph-completeness metrics, never on spread, access or introduction probability (D-025). Any learned policy stays UNVERIFIED until a second path reproduces it (DE-062).
+**Noisy-OR.** Defined but not in the build path. Its assumption that distinct source systems are independent evidence has no literature support and is untested. **D-021 constraint:** if any 'source' combined by noisy-OR is LDA or LobbyView, it may contribute identity only, never add to a tie's evidence strength.
 
-Influence language stays barred on revolving-door edges. LDA cannot be a noisy-OR source for tie strength, because LDA is identity only (D-021).
+**Outreach ranking.** Candidates are ordered by PageRank then route cost. Both inputs are heuristic, so the ordering is a descriptive list of structural position, not likelihood of access.
 
 **Contradictions.**
-- The independence assumption is untested, and it is plausibly violated if Quorum directories and payroll share upstream records. No evidence row addresses this either way.
-- There is a framing risk around Kamarthi. Its objective is influence maximisation, and the transfer note restricts it to graph completion. Adopting it under an influence objective would breach D-025 and the revolving-door wording rule.
+- None identified.
 
 **Gaps.**
-- No error-correlation study exists. To fill this, take a labelled sample of staffer ties or identities and estimate the joint error rates of each source pair (House payroll, Senate payroll, Quorum). Then test whether conditional independence holds before noisy-OR is wired into the build.
-- There is no validation of the outreach ordering. At minimum, run a rank-stability check across damping, allocation and teleport settings for the top-k outreach list. The order would still be described as heuristic, not a likelihood of access.
-- There is no budgeted acquisition study. If Paul wants it, run an offline replay that measures how fast each query rule (Kamarthi H2, degree, random) recovers held-out nodes and edges, scored on completeness only.
+- No study tests source independence. Needed: an error-correlation check on a hand-labelled set of staffer ties, comparing false-positive co-occurrence across payroll, Quorum and directory sources. Where errors correlate, noisy-OR overstates strength.
+- No validation of the outreach ordering against any outcome. Any test must be framed as structural ranking quality, not access.
+- Paul has no literature for this component (his stated position).
 
-**Paul's position vs the evidence.** The hub records "No literature" for Paul, and the evidence does not change that. The one bearing (Kamarthi) concerns data-collection order, not evidence combination or outreach validity. Nothing supports or refutes noisy-OR independence, or ordering outreach by PageRank.
+**Paul's position vs the evidence.**
+
+Paul states there is no literature, and the evidence confirms that. The single row is about budgeted graph exploration, not evidence combination or outreach ranking. Kamarthi 2020 is a different work from the Chen, Kamarthi, Wilder & Tambe UAI 2021 contingency-aware IM paper cited elsewhere in Melange; they should not be conflated.
 
 **Open questions.**
-- Should noisy-OR stay out of the build path until a source error-correlation estimate exists? It is currently defined but unused.
-- Which ranking key does rank_outreach_candidates consume after the v6 policy-link control? Is the shared-employee exclusion from top_staff applied there too?
-- Is there any appetite for budgeted acquisition of directory resolution? If so, it would be scored on completeness only.
+- Is noisy-OR intended to enter the build path? If so, which sources does it combine, and does any derive from LDA (barred as an edge or weight source by D-021)?
+- Should a budgeted directory-resolution priority (in the style of Kamarthi H2) be a separate data-collection lane, judged only on graph completeness?
 
-**Read first:** [[kamarthi-2020-influence-maximization-unknown]], [[baptista-2022-universal-multilayer-network]]
+**Read first.** [[kamarthi-2020-influence-maximization-unknown]], [[baptista-2022-universal-multilayer-network]], [[bacik-2025-measuring-dynamical-evolution]]
 
 ## Across components
 
-**1. One artifact runs through every component: large containers.**
+**1. Container size runs through three components and is one open ruling.** Size shapes the OVERLAP rule (clique expansion of containers), the exposure weights (headcount dilution in the sidecar but not in the operator) and PageRank (walks over the projected cliques). The papers (Azaiez, Porter) agree that size must be handled somewhere, but Azaiez's remedy is hypergraph-native measurement, and the project's Katz finding is that per-edge reweighting cannot remove a degree artifact under sum-based centrality. **Per-edge volume normalization was measured and REJECTED here, and nothing in this note reopens it.** The evidence bears on Paul's open container-size ruling, which is his to make. The 0.87 correlation between degree and office size is a v5, pre-admin-exclusion figure.
 
-The overlap rule is honoured in letter, but clique expansion of large payroll containers still drives degree. The v5 figure, before the admin exclusion, was Pearson(degree, largest office size - 1) = 0.8694 over 144,693 nodes. That artifact then flows into the co-tenure weight (kind-only kappa) and into PageRank and outreach (walks over row-normalised strengths).
+**2. Seniority is the one Congress-validated dimension, and the system has none of it.** Montgomery & Nyhan 2017 is the only Congress result (observational, House personal offices, 105th-111th, VERIFIED): only senior and policy staff ties carry signal for member outcome similarity. The OVERLAP rule, co-tenure weight and shared_staff count apply no seniority filter, apart from the 0.05 shared-title attenuation, which points the other way. The result transfers imperfectly (House-only, member-level, pooled, homophily not excluded), so quote it as UNSTRATIFIED by chamber and do not apply it to the Senate without a check.
 
-The best external evidence (Azaiez 2025, moderate, VERIFIED-SOFTENED) supports the mechanism. Its remedy is a hypergraph-native measure. **FLAG:** do not translate this into per-edge volume normalisation, a proposal this project measured and REJECTED. Container-size normalisation remains Paul's OPEN ruling.
+**3. Every time constant is uncalibrated.** The co-tenure saturation (tau = 365.24 d), the 5-year access half-life, the 0.8 per-hop factor and Montgomery's 3-Congress window. Only Montgomery measures anything time-related, and that is window sensitivity, not decay. One survival analysis of later joint activity by years since overlap on the payroll data would inform all three components at once.
 
-**2. The system is inconsistent with itself.**
+**4. Validation is missing across the board.** Each component's empirical question names an outcome (later co-movement, later senior or lobbyist status, joint activity, precision and recall). No paper in the vault tests any of them on congressional staff. The system is consistently labelled descriptive, with no composite influence score, which is the correct and defensible claim at this evidence level.
 
-The sidecar exposure index dilutes by concurrent headcount, as 1/max(1, n-1)^gamma. The scored co-tenure operator does not. Any surface that shows both can rank the same pair differently. Reconciling them is a ruling for Paul, not something the evidence settles.
+**5. Wording discipline.** Haythornthwaite's control-of-flow and conduit language, Fink et al.'s 'probability of influence' and Kamarthi's spread objective must not migrate onto staffer edges or outreach ranks (D-025; no influence language on revolving-door edges). LobbyView and LDA appear only as identity sources (D-021); if they ever feed noisy-OR, they must not add to tie strength.
 
-**3. The evidence does not transfer well.**
-
-No bearing studies congressional staff. Porter 2005 is about House **members'** committee assignments. Azaiez studies meetings at the European Commission. Ardekani studies a New Zealand statute network. Baptista studies biological and airport networks. Bacik studies LDA lobbyists. Cao, which is UNVERIFIED, covers trust networks in expert panels.
-
-The mechanisms transfer, but no magnitude, constant or functional form does. Every numeric dial in this system is an owner prior with no literature support.
-
-**4. Paul's citations versus the extracted evidence.**
-
-Several cited sources have no extracted bearing on the component they are cited for:
-- Bacik is cited for the overlap rule but bears only on identity.
-- 'Furnas et al. 2022' does not resolve to a vault slug.
-- Fink et al. 2023 is a Twitter dataset.
-- Kim, Stuckatz & Wolters covers firm donation-to-lobbying timing.
-
-Ardekani, which Paul cites, argues *against* the system's main centrality choice.
-
-**5. Stratification and labelling.**
-
-Every validation proposed below must report by chamber (House payroll quarterly, Senate semiannual, different shared factors), and any pooled result must carry an UNSTRATIFIED label. The figures in the hub need generation labels: the v5 counts (31.1M, 16.0M, 12.5M, 70.8%, r = 0.87) and the v6 count (4.66M).
-
-**6. Stale descriptions.**
-
-The hub description may be out of date in two places. Bridging diversity may have been replaced by office_diversity in v6. The access-uncertainty half-life is 5 years in code and 12 years in the original design. Confirm both against the live tree before publishing the assessment.
+**6. Citations without bearings.** Paul's positions cite Furnas et al. 2022, Bacik et al. 2026, Kim, Stuckatz & Wolters 2020/2026 and Fink et al. 2023 for this system, but they generate no evidence rows on these components. Fink is cited elsewhere in Melange for author-volume-normalized social and press edges. Whether that normalization falls under the REJECTED per-edge volume normalization should be checked in the SNA hub. Flagged, not asserted.
 
 ## Research agenda
 
-1. Predictive validity of the edge (overlap rule, weights). Test whether GUARANTEED co-tenure pairs later re-co-locate (joint office moves or re-co-employment in payroll) more often than matched non-overlapping same-office peers, holding container size fixed. Report by chamber and container kind. LDA may enter only through identity linkage, never as an edge or weight (D-021).
-2. Hypergraph diagnostic for container size. Compute a hypergraph-native measure (for example hypercoreness, following Azaiez 2025) beside the clique projection on the v6 graph. Recompute Pearson(degree, largest office size) on v6. Treat this as evidence for Paul's OPEN size-normalisation ruling. Do not reintroduce the REJECTED per-edge volume normalisation.
-3. Exposure-form comparison. On held-out later co-movement, compare the kind-only kappa co-tenure weight, the headcount-diluted exposure index (sweeping gamma) and the hypergraph measure. Include a dose-response check on overlap length to test the saturation at about 3 years implied by tau = 365.24 d. Report stratified by chamber.
-4. Walk-stability sweep (following Baptista 2022). Extend the existing damping sweep (0.70/0.85/0.95) to the layer-allocation prior and the per-kind teleport weights, and report top-k overlap and L1 distance. Add a cross-vintage stability check (v5 to v8) to test Ardekani's growth critique. Outputs remain heuristic (D-025).
-5. Rank validity against later career outcomes. Test whether layer-balanced PageRank ranks staffers who later reach senior titles above a degree baseline and a container-size baseline. Describe the result only as descriptive connectedness, never as access.
-6. Identity-resolution audit. Hand-label a sample stratified by chamber, name commonality and source. Report precision and recall of the never-guess ladder with denominators, and compare title thresholds of 6, 8 and 10 characters. Measure the recall cost of 0 automatic merges and the sensitivity of degree and rank to missed merges.
-7. Tie-decay survival study. Model the hazard of later joint activity among former co-tenured pairs as a function of years since last overlap, by chamber and container kind. Use it to inform Paul's pending decay ruling (5-year half-life in code versus 12-year in design 6.3). Until then, keep the factor labelled heuristic and not a probability.
-8. Source error-correlation study before wiring in noisy-OR. Estimate joint error rates across House payroll, Senate payroll and Quorum directories on a labelled sample, and test conditional independence. LDA is excluded as a strength source (D-021).
-9. Evidence hygiene. Verify Cao 2025 by a second path (currently UNVERIFIED, DE-062). Resolve the 'Furnas et al. 2022' citation to a vault paper. Extract bearings, if any, from kim-2020-strategic-sequential-links and Fink et al. 2023 for the components where Paul cites them. Locate the kappa ladder values in code. Confirm whether bridging_diversity or office_diversity ships.
+1. Co-movement validation of the OVERLAP rule. Using payroll histories, compare overlapping vs non-overlapping same-office peers on later joint office moves or joint later employment. Stratify by chamber, container kind and seniority, report window and denominator, and test whether a senior/policy-only restriction (Montgomery 2017 spec) carries the signal.
+2. Tie-decay survival study. For pairs whose overlap ended, model the hazard of later joint activity by years since overlap. This calibrates or replaces the 5-year half-life, the co-tenure tau and the 0.8 per-hop factor, all as heuristic constants, never as access probabilities.
+3. Container-size ruling input (for Paul, not a recommendation). After the v6 admin exclusion, re-measure degree vs office size, and compare the kind-only kappa operator, the sidecar headcount dilution and a hypergraph-native measure (hypercoreness). Per-edge volume normalization is REJECTED and not a candidate.
+4. PageRank stability and predictive holdout. Extend the damping sweep to layer allocation and teleport weights (Baptista 2022), then test whether layer-balanced PageRank beats degree at predicting later senior-title or lobbying status, frozen at Congress t with outcomes at t+1/t+2. LDA is used only as an identity label.
+5. Identity-ladder audit. Draw a stratified hand-labelled sample of Quorum-to-payroll matches and auto-merges for precision and recall with CIs (denominator = candidate pairs), including false-match rates at the 6- vs 8-character title threshold. Check whether Kim-Stuckatz-Wolters graph clustering transfers.
+6. Source-independence check before noisy-OR enters the build. Measure error correlation across payroll, Quorum and directory sources on labelled ties, and confirm no LDA-derived source contributes to tie strength (D-021).
+7. Literature search to fill gaps: congressional staff tenure and turnover studies, revolving-door career-path studies (outcomes only, no influence framing), and organizational-network work on co-worker tie persistence. The vault holds no paper on staffer-staffer tie persistence or Senate staff networks.

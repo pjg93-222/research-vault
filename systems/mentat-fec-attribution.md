@@ -1,10 +1,22 @@
 ---
 type: system
-name: Mentat FEC money attribution and accounting
+name: "Mentat FEC money attribution and accounting"
 slug: mentat-fec-attribution
-components: [mentat-fec-attribution.employer-match, mentat-fec-attribution.identity-ladder, mentat-fec-attribution.receipt-role-and-exclusion, mentat-fec-attribution.dedup-and-versions, mentat-fec-attribution.cash-proportional-attribution, mentat-fec-attribution.transfer-graph-and-direction, mentat-fec-attribution.collection-completeness]
-brain_notes: [actors/mentat-fec-pipeline, concepts/mentat-fec-accounting-methodology, concepts/exclude-on-contradiction-not-ambiguity, concepts/pac-cash-proportional-attribution, actors/mentat-fec-pipeline-history-audit-r12]
-paper_count: 13
+components:
+  - mentat-fec-attribution.employer-match
+  - mentat-fec-attribution.identity-ladder
+  - mentat-fec-attribution.receipt-role-and-exclusion
+  - mentat-fec-attribution.dedup-and-versions
+  - mentat-fec-attribution.cash-proportional-attribution
+  - mentat-fec-attribution.transfer-graph-and-direction
+  - mentat-fec-attribution.collection-completeness
+brain_notes:
+  - actors/mentat-fec-pipeline
+  - concepts/mentat-fec-accounting-methodology
+  - concepts/exclude-on-contradiction-not-ambiguity
+  - concepts/pac-cash-proportional-attribution
+  - actors/mentat-fec-pipeline-history-audit-r12
+paper_count: 14
 tags: [system]
 ---
 
@@ -12,29 +24,31 @@ tags: [system]
 
 The R/Python pipeline (C:/Users/pgoff/Mentat) that attributes FEC Schedule A, Schedule B and PAS2 money to roster companies and industries. Covers employer and identity matching, receipt-role classification, contradiction-only exclusion, conduit and memo dedup, filing-version identity, the PAC transfer graph, cash-proportional attribution, beneficiary direction, geography and collection completeness.
 
-**Brain notes:** [actors/mentat-fec-pipeline](obsidian://open?vault=brain&file=actors/mentat-fec-pipeline); [concepts/mentat-fec-accounting-methodology](obsidian://open?vault=brain&file=concepts/mentat-fec-accounting-methodology); [concepts/exclude-on-contradiction-not-ambiguity](obsidian://open?vault=brain&file=concepts/exclude-on-contradiction-not-ambiguity); [concepts/pac-cash-proportional-attribution](obsidian://open?vault=brain&file=concepts/pac-cash-proportional-attribution); [actors/mentat-fec-pipeline-history-audit-r12](obsidian://open?vault=brain&file=actors/mentat-fec-pipeline-history-audit-r12)
+Brain notes: [actors/mentat-fec-pipeline](obsidian://open?vault=brain&file=actors/mentat-fec-pipeline); [concepts/mentat-fec-accounting-methodology](obsidian://open?vault=brain&file=concepts/mentat-fec-accounting-methodology); [concepts/exclude-on-contradiction-not-ambiguity](obsidian://open?vault=brain&file=concepts/exclude-on-contradiction-not-ambiguity); [concepts/pac-cash-proportional-attribution](obsidian://open?vault=brain&file=concepts/pac-cash-proportional-attribution); [actors/mentat-fec-pipeline-history-audit-r12](obsidian://open?vault=brain&file=actors/mentat-fec-pipeline-history-audit-r12)
 
-**What the evidence base is.** The hub has 20 evidence rows from 13 papers. 2 are VERIFIED, both narrow: Bouton 2022 on identity rules, and Paul's own cross-industry report on C-suite shares. The other 18 are VERIFIED-SOFTENED, and none is UNVERIFIED. No row validates a Mentat number. Every row is either a design reference (how someone else matched, deduped or traced) or a scope statement (what FEC data cannot see). Not one paper reports precision or recall for a linkage that Mentat could use as a benchmark. Paul's own report and the anonymous memo are not independent evidence. Each has unstated windows and denominators.
+**System:** Mentat FEC money attribution and accounting. **Evidence base:** 21 bearings from 14 works, spread over 6 components. 3 rows are VERIFIED and 18 are VERIFIED-SOFTENED; 0 are UNVERIFIED. **Strength:** 13 moderate, 8 weak, 0 strong.
 
-**Where the evidence matters:**
-- **Identity ladder.** This is the best-covered component, and the evidence cuts against the ladder. Bouton et al. (2022) is the only published rule-based donor grouping in the set. It requires exact first name, surname and ZIP plus a fuzzy street match, and it rejects employer and occupation as grouping keys. Mentat grants AUTO on exact name plus ZIP without reading street, which is looser than that benchmark. Paul's stated goal is to limit false positives.
-- **Conduit and memo dedup.** Bouton (2022) shows that an earmarked gift over $200 appears twice, once in the conduit report and once in the recipient's report. Bouton paired 87% of the recipient-side copies with their conduit twins. Mentat counts conduit legs as real rows and removed guard G3 on 2026-07-27, so a double count is plausible. Its size is unmeasured.
-- **Cross-cycle individual giving.** Bonica (2025) and Bouton (2022) both document a reporting break at the 2019-2020 WinRed launch. Any partisan or level comparison of employee giving that spans 2018 to 2020 contains a reporting artifact.
-- **Transfer graph.** The evidence is a scope statement: money routed through 501(c)(4)s and LLCs is invisible upstream of the first committee. The "89% oppose" figure is not reproducible as stated. The only trace is a code comment about opposition-direction rows in one shipped sheet, not dollars system-wide.
+**The short version.** The literature gives Mentat useful *design references* and *scope warnings*. It gives no *benchmarks*. None of the works reports a precision or recall figure, an error rate or a validation that could be carried over to Mentat's matching, dedup or attribution rules. The closest are Bonica 2013's record-linkage split and merge rates and CampaignView's hand-check counts, and both measure different linkers on different populations.
 
-**Gaps.** PAC cash proportional attribution has no literature, and collection completeness has one indirect row. A web scan found no published method for proportional tracing of pooled PAC cash. The right fill for both is an internal sensitivity study or reconciliation study, not more papers. Receipt-role exclusion has only an indirect bearing, so its fill is a manual audit of excluded rows.
+**Where the evidence sits (rows counted from the evidence file):**
+- **Identity ladder:** 6 bearings, the most of any component except the transfer graph.
+- **Transfer graph and beneficiary direction:** 7 bearings, mostly qualitative or scope-limiting.
+- **Employer matching:** 4 bearings, all definitional or extension ideas.
+- **Dedup and versions:** 2 bearings.
+- **Collection completeness:** 1 bearing.
+- **Receipt-role exclusion:** 1 weak bearing.
+- **Cash-proportional attribution:** 0. It is a complete GAP.
 
-**Actual errors to name:**
-1. The CITIZENS-read-as-CITI prefix bug produced $29.3M of the $32.5M excluded in the Banking run, with the window and denominator from the hub. This shows that prefix-token matching breaks the strict-names rule. It is a matching defect, not an exclusion-policy result.
-2. The 89% figure is rows-versus-dollars ambiguous and unsourced in the cited files.
-3. The two Kim rows disagree on whether SOC 27-3030 appears in the paper. The 2023 row calls it refuted, and the version cited varies between 2020, 2023 and JOP 2026.
-4. The known $176,942.05 off-by-cents memo-parent double count in Crypto is still open.
+**Three findings Paul should see first:**
+1. **Earmark double count.** Bouton et al. 2022 drop the committee-itemized leg of an earmarked gift because the same gift appears in both the conduit report and the recipient's report. They coupled 87% of earmarked committee-itemized donations to their conduit twin. Mentat counts conduit legs and removed guard G3 (export_guards.R:110-113, 2026-07-27, R5/R8 recipient-as-shown ruling). The size of any resulting double count in Mentat books is unmeasured.
+2. **The 89% oppose figure.** The component method states "89% of beneficiary dollars were oppose". Three verification passes could not find it in fec_transfer_graph.py, report.R or the brain folder. The only trace is a comment at R/export_guards.R:278 saying 89% of *one shipped beneficiary sheet* was opposition-direction *rows*. That is a share of rows, not dollars, with no stated cycle window and a one-sheet denominator. It should not be quoted as a dollar share.
+3. **The AUTO rung needs only exact name plus same zip.** It has no street check and no name-frequency weighting. Bonica 2013's only wrong merges were same-employer family members (Gates Sr/Jr, Walton family). Bouton 2022 requires three exact fields including street. Mentat's rung is looser than both published designs on the dimension that adds a stranger's money to a company total.
 
-None of this recommends a change to the receipt-counting code, which is frozen. Every change below is a per-change ruling for Paul. The studies proposed here are measurements only.
+Two sources are not independent evidence. goff-nd is Paul's own report, so it cannot corroborate his system. The anon-2025 memo has no stated author and gives figures without denominators. Both are kept as leads for extensions only.
 
 ## Employer-string roster matching and overrides
 
-**Computes.** Assigns Schedule A rows to roster companies by normalized employer key, prefix tokens and context; override rules use maximum-specificity matching.
+**What it computes.** Assigns Schedule A rows to roster companies by normalized employer key, prefix tokens and context; override rules use maximum-specificity matching.
 
 **Method.** Strict-names rule (roster plus verified aliases only). Acronym collisions are open owner calls.
 
@@ -44,47 +58,65 @@ None of this recommends a change to the receipt-counting code, which is frozen. 
 - Employer text identifies the employer
 - Unlisted spellings are unmatched
 
-**Evidence** (3 rows, 3 papers; 1 VERIFIED, 2 VERIFIED-SOFTENED).
+**Evidence rows:** 4 (VERIFIED 2, VERIFIED-SOFTENED 2)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
 | [[furnas-nd-conflating-lobbying-pacs]] |  | measurement-source | Organizational giving is campaign donations from the organization or its officially affiliated PAC; contributions by employees and contract lobbyists are not counted. Dark-money contributions are not observed. Independent expenditures (often by Super PACs) are not discussed; the article covers contributions to candidates only. | Comparing Mentat industry totals or participation counts with the paper's overlap or distribution figures requires restricting Mentat to organizational and affiliated-PAC receipts first. Melange's opposition prior already records that employee/executive giving and industry PAC money (congestion.json) are different instruments, with lean signs agreeing for only 157/276 members (57%) (fec/lobbying/build_opposition_prior.py:113). | moderate | VERIFIED-SOFTENED |
 | [[anon-2025-cross-industry-political]] | 2025 | suggests-extension | Charles Schwab's company PAC and executives halted giving. Per the memo, Chairman Schwab and his wife moved giving to a charity fund that invested over $250M in conservative causes in 2021-2024 and gave to Republican Super PACs (memo figures, partly redacted). The memo's thesis is that spending is offloaded onto company executives, measured as CEO and executive averages per industry. | An extension would link executive-controlled vehicles (foundations, donor-advised funds, family entities) to roster people. That needs a verified-affiliation rule consistent with the strict-names policy, not a fuzzy guess. The memo never defines executive, so its averages cannot be reconciled with the Chief or Middle Management tiers. | weak | VERIFIED-SOFTENED |
 | [[goff-nd-cross-industry-finance]] |  | suggests-extension | The C-suite share of crypto donations rose from 69 percent in 2021-22 to 98.8 percent in 2023-24; the report frames the credit union shortfall as missing employee and middle-management giving. | An occupation-role split would need a hand-coded precision check. The report gives no coding rule for C-suite, so its 69 and 98.8 percent figures cannot be reproduced from the extract. | moderate | VERIFIED |
+| [[fremeth-2018-spillovers-regulating-corporate]] | 2018 | suggests-extension | Within firm-cycle and candidate-cycle fixed effects, a candidate receiving the PAC maximum is 0.066 more likely (SE 0.006) to receive a CEO gift and receives about 110 dollars more (SE 10.05) (Table 2; 1992-2008; 950 firms; 6,803,661 observations). The text reports 7.7 percent and 123 dollars, which do not match Table 2. Table 7 gives 123.88. | A per-candidate join of company PAC-at-limit status with Chief-tier gifts would test the CEO-substitution pattern in the industries Paul covers. Depends on executive employer-match recall and the PAC-to-candidate recipient table. Any result stays UNVERIFIED until a second path reproduces it (DE-062). | moderate | VERIFIED |
 
 **Assessment.**
 
-**Evidence weight: weak to moderate. Nothing benchmarks Mentat.**
+**Evidence:** 4 bearings, all VERIFIED or VERIFIED-SOFTENED. None measures matching accuracy.
 
-- **Kim, Stuckatz & Wolters (2020).** The row is filed under identity, but it describes employer matching. It matches PAC and employer names to Compustat gvkey and checks the matches against hand-coded ground truth, yet it reports no precision or recall. It is a design reference, not a standard to beat.
-- **Furnas, LaPira & Brock (n.d., VERIFIED-SOFTENED, moderate).** This is the most consequential row. It defines organisational giving as the organisation plus its affiliated PAC and excludes employees. Mentat company totals include employee giving matched by employer. That is a definitional difference, not an error, but Mentat must be restricted to organisational and affiliated-PAC rows before any comparison with that literature. Melange already records that the two instruments' lean signs agree for only 157 of 276 members (57%; per fec/lobbying/build_opposition_prior.py:113, window not stated there).
-- **Paul's report (goff-nd, VERIFIED) and the anonymous memo (weak).** Both propose role splits (C-suite share) and executive-controlled vehicles such as foundations and donor-advised funds. Neither gives a coding rule, so the 69% to 98.8% C-suite shift cannot be reproduced.
+**Furnas, LaPira & Brock (n.d.)** (measurement-source, moderate). Its "organizational giving" means the organization or its affiliated PAC. It explicitly excludes employees and contract lobbyists, and it does not cover independent expenditures or dark money.
+- Mentat's company totals include individual employee giving matched by contributor_employer. They therefore measure a different, broader quantity.
+- This is a definitional mismatch, not an error. Any comparison with Furnas overlap figures must first restrict Mentat to organizational and affiliated-PAC receipts.
+- Melange already records that the two instruments diverge: lean signs agree for 157 of 276 members (57%; fec/lobbying/build_opposition_prior.py:113).
 
-**Internal contradiction.** The component's method says "strict names (roster plus verified aliases only)", but the matcher also uses prefix tokens. The Banking run excluded $32.5M, and $29.3M of it came from one prefix collision (CITIZENS read as CITI). That is a precision failure of prefix matching, caught downstream by exclusion. So "more conservative than the literature" is a claim about policy, not about measured behaviour.
+**Fremeth et al. 2018** (VERIFIED, moderate, extension).
+- Finding: within firm-cycle and candidate-cycle fixed effects, a candidate who received the PAC maximum is 0.066 (SE 0.006) more likely to receive a CEO gift. Window 1992-2008; 950 firms; 6,803,661 observations; Table 2.
+- The paper is internally inconsistent: its text gives 7.7% and $123, Table 2 gives $110, and Table 7 gives $123.88. Quote Table 2 with its window.
+- Use for Mentat: a CEO-substitution test that joins PAC-at-limit status to Chief-tier gifts. It depends on executive employer-match recall, which is itself unmeasured.
 
-**Online scan lead (UNVERIFIED).** Stuckatz, "Political alignment between firms and employees" (PSRM), has an appendix section on cross-validating firm-code matches. Its numbers were not confirmed.
+**goff-nd** (Paul's own report) and **the anon-2025 memo** both argue that giving is offloaded onto executives:
+- goff-nd: C-suite share of crypto donations went from 69% in 2021-22 to 98.8% in 2023-24.
+- Neither defines "executive" or gives a coding rule, so neither can be reconciled with Mentat's Chief and Middle Management tiers (report.R spending_title_role).
+
+**Verdict.** Mentat's empirical question is the precision and recall of employer-string matching against a hand-coded sample, by company size. That question is still a GAP. The study to fill it is a stratified hand-coded sample of Schedule A rows per roster company, by company size and by employer-string variant class, scored for both:
+- false matches: acronym collisions, and prefix bugs such as CITIZENS being read as CITI;
+- misses: unlisted spellings.
+
+Kim, Stuckatz & Wolters 2020 used a hand-coded ground truth but published no figures, so it is a template, not a benchmark.
 
 **Contradictions.**
-- The method claims strict names only, but prefix-token matching produced the CITIZENS to CITI collision. That collision was $29.3M of the $32.5M excluded in the Banking run.
-- Furnas et al. exclude employee giving from 'organizational giving', while Mentat company totals include it. Figures are not comparable without restriction.
-- The Kim/Stuckatz/Wolters citation appears as 2020 (positions), 2023 (evidence) and JOP 2026 (system citations). The SOC 27-3030 claim is VERIFIED-SOFTENED in the 2020 row and called refuted in the 2023 row.
+- Furnas defines organizational giving to exclude employee contributions. Mentat's company totals include employee giving matched by employer. Same word, different quantity, so the two cannot be compared without restricting Mentat first.
+- Fremeth 2018 reports the CEO-gift effect inconsistently: the text gives 7.7% and $123, Table 2 gives 0.066 and about $110, and Table 7 gives $123.88.
 
 **Gaps.**
-- No precision or recall estimate for employer-string matching. Fill it with a hand-coded random sample of Schedule A rows, stratified by company size and by match path (exact key, verified alias, prefix token, override), scoring false matches and missed spellings.
-- No coding rule for executive or C-suite roles that can be checked against report.R spending_title_role.
+- No study reports precision or recall for FEC employer-string matching. A hand-coded, size-stratified validation sample against Mentat's strict-names output is needed.
+- There is no evidence on how much money the strict-names rule leaves unmatched (recall loss from unlisted spellings) compared with fuzzy or gvkey-crosswalk approaches.
 
-**Paul's position vs the evidence.** Paul highlighted FEC employer matching to Compustat gvkey, SOC executive codes and hand-coded ground truth. Mentat's strict-names rule is more conservative. Paul points to gvkey/SOC matching with hand-coded ground truth and calls Mentat's strict-names rule more conservative. The papers he cites never publish their accuracy, so there is no number for Mentat to be more conservative than. Mentat's own prefix path broke the strict-names rule at scale in Banking. The position holds as policy intent, but it is unmeasured as behaviour.
+**Paul's position vs the evidence.**
+
+Paul highlighted Kim, Stuckatz & Wolters' match to Compustat gvkey, SOC executive codes and hand-coded ground truth, and he notes that Mentat's strict-names rule is more conservative.
+
+The evidence agrees that Kim et al. validated against hand-coded truth. It also shows they report no precision or recall, so their approach cannot show that Mentat is either too strict or adequate.
+
+The Furnas bearing adds a point Paul's position does not address: Mentat's company totals are not "organizational giving" in the Furnas sense. Paul's conservative posture is consistent with the literature's precision-first habit, but its recall cost is unmeasured.
 
 **Open questions.**
-- Is prefix-token matching still live after the CITIZENS fix, and is it limited to verified aliases?
-- Should company totals show organisational/PAC giving and employee giving as separate, never-summed channels to match the Furnas definition?
-- Which Kim/Stuckatz/Wolters version is the citation of record, and does it contain SOC 27-3030?
+- Should Mentat publish an organizational-only total (company PAC plus affiliated PAC) alongside the employee-inclusive total, so it can be compared with Furnas-style figures? This is Paul's call.
+- What is the dollar-weighted recall of strict-names matching for small roster companies, where a few variant spellings may carry most of the money?
+- Does executive-match recall support a Fremeth-style CEO-substitution test, or would a null be uninterpretable?
 
-**Read first.** [[kim-2020-strategic-sequential-links]], [[furnas-nd-conflating-lobbying-pacs]], [[goff-nd-cross-industry-finance]], [[anon-2025-cross-industry-political]]
+**Read first.** [[kim-2020-strategic-sequential-links]], [[furnas-nd-conflating-lobbying-pacs]], [[fremeth-2018-spillovers-regulating-corporate]], [[bonica-2013-mapping-ideological-marketplace]], [[goff-nd-cross-industry-finance]]
 
 ## Contributor identity match ladder
 
-**Computes.** AUTO, HIGH, REVIEW or DISCARD for same-name candidates by name parts, zip, city, state, occupation and employer contradiction.
+**What it computes.** AUTO, HIGH, REVIEW or DISCARD for same-name candidates by name parts, zip, city, state, occupation and employer contradiction.
 
 **Method.** Ordered rules (exact name + zip -> AUTO, etc.). No name-frequency weighting.
 
@@ -93,7 +125,7 @@ None of this recommends a change to the receipt-counting code, which is frozen. 
 **Assumptions.**
 - Same name + zip implies the same person
 
-**Evidence** (6 rows, 6 papers; 1 VERIFIED, 5 VERIFIED-SOFTENED).
+**Evidence rows:** 6 (VERIFIED 1, VERIFIED-SOFTENED 5)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -106,34 +138,58 @@ None of this recommends a change to the receipt-counting code, which is frozen. 
 
 **Assessment.**
 
-**Evidence weight: moderate. The direction is against the ladder's precision claim.** Six papers bear on this component (the table gives each row's status). Porter 2025 is context only, because it links candidates, not donors.
+**Evidence:** 6 bearings, the best-covered component after the transfer graph. All are VERIFIED or VERIFIED-SOFTENED. There are design references but no benchmark.
 
-- **Bouton et al. (2022).** This is the closest analogue: explicit rules on FEC donors. To count two records as one person it requires an exact match on three of first name, surname, street and ZIP, plus a fuzzy match on the fourth. It rejects occupation and employer as too inconsistent. Mentat grants AUTO on exact name plus ZIP, with no street check (street is collected at collect.R:1415-1416 but never read). It grants HIGH on exact name plus city. Both are looser than Bouton. Bouton's own false-positive rate is unmeasured, so the comparison is about design, not a validated standard. A false merge in Mentat adds a stranger's money to a company total, which raises the cost of looseness.
-- **Bonica (2013).** Its two wrong merges were same-employer family members (Gates Sr and Jr; Walton). Mentat's suffix-mismatch rule sends any suffix difference to REVIEW, which covers the suffixed case. A father and son in the same ZIP who both omit a suffix would still get AUTO.
-- **Kim (2020, 2023) and Bonica (2025).** These use constrained clustering, fastLink or voter-file linkage, all precision-first. None reports precision or recall usable for Mentat. The 75% link rate and r = 0.95 in Bonica 2025 are not Mentat benchmarks; the 0.95 is a candidate-level figure. That unlinked donors give slightly larger amounts is weak evidence that precision-first matching under-recovers big donors. It does not establish a downward dollar bias.
-- **No name-frequency weighting.** Common names in dense ZIPs are the known blind spot. That fastLink would fix it is analyst opinion, not a paper result.
+**Shared caveat.** No paper reports measured precision or recall for donor linkage:
+- Kim 2020 and Kim 2023 (fastLink plus constrained graph clustering) report none.
+- Bouton 2022 expects a very small false-positive rate but does not measure it.
+- Bonica 2025's r = 0.95 is for *candidate* birth-year linkage, not donors.
+- Bonica 2025's 75% linkage rate (about 17M DIME donors, 2012-2020) is for voter-file linkage, a different task.
 
-**Online scan lead.** Enamorado, Fifield & Imai (2019, APSR), the fastLink paper, is the standard frequency-weighted alternative. It is a lead only and has not been verified against Mentat.
+**Bonica 2013** (moderate) is the only source with error counts, from its corporate-board-member check:
+- 57% of cases got a single ID and 42% were split.
+- There were two wrong merges, both same-employer family members (Gates Sr/Jr, Walton family).
+
+This maps directly onto Mentat's weakest rung:
+- Mentat sends any *visible* suffix difference to REVIEW.
+- Exact name plus same zip gives AUTO, with no street check and no name-frequency weighting. If neither record carries the suffix, a father and son at the same zip and employer merge automatically.
+- Bouton 2022 (VERIFIED, moderate) requires exact match on three of first name, surname, full street and ZIP. Mentat collects street (collect.R:1415-1416) but the ladder does not read it.
+- Bouton also finds occupation and employer too inconsistent to group on. Mentat uses employer contradiction only to change the grade, which is consistent with that.
+
+**Context only:**
+- Porter 2025 (CampaignView) links candidates, not donors.
+- Bonica 2025 reports that unlinked donors give slightly larger gifts. That is weak at most as evidence that precision-first linkers under-recover large donors, and it does not establish a dollar bias in Mentat.
+
+**Cost asymmetry.** In Mentat a false merge adds a stranger's money to a company total. That makes precision more important than in DIME-style donor scoring, which supports Mentat's precision-first stance. The AUTO rung is less strict than the published rule designs.
+
+Any ladder change is Paul's under the frozen receipt-counting rule and D-040.
 
 **Contradictions.**
-- Paul's stated aim is to limit false positives, but AUTO on exact name plus ZIP without street is looser than the one published rule-based FEC donor benchmark (Bouton et al. 2022).
-- Bouton et al. reject employer as a grouping variable, while Mentat uses employer contradiction to change the grade, from AUTO to HIGH or from a name match to REVIEW. Mentat only downgrades on employer, so the conflict is mild.
+- Kim 2023's paper text does not contain SOC 27-3030 for government-relations staff. The analyst's claim was partly refuted, and only 11-1011 and fastLink are confirmed for 2023. Kim 2020's bearing does list 27-3030. Cite 27-3030 to Kim 2020 only.
+- Bouton 2022 requires street in its exact-three-of-four rule. Mentat's AUTO rung grants identity on name plus zip without street, so it is looser than the published design.
 
 **Gaps.**
-- No measured false-merge rate for AUTO and HIGH. Fill it with a hand-labelled sample of AUTO and HIGH pairs, stratified by surname frequency and ZIP population. Score each pair against street address and other public evidence. Compare the ladder, Bouton's street rule and fastLink on the same sample, as a measurement only.
+- No measured false-merge rate for Mentat's ladder. A hand-labelled sample of AUTO and HIGH pairs is needed, oversampling common surnames and suffix-free family pairs at the same zip and employer.
+- There is no head-to-head benchmark of rule ladders against frequency-weighted probabilistic linkage (fastLink) on FEC donors. A comparison on a shared labelled set would answer the component's empirical question.
 
-**Paul's position vs the evidence.** Paul highlighted 'no unique identifiers for individual donors', constrained graph clustering, and algorithms that limit false positive matches. Paul highlights the lack of unique donor IDs and the use of algorithms that limit false positives. The literature agrees on the precision-first posture. Mentat's ladder, however, is less strict than the rule set closest to it, and it has no frequency control. The position is right, but the implementation does not yet meet it.
+**Paul's position vs the evidence.**
+
+Paul highlighted the lack of unique donor identifiers, constrained graph clustering, and algorithms that limit false-positive matches.
+
+The evidence confirms all three as features of the published designs (Kim 2020 and 2023, Bonica 2025). It also shows that none of those designs published a measured false-positive rate.
+
+The evidence goes beyond Paul's position in one place. The literature's concrete false-merge cases (Bonica 2013 family members) and its stricter exact-field rule (Bouton's street requirement) both point at Mentat's AUTO rung, which Paul's annotations do not discuss.
 
 **Open questions.**
-- What share of kept dollars come from AUTO matches on common surnames in high-population ZIPs?
-- Should street agreement become an input to AUTO? This is Paul's ruling under the receipt-counting freeze.
-- How does the seed logic for same-name expansion within a company run work? It has not been traced.
+- How many AUTO merges in a current company run involve suffix-free same-name pairs at the same zip?
+- Would requiring street agreement for AUTO (and demoting name plus zip alone to HIGH or REVIEW) change company totals materially? This is a measurement question only, since any change is Paul's.
+- Does the absence of name-frequency weighting concentrate false merges in high-frequency surnames in dense zips?
 
-**Read first.** [[bouton-2022-small-campaign-donors]], [[kim-2020-strategic-sequential-links]], [[bonica-2013-mapping-ideological-marketplace]], [[kim-2023-systemic-sequential-links]], [[bonica-2025-money-campaign-finance]]
+**Read first.** [[bouton-2022-small-campaign-donors]], [[bonica-2013-mapping-ideological-marketplace]], [[kim-2020-strategic-sequential-links]], [[kim-2023-systemic-sequential-links]], [[bonica-2025-money-campaign-finance]]
 
 ## Receipt-role classification and contradiction-only exclusion
 
-**Computes.** Economic role per receipt from form, line and description. A row is excluded only when its own text names another organisation; ambiguous rows are kept with a flag.
+**What it computes.** Economic role per receipt from form, line and description. A row is excluded only when its own text names another organisation; ambiguous rows are kept with a flag.
 
 **Method.** The Banking run excluded 29,816 rows ($32.5M), of which $29.3M came from one prefix bug (CITIZENS read as CITI). Frozen code (2026-09-27).
 
@@ -143,7 +199,7 @@ None of this recommends a change to the receipt-counting code, which is frozen. 
 - Form/line plus text identify the role
 - Ambiguity is not contradiction (D-040)
 
-**Evidence** (1 rows, 1 papers; 1 VERIFIED-SOFTENED).
+**Evidence rows:** 1 (VERIFIED-SOFTENED 1)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -151,34 +207,49 @@ None of this recommends a change to the receipt-counting code, which is frozen. 
 
 **Assessment.**
 
-**Evidence weight: near zero. Treat this component as a GAP.**
+**Effectively a GAP.** There is 1 weak, VERIFIED-SOFTENED bearing, and it does not test the component.
 
-The only bearing is Irvin (2023; weak, suggests-extension). Its opacity index (0-9) does not predict the OpenSecrets dark-money label once controls are added (N = 54, 2016 economic-policy 501(c)(4)s). It therefore cannot justify finer treatment of 501(c) recipients, beyond a display-only heuristic label that carries that window. Paul's cited Furnas, LaPira & Brock (2025) row bears on employer-match definitions, not on the role classifier.
+**Irvin 2023** (suggests-extension, weak):
+- It scores 501(c) opacity from 0.8 to 8.3 on a 0-9 scale.
+- The index does not predict the OpenSecrets dark-money label once controls are added (N = 54, 2016 economic-policy C4s, Nagelkerke R2 0.529, only ln total expenses significant).
+- So it is an unvalidated index in its own sample. At most it could be a display-only heuristic label carrying its 2016 and N = 54 window.
+- Form 990 data arrive two or more years late, and Mentat does not collect them.
+- The bearing recommends no change to the EXCLUDED_527_501C block.
+- The 2026-07-18 ruling it refers to could not be found in the files checked, so its date is unverified.
 
-The contradiction-only rule (D-040) is a policy choice, and no paper tests it. The empirical question is internal: on manual audit, how many excluded rows are true misattributions? The Banking run already gives the answer for the largest block. $29.3M of $32.5M excluded was a prefix bug, a matching error that exclusion happened to catch. Without that block the remaining exclusion base is about $3.2M, but no audit has measured what share of it is true misattribution.
+**Nothing in the corpus tests:**
+- whether form and line plus description text identify the economic role of a receipt;
+- whether contradiction-only exclusion (D-040) achieves a lower misattribution rate than broader exclusion.
 
-The date of the 501c/527 exclusion ruling (2026-07-18) could not be verified from the files checked.
+**The Banking run** shows why this matters. It excluded 29,816 rows ($32.5M), and $29.3M of that (about 90%) came from one prefix bug, CITIZENS read as CITI. The dominant failure mode was a matching defect upstream, not the exclusion rule itself.
 
-Literature is not needed here. An audit is.
+**Study needed:** a stratified random manual audit of excluded rows and kept-with-flag rows. Stratify by exclusion reason and drop the prefix-bug block (or treat it separately). Score each row as a true misattribution or a false exclusion, and report the share with its run window and row and dollar denominators.
 
 **Contradictions.**
-- The large majority of Banking-run exclusions ($29.3M of $32.5M) came from an upstream matching bug, not from the contradiction rule. The headline exclusion total says little about how the exclusion rule performs.
+- The ruling the Irvin bearing cites as 2026-07-18 could not be located in the memory index or the analyst files checked, so its date is unverified. The code behaviour itself (the EXCLUDED_527_501C block) is confirmed.
 
 **Gaps.**
-- Fill it with a manual audit of a stratified random sample of excluded rows, by exclusion reason, after the CITIZENS fix. Report the share that are true misattributions, and the share of kept-but-flagged ambiguous rows that a human would exclude.
-- No study of the 501c/527 block exclusion; only Paul's ruling, which is not re-litigated here.
+- There is no literature on classifying FEC receipt roles from form, line and memo text. The FEC's own line-number documentation and a manual audit would serve better than academic sources.
+- No manual audit has measured the true misattribution share among excluded rows, which is the component's empirical question.
+- There is no evidence comparing contradiction-only exclusion with ambiguity-inclusive exclusion on error rates.
 
-**Paul's position vs the evidence.** No annotation addresses it directly. There is no literature position to compare. The exclude-on-contradiction policy is untested, but nothing in the evidence contradicts it.
+**Paul's position vs the evidence.**
+
+Paul cites Furnas, LaPira & Brock 2025 for this component, and his annotations say nothing addresses it directly.
+
+The evidence agrees: no bearing speaks to role classification or to the contradiction-versus-ambiguity rule. The Furnas bearing is filed under employer matching and concerns what counts as organizational giving, not receipt roles.
+
+The D-040 position stands without external support or contradiction.
 
 **Open questions.**
-- What is the post-fix exclusion total and its composition for Banking?
-- Where is the 501c/527 exclusion ruling recorded, and on what date?
+- Of the excluded dollars outside the CITIZENS/CITI prefix block (about $3.2M of $32.5M in the Banking run), what share are true misattributions?
+- Should the 501(c) block carry any transparency distinction, or stay a single supplementary category? Paul's call. Irvin's index is not validated for this use.
 
-**Read first.** [[irvin-2023-dark-investigation-dark]], [[furnas-nd-conflating-lobbying-pacs]], [[anon-2025-cross-industry-political]]
+**Read first.** [[irvin-2023-dark-investigation-dark]], [[furnas-nd-conflating-lobbying-pacs]]
 
 ## Conduit legs, memo dedup, filing-version identity and transfer rule
 
-**Computes.** Conduit legs are counted; memo legs are deduped by tuple; one winning amendment version per transaction; 24G/24K transfers; PAS2 index v6 count_latest.
+**What it computes.** Conduit legs are counted; memo legs are deduped by tuple; one winning amendment version per transaction; 24G/24K transfers; PAS2 index v6 count_latest.
 
 **Method.** Known defect: an off-by-cents memo parent ($176,942.05 Crypto double count).
 
@@ -187,7 +258,7 @@ Literature is not needed here. An audit is.
 **Assumptions.**
 - Same amount or date means the same transaction version
 
-**Evidence** (2 rows, 2 papers; 2 VERIFIED-SOFTENED).
+**Evidence rows:** 2 (VERIFIED-SOFTENED 2)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -196,35 +267,57 @@ Literature is not needed here. An audit is.
 
 **Assessment.**
 
-**Evidence weight: moderate on conduits, none on amendment versions.**
+**Evidence:** 2 bearings, both VERIFIED-SOFTENED. One is consequential.
 
-**Conduit double count (Bouton et al. 2022, moderate).** A recipient committee must itemize an earmarked gift once the donor's cycle total to it exceeds $200, so the same gift appears in the conduit's report and the recipient's report. Bouton paired 87% of the recipient-side copies with their conduit twins and dropped the recipient-side copy. Mentat counts conduit legs as real rows under the R5/R8 recipient-as-shown ruling, and guard G3 against conduit double counting was removed on 2026-07-27. If a company's employee gift is matched once on the conduit row and again on the recipient's itemized row, it is counted twice. The size of this in Mentat is unmeasured. This is the most likely live accounting error in the system. It is a measurement question first; any change is Paul's per-change call under the money freeze.
+**Bouton et al. 2022** (qualifies, moderate):
+- When a donor's cycle total to a recipient committee exceeds $200, that committee must itemize an earmarked gift. The same gift then appears in both the conduit report and the committee report.
+- Bouton et al. coupled 87% of earmarked committee-itemized donations to their conduit twin and dropped the committee leg. The uncoupled remainder is 3% of all contributions.
 
-**Cross-cycle break (Bonica 2025 and Bouton 2022, weak to moderate).** Sub-$200 Republican conduit giving becomes visible only from the 2019-2020 WinRed launch. Any 2018-to-2020 comparison of employee giving, its partisan share, or a backtest window spanning the break carries a reporting artifact. PAC-to-candidate transfers and the 2024 anchor cycle are not affected.
+**Mentat's practice and what is unverified:**
+- Mentat counts conduit legs. It removed guard G3 against conduit double counting on 2026-07-27 under the R5/R8 recipient-as-shown ruling (export_guards.R:110-113).
+- It dedups only same-recipient memo redisclosures that have an eligible counterpart.
+- The verification could not show from the code that the two legs carry different sub_ids, or that the committee leg is counted.
+- So the double count is a plausible hazard of unmeasured size, not a confirmed defect.
 
-**Amendments.** No paper bears on amendment handling (count_latest, the same-amount-or-date rule). The known off-by-cents memo-parent double count in Crypto ($176,942.05) shows the tuple match fails on cent drift.
+**Bonica 2025** (weak):
+- Small-donor coverage is near-complete only from 2020, after WinRed launched (2019).
+- So any cross-cycle comparison of employee giving or partisan share that spans 2018 to 2020 contains a reporting artifact.
+- It does not affect PAC-to-candidate totals or the 2024 anchor cycle.
 
-**Online scan leads (UNVERIFIED).** A 2009 Center for Responsive Politics comment to the FEC says amendments filed in varying ways create duplicate and triplicate records that the FEC cannot always pair with originals. The Follow the Crypto FAQ reports double- and triple-reported in-kind crypto receipts.
+**GAP: filing versions.** No paper speaks to amendments, count_latest, or whether same amount or date identifies the same transaction version. The known off-by-cents memo-parent defect ($176,942.05 Crypto double count) shows the tuple key fails on cent differences.
+
+**Study needed:** an empirical census of FEC amendment chains from bulk files:
+- how often an amendment changes the amount versus the date versus the tran_id;
+- totals under count_latest compared with tran_id-level resolution, by committee type and cycle.
+
+Money collection is frozen. Any change needs Paul's per-change OK.
 
 **Contradictions.**
-- Bouton et al. treat the recipient-side earmarked copy and its conduit twin as one gift, and drop one leg. Mentat counts conduit legs and removed guard G3, so both legs may be counted for the same gift.
+- Bouton et al. treat the committee-itemized leg of an earmarked gift as a duplicate of the conduit leg and drop it. Mentat removed its conduit double-count guard (G3) and counts each receipt to the recipient as shown. These cannot both be right for the same gift unless Mentat's memo dedup already catches the committee leg, and the code check could not confirm that it does.
 
 **Gaps.**
-- Fill the double-count gap with a coupling study. Pair recipient-side earmarked itemized rows with conduit rows on donor, amount, date and recipient, using Bouton's method, inside each company's kept rows. Report the overlapping dollars by industry and cycle.
-- Fill the amendment gap with an amendment census from bulk files. For transactions with more than one version, count how often amount, date or both change. Compare count_latest totals against a sum over all versions and a sum over the first version.
+- There is no literature on FEC amendment and version behaviour (amount changes versus date changes, and bias from count_latest). An FEC bulk amendment-chain census is needed.
+- The size of the conduit and committee double count in Mentat books is unmeasured. A per-industry, per-cycle count of committee-itemized earmarked rows with a conduit twin would measure it.
+- The memo-parent tuple key has no tolerance-or-identifier study. The off-by-cents case suggests a sub_id or tran_id-based key needs testing.
 
-**Paul's position vs the evidence.** Paul highlighted late-filed and duplicate filings as a pipeline hazard. Paul flags late-filed and duplicate filings as a hazard, and the evidence agrees. The sharper hazard in the evidence is structural duplication through the conduit's and recipient's reports. That is not late filing, and the current recipient-as-shown ruling may let it through.
+**Paul's position vs the evidence.**
+
+Paul cites Harrison et al. 2018 on late-filed records and flags late and duplicate filings as a pipeline hazard. The evidence supports that concern but from a different direction: Bouton documents a *structural* duplicate (the same earmarked gift reported by both the conduit and the recipient), not a late-filing duplicate.
+
+No bearing addresses late filings or amendments, so Harrison's concern remains uncorroborated by this corpus.
+
+The recipient-as-shown ruling (R5/R8) is Paul's. Bouton's practice differs from it, and the evidence is enough to warrant measuring the overlap, not to overturn the ruling.
 
 **Open questions.**
-- Do the conduit copy and the recipient's itemized copy carry different sub_ids, so that report.R's sub_id guard cannot catch them?
-- Does any forecast backtest window span the 2019-2020 WinRed break for employee giving?
-- Is the Crypto off-by-cents memo parent fixed or only documented?
+- Do Mentat's committee-itemized earmarked rows and their conduit twins share a sub_id or tran_id? If not, are both counted?
+- How many dollars per industry and cycle sit in committee-itemized earmarked rows that have a conduit twin?
+- Should cross-cycle employee-giving comparisons that span 2018-2020 carry a coverage-break label?
 
 **Read first.** [[bouton-2022-small-campaign-donors]], [[bonica-2025-money-campaign-finance]]
 
 ## PAC cash proportional attribution
 
-**Computes.** A company's share of each PAC payment = its share of labelled cash just before the payment.
+**What it computes.** A company's share of each PAC payment = its share of labelled cash just before the payment.
 
 **Method.** Ordered events, cent-level conservation, withhold on unresolved inputs. The first application failed the cash gate.
 
@@ -234,7 +327,7 @@ Literature is not needed here. An audit is.
 - Cash is fungible within a committee
 - Same-day receipts come before payments
 
-**Evidence** (0 rows, 0 papers; none).
+**Evidence rows:** 0
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -242,32 +335,48 @@ Literature is not needed here. An audit is.
 
 **Assessment.**
 
-**Evidence weight: none. This is a GAP.** No hub row bears on this component. An online scan found no published empirical method for proportional tracing of pooled PAC cash.
+**Complete GAP.** No bearing, no citation in the system, and Paul notes there is no literature.
 
-The closest analogues are legal, not empirical. *McCutcheon v. FEC* argues that routed money is diluted by everyone else's contributions to the same PAC. A 1989 California FPPC advice letter attributes PAC money to an original contributor only on evidence of control. Both are leads only. They support treating proportional attribution as a conditional accounting convention, not as traced dollars.
+The rule assigns a company a share of each PAC payment equal to its share of labelled cash just before the payment. It rests on two assumptions:
+- cash is fungible within a committee;
+- same-day receipts come before payments.
 
-The fungibility and same-day-ordering assumptions are choices, not findings. The first application failed the cash gate. There is also a possible inconsistency inside the system. The transfer graph's allocate() spreads funding pro rata over observed outflows without regard to timing, while pac_cash_model uses a time-ordered share of cash just before each payment. The two rules can give different company shares for the same committee.
+Neither has been tested, and the first application failed the cash gate.
 
-Literature will not settle this. A sensitivity study will.
+**Christopher 2016** describes allocate() in the transfer graph as a "conditional pro-rata scenario, not traced dollars". That is the right framing, and it applies equally here: proportional attribution is a modelling convention, not an observed flow.
+
+**Studies that would fill the gap:**
+1. A sensitivity study on Mentat's own ledgers. Recompute attributed totals under:
+   - proportional, FIFO, LIFO and lowest-intermediate-balance rules (from legal fund-tracing doctrine);
+   - alternative same-day orderings: receipts-first, payments-first, and file-order.
+
+   Report the spread per company and cycle as an uncertainty band.
+2. A literature search outside political science, in forensic accounting and legal tracing of commingled funds, for which rules courts and auditors accept and why.
+3. A check of the failed cash gate, to see whether the failure comes from unresolved inputs or from ordering.
 
 **Contradictions.**
-- Two proportional rules coexist. allocate() in the transfer graph is time-blind pro rata over outflows, while pac_cash_model is a time-ordered cash share. They are not reconciled anywhere in the evidence.
+- (none identified)
 
 **Gaps.**
-- Fill it with a sensitivity study on the same committees and cycles. Run proportional, FIFO and LIFO, and permute same-day receipt and payment order. Report the share of attributed dollars per company that move by more than a stated threshold, and name the window and denominator.
-- No ground truth. Committees with single-source funding periods give natural test cases where every rule must agree.
+- No literature addresses attribution of commingled committee cash to sources. Look to forensic accounting and legal commingled-fund tracing doctrine for candidate rules.
+- There is no sensitivity analysis of attributed totals to the same-day ordering assumption or to FIFO versus proportional rules, which is the component's own empirical question.
+- There is no diagnosis of why the first application failed the cash gate.
 
-**Paul's position vs the evidence.** No literature. Paul cites no literature for this component, and none was found. The method has to stand on a conservation proof and a sensitivity range, not on citations.
+**Paul's position vs the evidence.**
+
+Paul says there is no literature, and the corpus agrees: zero bearings. The method's discipline (ordered events, cent-level conservation, withhold on unresolved inputs) is sound engineering. Its central assumption, fungibility with proportional shares, is a modelling choice with no external validation.
+
+Attributed figures should be presented as conditional estimates, named with their rule and ordering assumption.
 
 **Open questions.**
-- What failed in the first cash-gate run, and is that failure fixed?
-- Should allocate() and pac_cash_model share one attribution rule?
+- How far apart are proportional and FIFO attributed totals for the largest roster companies in the 2024 cycle?
+- Is the cash-gate failure an ordering artifact or a missing-input artifact?
 
-**Read first.** [[christopher-2016-mathematical-modeling-analysis]], [[irvin-2023-dark-investigation-dark]]
+**Read first.** [[christopher-2016-mathematical-modeling-analysis]]
 
 ## PAC transfer graph and beneficiary direction partition
 
-**Computes.** PAC -> PAC -> candidate flows, and support/oppose/party four-bucket attribution (Dem/Rep = downstream - oppose).
+**What it computes.** PAC -> PAC -> candidate flows, and support/oppose/party four-bucket attribution (Dem/Rep = downstream - oppose).
 
 **Method.** 89% of beneficiary dollars were oppose. The attributed-estimate producer is unbuilt.
 
@@ -276,7 +385,7 @@ Literature will not settle this. A sensitivity study will.
 **Assumptions.**
 - Direction codes identify support vs oppose
 
-**Evidence** (7 rows, 6 papers; 7 VERIFIED-SOFTENED).
+**Evidence rows:** 7 (VERIFIED-SOFTENED 7)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -290,36 +399,58 @@ Literature will not settle this. A sensitivity study will.
 
 **Assessment.**
 
-**Evidence weight: moderate as scope statements. There is no numeric support for any direction share.**
+**Evidence:** 7 bearings, all VERIFIED-SOFTENED. They are mainly scope limits and qualitative direction claims. None is quantitative confirmation.
 
-- **Irvin (2023) and Christopher (2016).** Both VERIFIED-SOFTENED. Money passing through 501(c)(4)s or LLCs before reaching a committee gets no node, and appears only as a receipt into the super PAC. Upstream attribution past the first committee is therefore impossible. Neither paper gives a size, so no magnitude may be inferred. Christopher's network has no stated construction method, and its betweenness ranking must not be imported. Any key-node ranking on Mentat's graph is a heuristic model output (D-025), not closeness or access.
-- **Gaynor (2022).** Gives a method for directed leadership-PAC edges (115th Congress: 12,870 directed edges, average $3,682.19 per tie, from OpenSecrets data). Replicating it needs the 2018 and 2020 cycles, which the R defaults (2022-2026) skip. Such an edge is a donation record, never an access or influence edge.
-- **Direction share.** Chohan (2025) and Irvin's second-hand claim (via Beckel) support keeping support and oppose separate rather than netting them. Chohan's own examples include support as well as oppose, and neither paper gives a share. The "89% of beneficiary dollars were oppose" figure is not in fec_transfer_graph.py or report.R. The only trace is an export_guards.R:278 comment that 89% of one shipped beneficiary sheet was opposition-direction rows. Rows are not dollars, and one sheet is not the system. Until it is recomputed with a cycle window and a dollar denominator, it is an unsourced figure.
-- **Paul's report and the anonymous memo.** Figures such as 38 of 40 primaries won, 71.9% and "+90%" have no window, denominator or baseline win rate. They should not be quoted until recomputed.
+**Scope (moderate):**
+- **Irvin 2023** (2016 economic-policy C4s, anecdotes): One Nation gave $21.7M of $63.3M in 2016 spending to the Senate Leadership Fund, and Freedom Frontier made a $4.4M grant.
+- **Christopher 2016:** its nonprofit network has an unstated construction method and covers about 2010-2015.
+- Mentat's graph reads only OTH 24G and 24K committee transfers, with C-plus-eight-digit node IDs. A 501(c)(4) upstream of a Super PAC therefore appears only as a receipt, and money that passes through non-disclosing nonprofits is invisible. This is a scope statement, not a magnitude: neither paper estimates how much C4 money reaches Super PACs.
+- Christopher's betweenness ranking must not be imported, and any key-node ranking on Mentat's graph is a heuristic model output (D-025).
 
-**Online scan lead (UNVERIFIED).** Demos and U.S. PIRG report that 6.4% of itemized super PAC contributions since 2010 could not be traced to an original source. That is an order-of-magnitude reference for the upstream blind spot.
+**Gaynor 2022** (method-source, moderate):
+- It treats member-to-member LPAC giving as directed edges. 115th Congress figures: 12,870 unique directed edges and an average of $3,682.19 per tie.
+- Mentat's R readers can produce such edges but default to cycles 2022-2026. Gaynor's window needs 2018 and 2020.
+- Such edges are donation records, not access or influence edges (D-025).
+
+**Direction:**
+- **Chohan 2025** (weak, 2024 federal races, qualitative): crypto Super PAC ads often did not mention crypto, and the PACs both backed and opposed candidates (Moreno backed; Brown, Tester, Porter and Bowman opposed). This supports keeping support and oppose separate rather than netting them, and supports not reading the issue from ad content. It gives no oppose share.
+- **Irvin 2023's second bearing** relays Beckel 2018 second-hand: dark-money spending is "strongly negative". There is no count or share, so at most it shows directional agreement.
+- **anon-2025 memo and goff-nd** give partisan and Super PAC shares without windows or denominators. Examples: 71.9% and 70% for crypto, 38 of 40 primaries won with no baseline, and JPMorgan-linked "+90%".
+
+**The 89% figure.**
+- The component's "89% of beneficiary dollars were oppose" was not found in fec_transfer_graph.py, report.R or the brain folder.
+- The only trace is an R/export_guards.R:278 comment: 89% of one shipped beneficiary sheet's *rows* were opposition-direction.
+- Until it is recomputed with a stated cycle, industry and dollar denominator, it is a row share from one sheet.
+
+The attributed-estimate producer is unbuilt; the route returns 409.
 
 **Contradictions.**
-- The component states that 89% of beneficiary dollars were oppose. The only located source says 89% of rows in one shipped sheet were opposition-direction.
-- Chohan (2025) is cited as support for an oppose-heavy picture, but its own examples include large support spending, such as Fairshake backing Moreno.
+- The component states that 89% of beneficiary *dollars* were oppose. The only located source (R/export_guards.R:278 comment) says 89% of one sheet's *rows* were opposition-direction. The figure was not found in fec_transfer_graph.py, report.R or the brain folder. Rows are not dollars, and one sheet is not the industry total.
+- The goff-nd and anon-2025 shares (71.9%, 70%, 38 of 40, +90%) carry no cycle window or denominator. They cannot be reconciled with Mentat's support, oppose and party partition as stated.
 
 **Gaps.**
-- The attributed-estimate producer is unbuilt; the UI route returns 409.
-- No dollar-weighted support/oppose/party split for any industry. Fill it by running the beneficiary partition over named cycles, reporting dollars, and stating the denominator.
-- No estimate of upstream non-disclosing money for Mentat's industries. Fill it by matching super PAC receipts from non-committee entities (501(c)s and LLCs) to Mentat industries and reporting their dollar share by cycle.
+- No quantitative study of how industry Super PAC money divides into support and oppose by party is in the corpus. Recompute from FEC Schedule E with support and oppose codes, by cycle and industry, and audit a sample of IE records to check that the direction codes match ad content.
+- There is no estimate of how much non-disclosing nonprofit money enters the committee graph upstream of industry PACs. Form 990 grant data linked to FEC committee IDs would bound it.
+- Leadership-PAC edges need 2018-2020 cycles and a validated sponsor-to-member key (name-key matching can give false or missing links).
 
-**Paul's position vs the evidence.** Paul ties dark-money donation behavior to Furnas's ideological infrastructure. No annotation addresses PAC flows. Paul ties dark-money behaviour to Furnas's ideological-infrastructure framing. The evidence supports the structural point that dark money sits upstream and is invisible to a committee graph. It does not support any oppose share or partisan magnitude.
+**Paul's position vs the evidence.**
+
+Paul cites Gaynor 2022, Irvin 2023 and Couch, Fox & Everton 2016 (the same work as the christopher-2016 slug). He ties dark-money giving to Furnas's ideological infrastructure and notes that no annotation addresses PAC flows.
+
+The evidence supports using Gaynor-style directed edges as donation records. It shows that the dark-money papers mark a boundary of Mentat's graph rather than validating its edges or rankings.
+
+On direction, the qualitative sources agree that negative spending is common. None supports a specific oppose share. The 89% figure Paul's system carries is unconfirmed as a dollar share.
 
 **Open questions.**
-- Is 89% a row share or a dollar share, which sheet and which cycle?
-- Should leadership-PAC edges (designation D) enter the graph for 2018 and 2020 to allow a Gaynor replication?
-- Should super PAC receipts from non-committee entities get an explicit unresolved-upstream bucket?
+- What is the support, oppose and party split by dollars, with cycle and industry named, once recomputed from Schedule E?
+- Does the export_guards.R:278 89% refer to rows of a single industry's sheet, and which cycle?
+- Should the beneficiary UI label the C4 and nonprofit upstream boundary explicitly?
 
-**Read first.** [[irvin-2023-dark-investigation-dark]], [[gaynor-2022-financial-ties-bind]], [[christopher-2016-mathematical-modeling-analysis]], [[chohan-2025-crypto-oligarchy-cryptocurrency]], [[goff-nd-cross-industry-finance]], [[anon-2025-cross-industry-political]]
+**Read first.** [[gaynor-2022-financial-ties-bind]], [[irvin-2023-dark-investigation-dark]], [[chohan-2025-crypto-oligarchy-cryptocurrency]], [[christopher-2016-mathematical-modeling-analysis]], [[anon-2025-cross-industry-political]], [[goff-nd-cross-industry-finance]]
 
 ## Collection completeness (zero provenance, count reconciliation, key pool)
 
-**Computes.** Verified zeros, count reconciliation, and pagination-shortfall rejection; key rotation with an hourly budget.
+**What it computes.** Verified zeros, count reconciliation, and pagination-shortfall rejection; key rotation with an hourly budget.
 
 **Method.** Only the browser lane stamps zero_verified. Three reconcile passes. The per-key vs per-IP rate limit is unverified.
 
@@ -328,7 +459,7 @@ Literature will not settle this. A sensitivity study will.
 **Assumptions.**
 - The FEC count is the completeness target
 
-**Evidence** (1 rows, 1 papers; 1 VERIFIED-SOFTENED).
+**Evidence rows:** 1 (VERIFIED-SOFTENED 1)
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -336,65 +467,90 @@ Literature will not settle this. A sensitivity study will.
 
 **Assessment.**
 
-**Evidence weight: weak and indirect. Mostly a GAP.**
+**Near-GAP.** There is 1 VERIFIED-SOFTENED bearing (moderate), and it bears on what itemized data can contain, not on openFEC API completeness.
 
-Bouton et al. (2022; moderate) and Bonica (2025) speak to coverage, not to API completeness:
-- Conduits report every contribution whatever its size. Over 2006-2020, 76.4% of individual contributions came through conduits, and 91.1% in 2020.
-- Direct gifts under $200 stay invisible.
-- WinRed's 2019 launch changes Republican coverage.
+**Bouton et al. 2022:**
+- Conduits must report every contribution whatever its size.
+- Conduit contributions were 76.4% of individual contributions in 2006-2020 and 91.1% in 2020. Processing them more than doubles observed contributions.
+- Committee-reported unitemized totals overstate small-donor contributions by 1.8 to 3.1 times.
+- Direct gifts under $200 stay invisible in itemized data.
 
-These results bear on whether an empty Conduit category is a real zero. export_guards.R:447-449 treats it as a real zero, which is fine only after 2019 for Republican-leaning industries.
+**Fit with Mentat:**
+- Mentat flags conduit legs (collect.R:1452-1454).
+- It treats an empty Conduit category as a real zero (export_guards.R:447-449).
+- It applies no coverage adjustment that varies by cycle or party.
+- So a "verified zero" for conduit giving in a pre-2019 Republican-leaning cycle can reflect platform absence (no WinRed), not absence of giving. This matters for cross-cycle and partisan splits of employee giving, not for PAC-to-candidate totals.
 
-No source checks how often openFEC recordsTotal misreports relative to bulk files, or false zeros, or per-key versus per-IP rate limits. These are engineering facts about one API. A reconciliation study settles them; papers will not.
+**Nothing in the corpus addresses:**
+- openFEC recordsTotal misreporting;
+- false zeros relative to bulk files;
+- pagination shortfalls;
+- whether the rate limit is per key or per IP.
+
+**Study needed:** a systematic reconciliation of openFEC API counts and sums against FEC bulk files for a sample of committees and cycles. Measure the false-zero and short-count rates by endpoint, and test the rate-limit unit on a single key and IP pair at normal load (logs only, no stress test).
 
 **Contradictions.**
-- (none)
+- (none identified)
 
 **Gaps.**
-- Fill the false-zero gap with an API-versus-bulk reconciliation on a random sample of committee-cycles and company queries. Compare recordsTotal, the number of rows returned and the bulk-file row count. Report the false-zero rate and the shortfall rate.
-- Fill the rate-limit gap with a documented test from FEC/api.data.gov documentation on whether limits apply per key or per IP. Read the documentation only; no load tests on the machine.
+- No study measures openFEC recordsTotal accuracy or false zeros against bulk files. An API versus bulk reconciliation sample is needed.
+- There is no evidence on whether the openFEC rate limit is per key or per IP. Read the API documentation and inspect existing logs rather than running load tests.
+- There is no cycle- or party-varying coverage label for conduit zeros before WinRed (2019).
 
-**Paul's position vs the evidence.** No literature. Paul cites no literature for this component, which is appropriate. The evidence adds one caution: treat a zero Conduit category as a real zero only for cycles after the WinRed launch.
+**Paul's position vs the evidence.**
+
+Paul says there is no literature. The corpus agrees on the API-completeness question. Bouton adds an adjacent point Paul's position does not address: for pre-2019 Republican employee giving, a verified zero in conduit-routed money can be a platform-coverage artifact. Paul's completeness target ("the FEC count") is sound for API fidelity, but it does not guarantee economic completeness.
 
 **Open questions.**
-- Should zero_verified be stamped by lanes other than the browser lane, once a reconciliation has passed?
-- Does any industry-cycle cell before 2020 report a Conduit zero that is really a coverage hole?
+- How often does openFEC return zero rows where bulk files show receipts, by endpoint and cycle?
+- Should conduit zeros in cycles before 2020 carry a coverage note on surfaces that split by party?
 
 **Read first.** [[bouton-2022-small-campaign-donors]], [[bonica-2025-money-campaign-finance]]
 
 ## Across components
 
-**1. One defect class runs through matching, exclusion and dedup: loose keys.** Prefix-token employer keys produced the CITIZENS to CITI collision ($29.3M of the $32.5M Banking exclusion). The identity ladder grants AUTO without street. The memo tuple fails on cent drift ($176,942.05 in Crypto). In each case the system's stated posture (strict names, precision-first, exact tuple) is stricter than what the code does at the edges. The literature consistently backs the stated posture. The gap is implementation, not policy.
+**1. Bouton et al. 2022 cuts across three components.** It is the single most consequential source for this system:
+- **Identity ladder:** it is a stricter rule design than Mentat's.
+- **Dedup and versions:** it treats the committee leg of an earmarked gift as a duplicate of the conduit leg.
+- **Collection completeness:** it finds that conduit coverage changes with WinRed's launch (2019).
 
-**2. The 2019-2020 WinRed reporting break.** Bonica (2025) and Bouton (2022) agree independently. It affects dedup (conduit volumes), collection completeness (Conduit zeros) and any downstream giving forecast or backtest whose window spans 2018 to 2020 for employee giving. PAC-to-candidate money is unaffected. Any pooled coefficient over employee giving across that break is UNSTRATIFIED unless it is split at 2020.
+It also bears on how receipt roles are read. Read it first.
 
-**3. Two proportional conventions.** pac_cash_model (time-ordered cash share) and allocate() in the transfer graph (time-blind pro rata over outflows) are two different allocation rules. No paper supports either one over the other. They should either be reconciled or labelled per surface.
+**2. The coverage break around 2019-2020.** Bonica 2025 and Bouton 2022 independently place a break in small-donor and conduit coverage around 2019-2020. Any Mentat surface that compares employee giving, or its partisan share, across 2018 and 2020 carries a reporting artifact. It needs a coverage label naming the window. PAC-to-candidate totals and the 2024 anchor cycle are unaffected.
 
-**4. Instrument definitions.** Furnas et al. define organisational giving without employees. Mentat company totals include employees, and Melange's own prior shows the two instruments' lean signs agree for only 57% of members (157 of 276). Company PAC money and employee money should be shown side by side and never summed when compared with the literature. This matches the lobbying ruling for LDA in-house versus outside firms.
+**3. Benchmarks are missing everywhere.** Every component that matches, dedups or attributes lacks a measured error rate, and the literature cannot supply one:
+- Kim 2020 and 2023, Bouton 2022 and Bonica 2025 all report no precision or recall for their own linkers.
+- The common fix is one hand-coded audit programme. One labelled sample of Schedule A rows, with truth for employer, identity and role, would answer the empirical questions of employer-match, identity-ladder and receipt-role together.
 
-**5. Numbers that must not be quoted as they stand:** the 89% oppose figure (rows from one sheet versus dollars), the memo's "+90%", Paul's report's 38/40, 71.9% and 70%, and Bonica's 75%/r = 0.95 as a Mentat benchmark. None names a usable window and denominator for Mentat.
+**4. Precision-first is consistent across the literature but asymmetric in cost for Mentat.**
+- **Precision:** a false merge or false employer match puts a stranger's money in a company total, so Mentat's conservative posture is justified.
+- **Recall:** the recall cost is unmeasured. The AUTO rung (exact name plus same zip, no street) is actually looser than published rule designs.
 
-**6. Online scan leads (UNVERIFIED, single-pass web results).** These are worth fetching, but none is a finding:
-- Enamorado, Fifield & Imai (2019), fastLink, APSR (identity).
-- Stuckatz, "Political alignment between firms and employees", PSRM, with a supplementary appendix on firm-code cross-validation (employer match): https://www.cambridge.org/core/journals/political-science-research-and-methods/article/political-alignment-between-firms-and-employees-in-the-united-states-evidence-from-a-new-dataset/0BFC112803DD52C47E04DA476B0E0C68
-- Demos/U.S. PIRG on untraceable super PAC money, 6.4% of itemized contributions since 2010 (transfer graph): https://www.demos.org/media/some-super-pac-money-untraceable
-- 2009 CRP comment letter on amendment duplicates (dedup): https://fec-prod-cms.app.cloud.gov/documents/2439/8-21-09websitecomments.pdf
-- Follow the Crypto FAQ on duplicate in-kind crypto receipts (dedup): https://followthecrypto.org/about/faq
-- Validation-of-matching framework (identity and employer audits): https://arxiv.org/pdf/1411.0023
-- McCutcheon v. FEC on dilution, and a 1989 California FPPC advice letter on attribution by control (cash attribution, legal analogue only): https://www.fppc.ca.gov/siteassets/documents/legal_div/advice_letters/1980-1989/1989/89-071.pdf
+**5. Numbers with no window or denominator.** Several figures circulating in Mentat's documentation and in the two non-independent sources must not be quoted until they are recomputed with a cycle window and denominator:
+- 89% oppose (rows of one sheet, not dollars);
+- 71.9% and 70% Super PAC shares;
+- 38 of 40 primaries;
+- +90% (JPMorgan-linked);
+- 98.8% C-suite.
 
-**7. Governance.** Receipt counting is frozen. Every study below measures; no change follows without Paul's per-change ruling. The R5/R8 recipient-as-shown and D-040 rulings are Paul's, and they are not re-argued here. The conduit double count is flagged because it may be an actual error under those rulings, not because the rulings are wrong.
+**6. Graph and edge wording.**
+- Edges built from LPAC, PAC or Super PAC transfers are donation records.
+- Any centrality or key-node ranking on them is a heuristic model output, never an access, closeness or influence measure (D-025).
+- LDA stays an identity source, not an edge or weight source (D-021).
+
+None of the bearings proposes dropping cosponsorship edges or per-edge volume normalization, so no rejected SNA proposal is in play here.
+
+**7. Change control.** Receipt-counting and money collection are frozen. Every bearing that implies a code change (street in AUTO, frequency weighting, earmark-leg dedup, 501(c) labelling) is a measurement question first and a ruling for Paul second. This assessment recommends measuring, not changing.
 
 ## Research agenda
 
-1. Conduit coupling study (dedup). Following Bouton et al. 2022, pair recipient-side earmarked itemized rows with conduit rows inside each company's kept rows. Report overlapping dollars by industry and cycle. This is the most likely live double count.
-2. Identity-ladder audit. Hand-label a sample of AUTO and HIGH pairs, stratified by surname frequency and ZIP population. Score the current ladder, Bouton's street rule and fastLink on the same pairs, and report the false-merge rate and the dollars at risk.
-3. Employer-match precision and recall. Hand-code Schedule A rows stratified by company size and match path (exact, alias, prefix token, override). Confirm whether prefix-token matching survives the CITIZENS fix.
-4. Exclusion audit. Take a stratified sample of excluded rows after the CITIZENS fix, plus flagged-ambiguous kept rows. Report the true-misattribution share and the share a reviewer would exclude.
-5. Recompute the beneficiary direction share. Produce a dollar-weighted support/oppose/party split per industry and named cycle, with a stated denominator, to replace the 89% figure, which is either a row share or an unsourced dollar share.
-6. Cash-attribution sensitivity. Compare proportional, FIFO and LIFO, permute same-day ordering, and report the share of attributed dollars that moves. Decide whether allocate() and pac_cash_model should share one rule.
-7. Amendment census. Using bulk files, count how often amendments change amount versus date, and compare count_latest against alternatives. Include the $176,942.05 Crypto off-by-cents memo parent as a test case.
-8. openFEC versus bulk reconciliation. On a random sample of committee-cycles, measure the false-zero and shortfall rates of recordsTotal. Confirm the rate-limit scope from documentation only, with no load tests.
-9. Flag the WinRed break. Mark every employee-giving series, partisan share or backtest window that spans 2018 to 2020 as affected by a reporting artifact, or split it at 2020.
-10. Upstream blind-spot sizing. Measure the share of industry-linked super PAC receipts that come from non-committee entities (501(c)s and LLCs), by cycle, and label it as unresolved upstream.
-11. Citation hygiene. Settle the Kim/Stuckatz/Wolters version of record (2020 working paper, 2023 version, JOP 2026) and whether SOC 27-3030 appears in it. Fetch and verify the online-scan leads before citing any of them.
+1. Earmark double count (Bouton 2022 versus guard G3's removal under R5/R8). Count the committee-itemized earmarked rows that have a conduit twin, and their dollars, per industry and cycle. Check whether the twin pairs share a sub_id or tran_id. Measurement only; any change is Paul's.
+2. Hand-coded audit sample. Build one labelled sample of Schedule A rows covering employer truth, person identity and receipt role, stratified by company size, surname frequency and exclusion reason. Use it to estimate employer-match precision and recall, the false-merge rate by ladder rung, and the true misattribution share among excluded rows (excluding the CITIZENS/CITI block).
+3. AUTO-rung stress check from existing data. Count AUTO merges that involve suffix-free same-name pairs at the same zip and employer, and high-frequency surnames in dense zips. Estimate how company totals would move if street agreement were required. Report only.
+4. Cash-proportional sensitivity. Recompute attributed PAC totals under proportional, FIFO, LIFO and lowest-intermediate-balance rules, and under alternative same-day orderings, for 2024. Report the spread per company as an uncertainty band. Also diagnose why the first application failed the cash gate.
+5. The 89% oppose figure. Find its source (the R/export_guards.R:278 comment), then recompute the support, oppose and party split in dollars from Schedule E with the cycle and industry named. Retire the 89% dollar wording until that is done.
+6. FEC amendment-chain census from bulk files. Measure how often amendments change the amount, the date or the tran_id, and compare totals under count_latest with tran_id-level resolution. Test a sub_id or tran_id key against the off-by-cents memo-parent defect.
+7. openFEC versus bulk reconciliation. Measure false-zero and short-count rates by endpoint and cycle for a committee sample. Settle per-key versus per-IP rate limiting from the documentation and existing logs, with no load testing.
+8. Coverage labels. Add a coverage-break note naming the window to any cross-cycle or partisan split of employee or conduit giving that spans 2018-2020 (Bonica 2025, Bouton 2022). This is display wording for Paul to approve.
+9. Literature search to fill the gaps. Look at forensic-accounting and legal commingled-fund tracing (for cash attribution), FEC line-number and memo-code documentation (for receipt role), and any published precision and recall for fastLink on FEC donors (for the identity ladder).
+10. Extension leads, all UNVERIFIED until a second path reproduces them (DE-062). (a) A Fremeth-style test of CEO substitution when the PAC is at its limit, on Chief-tier gifts. (b) A verified-affiliation rule linking executive foundations and donor-advised funds to roster people, consistent with strict-names. (c) Leadership-PAC donation edges for 2018-2020, labelled as donation records only (D-025).

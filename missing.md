@@ -28,12 +28,8 @@ Web-scan results: see _work/missing_sources.md
 - Unidentified Google Books id=TtduEAAAQBAJ (Lobbying)
 - Neural Networks bare links: redalyc 297176235002; EBSCO 162692885; EBSCO 183882663
 - Optimization bare link FAIA 397 p.583
-- Ansolabehere, de Figueiredo & Snyder 2003, JEP (sector-growth plan; flip_model.py)
 - Cox & Magar 1999, APSR (sector-growth plan)
-- de Figueiredo & Richter 2014, ARPS (sector-growth plan)
 - Grier, Munger & Roberts 1994, APSR (sector-growth plan)
-- Kerr, Lincoln & Mishra 2014, AEJ:Policy (sector-growth plan)
-- Snowberg, Wolfers & Zitzewitz 2007, QJE (sector-growth plan)
 - Hall & Wayman 1990 (flip_model / money_response)
 - Fowler, Garro & Spenkuch 2020 (money_response)
 - Coppock persuasion effect sizes (scenario calibration)
@@ -43,7 +39,7 @@ Web-scan results: see _work/missing_sources.md
 - Volden & Wiseman federal LES / Center for Effective Lawmaking (only the Bucchianeri et al. 2025 state study is on disk)
 - Nokken & Poole dynamic ideal points
 - Norgaard & Klemmensen 2019; Schumacher & Zettler 2019
-- Cao & Kosinski 2024; Peters & Matz 2024 (LLM trait scoring)
+- Peters & Matz 2024 (LLM trait scoring)
 - Valente 2012; Yu 2019; Rienks & Heylen 2005 (turn-statistic dominance)
 - Matz et al. 2017; Hackenburg & Margetts 2024
 - Russo et al. 2023; Brandenberger 2018; Montgomery & Nyhan 2017; Shalizi & Thomas 2011; Nay 2017 (cosponsor-forecaster protocol)

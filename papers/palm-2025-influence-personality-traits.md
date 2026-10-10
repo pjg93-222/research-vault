@@ -115,3 +115,4 @@ The paper partly supports Paul's framing ("very agreeable, or submissive to auth
 
 ### Linked from
 - [[selfhout-2010-emerging-late-adolescent]] — complements — Palm reviews personality as a moderator of persuasion, the monadic receptivity question. Selfhout shows that in tie formation the pairwise similarity effect outweighs individual levels.
+- [[peters-2024-language-models-infer]] — complements — Palm and Tims is a systematic review of whether Big Five traits moderate persuasion strategies. The research note lists its evidence status as unverified, so this link is kept on the note's abstract only.

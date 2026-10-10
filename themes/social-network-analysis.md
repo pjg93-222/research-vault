@@ -1,341 +1,381 @@
 ---
 type: theme
 name: "Social Network Analysis"
-paper_count: 21
+paper_count: 23
 tags: [theme]
 ---
 
 # Social Network Analysis
 
-The theme holds 21 works. Paul's annotated bibliographies describe a single ambition: turn heterogeneous political records (cosponsorship, committee rosters, donations, tweets, press text, lobbying filings) into graphs. The graphs would then support communities, coalitions, champions, path-finding and allocation. In his notes, community detection (Louvain) and centrality are the default tools. He tags [[malaterre-2024-inferring-social-networks]] as "Priority Very High, Foundational". His recurring open problems are:
+**Social Network Analysis: literature synthesis (23 works, written 2026-10-10)**
 
-- converting bipartite or multi-layer data into a graph that path-finding can run on;
-- temporal weighting;
-- the sign of edges;
-- which centrality to use.
+The theme holds 23 works. They range from a 1996 expository primer ([[haythornthwaite-1996-social-network-analysis]]) to 2025-2026 papers on hypergraphs, multilayer networks and legislative citation networks. Read together, they make one argument that runs against how network outputs are usually quoted: **network position is a measurable property of how a graph was built. It is not, by default, a measure of influence, access or closeness.** The strongest legislative papers converge on this from different directions:
 
-Read together, the works answer those problems more sceptically than the original plan assumed. Four messages repeat across independent papers:
+- Off-the-shelf centralities barely separate passed from failed House bills ([[sotoudeh-2024-network-based-measure]]).
+- Those centralities lose significance once endogeneity in cosponsorship is corrected ([[battaglini-2018-effectiveness-connected-legislators]]).
+- Centrality tracks resources and embeddedness, not influence ([[azaiez-2025-hypergraph-analysis-european]]).
+- Centrality depends on where a topic-limited graph is cut ([[ardekani-2026-computational-graph-theoretic]]).
+- A centrality ranking built from expert-weighted measures is never checked against an outcome ([[christopher-2016-mathematical-modeling-analysis]]).
 
-1. **Construction decides the result.** Projecting group events (meetings, bills, committees) onto pairwise ties changes who looks central ([[azaiez-2025-hypergraph-analysis-european]], [[porter-2005-network-analysis-committees]]). So does cutting a graph to one topic ([[ardekani-2026-computational-graph-theoretic]]), and so does adding a layer whose links barely overlap the base graph ([[baptista-2022-universal-multilayer-network]]).
-2. **Off-the-shelf centrality is a weak stand-in for influence.** It barely separates passed from failed House bills ([[sotoudeh-2024-network-based-measure]]). Degree, closeness and betweenness explain no PAC money ([[battaglini-2016-influencing-connected-legislators]]). In the EC register, centrality tracks resources and embeddedness ([[azaiez-2025-hypergraph-analysis-european]]). The signed form rewards majoritarians over cue-providers ([[ringe-nd-pinpointing-powerful-voting]]). This backs the June 2026 retirement of cosponsor centrality from the Influence pillar. It also backs D-025: graph ranks are heuristic model outputs, never closeness, access or introduction probabilities.
-3. **Sign matters, but observed negative signals are noisy.** Negative ties define the House's fluid third coalition ([[aref-2021-identifying-hidden-coalitions]]). Contact with adversaries goes with *less* co-voting ([[ringe-2013-pinpointing-powerful-voting]]). But negative interactions are low-precision proxies for negative ties ([[tang-2015-negative-link-prediction]]), and partitions need a rewired null before a faction claim can stand ([[leskovec-2010-predicting-positive-negative]]).
-4. **Text-inferred ties are attention similarity, not relationships.** [[malaterre-2024-inferring-social-networks]] says this outright. Two system nulls agree with it: 49% stance co-movement on the HCoI layer, and 4 of 41 cosponsor-isolated members recovered.
+This fits the project's D-025 wording rule and the June retirement of the direction-blind InfluenceScore. It does not license new influence claims.
 
-Most works are descriptive and drawn from other domains: online trust platforms, biology and airports, philosophy of science, adolescent friendship. Only a handful use inferential network-dependence models: [[gaynor-2022-financial-ties-bind]] (ERGM), [[selfhout-2010-emerging-late-adolescent]] (SAOM), [[battaglini-2016-influencing-connected-legislators]] (SAR) and [[ringe-2013-pinpointing-powerful-voting]] (crossed random effects). None of the 21 has a causal design.
+Paul's own notes, gathered from six annotation documents that feed this theme, frame SNA as a transferable toolkit. The idea is to turn heterogeneous sources (citations, filings, tweets, donations, committee rosters) into weighted, directed or multilayer graphs, then run community detection (Louvain) and centrality. His tagged priorities are [[malaterre-2024-inferring-social-networks]] (Very High, Foundational) and [[haythornthwaite-1996-social-network-analysis]] (Medium, Theory). He repeatedly names four gaps:
+1. Two-mode data must be converted into one-mode graphs before path-finding can run.
+2. Temporal weighting is missing.
+3. There are no rules for the sign of a tie, such as negative replies and mentions ([[fink-2023-congressional-social-network-dataset]]).
+4. Directionality and causal order are unresolved ([[porter-2005-network-analysis-committees]], [[haythornthwaite-1996-social-network-analysis]]).
 
-Two caveats apply to everything that follows. Several system bearings in the file are single-agent readings. Those marked UNVERIFIED are leads, not findings (DE-062). Two works ([[cao-2025-social-network-group]] and [[vanderdoes-2022-strategic-identity-signaling]]) and parts of [[selfhout-2010-emerging-late-adolescent]] carry only UNVERIFIED bearings.
+The corpus answers some of these well: sign (the five signed-network works) and projection bias (see [[azaiez-2025-hypergraph-analysis-european]]). It answers others poorly: temporal dynamics, path-finding and US lobbying networks.
 
-Housekeeping:
-- The slug [[ringe-2013-pinpointing-powerful-voting]] has no title metadata. Its summary identifies it as Ringe, Victor and Gross (BJPS 2013).
-- [[vanderdoes-2022-strategic-identity-signaling]] is van der Does, Galesic, Dunivin and Smaldino (PNAS 2022).
-- Paul's own notes name several SNA works that are not in this theme file: Kim and Kunisky, Bacik et al., Bonica, Valujeva et al., Zhang et al., Huneeus and Kim, Furnas et al., Oropeza-Martinez et al., and Rongkuan et al.
+Five strands organise the works:
+1. Foundations and vocabulary.
+2. Centrality as a measure of legislative power, which is contested.
+3. Signed ties, balance and coalitions.
+4. Group co-membership, projection and multilayer construction.
+5. Ties inferred from text and interaction traces, and how ties form.
+
+Most bearings on Paul's systems are VERIFIED or VERIFIED-SOFTENED readings against named components. The ones from [[cao-2025-social-network-group]], [[selfhout-2010-emerging-late-adolescent]] and [[vanderdoes-2022-strategic-identity-signaling]] are UNVERIFIED single-agent leads (DE-062), not findings.
+
+Two of the corpus's methods resemble project proposals that were measured and REJECTED. Both are flagged wherever they appear:
+- **Per-edge volume normalization:** Porter's normalized interlock and Aref's SDSM backbone, if they were used to fix the degree artifact.
+- **Dropping regular cosponsorship edges:** the 2016 Battaglini-Patacchini avoidance of cosponsorship could be misread as support for this.
 
 ## Strands
 
-### Constructing the graph: projection, co-membership, hypergraphs and layers
+### Foundations: what a tie is, and what the decision-making frame adds
 
-Works: [[porter-2005-network-analysis-committees]], [[azaiez-2025-hypergraph-analysis-european]], [[baptista-2022-universal-multilayer-network]], [[haythornthwaite-1996-social-network-analysis]], [[fink-2023-congressional-social-network-dataset]], [[gaynor-2022-financial-ties-bind]], [[ardekani-2026-computational-graph-theoretic]]
+Both works are **vocabulary sources, not evidence**. Neither has a sample that transfers to legislators, staffers or lobbyists.
 
-This strand asks how political records become nodes and edges. Paul's repeated stated gap is the step from a bipartite or two-mode source to a graph that algorithms can use. He raises it for Kim and Kunisky, and for Mason, Porter and Mucha (members and committees on one graph).
+[[haythornthwaite-1996-social-network-analysis]] (Paul's tag: Priority Medium, Theory) defines three attributes of a relationship: content, direction and strength. A tie bundles all the relationships between two actors. The article sets out five principles (cohesion, structural equivalence, prominence, range, brokerage) and warns that cutting tie strength at a threshold throws information away. Paul's annotation calls it thin on graph construction and flags directionality and information availability as validity threats. Used as a checklist against the built graphs, it exposes four things:
+- The R Stage 3 scrape keeps sponsor-to-cosponsor direction, but `load_network` averages the two directions. The cascade kernel therefore runs undirected.
+- Strength is kept as a value (original 1.0, regular 0.5, times 1/sqrt(C)), which the article endorses.
+- Multiplexity never strengthens a tie. Media edges either fill pairs with no tie or take the maximum of the two weights.
+- Brokerage (betweenness) lives only inside the retired InfluenceScore.
 
-**Projection is the default, and it distorts.**
-- [[porter-2005-network-analysis-committees]] projects the member-by-committee network for the 101st-108th Houses onto committee pairs. It weights each pair by a "normalized interlock" (observed shared members divided by the count expected by chance) and finds nested levels of structure. The Intelligence cluster runs at 14.4-26.6 times chance. No interlock has a significance test.
-- [[azaiez-2025-hypergraph-analysis-european]] keeps EC meetings (Dec 2019 - Nov 2024; 5,717 nodes, 18,561 meetings) as hyperedges. It shows that clique projection inflates nodes that attend a few large meetings: coreness on the projection agrees only weakly with hypercoreness. This is the most portable result in the theme for Melange. Melange's cosponsor network and its staffer co-tenure containers are both clique projections. The paper is direct evidence for the open owner ruling on staffer container-size normalization, and it helps explain the recorded r = 0.87 between staffer degree and office size.
+The article's split between sources that inform and close ties that legitimate (after Coleman, Katz and Menzel) loosely parallels the engine's two-factor kernel. It is a parallel, not support.
 
-**Multiplexity and layers.**
-- [[haythornthwaite-1996-social-network-analysis]] defines a tie as a bundle of relations with content, direction and strength. It warns against thresholding strength. Read against the built graphs: Melange keeps strength (role weights scaled by 1/sqrt(C)) but loses direction (keys are sorted and the two directions averaged) and multiplexity (a pair tied in several channels never gets a stronger tie).
-- [[baptista-2022-universal-multilayer-network]] adds the test discipline. A layer helps only when its bipartite links overlap the base graph: only 23% of genes and 5% of diseases are shared in the failing biological case. Randomizing the links erases the gain. The Congress multilayer builder merges five layers into one weight. No held-out test checks whether any layer earns its place, and the staffer PageRank is checked for sensitivity on damping only, never on how mass is split across layers.
+[[cao-2025-social-network-group]] is a narrative review with a bibliometric map: 917 Web of Science articles, snapshot 25 Sept 2024. It covers 'social network group decision making' among small expert panels whose trust is elicited or preset. It contributes three framings:
+- Decay of trust along chains (path length, node importance) is unstudied. That is exactly the status of the staffer router's uncalibrated 0.8-per-hop factor, its 5-year half-life, and the ASKM product in the recruitment chain.
+- A single most-reliable path is different from aggregating trust over many paths. The recruitment chain's own comment calls its single-path result a floor.
+- 'Pseudoconsensus': agreement inside a subgroup is not agreement between subgroups. This applies to the Ward press-lean blocs, which are all labelled pro-CU.
 
-**Directed, normalized edges from behaviour.**
-- [[fink-2023-congressional-social-network-dataset]] builds a directed Twitter interaction graph for the 117th Congress (window Feb 9 - June 9 2022; 475 members after a 100-tweet floor). Each edge from i to j counts j's interactions with i's tweets and is divided by i's tweet count. It is the method source for press_engagement_layer.py.
-- social_interaction_layer.py cites Fink but divides by the engaging member's own volume, which is the opposite end of the dyad. It also uses a 25-post floor and drops quotes and replies.
-- Both layers are mean-symmetrized, which discards Fink's direction. The denominator reading comes from code only and is UNVERIFIED (DE-062).
+Every Cao bearing is UNVERIFIED (DE-062).
 
-**Money and co-membership as ties.** [[gaynor-2022-financial-ties-bind]] builds the member-to-member Leadership PAC network for the 115th House: 450 nodes and 12,870 directed edges, with ties treated as binary and weights ignored. Mentat already holds the FEC sponsor links needed to rebuild it. [[ardekani-2026-computational-graph-theoretic]] shows how a breadth-first cut from a seed node shapes every downstream statistic. In its New Zealand Acts graph the seed Act ranks 2nd at 2 layers and falls out of the top 50 at 3.
+Where they agree: both say relational structure has to be specified (direction, strength, propagation rule) before any measure means anything. Neither validates a constant.
 
-**Caution.** Porter's normalized interlock is a per-edge size normalization. Per-edge volume normalization of cosponsor edges was measured in this project and REJECTED. Porter must not be cited to reopen it. Azaiez's projection-inflation result bears on the staffer container question, not on that rejected cosponsor proposal.
+Works: [[haythornthwaite-1996-social-network-analysis]], [[cao-2025-social-network-group]]
 
-### Does network position measure influence? Centrality against outcomes
+### Centrality as a measure of legislative power (contested)
 
-Works: [[sotoudeh-2024-network-based-measure]], [[battaglini-2016-influencing-connected-legislators]], [[ringe-nd-pinpointing-powerful-voting]], [[christopher-2016-mathematical-modeling-analysis]], [[ardekani-2026-computational-graph-theoretic]], [[azaiez-2025-hypergraph-analysis-european]], [[haythornthwaite-1996-social-network-analysis]]
+This is the strand with the most direct bearing on Moneyball's rank pillars and Melange's Katz-Bonacich benchmark. **The works agree that generic centralities are weak or fragile signals. They disagree on whether a model-derived measure rescues the idea.**
 
-Paul's notes treat centrality choice as an open research item: "centrality types need more research" (Ardekani), and Viral Centrality needs testing (Fink). The works converge on a negative answer for generic centralities and a conditional one for theory-derived measures.
+- [[sotoudeh-2024-network-based-measure]] covers the House, 111th-115th Congresses (2009-2019), in non-overlapping 4-month windows of bills. A decayed, party-normalized pass/total cosponsorship score separates passed from failed bills (relative difference 0.248 for the max-cosponsor score versus 0.139 for the mean, at a 6-month half-life). Eigenvector, closeness and strength on the same matrix barely do (0.002-0.004). The study is descriptive only: no controls, no significance tests, no strata. A bill also counts toward its own score.
+- [[battaglini-2016-influencing-connected-legislators]] is a game-theoretic NBER working paper, not peer reviewed. Interest groups pay legislators in proportion to their Bonacich centrality. Its SAR fit uses House PAC totals for the 2004-2012 cycles, on N=2,128 member-Congress rows for committee ties and N=1,166 for alumni ties. The spillover phi is 0.209 on committee ties and 0.084 on alumni ties. Degree, closeness and betweenness add nothing (R^2 stays 0.148). The authors **deliberately avoid a cosponsorship network because cosponsorship is itself driven by money** (fn. 30).
+- [[battaglini-2018-effectiveness-connected-legislators]] is its empirical twin, also an NBER working paper. It covers the House, 109th-113th Congresses, N=2,176 member-Congress rows, with LES as the outcome. It does use cosponsorship, correcting it with an alumni-tie control function. Phi rises from 0.44 to 0.83 after the correction. Betweenness, closeness and eigenvector are significant naively but not after correction. Only the model-derived Katz-Bonacich term survives a horse race. Cross-party and within-party ties have similar coefficients (0.87 vs 0.83), so this is reported by stratum, not pooled.
+- [[ringe-nd-pinpointing-powerful-voting]] is an online appendix only: a proof, 1,000 simulated networks per complexity class, and 897 MEPs in an unstated term. It shows a sign-blind (absolute-value) co-voting centrality picks out the cue-provider where the signed measure rewards 'majoritarians'. The authors call the results 'highly dependent on parameterization'.
+- [[christopher-2016-mathematical-modeling-analysis]] ranks 8 dark-money organisations with TOPSIS over eight centralities, weighted by the authors' own AHP judgments (out-degree weight 0.502). It is never validated against an outcome, and it admits 'no significant changes' versus plain out-degree.
+- [[ardekani-2026-computational-graph-theoretic]] (Paul's annotation) builds a New Zealand Acts citation network to depth 3 (6,021 of 17,709 Acts). The seed Act ranks 2nd on Katz prestige at 2 layers and leaves the top 50 at 3 layers. Centrality on a topic-cut graph therefore depends on the cut. Paul notes the network does not track lobbying, consulting, co-sponsorship or money, and that 'centrality types need more research'.
 
-**Evidence against generic centrality.**
-- [[sotoudeh-2024-network-based-measure]] (111th-115th House, 2009-2019, non-overlapping 4-month windows). Eigenvector, closeness and strength centralities on the pass/total matrix barely separate passed from failed bills: relative difference 0.002-0.004. An outcome-built pairwise score does much better, 0.248 for max-cosponsor at a 6-month half-life. The study is descriptive, with no controls or tests, and has leakage: a bill counts toward its own score, and edges can include later passage.
-- [[battaglini-2016-influencing-connected-legislators]] (House, 2004-2012 cycles) gives a game-theoretic reason why interest groups should pay legislators in proportion to Bonacich centrality. Degree, closeness and betweenness add nothing to a PAC-money regression (R^2 stays at 0.148). It is an NBER working paper and not peer-reviewed.
-- [[azaiez-2025-hypergraph-analysis-european]] (1,178 EC-registered companies) finds hypercoreness tracks lobbying FTE (standardized 0.464) and assets (0.253). It reads centrality as embeddedness driven by resources, association only. Its own Discussion slips into "access and influence" wording, which must not carry over.
-- [[ringe-nd-pinpointing-powerful-voting]] shows in simulation (1,000 networks per class, 100 legislators) that signed co-voting centrality can rank majoritarians above the true cue-provider. A sign-blind (absolute-value) measure recovers the cue-provider. The authors call this "highly dependent on parameterization".
+**Agreement.** Generic degree, closeness, betweenness and eigenvector centralities do not hold up against outcomes (Sotoudeh on passage, Battaglini 2016 on money, Battaglini 2018 on LES). This backs the retirement of the direction-blind InfluenceScore and the two-axis rule that keeps influence and alignment separate.
 
-**Construction-dependence.** [[ardekani-2026-computational-graph-theoretic]] uses in-direction Katz prestige on a citation graph, which differs from Battaglini's out-direction Katz-Bonacich. The two must not be conflated in kb_benchmark.py.
+**Disagreement.**
+- Cosponsorship as a substrate: Battaglini 2016 rejects it, Battaglini 2018 corrects for it, Sotoudeh uses it raw.
+- Whether sign-blindness is a flaw or a feature: Ringe-nd treats it as a property of a leadership measure.
 
-**What not to do.** [[christopher-2016-mathematical-modeling-analysis]] ranks nodes of a dark-money network with an AHP-weighted TOPSIS over eight centralities, led by out-degree (weight 0.502). It never checks the composite against an outcome. That is the same shape as the retired cosponsor InfluenceScore. Its consistency ratio and one-weight sensitivity sweep are documentation devices, not validation.
+**FLAG:** Battaglini 2016's decision not to build a cosponsorship network must not be read as support for dropping regular cosponsorship edges. That proposal was measured and REJECTED in this project.
 
-[[haythornthwaite-1996-social-network-analysis]] supplies the vocabulary: betweenness as brokerage, and degree and closeness as prominence. It tests none of them.
+### Signed ties, structural balance and coalitions
 
-**Net reading.** Across House cosponsorship, House PAC money and the EC register, the three empirical centrality studies agree on one point: standard centralities are weak, unstratified signals of the outcomes studied, each measured in its own window and population. This supports the system's two-axis rule (influence and alignment kept separate), the retirement of cosponsor centrality from the Influence pillar, and D-025 wording. Any check of a passage-weighted InfluenceScore against bill passage would be circular, because the edges are already weighted by passage.
+This strand answers Paul's 'sign of ties' gap ([[fink-2023-congressional-social-network-dataset]] annotation) most directly. **The works agree that sign carries information. They disagree on whether global faction structure is real or an artifact of the baseline.**
 
-### Signed networks, balance and hidden coalitions
+- [[aref-2020-detecting-coalitions-optimally]] builds an SDSM signed backbone of cosponsorship for each chamber and Congress, 96th-114th (1979-2016). It solves the 2-group frustration problem exactly. Balance is high and rising: the triangle and frustration indices correlate at 0.95 in the House and 0.91 in the Senate. In session-level mediation on 19 sessions per chamber (association only), coalition partisanship partly offsets the House decline in passage (indirect beta 0.510). The Senate shows no effect, so the results are chamber-stratified.
+- [[aref-2021-identifying-hidden-coalitions]] builds on it. It covers 19 House sessions (1981-2017, about 445 members each), solved to global optimality for k groups. In every session, frustrated edges fall from the party split to the optimal 2-partition to the optimal 3-partition. The third coalition (4-69 members) is ideologically fluid and is the most effective coalition on CEL LES in most sessions. It is defined by negative ties: 21.18 negative per positive tie, against 2.68 for the main blocs. The study is descriptive, with no controls. Paul's annotation values the computational efficiency and notes there is no path-finding and no temporal tracking of coalitions.
+- [[leskovec-2010-predicting-positive-negative]] uses Epinions (85.0% positive edges), Slashdot (77.4%) and Wikipedia adminship votes (78.7%). Triad features predict edge sign at about 93-94% accuracy on balanced samples of edges with at least 25 common neighbours. **A global two-faction partition does not beat degree-preserving rewired networks**, so there is no significant faction structure in these online networks.
+- [[tang-2015-negative-link-prediction]] builds on Leskovec's triad features. It finds that a negative interaction is a real but low-precision proxy for a negative link: the negIn rule reaches precision 0.2097 on Epinions and 0.1483 on Slashdot, and the best negative-class F1 is 0.3242 / 0.2441. Signed triads are mostly balanced (92.31% / 93.01%).
+- [[ringe-2013-pinpointing-powerful-voting]] covers one European Parliament committee (32 of 65 offices responding to the 2007 staff survey; 40 final roll calls, 2004-2008; n=1,319 non-unanimous dyads). For opposing-bloc pairs, each unit of connectivity goes with about 10% lower odds of co-voting. A contact with an opponent is therefore associated with disagreement, not alignment. Bloc dominates (log-odds 2.91).
 
-Works: [[aref-2020-detecting-coalitions-optimally]], [[aref-2021-identifying-hidden-coalitions]], [[leskovec-2010-predicting-positive-negative]], [[tang-2015-negative-link-prediction]], [[ringe-2013-pinpointing-powerful-voting]], [[ringe-nd-pinpointing-powerful-voting]], [[cao-2025-social-network-group]]
+**Agreement.** Local balance holds (Tang, Leskovec). Negative ties carry information that unsigned or positive-only graphs lose (Aref 2021, Ringe 2013). Party is not the best partition (Aref).
 
-Paul's stated gaps include the sign of reply and mention edges, and how to score agreement when sentiment is negative (Fink). This strand is where the theme speaks most directly to the built diagnostic signed-coalition layer.
+**Tension.** Aref compares optimal partitions only against the party and one-cluster baselines. Leskovec shows a partition objective can look good while losing to rewired nulls. Any frustration result needs a rewired or sign-permuted null.
 
-**The Aref and Neal programme.**
-- [[aref-2020-detecting-coalitions-optimally]] builds signed SDSM backbones of cosponsorship for each chamber, 96th-114th Congress (1979-2016), and computes the exact two-group frustration index. Balance is high and rising, which the authors read as polarization. Exact House solves take up to about 13.5 h (113th Congress, 75,771 edges); Senate solves take about 4 s.
-- [[aref-2021-identifying-hidden-coalitions]] extends this to k groups for 19 House sessions (1981-2017). In every session, party fits worse than the optimal 2-partition, which fits worse than the optimal 3-partition. The small third coalition (4-69 members) is ideologically fluid. It is the most effective coalition on CEL LES in most sessions. It is defined by negative ties: 21.18 negative per positive, against 2.68 in the main blocs. All of this is descriptive, with no controls.
+**FLAG:** the SDSM backbone in Aref 2020/2021 must not be adopted as a fix for the cosponsor network's degree artifact. That would be per-edge volume normalization, which was measured and REJECTED.
 
-**Corroborating that negative ties carry information.**
-- [[ringe-2013-pinpointing-powerful-voting]] (Ringe, Victor and Gross 2013; EP Environment Committee, staff survey 2007 with 32 of 65 offices responding; 40 roll calls 2004-2008). Among opposing-bloc dyads, each extra unit of connectivity goes with about 10% lower odds of co-voting (95% CI 7-13%, n = 1,319 non-unanimous dyads). Contact with an adversary is a cue for disagreement, not a conduit for agreement.
-- [[ringe-nd-pinpointing-powerful-voting]] argues that negative co-voting correlations carry cue-provider information. That bears against the June vote backbone, which dropped its negative side.
+### Group co-membership, projection and multilayer construction
 
-**Cautions from link-prediction work** (online trust platforms, not legislatures).
-- [[leskovec-2010-predicting-positive-negative]] (Epinions, Slashdot, Wikipedia). Local balance and status predict edge signs well, at about 93-94% on balanced high-embeddedness samples. But global two-faction partitions score below degree-preserving rewired nulls, so no significant faction structure is found. Any partition claim needs a rewired or sign-permuted null.
-- [[tang-2015-negative-link-prediction]] (Epinions and Slashdot). A negative interaction is a real but low-precision proxy for a negative link: precision 0.2097 and 0.1483 for the negIn rule.
+This strand addresses Paul's 'bipartite to one-mode' gap: how to show members and committees, or members and events, on one graph. **Each work warns that the projection step changes the answer.**
 
-**Pseudoconsensus.** [[cao-2025-social-network-group]] warns that agreement inside a subgroup is not agreement across subgroups. The bearing is UNVERIFIED and concerns the all-pro-CU Ward press blocs.
+- [[porter-2005-network-analysis-committees]] (Paul cites it as Mason and Mucha) projects House member-by-committee rosters onto a committee graph for the 101st-108th Congresses. Edges are weighted by a 'normalized interlock' (observed shared members divided by the number expected at random). Clustering shows subcommittees nested inside their parents; the Intelligence cluster shows interlocks 14.4-26.6 times chance. A rank-2 SVD of the 107th House roll calls (990 votes) splits into a bipartisan axis (45.3% of the sum of squares) and a partisan axis (29.6%). No significance tests are reported. Paul's annotation raises the chicken-or-egg problem (partisanship versus committee selection) and the lack of a way to show members and committees together. **FLAG:** the normalized interlock is a per-edge size normalization. It must not be carried over to cosponsor edges, where per-edge normalization was measured and REJECTED.
+- [[azaiez-2025-hypergraph-analysis-european]] covers European Commission meetings from Dec 2019 to Nov 2024 (5,717 nodes, 18,561 meetings). Its core methodological result: **clique projection inflates nodes that attend a few large meetings**, and projected coreness agrees only weakly with hypergraph coreness. Hypercoreness rises with lobbying FTE (0.464) and assets (0.253) in a standardized OLS over 1,178 companies (R^2 0.398, association only, reverse causation possible). The authors read centrality as embeddedness, not influence.
+- [[baptista-2022-universal-multilayer-network]] generalises random walk with restart to any mix of multiplex and bipartite layers. Its gene and airport tests show an added layer helps only when its bipartite links overlap the base graph (23% of genes and 5% of diseases overlap in the case that failed). Top-ranked outputs were unstable across 125 parameter sets in the airport network. There is no evidence about legislatures.
+- [[gaynor-2022-financial-ties-bind]] (Paul's annotation) covers House member-to-member Leadership PAC giving, 115th Congress (450 nodes, 12,870 directed edges), with an ERGM per party. Cross-party giving is almost nil. Caucus co-membership raises giving inside the caucus (Freedom Caucus +1.208, Tea Party +0.686, Progressive +0.381). Republican leaders give to 86% of members but about 30% of Freedom Caucus members. Vulnerable members (Cook PVI 'likely', Oct 2018) are about 70-75% more likely to receive a tie, retirees about 40-45% less likely. Ties are binary, and text and tables disagree in places. Paul notes the study omits committee action, voting and co-sponsorship.
+- [[montgomery-2017-effects-congressional-staff]] covers House personal-office staff shared within the current or previous two Congresses, 105th-111th, using Bayesian SAR models. It finds a small senior-staff lag on LES (pooled rho 0.043, CI 0.0095-0.096) and weaker or null results otherwise. Placebos do not rule out homophily, and committee staff are excluded.
 
-**System consequence.** signed_coalitions.py cites Aref 2021 but differs from it in five ways:
-- it partitions an LLM-valenced mention graph that is 83% positive by edge count;
-- it pools House and Senate;
-- it uses heuristic local search capped at k = 3;
-- it compares only against the one-cluster baseline, with no rewired null;
-- it discards direction and has no evidence-count floor on signs.
+**Agreement.** The construction rule (projection, normalization, layer merge, time window) is a modelling decision with measurable consequences. Party and caucus boundaries are fault lines that should be modelled separately: Gaynor models each party on its own, and Montgomery runs one model per Congress.
 
-Its stored artifact (2026-07-19) shows one main bloc plus a 14-member splinter. So the system has neither reproduced nor tested Aref's finding. That finding stays UNVERIFIED until a House-only signed cosponsor-backbone reproduction runs; CEL LES is already on disk. The mention-layer negatives are best read as negative *interaction*, not negative *ties* (Tang).
+**Disagreement.** Porter corrects for size per edge. Azaiez keeps the group as a hyperedge. Baptista keeps layers separate with jump parameters.
 
-**Caution.** The SDSM backbone null (Aref) must not be adopted as a fix for degree artifacts in the cosponsor network. That would amount to the per-edge volume normalization measured and REJECTED in this project.
+### Ties inferred from text and interaction traces; how ties form
 
-### Inferring ties without tie data: text similarity, link prediction and random walks
+This strand is the closest to Paul's stated pipeline of text and filings into nodes and edges. **The works agree that inferred ties are heuristics whose meaning must be bounded.**
 
-Works: [[malaterre-2024-inferring-social-networks]], [[zareie-2020-similarity-based-link]], [[baptista-2022-universal-multilayer-network]], [[ardekani-2026-computational-graph-theoretic]], [[leskovec-2010-predicting-positive-negative]]
+- [[malaterre-2024-inferring-social-networks]] is Paul's Priority Very High, Foundational work. It runs a 25-topic LDA over 16,917 philosophy-of-science articles (1930-2017) and builds author profiles in four periods of about 21 years each (at most 8,009 authors). Authors are linked at Pearson r of at least 0.6, communities come from Louvain, and community histories are traced with Hellinger distance. Modularity rises from 0.427 to 0.834. Validation is only agreement with the known history of the field. The authors say HCoI ties are heuristics for possible ties, not social ties. Paul wants a temporal element and possibly domain-specific topic models. It is the method source for `press_hcoi.py`.
+- [[fink-2023-congressional-social-network-dataset]] covers the 117th Congress on Twitter. The common window is 9 Feb-9 Jun 2022, with 475 members after a 100-tweet floor. The edge i to j counts j's retweets, quotes, replies and mentions of i, divided by i's tweet count. The authors call this a 'probability of influence'. **Under D-025 it must be quoted as a heuristic engagement rate.** It is one snapshot with no edge uncertainty, and the Viral Centrality approximation to the independent cascade model is asserted, not tested. Paul's notes ask for sign and temporal rules and want Viral Centrality tested for compute time and as a Monte Carlo analogue.
+- [[zareie-2020-similarity-based-link]] proposes the DICN score, (1 + common neighbours) x (1 + correlation of second-order profiles). It has the highest AUC in 8 of 9 small static networks (20% hold-out, 15 repeats). Margins are about 0.01-0.055, with no variances reported.
+- [[selfhout-2010-emerging-late-adolescent]] follows 205 Dutch freshmen in 10 groups over 5 monthly waves using SIENA models. Personality acts mainly through similarity between the two people (similarity effects 1.45-1.55, significant in 7-10 of 10 groups). An individual's trait level matters far less (ego .10, alter .14). Reciprocity (1.73) and closure terms are large, so pure dyadic models misfit. Bearings are UNVERIFIED.
+- [[vanderdoes-2022-strategic-identity-signaling]] (n=481, 2020-era partisan Twitter users) finds that a larger outgroup share in the audience raises covert sharing (AME 0.73) and cuts total sharing. The authors warn that classifiers catch mostly overt speech. Bearings are UNVERIFIED.
 
-Paul's notes describe text-to-network pipelines as a core technique. He names Malaterre (topic models), Ardekani (NER and information extraction) and Kim and Kunisky (ML on lobbying reports), with Malaterre as the "Very High, Foundational" item.
+**Agreement.**
+- Text-derived or interaction-derived ties measure exposure or similarity, not relationships (Malaterre, Fink).
+- Pairwise similarity matters more than a single person's attributes (Selfhout, Zareie).
+- What actors say on observed channels is shaped by who is listening (van der Does), which limits any text-to-node pipeline.
 
-**[[malaterre-2024-inferring-social-networks]]** is the stated source of fec/network/press_hcoi.py. It fits a 25-topic LDA to 16,917 philosophy-of-science articles (1930-2017), builds author profiles in four periods of about 21 years, links authors at Pearson r of 0.6 or more, and runs Louvain. Modularity rises from 0.427 to 0.834 across the periods. The only validation is agreement with the field's known history. The authors say plainly that HCoI ties are text-mediated heuristics for *possible* ties, not social ties.
-
-The system's own results back that caveat: the HCoI layer was null for stance co-movement (49%) and recovered only 4 of 41 cosponsor-isolated members. The paper supports building the layer. It does not support reading HCoIs as coalitions, closeness or influence channels, which is the reading Paul's annotation and the holistic edge admission lean toward.
-
-**[[ardekani-2026-computational-graph-theoretic]]** adds two reporting duties: give the modularity, and run an external alignment check. Ardekani's Louvain communities match NZ committee keywords only weakly (Jaccard 0.10-0.67), and press HCoI reports neither figure. It also found hand-written regex extraction beat an LLM extractor (precision 0.96 vs 0.86 in Table 1), although the text gives a conflicting 93%.
-
-**[[zareie-2020-similarity-based-link]]** shares Malaterre's correlation-of-profiles idea, but applies it to structural neighbourhoods and multiplies it by a direct common-neighbour term. It tops AUC in 8 of 9 small, static, unweighted networks, with margins of about 0.01-0.055 and no variance reported. Its use for Melange is as a candidate dyadic feature for the cosponsor forecaster, whose only pair-level network term is the direct prior-affinity count. Any such score is heuristic similarity under D-025 and is UNVERIFIED until reproduced on the forecaster's temporal split (DE-062).
-
-**[[leskovec-2010-predicting-positive-negative]]** shows signed triads modestly improve positive-link prediction (Epinions 0.5612 to 0.5911, chance 0.50).
-
-**[[baptista-2022-universal-multilayer-network]]** generalizes random walk with restart (seed-personalized PageRank) to any mix of multiplex and bipartite layers. Its evidence is biological and airport networks, with nothing on politics. Its transferable lesson is the per-layer ablation and overlap check described in the construction strand.
-
-**Common thread.** Every inference method here is validated, if at all, on held-out links or face validity within its own domain. None is validated against a political relationship ground truth.
-
-### Money as network structure
-
-Works: [[gaynor-2022-financial-ties-bind]], [[battaglini-2016-influencing-connected-legislators]], [[christopher-2016-mathematical-modeling-analysis]], [[azaiez-2025-hypergraph-analysis-european]]
-
-Paul's allocation interest (where advocacy money should go) meets SNA in four works. All four describe where money or resources sit in a network. None shows that money moves a legislator.
-
-- **[[gaynor-2022-financial-ties-bind]]** (115th House; ERGM, binary ties, each party modelled separately). Same-caucus members give to each other more (Freedom Caucus +1.208, Tea Party +0.686, Progressive +0.381, log-odds). Republican leaders give to 86% of members but only about 30% of Freedom Caucus members. Vulnerable members (Cook PVI "likely", October 2018) are about 70-75% more likely to receive a tie, and announced retirees about 40-45% less likely. This supports Cook PVI as the vulnerability measure donors act on. It does **not** support the system's reciprocity claim that a dollar buys more in a competitive seat (D-104..D-108, NOT validated). It also exposes a structural blind spot: Melange treats co-partisans as one class and has no data on the ideological intraparty caucuses.
-- **[[battaglini-2016-influencing-connected-legislators]]** predicts Bonacich-proportional PAC allocation. Its estimated spillover is phi of about 0.08-0.25: 0.209 with committee ties (N = 2,128 member-Congress rows) and 0.084 with alma-mater ties (N = 1,166). The paper deliberately avoids cosponsorship ties because cosponsorship is itself driven by money.
-- **[[christopher-2016-mathematical-modeling-analysis]]** maps a dark-money nonprofit and LLC network that FEC data cannot see. Mentat's PAC transfer graph follows FEC-reported committee cash only.
-- **[[azaiez-2025-hypergraph-analysis-european]]** links company core position to lobbying FTE and assets in the EC register, association only. Its design needs a register that names both parties to each contact. US LD-2 filings do not, and LDA is an identity source, not an edge or weight source (D-021), so the design cannot be rebuilt from LDA.
-
-### Actor attributes, tie formation and what the ties carry
-
-Works: [[selfhout-2010-emerging-late-adolescent]], [[vanderdoes-2022-strategic-identity-signaling]], [[cao-2025-social-network-group]], [[haythornthwaite-1996-social-network-analysis]], [[ringe-2013-pinpointing-powerful-voting]]
-
-Paul's notes ask how an individual's text-derived traits (Birkenmaier) become a graph node, and his path-finding notes ask how personality should be parameterized on edges. This strand gives only indirect answers. Its bearings are mostly UNVERIFIED (DE-062).
-
-- **[[selfhout-2010-emerging-late-adolescent]]** (205 Dutch freshmen in 10 groups, five monthly waves, SIENA actor-oriented models with meta-analytic pooling). Trait *similarity* drives friendship selection: openness, extraversion and agreeableness similarity at 1.45-1.55, significant in 7, 8 and 10 of the 10 groups. Trait *levels* have small effects: extraversion ego .10, agreeableness alter .14. Reciprocity (1.73) and closure terms are large, so pair-only tests misfit. This suggests personality belongs on dyads (similarity) more than on nodes. It qualifies the receptivity layer, where every input describes one member, and the persona-homophily null. Transfer is weak: these are strangers forming friendships, not legislators.
-- **[[vanderdoes-2022-strategic-identity-signaling]]** (van der Does et al. 2022; 2020 tweets; randomized experiment, n = 481). Senders switch to covert signals as the outgroup share of their audience rises (AME 0.73 from 1 to 9 outgroup members of 10). Automated political-speech classifiers probably catch only overt speech. For the system, members facing mixed audiences may be understated by the press pillar and the DEBATE stance reader. The paper says nothing about edges, weights or reciprocity.
-- **[[cao-2025-social-network-group]]** is a taxonomy of trust propagation and consensus with no evidence. It names multiplicative per-hop decay as systematically unstudied. That describes the uncalibrated 0.8-per-hop factor and 5-year half-life in the staffer router and the single-most-reliable-path recruitment chain. It validates no constant.
-- **[[haythornthwaite-1996-social-network-analysis]]** separates sources that inform from close ties that legitimate adoption (after Coleman, Katz and Menzel). This is a loose conceptual parallel to the engine's two-factor kernel.
-- **[[ringe-2013-pinpointing-powerful-voting]]** completes the point: what a tie carries depends on its sign and on bloc membership. Pooling ties without sign misreads it.
+**Tension.** Fink names its weights 'influence', while Malaterre explicitly disclaims a social reading of its ties.
 
 ## Agreements and debates
 
-**1. Is cosponsorship a social tie, a money-driven artifact, or an outcome signal?**
-- [[sotoudeh-2024-network-based-measure]], [[aref-2020-detecting-coalitions-optimally]] and [[aref-2021-identifying-hidden-coalitions]] treat cosponsorship as the substrate.
-- [[battaglini-2016-influencing-connected-legislators]] deliberately avoids it as endogenous to money (fn. 30).
-- [[ringe-2013-pinpointing-powerful-voting]] questions it as a social-tie proxy (p. 604) but does not test it.
+**1. Does network centrality measure power or influence?**
+- *No, or only weakly, for off-the-shelf measures:*
+  - [[sotoudeh-2024-network-based-measure]]: eigenvector, closeness and strength separate passed from failed bills by only 0.002-0.004. This is relative difference within 4-month windows, House 111th-115th.
+  - [[battaglini-2018-effectiveness-connected-legislators]]: betweenness, closeness and eigenvector lose significance after the control function. House 109th-113th, N=2,176 member-Congress rows.
+  - [[battaglini-2016-influencing-connected-legislators]]: degree, closeness and betweenness leave R^2 at 0.148. House PAC money, 2004-2012 cycles.
+  - [[azaiez-2025-hypergraph-analysis-european]]: centrality reflects embeddedness and resources.
+- *Yes, if the measure is derived from a model or an outcome:* the Katz-Bonacich term in Battaglini 2018 (phi 0.71 in the horse race), Sotoudeh's passage-based score, and the sign-blind cue-provider centrality in [[ringe-nd-pinpointing-powerful-voting]] (simulation only, parameter-dependent).
+- *Assumed, never tested:* [[christopher-2016-mathematical-modeling-analysis]].
+- *Depends on graph scope:* [[ardekani-2026-computational-graph-theoretic]].
+- **Net:** no work in the theme supports reading a raw centrality rank as influence. D-025 wording holds.
 
-This is a premise dispute, not a contradiction: no work tests cosponsor ties against an independent tie measure. **FLAG:** neither Battaglini nor Ringe et al. licenses dropping regular cosponsorship edges. That proposal was measured and REJECTED in this project and must not be revived on their authority.
+**2. Is cosponsorship a valid tie substrate?**
+- [[battaglini-2016-influencing-connected-legislators]] rejects it as endogenous to money.
+- [[battaglini-2018-effectiveness-connected-legislators]] keeps it but corrects with an alumni-tie instrument.
+- [[aref-2020-detecting-coalitions-optimally]] and [[aref-2021-identifying-hidden-coalitions]] filter it through an SDSM significance backbone.
+- [[sotoudeh-2024-network-based-measure]] uses it raw.
+- [[ringe-2013-pinpointing-powerful-voting]] questions it as a social-tie proxy. That is a premise dispute, not a test.
+- **FLAG:** this debate does not reopen the REJECTED proposal to drop regular cosponsorship edges, nor the REJECTED per-edge volume normalization that the SDSM backbone would amount to if it were used as a degree fix.
 
-**2. Does centrality measure influence?**
-- Agreement: [[sotoudeh-2024-network-based-measure]], [[battaglini-2016-influencing-connected-legislators]] and [[azaiez-2025-hypergraph-analysis-european]] all find generic centralities weak or resource-driven, each on its own outcome and window.
-- Disagreement on the remedy: Sotoudeh builds an outcome-derived pairwise score; Battaglini derives Bonacich from theory; [[ringe-nd-pinpointing-powerful-voting]] argues for a sign-blind measure; [[christopher-2016-mathematical-modeling-analysis]] hand-weights a composite and never validates it.
-- [[ardekani-2026-computational-graph-theoretic]] adds that the answer moves with where the graph is cut.
+**3. Is there real global faction structure in signed networks?**
+- Aref 2020/2021 find that optimal partitions beat party in every House session, 1979-2017.
+- [[leskovec-2010-predicting-positive-negative]] finds that two-faction partitions do not beat degree-preserving rewired nulls in three online networks.
+- The two sets of results are not directly comparable: different substrates, and Aref uses no rewired null. Together they make a null model mandatory.
+- [[tang-2015-negative-link-prediction]] adds that signs derived from interactions are noisy (negIn precision 0.21 / 0.15).
 
-**3. Sign: keep it, drop it, or take its absolute value?**
-- [[aref-2021-identifying-hidden-coalitions]] and [[ringe-2013-pinpointing-powerful-voting]] find negative ties substantively informative.
-- [[ringe-nd-pinpointing-powerful-voting]] uses the absolute value, deliberately blind to sign, for leadership, while keeping alignment separate. This fits the system's two-axis rule.
-- [[leskovec-2010-predicting-positive-negative]] finds local balance strong but global factions absent against rewired nulls. That is in tension with Aref's partition results, which have no rewired null.
-- [[tang-2015-negative-link-prediction]] finds observed negative interactions are poor proxies for negative ties.
+**4. Do ties transmit, or do similar actors simply connect?**
+- [[montgomery-2017-effects-congressional-staff]] cannot rule out homophily: the placebo intervals overlap the headline estimates.
+- [[selfhout-2010-emerging-late-adolescent]] shows that selection on similarity drives tie formation.
+- [[malaterre-2024-inferring-social-networks]] disclaims any social reading of its ties.
+- [[fink-2023-congressional-social-network-dataset]] labels engagement 'probability of influence' with no test.
 
-Resolution for the system: sign matters, but signs built from interactions need evidence floors and nulls before coalition claims.
+**5. How to treat group events: project, normalise, or keep as hyperedges?**
+- [[porter-2005-network-analysis-committees]] normalizes interlocks.
+- [[azaiez-2025-hypergraph-analysis-european]] shows clique projection inflates attendees of large events.
+- [[baptista-2022-universal-multilayer-network]] keeps layers separate.
+- Unresolved for legislatures. No work runs a hypergraph treatment of cosponsorship.
 
-**4. Projection versus higher-order representation.**
-- [[porter-2005-network-analysis-committees]] and [[battaglini-2016-influencing-connected-legislators]] project co-membership onto pairs.
-- [[azaiez-2025-hypergraph-analysis-european]] shows projection changes core rankings.
-
-Porter's fix is a per-edge chance normalization. **FLAG:** per-edge volume normalization of cosponsor edges was measured and REJECTED. Do not carry Porter's interlock, Aref's SDSM null, or Sotoudeh's pass/total ratio onto cosponsor edges as a normalization fix. The 1/sqrt(C) bill-size discount already in place is a different, retained device.
-
-**5. Direction.**
-- [[fink-2023-congressional-social-network-dataset]], [[haythornthwaite-1996-social-network-analysis]] and [[leskovec-2010-predicting-positive-negative]] (status theory) all treat direction as carrying information.
-- The built layers and cascade kernel symmetrize.
-
-No work in the theme tests whether direction improves prediction in Congress.
-
-**6. Text-inferred ties as relationships.** [[malaterre-2024-inferring-social-networks]] itself says HCoIs are heuristics. Paul's annotation reads them as communities and coalitions. The system nulls side with the authors.
-
-**7. Traits on nodes or on dyads.** [[selfhout-2010-emerging-late-adolescent]] finds similarity effects much larger than level effects. Paul's open question frames trait-to-*node* conversion. The evidence suggests dyadic similarity may be the better carrier, but the bearing is UNVERIFIED and comes from a different population.
+**6. Do ties to opponents produce alignment?**
+- [[ringe-2013-pinpointing-powerful-voting]] (one EP committee): no. Connectivity to the opposing bloc goes with about 10% lower odds of co-voting.
+- [[battaglini-2018-effectiveness-connected-legislators]]: cross-party ties are about as productive as within-party ties for LES (0.87 vs 0.83).
+- The outcomes differ (co-voting vs effectiveness), so this is a tension, not a contradiction.
 
 ## Methods
 
 **Dominant methods**
 
-1. **Descriptive construction plus centrality or community detection.** Used by [[porter-2005-network-analysis-committees]], [[sotoudeh-2024-network-based-measure]], [[ardekani-2026-computational-graph-theoretic]], [[malaterre-2024-inferring-social-networks]], [[azaiez-2025-hypergraph-analysis-european]], [[christopher-2016-mathematical-modeling-analysis]] and [[fink-2023-congressional-social-network-dataset]]. Louvain (or Louvain-type) recurs in Malaterre, Ardekani and Azaiez, matching Paul's "Synthesis 1".
-   - Weaknesses: few significance tests or null models (Porter, Ardekani, Sotoudeh and Malaterre report none; Azaiez is the exception, with configuration nulls); unreported tuning (Ardekani gives no Katz alpha, Louvain resolution or seed); single snapshots (Fink); validation by face agreement only (Malaterre); leakage (Sotoudeh lets a bill count toward its own score and lets later passage enter edges).
-2. **Exact combinatorial optimization on signed graphs.** [[aref-2020-detecting-coalitions-optimally]] and [[aref-2021-identifying-hidden-coalitions]] (binary LPs in Gurobi on SDSM backbones).
-   - Strength: globally optimal partitions, not heuristics.
-   - Weaknesses: descriptive coalition-effectiveness comparisons with no controls for party, majority or committee; no rewired null for partition significance, which [[leskovec-2010-predicting-positive-negative]] shows matters.
+1. **Centrality computation:** degree, closeness, betweenness, eigenvector, Katz/Bonacich, PageRank. Used in [[sotoudeh-2024-network-based-measure]], [[battaglini-2016-influencing-connected-legislators]], [[battaglini-2018-effectiveness-connected-legislators]], [[ringe-nd-pinpointing-powerful-voting]], [[christopher-2016-mathematical-modeling-analysis]], [[ardekani-2026-computational-graph-theoretic]] and [[azaiez-2025-hypergraph-analysis-european]].
+   - *Weakness:* usually reported without an outcome test. When tested, the generic measures fail (strand 2). Attenuation and normalization choices are often not reported (Ardekani does not report alpha).
+2. **Community detection and partitioning.**
+   - Louvain: [[malaterre-2024-inferring-social-networks]], [[ardekani-2026-computational-graph-theoretic]], [[azaiez-2025-hypergraph-analysis-european]].
+   - Single-linkage clustering: [[porter-2005-network-analysis-committees]].
+   - Exact frustration minimization: [[aref-2020-detecting-coalitions-optimally]], [[aref-2021-identifying-hidden-coalitions]].
+   - *Weakness:* Louvain resolution and seed are rarely reported. External validation is face-validity only (Malaterre) or weak keyword overlap (Ardekani, Jaccard 0.10-0.67). Partition objectives are compared against party baselines but not against rewired nulls (contrast [[leskovec-2010-predicting-positive-negative]]).
 3. **Statistical network models that handle dependence.**
-   - ERGM: [[gaynor-2022-financial-ties-bind]]. Binary ties only, weights ignored, and text and tables disagree in places.
-   - Stochastic actor-oriented models: [[selfhout-2010-emerging-late-adolescent]].
-   - Spatial autoregression: [[battaglini-2016-influencing-connected-legislators]].
-   - Crossed-random-effects dyadic models: [[ringe-2013-pinpointing-powerful-voting]]. One committee, cross-sectional, results sensitive to specification.
-
-   These are the only works that model network dependence in the dyads. None of the system's dyad-level checks does.
-4. **Supervised and similarity-based link prediction.** [[leskovec-2010-predicting-positive-negative]], [[tang-2015-negative-link-prediction]], [[zareie-2020-similarity-based-link]], and [[baptista-2022-universal-multilayer-network]] (LOOCV and link prediction for RWR).
-   - Weaknesses: online-platform or biological domains; random edge holdout rather than temporal holdout (Zareie); AUC with no variance (Zareie); low negative-class precision (Tang, best F1 0.3242 on Epinions).
-5. **Simulation and formal proof.** [[ringe-nd-pinpointing-powerful-voting]] and the theory half of [[battaglini-2016-influencing-connected-legislators]]. Ringe and Wilson flag high parameter dependence.
-6. **Experiments.** [[vanderdoes-2022-strategic-identity-signaling]], randomized audience composition, the only randomized design in the theme. Its subjects are ordinary Twitter users, not elites.
-7. **Narrative and taxonomic reviews.** [[haythornthwaite-1996-social-network-analysis]] and [[cao-2025-social-network-group]]. Vocabulary only; nothing estimated.
+   - ERGM: [[gaynor-2022-financial-ties-bind]].
+   - SIENA actor-oriented models: [[selfhout-2010-emerging-late-adolescent]].
+   - Spatial autoregressive models: [[battaglini-2016-influencing-connected-legislators]], [[battaglini-2018-effectiveness-connected-legislators]], [[montgomery-2017-effects-congressional-staff]].
+   - Crossed-random-effects dyad models: [[ringe-2013-pinpointing-powerful-voting]].
+   - *Strength:* these are the only designs in the theme that model network dependence, and Battaglini 2018 is the only one with an endogeneity correction.
+   - *Weakness:* binary ties discard weights (Gaynor). The instrument validity of alumni ties is asserted. Both Battaglini papers are unrefereed NBER working papers.
+4. **Link and sign prediction.**
+   - Similarity scores: [[zareie-2020-similarity-based-link]].
+   - Triad-feature logistic regression: [[leskovec-2010-predicting-positive-negative]].
+   - Reliability-weighted SVM: [[tang-2015-negative-link-prediction]].
+   - *Weakness:* the data are small static benchmark networks or 2010-2015 online trust platforms. Evaluation is AUC-only with no variances (Zareie). None uses legislative data.
+5. **Text-to-network inference.** LDA topic profiles, a correlation threshold, then Louvain ([[malaterre-2024-inferring-social-networks]]). Rule-based extraction beats an LLM extractor ([[ardekani-2026-computational-graph-theoretic]], precision 0.96 vs 0.86 in Table 1, although the text says 93%).
+   - *Weakness:* thresholds (r of at least 0.6) discard strength, the very thing [[haythornthwaite-1996-social-network-analysis]] warns against. There is no ground truth.
+6. **Interaction-rate edges:** [[fink-2023-congressional-social-network-dataset]].
+   - *Weakness:* one snapshot, no edge uncertainty, a 100-tweet floor, and all interaction types weighted equally.
+7. **Higher-order and multilayer structure:** hypergraph rich-club and hypercore analysis ([[azaiez-2025-hypergraph-analysis-european]]); random walk with restart on universal multilayer networks ([[baptista-2022-universal-multilayer-network]]).
+   - *Weakness:* the null models cannot test the full network in Azaiez. Baptista's top ranks are unstable across parameter sets and its evidence is non-social.
+8. **Multi-criteria decision analysis:** AHP/TOPSIS ([[christopher-2016-mathematical-modeling-analysis]]).
+   - *Weakness:* the authors set the weights themselves, and there is no validation.
 
 **Cross-cutting weaknesses**
-- No work in the theme has a causal identification strategy.
-- Pooled estimates are rarely stratified. [[gaynor-2022-financial-ties-bind]] splits by party and [[ringe-2013-pinpointing-powerful-voting]] conditions on bloc; most others pool.
-- External validity to US congressional influence is limited. Only Porter, Sotoudeh, Aref (2020, 2021), Gaynor, Battaglini and Fink use US Congress data, and of those only Sotoudeh, Aref 2020 and Battaglini link network structure to an outcome, all associationally.
-- Any figure carried from these works into the system must keep the work's window, chamber and denominator, and be labelled UNSTRATIFIED when pooled across a known fault line (chamber, party).
+- Most legislative studies are descriptive, with no controls or significance tests: Sotoudeh, Porter, both Aref papers, Ardekani, Malaterre.
+- Causal identification is rare: only the Battaglini 2018 control function and the Montgomery placebos.
+- Several works run on non-legislative populations: Selfhout, Cao, Leskovec, Tang, Baptista, van der Does.
+- Senate coverage is almost absent: only [[aref-2020-detecting-coalitions-optimally]] covers the Senate, and finds no effect there.
+- Temporal dynamics are thin: Sotoudeh's decay, Selfhout's waves, and the Malaterre and Aref period slices are the only temporal treatments.
 
 ## How the works relate
 
-- [[aref-2021-identifying-hidden-coalitions]] — builds-on — [[aref-2020-detecting-coalitions-optimally]]: Same authors; the 2021 paper extends the exact 2-group frustration partition of signed SDSM cosponsorship backbones to k groups and the minimal-k clusterability index.
-- [[aref-2021-identifying-hidden-coalitions]] — same-data — [[aref-2020-detecting-coalitions-optimally]]: Both build signed SDSM backbones from congressional bill cosponsorship over overlapping periods (1979-2016 and 1981-2017).
-- [[tang-2015-negative-link-prediction]] — builds-on — [[leskovec-2010-predicting-positive-negative]]: Tang uses Leskovec et al.'s 16 signed-triad features in its 45-feature set and works on the same Epinions and Slashdot platforms.
-- [[sotoudeh-2024-network-based-measure]] — cites (shared author) — [[porter-2005-network-analysis-committees]]: Sotoudeh cites Porter et al. 2005 (ref 19), Porter is second author of Sotoudeh, and committee assignments are named as Sotoudeh's missing control.
-- [[gaynor-2022-financial-ties-bind]] — cites — [[porter-2005-network-analysis-committees]]: Gaynor cites Porter et al. 2005 (p.893) as prior House network analysis, and builds from LPAC money where Porter used committee co-membership.
-- [[aref-2020-detecting-coalitions-optimally]] — cites — [[porter-2005-network-analysis-committees]]: Aref and Neal 2020 cite Porter et al. (ref 47) as a committee-network substrate they set aside in favour of cosponsorship.
-- [[malaterre-2024-inferring-social-networks]] — same-method (Louvain) — [[ardekani-2026-computational-graph-theoretic]]: Paul's own cross-reference: both use Louvain community detection. Malaterre builds ties from text similarity; Ardekani from a relational citation graph.
-- [[zareie-2020-similarity-based-link]] — shared technique — [[malaterre-2024-inferring-social-networks]]: Both infer ties from Pearson correlation of profiles: structural neighbourhood vectors in Zareie, LDA topic profiles in Malaterre. Zareie adds a direct common-neighbour term.
-- [[baptista-2022-universal-multilayer-network]] — same-method (evaluation) — [[zareie-2020-similarity-based-link]]: Both score link prediction by holding out existing edges. Baptista uses it to evaluate RWR; Zareie to evaluate the DICN similarity score.
-- [[azaiez-2025-hypergraph-analysis-european]] — qualifies — [[porter-2005-network-analysis-committees]]: Porter projects member-by-committee co-membership onto pairs; Azaiez shows clique projection of group events changes core rankings relative to a hypergraph treatment.
-- [[azaiez-2025-hypergraph-analysis-european]] — agrees — [[sotoudeh-2024-network-based-measure]]: Both find generic centrality on projected graphs is a poor stand-in for influence. Sotoudeh: centralities barely separate passed and failed bills. Azaiez: centrality reflects embeddedness driven by resources.
-- [[battaglini-2016-influencing-connected-legislators]] — premise dispute / partial agreement — [[sotoudeh-2024-network-based-measure]]: Battaglini avoids cosponsorship ties as endogenous to money, while Sotoudeh builds on them. Both find degree, closeness, betweenness-type centralities add little to their outcome (PAC money; bill passage).
-- [[ringe-2013-pinpointing-powerful-voting]] — premise dispute — [[sotoudeh-2024-network-based-measure]]: Ringe, Victor and Gross question cosponsorship as a social-tie proxy (p. 604) without testing Sotoudeh's measure; not a contradiction.
-- [[ardekani-2026-computational-graph-theoretic]] — contrast (different quantity) — [[battaglini-2016-influencing-connected-legislators]]: Ardekani uses in-direction Katz prestige on statutes; Battaglini derives out-direction Katz-Bonacich for legislators. kb_benchmark.py implements the latter and they must not be conflated.
-- [[leskovec-2010-predicting-positive-negative]] — tension / qualifies — [[aref-2021-identifying-hidden-coalitions]]: Leskovec finds global faction partitions score below degree-preserving rewired nulls, so no significant faction structure; Aref reports coalition partitions with no rewired null. Any partition claim needs that null.
-- [[tang-2015-negative-link-prediction]] — qualifies — [[aref-2021-identifying-hidden-coalitions]]: Aref's third coalition is defined by negative ties; Tang shows negative interactions are low-precision proxies for negative ties, which bears on the system's LLM-valenced mention signs used with the Aref method.
-- [[ringe-2013-pinpointing-powerful-voting]] — agrees — [[aref-2021-identifying-hidden-coalitions]]: Both find structure below party level carried by adversarial ties: bloc-conditioned adversary contact lowers co-voting; negative cosponsor ties define the third coalition.
-- [[ringe-nd-pinpointing-powerful-voting]] — same research programme — [[ringe-2013-pinpointing-powerful-voting]]: Same first author and European Parliament setting; both treat colleagues as cue sources and keep the sign of voting relations analytically central.
-- [[ringe-nd-pinpointing-powerful-voting]] — complements — [[aref-2020-detecting-coalitions-optimally]]: Both treat signed ties as informative. Ringe and Wilson score nodes from signed co-voting correlations; Aref and Neal partition signed cosponsorship networks into coalitions.
-- [[ringe-nd-pinpointing-powerful-voting]] — complements — [[sotoudeh-2024-network-based-measure]]: Together they bound what centrality shows: eigenvector centrality is weak for bill passage (Sotoudeh); co-voting centrality is validated only against simulated ground truth (Ringe and Wilson).
-- [[christopher-2016-mathematical-modeling-analysis]] — contrast — [[sotoudeh-2024-network-based-measure]]: Couch et al. hand-weight eight centralities with no outcome check; Sotoudeh tests centralities against bill passage and finds them weak.
-- [[christopher-2016-mathematical-modeling-analysis]] — contrast — [[ardekani-2026-computational-graph-theoretic]]: Both face the choice of centrality. Ardekani picks Katz on substantive grounds; Couch et al. weight eight measures by expert judgment.
-- [[christopher-2016-mathematical-modeling-analysis]] — complements — [[gaynor-2022-financial-ties-bind]]: Both build directed money-flow networks among political organizations: dark-money nonprofits in Couch et al., member Leadership PACs in Gaynor.
-- [[gaynor-2022-financial-ties-bind]] — complements — [[battaglini-2016-influencing-connected-legislators]]: Both model House money allocation on networks: member-to-member LPAC ties shaped by caucus (Gaynor) versus PAC money proportional to Bonacich centrality over committee and alma-mater ties (Battaglini).
-- [[porter-2005-network-analysis-committees]] — same-structure (co-membership) — [[gaynor-2022-financial-ties-bind]]: Committee co-membership (Porter) and intraparty caucus co-membership (Gaynor) are both affiliation relations among House members.
-- [[porter-2005-network-analysis-committees]] — same-data, different object — [[battaglini-2016-influencing-connected-legislators]]: Both use shared House committee membership. Porter's nodes are committees; Battaglini builds member-level ties.
-- [[cao-2025-social-network-group]] — complements — [[aref-2021-identifying-hidden-coalitions]]: Cao's pseudoconsensus warning (within-group agreement is not cross-group agreement) is addressed by Aref's signed partitioning between subgroups.
-- [[haythornthwaite-1996-social-network-analysis]] — extended-by — [[aref-2021-identifying-hidden-coalitions]]: Haythornthwaite's content, direction and strength triad has no sign dimension; signed-network partitioning adds it.
-- [[haythornthwaite-1996-social-network-analysis]] — complements — [[sotoudeh-2024-network-based-measure]]: Haythornthwaite names degree, closeness and betweenness without testing them; Sotoudeh tests cosponsorship centralities against bill passage.
-- [[selfhout-2010-emerging-late-adolescent]] — complements — [[haythornthwaite-1996-social-network-analysis]]: Haythornthwaite gives the directed, tie-strength framing; Selfhout estimates reciprocity and transitivity in a longitudinal directed-tie model rather than assuming them.
-- [[baptista-2022-universal-multilayer-network]] — complements — [[ardekani-2026-computational-graph-theoretic]]: Baptista's RWR is personalized PageRank and Ardekani uses Katz prestige, so together they frame the PageRank-versus-Katz choice for walk-based ranking.
-- [[vanderdoes-2022-strategic-identity-signaling]] — complements — [[fink-2023-congressional-social-network-dataset]]: Same medium (Twitter). Fink builds congressional interaction ties; van der Does et al. imply the content on such ties is audience-shaped and more covert with heterogeneous followings.
-- [[leskovec-2010-predicting-positive-negative]] — complements — [[zareie-2020-similarity-based-link]]: Leskovec shows signed triads improve positive-link existence prediction; Zareie's unsigned similarity leaves the negative-tie question open.
+- [[aref-2021-identifying-hidden-coalitions]] — builds-on — [[aref-2020-detecting-coalitions-optimally]]: Same authors. The 2021 paper extends the exact 2-group frustration partition of signed cosponsorship backbones to k groups and to the minimal k.
+- [[tang-2015-negative-link-prediction]] — builds-on — [[leskovec-2010-predicting-positive-negative]]: Tang uses Leskovec et al.'s 16 signed-triad features in its 45-feature set and the same Epinions and Slashdot platforms.
+- [[battaglini-2018-effectiveness-connected-legislators]] — builds-on — [[battaglini-2016-influencing-connected-legislators]]: Same lead author and the same Katz-Bonacich equilibrium concept. The 2018 paper applies it to LES and adds an alumni-tie control function, but uses the cosponsorship network that the 2016 paper avoided as endogenous to money.
+- [[sotoudeh-2024-network-based-measure]] — cites / shared author — [[porter-2005-network-analysis-committees]]: Porter is second author on Sotoudeh. Sotoudeh cites Porter et al. 2005 and lists committee assignments as a missing control.
+- [[gaynor-2022-financial-ties-bind]] — cites — [[porter-2005-network-analysis-committees]]: Gaynor cites Porter et al. 2005 as prior network analysis of House committee assignments, and builds her own network from Leadership PAC money instead.
+- [[aref-2020-detecting-coalitions-optimally]] — cites — [[porter-2005-network-analysis-committees]]: Aref and Neal cite Porter's committee network as a substrate they set aside in favour of cosponsorship.
+- [[ardekani-2026-computational-graph-theoretic]] — same-method — [[malaterre-2024-inferring-social-networks]]: Paul's own cross-reference: both use Louvain community detection. Ardekani builds communities from a relational citation network, Malaterre from text similarity alone.
+- [[zareie-2020-similarity-based-link]] — shared technique — [[malaterre-2024-inferring-social-networks]]: Both infer ties from the Pearson correlation of profiles. Zareie correlates structural neighbourhood vectors and multiplies by a common-neighbour term; Malaterre correlates topic profiles and applies a 0.6 threshold.
+- [[baptista-2022-universal-multilayer-network]] — same-method (evaluation) — [[zareie-2020-similarity-based-link]]: Baptista scores random walk with restart with a link-prediction protocol, the same evaluation design Zareie uses.
+- [[leskovec-2010-predicting-positive-negative]] — qualifies — [[aref-2021-identifying-hidden-coalitions]]: Leskovec finds that two-faction partitions of signed networks do not beat degree-preserving rewired nulls. Aref compares its optimal partitions only with party and lower-k baselines, so its coalition result needs that null.
+- [[leskovec-2010-predicting-positive-negative]] — qualifies — [[aref-2020-detecting-coalitions-optimally]]: Both use a frustration-type partition objective. Leskovec finds no global faction signal against rewired nulls, so any partition result on signed data needs a null model.
+- [[tang-2015-negative-link-prediction]] — complements — [[aref-2021-identifying-hidden-coalitions]]: Aref's third coalition is defined by negative ties. Tang shows negative signs derived from interactions are real but low-precision proxies for antagonistic links.
+- [[sotoudeh-2024-network-based-measure]] — agrees — [[battaglini-2018-effectiveness-connected-legislators]]: Both find off-the-shelf centralities (eigenvector, closeness and others) weak against legislative outcomes, and that a model-derived or outcome-derived measure does better. The outcomes differ: bill passage in Sotoudeh, LES in Battaglini.
+- [[battaglini-2016-influencing-connected-legislators]] — disagrees on substrate — [[sotoudeh-2024-network-based-measure]]: Battaglini and Patacchini refuse to build their network from cosponsorship because cosponsorship is driven by money. Sotoudeh builds its influence measure directly from cosponsorship.
+- [[ringe-2013-pinpointing-powerful-voting]] — premise dispute — [[sotoudeh-2024-network-based-measure]]: Ringe et al. question cosponsorship as a proxy for social ties but do not test Sotoudeh's measure. This is a dispute over premises, not a contradiction.
+- [[ringe-2013-pinpointing-powerful-voting]] — same author line, European Parliament — [[ringe-nd-pinpointing-powerful-voting]]: Both share first author Ringe and use European Parliament data on cue-taking and co-voting. Whether they use the same dataset is not verified, and the slug and title labels of the two items appear swapped or misassigned (see gaps).
+- [[ringe-nd-pinpointing-powerful-voting]] — complements — [[aref-2021-identifying-hidden-coalitions]]: Both treat negative ties as informative. Ringe-nd scores nodes from signed co-voting correlations; Aref partitions signed cosponsorship networks into coalitions.
+- [[ringe-nd-pinpointing-powerful-voting]] — contrasts — [[christopher-2016-mathematical-modeling-analysis]]: Ringe-nd tests whether centrality recovers a known cue-provider, though only in simulation. Christopher assumes centrality stands for power and weights centralities by expert judgment, with no outcome test.
+- [[christopher-2016-mathematical-modeling-analysis]] — contrasts — [[ardekani-2026-computational-graph-theoretic]]: Both face the choice of which centrality to use. Ardekani chooses Katz on substantive grounds; Christopher blends eight centralities using AHP weights the authors set themselves.
+- [[azaiez-2025-hypergraph-analysis-european]] — qualifies — [[porter-2005-network-analysis-committees]]: Porter projects member-by-committee rosters onto a one-mode graph. Azaiez shows that projecting group events onto pairwise cliques changes core rankings relative to a hypergraph treatment.
+- [[azaiez-2025-hypergraph-analysis-european]] — qualifies — [[sotoudeh-2024-network-based-measure]]: Sotoudeh's cosponsorship network is a projection of bill rosters. Azaiez gives a general reason why centrality on a projected graph can mislead.
+- [[azaiez-2025-hypergraph-analysis-european]] — complements (reverse direction) — [[battaglini-2016-influencing-connected-legislators]]: Battaglini models money allocated according to legislators' centrality. Azaiez finds interest-group resources associated with the groups' own centrality, as association only with reverse causation acknowledged.
+- [[montgomery-2017-effects-congressional-staff]] — same-method / same outcome — [[battaglini-2018-effectiveness-connected-legislators]]: Both fit spatial autoregressive models of House LES on a member network. Montgomery's shared-staff network is a substrate less endogenous than cosponsorship.
+- [[montgomery-2017-effects-congressional-staff]] — same-method — [[battaglini-2016-influencing-connected-legislators]]: Both use spatial autoregressive models with a row-standardized member network on House data.
+- [[gaynor-2022-financial-ties-bind]] — complements — [[aref-2021-identifying-hidden-coalitions]]: Both find structure below the party level: intraparty caucus factions in Leadership PAC ties (Gaynor), and a fluid third coalition in signed cosponsorship (Aref).
+- [[christopher-2016-mathematical-modeling-analysis]] — complements — [[gaynor-2022-financial-ties-bind]]: Both analyse directed money-flow networks among political organisations: nonprofit dark-money transfers in Christopher, member Leadership PAC giving in Gaynor.
+- [[haythornthwaite-1996-social-network-analysis]] — extended-by — [[aref-2021-identifying-hidden-coalitions]]: Haythornthwaite describes ties by content, direction and strength, with no sign dimension. Signed-network methods add sign.
+- [[selfhout-2010-emerging-late-adolescent]] — complements — [[haythornthwaite-1996-social-network-analysis]]: Haythornthwaite gives the directed, tie-strength framing. Selfhout estimates reciprocity and transitivity in a longitudinal directed-tie model rather than assuming them.
+- [[cao-2025-social-network-group]] — complements — [[aref-2021-identifying-hidden-coalitions]]: Cao's 'pseudoconsensus' warning (agreement inside a subgroup is not agreement between subgroups) is what signed partitioning between subgroups addresses.
+- [[vanderdoes-2022-strategic-identity-signaling]] — complements (same medium) — [[fink-2023-congressional-social-network-dataset]]: Fink builds congressional Twitter interaction ties. Van der Does implies that the content on such ties is shaped by the audience, with mixed audiences producing more covert political posts.
+- [[leskovec-2010-predicting-positive-negative]] — complements — [[zareie-2020-similarity-based-link]]: Leskovec's signed triad features address the negative-tie question that Zareie's unsigned similarity score leaves open.
+- [[tang-2015-negative-link-prediction]] — complements — [[zareie-2020-similarity-based-link]]: Tang predicts negative links from positive links and interaction content, filling the signed-tie gap in Zareie's method.
+- [[baptista-2022-universal-multilayer-network]] — complements — [[ardekani-2026-computational-graph-theoretic]]: Baptista's random walk with restart is personalized PageRank; Ardekani uses Katz prestige. Together they frame the PageRank-versus-Katz choice.
+- [[malaterre-2024-inferring-social-networks]] — complements — [[aref-2021-identifying-hidden-coalitions]]: HCoI topic profiles carry no sign. Aref's generalized-balance partition encodes agreement and disagreement. The two are complementary routes to recovering alignment.
+- [[ringe-nd-pinpointing-powerful-voting]] — same data type — [[porter-2005-network-analysis-committees]]: Both extract structure from roll-call matrices: Porter through a rank-2 SVD (bipartisan and partisan axes), Ringe through co-voting phi-correlation centrality.
 
 ## What it means for the systems
 
-Statuses follow the bearing tags in the file. VERIFIED and VERIFIED-SOFTENED bearings are checked readings. UNVERIFIED bearings are single-agent leads, not findings (DE-062). Graph ranks and shared-background scores are heuristic model outputs, never closeness, access or introduction probabilities (D-025).
+Status labels follow the bearings in the theme file. VERIFIED-SOFTENED and VERIFIED are checked readings against named components. **UNVERIFIED items are single-agent leads, not findings (DE-062).** Nothing below proposes a change. Rulings remain Paul's.
 
-**Cosponsor network ([[systems/melange-sna]], [[systems/melange-influence-engine]])**
-- [[sotoudeh-2024-network-based-measure]] is cited as the source of the CU cosponsor edge weights, but the built weights depart from it on nearly every parameter: an additive x3 success multiplier, a per-Congress 0.8 decay (about a 6-year half-life), the 1/sqrt(C) size discount, unequal role weights, and no party normalization. The citation should say "inspired by", not "implements".
-- Code comments and brain notes also cite Sotoudeh for recruitment chains and for influence versus cosponsor count. The paper tests neither.
-- Paul's 6-month half-life note is a mis-transfer: Sotoudeh's decay applies to accruing cosponsorship influence, not to stance salience.
-- **FLAG (rejected proposals):** [[porter-2005-network-analysis-committees]] (normalized interlock), [[aref-2020-detecting-coalitions-optimally]] (SDSM backbone null) and Sotoudeh's pass/total ratio could each be read as arguments for per-edge volume normalization of cosponsor edges. That proposal was measured and REJECTED.
-- **FLAG:** [[battaglini-2016-influencing-connected-legislators]] and [[ringe-2013-pinpointing-powerful-voting]] question cosponsorship as a tie. That is not a case for dropping regular cosponsorship edges, which was also measured and REJECTED.
-- [[azaiez-2025-hypergraph-analysis-european]] supports the existing 1/sqrt(C) big-bill discount.
+**Melange: cosponsor network ([[systems/melange-sna]], `melange-sna.cosponsor-network`)**
+- [[sotoudeh-2024-network-based-measure]] is cited as the source of the edge weights, but the built weights depart from it on nearly every parameter:
+  - an additive x3 success multiplier, not a pass/total ratio;
+  - a per-Congress decay of 0.8 (half-life about 6 years), not 6-24 months;
+  - a 1/sqrt(C) size discount;
+  - unequal role weights;
+  - no party normalization.
+- Code comments also cite Sotoudeh for recruitment chains and for influence versus cosponsor count, which the paper never tests. Paul's 6-month half-life note transfers a decay that applies to accruing influence, not to stance salience. (VERIFIED-SOFTENED / VERIFIED)
+- [[haythornthwaite-1996-social-network-analysis]]: sponsor-to-cosponsor direction is scraped and then averaged away in `load_network`.
+- [[battaglini-2018-effectiveness-connected-legislators]]: the live graph is used without any endogeneity correction.
+- [[azaiez-2025-hypergraph-analysis-european]] supports the existing 1/sqrt(C) discount for large rosters.
+- **FLAGS:** two ideas in this corpus must not be carried onto cosponsor edges.
+  - Porter's normalized interlock and Aref's SDSM backbone would amount to per-edge volume normalization, which was measured and REJECTED.
+  - Battaglini 2016's avoidance of cosponsorship is not an argument for dropping regular cosponsorship edges, which was also REJECTED.
 
-**InfluenceScore and the rank pillars ([[systems/moneyball-rank-pillars]])**
-- The June 2026 retirement of direction-blind cosponsor centrality from the Influence pillar is supported by [[sotoudeh-2024-network-based-measure]], [[battaglini-2016-influencing-connected-legislators]] (money outcome only), [[azaiez-2025-hypergraph-analysis-european]] and [[ringe-nd-pinpointing-powerful-voting]].
-- It is qualified by [[christopher-2016-mathematical-modeling-analysis]], whose unvalidated hand-weighted composite has the same shape, and by [[haythornthwaite-1996-social-network-analysis]].
-- Any check of InfluenceScore against bill passage is circular, because the edges are already passage-weighted.
-- Committee pillar: [[porter-2005-network-analysis-committees]] shows subcommittee membership largely nests inside the parent committee, so the added one-sixth-weight subcommittee seats partly double count.
-- Say-do gate: Porter's roll-call SVD puts most variance on a bipartisan axis (45.3% of the sum of squares, 107th House, 990 votes), so a single final-passage Yea is weak corroboration.
+**Moneyball: InfluenceScore retirement and the two-axis rule ([[systems/moneyball-rank-pillars]])**
+- Supported by [[sotoudeh-2024-network-based-measure]], [[battaglini-2016-influencing-connected-legislators]], [[battaglini-2018-effectiveness-connected-legislators]], [[azaiez-2025-hypergraph-analysis-european]] and [[christopher-2016-mathematical-modeling-analysis]]. The retired score has the same shape as Christopher's composite: hand-weighted centralities led by out-degree.
+- [[ringe-nd-pinpointing-powerful-voting]] treats sign-blindness as a property of a leadership measure, which fits keeping influence and alignment on separate axes.
+- Any check of InfluenceScore against bill passage would be circular, because the edges are already weighted by passage.
 
-**Signed coalitions, diagnostic ([[systems/melange-sna]], [[systems/melange-validation]])**
-- signed_coalitions.py cites [[aref-2021-identifying-hidden-coalitions]] but partitions a different graph: an LLM-valenced mention layer that is 83% positive, pools both chambers, uses heuristic local search capped at k = 3, has no rewired null ([[leskovec-2010-predicting-positive-negative]]) and has no evidence floor on signs ([[tang-2015-negative-link-prediction]]).
-- Aref's third-coalition result is therefore UNVERIFIED in this system.
-- A House-only reproduction on a signed cosponsor SDSM backbone is cheap, since the CEL LES data is on disk. At 520 members and 7,153 edges, the exact program of [[aref-2020-detecting-coalitions-optimally]] looks tractable; that estimate is derived and UNVERIFIED.
-- [[ringe-nd-pinpointing-powerful-voting]] argues against having dropped the negative side of the vote backbone.
+**Melange: Katz-Bonacich benchmark (`fec/engine/kb_benchmark.py`, [[systems/melange-sna]])** (VERIFIED-SOFTENED)
+- Its method source is [[battaglini-2016-influencing-connected-legislators]], but it departs from the paper in three ways:
+  - it runs on the cosponsorship kernel the paper avoids;
+  - it pools the House and Senate, while the paper is House-only;
+  - it sets attenuation at 0.85 of the convergence bound, against an estimated spillover phi of 0.08-0.25.
+- Stored results, file 2026-08-18: Spearman rho 0.135 against CU money and 0.230 against bank plus financial-services money, n=533 members across both chambers. **These are UNSTRATIFIED, single-path and stale.**
+- [[ardekani-2026-computational-graph-theoretic]]: centrality on the CU-only kernel depends on that cut.
+- [[battaglini-2018-effectiveness-connected-legislators]] suggests a cheap House-only check of Katz-Bonacich against LES, since CEL LES data are already on disk. It has not been run.
 
-**Press HCoI and the multilayer social/press edges ([[systems/melange-sna]], [[systems/melange-stance]])**
-- [[malaterre-2024-inferring-social-networks]] (Paul's Very High, Foundational item) is the method source. The system's nulls (49% stance co-movement; 4 of 41 isolates recovered) match the authors' caveat that HCoI ties are text-mediated heuristics. Do not read HCoIs as coalitions, closeness or influence channels.
-- [[ardekani-2026-computational-graph-theoretic]]: report modularity and an external alignment check, which press HCoI currently omits.
-- [[fink-2023-congressional-social-network-dataset]] is the method source for press_engagement_layer.py. Its bearing on social_interaction_layer.py is tagged *contradicts*: that layer divides by the wrong end of the dyad, uses a 25-post floor, weights mentions 0.4, drops quotes and replies, and symmetrizes. The reading is code-only and UNVERIFIED.
-- Fink calls its weights a "probability of influence". In this system they are heuristic transmission weights (D-025), not measured influence.
-- [[baptista-2022-universal-multilayer-network]]: before treating more layers as more signal, test each layer's overlap with the base graph and run a held-out ablation per layer.
+**Melange: signed coalitions (`fec/network/signed_coalitions.py`, [[systems/melange-sna]])**
+- The script cites [[aref-2021-identifying-hidden-coalitions]] but differs from it in four ways:
+  - it partitions the LLM-valenced member-mention layer, which is 83% positive by edge count, not a signed cosponsorship backbone;
+  - it pools the House and Senate;
+  - it uses a heuristic local search capped at k=3 with no lower bound;
+  - it has no rewired null ([[leskovec-2010-predicting-positive-negative]]) and no evidence-count floor on signs ([[tang-2015-negative-link-prediction]]).
+- Artifact of 2026-07-19: one main bloc plus a 14-member splinter at k=2. At k=3 the third cluster has 1 member, and weighted frustration moves from 1040.79 to 1039.79. **The paper's finding has not been reproduced or tested and stays UNVERIFIED.**
+- [[aref-2020-detecting-coalitions-optimally]] suggests an exact solve may be tractable at 520 members and 7,153 edges. That estimate is derived, not tested, and is UNVERIFIED.
+- The same paper says the earlier vote backbone being about 95% party is expected under balance. [[ringe-nd-pinpointing-powerful-voting]] and Aref 2021 argue that dropping the negative side threw away information about cue-providers and coalitions.
 
-**Cascade kernel and the influence engine ([[systems/melange-influence-engine]], [[systems/melange-allocation]], [[systems/melange-pathfinding]])**
-- [[ringe-2013-pinpointing-powerful-voting]] qualifies any reading of cross-party ties as positive conduits for alignment. Opposing-bloc contact goes with less co-voting.
-- [[gaynor-2022-financial-ties-bind]] supports Cook PVI as the vulnerability measure donors act on (competitiveness multiplier). It does **not** validate reciprocity: reciprocity is NOT validated (D-104..D-108). It also exposes the missing intraparty-caucus structure.
-- kb_benchmark.py cites [[battaglini-2016-influencing-connected-legislators]] but deviates from it in three ways: it runs on the cosponsor kernel the paper avoids, pools Senate with House, and sets attenuation at 0.85 of the bound against the paper's phi of about 0.08-0.25.
-- Its stored results are Spearman rho 0.135 against CU money and 0.230 against bank plus financial-services money (n = 533 members, both chambers, file written 2026-08-18). They are UNSTRATIFIED by chamber, unverified and stale. Diagnostic only.
+**Melange: press HCoI (`fec/network/press_hcoi.py`, [[systems/melange-sna]])**
+- Built from [[malaterre-2024-inferring-social-networks]], using 19 regex-tagged CU press categories in place of LDA topics.
+- Recorded system results agree with the authors' own caveat: the layer was null for stance co-movement (49%) and recovered 4 of 41 cosponsor-isolated members. HCoIs are therefore not coalitions, closeness or influence channels.
+- [[ardekani-2026-computational-graph-theoretic]]: every Louvain partition should report its modularity and an external alignment check. HCoI reports neither. (VERIFIED-SOFTENED, single-agent per its own note)
 
-**Staffer network ([[systems/melange-staffer-network]])**
-- [[azaiez-2025-hypergraph-analysis-european]] is direct evidence for the open owner ruling on container-size normalization of co-tenure edges. That ruling is Paul's to make; this synthesis does not recommend an outcome. The paper also helps explain the r = 0.87 between degree and office size.
-- [[baptista-2022-universal-multilayer-network]]: the layer-balanced PageRank has been checked for sensitivity on damping only, not on how mass is split across layers.
-- [[cao-2025-social-network-group]] (UNVERIFIED): the 0.8-per-hop and 5-year decay constants are uncalibrated.
-- Revolving-door edges carry no influence language.
+**Melange: social and press engagement layers ([[systems/melange-sna]], [[systems/melange-stance]])**
+- [[fink-2023-congressional-social-network-dataset]] is the method source for both.
+  - `press_engagement_layer.py` uses Fink's denominator, the source's post volume.
+  - `social_interaction_layer.py` divides by the engaging member's own volume (the opposite end of the dyad), uses a 25-post floor rather than 100, weights mentions 0.4, and skips quotes and replies.
+  - Both layers are mean-symmetrized, which discards direction.
+- This reading comes from code only and is UNVERIFIED.
+- Fink's label 'probability of influence' must be shown as a heuristic engagement rate (D-025).
+- [[baptista-2022-universal-multilayer-network]]: the multilayer builder merges cosponsor, engagement, HCoI, social and co-appearance layers into one weight without a held-out test of each layer. Each layer should show it adds value, including how much it overlaps the base graph.
+
+**Melange: staffer network ([[systems/melange-staffer-network]])**
+- [[azaiez-2025-hypergraph-analysis-european]] is direct evidence on the open owner ruling about container-size normalization in co-tenure weights. It also helps explain the recorded r = 0.87 between staffer degree and office size. The ruling remains Paul's. The evidence concerns staffer containers and does not carry over to cosponsor edges.
+- [[montgomery-2017-effects-congressional-staff]] supports the OVERLAP rule: a sequence of offices is a trajectory, not a person-to-person edge. It finds only a weak signal confounded by homophily (House 105th-111th, personal staff only). Shared-staff counts are descriptive, not transmission channels. **Influence language is barred on revolving-door edges.**
+- [[baptista-2022-universal-multilayer-network]]: layer-balanced PageRank is checked for sensitivity only on damping, never on how mass is split across layers.
+- [[cao-2025-social-network-group]] (UNVERIFIED): the 0.8-per-hop decay and the 5-year half-life are uncalibrated ([[systems/melange-pathfinding]]).
+
+**Melange influence engine, receptivity and competitiveness ([[systems/melange-influence-engine]])**
+- [[gaynor-2022-financial-ties-bind]] (VERIFIED) supports Cook PVI as a vulnerability signal that donors act on. It does **not** support the claim that a dollar buys more in a competitive seat. Reciprocity is NOT validated (D-104..D-108).
+- [[ringe-2013-pinpointing-powerful-voting]] cautions against reading cross-party ties as conduits for alignment in the cascade kernel.
+- [[selfhout-2010-emerging-late-adolescent]] (UNVERIFIED): every receptivity input describes one member, while tie formation is driven by similarity between pairs.
+
+**Melange: cosponsor forecaster**
+- The forecaster lacks the following features, and every lead stays UNVERIFIED until reproduced under the forecaster's own temporal split:
+  - dyadic common-neighbour and second-order similarity ([[zareie-2020-similarity-based-link]]);
+  - signed triad features ([[leskovec-2010-predicting-positive-negative]], [[tang-2015-negative-link-prediction]]);
+  - reciprocity and closure terms ([[selfhout-2010-emerging-late-adolescent]]).
+
+**Moneyball committee pillar and say-do gate ([[systems/moneyball-rank-pillars]], [[systems/melange-psychometrics]])**
+- [[porter-2005-network-analysis-committees]]: subcommittee seats sit largely inside the parent committee, yet are added on top at 1/6 weight.
+- [[battaglini-2018-effectiveness-connected-legislators]]: the committee-chair effect shrinks about 18% (1.97 to 1.61) once the network enters the model.
+- Porter's dominant bipartisan roll-call axis makes a single final-passage Yea weak corroboration in the say-do gate.
+- [[vanderdoes-2022-strategic-identity-signaling]] (UNVERIFIED): the press pillar and the DEBATE stance reader may understate members facing mixed audiences. The say-do gate only lowers tiers, so it cannot correct for this.
 
 **Mentat ([[systems/mentat-fec-attribution]], [[systems/melange-lobbying]])**
-- [[gaynor-2022-financial-ties-bind]]: the LPAC member-to-member network can be rebuilt from FEC sponsor links Mentat already holds. It would be a donation-tie layer, not closeness.
-- [[christopher-2016-mathematical-modeling-analysis]]: the PAC transfer graph cannot see dark-money nonprofit flows.
-- [[azaiez-2025-hypergraph-analysis-european]]'s meeting design cannot be rebuilt from LD-2, because LDA is an identity source, not an edge or weight source (D-021).
+- [[gaynor-2022-financial-ties-bind]]: Mentat's FEC leadership-PAC sponsor links could rebuild the member-to-member LPAC network. It would be a donation-tie layer, not a closeness or influence measure.
+- [[christopher-2016-mathematical-modeling-analysis]]: the FEC transfer graph cannot see the nonprofit dark-money layer.
+- [[azaiez-2025-hypergraph-analysis-european]]: the EC register names both parties to each meeting. LD-2 filings do not, so LDA stays an identity source, not an edge or weight source (D-021).
 
-**Forecaster, stance and psychometric layers ([[systems/mentat-giving-forecast]], [[systems/melange-stance]], [[systems/melange-psychometrics]])**
-- Pair-level features are missing from the cosponsor forecaster: common-neighbour and second-order similarity ([[zareie-2020-similarity-based-link]]), signed triads ([[leskovec-2010-predicting-positive-negative]]), and reciprocity and closure ([[selfhout-2010-emerging-late-adolescent]], UNVERIFIED). All are leads that need a temporal-split reproduction.
-- [[vanderdoes-2022-strategic-identity-signaling]] (UNVERIFIED): the press pillar and DEBATE reader may understate members who code their messages for mixed audiences.
-
-**Terrier** ([[systems/terrier-row-scoring]], [[systems/terrier-imputation]], [[systems/terrier-canvass]]) is not addressed by any work in this theme.
+**Effectiveness shadow ([[systems/melange-legislative-data]])**
+- [[aref-2021-identifying-hidden-coalitions]], [[battaglini-2018-effectiveness-connected-legislators]] and [[montgomery-2017-effects-congressional-staff]] all relate network structure to LES, and the CEL LES data are on disk. These are candidate extensions, not results.
 
 ## Gaps
 
-**Gaps Paul named that the theme only partly closes**
-- *Bipartite-to-graph conversion for path-finding* (Kim and Kunisky; Mason, Porter and Mucha). [[porter-2005-network-analysis-committees]], [[azaiez-2025-hypergraph-analysis-european]] and [[baptista-2022-universal-multilayer-network]] show the trade-offs: projection distorts, and walks on heterogeneous layers need overlap. No work gives a path-finding-ready conversion for lobbying-to-legislator data. Kim and Kunisky are not in this theme file.
-- *Temporal weighting.* Only [[sotoudeh-2024-network-based-measure]] (exponential decay), [[malaterre-2024-inferring-social-networks]] (period slicing) and [[selfhout-2010-emerging-late-adolescent]] (panel waves) address time. Nothing tests tie-decay constants for legislators or staffers. The system's decay constants (0.8 per Congress; 0.8 per hop; 5-year half-life) have no literature calibration.
-- *Edge sign for replies and mentions.* [[tang-2015-negative-link-prediction]] warns that interaction-derived signs are low-precision. No legislative ground truth for negative ties exists in the theme.
-- *Which centrality.* The theme says generic centralities are weak. It offers no validated alternative for US congressional influence beyond Sotoudeh's descriptive, leakage-prone, outcome-built score.
-- *Viral Centrality.* Fink asserts it approximates ICM Monte Carlo. The proof sits in a companion paper that is not in the theme, and it remains untested here.
+**Gaps in Paul's notes and in the source mapping**
+- Paul's own annotation text exists for only some works in this theme:
+  - With annotations: [[haythornthwaite-1996-social-network-analysis]], [[malaterre-2024-inferring-social-networks]], [[ardekani-2026-computational-graph-theoretic]], [[gaynor-2022-financial-ties-bind]], [[porter-2005-network-analysis-committees]] (annotated as 'Mason and Mucha'; the citation lists three authors but the annotation names four), [[fink-2023-congressional-social-network-dataset]], and 'Aref and Neal' (one note; it is unclear whether he meant the 2020 or 2021 paper).
+  - Bare citations only: [[battaglini-2016-influencing-connected-legislators]] and [[zareie-2020-similarity-based-link]].
+  - No notes in any of the attached documents: the remaining works.
+- The theme's paul_notes block attaches 13 documents. Six are not literature: the staffer-network plan of record (14bfbd31b736), the staffer next-steps memo (55280df284a0), the Telecom scope note, the crypto forecast recheck, the forecast-collection recheck, and the cross-industry finance memo. A seventh, 'Neural Networks', is four bare links. The sha mapping should be checked.
+- Label problems:
+  - [[ringe-2013-pinpointing-powerful-voting]] has no title, and its content is Ringe, Victor and Gross (BJPS 2013) on ties to allies and adversaries, not 'Pinpointing the Powerful'.
+  - [[ringe-nd-pinpointing-powerful-voting]] is only the online appendix to Ringe and Wilson. The main article is not in the vault.
+  - Haythornthwaite's printed year is 1998.
+  - Both Battaglini papers are unrefereed NBER working papers.
+- [[vanderdoes-2022-strategic-identity-signaling]]: an earlier relation pass said the text was blank. That result is stale.
 
-**Missing evidence types**
-- No causal or quasi-experimental study links network position to legislative behaviour or outcomes.
-- No temporal-holdout validation of any network feature on US Congress data.
-- No directed-versus-symmetrized comparison for congressional ties.
-- No null-model practice for the system's own diagnostics: signed coalitions and HCoI both lack rewired or permuted nulls.
-- No reproduction of Aref's third coalition within the system. It stays UNVERIFIED until the House-only signed-backbone run.
-- No literature on staffer or revolving-door networks, despite the staffer network being a built component.
-- No work on lobbyist-to-member ties in the US. LD-2 does not name members, and LDA stays an identity source (D-021).
-- Nothing supports the reciprocity claim (D-104..D-108).
-- Nothing on multi-path trust aggregation versus single most-reliable path. [[cao-2025-social-network-group]] only names the gap.
-- No intraparty-caucus membership data for the main ideological caucuses, which [[gaynor-2022-financial-ties-bind]] shows structure money flows.
-- No inferential test of the projection-inflation effect on cosponsorship graphs. A hypergraph treatment of bill rosters is absent.
+**Gaps Paul names that the corpus does not close**
+- **Converting two-mode data to one-mode graphs for path-finding.** [[porter-2005-network-analysis-committees]] and [[azaiez-2025-hypergraph-analysis-european]] diagnose the projection problem, but no work gives a projection a path-finder can use. None of the 23 works is a path-finding paper; [[cao-2025-social-network-group]] only names how propagation operators are built.
+- **Temporal weighting** (Fink, Malaterre). Only [[sotoudeh-2024-network-based-measure]] (exponential decay), [[selfhout-2010-emerging-late-adolescent]] (actor-oriented models over waves) and period slicing (Malaterre, Aref) address time. There is no tracking of coalitions over time ([[aref-2021-identifying-hidden-coalitions]]).
+- **Sign rules for replies and mentions.** [[tang-2015-negative-link-prediction]] and [[leskovec-2010-predicting-positive-negative]] are online trust platforms. Congress has no ground truth for declared foes.
 
-**Coverage and metadata gaps in the vault**
-- Paul's SNA bibliography lists Battaglini and Patacchini, Bonica, Valujeva et al. and Zhang et al. as bare citations. [[battaglini-2016-influencing-connected-legislators]] is now summarized here, but Paul's own takeaway on it is missing.
-- Works named in Paul's notes but absent from this theme file: Kim and Kunisky, Bacik et al., Huneeus and Kim, Furnas et al., Kim (Jiseon) et al., Oropeza-Martinez et al., Rongkuan et al., and Birkenmaier and Lechner. They cannot be related here.
-- The slug [[ringe-2013-pinpointing-powerful-voting]] has empty title and year. It should be re-keyed to Ringe, Victor and Gross (BJPS 2013).
-- [[vanderdoes-2022-strategic-identity-signaling]] should carry van der Does et al. (PNAS 2022).
-- [[haythornthwaite-1996-social-network-analysis]]: the printed header says 1998.
-- Citation discrepancies Paul's notes record: "Kuinsky" vs "Kunisky"; Porter's author count (three in the citation, four in the annotation).
-- Paul's Neural Networks document holds four bare links with no annotations, so any SNA-relevant thinking in it is not captured.
+**Substantive gaps in the literature**
+- **US lobbying networks.** The only lobbying network here is European ([[azaiez-2025-hypergraph-analysis-european]]). The LDA-based works (Bacik, Kim and Kunisky) sit outside this theme, and LD-2 cannot supply member edges (D-021).
+- **The Senate.** Only [[aref-2020-detecting-coalitions-optimally]] covers it, and finds no effect there. Any pooled House-plus-Senate figure is UNSTRATIFIED.
+- **Causal identification.** Only [[battaglini-2018-effectiveness-connected-legislators]] (control function) and [[montgomery-2017-effects-congressional-staff]] (placebos) attempt it. Everything else is descriptive.
+- **Reciprocity and the value of money by seat competitiveness.** No work tests either. D-104..D-108 remain unvalidated.
+- **Committee-staff networks** are excluded by Montgomery. The staffer plan treats committee payrolls as the likely source of cross-party ties, and no literature here tests that.
+- **Hypergraph or multilayer treatment of cosponsorship.** No legislative work tests whether added layers improve prediction ([[baptista-2022-universal-multilayer-network]] is biological and airport data).
+- **Covert signalling among legislators.** [[vanderdoes-2022-strategic-identity-signaling]] studies ordinary partisan users.
+
+**Cheap checks the works point to (not run; all would stay UNVERIFIED until a second path reproduces them)**
+1. A House-only replication of Katz-Bonacich against LES using CEL data ([[battaglini-2018-effectiveness-connected-legislators]]).
+2. A House-only signed cosponsorship backbone with an exact k-partition ([[aref-2021-identifying-hidden-coalitions]]). It must be scoped so it does not become the REJECTED per-edge normalization of live cosponsor weights.
+3. A rewired and sign-permuted null for `signed_coalitions.py` ([[leskovec-2010-predicting-positive-negative]]).
+4. A test of whether negative-reference dyads sit close together in the cosponsor graph ([[tang-2015-negative-link-prediction]]).
+5. Per-layer ablation and overlap checks for the multilayer builder and for layer-balanced PageRank ([[baptista-2022-universal-multilayer-network]]).
+6. Reporting modularity plus an external alignment check for press HCoI ([[ardekani-2026-computational-graph-theoretic]]).
 
 ## All works
 
@@ -353,10 +393,12 @@ Statuses follow the bearing tags in the file. VERIFIED and VERIFIED-SOFTENED bea
 - [[cao-2025-social-network-group]] (2025) — Social network group decision making: Characterization, taxonomy, challenges and future directions from an AI and LLMs perspective
 - [[leskovec-2010-predicting-positive-negative]] (2010) — Predicting Positive and Negative Links in Online Social Networks
 - [[tang-2015-negative-link-prediction]] (2015) — Negative Link Prediction in Social Media
-- [[ringe-2013-pinpointing-powerful-voting]] (n.d.) — (untitled; Ringe, Victor and Gross, BJPS 2013)
+- [[ringe-2013-pinpointing-powerful-voting]] (2013) — 
 - [[christopher-2016-mathematical-modeling-analysis]] (2016) — Mathematical modeling and analysis of a dark money network
 - [[selfhout-2010-emerging-late-adolescent]] (2010) — Emerging Late Adolescent Friendship Networks and Big Five Personality Traits: A Social Network Approach
-- [[ringe-nd-pinpointing-powerful-voting]] (n.d.) — Pinpointing the Powerful: Co-voting Network Centrality as a Measure of Political Influence (online appendix)
+- [[ringe-nd-pinpointing-powerful-voting]] () — Pinpointing the Powerful: Co-voting Network Centrality as a Measure of Political Influence (online appendix)
 - [[aref-2020-detecting-coalitions-optimally]] (2020) — Detecting coalitions by optimally partitioning signed networks of political collaboration
-- [[vanderdoes-2022-strategic-identity-signaling]] (n.d.) — Strategic identity signaling in heterogeneous networks
+- [[vanderdoes-2022-strategic-identity-signaling]] (2022) — Strategic identity signaling in heterogeneous networks
 - [[fink-2023-congressional-social-network-dataset]] (2023) — A Congressional Twitter network dataset quantifying pairwise probability of influence
+- [[battaglini-2018-effectiveness-connected-legislators]] (2018) — Effectiveness of Connected Legislators
+- [[montgomery-2017-effects-congressional-staff]] (2017) — The Effects of Congressional Staff Networks in the U.S. House of Representatives

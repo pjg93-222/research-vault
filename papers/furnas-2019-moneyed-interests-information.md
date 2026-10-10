@@ -184,4 +184,4 @@ Paul's highlights pick out the paper's most careful claims: donors as donors sho
 - [[holyoke-2015-learnable-skills-unteachable]] — complements — Holyoke et al. treat lobbying as largely relationship building. This paper adds staff-side evidence that the information a lobbyist brings, and its ideological source, shapes siding; its point that lobbyists are more persistent than donors is the authors' speculation (p.17), not a finding.
 
 ### Linked from
-_None._
+- [[montgomery-2017-effects-congressional-staff]] — complements — Vault item exists; the survey experiment includes junior and senior congressional staff, which fits the staff-as-information-processor framing.

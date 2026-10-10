@@ -2,26 +2,9 @@
 type: system
 name: "Melange influence engine (persuasion, money and cascade physics)"
 slug: melange-influence-engine
-components:
-  - melange-influence-engine.cascade-kernel
-  - melange-influence-engine.competitive-cascade-crn
-  - melange-influence-engine.seed-gate
-  - melange-influence-engine.flip-model
-  - melange-influence-engine.persuadability-table
-  - melange-influence-engine.money-response-defection
-  - melange-influence-engine.lt-priming
-  - melange-influence-engine.salience-shock
-  - melange-influence-engine.receptivity-layer
-  - melange-influence-engine.competitiveness-multiplier
-  - melange-influence-engine.electoral-plays
-  - melange-influence-engine.scenario-runner
-  - melange-influence-engine.priority-engagement
-brain_notes:
-  - C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals.md
-  - C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md
-  - C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md
-  - C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md
-paper_count: 73
+components: [melange-influence-engine.cascade-kernel, melange-influence-engine.competitive-cascade-crn, melange-influence-engine.seed-gate, melange-influence-engine.flip-model, melange-influence-engine.persuadability-table, melange-influence-engine.money-response-defection, melange-influence-engine.lt-priming, melange-influence-engine.salience-shock, melange-influence-engine.receptivity-layer, melange-influence-engine.competitiveness-multiplier, melange-influence-engine.electoral-plays, melange-influence-engine.scenario-runner, melange-influence-engine.priority-engagement]
+brain_notes: [topics/2026-07-feature-influence-engine-internals, topics/2026-07-feature-influence-engine-internals-receptivity-layer, topics/2026-07-feature-influence-engine-internals-salience-sna-wave, topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration]
+paper_count: 79
 tags: [system]
 ---
 
@@ -31,43 +14,48 @@ Behavioural simulation layer that sits downstream of the rank. It covers the sha
 
 Brain notes: [topics/2026-07-feature-influence-engine-internals](obsidian://open?vault=brain&file=topics/2026-07-feature-influence-engine-internals); [topics/2026-07-feature-influence-engine-internals-receptivity-layer](obsidian://open?vault=brain&file=topics/2026-07-feature-influence-engine-internals-receptivity-layer); [topics/2026-07-feature-influence-engine-internals-salience-sna-wave](obsidian://open?vault=brain&file=topics/2026-07-feature-influence-engine-internals-salience-sna-wave); [topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration](obsidian://open?vault=brain&file=topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration)
 
-**Melange influence engine: evidence assessment** (hub file `melange-influence-engine.json`, read 2026-10-10)
+## Melange influence engine: evidence assessment
 
-The engine is the behavioural simulation layer that sits downstream of the rank. It has 13 components. The hub file holds 115 evidence rows: 34 VERIFIED, 68 VERIFIED-SOFTENED, 13 UNVERIFIED. Only VERIFIED and VERIFIED-SOFTENED rows count as evidence here. UNVERIFIED rows, and anything from the online scan, are single-agent leads (DE-062). The rows break down as 65 qualifies, 14 context, 14 supports, 13 suggests-extension, 4 contradicts, 4 method-source, 1 measurement-source. They cite 73 distinct papers.
+**Scope.** This covers 13 components and 124 paper bearings (35 VERIFIED, 76 VERIFIED-SOFTENED, 13 UNVERIFIED) across 79 distinct papers. UNVERIFIED rows are single-agent leads (DE-062) and do not count as findings here.
 
-**Bottom line.** The literature supports the engine's architecture and the direction of most of its terms:
-- an independent-cascade or threshold diffusion backbone;
-- co-partisan sources counting for more than out-partisan ones;
-- money as a weak lever on positions;
-- seeds that may not take up an invitation;
-- Noble-Turner's three going-public regimes.
+**Overall verdict.** The engine's architecture has sound *method* sources:
+- Bharathi-Kempe-Salek competitive IC
+- Chen 2021 contingency-aware seeding
+- Noble & Turner 2024 going public
+- Kempe-Kleinberg-Tardos threshold models
 
-Almost none of the constants come from evidence. That covers the saturation constant 6, cpf 1.7/0.5, the 0.4 cross-party floor, SGATE, PERS, WM/WP, HALFF, MAXSHIFT, DTHRESH, LOSSFRAME, the receptivity weights, the 1.15/0.92 and 0.60 multipliers, VULN 1.35, and the AMPLITUDE and SCALE of c. Each one is either owner judgment or a simulation default borrowed from a non-legislative paper (for example, Chen 2021's q = 0.6 behind the 0.60 seed_prob base). That is acceptable if the code labels them as design priors. It is not acceptable where the code labels them CALIBRATED (WM/WP, MAXSHIFT) or where a citation runs against the dial.
+Almost none of its *constants* has an empirical source. Constants with no estimate behind them:
+- the saturation constant 6, the bystander rule min(0.9, $/400k) and MC=20
+- the SGATE and PERS tables
+- WM/WP 0.35/0.65 (labelled CALIBRATED in code, but no paper calibrates it), HALFF, MAXSHIFT 18, DTHRESH 11.25 and LOSSFRAME 1.10
+- the pt multipliers 1.15/0.92, incent 0.60 and VULN 1.35
+- the c amplitude and scale, and the backfire map b(psi)
 
-**Four rows contradict the system outright:**
-1. **LOSSFRAME 1.10 cites Linde & Vis 2016, which found *no* loss aversion in MPs.** n = 46 Dutch MPs, 2014-15.
-2. **The salience advisory gives defensive credit on status-quo-unfavourable (sq = offense) issues.** Noble & Turner 2024 say the actor never goes public in that case. The live advisory (salience_advisory.json, 2026-10-08, 18 issues) ranks Technology & Emerging first under GO PUBLIC.
-3. **Out-party cues persuade negatively in the evidence, but the engine gives them positive pull.** Bakker et al., mass public, four studies, pooled out-party effect about -.07 on a 0-1 scale. The engine gives out-partisans +0.5 in flip and kernel pressure.
-4. **The competitive cascade breaks same-hop ties deterministically in favour of the pro side.** Bharathi et al. design ties away, so this is a departure from the cited model. It may inflate pro reach; the effect is unmeasured.
+The literature mostly tells us the *direction* of an effect and the *class of model*. It almost never gives a legislator-level magnitude.
 
-**Components with essentially no direct evidence:** the priority/leave-one-out orientation (one weak row), the scenario runner's 'defection is a general disposition shift', and the premise that a dollar buys more in a competitive seat. That premise sits under both the competitiveness multiplier and the electoral plays. Reciprocity stays NOT validated (D-104 to D-108). Every row filed under c is evidence about where donors send money, not about what a dollar buys.
+**Where the evidence is strongest:**
+1. **Money moves votes and positions little.** Ansolabehere et al. 2002 is the anchor: House 1978-1994, N=3,400; member fixed effects remove the contribution effect. Bombardini & Trebbi 2020 and Poole 1999 agree. This supports the small MAXSHIFT and money as the minority term, but not any specific value.
+2. **Out-party cues do not persuade.** Bakker (mass public, 2016-2018 panels), Merkley & Stecula (mass Republicans, climate), Furnas et al. 2019 (N=441 DC staff, 2017, stated intentions) and Ringe et al. 2013 (EP Environment Committee 2004-2008, 1,319 dyads) agree. All of this is mass-public, staff or EP evidence. None of it is US member-to-member.
 
-**Transfer is the main limit throughout.** The closest causal evidence on lobbying and cue-taking comes from state legislatures, mass-public survey experiments, EU Parliament committees and simulations. It does not come from the US Congress on credit-union issues. The one congressional field experiment, Kalla & Broockman (191 House offices, one party, June-Aug 2013), measures access only.
+**Contradictions found:**
+- **Salience shock.** The defensive-appeal credit is applied regardless of the status quo. All four GO PUBLIC verdicts in the 2026-10-08 advisory (18 issues) are offense issues. The top-ranked one (Technology & Emerging) is close to the case where Noble & Turner say never go public.
+- **LOSSFRAME 1.10.** It cites Linde & Vis 2016 for elite-attenuated loss aversion, but that paper found no loss aversion in its MPs (n=46 Dutch MPs, 2014-2015).
+- **Out-party sign.** The kernel and the flip model give out-partisan pro-neighbours a positive 0.5 weight. The cue evidence is zero-or-negative, and Furnas 2019 suggests the out-party penalty is about twice the in-party gain, the opposite of the kernel's asymmetry (+0.7 vs -0.5).
+- **Same-hop ties.** The cascade breaks same-hop ties deterministically in CU's favour, where Bharathi's model has no ties. The size of this effect has not been measured.
+- **Retiring members.** Fouirnaies & Hall 2022 is cited for incent 0.60 on final-term members. It finds an effort drop (-0.24 SD) in term-limited *state* legislatures with no position change, and argues that members seeking other office keep their electoral incentives. The retiring list includes such members.
 
-**Online scan (leads only, UNVERIFIED, not yet in the hub file):**
-- Camp, Schwam-Baird & Zelizer: null effects of lobbyist outreach on cosponsorship across four field experiments in two state legislatures.
-- Zelizer: briefing-spillover field experiment in a state legislature. The size of the indirect effect is reported inconsistently in secondary sources, 60% versus 80% of the direct effect.
-- Rogowski & Sinclair: House office lottery; no proximity effect on roll calls or cosponsorship, 105th-112th Houses.
-- Coppock: null cue-taking among similar legislators.
-- Fong (JOP): cue-taking from expert peers, reportedly crossing party lines.
-- Box-Steffensmeier, Christenson & Craig (AJPS 2019): Dear Colleague endorsements grow cosponsor lists.
-- Simkin & Roychowdhury (arXiv 1001.3732): threshold/sandpile model of cosponsor timing on H.R. 1207.
-- Levitt 1998: PAC returns run through the election channel.
-- A 2024 AEA conference paper: the money-vote relation is stronger under electoral pressure, identified from close incumbent defeats.
+**Gaps:**
+- No study validates the cascade against observed cosponsorship accumulation.
+- No contact-to-take-up rates exist by stance tier (SGATE, PERS).
+- No evidence shows dollars buy more in competitive seats. The supply-side papers show only that money *flows* to close seats, which is a selection confound for any future estimate of c (reciprocity NOT validated, D-104..D-108).
+- No evidence supports the scenario runner's cross-issue defection premise.
+- No literature at all supports the leave-one-out priority orientation.
 
-The scan found no study that reports take-up of lobbying contact by the target's prior position, which is the quantity SGATE and PERS encode.
-
-No PDFs were downloaded in this pass. The scan surfaced titles and URLs only.
+**Paul's positions vs the evidence:**
+- He reads source party as a filter on receptiveness (Furnas). The evidence supports the direction, but not the 3.4 ratio and not a positive out-party weight.
+- His access-and-ROI view of money is more generous than the evidence. The evidence on access is itself split: Kalla & Broockman find a donor-label access premium (191 House offices, Jun-Aug 2013); Furnas 2019 finds no donor meeting premium.
+- His complex-contagion hypothesis is a legitimate modelling option (Chen 2023, Kempe 2015), but it has no legislative estimate.
+- His trait-as-edge-parameter view of receptivity is undercut more than his notes admit. No bearing links any trait to a legislator's response to lobbying.
 
 ## Cascade activation kernel build_P and partisan edge factors
 
@@ -75,15 +63,15 @@ No PDFs were downloaded in this pass. The scan surfaced titles and URLs only.
 
 **Method.** One shared kernel for cascade, coalition, frontier, scenario, priming and route engines. bpf is the bipartisan share (default 0.24). The two physics factors are deliberately never merged.
 
-**Code refs.** `fec/moneyball_core.py:1-12,68-72,543-562`
+**Code refs:** `fec/moneyball_core.py:1-12,68-72,543-562`
 
-**Assumptions**
+**Assumptions:**
 - Cross-party contagion flows through bridge-builders
 - Co-partisan sources persuade more and out-partisan sources less (Furnas/Bakker source alignment)
 - Saturation constant 6 is a design choice, not estimated
 - Receiver susceptibility, not sender loudness, governs activation
 
-### Evidence
+**Evidence (14 bearings: 3 VERIFIED, 11 VERIFIED-SOFTENED, 0 UNVERIFIED; 14 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -99,50 +87,51 @@ No PDFs were downloaded in this pass. The scan surfaced titles and URLs only.
 | [[chen-2023-complex-contagion-influence]] | 2023 | context | IC and LT assume activation probability independent of how many neighbours are active, which keeps them submodular. Complex contagion breaks this (Sec. 3, lines 254-258 and footnote 2). | Context only. The paper gives no legislative estimate. Any count-dependent kernel would be a new model and must keep the two cpf physics separate. | weak | VERIFIED |
 | [[fink-2023-congressional-social-network-dataset]] | 2023 | method-source | Fink offers the directed pairwise probabilities as empirical transmission probabilities that can vary across edges. The paper argues that Monte Carlo SIR-type benchmarks usually assume one homogeneous, arbitrarily chosen rate. | The mapping holds only for untied pairs and only when physics and edge_mult equal 1. Fink rates are directed and normalized per source tweet, while the system symmetrizes them and reads them as per-campaign activation odds, which changes unit and meaning. The 2.0 cap gives p_max of 0.25. Fink covers one 2022 window and says the rates may not be stationary. | moderate | VERIFIED-SOFTENED |
 | [[kempe-2015-maximizing-spread-influence]] | 2015 | qualifies | Edge probabilities are set by rule, not estimated: LT weights from co-authorship multiplicity, IC uniform p of 1 or 10 percent, and weighted cascade p = 1/d_v with no multiplicity term (Sec 8.2, p.133). At p=1% each targeted node adds about three activations, so random seeds do relatively better (Sec 8.4, p.135). Estimating parameters from data is left open (Conclusions, p.138). | Seed rankings are sensitive to the activation level, so a sweep of the constant 6 (for example 3, 6, 12) should accompany any claim that frontier seed order is stable. This is not validation of the constant. | moderate | VERIFIED-SOFTENED |
+| [[battaglini-2018-effectiveness-connected-legislators]] | 2018 | qualifies | In the corrected column, between-party spillover is 0.8668 (SE 0.2136) and within-party 0.8346 (SE 0.0584); the gap is small relative to the SEs. The authors nonetheless conclude that cross-party ties matter more. House, 109th-113th. | The kernel models stance and activation diffusion, while the paper measures productivity spillovers, so cross-party damping may still be right for persuasion. Table 6 is not the only stratification: Table 5a and 5b heterogeneity, the Table 7 stage split and the Table 8 state-experience subsample (N = 1,775) also stratify or subset. | weak | VERIFIED-SOFTENED |
+| [[harbridge-yong-2023-bipartisan-path-effective]] | 2023 | context | Cross-party cosponsorship is exchanged: members who offer cross-party support attract it back, within member 0.317 House (Model 4.2) and 0.547 Senate (Model 4.4), p<0.001. The paper tests member-level aggregates only, with no dyadic diffusion or join timing. | The paper cannot test the sqrt-product form or the 0.4 floor. Context only. | weak | VERIFIED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 14 bearings: 3 VERIFIED, 11 VERIFIED-SOFTENED, 0 UNVERIFIED. **Evidence weight: moderate on direction, nil on constants.** 
 
-**Evidence weight: moderate on direction, nil on constants.** 12 rows: 2 VERIFIED, 10 VERIFIED-SOFTENED.
+**Direction of the source-alignment term.** Co-partisan sources weigh more than out-partisan ones. This is supported in direction by:
+- Furnas et al. 2019: 2017 staff vignette, N=441 staff (5.2% response). This is *outside requester evidence*, not Member-to-Member ties.
+- Merkley & Stecula: mass Republicans, climate.
 
-**What holds**
-- Fink 2023 (method-source) supports directed, heterogeneous per-edge probabilities over one homogeneous rate. The x/(x+6) kernel returns Fink's p exactly, but only for untied pairs and only when the physics term and edge_mult both equal 1. The Fink data are one 2022 Twitter window and are per-tweet rates, which the system symmetrises.
-- Haythornthwaite (VERIFIED, weak) gives a conceptual basis for keeping an information channel separate from a legitimation channel, which is what keeping cpf_diffusion and cpf_pressure apart does. It is not evidence for any ratio.
-- Kempe 2015 confirms that edge probabilities in the canonical work are set by rule, not estimated, and that seed rankings are sensitive to the activation level. A sweep of the constant (3 / 6 / 12) should accompany any claim that seed order is stable. That is a robustness check, not validation.
+**What the same papers undercut:**
+- **The asymmetry.** Furnas finds the non-aligned penalty roughly twice the aligned benefit. The kernel's gain (+0.7 over 1.0) exceeds its penalty (-0.5). Furnas's pooled estimate is null over the party fault line, so any figure must be quoted by party stratum or as UNSTRATIFIED.
+- **The sign.** Bakker (mass public, 2016-2018 online panels, study 1 N=747) finds out-party cues *lower* support by about .06-.07 on a 0-1 scale. In-party cues add about .03, mostly non-significant. Merkley reads out-party cues as backlash. A positive out-partisan pressure weight of 0.5, which enters flip_model nA, has no support.
 
-**What does not hold**
-- The 3.4 co-/out-partisan ratio has no source.
-- Furnas 2019 (stated intentions of DC staff, N = 441 staff, 5.2% response, 2017) shows, by party stratum, an out-aligned *penalty* about twice the aligned *gain*. The system has the opposite asymmetry: +0.7 gain against -0.5 penalty, measured from 1.0. The pooled Furnas estimate is null across the party fault line, so any Furnas figure must be quoted by party stratum or labelled UNSTRATIFIED.
-- Bakker (contradicts; mass public, 2016-18 online panels, N = 747 in study 1) finds out-party cues *lower* support by about .06-.07 on a 0-1 scale. In-party cues add about .03 and are mostly non-significant. Merkley finds backlash from out-party cues.
-- Both papers measure publics, not legislator-to-legislator pressure, so they set sign, not size. On sign they run against cpf_pressure's positive 0.5 out-partisan pull in the flip model.
-- Ringe 2013 (EP Environment Committee, 40 roll calls 2004-08, 1,319 non-unanimous opposing-bloc dyads) finds that more connection between opposing-bloc members goes with *less* co-voting. That cuts against a 0.4 cross-party diffusion floor, but the result is cross-sectional and not from the US.
+**Cross-party diffusion damping.** cpf_diffusion is 0.544 at the default bpf 0.24.
+- Battaglini et al. 2018 (House 109th-113th) report between-party productivity spillover 0.867 (SE 0.214) vs within-party 0.835 (SE 0.058), so they find no damping. But their outcome is productivity spillover, not persuasion, so this qualifies the term rather than refuting it.
+- Ringe et al. 2013 (EP, 2004-2008, 1,319 non-unanimous opposing-bloc dyads) find connectivity between adversaries goes with *less* co-voting. This is a multi-party, staff-contact setting and is cross-sectional.
 
-**Flags**
-- Trivedi 2020's degree term raises probability for hubs. It must not be read as support for the REJECTED per-edge volume normalization.
-- Zareie's signed-edge taxonomy would change the two-physics architecture, so it is the owner's decision. It is not a recommendation.
-- Chen 2023 is context only: the kernel ignores how many neighbours are already active, so it cannot represent complex contagion.
+**Saturation constant 6.** It has no basis. Kempe et al. 2015 show seed rankings are sensitive to the activation level, so a sweep (3/6/12) should accompany any claim that frontier seed order is stable. Trivedi 2020 gives no calibration. **FLAG:** its degree-based edge probability must not be read as support for the REJECTED per-edge volume normalization.
 
-### Contradictions
-- Bakker et al. (VERIFIED-SOFTENED, contradicts): out-party cues lower support (about -.07 pooled, mass public). The flip model gives an out-party pro neighbour positive pull at cpf_pressure 0.5.
-- Furnas 2019, by party stratum: the out-aligned penalty is about twice the aligned gain. The kernel's asymmetry runs the other way (+0.7 gain, -0.5 penalty). The pooled Furnas estimate is null, so quote the party strata.
-- Ringe 2013: more connection between opposing-bloc members goes with less co-voting (EP, cross-sectional), against a positive 0.4 cross-party diffusion floor for non-bridge pairs.
+**Fink 2023.** It supports heterogeneous directed edge probabilities in concept. The system symmetrizes them and reads them as per-campaign odds (cap 2.0, so p_max 0.25), and the mapping holds only for untied pairs.
 
-### Gaps
-- Saturation constant 6: no study estimates it. Fill with an internal fit of cosponsor join timing on CU bills (hazard of joining as a function of already-joined weighted neighbours), held out by Congress.
-- Out-partisan weight on legislator-to-legislator edges: needs elite-level evidence, not mass-public cue experiments. Candidates are a test stratified by party pair of whether cross-party cosponsor ties predict later joining, or the scan leads (Fong JOP, Box-Steffensmeier/Christenson/Craig AJPS 2019, Rogowski & Sinclair office lottery). These are UNVERIFIED.
-- sqrt(bpf_u bpf_v) bridge form: no paper measures bipartisanship as a moderator of cross-party diffusion.
+**Extensions the papers suggest (not adopted):**
+- Gaynor 2022: party is not homogeneous; there are faction effects in LPAC ties in the 115th House, which need party strata.
+- Zareie 2023: signed edges. This would change the two-physics architecture, so the owner decides.
 
-### Paul's position vs the evidence
+**Reciprocity.** Haythornthwaite's reciprocated ties must not be imported as a reciprocity weight (D-104..D-108).
 
-Paul's two reads hold for direction only. Directed per-edge influence probabilities are foundational (Fink), and source party filters receptiveness (Furnas). His own Furnas source implies a larger out-party penalty than the 0.5 floor gives. Bakker and Merkley, which he highlighted, point to a negative out-party sign, not a weaker positive one. He is right that the saturation constant has no literature basis, and the evidence confirms nobody estimates it. It needs an internal fit, not more reading.
+**Contradictions:**
+- Bakker (mass public, 2016-2018, study 1 N=747): out-party cues lower policy support by about .06-.07. The kernel and flip model give out-partisan pro-neighbours a positive 0.5 weight.
+- Furnas et al. 2019 (N=441 staff, 2017; party subgroup Ns not reported): the out-party penalty is about 2x the aligned gain. cpf_pressure has the gain (+0.7) larger than the penalty (-0.5).
+- Battaglini et al. 2018 (House 109th-113th): between-party spillover 0.867 is not below within-party 0.835. cpf_diffusion damps cross-party edges to 0.544 at bpf 0.24. The outcome differs (productivity, not persuasion), so this is a soft contradiction.
 
-### Open questions
-- Should cpf_pressure's out-partisan value go to 0, as lt_priming's xf already does for non-bridge pairs? That is a gated recalibration and Paul's call.
-- Do frontier seed rankings stay stable when the constant 6 is swept over 3, 6 and 12?
-- Does the Fink-derived weight change meaning (per-tweet rate versus per-campaign activation odds) enough to distort engagement edges?
+**Gaps:**
+- No estimate exists for the saturation constant 6. Fill it with a likelihood fit of x/(x+c) to observed CU-bill cosponsorship join timing on the member network, or at minimum a sensitivity sweep (3/6/12) of frontier seed order.
+- No US Member-to-Member evidence exists for the 1.7/0.5 ratio. Fill it with an elite cue study, such as a cosponsorship-recruitment hazard model by party pair, stratified D-D, R-R and D-R, with bpf as a moderator.
+- The sqrt(bpf_u bpf_v) bridge form and its 0.4 floor are untested. Harbridge-Yong 2023 is member-level only and has no dyadic diffusion.
 
-### Read first
+**Paul's position vs the evidence.** Paul treats directed edge probabilities as foundational (Fink) and party or source identity as a filter on receptiveness (Furnas). The evidence supports the filter's direction, but not its magnitude, its gain-over-penalty asymmetry, or a positive out-party weight. The mass-public and staff evidence points to an out-party weight at or below zero. Paul's directed-edge view is also not what the code does: it symmetrizes Fink rates. He correctly notes that the constant 6 has no literature basis.
 
-[[bakker-nd-understanding-partisan-receptivity]] [[furnas-2019-moneyed-interests-information]] [[merkley-nd-party-cues-news]] [[fink-2023-congressional-social-network-dataset]] [[kempe-2015-maximizing-spread-influence]] [[ringe-2013-pinpointing-powerful-voting]]
+**Open questions:**
+- Should cpf_pressure's out-partisan weight stay positive (0.5) when every cue bearing points to zero or negative? This is a rank-moving change and Paul's call.
+- Does frontier seed order survive a 3/6/12 sweep of the saturation constant?
+- Is the 1.7 co-partisan amplification, as opposed to the out-party penalty, supported by anything? Bakker's in-party effect is small and often null.
+
+**Read first:** [[furnas-2019-moneyed-interests-information]], [[bakker-nd-understanding-partisan-receptivity]], [[battaglini-2018-effectiveness-connected-legislators]], [[kempe-2015-maximizing-spread-influence]], [[fink-2023-congressional-social-network-dataset]], [[merkley-nd-party-cues-news]]
 
 ## Competitive independent cascade with common random numbers
 
@@ -150,14 +139,14 @@ Paul's two reads hold for direction only. Directed per-edge influence probabilit
 
 **Method.** Keyed splitmix64 draws per (iteration, edge), reseeded with 1000003*SEED+it. SEED 7, MC 20 (scenario 40). Seed activation uses a separate 2^62 key range.
 
-**Code refs.** `fec/moneyball_core.py:549-554`, `fec/engine/budget_frontier.py:40-94`, `fec/engine/per_topic_coalition.py:27-57`, `fec/engine/scenario.py:40-53`, `fec/engine/salience_shock.py:71-81`
+**Code refs:** `fec/moneyball_core.py:549-554`, `fec/engine/budget_frontier.py:40-94`, `fec/engine/per_topic_coalition.py:27-57`, `fec/engine/scenario.py:40-53`, `fec/engine/salience_shock.py:71-81`
 
-**Assumptions**
+**Assumptions:**
 - Independent edge activations given the draws (Bharathi-Kempe-Salek competitive IC)
 - Industry money mobilizes neutral bystanders
 - MC = 20 is adequate
 
-### Evidence
+**Evidence (10 bearings: 2 VERIFIED, 8 VERIFIED-SOFTENED, 0 UNVERIFIED; 9 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -172,47 +161,47 @@ Paul's two reads hold for direction only. Directed per-edge influence probabilit
 | [[bharathi-nd-competitive-influence-maximization]] |  | contradicts | The paper avoids ties between simultaneous activation attempts by giving each attempt a continuous exponential delay. It randomizes only between players who select the same seed node. The rel claim that simultaneous arrivals are tie-broken at random is not in the text. | The departure from the paper's no-tie design is confirmed by reading the code. Its effect on CU reach is unmeasured. A rerun with B-first or randomized frontier order under the same draws would measure it. Remains UNVERIFIED under DE-062. | moderate | VERIFIED-SOFTENED |
 | [[kamarthi-2020-influence-maximization-unknown]] | 2020 | context | Every comparison uses a single-colour independent cascade with uniform p = 0.1, budget 10, and the mean of 100 simulations, with no variance or confidence intervals. Tables 2 and 4 report the best Geometric-DQN variant per test network or per test set. | Gains measured under uniform p = 0.1 single-colour IC do not carry over to the system heterogeneous two-colour kernel. Any reuse needs a rerun on the system own P and stays UNVERIFIED until a second path reproduces it (DE-062). | weak | VERIFIED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 10 bearings: 2 VERIFIED, 8 VERIFIED-SOFTENED, 0 UNVERIFIED. **Evidence weight: strong as a method source, nil as empirical validation.** 
 
-**Evidence weight: strong on mechanism, nil on the bystander rule and MC sufficiency.** 10 rows: 2 VERIFIED, 8 VERIFIED-SOFTENED.
+**What carries over from Bharathi-Kempe-Salek:**
+- Edge-level common random numbers.
+- First-colour-wins.
+- One draw per edge serving whichever colour arrives. This matches the paper's fixed-in-advance edge equivalence (Lemma 1).
 
-**What holds**
-- Bharathi et al. (method-source, strong) supports edge-level common random numbers with first-colour-wins. Each edge has one draw with no colour in the key, which matches the paper's fixed-in-advance edge equivalence (Lemma 1).
-- Borodin's inapproximability result covers models with separate per-technology edge weights. The shared kernel sits outside it. That holds only while both colours use the same P; giving the anti side its own physics would move the engine into the hardness scope.
+**What departs from it:**
+- **Timing.** Hop-synchronous unit steps replace the paper's continuous exponential delays.
+- **Ties.** The paper has no ties between simultaneous arrivals. The code's frontier is built A-first, so a node reached by both colours in the same hop goes to CU. This is confirmed by code reading. It biases CU reach upward by an unmeasured amount, and the size stays UNVERIFIED until a B-first or randomized-order rerun under the same draws measures it.
 
-**Departures from the cited model**
-- **Timing.** Unit hops replace Bharathi's continuous exponential delays.
-- **Ties (VERIFIED-SOFTENED, contradicts).** The A-first frontier resolves same-hop arrivals deterministically for the pro side, where the paper designs ties away. The direction of the bias favours CU reach. Its size is unmeasured.
+**Complexity.** Borodin et al. show that the shared kernel keeps the engine outside the separate-weights hardness result. Giving the anti side its own physics (for example cpf_pressure on B only) would move it inside.
 
-**Unsupported inputs**
-- The bystander rule min(0.9, industry$/400000) has no basis in any row.
-- MC = 20 adequacy is the system's own claim. Arya 2025 used 100,000 draws but gives no rationale, and no row tests 20 versus more.
-- Harrison 2010 and Zareie apply as generic cautions that outputs are model-conditional.
+**Constants with no source:**
+- The bystander rule min(0.9, $/400,000) has no basis in any paper.
+- MC=20 adequacy is the system's own claim (mc_stability_check). Arya 2025 used 100,000 draws with no rationale, which says nothing about 20.
 
-**Model class**
-- Cai 2025 and Moreno 2021 use reversible voter models and a strategic opponent. They show a difference of model class, not an error. The claim that cosponsorship is near-progressive is UNVERIFIED.
-- Kamarthi and Kumar gains come from uniform single-colour IC and do not transfer to this two-colour heterogeneous kernel.
+**Model-class alternatives, not refutations:**
+- Cai 2025: a non-progressive voter model with a strategic opponent.
+- Moreno 2021: hub targeting in the discrete regime.
+- Kumar 2022 and Kamarthi 2020: surrogates trained on single-colour labels. These would need retraining on competitive labels before standing in for this engine.
 
-### Contradictions
-- Bharathi et al. (VERIFIED-SOFTENED, contradicts): the paper avoids simultaneous-arrival ties. The code's A-first frontier hands same-hop ties to the pro side deterministically. The effect on CU reach is unmeasured.
+**Harrison 2010** is a generic caution: MC is only as good as its inputs, and analytic alternatives should be considered first.
 
-### Gaps
-- Bystander mobilization min(0.9, $/400k): no evidence. Fill by regressing anti-side cosponsor or opposition accumulation on CU bills on opposing-industry PAC dollars per member, within a stated window and denominator.
-- MC sufficiency: run an internal convergence check of seed-order stability against MC (20, 40, 200) under CRN, reporting rank deltas. This is not a literature question.
-- Fit to reality: no row checks whether competitive IC reproduces observed cosponsor accumulation curves on CU bills.
+**Contradictions:**
+- Bharathi et al. avoid simultaneous-arrival ties through continuous delays. The code resolves same-hop ties deterministically in CU's favour. The departure is confirmed in code; its effect on CU reach is unmeasured (UNVERIFIED, DE-062).
 
-### Paul's position vs the evidence
+**Gaps:**
+- No study shows the competitive IC reproduces observed cosponsorship accumulation curves on CU bills. Fill it with a back-test of simulated vs observed cosponsor counts over time on past CU bills, with a pre-registered fit metric.
+- The bystander mobilization rule min(0.9, industry$/400k) has no evidence. Fill it with an observational test of whether industry PAC money to a member predicts anti-side stance among previously neutral members, stratified by party.
+- MC=20 adequacy is unsupported. Fill it with a variance study of rank and frontier decisions across MC 20/40/200 under CRN, reported as rank-flip rates.
+- Order bias is unmeasured. Fill it with a rerun using B-first and randomized frontier order under identical draws.
 
-Paul wants rival industries modelled; the engine models them, but only as a non-strategic bystander probability. Bharathi's guarantees hold only for a last mover facing a fixed opponent, so industry reacting to public FEC filings is outside the design. Paul's preference for cheap analytic scenario estimates (Viral Centrality) has no head-to-head test against the MC cascade in any row. The choice of MC with CRN is defensible (Harrison) but unbenchmarked.
+**Paul's position vs the evidence.** Paul wants rival industries modelled; the two-colour race does that, and Bharathi supports the structure. He also wanted a cheap analytic proxy (Viral Centrality). The system chose MC with CRN, and no bearing compares the two head-to-head. Harrison's advice to consider analytic alternatives first is in Paul's favour, but it is not evidence that the proxy is accurate.
 
-### Open questions
-- How much CU spread is attributable to A-first tie-breaking? Rerun with B-first and randomized frontier order under the same draws.
-- Is MC = 20 enough for frontier seed order, or only for aggregate spread?
-- Should industry be modelled as a reacting player, given public FEC disclosure?
+**Open questions:**
+- How much CU reach does the A-first same-hop tie rule add?
+- Does industry react to CU seeding (filings are public)? If so, the fixed-opponent framing fails (Bharathi).
+- Would Viral Centrality or Katz-Bonacich reproduce the MC frontier order within the CRN noise band?
 
-### Read first
-
-[[bharathi-nd-competitive-influence-maximization]] [[borodin-nd-threshold-models-competitive]] [[harrison-2010-introduction-monte-carlo]] [[moreno-2021-shadowing-shielding-effective]] [[cai-2025-competitive-influence-maximization]]
+**Read first:** [[bharathi-nd-competitive-influence-maximization]], [[borodin-nd-threshold-models-competitive]], [[harrison-2010-introduction-monte-carlo]], [[moreno-2021-shadowing-shielding-effective]], [[cai-2025-competitive-influence-maximization]]
 
 ## Contingent seed activation gate
 
@@ -220,12 +209,12 @@ Paul wants rival industries modelled; the engine models them, but only as a non-
 
 **Method.** SGATE ranges from Highly Persuadable 1.00 down to Opponent 0.35, with unknown 0.85. seed_prob comes from the receptivity layer.
 
-**Code refs.** `fec/moneyball_core.py:626-630`
+**Code refs:** `fec/moneyball_core.py:626-630`
 
-**Assumptions**
+**Assumptions:**
 - A lobbied legislator acts only with a stance-graded take-up probability (Chen et al. UAI 2021 contingency-aware seeding)
 
-### Evidence
+**Evidence (5 bearings: 1 VERIFIED, 3 VERIFIED-SOFTENED, 1 UNVERIFIED; 5 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -235,44 +224,39 @@ Paul wants rival industries modelled; the engine models them, but only as a non-
 | [[madsen-2017-strategic-advantages-micro]] | 2017 | supports | Under Bayesian source-credibility updating, contacts restricted to receptive targets (credibility signal above 0.5) convert better than untargeted contacts. Contacting audiences who view the source unfavourably moves them away from the source's position. | Directional agreement only. The paper's agents are voters, not legislators. Its unit is a source-credibility belief update, not a take-up decision about cosponsoring, and it estimates no take-up rates. The SGATE values remain unestimated design constants; this paper does not calibrate them. | weak | UNVERIFIED |
 | [[watkins-1992-q-learning]] | 1992 | context | Q-learning needs each state-action pair sampled an infinite number of times (p.281). Lemma B.3 (p.284; proof p.290) says action-replay estimates of rewards and transitions converge with probability 1 as the level grows, under learning-rate sum conditions. This concerns estimating model quantities from unbounded samples, not learning a gate parameter. No finite-sample rate is given. | Learning take-up rates would need repeated observed contact-to-action outcomes per stance tier, which the system does not log. The paper's result is asymptotic and gives no sample size. The link is conceptual: Lemma B.3 concerns action-replay transition and reward estimates, not gate probabilities. Weak strength is right. | weak | VERIFIED-SOFTENED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 5 bearings: 1 VERIFIED, 3 VERIFIED-SOFTENED, 1 UNVERIFIED. **Evidence weight: method source only, plus one lead.** 
 
-**Evidence weight: the concept is supported, the values are unsupported.** 5 rows: 1 VERIFIED, 3 VERIFIED-SOFTENED, 1 UNVERIFIED.
+**Chen et al. 2021** supplies the idea that invitation is not activation. But in that paper:
+- the take-up probability q is homogeneous across nodes and known a priori;
+- the default q is 0.6, a simulation default (the paper estimates no real-world q);
+- the setting is multi-round, with HIV peer leaders.
 
-**The concept**
-- Chen 2021 (method-source) establishes that an invitation is not an activation.
-- Chen's q is homogeneous across nodes, a known prior, and set to a simulation default of 0.6 (HIV peer leaders). The paper estimates no real-world take-up rate.
-- SGATE is member-specific and single-shot, so Chen's theorems do not cover it. The 0.60 base of seed_prob is Chen's simulation default carried over, not an estimate.
+The system's seed_prob baseline of 0.60 matches that simulation default. It is not a legislator estimate. SGATE is member-specific and single-shot, so Chen's theorems do not cover it.
 
-**The guarantee**
-- Golovin 2011 (VERIFIED) gives the (1-1/e) adaptive guarantee for independent take-up. It needs two things the system does not have: monotone submodular spread, which is unshown for this competitive kernel, and known take-up probabilities. SGATE is not estimated, so the known-prior condition fails.
+**Golovin & Krause 2011** give (1-1/e) for independent take-up. That guarantee needs a known prior and adaptive submodular spread; SGATE is unestimated and the competitive kernel's submodularity is not shown.
 
-**The values**
-- Zareie supports only the framing that member attributes may enter seed activation.
-- Madsen 2017 (UNVERIFIED, voter agent-based model) agrees that contacting unreceptive targets converts worse and can backfire. SGATE has no negative outcome.
-- Watkins 1992 notes that learning take-up would need logged contact-to-action outcomes per tier, which the system does not collect.
+**Zareie 2023** supports only the framing that member attributes can enter activation. It gives no rates.
 
-seed_prob is a heuristic take-up weight, not an access or introduction probability (D-025).
+**Madsen 2017 (UNVERIFIED lead):** contacting unreceptive audiences can move them *away*. The gate has no backfire outcome.
 
-### Contradictions
-- none recorded
+**Watkins 1992:** learning the gate would need repeated logged contact-to-action outcomes per tier, which the system does not log.
 
-### Gaps
-- SGATE values (1.00 down to 0.35, unknown 0.85) and the 0.15 floor are unestimated. The study that would fill this is a field or quasi-experiment logging lobbying contact and subsequent cosponsorship, with take-up broken down by prior stance tier.
-- Scan lead (UNVERIFIED): Camp, Schwam-Baird & Zelizer report null lobbyist-outreach effects on cosponsorship across four field experiments in two state legislatures, with block randomization within legislator. If its replication files allow a split by prior position, it is the closest existing design. Transfer from state legislatures to Congress is not established.
-- No backfire branch for contacts with Opponents.
+**Bottom line:** SGATE (1.00 down to 0.35, unknown 0.85) and the seed_prob coefficients are design priors.
 
-### Paul's position vs the evidence
+**Contradictions:**
+- none
 
-Paul's mapping of contingency-aware seeding to legislators who may or may not move holds as a concept. The evidence does not support SGATE as anything more than a design prior. Chen itself uses one homogeneous q, chosen by simulation default, because per-node values are impractical to know.
+**Gaps:**
+- No take-up rates exist by stance tier. Fill it with logged lobbying-contact events (from CU-side meeting logs, not LDA, which is identity-only per D-021) joined to subsequent cosponsorship deltas, tested on the prospective H1 contract (at least 150 members with cosponsorship deltas).
+- There is no test of whether contact with Opponents backfires. Fill it with the same panel, testing for negative stance movement after contact in low tiers.
 
-### Open questions
-- Is there any internal record (ACU fly-in logs, contact notes) that could estimate take-up by tier, given that LDA filings are identity-only (D-021)?
-- Does the outcome contract's H1 threshold (at least 150 members with cosponsorship deltas) make an SGATE test feasible this Congress?
+**Paul's position vs the evidence.** Paul maps contingency-aware seeding directly onto legislators who may or may not move when approached. The concept transfers. Two caveats: Chen's q is homogeneous, known, and a simulation default; and the system's 0.60 baseline is that default, not a measurement. Paul's mapping is a reasonable design prior that has not been calibrated.
 
-### Read first
+**Open questions:**
+- Can CU-side contact logs be obtained at member level to estimate SGATE?
+- Should low tiers carry a negative-outcome branch (Madsen lead), or is a floor of 0.15 enough?
 
-[[chen-2021-contingency-aware-influence]] [[golovin-2011-adaptive-submodularity-theory]] [[zareie-2023-influence-maximization-social]] [[madsen-2017-strategic-advantages-micro]]
+**Read first:** [[chen-2021-contingency-aware-influence]], [[golovin-2011-adaptive-submodularity-theory]], [[zareie-2023-influence-maximization-social]], [[madsen-2017-strategic-advantages-micro]]
 
 ## Flip - winnability model
 
@@ -280,15 +264,15 @@ Paul's mapping of contingency-aware seeding to legislators who may or may not mo
 
 **Method.** Saturating money term on receipts R (floored at $200k; zero imputed to median). nA = pro-neighbour weight x cpf_pressure. WM 0.35, WP 0.65, HALFF 0.10. A comment cites a Volden-Wiseman passage bonus but the code line has none.
 
-**Code refs.** `fec/engine/flip_model.py:1-147`, `fec/engine/money_observation.py:4-13`
+**Code refs:** `fec/engine/flip_model.py:1-147`, `fec/engine/money_observation.py:4-13`
 
-**Assumptions**
+**Assumptions:**
 - Money buys access more than votes (Ansolabehere; Hall & Wayman; Kalla & Broockman)
 - Peer proximity outweighs money
 - Money saturates relative to receipts
 - Flip-side competitive LT has no submodularity guarantee (Borodin et al.)
 
-### Evidence
+**Evidence (20 bearings: 5 VERIFIED, 14 VERIFIED-SOFTENED, 1 UNVERIFIED; 20 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -307,57 +291,59 @@ Paul's mapping of contingency-aware seeding to legislators who may or may not mo
 | [[cai-2025-competitive-influence-maximization]] | 2025 | qualifies | Vote share at a finite horizon depends on when each controller starts and on degree heterogeneity. At T=16 (dimensionless model time, unit-weight graphs) the degree of equilibrium l never exceeds 0.82 and high-degree nodes relax more slowly. An optimized start beats t_a=0 in all 30 rows of Table 2 (5 real networks, T in {16, 256}, budget ratio in {0.1, 1, 10}). Congress votes network, T=16, budget ratio 1: S_A 0.705 vs 0.500 (model output, not observed votes). | Structural parallel only: both are ratios of competing pulls. Magnitudes do not transfer, since paper time is dimensionless, edges have unit weight and opinions are binary simple contagion. The paper shows that an equilibrium-share form omits timing, not that pflip is miscalibrated. | moderate | VERIFIED |
 | [[moreno-2021-shadowing-shielding-effective]] | 2021 | context | Steady-state opinions solve (L + Wa + Wb) x = wa for the voter model with zealots (Eq 1 rate equation on p.3; Eq 2 vote share on p.4). In the high-allocation limit (w much larger than d) the optimal allocation has no degree dependence (Eqs 7-8, pp.7-8). | The functional form is analogous (a share-of-pull ratio), but the paper's neighbour states are endogenous while Melange fixes them from stance, so the paper's HMF results do not transfer. Read pflip only as a vote-share proxy, never as a vote or access probability (D-025). The analogy itself is an inference (DE-062). | weak | VERIFIED |
 | [[anon-2025-cross-industry-political]] | 2025 | qualifies | Bank CEOs give little directly to candidates; several, including Moynihan and Masrani, gave nothing across recent cycles. Bank money flows mainly through company PACs and the ABA (cyclical average $2,402,499, memo wording). Mutual-fund Super PAC spending (about $261M annual average to the four biggest Super PACs; industry PACs about $13M cumulative; memo figures, no source or window) is described as channeled by the industry. CU giving runs through ACU coordination, with $0 dark money to the four biggest Super PACs (memo wording). | Structural caution only. The memo's dollar figures have no source, window, N or denominator, so they cannot calibrate WM, HALFF or the b-term. Before any engine change, Mentat's trade-association and Super PAC columns would need mapping to members. | weak | VERIFIED-SOFTENED |
+| [[ansolabehere-2002-little-money-politics]] | 2002 | qualifies | Money is a small part of a reelection-minded legislator's calculation: party moves the score by more than 30 points against about 2 for money. The paper lists buying access as one of several group motives and does not test it. It cites 3 billion dollars of lobbying against 300 million of PAC contributions in 1997-98, and Langbein's estimate of about 10000 dollars per legislator hour. Its main thesis is consumption rather than access. | The paper supports money as the minority partner on votes, not on access. The access attribution rests on Kalla and Broockman, which is outside this paper. Peer proximity (cpf_pressure) is not party; the 30-point party effect is only the nearest analogue. With peer terms zero, pflip approaches 0 or 1 only at extreme money ratios because of the +1 smoothing. | moderate | VERIFIED-SOFTENED |
+| [[callaway-2025-difference-differences-continuous]] | 2025 | suggests-extension | A dose-response curve ACRT(d) is identified only under strong parallel trends; cross-dose comparisons otherwise carry selection bias ATT(l\|h) minus ATT(l\|l) (Thm 3.2). In the application the nonparametric ACRT(m) point estimates are negative for m above 0.41, covering 71 percent of treated hospitals, but the 95 percent uniform band covers zero everywhere, so only pointwise sign changes are reported. ATT_loc stays positive. A quadratic functional form is precise only if it is correctly specified. | A test would need a member panel: votes or stance before and after giving, an unfunded zero-dose comparison group, and dose as share of receipts. PAC dose is plausibly selected on expected response, so strong parallel trends is doubtful and any curve beyond ATT_loc would carry selection bias. This is a design template for a future test, not evidence on the current HALF or MAXSHIFT values. Any result stays UNVERIFIED until a second path reproduces it (DE-062). | moderate | VERIFIED-SOFTENED |
+| [[defigueiredo-2013-advancing-empirical-research]] | 2013 | suggests-extension | Lobbying spending was about 3.5 billion dollars in 2012, roughly five times the approximately 750 million a year in interest-group campaign contributions (pp.5-6). Kang (2012) finds expenditure effects on enactment are very small but the marginal policy return is about 140 percent (p.28), and the value of lobbying depends on timing and targets (p.28). Selection into lobbying (about 10 percent of firms) biases naive return estimates upward only if non-lobbying interests expect no return (p.17). | Lobbying cannot enter a per-member leg directly, because LD-2 names no member and LDA is an identity source, not an edge or weight source (D-021). Pooled return figures must carry an UNSTRATIFIED label. Kang's 140 percent is a policy return in a structural model, not a dollar ROI. | moderate | VERIFIED-SOFTENED |
+| [[fremeth-2018-spillovers-regulating-corporate]] | 2018 | qualifies | Firm-cycles whose PAC reaches the limit are associated with 549,000 to 1.6M dollars more lobbying per cycle (abstract; Table 3 col 1; Table 5) and with about 110 dollars more CEO giving per candidate at the limit (Table 2). CEO giving is candidate money outside the PAC channel. Authors describe these as partial correlations. | Hypothesis only: if competitor bank and finserv firms hit the cap as S&P 500 PAC firms do, ind0 undercounts competitor pressure on the members they max out. The paper does not test this. Does not license LDA dollars as a per-member weight (D-021). | moderate | VERIFIED-SOFTENED |
+| [[harbridge-yong-2023-bipartisan-path-effective]] | 2023 | qualifies | Within-member quadratic in the attracted share: House linear 1.828 and squared -1.844 peak at 0.496 (Model 3.1); Senate 1.666 and -1.626 peak at 0.512 (Model 3.4). Effectiveness falls on both sides of the peak. A one-SD decline from the mean costs about 22 percent of LES in the House and 16 percent in the Senate; a one-SD rise adds about 8 and 4 percent. Mean LES about 1.0. | A linear bonus approximates the paper only below a share of about 0.5, where most members sit (paper mean 0.29 House, 0.35 Senate). The paper outcome is LES on a member's own sponsored bills, not the value of flipping a vote, and its share is the attracted share, not bpf. Any change to the functional form would move ranks and is not proposed here. | moderate | VERIFIED-SOFTENED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 20 bearings: 5 VERIFIED, 14 VERIFIED-SOFTENED, 1 UNVERIFIED. **Evidence weight: moderate for "money is the minority term on votes", contested on access, nil on the constants.** 
 
-**Evidence weight: direction moderately supported, weights unsupported, access premise contested.** 15 rows: 5 VERIFIED, 9 VERIFIED-SOFTENED, 1 UNVERIFIED.
+**Money is small on votes.** Ansolabehere et al. 2002 is the anchor (House 1978-1994, N=3,400). About $60k of corporate PAC money moves the CCUS score by at most 2 points, against more than 30 for party; that contrast is conditional on party and must be labelled UNSTRATIFIED. Member fixed effects eliminate the effect. Bombardini & Trebbi 2020, citing Kang, report a tiny enactment effect for energy policy in the 110th Congress. Jacoby 2025 is a simulation from literature parameters: one House member out of 435 moves on one 2009 bill. Holyoke 2015 (UNVERIFIED) agrees.
 
-**Money as the minority partner (WM 0.35 vs WP 0.65)**
+**Access is contested:**
+- Kalla & Broockman find a donor-label access premium: 191 House offices of one party, Jun-Aug 2013, chief-of-staff-or-above meetings 12.5% vs 2.4%. The study measures no votes.
+- Furnas 2019 finds *no* donor meeting premium in 2017 stated staff intentions.
 
-The ordering is consistent with:
-- Bombardini 2020's review: Kang's structural estimate puts lobbying's enactment effect at 0.021%-0.415% against an 8% baseline (energy, 110th Congress);
-- Kim 2020/2023 (amount effect about 0.03 pp per 10% more donation; not causal; manufacturing firms 2008-18);
-- Jacoby 2025, a simulation, not an estimate: donations move 1 of 435 House members on ACESA 2009;
-- Holyoke 2015 (UNVERIFIED).
+The code comment cites "money buys access not votes", yet the model puts money directly into a flip probability at weight 0.35. That is a modelling step beyond what the access literature shows. pflip must be read as a heuristic share, not as a vote or access probability (D-025).
 
-No row estimates WM, WP or HALFF. The CALIBRATED label on WM has no source (Bonica row).
+**Constants.** No paper calibrates WM/WP, HALFF or the saturation. The code labels WM/WP as CALIBRATED, and Bonica 2013 explicitly gives that label no support. Callaway et al. 2025 supply a dose-response design template; PAC dose is plausibly selected on expected response.
 
-**The access half of the code comment is contested**
-- Kalla & Broockman (VERIFIED-SOFTENED, strong) found that a donor label raised senior access: chief of staff or above 12.5% vs 2.4%. That is 191 House offices of one party, June-Aug 2013, with no vote or position outcome.
-- Furnas 2019 (VERIFIED) found no donor meeting premium in staff stated intentions in 2017.
-- Neither paper supports the 'not votes' half; that rests on Ansolabehere and Fowler-Garro-Spenkuch, which no row checked.
+**Passage bonus.** The target term (1+0.3 bpf) carries an attributed "Volden-Wiseman +8-14%" that is not in the paper. Harbridge-Yong 2023 show an inverted-U in attracted bipartisan share, peaking at about 0.50 (House) and 0.51 (Senate). The monotone linear bonus approximates that only below 0.5.
 
-**Structural points**
-- Kim 2020 suggests the lobbying-link value of money is onset-driven and decays over about three years. A static cycle-level money term ignores this.
-- Battaglini 2016 (VERIFIED) shows network spillover of influence (Bonacich multiplier), which pflip's one-hop, own-member-only money term omits. Its phi may reflect correlated effects rather than conformity, so a spillover term would need its own prereg look.
-- Bonica 2013: both money legs are corporate or trade PAC money, which is mixed-motive. Individual-donor ideology results cannot be borrowed to call these dollars expressive.
+The component's own method note says the code line has no bonus, but the bearing and the computes field both show (1+0.3 bpf). This needs checking.
 
-**LDA (D-021)**
-- Huneeus & Kim, Jacoby and Furnas (conflating) all point out that lobbying spend is the larger channel and is absent from the money terms. Under D-021 that absence is deliberate. This is not a recommendation to add LDA dollars or weights.
+**Timing.** Kim et al. 2020 and 2023 find the money-to-lobbying link is onset-driven and transient; the static cycle-level term ignores this. Cai 2025 shows equilibrium shares depend on timing.
 
-pflip is a heuristic winnability score, not a vote probability (D-025).
+**Coverage.**
+- Furnas (nd) shows that 64-70% of politically active organizations per year (1998-2018) lobby without a PAC.
+- Fremeth 2018 suggests maxed-out PACs shift money to lobbying.
+- So the b-leg may undercount competitors. Under D-021, LDA dollars still cannot become a per-member weight.
 
-### Contradictions
-- The code comment 'money buys access' (Kalla & Broockman: access premium, 2013 field experiment) conflicts with Furnas 2019 (no donor meeting premium in staff stated intentions, 2017). The evidence is divided. Neither paper bears on votes.
-- WM/WP are labelled CALIBRATED in flip_model.py, but no source in the evidence calibrates them (Bonica 2013 row).
+**Lead.** Battaglini 2016 suggests network spillover of money pricing. This would need its own pre-registered look.
 
-### Gaps
-- Empirical peer-vs-money weight ratio in cosponsorship or roll-call decisions on CU bills: needs a member-level panel regressing alignment on CU and opposing PAC money as a share of receipts, with party and peer-exposure controls, stratified by party.
-- Concavity in the contribution-to-receipts ratio: untested anywhere in the rows.
-- Timing: no onset or recency term, although Kim 2020 implies one.
+**Contradictions:**
+- The code comment says 'money buys access' and cites Kalla & Broockman. Furnas et al. 2019 (2017 staff vignette, N=441) find no donor meeting premium, and Democratic staff are less likely to meet donors.
+- The target bonus (1+0.3 bpf) is attributed to Volden-Wiseman at +8-14%. That figure is absent from the paper. Harbridge-Yong 2023 show an inverted-U (peak attracted share about 0.50), not a monotone rise.
+- WM/WP are labelled CALIBRATED in code. No bearing, including the cited ones, estimates them.
 
-### Paul's position vs the evidence
+**Gaps:**
+- The relative effect of CU vs industry money as a share of receipts on CU roll-call or cosponsorship alignment is unestimated. Fill it with a member panel using continuous-dose difference-in-differences (Callaway), with an unfunded comparison group, member fixed effects, and party strata.
+- The peer-vs-money weight ratio is unestimated. Fill it with a joint hazard model of cosponsorship timing on neighbour adoption and money dose.
+- Concavity in the contribution-to-receipts ratio is untested. The same panel can check it with a nonparametric dose curve.
 
-Paul's 'money buys access and returns' and his reading of Jacoby (lobbying sways undecided members more than donations) both fit the model's conservative money weight. Jacoby is a simulation with literature-chosen inputs, not an estimate, so it corroborates rather than calibrates. Paul's own access source, Kalla & Broockman, measures access only. His ROI sources (Alexander, Huneeus & Kim) measure firm returns to lobbying spend, not member movement from PAC money, so they give no basis for raising WM.
+**Paul's position vs the evidence.** Paul believes money buys access and returns. On *votes*, the evidence sides with the model's conservative stance, not with his ROI enthusiasm. On *access*, the evidence is split (Kalla & Broockman yes; Furnas 2019 no).
 
-### Open questions
-- Should the CALIBRATED tag on WM/WP be relabelled as owner judgment? That is a docs change and Paul's call.
-- Is there an onset effect, meaning first-time CU gifts move alignment more than repeat gifts?
-- The method note says a code comment cites a Volden-Wiseman passage bonus that the code does not implement. Should the comment or the code be fixed?
+His Jacoby highlight, that lobbying sways undecided members more than donations do, comes from a simulation with literature parameters, one bill (ACESA 2009), and 7-8 members moving. It is not an estimate. Under D-021 it cannot license an LDA weight in the model.
 
-### Read first
+His Bonica margin note asking for a short-term theory of engagement is answered in part by Kim et al. (onset-driven, transient links). The current static money term ignores that.
 
-[[kalla-nd-campaign-contributions-facilitate]] [[furnas-2019-moneyed-interests-information]] [[bombardini-2020-empirical-models-lobbying]] [[kim-2020-strategic-sequential-links]] [[battaglini-2016-influencing-connected-legislators]] [[bonica-2013-mapping-ideological-marketplace]]
+**Open questions:**
+- Does the code at flip_model.py:142 carry the (1+0.3 bpf) bonus? The component note and the bearing disagree.
+- Should the CALIBRATED label on WM/WP be changed to owner judgment?
+- Should money enter pflip at all if the evidence shows access but not votes, or should it enter only through an access or engagement term?
+
+**Read first:** [[ansolabehere-2002-little-money-politics]], [[kalla-nd-campaign-contributions-facilitate]], [[furnas-2019-moneyed-interests-information]], [[harbridge-yong-2023-bipartisan-path-effective]], [[callaway-2025-difference-differences-continuous]], [[kim-2020-strategic-sequential-links]]
 
 ## Persuadability table PERS
 
@@ -365,13 +351,13 @@ Paul's 'money buys access and returns' and his reading of Jacoby (lobbying sways
 
 **Method.** Fixed design table. PERS_NONE was ratified 2026-07-02 at Ally parity. The no-position default drives about 60% of cells (open M5).
 
-**Code refs.** `fec/moneyball_core.py:564-568`
+**Code refs:** `fec/moneyball_core.py:564-568`
 
-**Assumptions**
+**Assumptions:**
 - Persuadability is inverted-U along the stance ladder
 - Silence equals uncertainty, not enthusiasm
 
-### Evidence
+**Evidence (6 bearings: 2 VERIFIED, 4 VERIFIED-SOFTENED, 0 UNVERIFIED; 6 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -382,36 +368,34 @@ Paul's 'money buys access and returns' and his reading of Jacoby (lobbying sways
 | [[tappin-2023-quantifying-potential-persuasive]] | 2023 | context | In the Study 2 calibration (n=3,990 respondents, 36 issues, 48 progressive video ads), the messages predicted most persuasive were often on obscure, low-information policies such as net neutrality. The authors offer this as one possible explanation for the Study 2 divergence, alongside a mixed pretest design and a nearly one-year gap before follow-up. They expect smaller effects in high-salience settings with countermessaging. | Weak. Tappin measures attitude change among public respondents after one video, while PERS models legislators under lobbying. The low-information point might carry over to members on low-visibility CU topics, but nothing here measures that. | weak | VERIFIED-SOFTENED |
 | [[sverdrup-nd-introduction-grf-causal-forests]] |  | qualifies | Best linear projection tests whether effects vary along a chosen covariate: financial.autonomy.index coefficient -0.0329 (SE 0.0128, p = 0.0099). Other terms: is.female p = 0.17, family cash transfer p = 0.066, is.unemployed p = 0.61. Heterogeneity can be hard to detect at moderate n (payday AUTOC t = 0.67, about 2,500 individuals; text says possibly underpowered). | A BLP of contact effect on stance-tier ordinals needs logged contact and tier movement; the payday example suggests a sample of 533 members may be too small for tier-level heterogeneity. A null would not refute the table. | weak | VERIFIED-SOFTENED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 6 bearings: 2 VERIFIED, 4 VERIFIED-SOFTENED, 0 UNVERIFIED. **Evidence weight: weak. No bearing tests the inverted-U in legislators.** 
 
-**Evidence weight: weak. No legislator evidence on the inverted-U.** 6 rows: 2 VERIFIED, 4 VERIFIED-SOFTENED. All are weak.
+**Jacoby 2025.** Committed members are fixed only *by assumption* (absorbing states). Widening the centrist band from ±0.25 to ±0.35 reverses the House outcome. How the movable set is defined can decide the result, and the system's own PERS_NONE sweep shows the same thing. PERS_NONE 0.45 drives about 60% of cells (59.8% per the flip_model comment).
 
-- Jacoby 2025 makes the extremes immovable by construction: Y and N are absorbing states. It does not test an inverted-U. Its useful warning: widening the centrist band from ±0.25 to ±0.35 reverses the House result, so how the movable set is defined can decide the outcome. The system's own PERS_NONE sweep shows the same sensitivity, and PERS_NONE drives about 60% of cells (59.8% per the flip_model comment).
-- Cai 2025 (simulated agents) allocates less to zealots. That matches the low PERS for Opponent and Highly Skeptical, but it never sets allocation to zero, so it does not back the hard F1 zero gate. Champion's low PERS reflects a member already won, not zealot resistance.
-- Broockman 2026 (voters, not legislators) supports applying persuadability issue by issue.
-- Aref 2021 shows coalition composition shifting across sessions, not individual movability.
-- Tappin 2023 (public respondents) hints that low-information topics are more movable. No row measures this for members.
-- Sverdrup/grf shows how a best-linear-projection test of contact effect by tier would work, and warns that 533 members may be too few for tier-level heterogeneity.
+**Cai 2025** (simulated agents): resistant agents get less budget. This matches the low Opponent multiplier in direction. It does not support the hard zero F1 gate, and Champion's low value means "already won", not resistance.
 
-### Contradictions
-- none recorded
+**Broockman & Kalla 2026** (voters, not legislators): moving pays only where the audience disagrees. This is consistent with applying PERS per topic. It is an analogy only.
 
-### Gaps
-- The inverted-U is untested on legislators. Fill with observed stance-tier movement after a dated lobbying or advocacy contact, by prior tier, with heterogeneity tested by BLP or causal forest. It needs logged contacts the system does not have.
-- PERS_NONE 0.45 (silence equals uncertainty) has no evidence either way, yet it drives about 60% of cells.
-- Scan lead (UNVERIFIED): Camp, Schwam-Baird & Zelizer report null average lobbying effects in state legislatures. If replicated in Congress, a null average would bound how much any tier can move.
+**Aref & Neal 2021** describe coalition-level ideological drift across sessions, not individual movability. They give no support for Fitzpatrick-type members being more movable.
 
-### Paul's position vs the evidence
+**Tappin 2023:** persuasion was largest on obscure issues, which may carry over to low-visibility CU topics. Nothing has measured that.
 
-Paul's view that centrists and ideologically fluid competitive seats are most movable fits the table's shape. He has never tested it, and no row tests it on legislators. Aref gives no support for treating third-coalition or Fitzpatrick-type members as individually more movable. Jacoby's centrist result is assumed, not found.
+**Sverdrup:** tier-level heterogeneity may be undetectable at n=533.
 
-### Open questions
-- How sensitive are flip and frontier outputs to PERS_NONE across plausible values (0.25-0.65)? The value covers about 60% of cells.
-- Should F1's hard zero for Skeptic and Opponent tiers be softened to a small positive weight, in line with Cai? That is Paul's call.
+**Contradictions:**
+- none
 
-### Read first
+**Gaps:**
+- The inverted-U is untested. Fill it with observed stance-tier transitions after CU contact or campaign exposure, by starting tier (an ordinal transition model). Sverdrup's power caution applies at 533 members, so a null would not refute the table.
+- PERS_NONE (silence = uncertainty) is unvalidated, yet it drives about 60% of cells. Fill it with a test of whether silent members move at rates between Ally and Persuadable.
 
-[[jacoby-2025-mathematical-modeling-analysis]] [[broockman-2026-should-moving-middle]] [[sverdrup-nd-introduction-grf-causal-forests]] [[cai-2025-competitive-influence-maximization]] [[tappin-2023-quantifying-potential-persuasive]]
+**Paul's position vs the evidence.** Paul reads ideologically fluid, competitive-seat members and centrists (his example is Fitzpatrick) as the most movable. This is consistent with the table's shape, but no bearing tests it. Aref & Neal, which he cites, give it no individual-level support. The Cook table shows Fitzpatrick at EVEN PVI but rated Likely R, which reflects personal strength rather than fluidity. Jacoby warns that the movable-set definition can decide outcomes.
+
+**Open questions:**
+- How sensitive are ranks to PERS_NONE across 0.30-0.60, given that it drives about 60% of cells?
+- Should the F1 zero-allocation gate for resistant tiers be softened? Cai never sets zealot allocation to zero.
+
+**Read first:** [[jacoby-2025-mathematical-modeling-analysis]], [[broockman-2026-should-moving-middle]], [[aref-2021-identifying-hidden-coalitions]], [[sverdrup-nd-introduction-grf-causal-forests]], [[tappin-2023-quantifying-potential-persuasive]]
 
 ## Money response (lean shift) and money-triggered defection
 
@@ -419,13 +403,13 @@ Paul's view that centrists and ideologically fluid competitive seats are most mo
 
 **Method.** MAXSHIFT 18 (cut from 40), HALF 0.10, DTHRESH 11.25. Crossing one rung takes roughly a sixth of receipts.
 
-**Code refs.** `fec/engine/money_response.py:15-90`
+**Code refs:** `fec/engine/money_response.py:15-90`
 
-**Assumptions**
+**Assumptions:**
 - Money moves positions little (null vote-buying literature)
 - Threats weigh more than gifts (loss aversion, elite-attenuated)
 
-### Evidence
+**Evidence (6 bearings: 3 VERIFIED, 3 VERIFIED-SOFTENED, 0 UNVERIFIED; 6 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -434,44 +418,31 @@ Paul's view that centrists and ideologically fluid competitive seats are most mo
 | [[bombardini-2020-empirical-models-lobbying]] | 2020 | supports | Structural work finds a very small marginal enactment effect of lobbying (Kang 0.021%-0.415%) despite large stakes, and campaign contributions are low with federal donation caps very seldom binding (Ansolabehere et al. 2003, as reported). | The review addresses enactment and bill outcomes, not shifts in individual member stance. It supports rare money-triggered defection but not the LOSSFRAME 1.10 asymmetry or the specific constants. | weak | VERIFIED |
 | [[jacoby-2025-mathematical-modeling-analysis]] | 2025 | supports | Campaign donations alone move one House member out of 435 (from 9 undecided to 8, 230 to 231 yes). The Senate is reported only for the combined lobbying-plus-donations run, which changes it by one senator (52/47/1 to 52/48/0). The authors note that donations may reflect ideology rather than buy influence (citing Bonica [5]). | This is a consistency check, not a calibration. The donation effect in the paper is a model output from literature parameters (I_F, I_A taken from Meng and Rode), not an observed shift. It is weaker than the experimental and null-result literature already cited at money_response.py:15. | weak | VERIFIED-SOFTENED |
 | [[kalla-nd-campaign-contributions-facilitate]] |  | qualifies | The measured outcome was access: the rank of the official who attended. Positions and votes were not measured. Cosponsorship was nine legislators in total, with equal shares in both arms, and the authors say it tells little about effects. | The paper can be cited for the access measure, but not for a null on positions: its cosponsorship estimate is uninformative rather than null. It says nothing about MAXSHIFT, HALF, DTHRESH or LOSSFRAME. The not-votes half of the premise lies outside the paper (p.555). | weak | VERIFIED |
+| [[ansolabehere-2002-little-money-politics]] | 2002 | supports | In the most common House specification (Column 1, 1978-1994, N = 3400, CCUS 0-100 score) an extra 60000 dollars of corporate PAC money (about 1 SD) changes the score by at most 2 points; 50000 dollars of labor PAC money changes it by 6; a change of party changes it by more than 30 points (40 with district FE). Member fixed effects eliminate the contribution effects, and IV reverses the sign on corporate money. Changes in donations to an individual legislator do not translate into changes in that legislator's roll-call votes. | The paper estimates business-wide PAC money against a Chamber score at ordinary contribution sizes, pooled across the House. The defection channel fires only on scenario shocks near 1/6 of receipts, outside the paper's support. The member-FE null puts the within-member slope at zero, so any nonzero MAXSHIFT is owner judgment, not an estimate. The 2-vs-30 contrast is conditional on party and is not stratified; quote it with an UNSTRATIFIED label. | strong | VERIFIED-SOFTENED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 6 bearings: 3 VERIFIED, 3 VERIFIED-SOFTENED, 0 UNVERIFIED. **Evidence weight: strong support for a small shift, and a strong contradiction on LOSSFRAME.** 
 
-**Evidence weight: the low prior on position change is supported. LOSSFRAME is contradicted by its own citation.** 5 rows: 3 VERIFIED, 2 VERIFIED-SOFTENED.
+**Small shift.** Ansolabehere et al. 2002 (House 1978-1994, N=3,400; UNSTRATIFIED pooled contrast): member fixed effects eliminate contribution effects and IV reverses the sign. The within-member slope is about zero, so any nonzero MAXSHIFT is owner judgment, not an estimate. Defection fires at roughly 1/6 of receipts (about $290k against median receipts of $1,743,281, n=517), which is outside the paper's data support. Poole & Rosenthal 1999 (Congresses 1-105) show near-constant ideal points. Bombardini & Trebbi 2020 and Jacoby 2025 are consistent with rare defection. Jacoby's is a model output, not an observation.
 
-**Supported: money moves positions little**
-- Poole 1999 (VERIFIED): across Congresses 1-105, constant ideal points classify within about 0.3% of linear-drift ones.
-- Bombardini 2020 (VERIFIED): tiny enactment effects.
-- Jacoby 2025: a model output, not an observation.
+**Kalla & Broockman.** Their cosponsorship estimate covers only nine legislators in total. It is *uninformative*, not a null on positions.
 
-Together these back a low MAXSHIFT and rare money-triggered defection: a rung needs about a sixth of receipts, and a $10k gift moves median receipts by about 0.9 lean against DTHRESH 11.25. None of them sets MAXSHIFT 18, HALF or DTHRESH; those are design values. MAXSHIFT is labelled CALIBRATED with no calibration in the rows.
+**LOSSFRAME.** The 1.10 dial cites Linde & Vis for elite-attenuated loss aversion. Linde & Vis found **no** loss aversion in their MPs (n=46 Dutch MPs, 2014-2015) or students, and suspect the task lacked validity. A competitor's donation is also not a loss to the member, so the "threat frame" is a separate untested assumption. LOSSFRAME should be cited as owner judgment.
 
-**Kalla & Broockman**
-- Its cosponsorship estimate (nine legislators in total) is *uninformative*, not null. It cannot be cited for 'money does not move positions'.
+**Contradictions:**
+- LOSSFRAME 1.10 cites Linde & Vis 2016 for elite-attenuated loss aversion. Linde & Vis found no loss aversion among MPs (n=46, 2014-2015), and their 'smaller than other people' claim is not a formal test.
+- Treating competitor money as a loss to the member is unsupported. The paper's loss frame concerns the decision-maker's own outcomes against a reference point.
 
-**Contradicted: LOSSFRAME 1.10**
-- Linde & Vis 2016 (VERIFIED-SOFTENED, strong) found **no loss aversion** in MPs (n = 46) or in students. The code comment cites it as 'elite-attenuated' loss aversion, and audit_full locks the asymmetry in as by design.
-- Separately, a competitor's PAC gift to a member is not a loss *to that member* in the prospect-theory sense, so the 'threat frame' is a second, untested assumption.
+**Gaps:**
+- There is no evidence on whether large competitor spends precede stance shifts in press or votes. Fill it with an event study of large industry contributions or IEs against subsequent CU stance tier changes, with member fixed effects and party strata.
+- The loss/gain asymmetry is unmeasured. Fill it with the same panel, comparing CU-side and competitor-side dose coefficients.
 
-### Contradictions
-- Linde & Vis 2016 (contradicts, strong): no loss aversion found in MPs (n = 46). LOSSFRAME 1.10 cites the paper as its basis, so the citation runs against the dial. Cite LOSSFRAME as owner judgment.
+**Paul's position vs the evidence.** Paul's highlights support the reflection effect and loss framing in MPs, weaker than in the public. The evidence separates these. Reflection (risk-seeking under losses) is found in the paid lottery task and in 2 of 4 scenarios. Loss aversion is not found, and the 'weaker than the public' comparison is informal. The LOSSFRAME dial rests on the half that failed. Paul's notes do not discuss defection, and the null vote-buying literature supports keeping it rare.
 
-### Gaps
-- Stance shifts after large competitor spends: no row. Fill with event studies of press or vote positions on CU issues around large opposing-industry PAC or Super PAC disbursements, with the window stated.
-- Loss/gain asymmetry for legislators facing donor money: no evidence exists. The study would be a survey experiment on staff or members framing the same dollar amount as a rival's gift versus a forgone gift.
-- Cross-issue defection mechanics: no row.
+**Open questions:**
+- Should LOSSFRAME be relabelled as owner judgment, or reset to 1.0? Either is Paul's call.
+- Should defection be disabled outside the range of observed contribution shares (well below 1/6 of receipts)?
 
-### Paul's position vs the evidence
-
-Paul's highlights support a reflection effect in MPs, and Linde & Vis does find one: risky choice 39% under gain vs 76% under loss in the paid lottery, n = 46. Reflection is a different thing from loss aversion. The dial implements loss aversion, which the same paper did not find. The citation should move from LOSSFRAME to the receptivity layer's prospect-domain term, where it fits better, and LOSSFRAME should be relabelled as judgment.
-
-### Open questions
-- Should LOSSFRAME be set to 1.00 or relabelled? Either is a gated change and Paul's call.
-- Should the CALIBRATED label on MAXSHIFT 18 be relabelled as owner judgment?
-
-### Read first
-
-[[linde-2016-politicians-take-risks]] [[poole-1999-nominate-after-years]] [[bombardini-2020-empirical-models-lobbying]] [[kalla-nd-campaign-contributions-facilitate]]
+**Read first:** [[linde-2016-politicians-take-risks]], [[ansolabehere-2002-little-money-politics]], [[poole-1999-nominate-after-years]], [[bombardini-2020-empirical-models-lobbying]], [[kalla-nd-campaign-contributions-facilitate]]
 
 ## Linear-threshold priming (cheapest tip)
 
@@ -479,13 +450,13 @@ Paul's highlights support a reflection effect in MPs, and Linde & Vis does find 
 
 **Method.** theta = tier threshold (0.6 ... 3.0) + max(0, -lean/120) + 0.25 per Opponent cell. Cross-party cue factor sqrt(bpf_u bpf_v) (Bakker-Lelkes-Malka). Recruit cost = CEDGE x 0.5 / PERS[tier]. Money closes the gap only up to 0.97 pm units.
 
-**Code refs.** `fec/engine/lt_priming.py:11-145`
+**Code refs:** `fec/engine/lt_priming.py:11-145`
 
-**Assumptions**
+**Assumptions:**
 - Linear-threshold adoption over summed neighbour pressure
 - Out-party cues do not persuade
 
-### Evidence
+**Evidence (9 bearings: 4 VERIFIED, 5 VERIFIED-SOFTENED, 0 UNVERIFIED; 9 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -499,44 +470,34 @@ Paul's highlights support a reflection effect in MPs, and Linde & Vis does find 
 | [[chen-2023-complex-contagion-influence]] | 2023 | qualifies | K-complex model (Eq. 1): activation probability p0 when at least K neighbours are active and p1 much smaller otherwise. It is motivated by Centola and Macy 2007 and Centola 2010 but not validated on field adoption data in this paper; the paper cites succeeding studies as support. | The paper supports only the modelling option that adoption can be threshold-like. It gives no K or threshold values for legislators. Joint multi-target priming would be a new model needing owner authorisation and a holdout look. | weak | VERIFIED-SOFTENED |
 | [[kempe-2015-maximizing-spread-influence]] | 2015 | qualifies | LT is submodular when in-weights sum to at most 1 (Thm 4.6). The LT model draws each threshold uniformly on [0,1] (Sec 2). Thm 3.3, for the general threshold model, shows NP-hardness of approximation within n^(1-eps) for any eps > 0. Fixed-threshold models are only stated to admit no non-trivial approximation factor (p.117). | Deterministic thresholds are the regime the paper excludes, so the greedy guarantee does not transfer. A future joint multi-target priming optimizer would inherit the n^(1-eps) hardness for general thresholds. Per-target cheapest tip remains a heuristic. | strong | VERIFIED-SOFTENED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 9 bearings: 4 VERIFIED, 5 VERIFIED-SOFTENED, 0 UNVERIFIED. **Evidence weight: moderate on direction (out-party cues non-positive), sound on mathematics, nil on thresholds.** 
 
-**Evidence weight: the sign of the cross-party cue is well supported. No threshold values exist.** 9 rows: 4 VERIFIED, 5 VERIFIED-SOFTENED.
+**Out-party cue clamp.** Furnas 2019, Ringe 2013 and Merkley (all VERIFIED) agree that out-party cues do not persuade; Merkley reads them as backlash. Clamping at zero rather than inventing a backfire size is the conservative reading. None of these is US member-to-member evidence.
 
-**The zero clamp is well supported**
+**Bridge exemption.** Bakker does not support it. sqrt(bpf_u bpf_v) restores full cross-party influence between perfect bridge pairs, and bipartisanship is never measured in that paper.
 
-The BAKKER_XCUE treatment sends cross-party pro-cues through sqrt(bpf_u bpf_v), so non-bridge cues fall to about 0 and never go negative. Three VERIFIED rows agree on direction:
-- Furnas 2019 (the out-party penalty);
-- Ringe 2013 (opposing-bloc ties go with less co-voting);
-- Merkley (out-party cues produce backlash: strong Republicans +0.06 toward skepticism, p about 0.03).
+**Theory.** Kempe 2015 and Ma 2022 show that deterministic thresholds (the 0.6-3.0 ladder) sit outside the greedy and submodularity guarantees. That is fine as long as per-target cheapest-tip stays a labelled heuristic. A joint multi-target optimizer would inherit the hardness results.
 
-All of them measure publics, staff or EP members, so none can set a backfire magnitude. Keeping the clamp at 0 is the conservative reading. Bakker supports shrinking out-party cues but not the bridge exemption, because it never measures bipartisanship.
+**Competition.** Borodin: anti neighbours exert no competing threshold pressure in the solver.
 
-**Mathematics**
-- Kempe 2015 and Ma 2022: deterministic per-tier thresholds (0.6-3.0, not normalised) are the regime with no approximation guarantee. Per-target cheapest tip is a heuristic.
-- A future joint multi-target optimiser would inherit n^(1-eps) hardness under general thresholds (Kempe 2015).
-- Borodin: the anti side exerts no competing threshold here; adding one would be a model change.
-- Chen 2023 supports the modelling option of threshold-like (complex) adoption but gives no K for legislators.
-- Dietrich 2019 is context only.
+**Complex contagion.** Chen 2023 supports threshold-like adoption as a modelling option only. It has no legislative K.
 
-### Contradictions
-- none recorded
+**Dietrich 2019** (women's issues, 2009-2014 floor votes) cannot set constants.
 
-### Gaps
-- Threshold values: no legislative estimate. Fill by testing on own data whether CU-bill join hazard jumps after a threshold share of close cosponsorship partners has joined, against a smooth dose-response, held out by Congress.
-- Scan leads (UNVERIFIED): Simkin & Roychowdhury (arXiv 1001.3732) model cosponsor accumulation on H.R. 1207 as a threshold/sandpile process with power-law join bursts. Rogowski & Sinclair (House office lottery) and Coppock find little peer cue-taking. Zelizer (state legislature) finds large briefing spillovers. Fong (JOP) reports expert-peer cues that cross party lines. If Fong holds, it would cut against the zero clamp for expert cross-party cues.
+**Contradictions:**
+- Bakker measures no bipartisanship attribute, so the sqrt(bpf) bridge exemption has no basis in the source it cites. This conflicts with the source, not with the data.
 
-### Paul's position vs the evidence
+**Gaps:**
+- Threshold adoption is untested. Fill it with a test of whether members join CU bills after a threshold share of close cosponsorship partners has joined: a hazard model with a fractional-exposure term vs a linear count, by party.
+- Out-party endorsement effect is unmeasured. Fill it with the same model, splitting exposure into co-party and out-party joiners, stratified by bpf.
 
-Paul's hypothesis that coalition formation is a complex contagion is a modelling option the literature allows (Chen 2023). No row tests it on Congress. His view that pressure from high-ranking members is not diminishing would break submodularity. That is consistent with the component claiming no greedy guarantee, but there is no evidence for or against a seniority amplification. The kernel has no leadership term, so the idea is currently unimplemented, not refuted.
+**Paul's position vs the evidence.** Paul hypothesizes that coalition formation is a complex contagion. Chen 2023 and Kempe 2015 make that a legitimate model class, and the deterministic LT ladder already departs from submodularity. His margin note that pressure from high-ranking members is 'not diminishing' fits non-submodular threshold models, but nothing tests it. The kernel has no seniority or leadership term, so the note's leadership effect is not modelled anywhere.
 
-### Open questions
-- Do expert cross-party cues (Fong) differ from generic out-party cues, and would that justify a bridge or expertise exemption from the clamp?
-- Is cosponsor joining on CU bills bursty (threshold-like) or smooth?
+**Open questions:**
+- Should bridge pairs keep full cross-party cue weight without elite evidence?
+- Should the out-party clamp stay at zero, or go negative? Evidence leans negative, but has no legislator magnitude.
 
-### Read first
-
-[[kempe-2015-maximizing-spread-influence]] [[merkley-nd-party-cues-news]] [[bakker-nd-understanding-partisan-receptivity]] [[furnas-2019-moneyed-interests-information]] [[chen-2023-complex-contagion-influence]] [[ma-2022-adversarial-attack-graph]]
+**Read first:** [[bakker-nd-understanding-partisan-receptivity]], [[merkley-nd-party-cues-news]], [[ringe-2013-pinpointing-powerful-voting]], [[kempe-2015-maximizing-spread-influence]], [[chen-2023-complex-contagion-influence]], [[borodin-nd-threshold-models-competitive]]
 
 ## Salience shock (Noble-Turner going public)
 
@@ -544,14 +505,14 @@ Paul's hypothesis that coalition formation is a complex contagion is a modelling
 
 **Method.** z = min(1, |D-R tier gap|/3); psi = uncertainty; b = min(0.35, 0.05 + 0.10 psi); p = (1-b)(1-z), q = (1-b)z. Rally: co-partisan +1, out-partisan +0.5 if bpf >= 0.30. Retreat: co +1, out -1. Vulnerable members x1.35 x susc_mult. Defensive appeal raises the threshold by (1 + DELTA/2).
 
-**Code refs.** `fec/engine/salience_shock.py:1-246`, `fec/moneyball_core.py:731-751`
+**Code refs:** `fec/engine/salience_shock.py:1-246`, `fec/moneyball_core.py:731-751`
 
-**Assumptions**
+**Assumptions:**
 - Co-partisans move more than out-partisans under salience (Noble & Turner 2024)
 - Backfire grows with policy uncertainty
 - Electorally vulnerable members respond more
 
-### Evidence
+**Evidence (11 bearings: 4 VERIFIED, 5 VERIFIED-SOFTENED, 2 UNVERIFIED; 6 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -567,55 +528,42 @@ Paul's hypothesis that coalition formation is a complex contagion is a modelling
 | [[merkley-nd-party-cues-news]] |  | qualifies | A polarized cue (Democrats for, Republicans against) moves strong Republicans +0.09 points on the 0-1 scale (about 0.3 SD, p~0.002). It is numerically the largest cue effect, but the authors do not report it as significantly different from the single Democratic cue or opposing-GOP cue effects. A single Democratic cue moves them +0.06 (p~0.03). Supporting-GOP and consensus cues show no polarizing effect and no de-polarizing effect. Observationally, +100 articles a quarter with cues held fixed goes with -0.4 SD in Republican skepticism (Model 3, PCCTI, N=54; p~0.03). | Carries over only as a direction-of-effect prior. The paper studies mass partisans reacting to elite cues in national newspapers on climate; the engine moves legislators' stance tiers on credit-union issues. The rally result rests on one thin MTurk treatment, so it weakens but does not refute out-partisan rally movement. Treating z as endogenous to going public is the analyst's inference, not the paper's; the Granger results concern cue shares and skepticism, not the partisan stance gap. | moderate | VERIFIED-SOFTENED |
 | [[vanderdoes-2022-strategic-identity-signaling]] | 2022 | suggests-extension | The calibrated payoff model makes outgroup share of the audience the main driver of whether covert beats overt signaling, with cost a weaker driver, and covert messaging only reduces, not removes, outgroup dislikes. | The paper's audience is a tweet reader pool, not the Noble-Turner public-campaign setting. An outgroup-share term would need its own calibration on congressional data, and the paper's r_o = 0.5 cannot be ported as a parameter. | weak | UNVERIFIED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 11 bearings: 4 VERIFIED, 5 VERIFIED-SOFTENED, 2 UNVERIFIED. **Evidence weight: one strong method source with several verified departures from it.** 
 
-**Evidence weight: the regime structure transfers. Three implementation choices depart from the source, one of them an internal contradiction.** 11 rows: 4 VERIFIED, 5 VERIFIED-SOFTENED, 2 UNVERIFIED. Five of the rows are on Noble & Turner 2024.
+The regime structure follows Noble & Turner 2024: rally, partisan retreat and backfire, with co-partisans above out-partisans.
 
-**What holds**
-- The rally/retreat/backfire structure with beta_L > beta_R (co-partisans always favour the proposal more) is implemented in steps_for().
-- It transfers most cleanly to the dashboard's executive cue, which matches the paper's presidential actor. It transfers less well to an ACU or industry actor, which has no shared reelection stake (delta).
+**Verified departures:**
+1. **Status-quo gate missing.** defensive_appeal_value is credited on every issue, but in the paper the defensive logic holds only for a favourable status quo. In salience_advisory.json (2026-10-08, 18 issues), all four GO PUBLIC verdicts are offense issues, driven by held counts. Technology & Emerging ranks first while sitting near the paper's never-go-public case. The three defend issues rank 13th-15th. These are heuristic advisory scores, not measured effects.
+2. **z conflates elite and mass.** z is the elite stance gap, used to set the mass-base reaction odds. The paper treats these as separate primitives, and its own infrastructure example shows they diverge.
+3. **psi and backfire.** psi measures missing posture data, not preference uncertainty. The b(psi) link is not in the paper. The paper's actual Prop 5 damping is off by default (SAL_PSI_DAMP=0).
+4. **VULN 1.35.** The paper's 'gambling for reelection' concerns the president, not rank-and-file members. Prop 6 is internally inconsistent on direction.
+5. **gridlock_width** (mid-band occupancy) is not Prop 1's gridlock interval.
 
-**Contradiction (VERIFIED-SOFTENED, strong)**
-- Noble & Turner predict going public mainly in *defense* of a favourable status quo; under partisan retreat the actor never goes public against an unfavourable one.
-- defensive_appeal_value() gives held-count credit on every issue with no status-quo check.
-- In the live salience_advisory.json (2026-10-08 15:37, denominator 18 issues), all four GO PUBLIC verdicts (top quartile, cut 68.27) are sq = offense. Technology & Emerging, close to the paper's pure-retreat case, ranks first. The three defend issues rank 13th-15th.
-- These are heuristic advisory scores, not measured effects. Gating the held credit to sq == defend would restore the paper's ordering.
+**Other bearings:**
+- Bakker and Merkley support the negative out-partisan step in retreat and backfire. Neither supports rally out-partisan +0.5; Merkley's consensus cue shows a null.
+- Joo 2022: auto intensity is not wired into the chain, and its 65% input is inflated by ACU syndication.
+- Leads (UNVERIFIED): Zhang 2022 suggests a burst-detector salience onset signal. van der Does 2022 suggests the audience's outgroup share should drive backfire.
 
-**Mappings that are design priors, not the paper's**
-- **z from legislator tier gaps.** The paper treats elite polarization and base reactions as separate, and its own infrastructure example has them diverge.
-- **psi from missing stance labels**, and backfire b = f(psi). The paper never links psi to backfire. Coverage gaps differ by party and chamber.
-- **VULN 1.35.** The paper's rho and 'gambling for reelection' concern the president, not rank-and-file members. Prop 6 is also internally inconsistent on direction.
-- **gridlock_width.** Midband occupancy across 533 members is a different quantity from the paper's gridlock interval and cannot test Prop 1.
+**Contradictions:**
+- Noble & Turner: defensive appeals pay only under a favourable status quo, and under partisan retreat the actor never goes public against an unfavourable one. The live advisory credits defensive holds on offense issues, and all 4 GO PUBLIC verdicts (of 18 issues, 2026-10-08) are offense issues.
+- The paper keeps elite polarization z and base reactions separate. The code derives base-reaction odds from the elite stance gap.
+- The paper's psi damps go-public value (Prop 5) and is never linked to backfire. The code maps psi (a data-missingness measure) to backfire probability and leaves Prop 5 damping off by default.
+- VULN 1.35 is attributed to Noble A.4. In the paper, gambling for reelection applies to the president, not legislators.
+- Rally out-partisan +0.5: Merkley's consensus cue shows no effect, and Bakker shows no positive out-party movement.
 
-**Rally +0.5 out-partisan step**
-- Unsupported. Merkley's consensus cue is null and Bakker shows no positive out-party movement.
-- Both papers support the negative out-partisan step in retreat and backfire, as a direction only.
+**Gaps:**
+- There is no evidence that co-partisans of a campaign's champions shift more than out-partisans after a public CU campaign. Fill it with an event study around dated CU public campaigns, using stance-tier change by party relative to the champions.
+- Whether issue polarization predicts the retreat regime is untested. The same event panel can test it with z as a moderator, plus a mass-opinion partisan gap per issue, which the system lacks.
+- Vulnerable-member amplification is unsupported here. Fill it from the electoral-incentives literature or the event panel, stratified by seat security.
 
-**Intensity input**
-- Joo 2022's alignment-to-intensity mapping has no estimate behind it.
-- The 65% CU Tax Status input is inflated by ACU syndication, and it does not reach the chain's advisory anyway.
+**Paul's position vs the evidence.** Paul highlighted Noble & Turner heavily and the component is described as implementing it 'almost directly'. The verified bearings show at least five departures: the status-quo gate, the z mapping, psi and backfire, VULN, and the gridlock metric. The first changes which issues get a GO PUBLIC verdict. The regime skeleton is faithful; the parameterisation is not the paper's.
 
-### Contradictions
-- Noble & Turner 2024 (contradicts, strong): defensive credit is applied on sq = offense issues. All four live GO PUBLIC verdicts (18 issues, 2026-10-08) are offense issues, against the paper's prediction that going public is mainly a defense of a favourable status quo.
-- Rally out-partisan +0.5 (bpf >= 0.30) is contradicted in direction by Merkley's null consensus cue and by Bakker's lack of any positive out-party movement (both mass public).
+**Open questions:**
+- Should held-count credit be gated to sq=='defend' as the paper implies? It would reorder verdicts, so it is Paul's call.
+- Does the paper's presidential-actor logic transfer to an ACU or industry actor with no shared electoral fate (delta)?
+- Should psi be rebuilt as preference uncertainty, separate from press-collector coverage gaps that differ by party and chamber?
 
-### Gaps
-- Electoral vulnerability amplifier 1.35: Noble & Turner do not support it. It needs a separate electoral-incentives source or an internal test: do vulnerable members shift more after CU public campaigns?
-- Base-side (mass or CU-member) opinion gap per issue: needed for z. The system has none.
-- Salience onset timing: Zhang 2022 (UNVERIFIED) suggests a burst detector on press volume as a dated trigger. It must be tested against co-partisan shifts before any use, and volume must not be read as influence.
-
-### Paul's position vs the evidence
-
-Paul highlighted Noble & Turner heavily, and the component implements its regimes closely. The one place it departs is the place that drives the live verdicts: defensive credit on offense issues. Paul's reading and the paper agree on co-partisans moving more. They disagree with the code on when going public pays.
-
-### Open questions
-- Should held credit be gated to sq == defend? It would reorder the live GO PUBLIC verdicts. Paul's call.
-- Should VULN 1.35 be relabelled as judgment, or sourced from the electoral-incentives literature?
-- Is missing stance data a defensible proxy for preference uncertainty, given party and chamber coverage gaps?
-
-### Read first
-
-[[noble-2024-presidential-leadership-legislative]] [[merkley-nd-party-cues-news]] [[bakker-nd-understanding-partisan-receptivity]] [[joo-2022-image-data-automated]]
+**Read first:** [[noble-2024-presidential-leadership-legislative]], [[merkley-nd-party-cues-news]], [[bakker-nd-understanding-partisan-receptivity]], [[joo-2022-image-data-automated]], [[vanderdoes-2022-strategic-identity-signaling]]
 
 ## Receptivity layer (susceptibility, incentive, prospect domain, seed probability)
 
@@ -623,15 +571,15 @@ Paul highlighted Noble & Turner heavily, and the component implements its regime
 
 **Method.** Behavioural basis (default): susc = .40 cooperation_v2 + .30 N(affective) - .20 diligence - .10 dominance, blended 0.70/0.30 with persona when n >= 15 cues. Lexical basis: .40A + .30N - .20C - .10E. incent: retiring 0.60, else clip(1 + .30(comp - 0.5), 0.85, 1.15), neutral when COMPET_MULT is on. pt: 1.15 loss domain, 0.92 safe. PERSONA_W 0.30 is kept by owner ruling. Recorded double-count: cooperation_v2 vs bpf rho +0.888.
 
-**Code refs.** `fec/members/receptivity_layer.py:1-216`, `fec/moneyball_core.py:185-213 (rc)`
+**Code refs:** `fec/members/receptivity_layer.py:1-216`, `fec/moneyball_core.py:185-213 (rc)`
 
-**Assumptions**
+**Assumptions:**
 - Neuroticism degrades decisions under pressure (Byrne et al. 2015); the A, C and E signs are design priors, not Byrne findings
 - Final-term members are less responsive (Fouirnaies & Hall)
 - Members in a live race are in the loss domain and take risks (Linde & Vis 2016)
 - No N susceptibility signal has been demonstrated (Nokken-Poole drift MISS; H5 null)
 
-### Evidence
+**Evidence (22 bearings: 4 VERIFIED, 11 VERIFIED-SOFTENED, 7 UNVERIFIED; 19 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -658,65 +606,53 @@ Paul highlighted Noble & Turner heavily, and the component implements its regime
 | [[kumari-nd-five-personality-predictions]] |  | context | Pitches text-derived personality as directly usable for business targeting and mental-health uses (Sec 4), with no validation of whether traits predict any behaviour. | This is only a caution. The paper's implicit claim that a text-derived trait is action-ready is exactly what the system's single-look record refuted for legislators. Nothing in the paper should move the system back to a lexical basis. | weak | UNVERIFIED |
 | [[celli-2012-role-emotional-stability]] | 2012 | qualifies | Neurotic users post and retweet more, and calm users reply slightly more (Fig. 5, no values in the text). Neurotic networks form longer chains (average path 1.551 vs 1.334; diameter 6 vs 5), and calm networks have more mutual ties. | Celli measures communication style and ego-network shape, not response to pressure or persuasion. The data are anonymous 2011 public Twitter users with tagger-inferred labels, not legislators. The result gives no support for N as a susceptibility multiplier. The only thing that transfers is a caution: if text-N tracks posting volume, a volume confound could enter N. The system residualizes on E and party but has no stated volume control. That control is untested here. | weak | UNVERIFIED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 22 bearings: 4 VERIFIED, 11 VERIFIED-SOFTENED, 7 UNVERIFIED. **Evidence weight: weak.** No bearing links any trait or persona measure to a legislator's response to lobbying or money. 
 
-**Evidence weight: the most rows and the weakest support. Every multiplier's size is unsupported, and two citations are misapplied.** 22 rows: 4 VERIFIED, 11 VERIFIED-SOFTENED, 7 UNVERIFIED.
+**Susceptibility composite:**
+- **N.** Byrne et al. (undergraduates, self-report BFI, lab delay task) support only the direction of an N-under-pressure term.
+- **A.** The A-above-N weighting is not supported. The claimed A interaction comes from Exp 2, which has no low-pressure arm. The default basis fills the A slot with cooperation_v2, which correlates +0.888 with bpf, a recorded double count.
+- **C and E.** Byrne gives no support to the C or E dampeners; C's one correlation runs the other way and was not replicated. Palm 2025 (UNVERIFIED) ranks N least susceptible to persuasion, and suggests N may act differently on the peer and direct channels.
 
-**Susceptibility traits**
-- Byrne 2014 supports only the direction of an N-under-pressure term. The population is undergraduates on a delayed-reward task, with self-report BFI and an interaction increment ΔR² = .06.
-- Byrne does not support A outweighing N. Experiment 2 has no low-pressure arm, so the docstring's 'Exp-2 interaction' cannot exist. The A slot is filled by cooperation_v2, which has a recorded rho of +0.888 with bpf (a double count).
-- Byrne's only C evidence is one uncontrolled correlation whose sign is opposite to the code's dampener. The authors decline to interpret it, so it qualifies the dampener rather than contradicting it.
-- Text-trait validity is low. Koutsoumpis 2024: LIWC categories explain 5.07% of self-report variance. Azucar 2017: A is the least recoverable trait. Celli: convergent validity rho 0.30. This supports keeping the lexical basis out of the default.
-- The system's own record agrees: Nokken-Poole drift MISS (n = 441), H5 null, no demonstrated N signal. Poole 1999's low drift variance is consistent with that MISS; it does not reopen it.
-- Leads (UNVERIFIED): Palm 2025 ranks N *least* susceptible and suggests N's sign may differ by channel. Celli 2012 flags a possible posting-volume confound in text-N.
+**Validity record.** Koutsoumpis 2024 (closed-vocabulary categories explain 5.07% of self-report variance) supports keeping the lexical basis out of the default. Poole 1999 is consistent with the Nokken-Poole drift MISS (2026-07-08, n=441) and argues against another drift look.
 
-**Final-term factor (0.60)**
-- Fouirnaies & Hall 2022 is evidence from state legislatures under binding term limits. Productivity falls 0.24 SD and ideological positioning does not move.
-- It supports less effort in the final term. It does not support less responsiveness to pressure, and it does not support the 0.60 size.
-- Its lower-bound argument (members running for other office keep their electoral incentive) contradicts including members such as Barr and Stefanik in the retiring list.
-- The docstring also credits Fouirnaies & Hall for the competitiveness term 1 + .30(comp - 0.5), which the paper does not test.
-- Gaynor 2022: retirees receive fewer LPAC ties. That is about where peers send money, not how retirees respond.
+**Incentive term:**
+- Fouirnaies & Hall 2022 is about term-limited *state* legislatures: effort -0.24 SD, no position change.
+- It does not support the 0.60 size or a 'pressure response' mechanism.
+- Its lower-bound argument says members seeking other office keep their incentives, which contradicts their inclusion on the retiring list (e.g. Barr).
+- It does not test seat competitiveness, though the code attributes the comp term to it.
 
-**Prospect domain (pt 1.15 / 0.92)**
-- Linde & Vis supports reflection: 39% vs 76% risky choice under gain vs loss, n = 46. Votes are a plausible reference dimension.
-- It does not support the magnitudes, the mapping from seat security to framing, or 'risk-seeking = more movable'. The docstring's 'loss-averse overall' is unsupported, because no loss aversion was found.
+**Prospect domain.** Linde & Vis show the reflection effect is real: paid lottery, risky choice 39% under gain vs 76% under loss, n=46. Its domain was randomly assigned, not inferred from seat security. The 1.15/0.92 sizes and 'loss-averse overall' are unsupported.
 
-**COMPET_MULT side effect (VERIFIED)**
-- With COMPET_MULT on, the Ballotpedia candidate-specific comp term is set to neutral. Cook 2024 shows ratings and PVI diverge (Fitzpatrick EVEN/Likely R; Salazar EVEN/Solid R).
-- So the engine path no longer sees candidate-specific vulnerability.
+**COMPET_MULT side effect.** With COMPET_MULT on, the candidate-specific Ballotpedia comp term is neutralized. The Cook 2024 table shows candidate-specific ratings carry information PVI lacks: Fitzpatrick EVEN/Likely R, Salazar EVEN/Solid R.
 
-**Persona channel**
-- Birkenmaier and Lechner validate measuring a *projected* persona only. Neither paper links persona to behaviour under pressure.
-- PERSONA_W 0.30 is kept by owner ruling and is not revisited here.
+**Persona and visibility:**
+- Birkenmaier 2025 measures the projected persona only, with no behavioural outcome.
+- Lechner 2025 offers nothing on behaviour under pressure.
+- Amsalem 2018: more visible MPs are less agreeable and less neurotic, so seed_prob's visibility and cooperation terms may pull against each other. The correlation check has not been run.
 
-pressure_mult and seed_prob are heuristic multipliers, not access probabilities (D-025).
+**Leads (UNVERIFIED):** Celli 2012 (posting-volume confound in text N), Selfhout 2010 (dyadic similarity), Simchon 2024 (trait-message fit). The system's own persona-homophily test was null.
 
-### Contradictions
-- Fouirnaies & Hall 2022: members running for other office keep electoral incentives (the lower-bound argument). The retiring list applies incent 0.60 to members seeking other office.
-- Fouirnaies & Hall is cited for the competitiveness term 1 + .30(comp - 0.5), but the paper does not test seat competitiveness.
-- Byrne 2014: the docstring cites an 'Exp-2 interaction' for A, but Experiment 2 has no low-pressure arm, so no interaction can be estimated.
-- Linde & Vis 2016: the docstring says politicians are 'loss-averse overall', and the paper found no loss aversion.
-- With COMPET_MULT on, the candidate-specific Ballotpedia vulnerability is set to neutral and only PVI-based c remains. Cook ratings show PVI and candidate risk diverge (VERIFIED).
+**Contradictions:**
+- Fouirnaies & Hall 2022 argue that members running for other office retain electoral incentives (estimates are a lower bound). The retiring list applies incent 0.60 to members seeking other office.
+- Fouirnaies & Hall find no ideological position change (|W-NOMINATE| +0.02, SE 0.01) for final-term state legislators. The 0.60 factor encodes reduced responsiveness to pressure.
+- The docstring cites Byrne Exp 2 for an A x pressure interaction, but Exp 2 has no low-pressure arm.
+- Linde & Vis found no loss aversion. The docstring calls politicians 'loss-averse overall'.
+- Palm 2025 (UNVERIFIED lead): N is least susceptible to persuasion messages, while the composite gives N +.30.
 
-### Gaps
-- Does higher susceptibility predict more cosponsorship or vote change after contact? This is prospective H2, still untested, and no literature measures it for legislators.
-- Are retirees less responsive to PAC money in roll-call alignment (Congress, voluntary retirement)? Fill with a within-member final-term versus prior-term comparison of money-alignment slopes, excluding members who run for other office.
-- Do members in live races take riskier CU positions? There is no US legislator evidence.
-- Channel-specific N (peer influence versus direct appeal): Palm is a lead only, and testing it needs edge-level versus pressure-level outcomes.
+**Gaps:**
+- There is no evidence that higher-susceptibility members change cosponsorship or votes more after lobbying contact. The prospective H2 contract is the designated test; it needs logged contact and a pre-registered single look.
+- Retiree responsiveness to PAC money is untested. Fill it with a roll-call alignment panel comparing final-term to continuing members, separating those seeking other office, with party strata.
+- Risk-taking by competitive-seat members on CU issues is untested. Fill it by comparing stance variance or position extremity by seat security, stratified by party.
 
-### Paul's position vs the evidence
+**Paul's position vs the evidence.** Paul wants psychological traits to adjust the response to pressure as edge parameters (Oropeza), and notes 10 personalities collapsing into 4. The evidence and the system's own validity record undercut this more than his notes acknowledge: drift MISS, H5 null, lexical traits judged unfit. No bearing connects a trait to legislator response to lobbying; the strongest trait evidence is lab undergraduates. PERSONA_W 0.30 is kept by owner ruling and is not revisited here.
 
-Paul wants traits to adjust the response to pressure as edge parameters (Oropeza). The evidence supports measuring a projected persona and gives direction-only support for an N-under-pressure term. It does not support the composite weights, the A-over-N ranking, or any demonstrated susceptibility signal in members. The project's own validity record (drift MISS, H5 null, lexical traits rated unfit) weighs against the layer more than Paul's notes acknowledge. His observation that the 10 personalities collapse into 4 observable ones fits the low text-trait validity the meta-analyses report.
+**Open questions:**
+- Should members seeking other office be removed from the 0.60 retiring factor, as Fouirnaies & Hall's own argument implies?
+- With COMPET_MULT on, should the candidate-specific Ballotpedia comp term be restored alongside PVI-based c?
+- What are corr(visibility_z, coop_v2) and corr(visibility_z, affective N) on the roster? These are cheap read-only checks.
+- Is the cooperation_v2/bpf double count (rho +0.888) acceptable, given bpf also enters the kernel, LT priming, rally and the target bonus?
 
-### Open questions
-- Should members seeking other office be removed from the incent 0.60 list?
-- Should the competitiveness attribution to Fouirnaies & Hall be removed from the docstring?
-- With COMPET_MULT on, should candidate-specific vulnerability re-enter somewhere, since PVI misses it?
-- Is there a posting-volume confound in affective N? Check corr(N, statement count) on the roster.
-
-### Read first
-
-[[fouirnaies-2022-electoral-incentives-affect]] [[linde-2016-politicians-take-risks]] [[byrne-2014-chokes-under-pressure]] [[report-2024-2024-house-glance]] [[koutsoumpis-2024-kernel-truth-text]] [[palm-2025-influence-personality-traits]]
+**Read first:** [[byrne-2014-chokes-under-pressure]], [[fouirnaies-2022-electoral-incentives-affect]], [[linde-2016-politicians-take-risks]], [[koutsoumpis-2024-kernel-truth-text]], [[birkenmaier-2025-measuring-politicians-public]], [[amsalem-2018-effect-politicians-personality]]
 
 ## Competitiveness multiplier c (COMPET_MULT)
 
@@ -724,13 +660,13 @@ Paul wants traits to adjust the response to pressure as edge parameters (Oropeza
 
 **Method.** Matched by Cook incumbent or district, with overrides; unmatched members get 1.0. Default ON since 2026-10-06 (D-104/D-105/D-107/D-108). Real dollars are unchanged.
 
-**Code refs.** `fec/moneyball_core.py:74-172`, `fec/engine/build_competitiveness.py:1-304`, `data/money/competitiveness_c.json`
+**Code refs:** `fec/moneyball_core.py:74-172`, `fec/engine/build_competitiveness.py:1-304`, `data/money/competitiveness_c.json`
 
-**Assumptions**
+**Assumptions:**
 - Dollars buy more in competitive seats (reciprocity NOT validated)
 - AMPLITUDE and SCALE are uncalibrated owner judgment
 
-### Evidence
+**Evidence (11 bearings: 4 VERIFIED, 5 VERIFIED-SOFTENED, 2 UNVERIFIED; 11 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -744,48 +680,42 @@ Paul wants traits to adjust the response to pressure as edge parameters (Oropeza
 | [[becker-nd-gameability-redistricting-criteria]] |  | suggests-extension | Population-based change and incumbent-based change can diverge sharply. In Minnesota, Plan 8 and Plan 9 have almost the same People Change (1.93 percent vs 1.90 percent), yet Incumbent-People Pair Change is 1.93 percent vs 13.90 percent, because one incumbent precinct was moved. The text says Plan 9 moves 0.03 percent more people than Plan 8, which Table 3 contradicts. | Holds where a member's seat was redrawn between the 2025 and 2026 maps. A constituency-turnover measure would be a sharper diagnostic than a state flag or PVI delta, but it needs block assignments for both maps and would only inform Paul's override review. c stays PVI-defined. Reciprocity is not validated. | weak | VERIFIED |
 | [[mccartan-2022-simulated-redistricting-plans]] | 2022 | suggests-extension | District partisanship is a function of the map. In Georgia the enacted 12th and 14th districts have 2020 presidential Democratic two-party shares above the range of 5,000 simulated plans (p.8, Fig. 2). Partisan metrics depend on the statewide elections available in each state, so cross-state comparisons are not valid (p.5, p.8). | The ensembles cover 2020-cycle maps only. They do not include the 2025-26 mid-decade redraws that the system flags, and they describe counterfactual neutral maps, not the realized seat a member runs in. At most they could add a per-district map-sensitivity band or a cross-check of Cook lean against ndshare. Per the paper, ndshare is not comparable across states. Reciprocity and the c amplitude/scale stay unvalidated (D-104..D-108). This is not evidence for them. | weak | UNVERIFIED |
 | [[bouton-2022-small-campaign-donors]] | 2022 | context | Relative to safe Democratic seats, close races (mean Democratic winning margin between -10 and 10 percent over the last two elections) receive 0.11 pp more of a small donor's giving (48 percent of mean, not significant) and 0.18 pp more of a large donor's (75 percent of mean, significant at the 5 percent level). Sample is Democratic congressional candidates 2012-2020 with donor fixed effects. | The paper measures where individual donors send money, not what a dollar buys from a legislator, so it neither supports nor refutes c. Quote the close-seat figures only as Democratic candidates only, UNSTRATIFIED by party. | weak | VERIFIED-SOFTENED |
+| [[ansolabehere-2002-little-money-politics]] | 2002 | qualifies | Closeness raises the quantity of money. In the gubernatorial panel (1976-2000, N = 326, state FE) the closeness coefficient on log per-capita spending is 2.93. In House races of 1992-2000, close seats (under 5 points) draw 60 percent of funds from individuals and 31 percent from PACs, while safe seats (30 points or more) draw 48 and 46 percent. Most of the gap in the individual share comes from gifts under 500 dollars. | The paper shows the supply side only: more money, mostly from individuals, flows to close races. It says nothing about per-dollar influence. The PAC evidence is in shares, not dollar levels. Higher receipts in close seats shrink r and partly offset c. Reciprocity is not validated (D-104..D-108), and this paper does not validate it. | moderate | VERIFIED-SOFTENED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 11 bearings: 4 VERIFIED, 5 VERIFIED-SOFTENED, 2 UNVERIFIED. **Evidence weight: no support for the premise.**  None shows a dollar buys more access or alignment in a competitive seat. Reciprocity is NOT validated (D-104..D-108), and nothing here changes that.
 
-**Evidence weight: none for the premise. Every row is about donor allocation, measurement, or confounding.** 10 rows: 4 VERIFIED, 4 VERIFIED-SOFTENED, 2 UNVERIFIED. Reciprocity is NOT validated (D-104 to D-108), and nothing here changes that.
+**Supply side only.** Several papers show money *flows* to competitive seats:
+- Gaynor 2022: in the 115th House, vulnerable members are about 70% (R) and 75% (D) more likely to receive member LPAC ties; denominators 238 R and 168 D connected nodes.
+- Ansolabehere 2002: close House seats 1992-2000 draw a larger individual share. In the governor panel (1976-2000, N=326), closeness raises spending.
+- Bouton 2022: Democratic candidates only, 2012-2020. UNSTRATIFIED by party.
+- Bonica 2013: donor allocation.
 
-**Allocation evidence, not effectiveness**
+Two consequences follow:
+1. This is exactly the strategic-targeting confound that any future estimate of c must handle (Blackwell 2026; Cagala 2021 shows the randomized-variation standard).
+2. Higher receipts in close seats shrink r = amount/receipts and partly offset c.
 
-These rows show givers *target* vulnerable seats:
-- Gaynor 2022 (VERIFIED): vulnerable members are about 70% (R) and 75% (D) more likely to receive member LPAC ties. 115th Congress, Oct 2018 Cook dichotomy, 238 R and 168 D connected nodes, stratified by party.
-- Bonica 2013: individual donors 2004-12. The partisan-electoral model fits *worse* than the ideological one.
-- Bouton 2022: close races get +0.18 pp of a large donor's giving. Democratic candidates only, 2012-20, so UNSTRATIFIED by party.
+**Heterogeneity never measured.** Kalla & Broockman blocked on Obama 2012 share and reported no heterogeneity by competitiveness.
 
-None shows that a dollar buys more in a competitive seat, which is what c encodes.
+**PVI is not a rating.** In the Cook 2024 table (435 districts, as of 2024-09-12), EVEN seats get five different ratings, and an EVEN Solid R incumbent still gets the maximum c = 2.0. The table supports PVI as a partisan baseline, not as vulnerability.
 
-**Confounding and measurement**
-- Blackwell 2026: strategic targeting of competitive seats on information the analyst lacks confounds any future calibration of c.
-- Cagala 2021: what establishing heterogeneous dollar effectiveness would require (randomized variation, a heterogeneity test, transfer to a new population).
-- Kalla & Broockman blocked on partisanship and report no heterogeneity by competitiveness; 64 treated offices could not detect it.
-- Cook 2024 (435 districts, as of 2024-09-12): PVI and race rating diverge. The six EVEN seats get five different ratings, and Toss Ups span R+8 to D+5. So c (PVI-only, maximum 2.0 at EVEN or against-party lean) gives Salazar (Solid R) and Bacon (Toss Up) the same c.
-- Best 2022 and McCartan 2022 (UNVERIFIED): district lean is partly a product of the map. A 3-4 point shift moves c by about 0.45-0.55 near lean 0, which matters most in the ten flagged mid-decade redistricted states.
-- Becker: a constituency-turnover measure would be a sharper redistricting diagnostic than the state flag.
+**Redistricting leads (UNVERIFIED).** Best 2022 and McCartan 2022: map choice can move lean by 3-4 points, which moves c by about 0.45-0.55 near lean 0. This matters most in the ten flagged mid-decade-redistricted states. Becker suggests a constituency-turnover diagnostic.
 
-### Contradictions
-- none recorded
+**Contradictions:**
+- none
 
-### Gaps
-- Whether PAC dollars have a larger marginal effect on alignment or access in competitive seats is the core premise and has no evidence. Fill with an identified design: a randomized donor treatment stratified by seat competitiveness, or quasi-experimental variation such as close-election shocks.
-- Scan leads (UNVERIFIED): a 2024 AEA conference paper reports that the link between carbon-firm money and climate-skeptic votes is stronger under electoral pressure, identified from narrow incumbent defeats. Levitt 1998 argues PAC returns run mainly through the election channel, which would favour marginal seats for a different reason than reciprocity. Neither has been read.
-- Decay scale in PVI points (SCALE 5.0): no evidence. Only estimable once the premise itself has an identified effect.
+**Gaps:**
+- There is no evidence that the marginal effect of PAC dollars on access or alignment is larger in competitive seats. Fill it with a heterogeneous-effect design: randomized or quasi-random variation in contributions, or a continuous-dose DiD with an interaction by PVI. It must handle strategic targeting (Blackwell) and pass a transfer check (Cagala). Report by party stratum.
+- The decay scale (5 PVI points) and amplitude (1.0) are unfitted. The same design could fit them with a flexible lean interaction.
+- Map sensitivity of c is unmeasured in redistricted states. Fill it by comparing c under 2025 and 2026 PVIs, and against Cook ratings, for the ten flagged states.
 
-### Paul's position vs the evidence
+**Paul's position vs the evidence.** Paul endorses Cook PVI as a vulnerability measure (Gaynor) and reads competitive seats as responsive. Gaynor supports PVI as a signal donors act on. No source Paul annotated, and no bearing here, says dollars buy more in competitive seats. The multiplier rests entirely on owner judgment, which the code header already states.
 
-Paul endorses Cook PVI as a vulnerability measure (Gaynor uses it), and the evidence agrees that donors act on it. He reads competitive seats as responsive. No source he annotated, and no row in the hub file, says dollars buy more there. AMPLITUDE and SCALE stay owner judgment, and the dial runs ON by default on an unvalidated premise. The Cook table also shows PVI misses candidate-specific risk, which the Ballotpedia term used to carry before COMPET_MULT neutralised it.
+**Open questions:**
+- Should c use Cook ratings or candidate-specific security rather than raw PVI, given the rating/PVI divergence (e.g. EVEN Solid R seats get c=2.0)?
+- How much does the receipts denominator offset c in close seats? Is the net effect on r near 1?
+- Should redistricted-state members carry a c uncertainty band?
 
-### Open questions
-- Should c use the Cook race rating, or blend it with PVI, rather than PVI alone?
-- How many members sit in the ten flagged redistricted states with c near the steep part of the curve?
-- Does the Levitt election-channel argument suggest c belongs on electoral plays rather than on persuasion money legs?
-
-### Read first
-
-[[gaynor-2022-financial-ties-bind]] [[blackwell-2026-effect-political-advertising]] [[cagala-2021-optimal-targeting-fundraising]] [[report-2024-2024-house-glance]] [[bouton-2022-small-campaign-donors]] [[best-2022-redistricting-commissions-avoid]]
+**Read first:** [[gaynor-2022-financial-ties-bind]], [[ansolabehere-2002-little-money-politics]], [[report-2024-2024-house-glance]], [[kalla-nd-campaign-contributions-facilitate]], [[blackwell-2026-effect-political-advertising]], [[cagala-2021-optimal-targeting-fundraising]]
 
 ## Electoral security, leverage and contest-defend plays
 
@@ -793,12 +723,12 @@ Paul endorses Cook PVI as a vulnerability measure (Gaynor uses it), and the evid
 
 **Method.** Defend value = comp x positive gap vs the cross-party average. Contest route = the larger of the primary and general gaps. Contest plays convert opponents in spread().
 
-**Code refs.** `fec/engine/build_electoral.py:7-31`, `fec/engine/build_electoral_plays.py:20-36`
+**Code refs:** `fec/engine/build_electoral.py:7-31`, `fec/engine/build_electoral_plays.py:20-36`
 
-**Assumptions**
+**Assumptions:**
 - Ballotpedia electoral average measures security
 
-### Evidence
+**Evidence (5 bearings: 1 VERIFIED, 4 VERIFIED-SOFTENED, 0 UNVERIFIED; 5 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -808,37 +738,30 @@ Paul endorses Cook PVI as a vulnerability measure (Gaynor uses it), and the evid
 | [[chohan-2025-crypto-oligarchy-cryptocurrency]] | 2025 | context | Fairshake campaigned against Katie Porter in California's Senate primary and opposed Jamaal Bowman's re-election bid. The paper calls this influence 'decisive' and offers no counterfactual or estimate. | Shows that federal primary-contest plays by an industry actor occurred in 2024. It is not evidence that such plays work, because outcomes are confounded and there is no comparison group. Do not use it to calibrate conversion. | weak | VERIFIED-SOFTENED |
 | [[porter-2025-campaignview-campaign-platforms]] | 2025 | suggests-extension | Platform text for 5,228 of 6,016 (86.9%) major-party ballot-eligible House primary candidates 2018-2022, with 43,465 hand-topic-coded platform points. Identifiers are FECCandID (not universal) and BioGuideID (incumbents only). | House only, 2018-2022 cycles; the 14 topic codes are not CU categories. BioGuideID is incumbent-only and the paper advises against aggregating by either ID. Challenger coverage gaps (low fundraising, uncompetitive races) are where the proxy matters most. New analysis stays UNVERIFIED until a second path reproduces it (DE-062). | moderate | VERIFIED-SOFTENED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 5 bearings: 1 VERIFIED, 4 VERIFIED-SOFTENED, 0 UNVERIFIED. **Evidence weight: weak.** 
 
-**Evidence weight: weak. No evidence that plays convert anyone.** 5 rows: 1 VERIFIED, 4 VERIFIED-SOFTENED.
+**Defend plays.** Gaynor 2022 (115th House, within party) shows vulnerability attracts co-partisan LPAC money, which is consistent with defend plays. It gives no evidence that low-security members are cheaper to move.
 
-- Gaynor 2022 (VERIFIED) backs vulnerability as a magnet for co-partisan money, within party, which fits defend plays. It gives no evidence that low-security members are cheaper to move.
-- Bonica 2013 states the partisan-electoral hypothesis (donors fund competitive races) and rejects it for individual donors. It neither supports nor refutes the comp weighting.
-- Chohan 2025 documents that industry primary plays occurred (Fairshake against Porter and Bowman, 2024). It has no counterfactual and must not be used to calibrate conversion.
-- Cook 2024 suggests a forward-looking, dated risk input could replace the backward-looking Ballotpedia Election_Average.
-- CampaignView (Porter 2025: 5,228 of 6,016 House primary candidates, 2018-22) could supply challenger platforms for the contest-primary route. It is House-only, its topics are not CU categories, and the IDs are imperfect.
+**Two vulnerability measures.** The engine now uses Cook PVI in c and Ballotpedia Election_Average here. Ballotpedia is backward-looking; the Cook rating table is forward-looking, with OPEN and VACANT flags (41 OPEN lines and 4 VACANT seats as of 2024-09-12).
 
-**Inconsistency.** The engine uses two vulnerability measures: Ballotpedia security here, Cook PVI in c. With COMPET_MULT on, the two can disagree on the same member.
+**Bonica 2013** states, then rejects for individual donors, the partisan-electoral model behind Paul's highlight. It neither supports nor refutes the comp weighting.
 
-### Contradictions
-- Internal: electoral plays use Ballotpedia Election_Average security, while the competitiveness multiplier uses Cook PVI. Gaynor and the Cook table show the two measure different things.
+**Contest plays.** Chohan 2025 shows industry primary plays happen (Fairshake 2024) but offers no counterfactual. Porter 2025 (CampaignView) could supply challenger platforms for the contest-primary proxy: 5,228 of 6,016 House primary candidates, 2018-2022. Its topics are not CU categories and BioGuideID covers incumbents only.
 
-### Gaps
-- Are CU PAC dollars more effective in lower-security members? This shares the unvalidated premise behind c and needs the same identified design.
-- Contest plays converting opponents: no evidence. Fill with a comparison of positions held by successors versus defeated incumbents in seats targeted by advocacy primaries, against matched untargeted seats.
-- Ballotpedia security as a measure of current-cycle risk: untested against dated ratings.
+**Contradictions:**
+- Two vulnerability measures feed the engine: Cook PVI in c and Ballotpedia Election_Average in security and leverage. They need not agree, and the receptivity comp term (Ballotpedia) is neutralized when COMPET_MULT is on.
 
-### Paul's position vs the evidence
+**Gaps:**
+- There is no evidence that CU PAC dollars or plays are more effective in later alignment for low-security members. Fill it with an alignment panel interacting contributions with security, stratified by party, with selection handled as for c.
+- Contest-play conversion is unmeasured. Fill it with outcomes of past industry primary interventions against a matched comparison set of untargeted incumbents.
 
-Paul highlighted Bonica's partisan-electoral model (donors direct funds to competitive races). The paper fits that model *worse* than the ideological one for individual donors, so the highlight describes a hypothesis Bonica rejects. Nothing in the evidence addresses whether contest or defend plays work.
+**Paul's position vs the evidence.** Paul highlighted Bonica's statement that donors fund competitive races under the partisan electoral model. Bonica's own table shows that model fits individual donors worse than the ideological model. Either way it describes donor allocation, not the payoff of a play. Paul left no annotation.
 
-### Open questions
-- Should security switch to a dated, forward-looking rating?
-- Should one vulnerability measure feed both the plays and c?
+**Open questions:**
+- Should security be harmonized with the PVI or rating source used by c?
+- Should forward-looking dated ratings replace the backward-looking Ballotpedia average?
 
-### Read first
-
-[[report-2024-2024-house-glance]] [[gaynor-2022-financial-ties-bind]] [[porter-2025-campaignview-campaign-platforms]] [[bonica-2013-mapping-ideological-marketplace]]
+**Read first:** [[gaynor-2022-financial-ties-bind]], [[bonica-2013-mapping-ideological-marketplace]], [[report-2024-2024-house-glance]], [[porter-2025-campaignview-campaign-platforms]], [[chohan-2025-crypto-oligarchy-cryptocurrency]]
 
 ## Scenario runner (what-if)
 
@@ -846,12 +769,12 @@ Paul highlighted Bonica's partisan-electoral model (donors direct funds to compe
 
 **Method.** A defection shifts all movable positions by at most 1 fine tier.
 
-**Code refs.** `fec/engine/scenario.py:1-120`
+**Code refs:** `fec/engine/scenario.py:1-120`
 
-**Assumptions**
+**Assumptions:**
 - A defection is a general disposition shift across issues
 
-### Evidence
+**Evidence (4 bearings: 2 VERIFIED, 2 VERIFIED-SOFTENED, 0 UNVERIFIED; 4 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
@@ -860,35 +783,31 @@ Paul highlighted Bonica's partisan-electoral model (donors direct funds to compe
 | [[xu-2024-improved-lite-based]] | 2024 | qualifies | Paper reports node updates of 18,468 vs 72,835 (freezing) and 16,864 vs 114,929 (melting) for its improved D* Lite against full global re-planning. Numbers are correct. The paper frames reuse of earlier search data as the motivation (Sec. 2.1) but does not say D* Lite family planners save work only by reuse. | Documentation point only. At 533 members and MC=40 a full recompute is cheap, so incremental reuse is not warranted. The Xu numbers say nothing about the cascade. The cited work is Ren et al., not Xu. | weak | VERIFIED-SOFTENED |
 | [[bharathi-nd-competitive-influence-maximization]] |  | qualifies | The best-response guarantee holds only for the last committer. Pure Nash equilibria need not exist and mixed ones do (lines 83-85). Theorem 2 bounds the price of competition at 2 on total activations, not on any one player's share. First-mover results cover only a duopoly on disjoint lines (Lemma 2, lines 149-153). | The fixed-opponent framing holds only if industry commits first and never reacts. FEC filings are public, so if industry reacts, CU becomes a first mover on a general graph, where the paper gives no algorithm or guarantee. The price-of-competition bound says nothing about CU's own share. | weak | VERIFIED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 4 bearings: 2 VERIFIED, 2 VERIFIED-SOFTENED, 0 UNVERIFIED. **Evidence weight: weak; mostly framing.** 
 
-**Evidence weight: tooling choices supported. The behavioural assumption is a gap.** 4 rows: 2 VERIFIED, 2 VERIFIED-SOFTENED.
+**Weimer 2023.** In that paper, Monte Carlo is a negative control for an estimator applied to observed data. The scenario runner's zero delta for an unperturbed scenario is an identity property of CRN, not a placebo. Weimer-style placebos belong on the empirical estimators (the forecasters and the outcome contract).
 
-- Harrison 2010 fits the split the runner already uses: closed-form pflip for flips, MC only for cascade spread.
-- Weimer 2023 (VERIFIED) clarifies that a CRN zero-delta on an unperturbed scenario is an identity property of the simulator, not a negative control. Placebo tests belong on empirical estimators.
-- Bharathi (VERIFIED): the (1-1/e) best-response claim holds only for a follower facing a fixed opponent. If industry reacts to public FEC filings, CU becomes a first mover on a general graph, where no guarantee exists. The price-of-competition bound says nothing about CU's own share.
-- Xu 2024 is a citation mismatch: the docstring cites Ren et al. D* Lite, but isolation comes from CRN, not from reusing search state. At 533 members and MC = 40 a full recompute is cheap anyway.
+**Harrison 2010.** The split between closed-form flip maths and MC spread fits the paper's advice.
 
-The core assumption, that one defection shifts all movable positions by up to one fine tier as a general disposition shift, has no evidence.
+**Xu 2024.** The docstring's D* Lite citation (Ren et al.) is a documentation mismatch. Isolation comes from CRN, not from reusing earlier search state, and full recompute is cheap at 533 members and MC=40.
 
-### Contradictions
-- none recorded
+**Bharathi.** Scenarios hold industry fixed, so the follower guarantee holds only if industry commits first and never reacts. FEC filings are public.
 
-### Gaps
-- Defection as a cross-issue shift: when a member switches stance on one CU issue, do they move on others? Fill with an internal panel of stance-tier changes across CU categories within member, testing co-movement against an independence null, with the window and number of members stated.
-- Opponent reaction: is industry money reactive to CU spending? Fill with a timing analysis of FEC filings.
+**Cross-issue defection.** The core premise, that a defection is a general disposition shift across issues, has no bearing.
 
-### Paul's position vs the evidence
+**Contradictions:**
+- none
 
-Paul treats Monte Carlo as a tool and highlighted Weimer's use of it as a negative control. The runner's CRN zero-delta is not that kind of control, because it holds by construction. A Weimer-style placebo belongs on the forecasters and the outcome contract, not here.
+**Gaps:**
+- The cross-issue defection premise is untested. Fill it with a test of whether members who switch stance tier on one CU issue shift on other CU issues in the same window: within-member co-movement of tier changes across categories, by party.
 
-### Open questions
-- Should the scenario docstring's D* Lite citation be corrected to describe CRN isolation?
-- Should scenarios offer a reacting-industry variant?
+**Paul's position vs the evidence.** Paul treats Monte Carlo as a tool and highlighted Weimer's use of it as a negative control. That use applies to estimators reading observed outcomes, not to this forward simulator, so the highlight points at the forecasting and contract layer rather than at the scenario runner.
 
-### Read first
+**Open questions:**
+- Should the scenario docstring drop the D* Lite citation in favour of a CRN description?
+- Should scenarios offer a reacting-industry variant, given that the fixed-opponent assumption is untested?
 
-[[bharathi-nd-competitive-influence-maximization]] [[harrison-2010-introduction-monte-carlo]] [[weimer-2023-causal-approach-detecting]]
+**Read first:** [[bharathi-nd-competitive-influence-maximization]], [[weimer-2023-causal-approach-detecting]], [[harrison-2010-introduction-monte-carlo]], [[xu-2024-improved-lite-based]]
 
 ## Priority anchor, leave-one-out orientation and engagement signal
 
@@ -896,105 +815,107 @@ Paul treats Monte Carlo as a tool and highlighted Weimer's use of it as a negati
 
 **Method.** Leave-one-topic-out orientation. Fails closed on an incomplete roster.
 
-**Code refs.** `fec/moneyball_core.py:255-317,573-625`
+**Code refs:** `fec/moneyball_core.py:255-317,573-625`
 
-**Assumptions**
+**Assumptions:**
 - Stance on other CU issues predicts priority on this issue
 
-### Evidence
+**Evidence (1 bearings: 0 VERIFIED, 1 VERIFIED-SOFTENED, 0 UNVERIFIED; 1 distinct papers).**
 
 | Paper | Year | Relation | Paper shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
 | [[poole-1999-nominate-after-years]] | 1999 | qualifies | The second dimension now adds less than 1 percent improvement over the first dimension in both chambers. | engine_orientation reads category_stance scores, not votes. The Path V vote shares (UNVERIFIED) show opposite party direction across some categories (CFPB, Technology, Exam, CU Capital Requirements lean R; Charter, NCUA Budget & Insurance lean D) and none in others. If stance scores share that pattern, leave-one-out borrowing could import party sign; that has not been checked on the stance scores. Alpha is small. | weak | VERIFIED-SOFTENED |
 
-### Assessment
+**Assessment.** Counts computed from the evidence rows: 1 bearings: 0 VERIFIED, 1 VERIFIED-SOFTENED, 0 UNVERIFIED. **Evidence weight: effectively a GAP.** 
 
-**Evidence weight: effectively a GAP.** 1 rows: 1 VERIFIED-SOFTENED. Weak.
+Poole & Rosenthal 1999 find that the second dimension adds under 1% over the first. That suggests the leave-one-topic-out orientation may mostly carry the party or first-dimension signal.
 
-Poole 1999 notes that a second NOMINATE dimension adds under 1% of fit. Low dimensionality makes it plausible that stance on other issues carries information about the held-out one. That is about votes, not CU category stance scores.
+The Path V vote shares (UNVERIFIED) show party direction reversing across CU categories:
+- CFPB, Technology, Exam and CU Capital Requirements lean R.
+- Charter and NCUA Budget & Insurance lean D.
 
-The row also raises a risk. UNVERIFIED Path V vote shares show party direction reversing across CU categories (some lean R, some lean D). If the stance scores share that pattern, leave-one-topic-out borrowing could import party sign into priority. Alpha is small (0.15 flip, 0.25 coalition), which limits the damage.
+If stance scores share that pattern, borrowing from other topics could import the wrong party sign. Nobody has checked this on the stance scores. Alpha is small (0.15 flip, 0.25 coalition), which limits the damage. The engagement block weights have no literature at all.
 
-This component needs an internal test more than literature.
+**Contradictions:**
+- none
 
-### Contradictions
-- none recorded
+**Gaps:**
+- There is no test that leave-one-topic-out stance predicts held-out-topic stance. Fill it with a predictive check over all CU categories, reported by party stratum and by category, including the categories where party direction reverses.
+- Engagement block weights are unvalidated. Fill it with a test of whether block-weighted activity predicts later cosponsorship or stance movement on CU bills.
 
-### Gaps
-- Does leave-one-topic-out stance predict held-out-topic stance? Fill with an internal held-out validation on the 533 x category stance matrix: rank correlation of the LOO orientation with the held-out tier, stratified by party, reported per category with denominators.
-- Engagement block weights: no source.
+**Paul's position vs the evidence.** Paul has no literature or stated position here. The one bearing raises a sign-importing risk that he has not addressed.
 
-### Paul's position vs the evidence
+**Open questions:**
+- Does orientation borrowing flip sign for categories where party direction reverses?
 
-No literature, and none is really needed. The question is empirical and answerable on the system's own stance matrix.
-
-### Open questions
-- Do CU category stance scores reverse party direction across categories, as the UNVERIFIED Path V vote shares suggest? If so, does LOO orientation import party sign?
-
-### Read first
-
-[[poole-1999-nominate-after-years]] [[aref-2021-identifying-hidden-coalitions]]
+**Read first:** [[poole-1999-nominate-after-years]], [[harbridge-yong-2023-bipartisan-path-effective]], [[aref-2021-identifying-hidden-coalitions]]
 
 ## Across components
 
-**1. Out-party influence is treated three different ways in one engine.**
+**1. The out-party sign differs across engines.** Different parts of the engine encode four different out-party responses:
 
-The evidence is consistent on sign, though all of it comes from mass publics, staff or EP members, not US legislator-to-legislator ties: out-party cues do not persuade and often backfire (Bakker, Merkley, Furnas by stratum, Ringe). The engine handles them three ways:
+| Where | Out-party value |
+|---|---|
+| Kernel cpf_pressure, entering flip-model nA | **+0.5** (positive pull) |
+| cpf_diffusion | at least 0.4 |
+| LT priming | sqrt(bpf_u bpf_v), clamped at 0 (about 0 except for bridge pairs) |
+| Salience retreat and backfire | **-1** |
+| Salience rally | **+0.5** if bpf is at least 0.30 |
 
-| Component | Treatment of out-party influence | Fit with the evidence |
-|---|---|---|
-| lt_priming | Clamps non-bridge out-party cues to about 0 | Fits the evidence |
-| Kernel diffusion | Keeps a 0.4 floor | Positive pull the evidence does not support |
-| Flip model (cpf_pressure) | Out-partisan weight 0.5 | Positive pull the evidence does not support |
-| Salience rally | +0.5 out-partisan step | Positive pull the evidence does not support |
+The cue evidence (Bakker, Merkley, Furnas 2019, Ringe 2013) consistently points to zero or negative. All of it is mass-public, DC-staff or EP evidence, so it sets a sign prior, not a magnitude. A single, documented out-party convention would remove the internal inconsistency. Choosing it is Paul's call because it moves ranks.
 
-There should be one documented choice. Unifying the treatment is a gated recalibration and Paul's call. The UNVERIFIED Fong lead (expert cues crossing party lines) is the main thing that could justify a bridge or expertise exemption.
+**2. bpf is counted many times.** The bipartisan share enters:
+- cpf_diffusion;
+- the LT cross-cue factor;
+- the rally gate (bpf of at least 0.30);
+- the flip target bonus (1+0.3 bpf);
+- the receptivity layer, through cooperation_v2 (rho +0.888 with bpf, a recorded double count).
 
-**2. Labels outrun the evidence.**
-- WM/WP and MAXSHIFT are labelled CALIBRATED, and no source calibrates them.
-- LOSSFRAME and the receptivity docstring cite Linde & Vis for loss aversion that the paper did not find.
-- Fouirnaies & Hall is cited for a competitiveness term it never tested.
-- Byrne is cited for an Experiment 2 interaction that its design cannot estimate.
-- The scenario docstring cites a D* Lite reuse mechanism the code does not use.
+Harbridge-Yong 2023 shows the payoff from bipartisanship is inverted-U, not monotone. No bearing licenses rewarding bridge-builders five times over.
 
-These are documentation corrections. Engine values do not need to change.
+**3. Unvalidated factors stack on a channel the literature says is small.** On the competitor leg, effective dollars can be scaled by:
+- c, up to 2.0 (reciprocity NOT validated, D-104..D-108);
+- pressure_mult, up to 1.60 (which includes pt 1.15 and susc);
+- LOSSFRAME 1.10 (contradicted by its own citation).
 
-**3. Two vulnerability measures, and one premise with no evidence.**
-- Cook PVI drives c. Ballotpedia security drives the electoral plays and, before COMPET_MULT, the receptivity incentive term.
-- With COMPET_MULT on by default, candidate-specific risk has dropped out of the engine path. The Cook 2024 table shows PVI and race ratings diverge.
-- The premise under c, under leverage and under the VULN 1.35 amplifier is the same: dollars and pressure work better on vulnerable members. Its only support is allocation evidence (donors target these seats). Reciprocity stays NOT validated (D-104 to D-108).
+That is up to about 3.5x on money whose within-member vote effect is near zero (Ansolabehere 2002, member fixed effects; House 1978-1994, N=3,400). Every factor in the chain is owner judgment.
 
-**4. Transfer ceiling.**
-- No row provides a Congress-level causal estimate of lobbying or peer effects on cosponsorship.
-- The best-identified designs are state-legislature field experiments (scan leads: Zelizer; Camp et al.) or House access-only experiments (Kalla & Broockman).
-- Engine outputs (pflip, spread, seed_prob, GO PUBLIC scores) are heuristic model outputs, never vote, access or introduction probabilities (D-025).
+**4. Two vulnerability measures disagree.** c uses Cook PVI. Electoral plays and the receptivity comp term use Ballotpedia security, and COMPET_MULT neutralizes the receptivity comp term. The Cook 2024 rating table (435 districts) shows PVI and candidate-specific risk diverge: EVEN seats get five different ratings.
 
-**5. Guardrails honoured.**
-- No row argues for dropping regular cosponsorship edges.
-- Trivedi's degree-weighted edge form is FLAGGED: it must not be read as support for the REJECTED per-edge volume normalization.
-- Lobbying-spend gaps raised by Huneeus & Kim, Jacoby and Furnas are not recommendations to bring LDA dollars in as weights (D-021).
+**5. Transfer conditions are poor across the board.** Fouirnaies & Hall (term-limited state legislatures) is not a Congress result. Other sources are equally far from US members:
+- Linde & Vis: 46 Dutch MPs.
+- Byrne: undergraduates.
+- Bakker and Merkley: mass public.
+- Furnas 2019: staff stated intentions.
+- Ringe: European Parliament.
+- Cai, Moreno and Jacoby: simulations.
 
-**6. Most gaps are answerable on the system's own data.**
+The only US-Congress causal evidence on money is Kalla & Broockman (access only, 2013) and the Ansolabehere panel (votes, observational with member fixed effects).
 
-These internal tests answer more than further literature would:
-- cosponsor join-timing hazard (fits the constant 6 and tests thresholds);
-- the held-out-topic test (priority and leave-one-out orientation);
-- cross-issue co-movement (scenario defection);
-- a tie-break rerun (competitive cascade);
-- an MC convergence check;
-- a PERS_NONE sweep.
+**6. Project-rule flags:**
+- Trivedi 2020's degree-based edge probability must not be read as support for the REJECTED per-edge volume normalization.
+- No bearing argues for dropping regular cosponsorship edges.
+- Several papers measure LDA-style lobbying dollars (Huneeus & Kim, Jacoby, de Figueiredo, Fremeth, Furnas nd). None licenses LDA as an edge or weight (D-021).
+- 'Reciprocity' appears three ways, and none validates the reciprocity premise behind c: Haythornthwaite's reciprocated ties, Palm's Cialdini strategy, and Harbridge-Yong's cross-party exchange.
+- All engine outputs (pflip, seed_prob, spread, GO PUBLIC scores) are heuristic model outputs, not access, vote or introduction probabilities (D-025).
 
-Only the money-effect-by-competitiveness question and the take-up-by-tier question need external, identified designs.
+**7. Citation-hygiene defects found in passing:**
+- the Volden-Wiseman +8-14% bonus figure is absent from the paper;
+- WM/WP are labelled CALIBRATED with no calibration behind them;
+- LOSSFRAME is attributed to Linde & Vis;
+- VULN is attributed to Noble A.4;
+- the comp term is attributed to Fouirnaies & Hall;
+- the D* Lite citation in the scenario docstring does not match what the code does;
+- the flip-model component note says there is no passage-bonus code line, while the bearing shows flip_model.py:142 applies it.
 
 ## Research agenda
 
-1. Fix citation and label errors (docs only, Paul applies): relabel LOSSFRAME, WM/WP and MAXSHIFT as owner judgment rather than CALIBRATED. Move Linde & Vis from LOSSFRAME to the prospect-domain term and drop 'loss-averse overall'. Remove the Fouirnaies & Hall attribution from the competitiveness term. Correct Byrne's 'Exp-2 interaction' wording. Correct the scenario D* Lite citation.
-2. Salience advisory: decide whether to gate held/defensive credit to sq == defend, to match Noble & Turner. The live 2026-10-08 advisory (18 issues) has all four GO PUBLIC verdicts on offense issues. This is Paul's ruling.
-3. Out-party influence: decide on one treatment across the kernel (0.4 floor), flip (cpf_pressure 0.5), salience rally (+0.5) and lt_priming (clamped about 0). Read the Fong (JOP) expert-cue lead before deciding on any bridge exemption.
-4. Internal test: CU-bill cosponsor join hazard as a function of already-joined weighted neighbours, stratified by party pair and held out by Congress. It estimates the constant 6, tests threshold versus smooth adoption, and tests whether cross-party ties predict joining.
-5. Internal test: rerun the competitive cascade with B-first and randomized same-hop tie-breaking under identical CRN draws, and report the change in CU spread. Separately, check seed-order stability at MC 20/40/200.
-6. Internal test: leave-one-topic-out orientation versus held-out tier on the 533 x category stance matrix, stratified by party, with per-category denominators. Also test cross-category co-movement of stance changes for the scenario defection assumption.
-7. Retiring list: remove members seeking other office from incent 0.60, per Fouirnaies & Hall's lower-bound argument. Paul's call.
-8. COMPET_MULT: decide whether candidate-specific vulnerability (Cook race rating or Ballotpedia comp) should re-enter, since PVI-only c gives EVEN Solid R and EVEN Toss Up seats the same value. Count members in the ten flagged redistricted states near lean 0.
-9. Read the online-scan leads (all UNVERIFIED, to be added to the hub file before use): Camp, Schwam-Baird & Zelizer, 'The limits of lobbying: null effects from four field experiments in two state legislatures' (cambridge.org PSRM); Zelizer's briefing-spillover experiment (resolve the 60% versus 80% indirect-effect figure); Rogowski & Sinclair, House office lottery; Box-Steffensmeier, Christenson & Craig, 'Cue-Taking in Congress' (AJPS 2019); Fong, cue-taking (fongsurvey.polisci.lsa.umich.edu/papers/cue-taking.pdf); Simkin & Roychowdhury, H.R. 1207 cosponsor dynamics (arxiv.org/abs/1001.3732); Levitt 1998, PAC election channel (ideas.repec.org/a/bla/ecopol/v10y1998i1p19-35.html); the 2024 AEA paper on carbon money and electoral pressure (aeaweb.org/conference/2024/program/paper/nn3G7ztR).
-10. External design needed: the take-up of lobbying contact by prior stance tier (SGATE, PERS) and the money effect by seat competitiveness (c, leverage). Both need identified variation. Check whether the Camp et al. and Kalla & Broockman replication files allow a split by prior position or by competitiveness.
+1. Cheap read-only robustness runs, no new data needed: (a) frontier seed order under saturation constant 3/6/12; (b) cascade CU reach with A-first vs B-first vs randomized same-hop tie order under identical CRN draws; (c) rank-flip rates at MC 20/40/200; (d) corr(visibility_z, coop_v2) and corr(visibility_z, affective N) on the roster.
+2. Salience status-quo audit: recompute the 18-issue advisory with defensive held-credit gated to sq=='defend' (Noble & Turner Prop 2 logic) and report how the verdict order changes. This is presented to Paul; it is not applied.
+3. Out-party cue test on US data: a cosponsorship-join hazard model on CU bills with exposure split into co-party and out-party prior joiners, stratified D-D, R-R and D-R and by bpf. It covers the kernel 1.7/0.5, the LT clamp, the bridge exemption and the rally +0.5 step together.
+4. Money dose-response panel: member-level continuous-dose DiD (Callaway et al. 2025) of CU and industry PAC money as a share of receipts on CU roll-call and cosponsorship alignment. Use member fixed effects, an unfunded comparison group, party strata, and an interaction with PVI and with security. Handle strategic targeting (Blackwell 2026). This is the only route to evidence on WM/WP, HALFF, MAXSHIFT, LOSSFRAME and c.
+5. Contact-to-take-up study: obtain CU-side member-level contact logs (not LDA, D-021), join them to cosponsorship deltas, and estimate take-up and stance-tier transitions by starting tier for SGATE and PERS, including possible backfire in low tiers. Run it through the prospective H1/H2 contract (at least 150 members), with a single pre-registered look.
+6. Retiree split: compare final-term members who are leaving office with those seeking other office on post-announcement alignment and responsiveness, per Fouirnaies & Hall's lower-bound argument, stratified by party.
+7. Cross-issue co-movement: test whether a stance-tier switch on one CU category predicts switches on others in the same window (scenario-runner premise). Run the leave-one-topic-out predictive check by party and category, including the categories where party direction reverses.
+8. Cascade back-test: compare simulated vs observed cosponsor accumulation curves on past CU bills under a pre-registered fit metric, with the bystander rule min(0.9, $/400k) tested as a separate component.
+9. Vulnerability harmonization study: compare Cook PVI, Cook ratings and Ballotpedia security as predictors of the dose-response heterogeneity above. In the ten mid-decade-redistricted states, check c sensitivity to 2025 vs 2026 maps (Best/McCartan leads, UNVERIFIED).
