@@ -39,7 +39,6 @@ Web-scan results: see _work/missing_sources.md
 - Volden & Wiseman federal LES / Center for Effective Lawmaking (only the Bucchianeri et al. 2025 state study is on disk)
 - Nokken & Poole dynamic ideal points
 - Norgaard & Klemmensen 2019; Schumacher & Zettler 2019
-- Peters & Matz 2024 (LLM trait scoring)
 - Valente 2012; Yu 2019; Rienks & Heylen 2005 (turn-statistic dominance)
 - Matz et al. 2017; Hackenburg & Margetts 2024
 - Russo et al. 2023; Brandenberger 2018; Montgomery & Nyhan 2017; Shalizi & Thomas 2011; Nay 2017 (cosponsor-forecaster protocol)
