@@ -1,5 +1,7 @@
 # Research vault
 
+Brain vault: [research-vault project note](obsidian://open?vault=brain&file=projects%2Fresearch-vault) · [Melange](obsidian://open?vault=brain&file=projects%2Fmelange-systems) · [Mentat](obsidian://open?vault=brain&file=projects%2Fmentat) · [Terrier](obsidian://open?vault=brain&file=terrier%2Fterrier)
+
 The empirical backbone of Paul's systems: Melange (path-finding, SNA, allocation, stance, psychometrics), Moneyball rank pillars, Mentat (FEC attribution, giving forecast, sector-growth study) and Terrier. Contract for sessions: see CLAUDE.md.
 
 - [[framework]]
