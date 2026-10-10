@@ -17,7 +17,7 @@ brain_notes:
   - concepts/pac-cash-proportional-attribution
   - actors/mentat-fec-pipeline-history-audit-r12
 paper_count: 14
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Mentat FEC money attribution and accounting

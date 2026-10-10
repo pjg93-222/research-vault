@@ -1,0 +1,129 @@
+---
+type: paper
+title: "Efficient Influence Maximization in Social-Networks Under Independent Cascade Model"
+authors: ["Nitesh Trivedi", "Anurag Singh"]
+year: "2020"
+venue: "Procedia Computer Science 173 (2020) 315-324, ICITETM2020 (International Conference on Smart Sustainable Intelligent Computing and Applications). Metadata hint verified against the PDF header and first page."
+doi: "10.1016/j.procs.2020.06.037"
+category: "Adaptive Influence Maximization"
+systems: ["melange-allocation", "melange-influence-engine", "melange-pathfinding", "melange-sna", "moneyball-rank-pillars"]
+components: ["melange-allocation.budget-frontier", "melange-allocation.per-topic-allocators", "melange-pathfinding.multi-target-and-budget-modes", "melange-influence-engine.cascade-kernel", "melange-sna.katz-bonacich-benchmark", "moneyball-rank-pillars.network-centrality-influencescore"]
+paul_annotated: false
+paul_markup_count: 0
+evidence_status: "verified"
+source: "[[_sources/trivedi-2020-efficient-influence-maximization.pdf]]"
+original_paths: ["C:\\Users\\pgoff\\Downloads\\1-s2.0-S1877050920315416-main.pdf"]
+sha12: ["d26d6371ed9a"]
+tags: [paper, adaptive-influence-maximization, type/paper, theme/adaptive-influence-maximization, evidence/verified]
+---
+
+# Efficient Influence Maximization in Social-Networks Under Independent Cascade Model
+
+**Nitesh Trivedi, Anurag Singh (2020).** *Procedia Computer Science 173 (2020) 315-324, ICITETM2020 (International Conference on Smart Sustainable Intelligent Computing and Applications). Metadata hint verified against the PDF header and first page..* [10.1016/j.procs.2020.06.037](https://doi.org/10.1016/j.procs.2020.06.037) Theme: [[themes/adaptive-influence-maximization|Adaptive Influence Maximization]].
+
+> [!abstract] Summary
+> Trivedi and Singh (2020) is a short algorithm benchmark under the Independent Cascade Model (ICM). It makes two proposals. The first, DHICM, extends Chen et al.'s 2009 degree-discount rule: once a node is picked as a seed, each neighbour's degree is discounted by dd_v = d_v - 1 - (d_u - 1)p. The second, MICM, replaces the constant edge probability (p = 0.01) with a structural form: 0.01 + (d_i + d_j)/n + common neighbours/n. Both are tested on two arXiv co-authorship graphs (NetHept: 15,233 nodes and 58,891 edges; NetPhy: 37,154 nodes and 231,584 edges). The data contain no real diffusion or outcomes, and the paper does not report how many Monte Carlo runs it used or give error bars. On NetHept, DHICM's spread is 12.5% below CELF at k=10 and 7.9% below at k=30, and on NetPhy 2.5% below at k=30. It is above plain degree centrality by 16% (NetHept k=30), 10.4% (NetHept k=80) and 10% (NetPhy k=50), and runs in seconds where CELF takes far longer. A Katz-based heuristic does worse than degree and sometimes worse than random. MICM raises spread for every algorithm (CELF by up to +55.6% on NetPhy at k=10). The paper does not decompose that rise and offers no evidence that MICM is realistic; the analysis infers, beyond the paper, that the low 0.01 baseline may account for much of it.
+>
+> For Paul's system the paper matters mainly as a calibration of trade-offs. With a stance-gated shortlist of 45 candidates, CELF's cost does not constrain the budget frontier, so the paper's gaps to CELF (2.5 to 12.5%) argue for keeping the exact lazy greedy over a degree heuristic. The dashboard's budget-recruit mode is a one-hop coverage greedy that discounts direct neighbours only. The per-topic coalition allocator scores each candidate's marginal in isolation and ignores seed overlap, which is the problem degree-discount exists to fix. MICM does not calibrate the kernel: the system draws edge probabilities from weighted cosponsorship with saturation, at much higher p than 0.01. All spread figures here are simulated model outputs on co-authorship graphs, not measured influence.
+
+## Paul's annotation
+
+_Not in Paul's annotated bibliographies._
+
+## Study
+
+**Question:** Given a social network and a diffusion model, which k seed nodes maximize expected spread under the Independent Cascade Model (ICM) while keeping computation cheap? Two sub-questions: (a) can a degree-based heuristic (DHICM) approach greedy/CELF spread at much lower cost; (b) can ICM edge probabilities be derived from network structure (degrees, common neighbours) instead of a fixed constant, to make spread more realistic (MICM).
+
+**Theory:** Independent Cascade and Linear Threshold diffusion models (Kempe et al. 2003, ref [12]); word-of-mouth and viral-marketing theory (Goldenberg et al. 2001, refs [6][7] as cited; Granovetter 1978 for thresholds); submodularity of the spread function, which gives the greedy (1-1/e, text says 63%) guarantee (p.318); degree-discount heuristic (Chen et al. 2009, ref [4]); the claim that centrality heuristics are fast and that similarity (degree and common neighbours) can proxy real propagation probability (p.320-321).
+
+**Data:** Two academic co-authorship networks, labelled NetHept and NetPhy, with the authors citing ref [20] (Wang, Chen, Wang 2012) for the source. Unit: author = node; edge = two authors who co-wrote a paper. Both are undirected multigraphs that the authors simplify to undirected simple graphs (p.322). Table 4.1 (p.322): NetHept n = 15,233 nodes, m = 58,891 edges; NetPhy n = 37,154 nodes, m = 231,584 edges. Abstract says the academic collaboration data is from arXiv.org; the text does not name the arXiv subject categories. Time period: not stated. Hardware: 2.10 GHz Xeon, 6 cores / 12 logical processors, 16 GB RAM (p.321). No real diffusion or outcome data is used; all results are simulated spread on the networks.
+
+**Method:** Algorithmic benchmark with Monte Carlo simulation of ICM. (1) DHICM (Algorithm 3, p.320): compute degrees, then repeatedly pick the max-discounted-degree node and update each un-seeded neighbour v as dd_v = d_v - 1 - (d_u - 1)p (Eq. 3.2), where p is the ICM propagation probability. Stated complexity O(n + k log n + m). (2) MICM (Eq. 3.3, p.320): edge probability p_ij = 0.01 + (d_i + d_j)/n + CN(i,j)/n, with n the node count and CN the common-neighbour count (the extracted equation is typeset ambiguously; this is the reading the surrounding prose gives). Spread is estimated by R Monte Carlo runs per candidate (Algorithm 2, p.319); the value of R used in experiments is NOT reported. Baselines: CELF (Leskovec et al. 2007, ref [13]), degree centrality, Katz centrality, PrKatz (ref [1] as cited), and Random. k is varied (values shown in figures for k = 10 to 80). Baseline ICM uses p = 0.01 (Fig. 4.1 caption, p.322).
+
+**Identification:** None. The paper makes no causal claim; it is a comparative simulation benchmark. The "modified ICM" is an assumed functional form for edge probability, justified by prose (similarity, real-world dynamics), not estimated from data or validated against observed diffusion.
+
+**Scope:** Population: two academic co-authorship networks (no social media or political networks). Institution: National Institute of Technology Delhi (authors); conference ICITETM2020. Era: not stated. Generalization is limited to ICM with the two networks tested; the authors themselves say performance on other cascade models is untested (p.324).
+
+## Key findings
+
+- DHICM spread on NetHept is close to CELF: 12.5% lower at k=10 and 7.9% lower at k=30. (k=10: -12.5%; k=30: -7.9% vs CELF; Sec 4.1, p.321)
+- DHICM beats degree centrality on NetHept for every k tested. (k=30: +16%; k=80: +10.4% vs degree centrality; Sec 4.1, p.321)
+- On NetPhy, DHICM beats degree centrality at k=50 and trails CELF slightly at k=30. (k=50: +10% vs degree; k=30: -2.5% vs CELF; Sec 4.1, p.321)
+- PrKatz (Katz-based, ref [1]) underperforms: on NetHept it is worse than Random for some k; on NetPhy it beats Random throughout. Authors attribute this to graph pre-processing that splits the graph into components and to Katz centrality being weaker than degree in their results. (not reported as a table value; qualitative; Sec 4.1 and Sec 2.1, p.318-319, p.321)
+- Running time: CELF takes very large time on both datasets; DHICM takes a few seconds more than plain degree and Katz centrality. (times shown only in figures; no numeric table; Sec 4.1, Fig 4.2, p.322-323)
+- Modified ICM (MICM) raises spread for every algorithm on NetHept. Katz +5.7% at k=30; Degree +8.92% at k=70; DHICM +6.8% at k=40; CELF +12.5% at k=70. (as listed; Sec 4.2, p.322)
+- On NetPhy under MICM, gains are much larger: Katz +31.29% (k=20); Degree +32.60% (k=20); DHICM +23.7% (k=30); CELF +55.55% (k=10). (as listed; Sec 4.2, p.322)
+- MICM raises run time: DHICM +12.6% (NetHept) and +8.6% (NetPhy); CELF +9.4% and +6.5%; degree and Katz no significant change. Authors attribute the increase to larger spread, not to a complexity change. (as listed; Sec 4.2, p.323)
+- Stated complexity: DHICM O(n + k log n + m) vs greedy O(knRm) (R = Monte Carlo runs). Conclusion restates CELF as O(nkRm); the two complexity statements are not identical. (n=15,233 / 37,154; m=58,891 / 231,584 (Table 4.1); Sec 3.1 p.320; Sec 4.2 p.323; Sec 5)
+- Authors' main conclusion: centrality heuristics should be improved rather than making greedy faster, and edge probabilities should be derived from node or network information. (none; Sec 5 Conclusion, p.324)
+
+## Limitations
+
+- Only ICM tested; authors state DHICM performance must be tested on other cascade models (p.324).
+- Only two co-authorship networks; no node attributes used by design (p.320: only topology assumed known). Generalization to other network types is untested.
+- MC sample size R used in experiments is not reported; no error bars, confidence intervals, or repeated-seed runs in the text, so the reported percentage differences cannot be checked for noise.
+- Baseline ICM uses p = 0.01 for all edges, which the paper says gives very little influence (p.321); MICM gains are measured against this weak baseline.
+- MICM edge probability (Eq 3.3) is an ad hoc functional form with no empirical validation against real diffusion data; the claim that it reflects real-world dynamics (p.321, p.323) is asserted, not tested. The 0.01 constant and normalisation by n are chosen by the authors.
+- Gains from MICM are reported as percent increases in spread without showing that the ranking of algorithms is unchanged; some MICM rankings (e.g. CELF vs DHICM) are not discussed.
+- Network simplification: multigraphs turned into simple graphs (p.322), so repeated co-authorship weights are discarded.
+- Complexity claims are inconsistent: O(knRm) (p.320) vs O(nkRm) for CELF (p.323); and the stated DHICM complexity is not validated by any timing scaling experiment.
+- PrKatz is re-implemented by the authors, and they state their results show it underperforms; no details are given on the re-implementation.
+- Citation numbering in the text does not match the reference list: text cites [2] for Goldenberg et al. (list [2] is Arora et al.) and [17] for Kempe et al. (list [17] is Richardson and Domingos). Read the reference list with care.
+- Abstract says DHICM spread is 'close to benchmark greedy', but this is shown only on two networks and only with the greedy approximated by CELF.
+
+## Short quotes
+
+- "degree heuristic algorithm is very efficient and has influence spread far better than many centrality based heuristics" (Abstract, p.315)
+- "we need to work in the direction of improving centrality based heuristics, since they are very fast" (Sec 5 Conclusion, p.324)
+- "The proposed DHICM algorithm works well for ICM while its performance needs to be tested on other cascade models." (Sec 5 Conclusion, p.324)
+
+## Bearing on the systems
+
+| Component | Relation | Paper shows | System does | Transfers when | Strength | Check |
+|---|---|---|---|---|---|---|
+| [[systems/melange-allocation#Budget frontier with knee and electoral modes\|Budget frontier with knee and electoral modes]] | supports | Under ICM with p=0.01 on two co-authorship graphs, DHICM is 12.5% (NetHept k=10) and 7.9% (NetHept k=30) below CELF, and 2.5% below CELF at k=30 on NetPhy. The paper says greedy is slow on medium-sized graphs (more than 1500 nodes) because of its high time complexity. (Sec 4.1 p.321 (lines 348-357); Sec 2 p.318 (lines 185-186, 1500-node threshold); Fig 4.2 p.322 (times shown only as figures)) | budget_frontier runs exact lazy greedy: candidates are the stance-gated top-45 neutral shortlist (line 137), marginals are re-evaluated when popped from a heap (lines 159-170), and MAXSEEDS defaults to 60 and MC to 20 (line 7). Verified in code. `fec/engine/budget_frontier.py:7,137,159-170` | The gap was measured at p=0.01 on two co-authorship graphs of 15k to 37k nodes, with no MC sample size or variance reported. It ranks algorithms under ICM only and does not validate the frontier's spread values, which are model outputs. The cost argument holds because the candidate pool is about 45, not because of a node-count threshold in the paper. | moderate | VERIFIED-SOFTENED |
+| [[systems/melange-allocation#Per-topic flip and coalition allocators\|Per-topic flip and coalition allocators]] | suggests-extension | Degree-discount (DHICM) discounts neighbours of already chosen seeds (Eq 3.2). The paper reports DHICM above plain degree by 16% at k=30 and 10.4% at k=80 on NetHept, and by 10% at k=50 on NetPhy. Plain degree therefore trails DHICM by less than those percentages, not by them. (Sec 3.1 Eq 3.2 and Algorithm 3, p.319-320; Sec 4.1 p.321 (lines 349-350, 355-356)) | per_topic_coalition scores each candidate by isolated marginal spread({n}) minus base (line 115), boosts by a bridge factor with BETA_C=0.8 (lines 30, 117), water-fills the budget (line 119), and reports the joint spread only afterwards (lines 124-125). Verified: no discount for adjacency to other funded seeds. `fec/engine/per_topic_coalition.py:30,114-125; coal_waterfill defined at line 68` | The paper's direction is DHICM over degree, so the gap is an extension argument, not a measured gain. The percentages are simulated, depend on k, come from one benchmark, and have no error bars. A sequential or discounted pass is a candidate for owner review only. | moderate | VERIFIED-SOFTENED |
+| [[systems/melange-pathfinding#Best-sponsor, multi-target tree and budget max-coverage modes\|Best-sponsor, multi-target tree and budget max-coverage modes]] | qualifies | Under MICM on NetPhy the paper reports percent gains over ICM: DHICM +23.7% at k=30 and CELF +55.55% at k=10. These are different k values and gains over ICM, so they do not measure a head-to-head DHICM vs CELF gap under MICM. The paper does not say its discount assumes small p, and it does not test one-hop versus multi-hop spread. (Sec 4.2 p.322 (lines 382-387); Sec 3.1 Eq 3.2 p.320) | budgetRecruit greedy: gain = (1 minus cov[c]) plus the sum over direct neighbours of PE[c][v] times (1 minus cov[v]), with pruning of nodes below 0.1 times mean degree and a 1+2dT multiplier when a target is set. The coverage update touches direct neighbours only, so the objective is one-hop. Verified. `fec/surfaces/templates/make_dashboard_html_00.tpl:773-791` | The paper's MICM is a different edge-probability form from the kernel, so it cannot say how one-hop coverage fares at the kernel's p-range. The claim that the kernel reaches p of about 0.52 was not checked: the cited sector-networks note is not in the repo. | weak | VERIFIED-SOFTENED |
+| [[systems/melange-influence-engine#Cascade activation kernel build_P and partisan edge factors\|Cascade activation kernel build_P and partisan edge factors]] | qualifies | Structure-derived edge probabilities p_ij = 0.01 + (d_i+d_j)/n + CN(i,j)/n raise spread for every algorithm on the co-authorship graphs, e.g. Degree +32.60% (NetPhy, k=20) and CELF +55.55% (NetPhy, k=10). The form is asserted to reflect real propagation dynamics and is not fitted to or validated against observed diffusion. (Sec 3.2 Eq 3.3 p.320-321; Sec 4.2 p.322 (lines 385-387)) | build_P sets p(u to v) = x/(x+6) with x = cosponsor weight times cpf_diffusion(u,v) times the receiver edge_mult term. The constant 6 is a fixed design value in code, not estimated. Verified. `fec/moneyball_core.py:555-562 (build_P)` | The paper gives no calibration or validation, so it cannot support tuning or replacing the constant 6. Its gains are percent increases over a 0.01 baseline that it says gives very little influence and does not favour real-world dynamics; calling the gains mechanical is this analysis's reading, not the paper's. The common-neighbour term is a candidate covariate only. The degree term raises probability for hubs and must not be presented as support for the REJECTED per-edge volume normalization. | weak | VERIFIED-SOFTENED |
+| [[systems/melange-sna#Katz-Bonacich benchmark (diagnostic)\|Katz-Bonacich benchmark (diagnostic)]] | qualifies | PrKatz (Katz-based, Alshahrani et al. ref [1]) does worse than plain degree under ICM and on NetHept falls below Random for some k. The authors partly blame pre-processing that splits the graph into components. Katz centrality alone matches degree at small k and declines as k grows. (Sec 2.1 p.318-319 (lines 204-215); Sec 4.1 p.321 (lines 351-360)) | kb_benchmark computes Katz-Bonacich b = sum over k of (delta A)^k 1 on the live kernel P, with delta = 0.85 divided by the spectral radius (lines 33-53), and documents itself as a diagnostic. The optimizer does not read it. Verified. `fec/engine/kb_benchmark.py:1-24,33-53` | The paper concerns Katz as a seed-selection proxy for cascade spread and finds it weak. The system uses KB as an equilibrium-pricing benchmark, so the evidence only discourages promoting KB into seed choice. The rel's claim that nothing in the chain consumes KB is wrong: refresh_table.py:261 runs it as a DIAG step, surfaces/make_member_desk.py:825 reads kb_benchmark.json for display, legislation/run_legislation_shadow_recompute.py:403 holds an immutable-input contract on it, and audit/dashboard_integrity.py:625 checks it. KB values are heuristic model outputs, never access or closeness probabilities (D-025). | weak | VERIFIED-SOFTENED |
+| [[systems/moneyball-rank-pillars#Cosponsor-network InfluenceScore (computed, weight 0)\|Cosponsor-network InfluenceScore (computed, weight 0)]] | context | The paper says selecting maximum-degree vertices gives higher simulated influence than other centrality measures, and that degree-discount and greedy beat plain degree. Katz equals degree at small k and falls as k grows. The paper does not test betweenness, eigenvector or any weighted composite. (Sec 3.1 p.319 (lines 229-230); Sec 4.1 p.321 (lines 346-353)) | InfluenceScore is built as 0.60 weighted out-degree plus 0.25 betweenness plus 0.15 eigenvector, scaled to 0-100. The Python builder is in fec/legislation/build_legislation_base_network.py (lines 826-840, weights at lines 833-835). The 2026-06-25 retirement (AB13=0) was not checked; it sits in the workbook. `fec/legislation/build_legislation_base_network.py:826-840,833-835` | The paper measures simulated cascade spread on co-authorship graphs, not legislative influence or bill passage. It does not test the composite, so it cannot support or contradict the retirement or the underdog lens. Degree beating other centralities is a simulated ordering, not evidence about influence on outcomes. | weak | VERIFIED-SOFTENED |
+
+> [!failure]- Claims that did not survive verification
+> - Summary issue: Summary and paul_alignment say DHICM costs 8 to 12% of spread. The paper's gaps to CELF at p=0.01 are 12.5% and 7.9% on NetHept (k=10, k=30) and 2.5% on NetPhy (k=30), so the range is 2.5 to 12.5%.
+> - Summary issue: Summary says the MICM rise mostly follows mechanically from the 0.01 baseline. The paper does no decomposition; this is the analysis's inference and should be labelled as such.
+> - Summary issue: Summary says DHICM beats degree by 10 to 16% without naming datasets or k values. Paper: 16% at NetHept k=30, 10.4% at NetHept k=80, 10% at NetPhy k=50. These are DHICM above degree, not degree below DHICM.
+> - Summary issue: paul_alignment's claims about Paul's positions (joint optimizer, Fink-derived cheap-simulation wish, Ardekani Katz highlight) cannot be traced: paul_entries is empty, and the annotations folder has only bibliographic lines for Ardekani and Fink with no highlight text. Unverified; remove or source them.
+> - Summary issue: Rel bearing 4 and the summary's KB context say nothing in the chain consumes KB. Member desk, legislation shadow contracts and the integrity check read kb_benchmark.json; only the optimizer does not.
+> - Summary issue: Rel bearing 0 transfer conditions cite a CELF slowness threshold of 10^4 or more nodes. The paper's threshold is about 1500 nodes (p.318).
+> - Summary issue: The 533-member count in paul_alignment was not verified in this pass.
+
+## Gaps and flags
+
+- per_topic_coalition allocates on isolated single-seed marginals spread({n})-base and never discounts candidates adjacent to other funded seeds. The paper's central mechanism (degree discount for seed overlap) is absent there, though budget_frontier's sequential lazy greedy does handle overlap.
+- The edge probabilities in the cascade kernel use no structural term such as common neighbours or triadic closure. The paper's MICM is unvalidated, but it names a candidate covariate for any future calibration of the saturation constant 6 against observed cosponsorship join timing.
+- No check of the dashboard's one-hop coverage heuristic (budgetRecruit) against full multi-hop cascade spread at the kernel's actual p regime.
+- The paper reports no Monte Carlo sample size or variance, so it cannot speak to whether MC=20 is adequate. That question still rests on mc_stability_check.py (motivated by Almazaydeh 2026).
+- Wording: the paper uses 'influence' for simulated ICM spread on co-authorship graphs. When citing it, call spread, degree and Katz ranks heuristic model outputs, never closeness, access or introduction probabilities (D-025).
+- MICM's degree term raises edge probability for high-degree pairs. It is NOT the REJECTED per-edge volume normalization and must not be presented as support for it. Neither the paper nor this note recommends volume normalization.
+- The paper turns multigraphs into simple graphs and discards repeated co-authorship weight. Nothing here argues for dropping regular cosponsorship edges or weights (a REJECTED proposal), and none of the paper's results should be read that way.
+- Citation hygiene: the paper's in-text reference numbers do not match its reference list (Kempe is cited as [17], Goldenberg as [2]). Use the list entries, not the in-text numbers.
+
+Paul has not annotated this paper. The paper treats CELF as the accuracy ceiling and offers heuristics only as a speed trade-off, which does not bind at a candidate pool of about 45. The gaps to CELF in this benchmark range from 2.5% to 12.5% of spread. Katz is a weak seeding proxy in the paper's results, which concerns seed selection rather than the system's use of Katz-Bonacich as a diagnostic.
+
+## Related papers
+
+- [[almazaydeh-2026-heuristic-centrality-methods]] — complements — Same question: centrality heuristics versus greedy in influence maximization. Title and question match. The CELF MC-noise point and its link to mc_stability_check.py were not verified here.
+- [[golovin-2011-adaptive-submodularity-theory]] — builds-on — Title and question match: adaptive submodularity extends the diminishing-returns guarantee that the paper's greedy argument relies on.
+- [[kumar-2022-influence-maximization-social]] — complements — Also an IC-model seed-selection benchmark, but it uses graph embeddings and a GNN rather than degree discount, so the rel's same-method label is wrong.
+- [[chen-2021-contingency-aware-influence]] — extends — Title matches contingency-aware seeding, where invited nodes accept only probabilistically, which the plain DHICM and CELF comparison does not model.
+- [[bharathi-nd-competitive-influence-maximization]] — extends — Competitive IC with multiple cascades is the setting of the system's competitive cascade, which Trivedi does not test.
+- [[zareie-2023-influence-maximization-social]] — complements — A survey of behaviour-aware IM methods that places degree-discount and edge-probability modelling in wider context.
+- [[kamarthi-2020-influence-maximization-unknown]] — complements — Targets cheap seed selection with unknown topology, whereas Trivedi assumes the network topology is known.
+
+### Linked from
+- [[harrison-2010-introduction-monte-carlo]] — complements — It states that IC spread is approximated by large Monte-Carlo simulations whose accuracy scales with the number of runs, the computing cost Harrison flags as a drawback.
+- [[arya-2025-relink-edge-activation]] — same-method — Both use the Independent Cascade model with Monte Carlo spread estimation. Relation changed from same-data, since no data is shared. RELINK does not cite this item.
+- [[chen-2023-complex-contagion-influence]] — complements — Efficient IM under the submodular IC model, the setting whose guarantees this paper shows do not carry to complex contagion.
+- [[kamarthi-2020-influence-maximization-unknown]] — complements — Efficient greedy influence maximization under the independent cascade model, the same diffusion model Kamarthi uses as its oracle. Checked against the text on greedy and ICM.
+- [[fink-2023-congressional-social-network-dataset]] — complements — Influence maximization under the Independent Cascade Model, the diffusion model whose edge probabilities Fink supplies. Checked against the item title and venue.
+- [[kempe-2015-maximizing-spread-influence]] — built-on-by — Speeds up Kempe-style greedy under Independent Cascade. Item exists; not re-read here.

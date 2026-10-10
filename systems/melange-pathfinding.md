@@ -12,7 +12,7 @@ brain_notes:
   - actors/melange-dashboard-june-capstone.md
   - actors/staffer-live-sidecar.md
 paper_count: 29
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange path-finding (recruitment and introduction routes)

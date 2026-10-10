@@ -13,7 +13,7 @@ brain_notes:
   - C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-4-5-luna-and-pac.md
   - C:/Users/pgoff/Documents/brain/terrier/terrier.md
 paper_count: 1
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Terrier Luna imputation of blank consumer-file fields

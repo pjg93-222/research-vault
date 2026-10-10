@@ -2,7 +2,7 @@
 type: theme
 name: "Neural Networks"
 paper_count: 1
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Neural Networks

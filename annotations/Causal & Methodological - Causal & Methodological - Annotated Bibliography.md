@@ -3,6 +3,7 @@ type: "annotation-source"
 source_zip: "Annotated Bibliographies & Literature Synthesis-20261009T191315Z-1-001.zip"
 source_path: "Annotated Bibliographies & Literature Synthesis/Causal & Methodological/Causal & Methodological - Annotated Bibliography.docx"
 sha12: "e7d38ccd2551"
+tags: [type/annotation]
 ---
 
 Blackwell, Matthew, and Soichiro Yamauchi. *The Effect of Political Advertising after Citizens United: Adjusting for Unmeasured Confounding  in Marginal Structural Models∗*, 9 Feb. 2026.

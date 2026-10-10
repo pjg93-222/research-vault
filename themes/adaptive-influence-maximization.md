@@ -2,7 +2,7 @@
 type: theme
 name: "Adaptive Influence Maximization"
 paper_count: 16
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Adaptive Influence Maximization

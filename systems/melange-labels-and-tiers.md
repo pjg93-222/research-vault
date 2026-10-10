@@ -5,7 +5,7 @@ slug: melange-labels-and-tiers
 components: [melange-labels-and-tiers.category-stance-ladder, melange-labels-and-tiers.say-do-gate, melange-labels-and-tiers.overall-tier, melange-labels-and-tiers.rank-honors, melange-labels-and-tiers.primacy-board, melange-labels-and-tiers.per-area-grade, melange-labels-and-tiers.industry-boards-crown]
 brain_notes: [concepts/say-do-gate.md, concepts/stance-pipeline-integrity-contract.md, concepts/behavior-qualified-recognition.md, topics/2026-07-feature-primacy-and-industry-tier-boards.md]
 paper_count: 9
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange stance labels, say-do gate and tier boards

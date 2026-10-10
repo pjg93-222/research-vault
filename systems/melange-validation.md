@@ -14,7 +14,7 @@ brain_notes:
   - C:/Users/pgoff/Documents/brain/concepts/zero-rank-delta-verification.md
   - C:/Users/pgoff/Documents/brain/concepts/trend-over-significance.md
 paper_count: 15
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange validation protocol and prospective tests

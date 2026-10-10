@@ -31,3 +31,9 @@ Put the original in `_sources/`, extract text to `_text/`, write `papers/<author
 
 ## Brain links
 Link into the brain vault with `obsidian://open?vault=brain&file=<path>` URIs, not wikilinks.
+
+## Layout update 2026-10-10
+
+- Papers are filed by theme: `papers/<theme-slug>/<slug>.md`; non-articles in `papers/_non-articles/`. Links stay by basename (`[[slug]]`), so moves do not break them.
+- Every note carries a `type/*` tag (paper, research-note, system-hub, theme, annotation, index, non-article); papers also carry `theme/*` and `evidence/*` tags. Graph colour groups and the `vault-colors` CSS snippet key off these tags and folders.
+- The combined view lives at `C:\Users\pgoff\Documents\linked` (folder junctions to this vault and the brain vault, plus `bridges/` notes).

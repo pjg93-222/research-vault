@@ -3,6 +3,7 @@ type: "annotation-source"
 source_zip: "Annotated Bibliographies & Literature Synthesis-20261009T191315Z-1-001.zip"
 source_path: "Annotated Bibliographies & Literature Synthesis/Path-Finding Algorithums/Path-Finding Algorithums - Annotated Bibliography.docx"
 sha12: "6f4e1c72fa73"
+tags: [type/annotation]
 ---
 
 *(PDF) Shortest Path Algorithms for Social Network Strengths*, 2025, [www.researchgate.net/publication/315330410_Shortest_Path_Algorithms_for_Social_Network_Strengths](http://www.researchgate.net/publication/315330410_Shortest_Path_Algorithms_for_Social_Network_Strengths).

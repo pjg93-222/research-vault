@@ -17,7 +17,7 @@ brain_notes:
   - C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-case-1-moneyball-gate2.md
   - C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md
 paper_count: 36
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange member psychometrics (Big Five, dispositions, persona)

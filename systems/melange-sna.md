@@ -18,7 +18,7 @@ brain_notes:
   - C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md
   - C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md
 paper_count: 33
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange member social-network analysis

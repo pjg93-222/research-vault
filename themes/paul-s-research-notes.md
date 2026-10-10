@@ -2,7 +2,7 @@
 type: theme
 name: "Paul's Research Notes"
 paper_count: 5
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Paul's Research Notes

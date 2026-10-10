@@ -5,7 +5,7 @@ slug: terrier-canvass
 components: [terrier-canvass.candidate-support, terrier-canvass.turnout-calibration, terrier-canvass.untapped-potential, terrier-canvass.street-presets-and-turf]
 brain_notes: [terrier/terrier, terrier/2026-10-06-terrier-rulings, terrier/2026-10-06-terrier-blueprint]
 paper_count: 11
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Terrier canvass targeting and walk planning

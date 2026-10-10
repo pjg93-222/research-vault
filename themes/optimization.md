@@ -2,7 +2,7 @@
 type: theme
 name: "Optimization"
 paper_count: 5
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Optimization

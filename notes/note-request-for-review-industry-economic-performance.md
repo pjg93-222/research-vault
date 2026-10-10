@@ -12,7 +12,7 @@ evidence_status: "verified"
 source: "[[_sources/note-request-for-review-industry-economic-performance-source.md]]"
 original_paths: ["C:\\Users\\pgoff\\Downloads\\Astra_Review_Brief_Sector_Growth_and_Political_Spending.md"]
 sha12: ["bc2c16a312a8"]
-tags: ["research-note", "paul-s-research-notes"]
+tags: [research-note, paul-s-research-notes, type/research-note]
 ---
 
 # Request for Review: Industry Economic Performance and Political Spending

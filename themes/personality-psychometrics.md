@@ -2,7 +2,7 @@
 type: theme
 name: "Personality & Psychometrics"
 paper_count: 8
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Personality & Psychometrics

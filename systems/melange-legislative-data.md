@@ -14,7 +14,7 @@ brain_notes:
   - C:/Users/pgoff/Documents/brain/actors/sentinel-collectors.md
   - C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md
 paper_count: 17
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange legislative activity and effectiveness data (incl. Draft Systems R pipeline)

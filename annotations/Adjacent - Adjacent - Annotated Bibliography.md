@@ -3,6 +3,7 @@ type: "annotation-source"
 source_zip: "Annotated Bibliographies & Literature Synthesis-20261009T191315Z-1-001.zip"
 source_path: "Annotated Bibliographies & Literature Synthesis/Adjacent/Adjacent - Annotated Bibliography.docx"
 sha12: "c45e04ec65f6"
+tags: [type/annotation]
 ---
 
 Amoore, Louise. “Machine learning political orders.” *Review of International Studies*, vol. 49, no. 1, 15 Feb. 2022, pp. 20–36, https://doi.org/10.1017/s0260210522000031.

@@ -1,3 +1,6 @@
+---
+tags: [type/index]
+---
 # Paul's research framework
 
 ## 1. What the record contains

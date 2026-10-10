@@ -1,3 +1,6 @@
+---
+tags: [type/index]
+---
 # Excluded files
 
 Every file classified out of the literature. Rescue anything misfiled by copying its text into papers/.

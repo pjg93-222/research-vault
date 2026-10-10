@@ -3,6 +3,7 @@ type: "annotation-source"
 source_zip: "Annotated Bibliographies & Literature Synthesis-20261009T191315Z-1-001.zip"
 source_path: "Annotated Bibliographies & Literature Synthesis/Campaign Politics/Campaign Politics - Annotated Bibliography.docx"
 sha12: "1091449c88da"
+tags: [type/annotation]
 ---
 
 Bischof, Daniel, and Roman Senninger. “Simple politics for the people? Complexity in campaign messages and political knowledge.” *European Journal of Political Research*, vol. 57, no. 2, May 2018, pp. 473–495, https://doi.org/10.1111/1475-6765.12235.

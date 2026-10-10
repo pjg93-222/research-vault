@@ -14,7 +14,7 @@ brain_notes:
   - C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md
   - C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md
 paper_count: 30
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange budget allocation

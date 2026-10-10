@@ -5,7 +5,7 @@ slug: mentat-giving-forecast
 components: [mentat-giving-forecast.cycle-model, mentat-giving-forecast.slope-anchor-selection, mentat-giving-forecast.calculator-and-nowcast, mentat-giving-forecast.refit-gates, mentat-giving-forecast.pac-accuracy-attempts, mentat-giving-forecast.seasonal-naive-baseline]
 brain_notes: ["C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md", "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md", "C:/Users/pgoff/Documents/brain/topics/2026-10-feature-forecast-giving-redesign-giving-by-cycle-live-model.md", "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-forecast-giving-redesign-six-year-lookback-lane.md"]
 paper_count: 16
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Mentat giving and PAC forecast

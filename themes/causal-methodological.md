@@ -2,7 +2,7 @@
 type: theme
 name: "Causal & Methodological"
 paper_count: 17
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Causal & Methodological

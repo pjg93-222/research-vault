@@ -8,7 +8,7 @@ brain_notes:
   - C:/Users/pgoff/Documents/brain/topics/2026-07-feature-data-collection-lanes-lobbyview-lda-rebuild-and-bridge.md
   - C:/Users/pgoff/Documents/brain/topics/2026-07-feature-data-collection-lanes-contact-inference-design-and-evaluation.md
 paper_count: 26
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange lobbying data and LDA linkage

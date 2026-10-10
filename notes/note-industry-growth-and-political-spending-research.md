@@ -12,7 +12,7 @@ evidence_status: "verified"
 source: "[[_sources/note-industry-growth-and-political-spending-research-source.md]]"
 original_paths: ["C:\\Users\\pgoff\\Downloads\\Sector_Growth_and_Political_Spending_Research_Plan.md"]
 sha12: ["46495cfa916e"]
-tags: [research-note, paul-s-research-notes]
+tags: [research-note, paul-s-research-notes, type/research-note]
 ---
 
 # Industry Growth and Political Spending: Research Plan

@@ -1,3 +1,6 @@
+---
+tags: [type/index]
+---
 # Missing
 
 ## Cited but not on disk

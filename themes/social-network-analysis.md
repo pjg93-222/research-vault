@@ -2,7 +2,7 @@
 type: theme
 name: "Social Network Analysis"
 paper_count: 23
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Social Network Analysis

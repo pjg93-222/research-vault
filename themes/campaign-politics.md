@@ -2,7 +2,7 @@
 type: theme
 name: "Campaign Politics"
 paper_count: 18
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Campaign Politics

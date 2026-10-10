@@ -3,6 +3,7 @@ type: "annotation-source"
 source_zip: "Annotated Bibliographies & Literature Synthesis-20260705T013300Z-3-001.zip"
 source_path: "Annotated Bibliographies & Literature Synthesis/Social Network Analysis/Social Network Analysis - Annotated Bibliography.docx"
 sha12: "87e6811d5114"
+tags: [type/annotation]
 ---
 
 Ardekani, Iman, et al. “Computational and Graph-Theoretic Analysis of Legislative Networks: New Zealand’s Mental Health Act as a Case Study.” *MDPI*, Multidisciplinary Digital Publishing Institute, 5 Feb. 2026, [www.mdpi.com/2078-2489/17/2/161](http://www.mdpi.com/2078-2489/17/2/161).

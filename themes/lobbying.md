@@ -2,7 +2,7 @@
 type: theme
 name: "Lobbying"
 paper_count: 22
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Lobbying

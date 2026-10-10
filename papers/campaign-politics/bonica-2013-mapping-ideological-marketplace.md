@@ -1,0 +1,250 @@
+---
+type: paper
+title: "Mapping the Ideological Marketplace"
+authors: ["Adam Bonica"]
+year: "2013"
+venue: "SSRN working paper, draft dated June 25, 2013 (SSRN 2148801). The text names no journal; its replication link is a Dataverse \"ajps\" page, which suggests an AJPS submission but does not state one."
+doi: "SSRN:2148801"
+category: "Campaign Politics"
+systems: ["melange-allocation", "melange-influence-engine", "mentat-fec-attribution", "mentat-sector-growth-study"]
+components: ["melange-influence-engine.competitiveness-multiplier", "melange-influence-engine.flip-model", "melange-influence-engine.electoral-plays", "melange-allocation.stance-money-gate", "mentat-fec-attribution.identity-ladder", "mentat-sector-growth-study.seats-weekly-test"]
+paul_annotated: true
+paul_markup_count: 93
+evidence_status: "verified"
+source: "[[_sources/bonica-2013-mapping-ideological-marketplace.pdf]]"
+original_paths: ["C:\\Users\\pgoff\\Documents\\research\\_raw\\bib-20260705-013300\\Annotated Bibliographies & Literature Synthesis\\Social Network Analysis\\ssrn-2148801.pdf", "C:\\Users\\pgoff\\Documents\\research\\_raw\\bib-20260705\\Annotated Bibliographies & Literature Synthesis\\Social Network Analysis\\ssrn-2148801.pdf", "C:\\Users\\pgoff\\Documents\\research\\_raw\\bib-20261009-191315\\Annotated Bibliographies & Literature Synthesis\\Social Network Analysis\\ssrn-2148801.pdf", "C:\\Users\\pgoff\\Documents\\research\\_raw\\bib-20261009\\Annotated Bibliographies & Literature Synthesis\\Social Network Analysis\\ssrn-2148801.pdf"]
+sha12: ["08e24869104c"]
+tags: [paper, campaign-politics, type/paper, theme/campaign-politics, evidence/verified]
+---
+
+# Mapping the Ideological Marketplace
+
+**Adam Bonica (2013).** *SSRN working paper, draft dated June 25, 2013 (SSRN 2148801). The text names no journal; its replication link is a Dataverse "ajps" page, which suggests an AJPS submission but does not state one..* DOI: [SSRN:2148801](https://doi.org/SSRN:2148801). Theme: [[themes/campaign-politics|Campaign Politics]].
+
+> [!abstract] Summary
+> Bonica (SSRN draft, 2013) estimates common-space ideal points (CFscores) for candidates and donors. The data are more than 100 million federal and state contribution records from 1979 to 2012, and the method is correspondence analysis on a contributor-by-recipient matrix. Donors who give in both state and federal races bridge the two levels. Pooled across parties, candidate CFscores track DW-NOMINATE at r = 0.92 (unstratified). Within party the correlation is much weaker: 0.56 to 0.72. Scores for non-incumbents predict their later roll-call scores about as well as incumbent scores do for Senate and most House candidates, with Democratic House challengers somewhat weaker.
+>
+> For this system, the important result is the test of why people give. On 5,000 individual donors with 25 or more federal gifts (2004-2012), the ideological model beats both the partisan electoral model and the investor model by log-likelihood. The constrained investor model barely beats the baseline (-1504601 vs -1520312); the unconstrained form does better (-1468435). For corporate and trade PACs the investor model is competitive, and in its unconstrained form it fits better than the ideological model (Table 2). That is why those PACs are left out of estimation.
+>
+> Three consequences follow:
+> 1. The paper does not show that dollars buy more in competitive seats. The partisan electoral model, which Paul highlighted, loses to the ideological model for individual donors.
+> 2. The paper names corporate and trade PACs as the mixed-motive class; CU and bank PAC money plausibly falls there, though the text does not name banks or credit unions (an inference). Because individual donors give by ideology, money and stance are entangled, so any test of whether money moves members needs an ideology control.
+> 3. The record-linkage appendix gives Mentat's identity ladder a concrete error profile. When merges went wrong, they joined family members at the same employer.
+>
+> The paper measures who gives and why. It does not test whether giving changes votes or buys access, so it cannot calibrate any money-response constant.
+
+## Paul's annotation
+
+From [[annotations/Social Network Analysis - Social Network Analysis - Annotated Bibliography|Social Network Analysis - Social Network Analysis - Annotated Bibliography]]:
+
+> Bonica, Adam. “Mapping the Ideological Marketplace.” *American Journal of Political Science*, John Wiley & Sons, 1 Jan. 1970, ideas.repec.org/a/wly/amposc/v58y2014i2p367-386.html.
+
+## Paul's markup in the PDF
+
+- p1 Highlight: "measure the ideology of candidates and contributors using campaign finance data" — 
+- p1 Highlight: ", the method estimates ideal points for both incumbents and non-incumbents." — 
+- p2 Highlight: "“knowledge of what goes with what”" — 
+- p2 Highlight: "it also structures political discourse, voting, elections, and policy-making." — 
+- p2 Highlight: "It should not come as a surprise that ideology also structures the market for political donations." — 
+- p2 Highlight: "As representatives of an interest group or institution, corporate and special interest group PACs often weigh ideology against other considerations" — 
+- p2 Highlight: ", I present a new method to estimate the ideology of candidates and contributors using a comprehensive database of campaign finance records from state and federal elections" — 
+- p3 Highlight: "—to distribute funds in accordance with their evaluations of candidate ideology." — 
+- p3 Highlight: "Moreover, both contributors and candidates remain active across election cycles, thus helping to identify the measures across time" — 
+- p4 Highlight: "NOMINATE and other roll call scaling methods have amply demonstrated the value of quantitative measures of ideology for empirical researc" — 
+- p4 Highlight: ", the common-space CFscores represent a major breakthrough in the types of questions that can be addressed with quantitative measures of ideology." — 
+- p5 Highlight: "with the introduction of NOMINATE, a method to recover ideal point estimates of legislators from roll call voting records." — 
+- p5 Highlight: "By mirroring the structure of roll call voting data, they were able to scale PAC contributions with a slightly modified version of NOMINATE that allows for abstention." — 
+- p6 Highlight: ", the model treats contributor- candidate pairs as the unit of observation and structures the contributor’s choice as an allocation problem." — 
+- p6 Highlight: "A core tenet of spatial models of politics is that actors prefer ideologically proximate outcomes to those that are more distant" — 
+- p6 Highlight: "denoted as j ∈{1, ..., J}," — 
+- p6 Highlight: "y1,...,J," — 
+- p7 Highlight: "max y1,...,J" — 
+- p7 Highlight: "o yj < clim" — 
+- p7 Highlight: "climj is the maximum legal amou" — 
+- p7 Highlight: "in" — 
+- p7 Highlight: ", δj is candidate j’s ideal poi" — 
+- p7 Highlight: "θi is contributor i’s ideal point" — 
+- p7 Highlight: "combined instrumental and expressive utilit" — 
+- p7 Highlight: "ci(.) is a cost function that captures the marginal cost of contributing given the total amount already allocated" — 
+- p7 Highlight: "bi(.) and ci(.) represent contributor i’s propensity to contribute" — 
+- p7 FreeText: "" — Captures a number of good things, where both sides need to meet (optimal effectiveness), and measuring sunken cost (what about short-term theory of engagement)? Likely null if the people are on a phone number basis
+- p7 Highlight: "IRT model is that it can control for non-spatial candidate characteristics such as incumbency status and committee assignments that are known to influence PAC contributions." — 
+- p7 Highlight: "which amounts to a contribution matrix of several million rows by tens of thousands of columns." — 
+- p7 Highlight: "which scales two-way frequency tables by decomposing a transformed matrix of χ2 distances" — 
+- p7 Highlight: "CA is an attractive modeling strategy because it offers a close approximation of a statistical ideal point model at a much-reduced computational cost." — 
+- p7 Highlight: "nearly equivalent to a log-linear ideal point model" — 
+- p8 Highlight: "between 70-90% of contribu- tors who fund state campaigns also give to federal campaigns" — 
+- p8 Highlight: "A final set of bridging techniques are applied to ensure that contributors are on the same scale as candidates providing for valid distance comparisons." — 
+- p9 Highlight: "Indeed, the vast majority of donors give amounts so diminutive that it is difficult to conceive of the contribution as an investment." — 
+- p9 Highlight: "it remains unclear whether such behavior is widespread or leads contributors to allocate funds in a manner inconsistent with their spatial preferences." — 
+- p10 Highlight: "Second, I exclude all contributions made by individuals to labor, corporate, and trade PACs, as these PACs simply pool donations from their respective employees or industry members." — 
+- p10 Highlight: "An additional 9.75 million individuals that only gave to a single recipient do not factor directly into the estimation but are projected onto the recovered space as supplementary observations." — 
+- p11 Highlight: "r = 0.92, thus confirming that common-space CFscores map onto the same liberal- conservative dimension recovered from roll call data" — 
+- p12 Highlight: "the relationship between non-incumbent CFscores and future DW-NOMINATE scores is no weaker than it is for the incumbent CFscore" — 
+- p12 Highlight: "indicate that candidate CFscores are largely robust to changes in incumbency status" — 
+- p12 Highlight: "As such, perfect correspondence between the two measures is neither expected nor necessarily desirable.6" — 
+- p14 Highlight: "Thus the predictions made by the CFscores are not merely made out-of-sample" — 
+- p15 Highlight: "leading him to conclude that strategic factors pointed to by researchers as affecting Congressional voting— “shirking”, redistricting, agenda change, conversion, etc.—can at most account for less than 1.6 percent of Congressional roll call voting since the end of World War" — 
+- p15 Highlight: "They first estimate a static DW-NOMINATE scaling with all legislator ideal points held constant across time" — 
+- p15 Highlight: "I adapt this technique to estimate period-specific CFscores." — 
+- p15 Highlight: ". I likewise require that candidates raise funds from at least 25 unique contributors during a given election cycle to be included." — 
+- p16 Highlight: "The results indicate that the CFscores exhibit greater inter-temporal stability than DW-NOMINATE scores." — 
+- p16 Highlight: "Additional evidence of internal consistency of the measures is found in the relationship between contributor and candidate ideal points" — 
+- p16 Highlight: "I consider two general models of giving that provide theoret- ical rationales for strategic behavior." — 
+- p17 Highlight: "The first scenario arises when economic factors motivate contributors to invest in the politics process but do not necessarily influence the choice of which candidates to support" — 
+- p18 Highlight: "of 124 labor PACs" — 
+- p18 Highlight: "group 1312 corporate and trade PAC" — 
+- p19 Highlight: "to to" — 
+- p19 Highlight: "Xjt is a matrix of candidate-specific traits that vary across elections" — 
+- p19 Highlight: "A key implication of the investor model is that donors will direct contributions to legislators that occupy positions of power" — 
+- p20 Highlight: "The main testable implication of the partisan electoral model is that donors will direct funds to competitive races in order to maximize their preferred party’s seat share" — 
+- p20 Highlight: "The third is the partisan electoral model." — 
+- p20 Highlight: "increased institutional power is a associated with increased fundraising." — 
+- p21 Highlight: "indicating that much of what little variation in contribution patterns that is explained by the non-spatial covariates associated with the investor model is because donors are acting in a manner opposite of the investor model predicts." — 
+- p22 Highlight: "These results are used in part to justify the decision to exclude corporate and trade PACs when estimating ideal points." — 
+- p22 Highlight: "we should observe shifts in the estimated ideal points following changes in features such as incumbency status" — 
+- p23 Highlight: "there is little evidence that these factors significantly bias the ideal point estimate" — 
+- p23 Highlight: "their personal preferences when deciding how to allocate their funds." — 
+- p23 Highlight: "complementing existing measures of legislative ideology." — 
+- p24 Highlight: "They do not measure the ideology of state politicians directly. Rather, they infer aggregate measures of state-level ideology from congressional ADA scores." — 
+- p25 Highlight: "The chamber medians as measured by CFscores and NPAT common space scores for 2000 through 2010 correlate at r = 0.86 for upper chambers and r = 0.83 for lower chambers." — 
+- p25 Highlight: "the median member of the court of last resor" — 
+- p27 Highlight: "On the other hand, there is little evidence of convergence on the median voter by state-wide office holders" — 
+- p27 Highlight: "The distance is even greater at 1.81 for secretaries of state who serve as their state’s chief election officials, exceeding the 1.66 distance between the parties in Congress at the time." — 
+- p27 Highlight: "Campaign finance records do not share these limitations." — 
+- p30 Highlight: "Roll call based measures of ideology are widely viewed as the gold standard in the ideal point estimation literature" — 
+- p30 Highlight: "The CFscores also provide a new perspective on certain features of congressional ideology." — 
+- p30 Highlight: "The first is that the CFscores suggest the parties were less polarized at the beginning of the period" — 
+- p32 Highlight: "Given the importance of political polarization to understanding comtemporary politics, a thorough accounting of these differences is a worthwhile line of inquiry." — 
+- p34 Highlight: "contributor ideal points contain a wealth of information" — 
+- p36 Highlight: "expansive range of political actors using contribution records." — 
+- p36 Highlight: "Among the method’s key contributions is the ability to recover ideal points for non-incumbents" — 
+- p36 Highlight: "but also include a complement of non-incumbent estimates for practically every type of elected office." — 
+- p36 Highlight: "existing research on congressional polarization has focused on explaining the disappearance of moderates through attrition" — 
+- p36 Highlight: "A comprehensive account of the root cause of congressional polarization must account for both office- holders and office-seekers." — 
+- p36 Highlight: "there is tremendous value added from recovering ideal points for prominent donors, corporate board members and executives, lobbyists, and non-elected political elites such as bu- reaucratic and judicial appointees" — 
+- p37 Highlight: "The contrib- utor IDs make it possible explore a diverse set of concepts about donor behavior such as partisan loyalty and ideological consistency across time, donor fatigue, elite endorsements, re-districting effects, and political inequality." — 
+- p37 Highlight: "the CFscores represent a breakthrough in our ability to empirically test theoretical models of legislative and judicial behavior, electoral competition, and interacting institutions" — 
+- p43 Highlight: "each entry Rij stores the total amount contributor i gives to recipient j." — 
+- p43 Highlight: "Contributions of $5,000 or greater are capped at 50" — 
+- p43 Highlight: "V are the eigenvectors of K⊤K." — 
+- p44 Highlight: "I factor Ks with an iterative method known as alternating least-squares (Gabriel and Zamir 1979).3" — 
+- p46 Highlight: "A sizable number of committees and candidates are included in the data both as con- tributors and as recipients." — 
+- p47 Highlight: "The pre-nomination ideal point are based on all contributions received prior to the month that the candidate secured his position as presumptive nominee." — 
+- p51 Highlight: "That is, in most of these cases, the algorithm correctly grouped most of the individual’s records but left off a few hard to code stragglers." — 
+- p53 Highlight: "I assess the sensitivity of the measures to these factors using with a panel of period- specific candidate CFscores and time-varying electoral and candidate characteristics linked to strategic giving." — 
+- p57 Highlight: "It is my hope that by making all the data and code used to estimate the CFscore accessible as publically available database, researchers will be able to make adjustments directly to the scaling model." — 
+
+## Study
+
+**Question.** How can ideal points be estimated for candidates and contributors across federal and state elections, for incumbents and non-incumbents, from campaign contribution records? Secondary: whether ideology or strategic motives (investor, partisan-electoral) drive contributions, and whether the resulting common-space CFscores are valid and stable enough for work on polarization, state politics, candidate positioning and donor ideology.
+
+**Theory.** Spatial model of giving (PDF pp.6-7, Eq. 1): contributor i allocates amounts y_j across recipients to maximize sum of b_i(y_j) - c_i(y_j) - y_j(delta_j - theta_i)^2, subject to y_j below the legal limit clim_j. Competing accounts tested: the investor model (contributions as payments for access or votes; Denzau and Munger 1986, Snyder 1990), the partisan electoral model (donors fund competitive races to shift party seat share; Wand 2007, 2012), and the ideological model (proximity only). Central claim: individual donors give mainly on ideology, so spatial giving is the appropriate model for individuals and most PACs (PDF pp.22-23).
+
+**Data.** Campaign finance records: over 103 million records, 1979-2012, from 13.4 million individuals and 511,141 organizations to 51,572 candidates and 6,408 committees (PDF p.9; abstract says "over 100 million"). Scaling sample (PDF p.10): 3.93 million individuals plus 261,828 committees and organizations as contributor rows; 13,189 federal candidates, 55,737 state candidates and 9,436 committees as recipient columns. An additional 9.75 million single-recipient donors are projected onto the space as supplementary observations. Inclusion: contributor gave to at least 2 recipients; candidate received from at least 2 contributors; loans and transfers excluded; individual gifts to labor, corporate and trade PACs excluded; corporate and trade PACs excluded from estimation. Unit: contributor-recipient pair; amounts converted to counts of $100 bins capped at 50 ($5,000+). Strategic-giving tests: 5,000 random individuals with at least 25 federal contributions 2004-2012 (N=49,418 for the full 25+ group in the consistency test), 124 labor PACs, 1,312 corporate and trade PACs (PDF pp.18-19). Roll-call comparisons: 96th-112th Congresses. Period-specific estimates require at least 25 contributors per candidate per cycle.
+
+**Method.** Augmented correspondence analysis (CA) on the contributor-by-recipient contingency matrix R (PDF p.7; supplement). Matrix is standardized and decomposed by SVD of K = D_r^(-1/2)(R - rc')D_c^(-1/2); contributor ideal points theta = U D^-1/2 scaled, recipient delta = V D^-1/2. CA is described as nearly equivalent to a log-linear ideal point model (Lowe 2008; ter Braak 1985). Steps: (1) scale federal elections first; (2) scale each state separately, using bridge contributors (those giving to both state and federal races), with an 8-step alternating least-squares routine; (3) jointly re-estimate recipients; (4) normalize so the weighted mean and SD of contribution amounts are 0 and 1. Between-set identification: contributor points are regressed on matched candidate points with an error-in-variables specification (intercept 0.017, slope 0.975, on 29,913 candidates who appear as donors). Presidential nominees get separate pre- and post-nomination scores. Non-incumbent scores: contributor points held fixed; candidate points re-estimated from pre-record contributions. Period-specific CFscores follow Nokken and Poole (2004). Strategic-giving comparison: a right-censored negative binomial count model per donor (IRT-style, adapted from Bonica 2013a), compared by log-likelihood and the Cameron-Windmeijer deviance residual RDev.
+
+**Identification.** Bridging through multi-office donors, not roll calls. 70-90% of contributors who fund state campaigns also give to federal campaigns (PDF p.8), and candidates running for both state and federal office add more bridges. The federal scaling anchors each state's scaling. A final rescaling aligns contributor and candidate distances. Identification is up to a standard normalization. The author argues that the cross-state identification assumption is "unheroic and verifiable": donors have the same ideal point when giving to state and federal candidates (PDF p.24 footnote 13; state-federal correlation 0.88 for all donors, 0.93 for donors to 10+ candidates).
+
+**Scope.** US campaigns, 1979-2012. Candidates for President, Congress, governors, state attorneys general, secretaries of state, other state-wide offices, state legislatures, state supreme courts, federal circuit courts, boards of education and ballot campaigns (PDF p.23, Fig. 2). Also donors, labor, corporate and trade PACs and industry aggregates. Institutions: federal and all 50 states. Claims are about ideology as revealed by giving; no claim about legislative behavior is tested beyond roll-call comparisons.
+
+## Key findings
+
+- Candidate CFscores correlate with common-space DW-NOMINATE at r = 0.92. Within-party correlations are weaker: House Democrats 0.56, House Republicans 0.66, Senate Democrats 0.64, Senate Republicans 0.72. Figure 1 totals: House incumbents 0.91, open seats 0.93, challengers 0.89; Senate incumbents 0.91, open seats 0.95, challengers 0.92. r=0.92; within-party House D 0.56 / R 0.66; Senate D 0.64 / R 0.72 (External Validity, PDF p.11 (Fig. 1 on PDF p.13))
+- Non-incumbent CFscores predict future DW-NOMINATE about as well as incumbent CFscores, except for Democratic House challengers (somewhat weaker). Incumbent and non-incumbent CFscores correlate highly, and within-party correlations are lower for Democrats. non-incumbent vs incumbent CFscore r = 0.96 overall, 0.93 R, 0.88 D (PDF pp.12-13)
+- Roll-call classification: CFscores classify votes nearly as well as roll-call measures, although they never condition on roll calls. Party-only classification is also reported. House (96th-112th): CFscore 0.880 (APRE 0.638), DW-NOMINATE 0.896 (0.687), Turbo-ADA 0.886 (0.659), party 0.863 (0.588). Senate: CFscore 0.870 (0.607), DW-NOMINATE 0.882 (0.644), party 0.838 (0.514) (Table 1, PDF p.15 (text PDF p.14))
+- Period-specific stability: CFscores are more stable across periods than DW-NOMINATE. The text states the result as greater inter-temporal stability. R2 of static on period-specific: CFscore 0.97 overall, 0.89 D, 0.86 R; DW-NOMINATE House 0.96 (0.86 D, 0.70 R), Senate 0.96 (0.72 D, 0.85 R) (PDF p.16)
+- Donor-candidate consistency: candidates who also donate have CFscores as contributors that track their CFscores as recipients. The author reads this as both activities expressing the same latent ideology. r = 0.94 overall, 0.78 D, 0.68 R among 10,406 candidates who gave to at least 5 recipients (of 29,913 candidates who made contributions) (PDF p.16 (footnote 8 on PDF p.16))
+- Individual donors give on ideology: the ideological model beats both strategic models for individuals. The constrained investor model barely improves on the baseline. The investor model fits better than the ideological model for about 5% of individual donors. For corporate and trade PACs the investor model is competitive with the ideological model, which supports excluding those PACs from estimation. Log-lik individuals: unrestricted -1,275,233; ideological -1,334,200; partisan -1,405,855; investor -1,504,601; unconstrained investor -1,468,435; baseline -1,520,312. Labor PACs: ideological -231,022; investor -252,936. Corp/trade PACs: ideological -1,694,458; investor -1,695,149; unconstrained investor -1,687,949. RDev for individuals: ideological 0.601, investor 0.412. (Table 2, PDF p.21 (text PDF pp.20-21))
+- Strategic allocation is rare among active donors: nearly all donors with 25+ contributions are ideological in the money-weighted SD test. Only 167 of 49,418 (0.3%) individuals exceed the 0.577 random-giving benchmark; mean money-weighted SD 0.20 (PDF p.18)
+- Sensitivity to strategic covariates is small. Incumbency, majority-party status and competitive seats shift candidate CFscores only at the margins, and DW-NOMINATE is more sensitive to the same covariates. Largest shifts 0.03-0.05 (about 1/20 of a candidate CFscore SD, about a dozen ranks). Within-party R2 House Republicans 0.698 to 0.751 with covariates (DW-NOMINATE); CFscore static model already explains nearly all variance (PDF p.22; supplement Tables 1-3 (PDF ~53-56, approximate))
+- Congressional polarization differs by measure. CFscores start less polarized and keep growing after 1996, while DW-NOMINATE flattens. Two measures converge by the 112th Congress. Asymmetry also differs: DW-NOMINATE says Republicans moved further than Democrats; CFscores show a near reversal. Since 1980: DW-NOMINATE mean Democrat 0.20 SD left, mean Republican 0.44 SD right; CFscores mean Democrat 0.50 SD left, mean Republican 0.31 SD right (PDF pp.30-32 (Fig. 5 on PDF p.30))
+- State chamber medians from CFscores match NPAT-based common-space scores closely. Party medians match less well. 2000-2010 chamber medians r = 0.86 upper, 0.83 lower; party medians r = 0.59 and 0.64 (Republicans), 0.53 and 0.61 (Democrats) (PDF p.25)
+- State-wide officials are more polarized than legislators. Mean Democrat-Republican distances exceed the congressional party gap for secretaries of state. Governors 1.48, attorneys general 1.57, secretaries of state 1.81; congressional party distance at the time 1.66; 33 governors, 35 AGs and 35 SoS locate at the extremes of the state legislator parties (PDF p.27)
+- Candidate positioning and district vote share: the author replicates Ansolabehere, Snyder and Stewart (2001) with non-incumbent estimates. Midpoint positioning matters, but its effect is shrinking. The text reports the effect as about 4 points in 1996, falling to 1.96 in the 2000s, but the table coefficients do not reproduce these figures (see limitations). Midpoint coefficient 7.44 (1996), 7.98 (1982-1990), 4.60 (1992-2000), 1.71 (2002-2010); N = 325, 1246, 1498, 1330; R2 0.85, 0.73, 0.84, 0.88 (Table 3, PDF p.29 (text PDF pp.28-29))
+- Non-incumbent measures cover presidential and other federal candidates. 369 presidential candidates are recovered, including third parties. In the 2012 Republican field, pro-life donor share ranks Santorum highest, while Romney and Huntsman draw more pro-choice donor money. 369 presidential candidates; NPAT response rate 64% (532 of 830) in 1996, down to about one-third recently (PDF p.27) (PDF pp.32-33 (Fig. 6))
+- Donor ideology sorts by industry and occupation. Academics, entertainment, newspaper and print media, and online computer services skew left. Oil, gas and coal is the most reliably conservative, followed by agriculture, mining and construction. Mean contributor point for each left-aligned industry lies left of the mean Democratic candidate (PDF p.34 (Fig. 7))
+- Non-incumbent measures address the question of who is missing from polarization accounts. The author argues that the disappearance of moderates through attrition is only part of the story, and that office-seekers must be modeled alongside office-holders.  (Conclusions, PDF pp.36-37)
+
+## Limitations
+
+- Author states that CFscores are not the 'true' ideology measure, that roll-call and contribution measures are expected to differ, and that perfect correspondence is neither expected nor desirable (PDF p.12).
+- Strategic giving may bias estimates. The author reports covariate effects at the margins and argues the bias is small, but does not rule it out (PDF pp.21-22; supplement).
+- Party-driven classification: CFscores classify moderates who overlap the opposing party poorly; the classification gap to DW-NOMINATE narrows for close votes but not lopsided votes (supplement, 'Roll Call Classification, cont.').
+- Contribution Accounting Assumption: CA cannot control non-spatial covariates such as incumbency or committee assignments; the IRT count model can, but it is computationally infeasible at full scale (PDF pp.7-8).
+- Cross-state bridging depends on the assumption that donors hold the same ideal point when giving to state and federal candidates; the author calls it 'unheroic and verifiable' but does not test it directly beyond the 0.88 and 0.93 correlations (PDF p.24 fn 13).
+- Record linkage errors. Corporate board members were the training set: 57% were assigned a single ID; 42% were split (type 1, information loss); 13% failed the 90% threshold. Two type-2 errors merged different people (family members at the same employer), and type 2 errors can bias estimates (supplement, Record Linkage; PDF p.51). Disclosure of address and occupation is weaker in the 1980s and early 1990s.
+- Sample restrictions drive results: individual gifts to labor, corporate and trade PACs are dropped; corporate and trade PACs are excluded from estimation because of mixed motives; candidates need 2+ contributors and contributors need 2+ recipients; period-specific scores need 25+ contributors per cycle (PDF pp.9-10, 15).
+- Assumption: fixed legislator ideal points in the polarization trends exclude ideological adaptation, so the trends capture replacement but not adaptation (PDF p.30 fn 15).
+- Presidential nominees: joint fundraising after nomination shifts estimates, so the author uses pre-nomination scores as more accurate (supplement; PDF p.47).
+- Pro-life share interpretation is ambiguous: the author says it could reflect economic dimension dominance or the limits of stated positions (PDF pp.32-33).
+- Internal inconsistencies to check before citing: (a) abstract says over 100 million records, the data section says over 103 million; (b) the text says a 0.28-unit (two SD) shift gives about 4 points in 1996 and falls to 1.96 points in the 2000s, but Table 3 gives midpoint coefficients of 7.44 and 1.71 for those periods, and 0.28 x 7.44 is about 2.1, not 4; the 2000s column is labeled 2002-2010 in the table; (c) the text says investor and ideological models are on par for corporate PACs, but unconstrained investor log-lik (-1,687,949) beats ideological (-1,694,458) in Table 2; (d) a supplement table caption reads 'replicates Table ??' (unresolved cross-reference), and the Table 3 supplement caption says House while its title says Senate.
+- Reproducibility: the identity-resolution software and database access are available only on request; the CFscore data and code are promised as a public database (PDF p.57).
+
+## Short quotes
+
+- "Contributors are assumed—at least in part—to distribute funds in accordance with their evaluations of candidate ideology." (Introduction, PDF p.3 (printed p.2))
+- "Indeed, the vast majority of donors give amounts so diminutive that it is difficult to conceive of the contribution as an investment." (Sincere versus strategic giving, PDF p.9 (printed p.8))
+- "Campaign finance records do not share these limitations." (Non-Incumbent Candidates, PDF p.27 (printed p.26))
+
+## Bearing on the systems
+
+| Component | Relation | Paper shows | System does | Transfers when | Strength | Check |
+|---|---|---|---|---|---|---|
+| [[systems/melange-influence-engine#Competitiveness multiplier c (COMPET_MULT)\|Competitiveness multiplier c (COMPET_MULT)]] | qualifies | Table 2 (printed p.20, PDF p.21), individual donors (5,000 random donors with 25+ federal gifts, 2004-2012): LogLik ideological -1334200, partisan electoral -1405855, investor -1504601, baseline -1520312. Ideological fits best of these. Paper says partisanship is a coarsened ideology measure, so party vs ideology variance is hard to separate. Largest shifts in period-specific CFscores from candidate covariates are 0.03 to 0.05, about a twentieth of an SD (supplement Table 1 text). Paper models donor allocation and does not estimate a dollar's effect on the recipient. (Table 2 PDF p.21; text PDF pp.19-22; sensitivity text after Table 2 (PDF p.22) and supplement Table 1) | compet_c(lean) = 1 + COMPET_AMPLITUDE*exp(-max(lean,0)/COMPET_SCALE), AMPLITUDE 1.0, SCALE 5.0. Applied to effective dollars on both money legs. Code calls AMPLITUDE and SCALE uncalibrated owner judgment; reciprocity NOT validated (D-104..D-108). `fec/moneyball_core.py:74-95` | Paper supports neither c nor its calibration: its dependent variable is where individual donors send money, not what a dollar buys in a competitive seat. Sample is individuals 2004-2012 only. Any use of the partisan-electoral result must note that party and ideology are collinear. | moderate | VERIFIED-SOFTENED |
+| [[systems/melange-influence-engine#Flip - winnability model\|Flip - winnability model]] | qualifies | Table 2 (PDF p.21): individuals investor -1504601 vs baseline -1520312 and ideological -1334200. Corporate and trade PACs (N=1312): unconstrained investor -1687949 vs ideological -1694458, so the investor form is ahead by about 6,500 log-lik units. Paper says corporate and trade PACs combine ideological and strategic motives and excludes them from scaling as a precaution. Paper does not measure vote-buying, access or any effect of money. (Table 2 PDF p.21; text PDF pp.10, 18-22) | pflip = a/(a+b) when a+b > 0 (flip_model.py:97). a = WM*pm*(c*cu+1)/((c*cu+1)+HALFF*R) + WP*nA/mAt; b has the same form on bank plus finserv money. WM 0.35 and WP 0.65 are labelled CALIBRATED in code with the comment that money buys access and effort more than votes. HALFF default 0.10. `fec/engine/flip_model.py:21 (WM,WP) and :92-97 (pflip)` | Both money legs are corporate or trade PAC money, the class the paper finds mixed-motive, so the individual-donor ideology result cannot be borrowed to call these dollars purely expressive. Paper provides no calibration of WM, HALFF or MAXSHIFT, so it gives no support for the CALIBRATED label on WM. | moderate | VERIFIED-SOFTENED |
+| [[systems/melange-influence-engine#Electoral security, leverage and contest-defend plays\|Electoral security, leverage and contest-defend plays]] | qualifies | Text PDF p.20: the partisan electoral model's main implication is that donors fund competitive races to maximize party seat share. Table 2 (PDF p.21): for individuals partisan -1405855 vs ideological -1334200, so the partisan electoral model fits worse. Paper also says the ideological model significantly improves fit over a partisan model. (PDF p.20 text; Table 2 PDF p.21) | comp = round(1 - security, 3) from Ballotpedia security. Defend value = comp times the mean positive stance gap vs cross-party challenger. Contest general route is multiplied by comp; contest primary route is not. No money term in the play formula. `fec/engine/build_electoral_plays.py:23-35` | The paper states a hypothesis it rejects for individual donors; it neither supports nor refutes the comp weighting. It describes donor allocation, not the payoff of a play. | weak | VERIFIED-SOFTENED |
+| [[systems/melange-allocation#Stance money gate (F1)\|Stance money gate (F1)]] | supports | Text PDF p.18 (printed p.17): of 49,418 individuals with 25+ federal contributions (2004-2012), only 167 (0.3 percent) have money-weighted SD above the 0.577 random-giving baseline. Mean money-weighted SD is 0.20 for the sample. Descriptive evidence that active individual donors give on ideology. (Text PDF p.18 (printed p.17)) | STANCE_GATE_BLOCKED = Skeptic, Highly Skeptical, Opponent, tested on overall tier. Members in this set are excluded as money targets. The gate fails open: a member with no matrix row gets tier dash and stays eligible. `fec/moneyball_core.py:713-729` | Descriptive only: donors are ideological, but the paper does not test whether funding opponents converts them. Window is individual donors 2004-2012; PAC behavior differs (Table 2). | weak | VERIFIED-SOFTENED |
+| [[systems/mentat-fec-attribution#Contributor identity match ladder\|Contributor identity match ladder]] | measurement-source | Supplement record-linkage section (text lines about 5315-5350, approx PDF p.51): on corporate board-member cases, 57 percent got a single ID, 42 percent split (type 1 errors), and in 13 percent of the split cases the algorithm failed to put 90 percent of records under one ID. Two type 2 errors (wrong merges), both family members at the same employer (Gates Sr and Jr; Walton family). Address and occupation disclosure was significantly lower in the 1980s and early 1990s. Method is fuzzy matching plus supervised machine learning. (Supplement, Record Linkage section, approx PDF p.51) | identity_match_ladder: suffix_mismatch (any suffix difference, including a suffix present on one record only) returns REVIEW first. Exact name plus same zip returns AUTO unless the employer contradicts the company, which gives HIGH. No name-frequency weighting. `C:/Users/pgoff/Mentat/mentat/R/collect.R:2087-2124` | The paper's type 2 errors were same-employer family members (the Gates Jr and Sr pair differs by a suffix). Mentat sends any suffix difference to REVIEW, so a missing-suffix pair does not get AUTO under the current rule. The split rates come from a different linker and are a reference point, not an error-rate estimate for Mentat. | moderate | VERIFIED-SOFTENED |
+| [[systems/mentat-sector-growth-study#SEATS-W weekly seat-gain test (2022 House)\|SEATS-W weekly seat-gain test (2022 House)]] | supports | Table 2 (PDF p.21) and text PDF p.22: labor PACs ideological -231022 vs investor -252936; corporate and trade PACs unconstrained investor -1687949 vs ideological -1694458. Text says the investor model stays on par with the ideological model for these PACs, which is why they are excluded from scaling. Individuals are best fit by the ideological model. (Table 2 PDF p.21; text PDF p.22; exclusion text PDF p.10) | sgs_seats.R header defines SEATS-W estimand A: weekly Democratic share of giving on the prior week's change in expected Democratic seats, pp per seat, residual block bootstrap. The stated result (-3.47 pp per seat, p .0086-.0174, 2022; Senate null) was not found in the .md, .json or .csv files under sector_growth_study. The header marks SEATS-W NOT BUILT until 09 exists. `C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:2-24` | Bonica's tests are cross-sectional over 2004-2012 with static covariates, not within-cycle forecast movement. The paper is consistent with strategic re-allocation for corporate and trade PACs and not for individuals. The 2022 result is one election and stays UNVERIFIED until a second path reproduces it. If the giving series mixes individual employee gifts with PAC money, the paper predicts dilution. | weak | VERIFIED-SOFTENED |
+
+> [!failure]- Claims that did not survive verification
+> - Summary issue: summary_md non-incumbent claim: r = 0.96 is the correlation between non-incumbent and incumbent CFscores (text PDF p.11), not with later DW-NOMINATE scores. Non-incumbent scores predict later roll-call scores about as well as incumbent scores for Senate and most House candidates, except Democratic House challengers (somewhat weaker).
+> - Summary issue: summary_md says CU and bank PAC money is exactly the mixed-motive class. The paper names corporate and trade PACs as mixed-motive; banks and credit unions are not named in the text, so this is an analyst mapping and should be marked as inference.
+> - Summary issue: summary_md says the investor model barely beats the baseline. That holds for the constrained investor model (-1504601 vs -1520312). The unconstrained investor model (-1468435) does better, as the text says; the summary should say which form it means.
+> - Summary issue: summary_md pooled r = 0.92 is unstratified, as stated, and the within-party values (0.56 to 0.72) are correct. The 96th-112th window applies to the roll-call classification comparison (text PDF p.13); the DW-NOMINATE common-space scores cover the 1-112th Congresses (footnote 4).
+> - Summary issue: gaps_exposed says the non-incumbent scores are publicly available as DIME. The text does not name DIME; it gives a Dataverse replication link and promises public release of data and code. The DIME name is an outside fact.
+> - Summary issue: flags: the Table 3 inconsistency holds. Coefficients 7.44 and 1.71 times the stated 0.28 SD shift give about 2.1 and 0.5 points, not the text's 4 and 1.96. Cite table values.
+> - Summary issue: flags: the Paul positions list claim (grounding for the competitiveness multiplier and electoral plays) is not in the item files and was not verified. The p.7 margin note and the p.20 highlight were verified in the annotation file.
+> - Summary issue: paul_alignment and Paul's entry cite Bonica 2014, AJPS. The text names no journal (SSRN June 2013 draft), so the AJPS venue is not verifiable from the text.
+> - Summary issue: related: the poole parenthetical attributes r = 0.92 to Table 1; it is in the External Validity text, and Table 1 is classification rates. furnas-nd-conflating-lobbying-pacs and kim-2020-strategic-sequential-links were dropped because the paper text does not discuss lobbying-PAC overlap or donor identity graphs. kalla kept as a complement only.
+> - Summary issue: The output schema has only bearings, related and summary_issues; the key_findings and paul_markup fields named in the task do not exist in this schema and were not produced.
+
+## Gaps and flags
+
+- No ideology covariate anywhere in the money or influence chain. Validation questions (flip-model, demographic pillar, CFPB isolation) control only for party. Bonica shows party drives the pooled r = 0.92, while within-party correlation is 0.56-0.72, and that donors select on ideology. Any test that money or stance predicts CU alignment needs a CFscore or DW-NOMINATE control, or it measures selection.
+- The flip model and money response treat CU and industry PAC dollars as exogenous pressure. Bonica's ideological-giving result implies the reverse direction (ideology causes money), which the model never addresses or tests.
+- Electoral plays and the contest route have no position estimate for challengers or open-seat candidates. Bonica's non-incumbent CFscores (r = 0.96 with incumbent CFscores) are the standard way to place them; the paper promises public release of data and code and gives a Dataverse replication link.
+- Mentat's identity ladder has no name-frequency weighting and no documented false-merge rate. Bonica's linkage appendix shows that same-employer family members are the main false-merge mode, which an exact-name + zip AUTO rule does not guard against.
+- The partisan electoral model (which Paul highlighted on p.20) is not grounding for the competitiveness multiplier or electoral plays. The paper tests that model and finds it fits worse than the ideological model for individual donors (Table 2). It is also about donor allocation, not dollar efficacy. Do not cite it as support for c. Reciprocity stays NOT validated (D-104..D-108).
+- The pooled CFscore vs DW-NOMINATE r = 0.92 runs across the party fault line. Quote it as UNSTRATIFIED, or give strata: House D 0.56 / R 0.66, Senate D 0.64 / R 0.72. The DW-NOMINATE common-space scores cover the 1st-112th Congresses; the 96th-112th window belongs to the roll-call classification comparison.
+- Paper-internal inconsistencies: the text says investor and ideological models are on par for corporate PACs, but Table 2 has the unconstrained investor ahead. The Table 3 midpoint effects (7.44 and 1.71) do not reproduce the text's '4 points' and '1.96'. Cite table values, not prose.
+- Paul's p.7 margin note asks for a short-term theory of engagement and sunk costs. The paper's model is static spatial allocation with a cost function on the total given. It offers no dynamic engagement or sunk-cost mechanism, so the note is an open extension, not something the paper supplies.
+- Avoid access or influence language when citing this paper. It tests and largely rejects investor (access) motives for individuals and does not measure access.
+
+Partly aligned. Paul's highlights capture the main claim correctly: individuals give on ideology, and corporate or interest-group PACs weigh other considerations. The flip model's conservative 'money buys access, not votes' framing is compatible with that, though Bonica tests why donors give, not what money buys. The p.20 line he highlighted (donors fund competitive races) states the partisan electoral model's prediction, which the paper's evidence rejects for individuals. His p.7 margin note (short-term engagement, sunk costs) is still unaddressed by both the paper and the system. The annotation record is a bare citation with no takeaways.
+
+## Related papers
+
+- [[bonica-2025-money-campaign-finance]] — same-data — Same campaign-finance contributor data family. The 2013 text does not cite the 2025 work, so builds-on runs the wrong direction; the later work builds on this data.
+- [[poole-1999-nominate-after-years]] — complements — The paper uses Poole and Rosenthal common-space DW-NOMINATE as the roll-call benchmark (r = 0.92 pooled, text PDF p.10). Table 1 is classification rates, not that correlation.
+- [[kalla-nd-campaign-contributions-facilitate]] — complements — Not cited in this paper. Conceptual pairing only: the investor model tests access-type motives without measuring access. Kalla's content is not verified against this text.
+
+### Linked from
+- [[report-2024-2024-house-glance]] — complements — Bonica finds that donors direct funds to competitive races. Cook's Lean and Toss Up categories are the standard way to mark which races those are.
+- [[broockman-2026-should-moving-middle]] — complements — CFscores place donors and candidates on one ideological dimension. This paper's cross-pressure finding cautions against reading a single-axis position as a position on any particular issue.
+- [[kim-2020-strategic-sequential-links]] — cited-by — Cited as Bonica (2014) when the authors warn that donation-based ideology scores may reflect strategy rather than ideology. The name-standardization reference is to a different work (Bonica 2017, DIME).
+- [[bombardini-2020-empirical-models-lobbying]] — complements — The review uses DIME campaign-finance ideology scores, citing Bonica (2016) DIME database rather than this 2013 paper; same scoring lineage.
+- [[furnas-2019-partisan-ties-lobbying]] — same-method — Both infer the partisanship or ideology of actors from campaign contribution records.
+- [[holyoke-2015-learnable-skills-unteachable]] — cited-by — The paper cites Bonica (AJPS 58(2), 'Mapping the ideological marketplace') for the partisan spread of campaign money by industry (p.20).
+- [[kim-2025-measuring-interest-group]] — cited-by — Cited as ref 17 (Bonica 2014). The paper compares LPscores with DIME CFscores for 218 groups and finds Pearson r = 0.191, meaning the two measures capture different behaviour. That does not contradict Bonica.
+- [[jacoby-2025-mathematical-modeling-analysis]] — complements — Jacoby cites Bonica's roll-call inference paper [5], not the 2013 paper, for the claim that donations may reflect ideology rather than influence (p.20). The 2013 paper is Paul's on-disk anchor for that ideological-money reading but is not itself cited, so the relation is complements, not cites.
+- [[gaynor-2022-financial-ties-bind]] — complements — Bonica 2013 builds CFscores from contribution records and discusses competitiveness inducing contributions from some donor segments. Gaynor cites Bonica 2017, not 2013, and studies member LPAC giving, not external donors. Topical link only.
+- [[battaglini-2016-influencing-connected-legislators]] — complements — Bonica recovers ideology for candidates and contributors from campaign contributions (checked in abstract). The claim that PACs allocate by competitiveness was not checked in the text; the link is kept as complements on the ideology side only.
+- [[chohan-2025-crypto-oligarchy-cryptocurrency]] — complements — Estimates CFscores from contribution records and tests whether donors give for ideology or for investor and partisan-electoral motives. That is a test framework for the targeting Chohan describes but does not test. Item summary checked; the link to Fairshake targeting is interpretive.
+- [[porter-2025-campaignview-campaign-platforms]] — complements — Vault summary confirms Bonica's CFscores are donor-based candidate ideal points. The pairing with CampaignView platform text is the analyst's suggestion; the paper does not cite Bonica.
+- [[bouton-2022-small-campaign-donors]] — same-data — Bouton et al. use Bonica's CFscores for candidate ideology terciles and describe them as built from contribution records. The paper cites Bonica 2014 (AJPS); the vault note dates the work 2013 (SSRN draft), so the year label differs. Their close-race result is Democratic-only, so it bears on Bonica's donor-steering account only for Democratic individual donors 2012-2020.
+- [[ansolabehere-2002-little-money-politics]] — complements — Shows ideologically sorted donors, consistent with giving as ideological participation. Item exists.
+- [[lemens-2025-positioning-political-texts]] — complements — CFscores are the second actor-level benchmark (App A8). They correlate highly overall but less within party.
+- [[note-request-for-review-industry-economic-performance]] — complements — Introduces the common-space CFscores that DIME uses for the RShare outcome.

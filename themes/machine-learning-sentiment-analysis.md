@@ -2,7 +2,7 @@
 type: theme
 name: "Machine Learning & Sentiment Analysis"
 paper_count: 33
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Machine Learning & Sentiment Analysis

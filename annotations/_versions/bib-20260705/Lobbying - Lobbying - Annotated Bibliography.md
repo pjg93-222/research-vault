@@ -3,6 +3,7 @@ type: "annotation-source"
 source_zip: "Annotated Bibliographies & Literature Synthesis-20260705T013300Z-3-001.zip"
 source_path: "Annotated Bibliographies & Literature Synthesis/Lobbying/Lobbying - Annotated Bibliography.docx"
 sha12: "2db431c8434c"
+tags: [type/annotation]
 ---
 
 Aref, Samin, and Zachary P. Neal. “Identifying hidden coalitions in the US House of Representatives by optimally partitioning signed networks based on generalized balance.” *Scientific Reports*, vol. 11, no. 1, 7 Oct. 2021, [https://doi.org/10.1038/s41598-021-98139-w](https://doi.org/10.1038/s41598-021-98139-w).

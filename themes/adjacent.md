@@ -2,7 +2,7 @@
 type: theme
 name: "Adjacent"
 paper_count: 12
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Adjacent

@@ -12,7 +12,7 @@ evidence_status: "verified"
 source: "[[_sources/note-sector-growth-and-political-spending-source-source.md]]"
 original_paths: ["C:\\Users\\pgoff\\Downloads\\Sector_Research_Source_Check_2026-09-25\\START_HERE.md"]
 sha12: ["17c10df8e2db"]
-tags: [research-note, paul-s-research-notes]
+tags: [research-note, paul-s-research-notes, type/research-note]
 ---
 
 # Sector growth and political spending: source check (START HERE)

@@ -3,6 +3,7 @@ type: "annotation-source"
 source_zip: "Annotated Bibliographies & Literature Synthesis-20261009T191315Z-1-001.zip"
 source_path: "Annotated Bibliographies & Literature Synthesis/Adaptative - Influence Maximization/Melange Annotated Bibliography — Addendum.docx"
 sha12: "d09295bf5960"
+tags: [type/annotation]
 ---
 
 # Melange Annotated Bibliography — Addendum

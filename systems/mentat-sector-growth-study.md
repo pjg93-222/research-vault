@@ -5,7 +5,7 @@ slug: mentat-sector-growth-study
 components: [mentat-sector-growth-study.growth-spending-regressions, mentat-sector-growth-study.seats-weekly-test]
 brain_notes: ["C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"]
 paper_count: 24
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Mentat sector growth vs political spending study

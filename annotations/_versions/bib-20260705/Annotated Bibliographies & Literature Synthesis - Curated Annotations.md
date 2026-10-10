@@ -3,6 +3,7 @@ type: "annotation-source"
 source_zip: "Annotated Bibliographies & Literature Synthesis-20260705T013300Z-3-001.zip"
 source_path: "Annotated Bibliographies & Literature Synthesis/Curated Annotations.docx"
 sha12: "a0d42782bc20"
+tags: [type/annotation]
 ---
 
 Birkenmaier, Lukas, and Clemens Lechner. “Measuring politicians’ public personality traits using computational text analysis: A multimethod feasibility study for agency and Communion.” Political Analysis, 2 Dec. 2025, pp. 1–19, https://doi.org/10.1017/pan.2025.10025.

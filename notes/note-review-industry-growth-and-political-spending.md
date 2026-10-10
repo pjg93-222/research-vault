@@ -12,7 +12,7 @@ evidence_status: "verified"
 source: "[[_sources/note-review-industry-growth-and-political-spending-source.md]]"
 original_paths: ["C:\\Users\\pgoff\\Downloads\\Sector_Growth_Political_Spending_Review_2026-09-24.md"]
 sha12: ["1cb2685ab2e7"]
-tags: [research-note, paul-s-research-notes]
+tags: [research-note, paul-s-research-notes, type/research-note]
 ---
 
 # Review: industry growth and political spending

@@ -9,7 +9,7 @@ brain_notes:
   - C:/Users/pgoff/Documents/brain/topics/2026-09-feature-cu-geography-luna-and-row-framework.md
   - C:/Users/pgoff/Documents/brain/projects/cu-geography.md
 paper_count: 7
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Terrier (CU Geography) person and area scoring

@@ -22,7 +22,7 @@ brain_notes:
   - C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md
   - C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md
 paper_count: 36
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange stance and tone measurement (press and social text)

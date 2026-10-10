@@ -2,7 +2,7 @@
 type: theme
 name: "Legislative Behavior & Effectiveness"
 paper_count: 2
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Legislative Behavior & Effectiveness

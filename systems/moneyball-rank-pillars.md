@@ -20,7 +20,7 @@ brain_notes:
   - C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-lineage-and-june-audit.md
   - C:/Users/pgoff/Documents/brain/topics/2026-07-rfc-melange-architecture-system-of-record-model-config-and-committee-formula.md
 paper_count: 27
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Moneyball four-pillar influence rank

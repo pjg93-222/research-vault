@@ -2,7 +2,7 @@
 type: theme
 name: "Path-Finding Algorithms"
 paper_count: 8
-tags: [theme]
+tags: [theme, type/theme]
 ---
 
 # Path-Finding Algorithms

@@ -5,7 +5,7 @@ slug: melange-demographic-potential
 components: [melange-demographic-potential.growth-room-v21, melange-demographic-potential.footprint-v30, melange-demographic-potential.census-cd-metrics]
 brain_notes: [concepts/demographic-potential-method, actors/draft-systems-r-pipeline-architecture]
 paper_count: 6
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange Demographic Potential and district metrics

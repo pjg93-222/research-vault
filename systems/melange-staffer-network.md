@@ -15,7 +15,7 @@ brain_notes:
   - C:/Users/pgoff/Documents/brain/topics/2026-09-feature-staffer-network-data-and-math.md
   - C:/Users/pgoff/Documents/brain/topics/2026-09-feature-staffer-network-data-and-math-sna-math-and-clique-lane.md
 paper_count: 9
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange congressional staffer network

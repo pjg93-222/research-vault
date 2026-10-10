@@ -3,6 +3,7 @@ type: "annotation-source"
 source_zip: "Annotated Bibliographies & Literature Synthesis-20261009T191315Z-1-001.zip"
 source_path: "Annotated Bibliographies & Literature Synthesis/Neural Networks/Untitled document.docx"
 sha12: "da706e80ef35"
+tags: [type/annotation]
 ---
 
 [https://www.redalyc.org/journal/2971/297176235002/297176235002.pdf](https://www.redalyc.org/journal/2971/297176235002/297176235002.pdf)

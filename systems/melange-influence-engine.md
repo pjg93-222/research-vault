@@ -5,7 +5,7 @@ slug: melange-influence-engine
 components: [melange-influence-engine.cascade-kernel, melange-influence-engine.competitive-cascade-crn, melange-influence-engine.seed-gate, melange-influence-engine.flip-model, melange-influence-engine.persuadability-table, melange-influence-engine.money-response-defection, melange-influence-engine.lt-priming, melange-influence-engine.salience-shock, melange-influence-engine.receptivity-layer, melange-influence-engine.competitiveness-multiplier, melange-influence-engine.electoral-plays, melange-influence-engine.scenario-runner, melange-influence-engine.priority-engagement]
 brain_notes: [topics/2026-07-feature-influence-engine-internals, topics/2026-07-feature-influence-engine-internals-receptivity-layer, topics/2026-07-feature-influence-engine-internals-salience-sna-wave, topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration]
 paper_count: 79
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange influence engine (persuasion, money and cascade physics)

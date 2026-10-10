@@ -5,7 +5,7 @@ slug: melange-audio-speech
 components: [melange-audio-speech.speaker-verification, melange-audio-speech.prosody-and-disfluency, melange-audio-speech.identity-two-check-design]
 brain_notes: [C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md, C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md]
 paper_count: 7
-tags: [system]
+tags: [system, type/system-hub]
 ---
 
 # Melange audio and speech lane

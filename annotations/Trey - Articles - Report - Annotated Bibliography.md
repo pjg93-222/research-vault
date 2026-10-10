@@ -3,6 +3,7 @@ type: "annotation-source"
 source_zip: "Annotated Bibliographies & Literature Synthesis-20261009T191315Z-1-001.zip"
 source_path: "Annotated Bibliographies & Literature Synthesis/Trey - Articles/Report - Annotated Bibliography.docx"
 sha12: "02a41d947acd"
+tags: [type/annotation]
 ---
 
 Alexander, Raquel Meyer, et al. “Measuring rates of return for lobbying expenditures: An empirical case study of tax breaks for multinational corporations.” *SSRN Electronic Journal*, 2009, [https://doi.org/10.2139/ssrn.1375082](https://doi.org/10.2139/ssrn.1375082).  
