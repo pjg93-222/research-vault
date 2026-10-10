@@ -1,0 +1,179 @@
+---
+type: paper
+title: "Mathematical Modeling, Analysis and Simulation Utilizing Machine Learning Tools for Assessing the Impact of Climate Lobbying"
+authors: ["Andrew Jacoby", "Samiran Ghosh", "Malay Banerjee", "Aditi Ghosh", "Padmanabhan Seshaiyer"]
+year: "2025"
+venue: "arXiv preprint arXiv:2505.09617v1 [physics.soc-ph], submitted 22 Mar 2025 (manuscript dated May 16, 2025). No journal venue stated in the text."
+doi: "arXiv:2505.09617v1"
+category: "Lobbying"
+systems: ["melange-influence-engine", "melange-validation"]
+components: ["melange-influence-engine.flip-model", "melange-influence-engine.money-response-defection", "melange-influence-engine.persuadability-table", "melange-validation.sensitivity-and-mc"]
+paul_annotated: true
+paul_markup_count: 47
+evidence_status: "verified"
+source: "[[_sources/jacoby-2025-mathematical-modeling-analysis.pdf]]"
+original_paths: ["C:\\Users\\pgoff\\Documents\\research\\_raw\\bib-20260705-013300\\Annotated Bibliographies & Literature Synthesis\\Machine Learning & Sentiment Analysis\\2505.09617v1.pdf", "C:\\Users\\pgoff\\Documents\\research\\_raw\\bib-20260705\\Annotated Bibliographies & Literature Synthesis\\Machine Learning & Sentiment Analysis\\2505.09617v1.pdf", "C:\\Users\\pgoff\\Documents\\research\\_raw\\bib-20261009-191315\\Annotated Bibliographies & Literature Synthesis\\Machine Learning & Sentiment Analysis\\2505.09617v1.pdf", "C:\\Users\\pgoff\\Documents\\research\\_raw\\bib-20261009\\Annotated Bibliographies & Literature Synthesis\\Machine Learning & Sentiment Analysis\\2505.09617v1.pdf", "C:\\Users\\pgoff\\Downloads\\2505.09617v1.pdf"]
+sha12: ["4e6939c6565d"]
+tags: [paper, lobbying]
+---
+
+# Mathematical Modeling, Analysis and Simulation Utilizing Machine Learning Tools for Assessing the Impact of Climate Lobbying
+
+**Andrew Jacoby, Samiran Ghosh, Malay Banerjee, Aditi Ghosh, Padmanabhan Seshaiyer (2025).** *arXiv preprint arXiv:2505.09617v1 [physics.soc-ph], submitted 22 Mar 2025 (manuscript dated May 16, 2025). No journal venue stated in the text..* arXiv:2505.09617v1 Theme: [[themes/lobbying|Lobbying]].
+
+> [!abstract] Summary
+> Jacoby et al. (arXiv 2505.09617, 2025) model a legislature the way an epidemic model tracks a population. Each legislator sits in one of four compartments: not yet introduced (S), undecided centrist (C), yes (Y) or no (N). Undecided members move to Y or N through mass-action contact with members who have already decided. The extended model adds lobbyist counts and lobbying money (L_F, L_A, M_F, M_A) and drains campaign donations (I_F, I_A). Parameters are taken from cited literature and databases (Table 2); none is fitted to the ACESA vote. The model is checked against one bill, the 2009 Waxman-Markey vote (ACESA).
+>
+> In the House, the baseline run gives 230 yes, 196 no and 9 undecided, against an actual 219 to 212. Adding donations moves 1 member. Adding lobbying takes the undecided count from 9 at baseline to 1 (231 yes, 203 no); the paper does not say whether this run also includes donations, and relative to the donations run (8 undecided) it is 7 members. The Senate barely changes. The analysis shows that the centrist-flow and centrist-lobbying parameters (M_LF, M_LA) drive the outcome. An SVM finds no clean pass/fail boundary. Widening the centrist ideology band from ±0.25 to ±0.35 reverses the House result.
+>
+> For Paul's system this is weak evidence. Each chamber has one comparison point, every "effect" is the output of parameters the authors chose, and the paper's claim of accuracy within 5% fails for 3 of its 4 reported House errors (5.02%, 5.48% and 7.55%; only the 4.25% lobbying-run no error is within 5%). Its useful content is structural, not empirical:
+> - Legislators who have already decided are treated as fixed by construction (Y and N are absorbing), and only undecided members move. This is structural similarity to the low PERS values for Champion and Opponent, not support for them.
+> - Who counts as movable decides the result. The system already found the same thing when it swept PERS_NONE.
+> - The sensitivity harness does not sweep the flip model's WM/WP channel weights or the PERS table. The paper says centrist-flow parameters are the ones that matter, so those are the obvious next sweeps.
+>
+> The lobbying-versus-donations contrast should not be imported into the flip model. It is a contrast between simulation runs, not an estimate. Its lobbyist series includes both regular lobbyists and a revolving-door subgroup (Fig 3 caption), and project rules bar LDA as an edge or weight source (D-021).
+
+## Paul's annotation
+
+_Not in Paul's annotated bibliographies._
+
+## Paul's markup in the PDF
+
+- p1 Highlight (yellow): "This project aims to develop a novel compartmental model to forecast the trajectory of climate legislation within the United Sta[tes] (covered text cut mid-word in the annotation)." — 
+- p1 Highlight (yellow): "Our model adeptly captures the nonlinear dynamics among diverse legislative factions, including centrists, ardent supporters, and vocal opponents of the bill, culminating in a rich dynamics of final voting outcomes" — 
+- p3 Highlight (yellow): "By viewing lobbying as a process of influence spreading through a network, we can apply concepts from epidemiology to predict and understand how lobbying efforts can succeed or fail." — 
+- p3 Highlight (yellow): "Another study employed a Transformer-based text embedding model alongside campaign finance data, achieving over 90% accuracy in roll-call vote prediction, underscoring the critical role of financial interests in shaping legislative behavior [3]." — 
+- p3 Highlight (yellow): "The NOMINAl Three-step Estimation model (NOMINATE), for instance, places legislators and roll call votes in a common ideological space, enabling the estimation of ideological positions based on voting patterns" — 
+- p5 Highlight (yellow): "let pi0_i denote the value of firm i in the absence of the bill, and pi*_i its value under the bill where i ranges from 1 to N where N is the total number of firms. (Garbled OCR of the equation text.)" — 
+- p5 Highlight (yellow): "rho_Y represents the proportion of potential financial gains that a firm allocates to lobbying for the bill" — 
+- p6 Highlight (yellow): "By incorporating lobbying and campaign contributions" — 
+- p8 Highlight (yellow): "To prove boundedness for this system of differential equations we break it up into three parts. Both the MF F and MA A functions are bounded by definition." — 
+- p9 Highlight (yellow): "By examining the timeline and affiliations of these lobbyists, we were able to track the number of individuals with federal employment backgrounds who were involved in lobbying efforts over time." — 
+- p12 Highlight (yellow): "This implies that as time passes and the bill is discussed between the different legislators, legislators are lobbied, their campaigns are donated to, or the meet with potential donors, the members of the legislature who were either not introduced to the bill (S) or undecided (C0) decide to either vote yes (Y) and no (N)." — 
+- p12 Highlight (yellow): "we perform sensitivity analysis by allowing key parameters to vary." — 
+- p12 Highlight (yellow): "This implies that the model is highly sensitive to changes in certain parameters, especially those controlling centrists flow between decision-making states" — 
+- p13 Highlight (yellow): "indicating that the model is robust to moderate changes in these parameters." — 
+- p14 Highlight (yellow): ". These parameters directly influence whether a legislator votes Yes or No on the bill." — 
+- p14 Highlight (yellow): "We applied Support Vector Machines (SVM) to identify the decision boundary between parameter sets that lead to bill passage and those that result in failure." — 
+- p16 Highlight (yellow): "This approach allows us to observe the combined impact of interactions between different factors, offering a more comprehensive view of the system's behavior." — 
+- p16 Highlight (yellow): "Similar to the previous section, we use red dots to represent bills failing and green dots to represent bills passing." — 
+- p16 Highlight (yellow): "This is especially evident when considering the influence of centrist lobbying through MLF and MLA. However, because we are varying multiple parameters, in Fig. 9 there are some red dots over the boundary determined by the SVM and some green dots within the red area." — 
+- p16 Highlight (yellow): "his suggests that there are no straightforward or explicit conditions that assure the passage of a bill based solely on its various rate constants, illustrating the dynamic nature of political decision-making" — 
+- p16 Highlight (yellow): "This suggests" — 
+- p17 Highlight (yellow): "changes or perturbations can manifest as significant shifts in the trajectory of the bill." — 
+- p18 Highlight (yellow): "This could be interpreted as votes or opinions that diverge from the majority consensus, thereby underscoring the fragile nature of the consensus-building process in legislative bodies." — 
+- p18 Highlight (yellow): "Thus, the model accommodates the complexity of human behavior and institutional dynamics, revealing how closely held beliefs, advocacy efforts, and shifts in public opinion can sway legislative outcomes." — 
+- p18 Highlight (yellow): "Identifying and targeting these key factors may provide opportunities to influence the outcome favorably. Ultimately, the proposed model not only elucidates the dynamics at play but also serves as a tool for anticipating potential results in a landscape marked by uncertainty and complexity." — 
+- p18 Highlight (pink): "While the dynamics may be governed by a set of clear rules and interactions, the outcomes remain inherently unpredictable due to the multiple layers of influence and the minor variations that act as tipping points in the decision-making process." — 
+- p18 Highlight (yellow): "particularly those 18 (page-break fragment; continues on p.19)" — 
+- p19 Highlight (yellow): "related to centrists interactions with lobbying groups (MLF, MLA), exert a substantial influence on the final outcome." — 
+- p19 Highlight (yellow): "By refining our understanding of parameter influence, we can better anticipate how changes in lobbying efforts or political dynamics might affect future legislative outcomes" — 
+- p19 Highlight (yellow): "As a result, the percent error for yes votes is 5.02% and the percent error for no votes is 7.55%" — 
+- p20 Highlight (yellow): "Consequently, campaign donations alone appear to have limited impact on the bill's success or failure." — 
+- p20 Highlight (green): "This suggests that lobbying played a significant role in swaying undecided legislators to take a side, whereas campaign donations had a comparatively smaller influence on voting decisions." — 
+- p20 Highlight (yellow): "Our model effectively captures this result, demonstrating its ability to predict legislative success or failure by incorporating both ideological stances and procedural constraints" — 
+- p20 Highlight (yellow): "especially among centrists whose positions may shift based on external pressures like lobbying" — 
+- p21 Highlight (yellow): "This variability based on centrist definitions highlights how even slight changes in ideological distribution can impact the model's predicted voting outcomes." — 
+- p21 Highlight (yellow): "Then mass action peer pressure dynamics push undecided legislators to choose to vote yes or no on the bill." — 
+- p21 Highlight (yellow): "Validated against the voting results for the American Clean Energy and Security Ac[t]" — 
+- p22 Highlight (yellow): "model accurately simulates voting dynamics" — 
+- p22 Highlight (yellow): "how factors like lobbying, peer pressure, and ideological composition drive legislative decisions" — 
+- p22 Highlight (green): "model provides legislators with the strategic advantage to refine bill proposals and helps lobbyists identify where to focus their influence on undecided legislators." — 
+- p22 Highlight (yellow): "This offers policymakers and advocates a tool to navigate the complexities of legislative strategy more effectively." — 
+- p22 Highlight (yellow): "real-time data and stochastic elements will only enhance the model's accuracy and relevance," — 
+- p22 Highlight (yellow): "on, suggesting that legislative bodies may tend toward stable outcomes under certain pressure" — 
+- p23 Highlight (green): "To enhance future research on legislative behavior, it is essential to broaden the scope of bills analyzed using the proposed model." — 
+- p23 Highlight (green): "Incorporating advanced techniques for managing complex, interacting variables is pivotal in this endeavor." — 
+- p23 Highlight (blue): "By adopting suitable analytical methods such as multilevel modeling, machine learning algorithms, or network analysis, researchers can better capture the dynamics of these interactions" — 
+- p23 Highlight (red): "identifying potential feedback loops w[ithin the political system] (truncated in annotation)" — 
+
+## Study
+
+**Question.** Can a compartmental differential-equation model of legislators (not yet introduced, undecided centrists, yes, no), extended with lobbyists, lobbying money, and campaign donations, simulate and predict roll-call passage, and how do lobbying and donations change outcomes? Stated objectives (a) build the model, (b) study how interactions shape legislative behavior, (c) predict likelihood of passage (p.3).
+
+**Theory.** Epidemiology-style mass-action peer influence: undecided legislators (C) move to yes (Y) or no (N) at rates beta_F, beta_A times interactions with Y or N (eqs 2.1a-d, p.4-5). Intro frames lobbying as influence spreading through a network (p.3), but the model itself uses mass action, not a network. Lobbying side: firm value change Delta pi_i = pi*_i - pi0_i; firms with Delta pi > 0 lobby for, < 0 against (Sec 2.1, p.5, following Meng and Rode [17]); lobbying money is split by (1 - psi). Donations drain money M_F, M_A at rates I_F, I_A (eqs 2.2a-h, p.6-7). Authors claim this is the first compartmental-model use of this kind in political science (p.21).
+
+**Data.** Single case: the 2009 ACESA (American Clean Energy and Security Act, called the Waxman-Markey Bill, p.19) House and Senate votes. Unit: individual legislators in compartments. Population: House S = 435, Senate S = 100 (Table 1, p.19). Lobbyist counts: ProPublica Represent database, ACESA-related lobbyists, both regular lobbyists and a revolving-door subgroup (Fig 3 caption), 2006-2012 (Sec 2.4 p.9; Fig 3 caption p.9), rising from 0 to about 581 in a logistic-like pattern. Campaign money initial values MF = 345,873,085 and MA = 283,377,397 (Table 1). Parameters in Table 2 (p.32-33) are literature-sourced, e.g., alpha_F(H) 0.449, alpha_A(H) 0.382, alpha_C(H) 0.168 [16]; alpha_F(S) 0.41, alpha_A(S) 0.37, alpha_C(S) 0.22 [16]; nu 5.258e-10 [24]; psi 0.47847 [4]; I_F 345873.09 and I_A 283377.340 [17]; beta_F(H)=beta_A(H)=0.00005425 [7]; beta_F(S)=beta_A(S)=0.000437 [7]; L max = 600 [24][11]. No individual-level or survey data. Sensitivity and SVM runs use 1000 samples per figure (p.14-17). N for the empirical comparison: 435 House and 100 Senate members, one bill.
+
+**Method.** Deterministic ODE system. Baseline model (eqs 2.1a-d, p.4-5) and extended model with lobbyists L_F, L_A, money M_F, M_A and donations I_F, I_A (eqs 2.2a-h, p.6-7). Well-posedness: positivity via an invariant-domain lemma stated in the text (p.7-8) and boundedness via M(t) = S + C + Y + N constant (p.8). Stability: linearization about (0, C0, 0, 0) (unstable) and (0, 0, Y0, N0) (stable), in Sec 3.1 (p.10) and Sec 3.2.2 (p.12), with closed-form L_F(t), L_A(t) (Sec 3.2.1, p.11). Simulation: no solver, software or numerical tolerance stated. Sensitivity: 10% variation of centrist-flow parameters with distributions of final C, Y, N (Sec 4, p.12-13); parameter sweeps labelled pass/fail and separated by linear SVM (Sec 4.1-4.2, p.14-17); individual parameter impact ranking (Sec 4.3, Fig 12, p.18-19). Ideology sensitivity via centrist band (Sec 5.3, p.20-21). Validation: compare simulated final House and Senate counts to actual tallies using percent error (Sec 5.1, p.19-20).
+
+**Identification.** None in the econometric sense. No estimation, no quasi-experiment, no causal design. Parameters are fixed from cited literature (Table 2). Validation is a comparison of simulated final vote counts to actual ACESA tallies. The lobbying-on vs lobbying-off contrast (p.19-20) is a simulation contrast under chosen inputs. The abstract says parameters were estimated from public lobbying records and literature, but the text gives no estimation procedure.
+
+**Scope.** Population: US Congress, the House (435 seats) and Senate (100 seats), one bill, ACESA (2009). Era: lobbying counts 2006-2012 (Fig 3, p.9); the House and Senate votes of 2009 (abstract p.1, Sec 5 p.19). Institution: federal legislature. Authors state that the model has been applied to one bill and that a broader bill set is needed (p.23).
+
+## Key findings
+
+- Baseline House simulation with no lobbying or donations: model settles at yes/no/undecided counts, compared with actual tally. Numbers: Model 230 yes, 196 no, 9 undecided vs actual 219 yes, 212 no, 4 abstain; percent error 5.02% (yes), 7.55% (no). (Sec 5.1, p.19)
+- Adding campaign donations alone changes almost nothing; authors conclude donations have limited impact on passage. Numbers: 231 yes, 196 no, 8 undecided (one undecided legislator moves to yes). (Sec 5.1, p.20)
+- Adding lobbying (the text does not say whether donations stay in this run) moves the House prediction closer to the actual count; authors attribute the shift mainly to lobbying converting undecided legislators. Numbers: 231 yes, 203 no, 1 undecided; percent error 5.48% (yes), 4.25% (no). Undecided fell from 9 to 1, i.e., 8 legislators resolved in total. (Sec 5.1, p.20 (Fig 15))
+- Senate baseline and extended runs barely differ; authors say lobbying has minimal effect in the Senate, which they read as consistent with ACESA failing against the 60-vote filibuster threshold. Numbers: Baseline 52 yes, 47 no, 1 undecided; with lobbying and donations 52 yes, 48 no, 0 undecided. No Senate actual tally is given in the text. (Sec 5.2, p.20)
+- Stability: the all-undecided point is unstable; the point with Y and N positive and S, C at zero is stable, so Y and N converge to positive constants and the legislature tends toward a decision. Same qualitative result holds with lobbying and donations included. Numbers: No numeric equilibrium values for Y0 or N0 are reported in the text. (Sec 3.1 p.10; Sec 3.2.2 p.12 (Appendix 8.1 p.28-31))
+- Sensitivity to a 10% change in centrist flow parameters: final C, Y, N look roughly normally distributed; trajectories cross the actual House vote count, which authors read as robustness. Numbers: Parameters varied by 10%; no summary statistics beyond the figures are given in the text. (Sec 4, p.12-13 (Figs 4-5))
+- Parameter-impact ranking: centrist-lobbying parameters (M_LF, M_LA) and tau have substantial influence on outcome; initial compartment sizes (S) have minimal impact. Numbers: Qualitative ranking only; no effect sizes in the text. (Sec 4.3, p.18-19 (Fig 12))
+- SVM pass/fail boundaries: most single-parameter sweeps predict passage; beta and phi matter for passage, tau does not; no clean boundary for the multi-parameter sweeps; authors conclude no simple rate-constant condition guarantees passage. Numbers: Linear SVM trained on 1000 samples per figure; red (fail) points lie inside the pass region in Fig 9. (Sec 4.1-4.2, p.14-17 (Figs 6-11))
+- Centrist band definition matters: widening the centrist band from -0.25 to 0.25 to -0.35 to 0.35 flips the House result so that no votes exceed yes votes. Numbers: Band +/-0.25 vs +/-0.35 on a -1 to 1 ideology scale; the flipped vote counts are not given in the text. (Sec 5.3, p.20-21 (Fig 18))
+- ACESA lobbyist counts rise from 0 toward about 581 in a logistic-like pattern over 2006-2012. Numbers: Upper bound approximately 581 lobbyists; Table 2 uses L max = 600 (p.33). (Sec 2.4, p.9 (Fig 3))
+- Introduction context (cited to Meng and Rode [17], not produced by this paper's model): lobbying accounted for 14% of lobbying expenditures in the period, and lobbyists reduced the likelihood of ACESA passage by about 13%. Numbers: 14% of lobbying expenditures; about 13% reduction in passage likelihood (cited). (Intro, p.2)
+
+## Limitations
+
+- Single bill (ACESA) with one validation point per chamber; the authors themselves say the model should be applied to a broader set of bills (Sec 6, p.23).
+- Headline claim vs own numbers: the Introduction says the model predicts roll-call outcomes 'within 5% of the actual results' (p.3). The reported yes errors are 5.02% (baseline, p.19) and 5.48% (lobbying, p.20), and the no error is 7.55% (baseline, p.19). Only the lobbying-case no error (4.25%, p.20) falls within 5%.
+- Parameters are taken from literature and fixed (Table 2), not estimated from data. The abstract mentions estimating parameters, but the text gives no estimation procedure. Lobbying-money inputs rho_Y, rho_N and the firm-level Delta pi values are not reported, so the M_F and M_A inputs cannot be reproduced from the text.
+- The framework is deterministic. The authors say real-time data and stochastic elements would improve it (p.18, p.22).
+- Outcome depends on how centrists are defined (Sec 5.3, p.20-21). The ideology scale source is not named in the text beyond a -1 (liberal) to 1 (conservative) range.
+- Senate validation is qualitative: no actual Senate tally is reported, and the model's 52-48 result is not compared numerically with the failed filibuster outcome.
+- The lobbying-vs-donations claim rests on small shifts: 8 undecided legislators in total (9 to 1) out of 435, and donations move one legislator (p.19-20).
+- Authors note donation effects may reflect legislators' ideology rather than direct influence, citing Bonica [5] (p.20).
+- SVM section: overlap between pass and fail points is acknowledged (p.16); the SVM dimensionality is given as 2 in captions of Figs 6-8 and 6 in Figs 9-11 (p.14-17) with no sampling method described.
+- Positivity relies on an invariant-domain lemma stated without proof (p.7). Table 2 OCR is garbled for tau (value text '000000001112433819', p.33) and for nu; treat those entries as unverified.
+- The network framing (p.3, p.23) is not modeled: peer influence is mass action and no network data are used.
+
+## Short quotes
+
+- "lobbying played a significant role in swaying undecided legislators to take a side, whereas campaign donations had a comparatively smaller influence" (Sec 5.1, p.20)
+- "Consequently, campaign donations alone appear to have limited impact on the bill's success or failure." (Sec 5.1, p.20)
+- "the model accurately simulates voting dynamics" (Sec 6 Discussion, p.22)
+
+## Bearing on the systems
+
+| Component | Relation | Paper shows | System does | Transfers when | Strength | Check |
+|---|---|---|---|---|---|---|
+| [[systems/melange-validation#Receptivity sensitivity harness, MC stability and F5 power gate|Receptivity sensitivity harness, MC stability and F5 power gate]] | suggests-extension | Varying the centrist-flow parameters by 10% produces a wide spread of final C, Y and N counts. In the parameter-impact ranking, centrist-lobbying parameters (M_LF, M_LA) and tau rank high and initial compartment sizes rank low. Linear SVMs on 1000-sample sweeps find no clean pass/fail boundary in multi-parameter sweeps. (Sec 4, p.12-13 (Figs 4-5); Sec 4.1-4.3, p.14-19 (Figs 6-12)) | The receptivity sensitivity harness sweeps only receptivity constants: susc scale, prospect-theory multipliers, retiring factor and persona weight (VARIANTS). It grades each by top-20 overlap (ROBUST at 18 or more). The harness does not sweep the flip model's channel weights WM/WP (0.35/0.65) or the PERS persuadability table. The one centrist-like knob that has been swept, PERS_NONE, was swept by hand and recorded in a comment: top-20 overlap was 16/18/20/18/15 across 0.30-0.95, and total winnability ran from 149.5 to 245.8. `fec/members/receptivity_sensitivity.py:93-113; fec/engine/flip_model.py:21-27; fec/moneyball_core.py:564-568` | The transfer is a method idea, not evidence. Jacoby's sensitivity comes from a well-mixed ODE model with literature-fixed parameters, and the system's flip model is a network-based ratio of saturating terms. What carries over is the diagnostic: the parameters that decide who is movable and how fast they move should be swept first. The pass/fail SVM is not needed, because top-k overlap already measures decision change. Any such sweep is a bound on the model, not validation (DE-062). | moderate | VERIFIED |
+| [[systems/melange-influence-engine#Persuadability table PERS|Persuadability table PERS]] | qualifies | Only undecided centrists (C) move. Committed Y and N legislators are absorbing states, and the equilibrium with all members undecided is unstable. Widening the centrist band on a -1 to 1 ideology scale from ±0.25 to ±0.35 reverses the House result so that no votes exceed yes votes. (Eqs 2.1a-d p.4-5; Sec 3.1 p.10; Sec 5.3 p.20-21 (Fig 18)) | PERS assigns committed tiers near-zero persuadability (Champion 0.10, Defender 0.12, Opponent 0.08) and middle tiers the highest (Highly Persuadable 0.65). Silent members get PERS_NONE 0.45; per the flip_model comment, silent cells are 59.8% of matrix cells. Tiers are based on stance, not ideology. `fec/moneyball_core.py:564-568; fec/engine/flip_model.py:22` | The paper supports the extremes being near-fixed only because its model assumes it; Y and N are absorbing by construction. It does not test an inverted-U. Its centrist group is defined by an unnamed ideology scale, while PERS is defined by CU stance tier, so the band result carries over only as a warning: how the movable set is defined can decide the outcome. The system's PERS_NONE sweep shows the same thing in the system itself. Evidence is a single bill (ACESA, 2009) at the federal level. | weak | VERIFIED-SOFTENED |
+| [[systems/melange-influence-engine#Flip - winnability model|Flip - winnability model]] | qualifies | With parameters taken from cited literature and databases (none fitted to the vote), adding donations to the House run moves 1 legislator (230 to 231 yes, 8 undecided). The lobbying run yields 231 yes, 203 no, 1 undecided; the authors describe this as undecided members falling from 9 to 1 and conclude that lobbying sways undecided members more than donations do. (Sec 5.1, p.19-20 (Figs 14-15)) | pflip = a/(a+b), with a saturating FEC-money term weighted WM 0.35 and a peer-proximity term weighted WP 0.65. Money is treated as the minority channel. The model has no lobbying-contact channel; money means campaign receipts only. `fec/engine/flip_model.py:21,92-96` | Directionally consistent with the claim that money moves votes little, but this is a contrast between simulation runs under chosen inputs, not an estimated effect. The firm-value inputs (rho_Y, rho_N, Delta pi) are not reported in Table 2, the effect is 7-8 of 435 members on one bill (House, ACESA 2009), and the lobbying input is a ProPublica count of all ACESA-related lobbyists (regular plus a revolving-door subgroup, Fig 3 caption). The paper gives no basis for setting WM/WP or for adding a lobbying channel. Under D-021, LDA-derived lobbying data cannot become an edge or weight term. | weak | VERIFIED-SOFTENED |
+| [[systems/melange-influence-engine#Money response (lean shift) and money-triggered defection|Money response (lean shift) and money-triggered defection]] | supports | Campaign donations alone move one House member out of 435 (from 9 undecided to 8, 230 to 231 yes). The Senate is reported only for the combined lobbying-plus-donations run, which changes it by one senator (52/47/1 to 52/48/0). The authors note that donations may reflect ideology rather than buy influence (citing Bonica [5]). (Sec 5.1-5.2, p.20) | MAXSHIFT was cut from 40 to 18 on the premise that money moves positions little, so money-triggered defections are rare and need about a sixth of a member's receipts. Champion and Opponent tiers are immune (COMMITTED set). `fec/engine/money_response.py:15-25,35,72` | This is a consistency check, not a calibration. The donation effect in the paper is a model output from literature parameters (I_F, I_A taken from Meng and Rode), not an observed shift. It is weaker than the experimental and null-result literature already cited at money_response.py:15. | weak | VERIFIED-SOFTENED |
+
+> [!failure]- Claims that did not survive verification
+> - Summary issue: 'Adding lobbying resolves 8 more undecided members' implies 9 resolved after the donations step; the paper frames the lobbying run as 9 -> 1 undecided relative to baseline, which is 7 more than the donations run (8 undecided). The paper does not state whether the lobbying run includes donations.
+> - Summary issue: 'Every parameter is fixed from earlier literature (Table 2)' is loose: alpha rates come from Voteview [16], nu and L from ProPublica [24], others from cited papers. The accurate statement is that none is fitted to the ACESA vote.
+> - Summary issue: 'Its lobbyist counts also come from revolving-door staff' is wrong: the Fig 3 caption says the series includes both regular lobbyists and a revolving-door subgroup. The same error appears in the flags ('counts former federal employees, i.e. revolving-door staff') and in the flip-model bearing's transfer_conditions.
+> - Summary issue: The accuracy critique lists errors 5.02%, 5.48% and 7.55% but omits the 4.25% no-vote error in the lobbying run, which is within 5%; the 'within 5%' claim fails for 3 of the 4 reported House errors, not all of them.
+> - Summary issue: 'Legislators who have already decided are treated as fixed ... This matches the low PERS values' presents a model assumption (Y and N absorbing by construction) as agreement; it is structural similarity, not support.
+> - Summary issue: The Bonica related link was labeled 'cites', but Jacoby cites a different Bonica paper, not the 2013 vault item.
+> - Summary issue: paul_alignment speaks of Paul's highlights and notes, but paul_entries is empty and the 47 annotations have empty content fields; only highlighted spans exist, so claims about what Paul's notes record or omit are not verifiable.
+
+## Gaps and flags
+
+- The receptivity sensitivity harness sweeps only receptivity constants (fec/members/receptivity_sensitivity.py:93-103). It does not sweep the flip model's WM/WP channel split (flip_model.py:21) or the PERS tier values (moneyball_core.py:564-568), which are the system's equivalents of the centrist-flow parameters the paper finds dominant. PERS_NONE was swept once by hand and the result exists only as a code comment.
+- The system has no test of how the movable set is defined. PERS assigns persuadability by stance-tier label, and nothing measures how much targeting changes when tier cutpoints move. The paper's centrist-band reversal (±0.25 to ±0.35) shows that the band definition alone can decide the outcome.
+- The paper's whole premise is a timeline of how members move from undecided to decided, and the system has no outcome check of that kind. The prospective contract (H1/H2) is the planned check, but its F5 power gate is underpowered (72 of the 150 required new-event members).
+- The lobbying-versus-donations finding must not be used to add a lobbying channel or weight to the flip model. Its lobbying input is a count of ACESA-related lobbyists, and LDA is an identity source only, not an edge or weight source (D-021).
+- The paper's lobbyist series includes both regular lobbyists and a revolving-door subgroup (Fig 3 caption, Sec 2.4, p.9). Any summary must not describe those ties with influence language.
+- The paper's headline accuracy claim ('within 5%', p.3) is contradicted by 3 of its 4 reported House errors (5.02% and 7.55% at baseline; 5.48% yes with lobbying; the 4.25% lobbying-run no error is within 5%). If quoted, name the window and denominator: one bill (ACESA 2009), House N=435, one comparison per chamber, parameters not estimated.
+- Any SVM boundary or parameter-impact ranking from the paper describes the model, not legislators. If adapted here, it remains a bound on the model.
+- The paper frames lobbying as influence spreading through a network (p.3), but the model is well-mixed mass action with no network. Do not cite it as network-diffusion evidence for the cascade kernel.
+
+Paul's markup is highlights only (47 spans, no recorded note text), so what his notes say or omit cannot be checked. Read correctly, the evidence is thin: one bill, parameters taken from earlier literature with none fitted to the vote, a lobbying effect of 9 to 1 undecided members out of 435, and a 5% accuracy claim that fails for 3 of the 4 reported House errors. The paper shares with the system the structural assumption of near-fixed committed members and a small money channel (WM 0.35 < WP 0.65; MAXSHIFT 18), which is similarity, not support, and it gives no basis for the specific values. The sensitivity point is the most actionable: the system bounds receptivity constants but has not swept its own centrist-flow analogues (WM/WP and the PERS tiers). A lobbying channel cannot be built from LDA under D-021.
+
+## Related papers
+
+- [[bonica-2013-mapping-ideological-marketplace]] — complements — Jacoby cites Bonica's roll-call inference paper [5], not the 2013 paper, for the claim that donations may reflect ideology rather than influence (p.20). The 2013 paper is Paul's on-disk anchor for that ideological-money reading but is not itself cited, so the relation is complements, not cites.
+- [[kalla-nd-campaign-contributions-facilitate]] — complements — Kalla and Broockman provide experimental evidence that money buys access. Jacoby's finding that donations barely move votes is a simulated parallel with no causal design, and Kalla is the stronger basis for the flip model's WM < WP. Not cited by Jacoby.
+- [[kim-2020-mapping-political-communities]] — cites — Jacoby cites Kim and Kunisky [14] in its list of data sources used to predict voting outcomes (p.2-3), not for the network framing (the p.3 network sentence is uncited), and does not model a network. Kim and Kunisky is the actual lobbying-network treatment.
+- [[poole-1999-nominate-after-years]] — complements — Jacoby cites Poole and Rosenthal [19] for spatial models and Voteview [16] for the alpha rates (Table 2). This vault item (D-NOMINATE after 10 years) is not itself cited; the centrist-band reversal plausibly depends on that kind of ideal-point scale, though the paper does not name the scale it used.
+- [[harrison-2010-introduction-monte-carlo]] — complements — Jacoby's sensitivity runs are deterministic sweeps of 1000 samples. Monte Carlo practice is the stochastic extension the authors say would enhance the model (p.22). Not cited by Jacoby.
+- [[furnas-nd-conflating-lobbying-pacs]] — complements — Furnas et al. separate lobbying from PAC spending at the organization level. Jacoby's lobbying-versus-donations split rests on parameter choices, not on data that separates the two channels. Not cited by Jacoby.
+
+### Linked from
+- [[anon-2022-simulating-role-knowledge]] — complements — Both simulate how outside actors shape policy outcomes (lobbying in Jacoby, evidence brokers here); read together once this paper's text is recovered to compare their simulation designs.

@@ -1,0 +1,104 @@
+---
+type: paper
+title: "Do Redistricting Commissions Avoid Partisan Gerrymanders?"
+authors: ["Robin E. Best", "Steve B. Lem", "Daniel B. Magleby", "Michael D. McDonald"]
+year: "2022"
+venue: "American Politics Research 50(3):379-395 (copyright 2021; online first). Metadata hint confirmed. Author affiliations: Binghamton University (Best, Magleby, McDonald); Kutztown University of Pennsylvania (Lem)."
+doi: "10.1177/1532673X211053216"
+category: "Adjacent"
+systems: ["melange-demographic-potential", "melange-influence-engine"]
+components: ["melange-influence-engine.competitiveness-multiplier", "melange-demographic-potential.census-cd-metrics"]
+paul_annotated: false
+paul_markup_count: 0
+evidence_status: unverified
+source: "[[_sources/best-2022-redistricting-commissions-avoid.pdf]]"
+original_paths: ["C:\\Users\\pgoff\\Downloads\\best-et-al-2021-do-redistricting-commissions-avoid-partisan-gerrymanders.pdf"]
+sha12: ["7d1eedcb2296"]
+tags: [paper, adjacent]
+---
+
+# Do Redistricting Commissions Avoid Partisan Gerrymanders?
+
+**Robin E. Best, Steve B. Lem, Daniel B. Magleby, Michael D. McDonald (2022).** *American Politics Research 50(3):379-395 (copyright 2021; online first). Metadata hint confirmed. Author affiliations: Binghamton University (Best, Magleby, McDonald); Kutztown University of Pennsylvania (Lem)..* [10.1177/1532673X211053216](https://doi.org/10.1177/1532673X211053216) Theme: [[themes/adjacent|Adjacent]].
+
+> [!abstract] Summary
+> Best, Lem, Magleby and McDonald test whether the redistricting commissions of the 2010 round drew congressional maps that are biased toward one party. For each of 34 states, they compare the enacted plan with 10,000 partisan-blind plans drawn by graph partitioning on the voter tabulation district (VTD) map. Each simulated plan is contiguous and keeps district populations within about 1% of each other. The paper uses three indicators:
+> 
+> - the observed vs expected spread (SD) of district vote shares, as a test for cracking;
+> - the median minus the mean of district vote shares, as a test for packing and entrenchment;
+> - turnout bias, the mean district vote share minus the statewide share.
+> 
+> Overall, commission maps sit closer to the neutral baseline than maps drawn by legislatures. Still, 3 of the 7 commission states are suspect. Arizona added about 1.5 points of pro-Democratic asymmetry, and its districts were more spread out (less competitive) than neutral plans. New Jersey shows 1.7-3.7 points of anti-Democratic bias. Virginia shows 2.7-4.0 points against Democrats in 10 of 10 elections, and fewer than 1% of neutral plans are that skewed. The design is descriptive and within-state; the paper makes no causal claim about commissions.
+> 
+> For Paul's systems the paper is adjacent. It says nothing about lobbying, networks, path-finding or money effects. Its one real point of contact is the competitiveness multiplier c, which reads district lean from Cook PVI. The paper shows that how the lines are drawn can move district partisanship by several points, which is about the size of the multiplier's 5-point scale constant. So lean is partly a product of the map, not only of voters. The paper does not test, and cannot validate, the premise that dollars buy more in competitive seats. A smaller point: the paper treats out-of-date boundaries as a measurement limitation, which echoes the Census scraper's mix of 116th- and 119th-Congress district boundaries.
+
+## Paul's annotation
+
+_Not in Paul's annotated bibliographies._
+
+## Study
+
+**Question.** Do redistricting commissions used in the 2010 round produce congressional district maps that are biased toward one party compared with a neutral, partisan-blind standard drawn within the same state? The paper asks how well commissions perform as neutral decision makers, using the 2010 round as the test.
+
+**Theory.** Gerrymandering harms two things: (1) exclusion or silencing of minority-party voters via vote cracking (exclusionary gerrymander, indicated by a smaller-than-expected standard deviation in district vote shares with minimal minority opportunity to win), and (2) entrenchment of a majority party regardless of its vote share via packing (indicated by skew in the district vote distribution, median minus mean). Total electoral bias = turnout bias + gerrymandering bias (asymmetry due to skew). Commissions are expected to act like a divided government, with bipartisan members producing bias toward whichever side gains an upper hand, or to produce neutral lines if bipartisanship works (pp. 381-383, 384, 390).
+
+**Data.** Unit: state congressional district plans (enacted maps) and statewide two-party vote returns by voter tabulation district (VTD). Sample: 34 states that could be evaluated, of which 7 use commissions (independent: AZ, CA, WA; advisory: IA, NY, VA; politician: NJ). Excluded 16 states: 12 with one or two districts, KY and OR (no VTD data), OK and WV (insufficient partisan predictability). Period: 2010 redistricting round; elections analyzed 2008-2014 in Table 4 and Table A (e.g., AZ 2008-2012 statewide, NJ 2008-2013, VA 2008-2013); the text also cites 2016-2020 House results for AZ and VA. Simulated baseline: 10,000 computer-generated plans per state. Vote data: Daily Kos (Wolf) estimates disaggregating county returns to VTDs using 2008 presidential shares; Census VTD shapefiles. Validation of vote estimates against official VTD tallies in WI, NC, FL: correlations 0.87-0.97 (p. 383). N for the sample: 34 states, 7 commission states, 10,000 maps per state (~340,000 simulated plans).
+
+**Method.** Descriptive counterfactual-comparison design with a simulated neutral baseline. Each enacted map is compared with the distribution of outcomes from 10,000 partisan-blind plans per state, generated with the Magleby and Mosesson (2018) multi-level weighted graph-partitioning algorithm (rook contiguity, population balance within about plus or minus 1%, compactness considered in the appendix). Indicators: observed vs expected standard deviation of Democratic district vote share (exclusion); observed vs expected gerrymandering bias (median minus mean district vote share, skew/entrenchment); turnout bias (mean district vote share minus statewide vote share); observed vs expected number of districts won by the statewide Democratic candidate (majority-rule test). Evaluation is on average values across states and elections (Figures 2-3), then state-by-state (Table 4, Figure 4 traces of observed vs expected district vote shares, sorted low to high). For Arizona, the two Hispanic majority-minority districts were held fixed in all simulated plans (Appendix, VRA section). Compactness compared via dispersion (area / minimum circumscribing circle) and perimeter (Niemi et al. 1990) ratios for 1,000 simulated maps vs the commission map.
+
+**Identification.** None in the causal sense. The comparison to a neutral within-state simulated baseline is the counterfactual for how a partisan-blind process would sort voters across districts given residential geography. Cross-state comparisons are explicitly rejected because geography differs across states (p. 380). The paper does not estimate treatment effects of commissions versus legislatures using a causal design; its cross-state commission-vs-legislature comparison (Figures 2-3) is descriptive.
+
+**Scope.** Population: 34 states with at least three congressional districts and usable VTD data, US House districts, 2010 redistricting round. Institutions: 7 states with redistricting commissions (3 independent, 3 advisory, 1 politician commission; the paper labels NJ politician and Hawaii politician; see Table 1), plus legislative and court-imposed plans in other states. Era: post-2010 maps used in 2012-2014 House elections (with later 2016-2020 references for AZ and VA). Scope is congressional, not state legislative, districts.
+
+## Key findings
+
+- Three of seven commission states produced suspect results benefiting one party: Arizona pro-Democratic; New Jersey and Virginia pro-Republican. Commissions generally produce less partisan bias than legislatures, but do not always eliminate it. (3 of 7 commission states flagged; 34 states evaluated; 10,000 simulated maps per state; Abstract p. 379; Introduction pp. 380-381; Evaluations p. 385-386)
+- Across the 34 evaluated states, maps enacted by commission states generally perform better (closer to neutral baseline) than maps enacted by states without commissions. (Qualitative; commission states mostly near or below the 45-degree lines; AZ, NJ, VA above the line in Figure 2; Evaluations p. 384 (Figures 2-3))
+- Arizona (independent commission): turnout bias favored Democrats about 2 points across all 10 statewide 2008-2012 elections. Enacted plan added roughly 1.5 points of pro-Democratic asymmetry bias beyond what residential patterns would produce, erasing a neutral pro-Republican asymmetry. Republicans charged mistreatment and the commission's map was judged a pro-Democratic gerrymander. (turnout bias about +2 points; added asymmetry about +1.5 points; expected asymmetry balanced by pro-Republican bias under neutral drawing; Suspect 1, pp. 387-388; Table 4 p. 387; Conclusion p. 390)
+- Arizona: enacted standard deviations were consistently larger than expected (more dispersed, less competitive districts), with packing in both directions; Democrats carried the three CDs they were described as making more competitive. The contramajoritarian result was limited: Republicans won 5 of 9 seats in 2014 and 2016, so Democrats were not entrenched. (Obama 2012 at 45.4% of two-party vote carried 5 of 9 seats; Democratic Senate candidate 48.4% in 2012 would have carried 5 of 9 seats with CDs 1, 2, 9 over 50%; Republicans won 5 of 9 House seats in 2014 and 2016; Suspect 1, pp. 388-389; Figure 4 p. 388)
+- New Jersey (political commission, party-line 7-6 vote favored the Republican plan): enacted lines show an anti-Democratic gerrymander bias of 1.7 to 3.7 points, partly offset by 1.3 to 2.5 points of pro-Democratic turnout bias. Standard deviations uniformly larger than the neutral average. (gerrymander bias against Democrats 1.7-3.7 points; turnout bias +1.3 to +2.5; 2013 Senate special: Democrat 55.5% carried 6 of 12 districts; Suspect 2, p. 389; Table 4 p. 387; Conclusion p. 391)
+- Virginia (advisory commission, plan actually chosen by the legislature after an inconclusive session and a 20-20 Senate tie broken by the Republican Lieutenant Governor): a pro-Republican gerrymander, persistently biased against Democrats in all 10 observed elections; asymmetry of 2.7-4.0 points; fewer than 1% of partisan-blind plans exceed the observed asymmetry, except Warner's abnormally lopsided 2008 Senate win. (asymmetry bias 2.7-4.0 points against Democrats in 10 of 10 elections; Obama 2012 won 52% of two-party vote and carried 4 of 11 districts; Democrats won 3 of 11 House races in 2012 and 2014; 4 of 5 elections with Democratic vote share 50-54% failed to carry a majority of districts; Suspect 3, pp. 389-390; Table 4 p. 387; Conclusion p. 390)
+- California (independent) slightly reduced but did not eliminate anti-Democratic bias from residential patterns; Washington (independent) drew a plan that allowed residential-pattern consequences to stand; no evidence of gerrymandering in either. Iowa and New York maps fall in line with the neutral standard; Iowa may be somewhat more competitive than residential patterns alone. (CA 53 districts; IA 4 districts (55% vote share won all four seats by both parties per text); NY 27 districts (2010 Comptroller: Democrat 52% carried 11 of 27); Suspect discussion pp. 386-387 and Conclusion pp. 390; Table A p. 392)
+- Commissions do well on charges (population equality, contiguity, compactness, jurisdictional boundaries, competitiveness) and produce maps closer to the partisan-blind standard than legislatures, but the same cannot be said uniformly for avoiding partisan gerrymanders. The authors argue commissions are decidedly bipartisan, and that the charges given to them focus on form rather than a substantive anti-gerrymander standard. (Qualitative; Conclusion pp. 389-391)
+- Arizona's enacted map is compact on the dispersion measure relative to algorithm-drawn maps: its median district's dispersion ratio (0.4797) exceeds the median district in 95.8% of 1,000 simulated maps; simulated maps show lower variance in compactness than the commission map (86.95% lower on dispersion SD; 99.8% lower on perimeter SD). (0.4797 vs simulated average median 0.421; 95.8%; 86.95%; 89.5%; 99.8%; 7.25%; 89.0%; Appendix, Compactness, pp. 390-392)
+
+## Limitations
+
+- Vote-share data are estimates: Daily Kos disaggregation of county returns to VTDs using 2008 presidential shares. Validation correlations of 0.87-0.97 were checked only against official VTD tallies in WI, NC, and FL (p. 383).
+- VTD shapefiles are out of date by the 2012 and 2014 elections because states re-precinct more often than they redistrict; the authors rely on estimated VTD vote totals (fn 10, p. 392).
+- Results are based on average values across states and elections in the first evaluation; the authors state a closer state-by-state look is required to say whether any suspect state enacted a partisan gerrymander (p. 386-387).
+- Only 2010-round congressional maps; 16 states excluded (12 with one or two districts, KY and OR lacking VTD data, OK and WV with low partisan predictability) (fn 12).
+- The neutral baseline imposes only minimalist constraints (contiguity, compactness, equal population, plus fixed Hispanic majority-minority districts in AZ). Simulated maps differ from enacted maps in other ways, and the compactness comparison shows algorithm maps are more uniform, not identical.
+- The sign/size of the residual bias is a within-state counterfactual; the paper does not claim causal effects of commission design.
+- Threshold for 'suspect' is an informal statistical standard (observed vs expected values across 10,000 maps; e.g., less than 1% of simulated plans exceeding observed asymmetry); the paper notes standard deviation alone is insufficient to identify partisan gerrymanders because entrenchment requires packing and cracking together (fn 13).
+- Maryland and Utah are flagged as possible exclusionary (cracking) outliers in fn 13 but are not analyzed in depth.
+
+## Short quotes
+
+- "commissions are decidedly bipartisan, and the maps they create are influenced by politics" (Conclusion, p. 390)
+
+## Bearing on the systems
+
+| Component | Relation | Paper shows | System does | Transfers when | Strength | Check |
+|---|---|---|---|---|---|---|
+| [[systems/melange-influence-engine#Competitiveness multiplier c (COMPET_MULT)|Competitiveness multiplier c (COMPET_MULT)]] | qualifies | District partisanship is partly a product of how lines are drawn. Compared with 10,000 neutral plans per state, enacted maps added about +1.5 points of pro-Democratic asymmetry (median minus mean) in Arizona, 1.7-3.7 points against Democrats in New Jersey and 2.7-4.0 points against Democrats in Virginia (10 of 10 elections; fewer than 1% of neutral plans as skewed). The Arizona commission's districts had larger SDs than expected, meaning packing in both directions and fewer competitive seats than neutral drawing would produce. (Table 4 p. 387; Suspects 1-3 pp. 387-390; Figure 4 p. 388) | c = 1 + 1.0*exp(-max(lean,0)/5.0), where lean is the Cook PVI oriented toward the member's party. c scales effective dollars on both money legs. Ten mid-decade redistricted states and PVI shifts of 5 points or more are flagged but never altered. AMPLITUDE and SCALE are uncalibrated owner judgment, and the reciprocity they encode is not validated. (`fec/moneyball_core.py:83-92; fec/engine/build_competitiveness.py:51-52,279-280`) | The paper's shifts are state-level skews in two-party vote share. They are not per-district PVI changes, so they show only the order of magnitude by which a map can move lean. Under the model formula, a 3-4 point lean change moves c by roughly 0.45-0.55 near lean 0. That makes c partly a function of map choice, which matters most in the flagged 2025-26 mid-decade redistricted states. The paper covers the 2010 round and congressional districts only, and it says nothing about whether contributions are worth more in competitive seats. It must not be cited as support for the reciprocity premise (D-104..D-108). | weak | UNVERIFIED |
+| [[systems/melange-demographic-potential#Census congressional-district metrics|Census congressional-district metrics]] | qualifies | Redistricting materially reshuffles how voters are distributed across districts: the SD and skew of district vote shares differ from neutral by several points. The authors also flag boundary-vintage mismatch (VTD shapefiles out of date because states re-precinct more often than they redistrict) as a limitation on their own estimates. (fn 10 p. 392; Data section p. 383; Table 4 p. 387) | The Census CD scraper stacks ACS metrics on 119th-Congress districts with 2020 CBP establishment counts on 116th-Congress district boundaries. The mismatch is documented and accepted as tolerable. (`C:/Users/pgoff/OneDrive/Desktop/Draft Systems/census_cd_scraper.R:48,350`) | The paper is about vote distributions, not business counts. It does not quantify measurement error from mixing boundary vintages. It only reinforces that boundary changes are not innocuous in states that redrew substantially, which includes the 2020-round redraws and the later mid-decade redraws. The paper offers no evidence about how large the CBP error is. | weak | UNVERIFIED |
+
+## Gaps and flags
+
+- The competitiveness multiplier treats Cook PVI lean as given. It has no notion of how much of a seat's safety comes from the map rather than from residential geography. The paper's neutral-ensemble baseline is the standard tool for separating the two, and the system has no equivalent (none is needed unless c is ever calibrated).
+- Mid-decade redistricted states are flagged in build_competitiveness.py but not treated in any other way. The paper shows that map changes of a few points are routine, which is on the order of SCALE = 5 PVI points, so c in those states depends heavily on which map vintage is used.
+- The paper does not validate the competitiveness reciprocity (dollars buy more in competitive seats). Reciprocity remains NOT validated (D-104..D-108), and the paper must not be quoted as support for COMPET_MULT.
+- Era and scope: 2010-round congressional maps, with elections 2008-2014. The live Cook 2026 PVI reflects 2020-round and mid-decade 2025-26 maps that the paper does not cover.
+- Pooled commission vs legislature comparison (Figures 2-3): any figure taken from it should be labeled UNSTRATIFIED. It averages across states with different geography, which the authors themselves warn against for cross-state comparisons.
+
+Paul has no annotation of this paper. For the competitiveness multiplier, his position is that Cook PVI is a valid vulnerability measure and that competitive seats are responsive. The paper agrees that district partisanship is measurable and consequential, but it adds a caveat his notes do not record: PVI-type lean is partly a product of how the map was drawn, by several points. No source he annotated, including this one, shows that dollars buy more in competitive seats. His note is not stale relative to the system. The system already labels the reciprocity as unvalidated and flags redistricted states.
+
+## Related papers
+
+- [[becker-nd-gameability-redistricting-criteria]] — complements — Becker shows that formal redistricting criteria can be gamed. Best et al. find that commissions satisfy their formal charges (compactness, contiguity) yet still produced partisan bias in 3 of 7 states, an empirical case of the same weakness.
+- [[deluca-2022-validating-applicability-bayesian]] — complements — Same domain: method validation for redistricting analysis. DeLuca validates BISG race estimates for VRA work. Best et al. hold Arizona's majority-minority districts fixed in their neutral ensemble and validate their VTD vote estimates (r = 0.87-0.97).
+- [[report-2024-2024-house-glance]] — complements — Cook's district partisanship ratings are the type of measure the competitiveness multiplier consumes. Best et al. show that such district partisanship shifts by 1.5-4 points depending on how the map is drawn.
+
+### Linked from
+- [[mccartan-2022-simulated-redistricting-plans]] — complements — Best asks whether commissions avoid partisan gerrymanders. McCartan supplies the outlier-versus-ensemble benchmark such an evaluation needs.

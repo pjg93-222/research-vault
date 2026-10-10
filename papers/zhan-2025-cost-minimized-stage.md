@@ -1,0 +1,112 @@
+---
+type: paper
+title: "Zhan and Cai 2025 SN-LSGDM consensus with KNN imputation"
+authors: ["Jiaxin Zhan", "Mingjie Cai"]
+year: "2025"
+venue: "Expert Systems With Applications, vol. 263, article 125705 (online 10 Nov 2024)"
+doi: "10.1016/j.eswa.2024.125705"
+category: "Adjacent"
+systems: ["melange-stance"]
+components: ["melange-stance.stance-dynamics"]
+paul_annotated: false
+paul_markup_count: 0
+evidence_status: "unverified"
+source: "[[_sources/zhan-2025-cost-minimized-stage.pdf]]"
+original_paths: ["C:\\Users\\pgoff\\Downloads\\1-s2.0-S0957417424025727-main.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\adoring-yalow-ad763f\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\agent-a2168cba4e2fdc5a2\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\agent-a5628f8fee4a9c869\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\amazing-lewin-409893\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\codex-websocket-error-468fa9\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\ecc-benchmark-methodology-c4f259\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\evidence-csv-fetch-streaming-8bedff\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\forecasting-model-audit-5603f2\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\melange-math-eval-skill-18e907\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\melange-members-section-fixes-6613db\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\melange-ui-redesign-372c43\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\mentat-github-migration-b06195\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\mentat-systems-production-file-53552c\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\pac-map-downstream-viz-c2bca4\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\sector-growth-political-spending-9cc0c8\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\silly-einstein-57ef31\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\unfinished-work-handoff-a3bbad\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\vibrant-khayyam-65f943\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\.claude\\worktrees\\vibrant-sammet-a549a5\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf", "C:\\Users\\pgoff\\OneDrive\\Desktop\\Melange Systems\\research\\2025_ESWA_Zhan_Cai_TwoStage_ThreeWay_Consensus_SNLSGDM.pdf"]
+sha12: ["2fc5ba0b6a76"]
+tags: [paper, adjacent]
+---
+
+# Zhan and Cai 2025 SN-LSGDM consensus with KNN imputation
+
+**Jiaxin Zhan, Mingjie Cai (2025).** *Expert Systems With Applications, vol. 263, article 125705 (online 10 Nov 2024).* [10.1016/j.eswa.2024.125705](https://doi.org/10.1016/j.eswa.2024.125705) Theme: [[themes/adjacent|Adjacent]].
+
+> [!abstract] Summary
+> Zhan and Cai (ESWA 2025) propose a consensus procedure for large groups whose members state incomplete fuzzy preference matrices and are linked by a trust network. It has four parts. (1) Missing preference entries are filled from the K most trusted neighbours who have that entry. Each neighbour is weighted by trust and preference similarity, the most reliable gaps are filled first, and filling repeats until stable. (2) Members are clustered with an adaptive k-means whose distance combines trust and unit adjustment cost (UAC). (3) A three-way decision rule sorts members into Pos, Bnd and Neg regions. (4) A two-stage linear program makes the cheapest preference adjustments, first per member and then per subgroup, until group consensus reaches 0.92.
+>
+> All evidence is either one worked case or synthetic. The case has 20 decision-makers and 5 alternatives; its UAC values are random, and its trust network and preference data come from an earlier paper and are not reproduced. Group consensus rises from 0.9117 to 0.9368 over 11 rounds. The imputation MSE of 0.09 to 0.13 is measured only on randomly generated matrices. The paper compares numerically against one method, in a figure only. There is no causal identification, no holdout and no proof that the procedure converges.
+>
+> The paper models committee-style preference aggregation. It does not model lobbying, legislators or influence, so most of Paul's systems are unaffected. Its one useful contact is network-neighbour imputation. The paper's estimator weights neighbours by tie strength and similarity and orders fills by reliability. The system's stance-dynamics proposer takes a plain mean over binary cosponsor neighbours. The extension is only worth testing because that same component found co-movement null on cosponsor ties. That null undercuts the homophily premise this whole imputation family relies on, and the paper never tests the premise on real data. Its "trust" is an elicited trust score, not cosponsorship. Reading cosponsor weights as trust would break D-025.
+
+## Paul's annotation
+
+_Not in Paul's annotated bibliographies._
+
+## Study
+
+**Question:** How to reach a consensus in large-scale group decision-making (LSGDM) with social networks (SN-LSGDM) when decision-makers (DMs) submit incomplete fuzzy preference relations (IFPRs), while minimizing unit adjustment cost (UAC) and keeping trust relations dynamic. Sub-questions: (a) estimate missing preference entries using K-nearest neighbours in the trust network; (b) cluster DMs into subgroups using trust, preference similarity and UAC; (c) run a two-stage (individual and subgroup) feedback consensus process based on three-way decision (TWD) with a cost-minimizing optimization step.
+
+**Theory:** Consensus reaching process (CRP) with soft consensus; minimum-adjustment-cost feedback (Ben-Arieh and Easton 2007; unit adjustment cost); social trust networks and fuzzy sociometry (Wasserman and Faust 1994; Dong et al. 2018); additive consistency of fuzzy preference relations (Tanino 1984; Xu et al. 2017); K-nearest neighbour estimation (Cover and Hart 1967); three-way decision (Yao 2010) mapping DMs into Pos, Bnd and Neg regions via a comprehensive adjustment priority (CAP) threshold. The paper argues trust should drive both imputation and adjustment; no formal theorem or convergence proof is given.
+
+**Data:** Illustrative case (Sec. 5.1, p.11): venture-capital diversified investment, 20 DMs (e1-e20), 5 alternatives (x1-x5: green logistics, ecological materials, digital economy, sustainable energy, machine learning). 20 incomplete 5x5 fuzzy preference matrices with 39 missing entries. Standardized evaluation matrices and trust network are taken from Gong et al. (2024) and are not reproduced; the paper points to a GitHub repository and says "Data will be made available on request" (p.19). UAC values for the 20 DMs were generated randomly by a program and are listed in Sec. 6.1.2 (p.14). No calendar period is stated. Simulation (Sec. 6.2, p.15-16): DM count 50 to 5000 in steps of 50, 5 alternatives, randomly generated data. Robustness test (Sec. 6.3, p.16): p in {20,40,60,80,100}, n in {4,6,8,10,12}, missing probability 0.1/0.2/0.3, 10 repetitions per cell, synthetic data.
+
+**Method:** Four-part model. (1) Missing-value estimation (Sec. 3.1, Defs 3.1-3.6, Eqs 11-19): find K trusted neighbours with known entry; similarity sim_K (Eqs 12-13) and membership mu (Eq 14, mu = (t + sim)/(1 + sim)); normalize to weights (Eq 15); reliability r (Eq 16); impute f = sum of weights times neighbour values (Eqs 17-18), filling highest-reliability entries first and iterating to convergence. Complexity O(K^2 n p) (Remark 3.2). (2) Improved k-means on the trust network (Sec. 3.2, Defs 3.7-3.8, Eqs 20-30): trust influence Int(e_u) (Eq 20); adaptive k and initial centroids via a trust-discrepancy threshold (Eqs 21-23, Algorithm 1); distance = comprehensive difference combining (1 - mutual influence) and |UAC_u - UAC_v| / 2 (Eqs 24-29); iterate to SSE convergence (Algorithm 2, Eq 30). Complexity O(k n p^2) (Remark 3.5). (3) TWD consensus (Sec. 4.1, Def 4.1, Eqs 31-33): Pos = DMs with CD >= theta_ideal; CAP_r = beta(1 - UAC_r) + ((1-beta)/2) t_r + ((1-beta)/2)(1 - CD_r) (Eq 32); threshold CAP_lambda = CAP_min + lambda(CAP_max - CAP_min) (Eq 33); Neg if CAP >= CAP_lambda else Bnd. (4) Two-stage optimization (Sec. 4.2, Eqs 34-40): stage 1 minimizes sum of UAC_u times sum |h_ij - f_ij| over Neg DMs subject to Pos-based trust-weighted adjustment constraints, solved as a linear program (Python linprog); trust update t* = t^(1 - t) (Eqs 35-36, 39-40); stage 2 repeats with subgroups as units (Eq 38). Stop when group consensus degree (GCD) >= theta_ideal. Overall complexity stated as O(k n p^2) (Remark 4.2). Parameters: beta = 0.4, lambda = 0.5, theta_ideal = 0.92, K = 4 (Sec. 5.1, p.11).
+
+**Scope:** Population: group decision-making panels (expert/DM groups) with trust networks and incomplete fuzzy preference relations. Worked case: one venture-capital portfolio problem with 20 DMs and 5 alternatives. Simulated panels: 50 to 5000 DMs. No institution, country or era is studied; the paper argues applicability to emergency management, infrastructure engineering, government and industry (Sec. 4.1, p.10; Sec. 7, p.19) but tests none of these. Submission received 8 Aug 2024, accepted 3 Nov 2024. Relevance to networks: trust networks are central. Relevance to lobbying, elections, persuasion/turnout, legislators, text measurement and path-finding: none.
+
+## Key findings
+
+- Missing entry f10_45 is estimated from four trusted neighbours (e1, e8, e16, e4) with normalized weights 0.2549, 0.2507, 0.2503, 0.2440; the estimate is 0.4033. (weights sum to 0.9999; f10_45 = 0.4033; Sec. 5.2 Step 2, p.11-12 (Eq. 17 worked example))
+- Twenty IFPRs contain 39 missing entries; the most reliable missing value is f10_45 with reliability 3.8683, estimated first. (39 missing; reliabilities range about 3.16 to 3.87 (list at Step 2.2); max 3.8683; Sec. 5.2 Steps 2.1-2.2, p.11)
+- Adaptive k-means on the trust network with comprehensive difference yields six subgroups. (C1={e3,e4,e10,e12}; C2={e2,e8,e13}; C3={e5,e7}; C4={e9,e18}; C5={e1,e17,e19,e20}; C6={e6,e11,e14,e15,e16}; sizes 4,3,2,2,4,5 (total 20); Sec. 5.2 Step 3, p.12)
+- Before feedback, all six subgroup consensus degrees fall below the threshold 0.92. (CD(1)=0.8474, CD(2)=0.8683, CD(3)=0.8692, CD(4)=0.8814, CD(5)=0.8405, CD(6)=0.8601; Sec. 5.2 Step 3, p.12)
+- Stage-1 feedback brings subgroup C1 above threshold after two rounds; authors report all subgroups are then adjusted, with no per-subgroup table given. (C1: 0.8474 -> 0.9084 (round 1) -> 0.9220 (round 2); threshold 0.92; Sec. 5.2 Step 4, p.12-13)
+- Group consensus degree (GCD) passes the threshold only after the second stage-2 round. (GCD 0.9117 before stage 2; 0.9188 after round 1 (below 0.92); 0.9368 after round 2 (above 0.92). Total 11 rounds across both stages (Remark 5.2); Sec. 5.2 Step 5, p.13-14)
+- Authors report the algorithm converges in 1-2 iterations on average; no distribution or variance is given. (1-2 iterations on average; 11 rounds total in the case; Remark 5.2, p.14)
+- Final alternative ranking from row sums of the group opinion matrix. (scores [2.5007, 2.3051, 2.0456, 2.1455, 1.7817]; ranking x1 > x2 > x4 > x3 > x5. Row sums of the printed final matrix check against these scores.; Sec. 5.2 Step 6, p.14)
+- Parameter choices and K-analysis: GCD for FPRs rises with K and levels off at K=4; DBI is lowest and DI highest at K=4, so K=4 is chosen. (beta=0.4, lambda=0.5, theta_ideal=0.92, K=4. No numeric DI or DBI values are given in the text.; Sec. 5.1 p.11; Sec. 6.1.1 p.14 (Figs 3-4))
+- beta sweep: total adjustment cost of the proposed (UAC-aware) group is significantly below a control group with uniform average UAC; cost falls as beta rises; beta=0.4 chosen by judgement. (UAC vector for 20 DMs listed: 0.37, 0.95, 0.73, 0.6, 0.16, 0.16, 0.06, 0.87, 0.6, 0.71, 0.02, 0.97, 0.83, 0.21, 0.18, 0.18, 0.3, 0.52, 0.43, 0.29. No cost totals reported in text.; Sec. 6.1.2, p.14-15 (Fig 5))
+- Simulation: final consensus reaches or exceeds theta_ideal for every group size from 50 to 5000 DMs (5 alternatives); missing entries scale with DM count. (50 DMs: 10 missing values; 100 DMs: 20; step 50 up to 5000; threshold 0.92. No per-size numbers in text.; Sec. 6.2.1, p.15 (Fig 6))
+- Total adjustment cost tends to rise with group size; running time described as satisfactory. No numeric values given in text. (none reported in text; Sec. 6.2.2, p.16 (Fig 7))
+- Missing-value estimator robustness: average MSE stays within a narrow band across group sizes, matrix dimensions and missing rates. (MSE 0.09 to 0.13 across p in {20..100}, n in {4..12}, missing 0.1/0.2/0.3, 10 repeats; MSE computed on synthetic data; Sec. 6.3, p.16 (Fig 8))
+- Versus method M1 (text attributes it to Lu et al. 2022), the proposed method reaches consensus at both group and subgroup levels; M1 reaches group level only. (no numeric values; comparison is visual and single-case; Sec. 6.4.1, p.16 (Fig 9a-b))
+- Qualitative comparison (Table 2) claims the method covers incomplete information, multi-factor clustering distance, dynamic trust, minimum adjustment cost and two-stage consensus; other methods each lack some of these. (9 comparison methods; Table 2 marks only the proposed method with all factors ticked; Sec. 6.4.2, p.16-17; Table 2, p.18)
+
+## Limitations
+
+- Additive consistency of the input FPRs is assumed acceptable and not analysed (Sec. 2.1, p.5).
+- Non-cooperative behaviour is not modelled; the authors list it as future work (Sec. 7, p.18).
+- The authors state the optimization models cannot reach final consensus in a single iteration and plan to revise the objectives (Sec. 7, p.18).
+- Trust is the only factor used to pull dissenting DMs toward the group; other factors (expertise, track record, social influence) are deferred (Sec. 7, p.18-19).
+- The worked example uses one case with 20 DMs and 5 alternatives; larger groups are only simulated with random data (Sec. 5.1 p.11; Sec. 6.2 p.15).
+- UAC values are randomly generated by a program, not observed (Step 1, p.11; Sec. 6.1.2 p.14).
+- Parameters beta=0.4, lambda=0.5 and theta_ideal=0.92 are set by the authors' judgement; only K and beta are swept, and lambda and theta are not swept (Sec. 5.1, p.11; Sec. 6.1.2, p.15).
+- Quantitative comparison is against one method (M1) in one case with a figure only; the rest of the comparison is qualitative (Table 2, Sec. 6.4, p.16-18).
+- Internal label inconsistency: Sec. 6.4.1 names M1 as Lu et al. (2022), but Table 2 lists Method 1 as Chu et al. (2020) and Method 2 as Lu et al. (2022) (p.16 vs p.18).
+- Algorithm convergence is asserted ('1-2 iterations on average') with no proof, variance or count across runs (Remark 5.2, p.14).
+- Trust-update rule t* = t^(1-t) (Eqs 35-36, 39-40) is heuristic; no justification beyond the stated monotonicity is given.
+- Cost-reduction claims versus the control group rely on figures (Fig 5, Fig 7) with no numeric totals in the text.
+- Real data are not included; the case relies on Gong et al. (2024) and a GitHub link; 'Data will be made available on request' (p.19).
+- Claims of applicability to emergency management, infrastructure and government decisions (Sec. 4.1 p.10; Sec. 7 p.19) are not tested.
+- Figures 1-9 were read as extracted text only; the plotted values are not independently checked.
+
+## Short quotes
+
+- "the pursuit of absolute consensus can often lead to unnecessary expenditure of costs and resources" (Sec. 1.3.3, p.3)
+- "achieving complete consensus (i.e., 1) is nearly impossible, hence we choose a higher threshold of 0.92" (Sec. 5.1 item (3), p.11)
+- "the current optimization models' inability to reach final consensus in a single iteration" (Sec. 7, p.18)
+
+## Bearing on the systems
+
+| Component | Relation | Paper shows | System does | Transfers when | Strength | Check |
+|---|---|---|---|---|---|---|
+| [[systems/melange-stance#Stance dynamics and neighbour imputation\|Stance dynamics and neighbour imputation]] | suggests-extension | Missing preference entries are imputed from the K=4 most trusted neighbours with a known value. Each weight blends trust and preference similarity (mu = (t + sim)/(1 + sim), then normalized), and entries are filled in order of reliability r and iterated to convergence. In the worked case f10_45 = 0.4033 comes from 4 neighbours weighted 0.2549/0.2507/0.2503/0.2440, the highest-reliability gap (r = 3.8683) of 39 missing entries. Imputation MSE stays at 0.09-0.13 across p in {20..100}, n in {4..12} and missing rates 0.1/0.2/0.3, on synthetic data only. (Sec. 3.1, Eqs 11-19, Remark 3.2; Sec. 5.2 Steps 2.1-2.2 (p.11-12); Sec. 6.3, Fig 8 (p.16)) | The silent-member proposer takes each member's cosponsor neighbours as an UNWEIGHTED binary adjacency set (edge weights are dropped when the Edges sheet is read). It averages the neighbours' tier scores per category, with no similarity weighting, no reliability ordering and no iteration. It proposes a cell only when there are at least 5 neighbours (SD_MINNB) and \|est\| >= 0.75 (SD_CONF). It checks sign agreement on cells whose stance is already known, with no party-only baseline, and outputs proposals only. The same script reports co-movement as null on cosponsor ties. `fec/stance/stance_dynamics.py:89-93 (binary adj from cosponsor Edges); fec/stance/stance_dynamics.py:132-147 (MINNB 5, CONF 0.75, unweighted mean, proposal-only); fec/stance/stance_dynamics.py:94-110 (co-movement test)` | Only the mechanics carry over: neighbour weights from tie strength plus profile similarity, and filling the best-supported gaps first. The paper's evidence does not transfer. Its MSE comes from random synthetic matrices; its trust network is elicited trust among decision-makers, not cosponsorship; its alternatives are 5 investment options, not legislators' CU stance categories. Its homophily premise is assumed, never tested, while this system measured co-movement as null on cosponsor ties. A weighted variant should be adopted only if a masked-cell test beats both the current unweighted mean and a party-only baseline on held-out members. Until a second path reproduces that result it stays UNVERIFIED (DE-062). Weights must be labelled heuristic tie strength, never trust or closeness (D-025). | weak | UNVERIFIED |
+
+## Gaps and flags
+
+- The stance-dynamics masking check has no party-only baseline. Neither does the paper's MSE test. Neither can show that network-neighbour imputation adds anything beyond party (this is also the open question listed for the component).
+- The neighbour imputation ignores tie strength and similarity: binary adjacency gives weak and strong cosponsor ties equal votes. If imputation is kept at all, a weighted or reliability-ordered variant is the untested alternative.
+- Minor code-label mismatch: the summary print at fec/stance/stance_dynamics.py:152 says '>=3 informative neighbors', but the gate MINNB defaults to 5 (line 132).
+- The paper's 'trust' is an elicited trust degree between decision-makers. Porting its weighting onto cosponsor or staffer edges and calling it trust would break D-025: graph weights are heuristic model outputs, never closeness, access or introduction probabilities.
+- The paper's KNN imputation assumes preferences are similar among network neighbours, but the system measured cosponsor-tie co-movement as null. Treat any claim that this paper supports neighbour imputation as unsupported for this corpus.
+- This paper argues for neither rejected SNA proposal (dropping regular cosponsorship edges; per-edge volume normalization). It does not use LDA. It reports a reciprocity-like 'mutual influence' term only inside clustering, which gives no support to reciprocity (D-104..D-108 status unchanged).
+
+Paul has no annotation of this paper. For the closest component (stance-dynamics), his note asks for temporal dynamics and change-likelihood modelling, and it predates the null co-movement result. This paper does not resolve that tension. Its neighbour-imputation evidence is synthetic and rests on an assumed homophily the system did not find. His note is stale on that point; nothing in this paper revives the premise.
+
+## Related papers
+
+- [[zhou-2026-measuring-stance-dynamics]] — complements — The system's stance-dynamics imputer cites Zhou-Elejalde silent-actor collaborative filtering as its template (fec/stance/stance_dynamics.py:147). Zhan-Cai gives a trust- and similarity-weighted alternative to the same neighbour-imputation idea.
+- [[cao-2025-social-network-group]] — complements — Cao 2025 is a survey of social-network group decision making, the field this paper belongs to. It places the paper's trust-driven consensus and minimum-cost feedback among related designs.
+
+### Linked from
+_None._

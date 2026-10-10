@@ -1,0 +1,22 @@
+---
+type: "annotation-source"
+source_zip: "Annotated Bibliographies & Literature Synthesis-20261009T191315Z-1-001.zip"
+source_path: "Annotated Bibliographies & Literature Synthesis/Adjacent/Adjacent - Annotated Bibliography.docx"
+sha12: "c45e04ec65f6"
+---
+
+Amoore, Louise. “Machine learning political orders.” *Review of International Studies*, vol. 49, no. 1, 15 Feb. 2022, pp. 20–36, https://doi.org/10.1017/s0260210522000031.
+
+Broockman, David, and Joshua Kalla. *Should Moving to the Middle Win Candidates Votes? It Depends Where Voters Are*, 13 Mar. 2026, https://doi.org/10.31235/osf.io/bvjtd_v1.
+
+Kalla, Joshua, and David Broockman. “Which narrative strategies durably reduce prejudice? evidence from field and survey experiments supporting the efficacy of perspective-getting.” *American Journal of Political Science*, 28 Dec. 2020, https://doi.org/10.31219/osf.io/z2awt.
+
+Linde, Jona, and Barbara Vis. “Do politicians take risks like the rest of us? An experimental test of Prospect Theory under mps.” *Political Psychology*, vol. 38, no. 1, 26 Feb. 2016, pp. 101–117, https://doi.org/10.1111/pops.12335.
+
+Noble, Benjamin S., and Ian R Turner. *Presidential Leadership and Legislative Polarization*, 21 Jan. 2024, https://doi.org/10.31235/osf.io/sa9ke.
+
+Raychaudhuri, Samik. “Introduction to Monte Carlo Simulation.” *2008 Winter Simulation Conference*, Dec. 2008, pp. 91–100, https://doi.org/10.1109/wsc.2008.4736059.
+
+Weimer, Louis, et al. “A causal approach for detecting team-level momentum in NBA games.” *Journal of Sports Analytics*, vol. 9, no. 2, 3 July 2023, pp. 117–132, [https://doi.org/10.3233/jsa-220592](https://doi.org/10.3233/jsa-220592).
+
+[https://www.cambridge.org/core/journals/review-of-international-studies/article/machine-learning-political-orders/E10088513299784A34BB6EA4204E8B07](https://www.cambridge.org/core/journals/review-of-international-studies/article/machine-learning-political-orders/E10088513299784A34BB6EA4204E8B07)
