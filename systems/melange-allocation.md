@@ -354,6 +354,8 @@ The position stays a design idea with no evidential base yet.
 
 **Read first:** [[kempe-2015-maximizing-spread-influence]], [[borodin-nd-threshold-models-competitive]], [[bharathi-nd-competitive-influence-maximization]], [[almazaydeh-2026-heuristic-centrality-methods]], [[chen-2023-complex-contagion-influence]], [[manchanda-2020-gcomb-learning-budget-constrained]]
 
+**System record: lev and the competitiveness multiplier (added 2026-10-11; UNVERIFIED).** The primary record is in [[melange-influence-engine]], "Competitiveness multiplier c (COMPET_MULT)". Paul's rulings of 2026-10-05: c applies on both sides (CU and industry money), and budget_frontier REPLACES Ballotpedia lev with c when the dial is on. The 2026-10-07 QME audit found LEV=0 ignored when the dial is on (budget_frontier:63); Paul then ruled (brain D-106 R6) that LEV=0 forces fac=1, recorded as NOT YET BUILT as of 2026-10-07. With the dial on, the lev inside fac (REPFAC x lev for contest seeds, lev otherwise, per the assessment above) is therefore c (derived), an uncalibrated owner constant (reciprocity NOT validated, D-104..D-108); the Bharathi bound (fac = 1) does not cover that case either. Source: memory `competitiveness-multiplier-lane-2026-10-05.md`; brain note [topics/2026-07-feature-influence-engine-internals-competitiveness-multiplier](obsidian://open?vault=brain&file=topics%2F2026-07-feature-influence-engine-internals-competitiveness-multiplier).
+
 ## Workbook allocator (top-133 from fixed pot)
 
 **Computes.** Funds the top 133 of 533 members from a flat $2.0M in proportion to score (uncapped; max about $25.8k).

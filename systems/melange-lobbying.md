@@ -111,6 +111,12 @@ Paul treats LobbyView as the fundamental source and Harrison as an introductory 
 
 **Read first**: [[harrison-2018-application-data-mining]], [[huneeus-2018-effects-firms-lobbying]], [[bacik-2025-measuring-dynamical-evolution]], [[kim-2018-lobbyview-firm-level]], [[bombardini-2020-empirical-models-lobbying]]
 
+**System record (brain fleeting pass, added 2026-10-11).** Internal record, not literature; not counted in the 9 rows above. Figures and method only. Brain note: [topics/2026-07-feature-primacy-and-industry-tier-boards-telecom-industry](obsidian://open?vault=brain&file=topics%2F2026-07-feature-primacy-and-industry-tier-boards-telecom-industry).
+
+| Source | Date | Relation | Record shows | Transfers when | Strength | Check |
+|---|---|---|---|---|---|---|
+| memory `telecom-industry-lane-2026-10-07.md` | 2026-10-07 | internal (system record) | Telecom vs credit-union comparison. Federal LDA, OpenSecrets-style totals: telecom $102.7M vs CU $7.4M in 2025 (14x). 2025 lobbyists 526 vs 81; covered positions 196 vs 25. PAC giving to House and Senate candidates, 2024: about 3:1. Method: the full LDA sweep (539,782 filings, 2021 to 2026 Q2), read by the scratchpad script `lda/lda_sector_compare.py`; LobbyView cross-check within 1% (telecom) and 4% (CU); Mentat Telecom and Credit Union workbooks. Index file `audits/staffer_live_runtime/lda_activity_v2.sqlite` holds IDs only: no names, no amounts. | Descriptive sector totals; LDA here identifies and totals filings and is not an edge or weight source (D-021). The memory does not say how "OpenSecrets-style" treats self-filer expense against hired-firm income, which is the Harrison hazard above. The Mentat giving-forecast hub records a different telecom 2025 figure from a Melange page ($102.4M in-house + $37.0M outside-firm fees); the two are not reconciled here. The sweep runs past the 2021 LobbyView coverage limit, and the LobbyView agreement figures do not say which years they compare. | internal (lane memory) | UNVERIFIED |
+
 ## Lobbying member-year network and circular lobbied-member link
 
 **Computes.** client x bioguide x year dyads (63,991 member-years). Edges are the sponsor and cosponsors of lobbied bills.

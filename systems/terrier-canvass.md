@@ -146,6 +146,12 @@ Paul's position is 'No literature', and the pool agrees: there is none. The comp
 
 **Read first.** [[sverdrup-nd-introduction-grf-causal-forests]], [[cagala-2021-optimal-targeting-fundraising]], [[blackwell-2026-effect-political-advertising]]
 
+**System records (brain fleeting pass, added 2026-10-11).** Internal records, not literature; not counted in the 14 rows above. Brain notes: [terrier/2026-10-06-terrier-rulings](obsidian://open?vault=brain&file=terrier%2F2026-10-06-terrier-rulings) ("Open for Paul", "Lead ruling 2026-10-09 afternoon: how t is calibrated"); [terrier/2026-10-06-terrier-build-progress](obsidian://open?vault=brain&file=terrier%2F2026-10-06-terrier-build-progress).
+
+| Source | Date | Relation | Record shows | Transfers when | Strength | Check |
+|---|---|---|---|---|---|---|
+| memory `terrier-multidistrict-lane-2026-10-06.md` | 2026-10-09 | internal (system record) | Why calibrate: t from sai/100 was NOT calibrated (OR mean t 0.55 vs 0.84 observed record). Paul approved per-district calibration ("1. Yes"), proposed as a binomial logistic on the district's own general record, ranking unchanged. The lead switched method: S3 90d04ee is a MONOTONE calibration (weighted pool-adjacent-violators on the vote rate by distinct turnout-score value, linearly interpolated), NOT logistic, because the logistic missed the lowest deciles by up to 0.12 (OR) and 0.075 (CT). Brain calibration table: fit people 522,171 (OR) and 441,359 (CT); worst decile miss 0.016 (OR) and 0.012 (CT); split-half worst miss 0.016 (OR) and 0.008 (CT); ranking unchanged, no decreasing pair. The method is a lead ruling (agent default, Paul may overrule). | Partly answers the Gaps above: a logistic alternative was tried and lost on the low deciles, and a split-half check exists. Both checks use the same people's own record in the same cycle, so the open gap on transfer to a future (midterm) election stands. The 0.55 (live check) and the 0.58 -> 0.83 above (calibration table) both come from the brain rulings note and are not reconciled here. | internal (lane memory) | UNVERIFIED |
+
 ## Untapped potential
 
 **What it computes.** potential = (wp (1 - |2s-1|) t + (1-wp) s (1-t)) x (1 + wi x i), where i = sphere percentile / 100. Knocked doors are excluded.
@@ -229,6 +235,13 @@ Paul cites Kalla & Broockman 2020 and Broockman & Kalla 2026 and highlighted the
 - What does the sphere percentile i measure in Terrier, and is there any outcome it has been checked against?
 
 **Read first.** [[broockman-2026-should-moving-middle]], [[tappin-2023-quantifying-potential-persuasive]], [[sverdrup-nd-introduction-grf-causal-forests]], [[cagala-2021-optimal-targeting-fundraising]], [[kalla-2023-which-narrative-strategies]], [[blackwell-2026-effect-political-advertising]]
+
+**System records (brain fleeting pass, added 2026-10-11).** Internal records, not literature; not counted in the 14 rows above. Brain notes: [terrier/2026-10-06-terrier-rulings](obsidian://open?vault=brain&file=terrier%2F2026-10-06-terrier-rulings) ("The formula", "What it replaces and why"); [terrier/2026-10-06-terrier-build-progress](obsidian://open?vault=brain&file=terrier%2F2026-10-06-terrier-build-progress) ("Street plan evaluation").
+
+| Source | Date | Relation | Record shows | Transfers when | Strength | Check |
+|---|---|---|---|---|---|---|
+| memory `terrier-multidistrict-lane-2026-10-06.md` | 2026-10-08 to 2026-10-09 | internal (system record) | Paul's targeting ruling (2026-10-08): canvass "the people who need a reminder or push, not those who we are sure are going to vote and are sure that they are going to vote our way". Built as "Needs a push" = (1 - \|2s - 1\|) x p + s x (1 - p) per person (s = support, p = participation; 0-1), the default street-plan preset for candidate districts; the overall score unchanged. On 2026-10-09 Paul approved the Untapped spec and "Needs a push" everywhere was redefined as the untapped potential, one formula: potential = (wP*(1-\|2s-1\|)*t + wR*s*(1-t))*(1+wI*i), agent defaults wP=wR=wI=0.5, t from the turnout-only sai scores (/100), undecided centred at absolute 50%, connected-street turf, 60 doors. The brain rulings note states the persuade-versus-remind slider keeps wP + wR = 1. | Shows where the formula comes from: an owner targeting ruling, then agent-default weights, with no empirical anchor (as assessed above). wP + wR = 1 matches the code's 1 - wp (untapped.py:9-10), so the wR mismatch flagged above is a naming difference, not two different weightings. | internal (lane memory) | UNVERIFIED |
+| memory `terrier-multidistrict-lane-2026-10-06.md` | 2026-10-08 | internal (system record) | Read-only evaluation of the earlier Street plan (commits 847f04e/2419afc): arithmetic exact; turfs scattered; the old p is a percentile, not a voting chance (KILLED, second reader). The brain rulings note adds that the old p averaged 0.53 in Oregon where observed turnout was 0.84, and that the old push centred on the district support median (69% in Connecticut) instead of 50%. | Supports the switch from percentiles to an absolute s and a chance-of-voting t in the potential formula. It says nothing about whether the new formula targets the right doors; the randomized holdout above is still the test. | internal (lane memory) | VERIFIED |
 
 ## Street-plan presets, turf planner and walk routing
 
