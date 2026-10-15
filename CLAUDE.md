@@ -1,7 +1,7 @@
 # Research vault contract
 
 ## Purpose
-Paul's research vault: the empirical backbone of his systems (Melange path-finding / SNA / allocation / stance / psychometrics, Moneyball rank pillars, Mentat FEC attribution / giving forecast / sector-growth study, Terrier). Start at [[index]]; the synthesis is [[framework]]. This vault is NOT under git; nothing here commits or pushes.
+Paul's research vault: the empirical backbone of his systems (Melange path-finding / SNA / allocation / stance / psychometrics, Moneyball rank pillars, Mentat FEC attribution / giving forecast / sector-growth study, Terrier). Start at [[index]]; the synthesis is [[framework]]. This vault is a local git repo (branch master). A post-commit hook pushes every commit to the local mirror (C:/Users/pgoff/GitMirrors/research-vault.git) and private GitHub (pjg93-222/research-vault). `_sources/`, `_raw/`, `_text/` and `_annots/` are git-ignored and NOT backed up.
 
 ## Folder map
 - `papers/` one note per paper (slug = file name).
