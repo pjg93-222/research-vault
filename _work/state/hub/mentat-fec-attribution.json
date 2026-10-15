@@ -1,0 +1,1033 @@
+{
+ "system": {
+  "slug": "mentat-fec-attribution",
+  "name": "Mentat FEC money attribution and accounting",
+  "description": "The R/Python pipeline (C:/Users/pgoff/Mentat) that attributes FEC Schedule A, Schedule B and PAS2 money to roster companies and industries. Covers employer and identity matching, receipt-role classification, contradiction-only exclusion, conduit and memo dedup, filing-version identity, the PAC transfer graph, cash-proportional attribution, beneficiary direction, geography and collection completeness.",
+  "brain_notes": [
+   "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md",
+   "C:/Users/pgoff/Documents/brain/concepts/mentat-fec-accounting-methodology.md",
+   "C:/Users/pgoff/Documents/brain/concepts/exclude-on-contradiction-not-ambiguity.md",
+   "C:/Users/pgoff/Documents/brain/concepts/pac-cash-proportional-attribution.md",
+   "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline-history-audit-r12.md"
+  ]
+ },
+ "components": [
+  {
+   "id": "mentat-fec-attribution.employer-match",
+   "system": "mentat-fec-attribution",
+   "name": "Employer-string roster matching and overrides",
+   "computes": "Assigns Schedule A rows to roster companies by normalized employer key, prefix tokens and context; override rules use maximum-specificity matching.",
+   "method": "Strict-names rule (roster plus verified aliases only). Acronym collisions are open owner calls.",
+   "assumptions": [
+    "Employer text identifies the employer",
+    "Unlisted spellings are unmatched"
+   ],
+   "empirical_questions": [
+    "What precision and recall does employer-string matching achieve against a hand-coded sample, by company size?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Mentat/mentat/R/collect.R:363-1080",
+    "C:/Users/pgoff/Mentat/mentat/R/ingest.R:43-205"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md"
+   ],
+   "heading": "Employer-string roster matching and overrides"
+  },
+  {
+   "id": "mentat-fec-attribution.identity-ladder",
+   "system": "mentat-fec-attribution",
+   "name": "Contributor identity match ladder",
+   "computes": "AUTO, HIGH, REVIEW or DISCARD for same-name candidates by name parts, zip, city, state, occupation and employer contradiction.",
+   "method": "Ordered rules (exact name + zip -> AUTO, etc.). No name-frequency weighting.",
+   "assumptions": [
+    "Same name + zip implies the same person"
+   ],
+   "empirical_questions": [
+    "How does rule-based identity matching compare with probabilistic record linkage (frequency-weighted) on FEC donors?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Mentat/mentat/R/collect.R:1933-2157"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md"
+   ],
+   "heading": "Contributor identity match ladder"
+  },
+  {
+   "id": "mentat-fec-attribution.receipt-role-and-exclusion",
+   "system": "mentat-fec-attribution",
+   "name": "Receipt-role classification and contradiction-only exclusion",
+   "computes": "Economic role per receipt from form, line and description. A row is excluded only when its own text names another organisation; ambiguous rows are kept with a flag.",
+   "method": "The Banking run excluded 29,816 rows ($32.5M), of which $29.3M came from one prefix bug (CITIZENS read as CITI). Frozen code (2026-09-27).",
+   "assumptions": [
+    "Form/line plus text identify the role",
+    "Ambiguity is not contradiction (D-040)"
+   ],
+   "empirical_questions": [
+    "What share of excluded rows are true misattributions on manual audit?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Mentat/mentat/R/collect.R:122-261",
+    "C:/Users/pgoff/Mentat/mentat/tools/cross_reference_engine.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/exclude-on-contradiction-not-ambiguity.md",
+    "C:/Users/pgoff/Documents/brain/concepts/mentat-fec-accounting-methodology.md"
+   ],
+   "heading": "Receipt-role classification and contradiction-only exclusion"
+  },
+  {
+   "id": "mentat-fec-attribution.dedup-and-versions",
+   "system": "mentat-fec-attribution",
+   "name": "Conduit legs, memo dedup, filing-version identity and transfer rule",
+   "computes": "Conduit legs are counted; memo legs are deduped by tuple; one winning amendment version per transaction; 24G/24K transfers; PAS2 index v6 count_latest.",
+   "method": "Known defect: an off-by-cents memo parent ($176,942.05 Crypto double count).",
+   "assumptions": [
+    "Same amount or date means the same transaction version"
+   ],
+   "empirical_questions": [
+    "How often do FEC amendments change amounts versus dates, and does count_latest bias totals?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Mentat/mentat/R/schema.R:598-1098",
+    "C:/Users/pgoff/Mentat/mentat/tools/transfer_rule.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline-history-september-lanes.md",
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline-history-audit-r12.md"
+   ],
+   "heading": "Conduit legs, memo dedup, filing-version identity and transfer rule"
+  },
+  {
+   "id": "mentat-fec-attribution.cash-proportional-attribution",
+   "system": "mentat-fec-attribution",
+   "name": "PAC cash proportional attribution",
+   "computes": "A company's share of each PAC payment = its share of labelled cash just before the payment.",
+   "method": "Ordered events, cent-level conservation, withhold on unresolved inputs. The first application failed the cash gate.",
+   "assumptions": [
+    "Cash is fungible within a committee",
+    "Same-day receipts come before payments"
+   ],
+   "empirical_questions": [
+    "How sensitive are attributed totals to the same-day ordering assumption and to FIFO vs proportional rules?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Mentat/mentat/tools/pac_cash_model.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/pac-cash-proportional-attribution.md"
+   ],
+   "heading": "PAC cash proportional attribution"
+  },
+  {
+   "id": "mentat-fec-attribution.transfer-graph-and-direction",
+   "system": "mentat-fec-attribution",
+   "name": "PAC transfer graph and beneficiary direction partition",
+   "computes": "PAC -> PAC -> candidate flows, and support/oppose/party four-bucket attribution (Dem/Rep = downstream - oppose).",
+   "method": "89% of beneficiary dollars were oppose. The attributed-estimate producer is unbuilt.",
+   "assumptions": [
+    "Direction codes identify support vs oppose"
+   ],
+   "empirical_questions": [
+    "What share of industry super-PAC money ultimately supports versus opposes candidates by party?"
+   ],
+   "code_refs": [
+    "fec_transfer_graph.py",
+    "C:/Users/pgoff/Mentat/mentat/R/report.R"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/mentat-console-pac-map-viz-lane.md"
+   ],
+   "heading": "PAC transfer graph and beneficiary direction partition"
+  },
+  {
+   "id": "mentat-fec-attribution.collection-completeness",
+   "system": "mentat-fec-attribution",
+   "name": "Collection completeness (zero provenance, count reconciliation, key pool)",
+   "computes": "Verified zeros, count reconciliation, and pagination-shortfall rejection; key rotation with an hourly budget.",
+   "method": "Only the browser lane stamps zero_verified. Three reconcile passes. The per-key vs per-IP rate limit is unverified.",
+   "assumptions": [
+    "The FEC count is the completeness target"
+   ],
+   "empirical_questions": [
+    "How often do openFEC recordsTotal values misreport (false zeros) relative to bulk files?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Mentat/mentat/R/fec_api.R",
+    "C:/Users/pgoff/Mentat/mentat/R/fec_page.R:158",
+    "C:/Users/pgoff/Mentat/mentat/tools/api_request_pool.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline-history-september-lanes.md"
+   ],
+   "heading": "Collection completeness (zero provenance, count reconciliation, key pool)"
+  }
+ ],
+ "positions": [
+  {
+   "component_id": "mentat-fec-attribution.employer-match",
+   "citations": [
+    "Kim, Stuckatz & Wolters 2020",
+    "Bonica 2013",
+    "Huneeus & Kim 2018"
+   ],
+   "paul_position": "Paul highlighted FEC employer matching to Compustat gvkey, SOC executive codes and hand-coded ground truth. Mentat's strict-names rule is more conservative."
+  },
+  {
+   "component_id": "mentat-fec-attribution.identity-ladder",
+   "citations": [
+    "Kim, Stuckatz & Wolters 2020",
+    "Bonica & Grumbach 2025",
+    "Bonica 2013"
+   ],
+   "paul_position": "Paul highlighted 'no unique identifiers for individual donors', constrained graph clustering, and algorithms that limit false positive matches."
+  },
+  {
+   "component_id": "mentat-fec-attribution.receipt-role-and-exclusion",
+   "citations": [
+    "Furnas, LaPira & Brock 2025"
+   ],
+   "paul_position": "No annotation addresses it directly."
+  },
+  {
+   "component_id": "mentat-fec-attribution.dedup-and-versions",
+   "citations": [
+    "Harrison et al. 2018 (late-filed records)"
+   ],
+   "paul_position": "Paul highlighted late-filed and duplicate filings as a pipeline hazard."
+  },
+  {
+   "component_id": "mentat-fec-attribution.cash-proportional-attribution",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+   "citations": [
+    "Gaynor 2022 (LPAC directed edges)",
+    "Irvin 2023 (on disk)",
+    "Couch, Fox & Everton 2016 dark money network (on disk)"
+   ],
+   "paul_position": "Paul ties dark-money donation behavior to Furnas's ideological infrastructure. No annotation addresses PAC flows."
+  },
+  {
+   "component_id": "mentat-fec-attribution.collection-completeness",
+   "citations": [],
+   "paul_position": "No literature."
+  }
+ ],
+ "citations_in_system": [
+  {
+   "citation": "Ramey, Klingler & Hollibaugh, 'Measuring Elite Personality Using Speech', Political Science Research and Methods (year conflict in repo: 2016 in PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32 and code; 2019 in big5_methods.md:12). Replication data doi:10.7910/DVN/JDH6KR",
+   "where": [
+    "fec/members/big5_traits.py:1-25",
+    "fec/members/fit_smoreg_rkh.py:5",
+    "fec/members/lep_criterion.py:5-6",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32",
+    "big5_methods.md:12",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Lexical Big Five pipeline, token shrinkage, RKH reference targets (melange-psychometrics); ceremonial-share C criterion (melange-legislative-data)"
+  },
+  {
+   "citation": "Mairesse et al. (2007), JAIR, personality from text (SMOreg on LIWC/MRC; 53-58% band)",
+   "where": [
+    "fec/members/fit_smoreg_essays.py:4",
+    "fec/members/big5_traits.py:13-16",
+    "fec/members/interaction_features.py:5-6",
+    "big5_methods.md:31",
+    "big5_audio_prereg.md:15"
+   ],
+   "used_for": "SMOreg feature weights and word-count features (melange-psychometrics); audio cues"
+  },
+  {
+   "citation": "Pennebaker & King (1999); Yarkoni (2010); Pennebaker (2003, Annual Review)",
+   "where": [
+    "fec/members/big5_traits.py:14-15",
+    "fec/members/affective_n_validate.py:10",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Published-correlate lexical weights; essays corpus; negative-emotion basis for affective N"
+  },
+  {
+   "citation": "Birkenmaier & Lechner (2025), 'Measuring Politicians' Public Personality', Political Analysis; Birkenmaier, Lechner & Wagner (2024)",
+   "where": [
+    "fec/members/agency_communion_llm.py:3,33",
+    "fec/members/big5_llm.py:10",
+    "fec/members/big5_traits.py:9",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:33",
+    "big5_behavioral_extraversion_prereg.md:239"
+   ],
+   "used_for": "Agency/communion persona cue classifier and PERSONA_W; cannot-tell coding"
+  },
+  {
+   "citation": "Lechner, Aichholzer, Birkenmaier & Bluemke (2025), 'Mapping the Political Personality' (Polipers v0.1, GESIS)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Review of politician-personality studies; external criterion search"
+  },
+  {
+   "citation": "'Personality on the Hill' Senate insider and academic gold panels (online_appendix.pdf, SHA-256 43c98926...; author/year not recorded)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "External gold for Big Five validation"
+  },
+  {
+   "citation": "Amsalem et al. (2018), media visibility of Belgian, Canadian and Israeli MPs (Eran.pdf) - provenance warning only, NOT the gold source",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Hash-mismatch provenance check"
+  },
+  {
+   "citation": "Norgaard & Klemmensen (2019), J. Personality 87(2):267-275; Schumacher & Zettler (2019), PAID 141:173-181",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Elite self-report personality benchmarks and desirability caveat"
+  },
+  {
+   "citation": "Cao & Kosinski (PNAS Nexus 2024); Peters & Matz (PNAS Nexus 2024, doi:10.1093/pnasnexus/pgae231)",
+   "where": [
+    "fec/members/big5_llm.py:12",
+    "big5_methods.md:46-49",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "De-identification before LLM trait scoring; LLM zero-shot personality benchmark"
+  },
+  {
+   "citation": "Valente (Interspeech 2012); Yu (Interspeech 2019); Rienks & Heylen (2005)",
+   "where": [
+    "fec/members/interaction_features.py:5-8",
+    "fec/members/behavioral_dispositions.py:17",
+    "big5_methods.md:30"
+   ],
+   "used_for": "Turn-statistic dominance and reactivity features"
+  },
+  {
+   "citation": "Koutsoumpis (meta-analysis, language and personality); Yang, Lau & Abbasi (ISR 2023)",
+   "where": [
+    "big5_methods.md:114",
+    "AUDIT_FINDINGS_2026-07-04.md:332",
+    "big5_behavioral_extraversion_prereg.md:221"
+   ],
+   "used_for": "Text tracks observer more than self-report; response-selection bias; PERSONA_W scope argument"
+  },
+  {
+   "citation": "Soto & John (2017) BFI-2-XS; Connelly & Ones (2010); Judge et al. (2002); Funder & Ozer (2019); Dietrich (2012); Dynes (2019); Wagner (2024); Steiger (1980); Stern et al. (2021); Harari (2022); Rubio et al. (2024); Marrero et al. (2022); Marengo et al. (2018, doi:10.1016/j.paid.2017.12.018); Hargittai (2015, doi:10.1177/0002716215570866); Hinds & Joinson (2024, doi:10.1037/bul0000430); Marengo, Montag & Settanni (2025, doi:10.1111/jopy.70019); Lau & Abbasi (2023)",
+   "where": [
+    "big5_expert_panel_prereg.md",
+    "big5_nomological_prereg.md",
+    "big5_n_matrix_prereg.md",
+    "big5_audio_prereg.md",
+    "big5_es_crossmodal_prereg.md",
+    "big5_a_coverage_prereg.md",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "Prereg designs for Big Five expert panel, nomological, audio and coverage looks (melange-psychometrics)"
+  },
+  {
+   "citation": "Salam et al. (2022), PMLR 173, personalised NAS Big Five on UDIVA",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md:132"
+   ],
+   "used_for": "Audio trait benchmark and sex-conditioning check"
+  },
+  {
+   "citation": "Mestre & Ryan (2026), validated aeneas forced alignment; Dietrich (2019)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Audio identity design (forced alignment, within-speaker F0)"
+  },
+  {
+   "citation": "ECAPA-TDNN speaker embedding (name only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Proposed speaker verification"
+  },
+  {
+   "citation": "Byrne, Silasi-Mansat & Worthy (2015), 'Who chokes under pressure?', PAID",
+   "where": [
+    "fec/members/receptivity_layer.py:6-7,189,233",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:34",
+    "AUDIT_FINDINGS_2026-07-04.md:548",
+    "fec/engine/outcome_contract.py:18"
+   ],
+   "used_for": "Susceptibility composite (only N and A supported; C and E are design priors); H2 predictor"
+  },
+  {
+   "citation": "Fouirnaies & Hall, 'How Do Electoral Incentives Affect Legislator Behavior?' (APSR)",
+   "where": [
+    "fec/members/receptivity_layer.py:15-20",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:35",
+    "fec/engine/money_response.py:27"
+   ],
+   "used_for": "Retiring-member incentive multiplier and competitiveness term"
+  },
+  {
+   "citation": "Linde & Vis (2016), 'Do Politicians Take Risks Like the Rest of Us?', Political Psychology",
+   "where": [
+    "fec/members/receptivity_layer.py:22-28",
+    "fec/engine/money_response.py:27-29",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:36"
+   ],
+   "used_for": "Prospect-theory domain multiplier and attenuated loss frame"
+  },
+  {
+   "citation": "Kahneman & Tversky (loss aversion)",
+   "where": [
+    "fec/engine/money_response.py:29",
+    "fec/members/receptivity_layer.py:27"
+   ],
+   "used_for": "LOSSFRAME 1.10"
+  },
+  {
+   "citation": "Chen, Kamarthi, Wilder & Tambe, contingency-aware influence maximization (UAI 2021, arXiv 2106.07039; venue corrected from ICML); Zareie & Sakellariou (SNAM 2023)",
+   "where": [
+    "fec/members/receptivity_layer.py:28-34",
+    "fec/engine/budget_frontier.py:72-74",
+    "fec/engine/outcome_contract.py:17",
+    "AUDIT_FINDINGS_2026-07-04.md:564-565"
+   ],
+   "used_for": "Seed take-up probability and seed gate; H1 predictor"
+  },
+  {
+   "citation": "Bharathi, Kempe & Salek, Competitive Influence Maximization",
+   "where": [
+    "fec/engine/scenario.py:6-11",
+    "fec/engine/budget_frontier.py",
+    "fec/engine/per_topic_coalition.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Competitive IC cascade and coalition submodularity"
+  },
+  {
+   "citation": "Borodin et al. (submodularity can fail in competitive LT)",
+   "where": [
+    "fec/engine/scenario.py:11-12"
+   ],
+   "used_for": "Flip side treated as heuristic"
+  },
+  {
+   "citation": "Kempe, Kleinberg & Tardos (2003, KDD) influence maximization",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:157",
+    "quant skill references"
+   ],
+   "used_for": "Cascade and threshold model assumptions"
+  },
+  {
+   "citation": "Golovin & Krause (2011), Adaptive Submodularity, JAIR (Lemma 5.3/A.9)",
+   "where": [
+    "fec/engine/optimize.py:8,108-113",
+    "fec/engine/scenario.py:8-10",
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md"
+   ],
+   "used_for": "Joint optimizer bound and framing (melange-allocation)"
+  },
+  {
+   "citation": "Leskovec et al. (KDD 2007) CELF lazy greedy; Nemhauser (1-1/e)",
+   "where": [
+    "fec/engine/optimize.py:74-96",
+    "fec/engine/budget_frontier.py:96-106",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Lazy greedy seed and budget selection"
+  },
+  {
+   "citation": "Almazaydeh et al. (2026), Scientific Reports, s41598-026-47299-8",
+   "where": [
+    "fec/engine/mc_stability_check.py:3-10",
+    "influence-modeling-reference SKILL.md"
+   ],
+   "used_for": "Noisy MC corrupts CELF; motivates CRN and stability check"
+  },
+  {
+   "citation": "Manchanda et al., GCOMB, NeurIPS 2020, arXiv:1903.03332",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Budget mode: locality, degree pruning, CELF (melange-pathfinding)"
+  },
+  {
+   "citation": "Chen & Lam, most-reliable path; Ren et al., Multi-Objective Path-Based D* Lite (MOPBD*) and RELINK",
+   "where": [
+    "fec/engine/cosponsor_route.py:3-5",
+    "fec/engine/scenario.py:13",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Pathfinder and route-finder concepts (melange-pathfinding)"
+  },
+  {
+   "citation": "Sotoudeh, Porter & Krishnagopal (2024), arXiv 2406.19554, network measure of cosponsorship influence on bill passage",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Cosponsor edge weights and path grounding"
+  },
+  {
+   "citation": "Aref & Neal (2020, 2021), signed-network optimal partitioning / generalized balance; Neal signed backbone (R backbone sdsm)",
+   "where": [
+    "fec/network/signed_coalitions.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Signed coalition partition and multi-target coalition mode"
+  },
+  {
+   "citation": "Porter, Mucha, Newman et al. (PNAS 2005), committee network community structure / normalized interlock",
+   "where": [
+    "fec/surfaces/make_member_desk.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-model-facts.md",
+    "HOLISTIC_NETWORK_DESIGN_2026-08-17.md:78"
+   ],
+   "used_for": "Committee-cluster layout; community structure in pathfinder"
+  },
+  {
+   "citation": "Fink et al. (2023), Congressional Twitter influence network, Data in Brief",
+   "where": [
+    "fec/network/social_interaction_layer.py:15-19",
+    "MATHEMATICAL_SPECIFICATION.md:44",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Author-volume normalized social and press edges"
+  },
+  {
+   "citation": "Malaterre & Lareau (2024), HCoI communities",
+   "where": [
+    "fec/press_hcoi.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Press-attention communities"
+  },
+  {
+   "citation": "Zhou & Elejalde (2026), Information Processing & Management, TWLGCN",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Stance dynamics port"
+  },
+  {
+   "citation": "Joo & Steinert-Threlkeld (2022), Computational Communication Research; Steinert-Threlkeld, Twitter as Data",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Frame alignment"
+  },
+  {
+   "citation": "Ringe, Victor & Gross (BJPS 2013), Friends and Enemies",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:599"
+   ],
+   "used_for": "Signed mention layer concept"
+  },
+  {
+   "citation": "Battaglini & Patacchini, 'Influencing Connected Legislators', NBER w22739",
+   "where": [
+    "fec/engine/kb_benchmark.py:2-18"
+   ],
+   "used_for": "Katz-Bonacich benchmark"
+  },
+  {
+   "citation": "Kim & Kunisky, lobbying networks / latent communities (local PDF)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Community structure exploited by pathfinder"
+  },
+  {
+   "citation": "Noble & Turner (2024), 'Presidential Leadership and Legislative Polarization'; Lee (2009)",
+   "where": [
+    "fec/engine/salience_shock.py:4-38",
+    "fec/surfaces/build_dashboard_bundle.py:663",
+    "fec/moneyball_core.py:731"
+   ],
+   "used_for": "Salience shock regimes; retreat regime"
+  },
+  {
+   "citation": "Furnas, LaPira, Hertel-Fernandez, Drutman & Kosar (congressional staff survey experiment); Bakker (partisan cues); Bakker, Lelkes & Malka (JOP)",
+   "where": [
+    "fec/moneyball_core.py:11",
+    "fec/engine/lt_priming.py:56-58",
+    "fec/surfaces/templates/make_dashboard_html_00.tpl:742",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "cpf_pressure 1.7/0.5; out-party cue clamp; executive cue factor; money capped, information is the lever"
+  },
+  {
+   "citation": "Ansolabehere, de Figueiredo & Snyder (2003); Fowler, Garro & Spenkuch (2020); Hall & Wayman (1990); Kalla & Broockman (2016), 'Campaign Contributions Facilitate Access'; Kalla & Broockman (general-election persuasion about zero); Coppock (persuasion about 5 pp / 0.1 SD)",
+   "where": [
+    "fec/engine/flip_model.py:21",
+    "fec/engine/money_response.py:15,20",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Money buys access not votes; WM/WP weights; MAXSHIFT calibration; access multiplier"
+  },
+  {
+   "citation": "Huneeus & Kim (lobbying distorts policy); Bombardini & Trebbi (annual review of empirical lobbying); Pritoni (lobbying coalitions); Bacik et al. / Kim, lobbying-network dynamics (arXiv 2503.11745); Azaiez & Mandel (EC lobby hypergraph); Harrison et al. (lobbying record mining)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-scenario-model-build.md"
+   ],
+   "used_for": "Calibration context for small, capped lobbying returns; pathfinder background"
+  },
+  {
+   "citation": "Trivedi & Singh (Procedia 2020) coalition modeling; Scientific Reports 2026 IM algorithm comparison (CELF++/RIS/IMM)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md"
+   ],
+   "used_for": "Coalition and IM algorithm references"
+  },
+  {
+   "citation": "Gaynor (LSQ 2022); Kim, Stuckatz & Wolters (JOP 2026); Furnas, LaPira & Brock (PS 2025)",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:706-711"
+   ],
+   "used_for": "Leadership PAC edges and donation/lobbying sequencing (identified, not implemented)"
+  },
+  {
+   "citation": "Volden & Wiseman, legislative effectiveness (five-stage LES; Center for Effective Lawmaking LES 93-118); Bucchianeri/Volden/Wiseman-style",
+   "where": [
+    "fec/members/lep_criterion.py:1-15",
+    "fec/engine/flip_model.py:142 (comment only)",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md",
+    "C:/Users/pgoff/Documents/brain/actors/codex-executor-incidents.md"
+   ],
+   "used_for": "Effectiveness shadow score and convergence criterion; uncoded passage-bonus comment"
+  },
+  {
+   "citation": "Nokken & Poole dynamic ideal points; DW-NOMINATE (Poole-Rosenthal)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Drift criterion for N (MISS); NOMINATE rejected for vote edges"
+  },
+  {
+   "citation": "Matz et al. (PNAS 2017); Simchon (2024, PNAS Nexus); Hackenburg & Margetts (2024)",
+   "where": [
+    "fec/surfaces/make_member_desk.py:846",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Persona-matched appeals (design-only) and aggregate null caution"
+  },
+  {
+   "citation": "Brysbaert concreteness norms; Guiraud index; Empath lexicon; Valente (N overlap stat 68.7%)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-record-1-big5-campaign.md"
+   ],
+   "used_for": "Big Five lexical features"
+  },
+  {
+   "citation": "Miller & Sutherland, APSR (hearing conduct; doctrine WITHDRAWN 2026-07-10)",
+   "where": [
+    "big5_methods.md:36",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics.md"
+   ],
+   "used_for": "Withdrawn hearing-antagonism doctrine"
+  },
+  {
+   "citation": "Burnham, 'Stance detection: a practical guide' (PSRM 2024.35); mlburnham/Political_DEBATE_base_v1.0 (Hugging Face)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39",
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md"
+   ],
+   "used_for": "NLI stance templates and the DEBATE base model (melange-stance)"
+  },
+  {
+   "citation": "Stanceformer, arXiv 2410.07083; ACL 2023.acl-long.560 (TSE); MDPI 2076-3417/15/21/11784",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39,63",
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md"
+   ],
+   "used_for": "Target-aware stance (planned); two-stage decoupling; neutral-class difficulty"
+  },
+  {
+   "citation": "Khan et al. (2025), IECE TACS, Roman Urdu agree/disagree/unrelated stance",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md:45"
+   ],
+   "used_for": "Multi-view augmentation (hurt classical readers)"
+  },
+  {
+   "citation": "Park, Lee & Cho (2025), 'Automatic construction of direction-aware sentiment lexicon using direction-dependent words', Language Resources & Evaluation 59:843-869",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:65"
+   ],
+   "used_for": "Direction-aware valence lexicon idea (rejected on dry run)"
+  },
+  {
+   "citation": "Soroka et al., Lexicoder Sentiment Dictionary LSD2015 (snsoroka.com LSDaug2015.zip); Haselmayer & Jenny (2017); Rice & Zorn (2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-congress-r-scrapers-graded-scoring-and-audits.md:26-28"
+   ],
+   "used_for": "Stage 5b tone intensity; graded tone and polarity normalization"
+  },
+  {
+   "citation": "Dai, Liao, Zhao et al. (2025), LLM-enhanced Logic Tensor Network for stance detection, Neural Networks 183:106956, doi:10.1016/j.neunet.2024.106956",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md:198",
+    "stance_valence_folcot_prereg.md:13"
+   ],
+   "used_for": "FOL-CoT valence proposals (not adopted)"
+  },
+  {
+   "citation": "Kim, Kim, Jeong, Oh & In Song Kim (2025), 'Measuring Interest Group Positions on Legislation' (PNAS draft); LobbyView positions dataset doi:10.7910/DVN/D0QWM2; In Song Kim LobbyView (Song 2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md",
+    "fec/lobbying/lobby_position_benchmark.py:9",
+    "fec/lobbying/collect_lobbyview.py:35"
+   ],
+   "used_for": "LDA data and interest-group positions (melange-lobbying)"
+  },
+  {
+   "citation": "Romero Moreno (2021)",
+   "where": [
+    "CONTESTED_BILLS_DESIGN.md:29-30"
+   ],
+   "used_for": "Contested-bills counterparty term"
+  },
+  {
+   "citation": "Delano, Rudkin & Kim (2025), BICAM, Scientific Data 12:1567, doi:10.1038/s41597-025-05737-8; Porter, Case & Treul (2025), CampaignView, Scientific Data 12:1237, doi:10.1038/s41597-025-05491-x; Zhan & Cai (2025), ESWA 263:125705, doi:10.1016/j.eswa.2024.125705; Cao, Gai, Wu et al. (2025), Information Fusion 120:103107, doi:10.1016/j.inffus.2025.103107",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md",
+    "CAMPAIGN_SITE_COLLECTION_2026_RUNBOOK.md:10"
+   ],
+   "used_for": "Research-integration proposals (bill-LDA linkage, campaign corpus, trust-KNN imputation, signed trust propagation)"
+  },
+  {
+   "citation": "Russo et al. (ACL 2023), 'Helping a Friend or Supporting a Cause?'; Brandenberger (2018), 'Trading Favors', Social Networks 54:238-253, doi:10.1016/j.socnet.2018.02.001; Montgomery & Nyhan (2017), doi:10.1086/690301; Shalizi & Thomas (2011); Nay (2017), PLOS ONE doi:10.1371/journal.pone.0176999",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:153-158",
+    "fec/research/cosponsor_challengers/PROTOCOL.md:44-47"
+   ],
+   "used_for": "Cosponsorship prediction and reciprocity baselines; homophily vs contagion confounding; staff exchange and policy similarity"
+  },
+  {
+   "citation": "Tiedens & Fragale (2003), doi:10.1037/0022-3514.84.3.558; Santoro & Broockman (2022), Science Advances, doi:10.1126/sciadv.abn5515",
+   "where": [
+    "fec/research/member_personal_relationships/PERSONALITY_CONTEXT_EXPLORATION.md:46"
+   ],
+   "used_for": "Context only for member personal-relationship research"
+  },
+  {
+   "citation": "DerSimonian-Laird random-effects estimator",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "used_for": "R2 partially pooled industry slope (mentat-giving-forecast)"
+  },
+  {
+   "citation": "Cameron, Gelbach & Miller (2011), two-way cluster-robust variance; Holm step-down; Newey-West HAC; Driscoll-Kraay (requested); Ball (2024)",
+   "where": [
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-8,168,210",
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:71-76,389,588",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Inference in the sector growth regressions and SEATS-W"
+  },
+  {
+   "citation": "Bross (1958) ridit; Spearman-Brown; Kendall tau-b; pool-adjacent-violators (PAV)",
+   "where": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/design/spec_rigor.md",
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "used_for": "Ridit transforms, internal consistency and sensitivity tests (terrier-row-scoring); turnout calibration (terrier-canvass)"
+  },
+  {
+   "citation": "MAST multi-agent failure taxonomy (named only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/metaloop.md"
+   ],
+   "used_for": "Failure-attribution tags (metaloop-orchestration)"
+  },
+  {
+   "citation": "SR 11-7 model risk management (superseded 2026-04-17 by SR 26-2); quant-model-evaluation skill bibliography (Cinelli & Hazlett 2020; Politis & Romano 1994; Simar & Wilson 1998; Grubesic & Matisziw 2006; Fouirnaies & Hall 2018; Powell & Grimmer 2016; others)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md",
+    ".claude/skills/quant-model-evaluation/references/sources.md"
+   ],
+   "used_for": "Audit tooling references applied to Melange (melange-validation)"
+  },
+  {
+   "citation": "Data sources (not literature): MEDSL Dataverse election returns; Cook Political Report PVI; Voteview; congress-legislators; govinfo BILLSTATUS; Ballotpedia; openFEC and FEC bulk; OpenSecrets; IBISWorld; Census ACS/CBP/LODES/cb_2024 and cb_2020; FDIC SOD; NCUA Call Reports; HMDA; Polymarket/Kalshi/IEM; Crystal Ball/538",
+   "where": [
+    "fec/engine/build_competitiveness.py",
+    "fec/district/demographic_potential.py",
+    "DEMOGRAPHIC_POTENTIAL_METHOD.md:185-191",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Model inputs across systems"
+  }
+ ],
+ "evidence": [
+  {
+   "slug": "bonica-2025-money-campaign-finance",
+   "title": "Old money: Campaign finance and gerontocracy in the United States",
+   "year": "2025",
+   "component_id": "mentat-fec-attribution.identity-ladder",
+   "relation": "method-source",
+   "claim": "The DIME-to-L2 donor linkage is built to limit false positives. It links 75% of DIME individual contributors from 2012-2020, about 17M donors. Misses come from address differences (most common), donors who are not registered, and name differences. Unlinked donors have slightly more conservative CFscores and larger average gifts. The authors judge these imbalances small and not theoretically important. The r = 0.95 validation against Project Vote Smart (fn. 11) is for the CANDIDATE birth-year linkage, not the donor linkage.",
+   "system_side": "A rule ladder with no name-frequency weighting. Exact name and same zip gives AUTO, or HIGH when the employer contradicts. Exact name and same city, or nickname and same zip, gives HIGH. Suffix mismatches and weaker combinations go to REVIEW, and everything else is DISCARD (below_identity_threshold). Only AUTO and HIGH are kept (collect.R:2896).",
+   "transfer": "Both pipelines prefer precision to recall, which is consistent with Mentat's fail-closed posture. The paper reports that unlinked donors give slightly larger amounts, and the authors call this unimportant. It is weak evidence at most that precision-first matching under-recovers larger donors, and it does not establish a downward dollar bias in Mentat. Mentat matches contributor rows to one another within an employer roster, which is a different task from voter-file linkage. Neither 75% nor r = 0.95 is a benchmark for Mentat.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bonica-2025-money-campaign-finance",
+   "title": "Old money: Campaign finance and gerontocracy in the United States",
+   "year": "2025",
+   "component_id": "mentat-fec-attribution.dedup-and-versions",
+   "relation": "measurement-source",
+   "claim": "Small-donor coverage is near-complete only from 2020. ActBlue and WinRed itemize sub-$200 gifts, and WinRed launched during the 2020 cycle, so earlier cycles lack most small Republican donors. Pre-2020 Republican |Age Gap| coefficients come out unexpectedly positive. The authors attribute this to lower age variance among Republican donors, made more extreme by the missing small donors, and to possible partisan differences in age-related preferences. The coverage hole is not the sole cause.",
+   "system_side": "Conduit legs are kept and counted to their named recipients. Only same-recipient memo redisclosures with an eligible counterpart are removed. Employee candidate giving feeds the employee_candidate share basis in the giving forecast.",
+   "transfer": "This applies to any Mentat cross-cycle comparison of employee (individual) giving or its partisan share that spans 2018 to 2020. The 2020 jump in itemized Republican small-dollar conduit rows is a reporting artifact, not a behavioural change. It does not affect PAC-to-candidate measures, which are committee transfers, or the current anchor cycle (2024), which falls after the break.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kim-2020-strategic-sequential-links",
+   "title": "Strategic and Sequential Links between Campaign Donations and Lobbying",
+   "year": "2020",
+   "component_id": "mentat-fec-attribution.identity-ladder",
+   "relation": "method-source",
+   "claim": "FEC has no unique donor IDs (about 53M itemized individual contributions 1980-2018, 4M employer names, about 827,000 occupation names). Authors match PAC and employer names to Compustat gvkey and occupations to SOC codes (executives 11-1011, government relations 27-3030), standardize names with NLP as in Bonica (2017), and run unsupervised constrained graph clustering on address, donation history and targets; employer and occupation matches are cross-validated against a hand-coded ground truth and corporate PAC matches checked and revised manually.",
+   "system_side": "identity_match_ladder in Mentat collect.R: AUTO (exact name + same zip), HIGH (exact name + same zip cross-employer, exact name + same city, nickname + same zip), REVIEW (suffix mismatch, nickname + same city, exact name + state + similar occupation, employer contradiction), else DISCARD. No name-frequency weighting in this function. Employer agreement is tested against company_variants.",
+   "transfer": "Both work on FEC Schedule A, so the method transfers in kind. The paper reports no precision or recall, so it is a design reference, not a benchmark. Adopting clustering would loosen Mentat's rule-based ladder, and receipt-counting is frozen without per-change OK; any change is Paul's. The transferable piece is a hand-coded labelled sample to measure the ladder's precision and recall.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "furnas-nd-conflating-lobbying-pacs",
+   "title": "Conflating Lobbying and PACs: The Surprisingly Low Overlap in Organizational Lobbying and Campaign Expenditures",
+   "year": "",
+   "component_id": "mentat-fec-attribution.employer-match",
+   "relation": "measurement-source",
+   "claim": "Organizational giving is campaign donations from the organization or its officially affiliated PAC; contributions by employees and contract lobbyists are not counted. Dark-money contributions are not observed. Independent expenditures (often by Super PACs) are not discussed; the article covers contributions to candidates only.",
+   "system_side": "Mentat attributes FEC receipts to roster companies by normalized key, using contributor_employer for individual contributions and contributor_name otherwise, with legal-suffix and bank N.A. stripping on employer keys, so its company giving includes individual employee giving the paper excludes.",
+   "transfer": "Comparing Mentat industry totals or participation counts with the paper's overlap or distribution figures requires restricting Mentat to organizational and affiliated-PAC receipts first. Melange's opposition prior already records that employee/executive giving and industry PAC money (congestion.json) are different instruments, with lean signs agreeing for only 157/276 members (57%) (fec/lobbying/build_opposition_prior.py:113).",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "gaynor-2022-financial-ties-bind",
+   "title": "The (Financial) Ties That Bind: Social Networks of Intraparty Caucuses",
+   "year": "2022",
+   "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+   "relation": "method-source",
+   "claim": "Each member-to-member LPAC donation is a directed edge. In the 115th Congress 282 members headed an LPAC, 373 received LPAC money, there are 12,870 unique directed edges, and the average donation is $3,682.19 per tie. Source is OpenSecrets compiled from FEC records.",
+   "system_side": "Mentat fec_read_candidate_committee_links keeps designation D (Leadership PAC linked to candidate) from ccl files, and fec_read_leadership_pacs reads leadershipYYYY.csv sponsor files, with a Leadership PAC sponsor relationship. fec_transfer_graph.py counts only 24G and 24K cash-transfer records and describes itself as a committee cash-transfer graph.",
+   "transfer": "The R functions default to cycles 2022, 2024, 2026. Gaynor's 115th and 116th windows need the 2018 and 2020 cycles, which the defaults do not cover; the cycles argument can override. Sponsor name-key matching can give false or missing links. Any such edge is a donation record, not an access or influence edge (D-025), and must name its cycle window and denominator.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bonica-2013-mapping-ideological-marketplace",
+   "title": "Mapping the Ideological Marketplace",
+   "year": "2013",
+   "component_id": "mentat-fec-attribution.identity-ladder",
+   "relation": "measurement-source",
+   "claim": "Supplement record-linkage section (text lines about 5315-5350, approx PDF p.51): on corporate board-member cases, 57 percent got a single ID, 42 percent split (type 1 errors), and in 13 percent of the split cases the algorithm failed to put 90 percent of records under one ID. Two type 2 errors (wrong merges), both family members at the same employer (Gates Sr and Jr; Walton family). Address and occupation disclosure was significantly lower in the 1980s and early 1990s. Method is fuzzy matching plus supervised machine learning.",
+   "system_side": "identity_match_ladder: suffix_mismatch (any suffix difference, including a suffix present on one record only) returns REVIEW first. Exact name plus same zip returns AUTO unless the employer contradicts the company, which gives HIGH. No name-frequency weighting.",
+   "transfer": "The paper's type 2 errors were same-employer family members (the Gates Jr and Sr pair differs by a suffix). Mentat sends any suffix difference to REVIEW, so a missing-suffix pair does not get AUTO under the current rule. The split rates come from a different linker and are a reference point, not an error-rate estimate for Mentat.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kim-2023-systemic-sequential-links",
+   "title": "Systemic and Sequential Links between Campaign Donations and Lobbying",
+   "year": "2023",
+   "component_id": "mentat-fec-attribution.identity-ladder",
+   "relation": "method-source",
+   "claim": "Donor and firm linkage uses constrained graph clustering and fastLink probabilistic record linkage (Enamorado, Fifield and Imai 2019). Executives are classed by SOC 11-1011. The paper reports no precision or recall for its linkage.",
+   "system_side": "C:/Users/pgoff/Mentat/mentat/R/collect.R lines 2110-2156 implement an ordered rule ladder: exact name and same zip gives AUTO, with HIGH if the employer contradicts; exact name and same city gives HIGH; nickname and same zip gives HIGH; nickname and same city gives REVIEW; exact name, same state and similar occupation gives REVIEW; employer contradiction with a name match gives REVIEW; otherwise DISCARD. No name-frequency weighting appears in this ladder.",
+   "transfer": "The paper confirms the fastLink method and the 11-1011 code only. SOC 27-3030 for government-relations staff is not in the paper text, so that part of the claim is refuted. Suggesting that frequency-weighted fastLink would fix the common-name blind spot is the analyst's opinion, and the paper gives no benchmark. Any change to the ladder is a ruling for Paul under D-040 (not checked here).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "irvin-2023-dark-investigation-dark",
+   "title": "How Dark Is It? An Investigation of Dark Money Operations in U.S. Nonprofit Political Advocacy Organizations",
+   "year": "2023",
+   "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+   "relation": "qualifies",
+   "claim": "Two high-opacity C4s are described as moving money into political committees as grants. One Nation gave 21.7 million dollars to the Senate Leadership Fund, a PAC at the same address, out of 63.3 million spent in 2016. Freedom Frontier made a 4.4 million dollar grant to a PAC, with almost 75 percent of its expenses political. The paper presents these as anecdotes, not a sample-wide pattern. Grants between C4s are not classified as political, so such flows fall outside its C6 component.",
+   "system_side": "Header line 3 states OTH 24G/24K outgoing records only. CASH_CODES (line 22) and the COMMITTEE regex (line 23) accept only a C plus eight digits, so a non-committee contributor such as a 501(c)(4) gets no node and its money appears only as a receipt into the Super PAC. allocate() conserves each root's funding forward over observed edges, so upstream attribution past a committee is not available. The earlier 89 percent oppose figure was not found by grep in fec_transfer_graph.py or report.R and is not confirmed here.",
+   "transfer": "The structural point holds for the graph as read. The paper covers 2016 economic-policy C4s and gives no size estimate for C4 money reaching Super PACs, so no magnitude may be inferred. Mentat scope (2022-2026 industry PACs) was not checked here.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "irvin-2023-dark-investigation-dark",
+   "title": "How Dark Is It? An Investigation of Dark Money Operations in U.S. Nonprofit Political Advocacy Organizations",
+   "year": "2023",
+   "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+   "relation": "supports",
+   "claim": "Beckel 2018, cited and not re-analysed, is reported as showing that political spending routed through dark money organizations is strongly negative, asking voters to defeat candidates, per FEC filings. Section 12 calls the dark-money media financing overwhelmingly negative. The paper gives no count or share, and the claim concerns dark money vehicles in general, not this C4 sample specifically.",
+   "system_side": "allocate() docstring keeps opposition money on the named target, never its rivals (line 489). The 89 percent beneficiary oppose share cited in the earlier analysis was not found in fec_transfer_graph.py or report.R, so it is unconfirmed and must not be cited as corroboration.",
+   "transfer": "Qualitative, second-hand, 2016 C4-linked spending. Mentat's beneficiary split is a modelled conditional scenario for a different period and denominator. At most directional agreement; no numeric confirmation.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "irvin-2023-dark-investigation-dark",
+   "title": "How Dark Is It? An Investigation of Dark Money Operations in U.S. Nonprofit Political Advocacy Organizations",
+   "year": "2023",
+   "component_id": "mentat-fec-attribution.receipt-role-and-exclusion",
+   "relation": "suggests-extension",
+   "claim": "Opacity scores run from 0.8 (Fix the Debt Coalition) to 8.3 (Majority Forward) on a 0-9 scale. Scores above 7 are described as very opaque, including many large advocacy groups with very small boards, paltry websites and no staff. Scores up to 3 could be characterized as transparent. Donations average 92 percent of revenue. The total index does not predict the OpenSecrets dark-money label once controls are added (N=54, Nagelkerke R2 0.529, only ln total expenses significant).",
+   "system_side": "The earlier analysis describes Paul's 2026-07-18 ruling excluding 527 and 501c recipients; that ruling was not found in the memory index or in the analyst files checked, so its date is unverified here. The code keeps 501c-marked recipients as classified rows, tags them EXCLUDED_527_501C, and drops them from reported totals as one block. No transparency distinction is made among 501c recipients.",
+   "transfer": "Any change to the exclusion is Paul's decision; this bearing recommends none. The index is unvalidated in this sample, so at most a display-only heuristic label carrying its 2016 and N=54 window. Form 990 data is published two or more years late and Mentat does not collect it.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "christopher-2016-mathematical-modeling-analysis",
+   "title": "Mathematical modeling and analysis of a dark money network",
+   "year": "2016",
+   "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+   "relation": "suggests-extension",
+   "claim": "Money-flow network among politically active 501(c) nonprofits and SMLLCs. A tie means funds were exchanged, tie width is dollar amount, and node size is betweenness (Figure 1). The top-ranked organization, Freedom Partners Chamber of Commerce, has out-degree 90 (Table 5). The paper does not state how its network data were built: its background sources are news and IRS material from 2010-2014, and the network comes from earlier unpublished work.",
+   "system_side": "Mentat walks FEC-reported committee-to-committee edges breadth-first to depth 3 (reachable_rows default max_depth=3). allocate() spreads each root's funding pro rata over observed outflows and raises an error if root funding is not conserved. Unattributable dollars go to unresolved buckets (depth_limit, cycle, no_observed_outflow). The allocate() docstring calls the result a conditional pro-rata scenario, not traced dollars.",
+   "transfer": "Scope statement only. Money that passes through a non-disclosing nonprofit before reaching a committee is invisible to Mentat's committee graph. The paper gives no data-construction method, so its network cannot validate any edge set. Its network is a single partisan donor network from about 2010-2015. Do not import its ranking as evidence about any industry; any key-node ranking on Mentat's graph is a heuristic output (D-025).",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "anon-2025-cross-industry-political",
+   "title": "Cross-Industry Political Spending - Analysis Overview (memo)",
+   "year": "2025",
+   "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+   "relation": "qualifies",
+   "claim": "Mutual-fund Super PAC money goes particularly to PACs aligned with the GOP (memo wording; the memo does not say mostly). The memo calls this a vast reservoir of partisan spending. House and Senate Majority PAC donations linked to JPMorgan are +90% from the company rather than individuals (memo wording, no denominator). Credit unions report $0 dark money to the four biggest Super PACs.",
+   "system_side": "report.R lines 32-34 define 527 and 501c as supplementary categories. Lines 55-77 define the channel columns, including Super PAC, Trade Association and Company PAC: To Super PAC, each with a partisan split. spending_title_role at line 2528 onward and spending_contributor_tier assign Corporate to entity contributors. fec_transfer_graph.R lines 30-42 hold the F12 date-walk rule. The brain note that 89 percent of beneficiary dollars were oppose-coded was not found in the Project Brain melange-systems-brain folder searched.",
+   "transfer": "Quote the memo's partisan and dark-money readings only after recomputing with the support/oppose split and the 501c and 527 separation. The attributed-estimate producer status claimed by the analyst was not checked.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "anon-2025-cross-industry-political",
+   "title": "Cross-Industry Political Spending - Analysis Overview (memo)",
+   "year": "2025",
+   "component_id": "mentat-fec-attribution.employer-match",
+   "relation": "suggests-extension",
+   "claim": "Charles Schwab's company PAC and executives halted giving. Per the memo, Chairman Schwab and his wife moved giving to a charity fund that invested over $250M in conservative causes in 2021-2024 and gave to Republican Super PACs (memo figures, partly redacted). The memo's thesis is that spending is offloaded onto company executives, measured as CEO and executive averages per industry.",
+   "system_side": "collect.R company_cross_reference_people (lines 1009-1035) builds the trusted name set from roster executives and from contributions whose match reason is verified_employer_alias or verified_roster_alias. report.R spending_title_role (line 2528 onward) assigns Chief to CEO, CFO, general counsel, founder, owner, chairman and president titles, and Middle Management to vice president, director, partner, head and manager titles. The 501c category is supplementary at report.R line 32.",
+   "transfer": "An extension would link executive-controlled vehicles (foundations, donor-advised funds, family entities) to roster people. That needs a verified-affiliation rule consistent with the strict-names policy, not a fuzzy guess. The memo never defines executive, so its averages cannot be reconciled with the Chief or Middle Management tiers.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "chohan-2025-crypto-oligarchy-cryptocurrency",
+   "title": "Crypto-Oligarchy: The Cryptocurrency Lobby in American Politics",
+   "year": "2025",
+   "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+   "relation": "supports",
+   "claim": "Fairshake, Protect Progress and Defend American Jobs ran ads that often did not mention cryptocurrency, focusing on candidate integrity or economic policy. Named races: Fairshake backed Moreno against Brown in Ohio and opposed Tester in Montana. The paper also cites opposition to Porter in a California Senate primary and to Bowman's re-election bid. Coinbase, Ripple and Andreessen Horowitz each gave tens of millions of dollars, with no exact figures. No oppose or support split of dollars is given.",
+   "system_side": "Crypto workbook builder has a Super PAC scope and a Corporate tier (scopes list near lines 550-583) and a support_oppose field on rows (near line 177). The transfer graph reads only 24G and 24K outgoing OTH records and never counts independent expenditures again as transfers (docstring, lines 1-7). Code side verified.",
+   "transfer": "Qualitative evidence for federal races in 2024 only. It supports keeping support and oppose separate rather than netting them, and supports the point that ad topic cannot be read from ad content. It does not support any oppose share, and the paper's own examples include backing candidates as well as opposing them.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "goff-nd-cross-industry-finance",
+   "title": "Cross Industry Finance and Lobbying Disclosure Report: Analysis and Recommendations",
+   "year": "",
+   "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+   "relation": "suggests-extension",
+   "claim": "Super PACs take 71.9 percent of crypto non-direct-to-candidate giving, which is 70 percent of industry giving; Fairshake is the 2nd largest super PAC and wholly crypto-funded; backed candidates won 38 of 40 primaries.",
+   "system_side": "fec_build_beneficiary_tables seeds the traversal from each industry's funded committees (fec_beneficiary.R traversal_seed, around lines 1041-1060). Downstream rows carry a Support or Oppose direction (fec_beneficiary.R lines 136-145 and 348), so oppose money can be split from support money. An attributed-estimate view exists in the UI, but the route refuses with 409 until an estimate bundle exists (app/evidence-flow.js lines 8-10). A comment at R/export_guards.R line 278 says 89 percent of one shipped beneficiary sheet was opposition-direction rows.",
+   "transfer": "The 38 of 40 count has no window, no denominator of contested races and no baseline win rate. The 71.9 and 70 percent shares have no stated cycle or source. Reuse needs the support and oppose split by party and a stated cycle.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "goff-nd-cross-industry-finance",
+   "title": "Cross Industry Finance and Lobbying Disclosure Report: Analysis and Recommendations",
+   "year": "",
+   "component_id": "mentat-fec-attribution.employer-match",
+   "relation": "suggests-extension",
+   "claim": "The C-suite share of crypto donations rose from 69 percent in 2021-22 to 98.8 percent in 2023-24; the report frames the credit union shortfall as missing employee and middle-management giving.",
+   "system_side": "collect.R assigns Schedule A rows to roster companies by employer key (company_employer_keys, line 363). Occupation text enters only as an optional scoped regex on override rules (lines 520-529), keeping the most specific match. No C-suite or employee role taxonomy was found in that section.",
+   "transfer": "An occupation-role split would need a hand-coded precision check. The report gives no coding rule for C-suite, so its 69 and 98.8 percent figures cannot be reproduced from the extract.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "porter-2025-campaignview-campaign-platforms",
+   "title": "CampaignView, a database of policy platforms and biographical narratives for congressional candidates",
+   "year": "2025",
+   "component_id": "mentat-fec-attribution.identity-ladder",
+   "relation": "context",
+   "claim": "Cross-cycle candidate names linked by probabilistic record linkage on pretrained embeddings, blocked on party and state. Estimated matches under 50% were hand-checked: 15 wrong for 2018-2020, 1 for 2020-2022, none for 2018-2022.",
+   "system_side": "member_identity.py Resolver (about lines 118-135) maps a bioguide ID to a roster name and returns None as a refusal rather than guessing. The cited lines contain no contributor rule ladder (name parts, zip, city, occupation, employer) and no name-frequency logic, and a keyword search of member_identity.py found no occupation or employer rules.",
+   "transfer": "The paper links candidates (a small, ID-rich population), not donors; its error counts do not speak to donor-level false-match rates. Member bioguide lookup is a different problem from cross-cycle name linkage.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bouton-2022-small-campaign-donors",
+   "title": "Small Campaign Donors",
+   "year": "2022",
+   "component_id": "mentat-fec-attribution.dedup-and-versions",
+   "relation": "qualifies",
+   "claim": "A recipient committee must itemize an earmarked contribution when the donor's cycle aggregate to it exceeds 200 dollars, so the same gift appears in both the conduit report and the committee report. The authors coupled 87 percent of earmarked committee-itemized donations to their conduit twin and dropped the committee leg. The remaining committee-itemized donations are 3 percent of all contributions.",
+   "system_side": "Code comment at export_guards.R:110-113 says a conduit leg is a real row that counts, and that guard G3 against conduit double counting was removed 2026-07-27 under the R5/R8 recipient-as-shown ruling. report.R:1566-1568 keeps the downstream-earmark mask as an analytical flag only. report.R:1601-1606 is a sub_id duplicate guard. Not shown in code: that the two legs carry different sub_ids, and that the committee leg is counted. A report.R:2775-2786 comment says the receipt counts once, to the row's recipient.",
+   "transfer": "Paper population is employees whose cycle aggregate to the recipient exceeds 200 dollars. Sub-200 gifts are visible only through the conduit (paper Appendix A.4.3). The size of the double count in Mentat books is unmeasured. Money collection is frozen; any change needs Paul's per-change OK.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bouton-2022-small-campaign-donors",
+   "title": "Small Campaign Donors",
+   "year": "2022",
+   "component_id": "mentat-fec-attribution.identity-ladder",
+   "relation": "method-source",
+   "claim": "Donor grouping uses explicit rules. Two records are one person if they match exactly on three of first name, surname, full street and ZIP and fuzzily on the fourth (first-name variant index, fuzzy surname, fuzzy street, or city-state in place of ZIP). Occupation and employer are too inconsistent to use as grouping variables. The authors expect a very small false-positive rate but do not measure it.",
+   "system_side": "collect.R:2087-2157 (identity_match_ladder) returns AUTO on exact name plus same ZIP with no street check, and HIGH on exact name plus same city or nickname plus same ZIP. Employer contradiction only changes the grade (collect.R:2120-2134). AUTO and HIGH are kept (collect.R:2896). Street fields are collected (collect.R:1415-1416) but this ladder does not read them.",
+   "transfer": "The paper groups across all committees; Mentat links same-name rows to a seed within a company run (seed logic not traced in this check). A false merge adds a stranger's money to a company total, so the cost is higher. The paper's rules have no measured precision, so they are a design benchmark, not a validated standard.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "bouton-2022-small-campaign-donors",
+   "title": "Small Campaign Donors",
+   "year": "2022",
+   "component_id": "mentat-fec-attribution.collection-completeness",
+   "relation": "measurement-source",
+   "claim": "Conduits must report every contribution they collect, whatever its amount. Conduit contributions were 76.4 percent of individual contributions 2006-2020 and 91.1 percent in 2020, and processing them more than doubles observed contributions. WinRed launched in 2019. Committee-reported unitemized totals overstate small-donor contributions by a factor of 1.8 to 3.1.",
+   "system_side": "collect.R:1452-1454 sets is_conduit_leg for the two conduit committee IDs. export_guards.R:447-449 treats an empty Conduit category as a real zero for industries or cycles with no earmark-platform giving. No cycle- or party-varying coverage adjustment was found in the cited lines.",
+   "transfer": "Matters for cross-cycle or partisan splits of individual employee giving that span the 2019 WinRed launch. The paper limits its Republican analysis to 2020. It does not affect PAC-to-candidate totals. Direct gifts under 200 dollars stay invisible in itemized data (paper footnote 12).",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "fremeth-2018-spillovers-regulating-corporate",
+   "title": "Spillovers from regulating corporate campaign contributions",
+   "year": 2018,
+   "component_id": "mentat-fec-attribution.employer-match",
+   "relation": "suggests-extension",
+   "claim": "Within firm-cycle and candidate-cycle fixed effects, a candidate receiving the PAC maximum is 0.066 more likely (SE 0.006) to receive a CEO gift and receives about 110 dollars more (SE 10.05) (Table 2; 1992-2008; 950 firms; 6,803,661 observations). The text reports 7.7 percent and 123 dollars, which do not match Table 2. Table 7 gives 123.88.",
+   "system_side": "Mentat attributes individual Schedule A rows to roster companies by employer string and splits company totals into Chief, Middle Management and Employee tiers, with known executives forced to Chief.",
+   "transfer": "A per-candidate join of company PAC-at-limit status with Chief-tier gifts would test the CEO-substitution pattern in the industries Paul covers. Depends on executive employer-match recall and the PAC-to-candidate recipient table. Any result stays UNVERIFIED until a second path reproduces it (DE-062).",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  }
+ ]
+}

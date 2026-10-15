@@ -1,0 +1,1394 @@
+{
+ "system": {
+  "slug": "melange-pathfinding",
+  "name": "Melange path-finding (recruitment and introduction routes)",
+  "description": "Route search over two graphs: member-to-member recruitment chains on the cosponsor kernel (dashboard pathfinder modes and cosponsor_route.py), and staffer introduction routes on the people/office graph (closeness routes, ordered overlap routes and the employment-routing overlay). Route objectives, tie rules and coverage rules live here; the graphs themselves are built in melange-sna and melange-staffer-network.",
+  "brain_notes": [
+   "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+   "C:/Users/pgoff/Documents/brain/actors/staffer-live-sidecar.md"
+  ]
+ },
+ "components": [
+  {
+   "id": "melange-pathfinding.member-recruitment-path",
+   "system": "melange-pathfinding",
+   "name": "Sponsor-to-target max-product path and chain hold",
+   "computes": "The most reliable recruitment chain from a sponsor to a target, with per-hop $ and probability; chainHold = product of activeP per hop.",
+   "method": "Dijkstra on -log p. activeP(p) = p/(p + (1-p) x ASKM) with ASKM 0.07 (about a 14x odds shift, unestimated). recruitCost(p) = 1000 + 9000(1-p), clamped to $1k-$10k.",
+   "assumptions": [
+    "Cosponsor-kernel edge probabilities proxy ask success",
+    "Active asks raise odds by a constant factor (no study pins it)",
+    "Money is capped by FEC limits; difficulty shows up in reliability, not dollars"
+   ],
+   "empirical_questions": [
+    "What is the empirical lift in cosponsorship probability when an existing cosponsor directly asks a colleague versus passive diffusion?",
+    "Does the most-reliable path length predict how quickly a target joins?"
+   ],
+   "code_refs": [
+    "fec/templates/make_dashboard_html_00.tpl (buildPath, chainHold, recruitCost)"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "heading": "Sponsor-to-target max-product path and chain hold"
+  },
+  {
+   "id": "melange-pathfinding.multi-target-and-budget-modes",
+   "system": "melange-pathfinding",
+   "name": "Best-sponsor, multi-target tree and budget max-coverage modes",
+   "computes": "Recruitment trees and budget-bounded recruit sets with coverage cov[v] = 1 - prod(1 - p).",
+   "method": "Greedy max coverage (1-1/e) with locality and degree pruning (GCOMB), plus grow() spread with recruitability x log(deg) x proximity.",
+   "assumptions": [
+    "Approximate submodularity on the cosponsor graph",
+    "Community structure is exploitable (Porter-Mucha-Newman; Kim-Kunisky)"
+   ],
+   "empirical_questions": [
+    "Do members recruited through community-local paths join at higher rates than cross-community targets?"
+   ],
+   "code_refs": [
+    "fec/templates/make_dashboard_html_00.tpl (budgetRecruit, multiTarget, grow)"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "heading": "Best-sponsor, multi-target tree and budget max-coverage modes"
+  },
+  {
+   "id": "melange-pathfinding.cosponsor-route-pareto",
+   "system": "melange-pathfinding",
+   "name": "Cosponsor recruitment route finder (Pareto front)",
+   "computes": "Greedy routes from champion seeds with at most K = 5 recruits per recruiter, giving a Pareto front over cost, expected cosponsors and risk.",
+   "method": "Edge cost = CEDGE/max(0.1, p); value = (gain - lambda(1-p))/cost for lambda in {0, 0.5, 1, 2, 4}. Optional MC reach. MOPBD* (Ren et al.) is cited as concept only.",
+   "assumptions": [
+    "Recruiter whip capacity is bounded",
+    "Edge activations are independent"
+   ],
+   "empirical_questions": [
+    "Is whip capacity per recruiter observably bounded (do prolific recruiters' marginal recruits drop off)?"
+   ],
+   "code_refs": [
+    "fec/engine/cosponsor_route.py:1-89"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "heading": "Cosponsor recruitment route finder (Pareto front)"
+  },
+  {
+   "id": "melange-pathfinding.staffer-closeness-routes",
+   "system": "melange-pathfinding",
+   "name": "Staffer closeness route search",
+   "computes": "The least-cost introduction route to staff anchored at a member office. Hop cost = -ln(0.8 x strength) + w x uncertainty; terminal cost includes a member-context modifier (beta 0.15).",
+   "method": "Bidirectional Dijkstra with heuristic 0 (labelled A*) and Yen loopless alternatives. The default route search is one-directional to a virtual sink (staffer_closeness_routes.py:110-138). Ties within 1e-12 relative: fewer steps wins, then lower cost. The office search excludes uncovered staffers and reports the count.",
+   "assumptions": [
+    "The minimum-cost path approximates the most usable introduction",
+    "The prestige modifier is a bonus, not access evidence"
+   ],
+   "empirical_questions": [
+    "Do shorter or cheaper routes correspond to successful real-world introductions in an outreach log?"
+   ],
+   "code_refs": [
+    "fec/surfaces/staffer_closeness_routes.py:1-30,78-138,911-999",
+    "fec/surfaces/staffer_routing.py:381"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/staffer-live-sidecar.md"
+   ],
+   "heading": "Staffer closeness route search"
+  },
+  {
+   "id": "melange-pathfinding.staffer-overlap-routes",
+   "system": "melange-pathfinding",
+   "name": "Ordered person-overlap routes and employment-routing overlay",
+   "computes": "Routes through dated Politico-reconciled co-work. distance = ceil(1e6 x 128 / strength), with strength = proximity x log2(1 + days/30). Overlay costs: current co-worker 1, historical 3, reported activity 2, filing 5, policy 8.",
+   "method": "Bidirectional Dijkstra on (cost, steps). User-asserted current co-worker hop at cost 1.",
+   "assumptions": [
+    "Log-scaled shared work days proxy relationship strength",
+    "Only Politico career-history evidence creates work ties"
+   ],
+   "empirical_questions": [
+    "Does shared tenure length (log days) predict the likelihood of a successful warm introduction?"
+   ],
+   "code_refs": [
+    "fec/surfaces/staffer_overlap_routes.py:1-280",
+    "fec/surfaces/staffer_routing.py:153-640",
+    "fec/surfaces/staffer_routing_evidence.py:157-162"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/staffer-live-sidecar.md"
+   ],
+   "heading": "Ordered person-overlap routes and employment-routing overlay"
+  }
+ ],
+ "positions": [
+  {
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "citations": [
+    "Ahmad et al. (strongest path)",
+    "Chen et al. 2016 (most reliable path)",
+    "Duan et al. 2025",
+    "Lawande et al. 2022",
+    "Kim & Kunisky 2020",
+    "Rongkuan et al. 2024"
+   ],
+   "paul_position": "Paul's central path-finding gap is turning lobbying and bipartite data into a graph where path-finding can run. He also wants A* heuristics that cope with unstable information. The built chain uses most-reliable-path Dijkstra and no learned heuristic."
+  },
+  {
+   "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+   "citations": [
+    "Manchanda et al. 2020",
+    "Porter et al. 2005",
+    "Kim & Kunisky 2020"
+   ],
+   "paul_position": "GCOMB pruning and community structure are the cited grounding, which matches Paul's addendum."
+  },
+  {
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "citations": [
+    "Ren et al. 2022 (MOPBD*)",
+    "Lawande et al. 2022",
+    "Abdel-Rahman et al. 2025",
+    "Alkazzi & Okumura 2024"
+   ],
+   "paul_position": "Paul marked D* dynamic replanning 'Very interesting' and made D* Lite and LPA* the operational layer in the addendum. Only the multi-objective concept was built; there is no incremental replanning."
+  },
+  {
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "citations": [
+    "Rongkuan et al. 2024",
+    "Oropeza-Martinez 2024",
+    "Haythornthwaite 1996"
+   ],
+   "paul_position": "Paul wants a centerless design that stays intact when a node is lost, and learned heuristics. The staffer router uses heuristic 0."
+  },
+  {
+   "component_id": "melange-pathfinding.staffer-overlap-routes",
+   "citations": [
+    "Bacik et al. 2026",
+    "Holyoke et al. 2015"
+   ],
+   "paul_position": "Paul treats professional and revolving-door ties as central to lobbying. Holyoke's highlights stress that relationships are targeted and rest on mutual need."
+  }
+ ],
+ "citations_in_system": [
+  {
+   "citation": "Ramey, Klingler & Hollibaugh, 'Measuring Elite Personality Using Speech', Political Science Research and Methods (year conflict in repo: 2016 in PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32 and code; 2019 in big5_methods.md:12). Replication data doi:10.7910/DVN/JDH6KR",
+   "where": [
+    "fec/members/big5_traits.py:1-25",
+    "fec/members/fit_smoreg_rkh.py:5",
+    "fec/members/lep_criterion.py:5-6",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32",
+    "big5_methods.md:12",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Lexical Big Five pipeline, token shrinkage, RKH reference targets (melange-psychometrics); ceremonial-share C criterion (melange-legislative-data)"
+  },
+  {
+   "citation": "Mairesse et al. (2007), JAIR, personality from text (SMOreg on LIWC/MRC; 53-58% band)",
+   "where": [
+    "fec/members/fit_smoreg_essays.py:4",
+    "fec/members/big5_traits.py:13-16",
+    "fec/members/interaction_features.py:5-6",
+    "big5_methods.md:31",
+    "big5_audio_prereg.md:15"
+   ],
+   "used_for": "SMOreg feature weights and word-count features (melange-psychometrics); audio cues"
+  },
+  {
+   "citation": "Pennebaker & King (1999); Yarkoni (2010); Pennebaker (2003, Annual Review)",
+   "where": [
+    "fec/members/big5_traits.py:14-15",
+    "fec/members/affective_n_validate.py:10",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Published-correlate lexical weights; essays corpus; negative-emotion basis for affective N"
+  },
+  {
+   "citation": "Birkenmaier & Lechner (2025), 'Measuring Politicians' Public Personality', Political Analysis; Birkenmaier, Lechner & Wagner (2024)",
+   "where": [
+    "fec/members/agency_communion_llm.py:3,33",
+    "fec/members/big5_llm.py:10",
+    "fec/members/big5_traits.py:9",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:33",
+    "big5_behavioral_extraversion_prereg.md:239"
+   ],
+   "used_for": "Agency/communion persona cue classifier and PERSONA_W; cannot-tell coding"
+  },
+  {
+   "citation": "Lechner, Aichholzer, Birkenmaier & Bluemke (2025), 'Mapping the Political Personality' (Polipers v0.1, GESIS)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Review of politician-personality studies; external criterion search"
+  },
+  {
+   "citation": "'Personality on the Hill' Senate insider and academic gold panels (online_appendix.pdf, SHA-256 43c98926...; author/year not recorded)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "External gold for Big Five validation"
+  },
+  {
+   "citation": "Amsalem et al. (2018), media visibility of Belgian, Canadian and Israeli MPs (Eran.pdf) - provenance warning only, NOT the gold source",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Hash-mismatch provenance check"
+  },
+  {
+   "citation": "Norgaard & Klemmensen (2019), J. Personality 87(2):267-275; Schumacher & Zettler (2019), PAID 141:173-181",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Elite self-report personality benchmarks and desirability caveat"
+  },
+  {
+   "citation": "Cao & Kosinski (PNAS Nexus 2024); Peters & Matz (PNAS Nexus 2024, doi:10.1093/pnasnexus/pgae231)",
+   "where": [
+    "fec/members/big5_llm.py:12",
+    "big5_methods.md:46-49",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "De-identification before LLM trait scoring; LLM zero-shot personality benchmark"
+  },
+  {
+   "citation": "Valente (Interspeech 2012); Yu (Interspeech 2019); Rienks & Heylen (2005)",
+   "where": [
+    "fec/members/interaction_features.py:5-8",
+    "fec/members/behavioral_dispositions.py:17",
+    "big5_methods.md:30"
+   ],
+   "used_for": "Turn-statistic dominance and reactivity features"
+  },
+  {
+   "citation": "Koutsoumpis (meta-analysis, language and personality); Yang, Lau & Abbasi (ISR 2023)",
+   "where": [
+    "big5_methods.md:114",
+    "AUDIT_FINDINGS_2026-07-04.md:332",
+    "big5_behavioral_extraversion_prereg.md:221"
+   ],
+   "used_for": "Text tracks observer more than self-report; response-selection bias; PERSONA_W scope argument"
+  },
+  {
+   "citation": "Soto & John (2017) BFI-2-XS; Connelly & Ones (2010); Judge et al. (2002); Funder & Ozer (2019); Dietrich (2012); Dynes (2019); Wagner (2024); Steiger (1980); Stern et al. (2021); Harari (2022); Rubio et al. (2024); Marrero et al. (2022); Marengo et al. (2018, doi:10.1016/j.paid.2017.12.018); Hargittai (2015, doi:10.1177/0002716215570866); Hinds & Joinson (2024, doi:10.1037/bul0000430); Marengo, Montag & Settanni (2025, doi:10.1111/jopy.70019); Lau & Abbasi (2023)",
+   "where": [
+    "big5_expert_panel_prereg.md",
+    "big5_nomological_prereg.md",
+    "big5_n_matrix_prereg.md",
+    "big5_audio_prereg.md",
+    "big5_es_crossmodal_prereg.md",
+    "big5_a_coverage_prereg.md",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "Prereg designs for Big Five expert panel, nomological, audio and coverage looks (melange-psychometrics)"
+  },
+  {
+   "citation": "Salam et al. (2022), PMLR 173, personalised NAS Big Five on UDIVA",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md:132"
+   ],
+   "used_for": "Audio trait benchmark and sex-conditioning check"
+  },
+  {
+   "citation": "Mestre & Ryan (2026), validated aeneas forced alignment; Dietrich (2019)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Audio identity design (forced alignment, within-speaker F0)"
+  },
+  {
+   "citation": "ECAPA-TDNN speaker embedding (name only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Proposed speaker verification"
+  },
+  {
+   "citation": "Byrne, Silasi-Mansat & Worthy (2015), 'Who chokes under pressure?', PAID",
+   "where": [
+    "fec/members/receptivity_layer.py:6-7,189,233",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:34",
+    "AUDIT_FINDINGS_2026-07-04.md:548",
+    "fec/engine/outcome_contract.py:18"
+   ],
+   "used_for": "Susceptibility composite (only N and A supported; C and E are design priors); H2 predictor"
+  },
+  {
+   "citation": "Fouirnaies & Hall, 'How Do Electoral Incentives Affect Legislator Behavior?' (APSR)",
+   "where": [
+    "fec/members/receptivity_layer.py:15-20",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:35",
+    "fec/engine/money_response.py:27"
+   ],
+   "used_for": "Retiring-member incentive multiplier and competitiveness term"
+  },
+  {
+   "citation": "Linde & Vis (2016), 'Do Politicians Take Risks Like the Rest of Us?', Political Psychology",
+   "where": [
+    "fec/members/receptivity_layer.py:22-28",
+    "fec/engine/money_response.py:27-29",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:36"
+   ],
+   "used_for": "Prospect-theory domain multiplier and attenuated loss frame"
+  },
+  {
+   "citation": "Kahneman & Tversky (loss aversion)",
+   "where": [
+    "fec/engine/money_response.py:29",
+    "fec/members/receptivity_layer.py:27"
+   ],
+   "used_for": "LOSSFRAME 1.10"
+  },
+  {
+   "citation": "Chen, Kamarthi, Wilder & Tambe, contingency-aware influence maximization (UAI 2021, arXiv 2106.07039; venue corrected from ICML); Zareie & Sakellariou (SNAM 2023)",
+   "where": [
+    "fec/members/receptivity_layer.py:28-34",
+    "fec/engine/budget_frontier.py:72-74",
+    "fec/engine/outcome_contract.py:17",
+    "AUDIT_FINDINGS_2026-07-04.md:564-565"
+   ],
+   "used_for": "Seed take-up probability and seed gate; H1 predictor"
+  },
+  {
+   "citation": "Bharathi, Kempe & Salek, Competitive Influence Maximization",
+   "where": [
+    "fec/engine/scenario.py:6-11",
+    "fec/engine/budget_frontier.py",
+    "fec/engine/per_topic_coalition.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Competitive IC cascade and coalition submodularity"
+  },
+  {
+   "citation": "Borodin et al. (submodularity can fail in competitive LT)",
+   "where": [
+    "fec/engine/scenario.py:11-12"
+   ],
+   "used_for": "Flip side treated as heuristic"
+  },
+  {
+   "citation": "Kempe, Kleinberg & Tardos (2003, KDD) influence maximization",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:157",
+    "quant skill references"
+   ],
+   "used_for": "Cascade and threshold model assumptions"
+  },
+  {
+   "citation": "Golovin & Krause (2011), Adaptive Submodularity, JAIR (Lemma 5.3/A.9)",
+   "where": [
+    "fec/engine/optimize.py:8,108-113",
+    "fec/engine/scenario.py:8-10",
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md"
+   ],
+   "used_for": "Joint optimizer bound and framing (melange-allocation)"
+  },
+  {
+   "citation": "Leskovec et al. (KDD 2007) CELF lazy greedy; Nemhauser (1-1/e)",
+   "where": [
+    "fec/engine/optimize.py:74-96",
+    "fec/engine/budget_frontier.py:96-106",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Lazy greedy seed and budget selection"
+  },
+  {
+   "citation": "Almazaydeh et al. (2026), Scientific Reports, s41598-026-47299-8",
+   "where": [
+    "fec/engine/mc_stability_check.py:3-10",
+    "influence-modeling-reference SKILL.md"
+   ],
+   "used_for": "Noisy MC corrupts CELF; motivates CRN and stability check"
+  },
+  {
+   "citation": "Manchanda et al., GCOMB, NeurIPS 2020, arXiv:1903.03332",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Budget mode: locality, degree pruning, CELF (melange-pathfinding)"
+  },
+  {
+   "citation": "Chen & Lam, most-reliable path; Ren et al., Multi-Objective Path-Based D* Lite (MOPBD*) and RELINK",
+   "where": [
+    "fec/engine/cosponsor_route.py:3-5",
+    "fec/engine/scenario.py:13",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Pathfinder and route-finder concepts (melange-pathfinding)"
+  },
+  {
+   "citation": "Sotoudeh, Porter & Krishnagopal (2024), arXiv 2406.19554, network measure of cosponsorship influence on bill passage",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Cosponsor edge weights and path grounding"
+  },
+  {
+   "citation": "Aref & Neal (2020, 2021), signed-network optimal partitioning / generalized balance; Neal signed backbone (R backbone sdsm)",
+   "where": [
+    "fec/network/signed_coalitions.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Signed coalition partition and multi-target coalition mode"
+  },
+  {
+   "citation": "Porter, Mucha, Newman et al. (PNAS 2005), committee network community structure / normalized interlock",
+   "where": [
+    "fec/surfaces/make_member_desk.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-model-facts.md",
+    "HOLISTIC_NETWORK_DESIGN_2026-08-17.md:78"
+   ],
+   "used_for": "Committee-cluster layout; community structure in pathfinder"
+  },
+  {
+   "citation": "Fink et al. (2023), Congressional Twitter influence network, Data in Brief",
+   "where": [
+    "fec/network/social_interaction_layer.py:15-19",
+    "MATHEMATICAL_SPECIFICATION.md:44",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Author-volume normalized social and press edges"
+  },
+  {
+   "citation": "Malaterre & Lareau (2024), HCoI communities",
+   "where": [
+    "fec/press_hcoi.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Press-attention communities"
+  },
+  {
+   "citation": "Zhou & Elejalde (2026), Information Processing & Management, TWLGCN",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Stance dynamics port"
+  },
+  {
+   "citation": "Joo & Steinert-Threlkeld (2022), Computational Communication Research; Steinert-Threlkeld, Twitter as Data",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Frame alignment"
+  },
+  {
+   "citation": "Ringe, Victor & Gross (BJPS 2013), Friends and Enemies",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:599"
+   ],
+   "used_for": "Signed mention layer concept"
+  },
+  {
+   "citation": "Battaglini & Patacchini, 'Influencing Connected Legislators', NBER w22739",
+   "where": [
+    "fec/engine/kb_benchmark.py:2-18"
+   ],
+   "used_for": "Katz-Bonacich benchmark"
+  },
+  {
+   "citation": "Kim & Kunisky, lobbying networks / latent communities (local PDF)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Community structure exploited by pathfinder"
+  },
+  {
+   "citation": "Noble & Turner (2024), 'Presidential Leadership and Legislative Polarization'; Lee (2009)",
+   "where": [
+    "fec/engine/salience_shock.py:4-38",
+    "fec/surfaces/build_dashboard_bundle.py:663",
+    "fec/moneyball_core.py:731"
+   ],
+   "used_for": "Salience shock regimes; retreat regime"
+  },
+  {
+   "citation": "Furnas, LaPira, Hertel-Fernandez, Drutman & Kosar (congressional staff survey experiment); Bakker (partisan cues); Bakker, Lelkes & Malka (JOP)",
+   "where": [
+    "fec/moneyball_core.py:11",
+    "fec/engine/lt_priming.py:56-58",
+    "fec/surfaces/templates/make_dashboard_html_00.tpl:742",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "cpf_pressure 1.7/0.5; out-party cue clamp; executive cue factor; money capped, information is the lever"
+  },
+  {
+   "citation": "Ansolabehere, de Figueiredo & Snyder (2003); Fowler, Garro & Spenkuch (2020); Hall & Wayman (1990); Kalla & Broockman (2016), 'Campaign Contributions Facilitate Access'; Kalla & Broockman (general-election persuasion about zero); Coppock (persuasion about 5 pp / 0.1 SD)",
+   "where": [
+    "fec/engine/flip_model.py:21",
+    "fec/engine/money_response.py:15,20",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Money buys access not votes; WM/WP weights; MAXSHIFT calibration; access multiplier"
+  },
+  {
+   "citation": "Huneeus & Kim (lobbying distorts policy); Bombardini & Trebbi (annual review of empirical lobbying); Pritoni (lobbying coalitions); Bacik et al. / Kim, lobbying-network dynamics (arXiv 2503.11745); Azaiez & Mandel (EC lobby hypergraph); Harrison et al. (lobbying record mining)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-scenario-model-build.md"
+   ],
+   "used_for": "Calibration context for small, capped lobbying returns; pathfinder background"
+  },
+  {
+   "citation": "Trivedi & Singh (Procedia 2020) coalition modeling; Scientific Reports 2026 IM algorithm comparison (CELF++/RIS/IMM)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md"
+   ],
+   "used_for": "Coalition and IM algorithm references"
+  },
+  {
+   "citation": "Gaynor (LSQ 2022); Kim, Stuckatz & Wolters (JOP 2026); Furnas, LaPira & Brock (PS 2025)",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:706-711"
+   ],
+   "used_for": "Leadership PAC edges and donation/lobbying sequencing (identified, not implemented)"
+  },
+  {
+   "citation": "Volden & Wiseman, legislative effectiveness (five-stage LES; Center for Effective Lawmaking LES 93-118); Bucchianeri/Volden/Wiseman-style",
+   "where": [
+    "fec/members/lep_criterion.py:1-15",
+    "fec/engine/flip_model.py:142 (comment only)",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md",
+    "C:/Users/pgoff/Documents/brain/actors/codex-executor-incidents.md"
+   ],
+   "used_for": "Effectiveness shadow score and convergence criterion; uncoded passage-bonus comment"
+  },
+  {
+   "citation": "Nokken & Poole dynamic ideal points; DW-NOMINATE (Poole-Rosenthal)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Drift criterion for N (MISS); NOMINATE rejected for vote edges"
+  },
+  {
+   "citation": "Matz et al. (PNAS 2017); Simchon (2024, PNAS Nexus); Hackenburg & Margetts (2024)",
+   "where": [
+    "fec/surfaces/make_member_desk.py:846",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Persona-matched appeals (design-only) and aggregate null caution"
+  },
+  {
+   "citation": "Brysbaert concreteness norms; Guiraud index; Empath lexicon; Valente (N overlap stat 68.7%)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-record-1-big5-campaign.md"
+   ],
+   "used_for": "Big Five lexical features"
+  },
+  {
+   "citation": "Miller & Sutherland, APSR (hearing conduct; doctrine WITHDRAWN 2026-07-10)",
+   "where": [
+    "big5_methods.md:36",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics.md"
+   ],
+   "used_for": "Withdrawn hearing-antagonism doctrine"
+  },
+  {
+   "citation": "Burnham, 'Stance detection: a practical guide' (PSRM 2024.35); mlburnham/Political_DEBATE_base_v1.0 (Hugging Face)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39",
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md"
+   ],
+   "used_for": "NLI stance templates and the DEBATE base model (melange-stance)"
+  },
+  {
+   "citation": "Stanceformer, arXiv 2410.07083; ACL 2023.acl-long.560 (TSE); MDPI 2076-3417/15/21/11784",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39,63",
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md"
+   ],
+   "used_for": "Target-aware stance (planned); two-stage decoupling; neutral-class difficulty"
+  },
+  {
+   "citation": "Khan et al. (2025), IECE TACS, Roman Urdu agree/disagree/unrelated stance",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md:45"
+   ],
+   "used_for": "Multi-view augmentation (hurt classical readers)"
+  },
+  {
+   "citation": "Park, Lee & Cho (2025), 'Automatic construction of direction-aware sentiment lexicon using direction-dependent words', Language Resources & Evaluation 59:843-869",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:65"
+   ],
+   "used_for": "Direction-aware valence lexicon idea (rejected on dry run)"
+  },
+  {
+   "citation": "Soroka et al., Lexicoder Sentiment Dictionary LSD2015 (snsoroka.com LSDaug2015.zip); Haselmayer & Jenny (2017); Rice & Zorn (2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-congress-r-scrapers-graded-scoring-and-audits.md:26-28"
+   ],
+   "used_for": "Stage 5b tone intensity; graded tone and polarity normalization"
+  },
+  {
+   "citation": "Dai, Liao, Zhao et al. (2025), LLM-enhanced Logic Tensor Network for stance detection, Neural Networks 183:106956, doi:10.1016/j.neunet.2024.106956",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md:198",
+    "stance_valence_folcot_prereg.md:13"
+   ],
+   "used_for": "FOL-CoT valence proposals (not adopted)"
+  },
+  {
+   "citation": "Kim, Kim, Jeong, Oh & In Song Kim (2025), 'Measuring Interest Group Positions on Legislation' (PNAS draft); LobbyView positions dataset doi:10.7910/DVN/D0QWM2; In Song Kim LobbyView (Song 2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md",
+    "fec/lobbying/lobby_position_benchmark.py:9",
+    "fec/lobbying/collect_lobbyview.py:35"
+   ],
+   "used_for": "LDA data and interest-group positions (melange-lobbying)"
+  },
+  {
+   "citation": "Romero Moreno (2021)",
+   "where": [
+    "CONTESTED_BILLS_DESIGN.md:29-30"
+   ],
+   "used_for": "Contested-bills counterparty term"
+  },
+  {
+   "citation": "Delano, Rudkin & Kim (2025), BICAM, Scientific Data 12:1567, doi:10.1038/s41597-025-05737-8; Porter, Case & Treul (2025), CampaignView, Scientific Data 12:1237, doi:10.1038/s41597-025-05491-x; Zhan & Cai (2025), ESWA 263:125705, doi:10.1016/j.eswa.2024.125705; Cao, Gai, Wu et al. (2025), Information Fusion 120:103107, doi:10.1016/j.inffus.2025.103107",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md",
+    "CAMPAIGN_SITE_COLLECTION_2026_RUNBOOK.md:10"
+   ],
+   "used_for": "Research-integration proposals (bill-LDA linkage, campaign corpus, trust-KNN imputation, signed trust propagation)"
+  },
+  {
+   "citation": "Russo et al. (ACL 2023), 'Helping a Friend or Supporting a Cause?'; Brandenberger (2018), 'Trading Favors', Social Networks 54:238-253, doi:10.1016/j.socnet.2018.02.001; Montgomery & Nyhan (2017), doi:10.1086/690301; Shalizi & Thomas (2011); Nay (2017), PLOS ONE doi:10.1371/journal.pone.0176999",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:153-158",
+    "fec/research/cosponsor_challengers/PROTOCOL.md:44-47"
+   ],
+   "used_for": "Cosponsorship prediction and reciprocity baselines; homophily vs contagion confounding; staff exchange and policy similarity"
+  },
+  {
+   "citation": "Tiedens & Fragale (2003), doi:10.1037/0022-3514.84.3.558; Santoro & Broockman (2022), Science Advances, doi:10.1126/sciadv.abn5515",
+   "where": [
+    "fec/research/member_personal_relationships/PERSONALITY_CONTEXT_EXPLORATION.md:46"
+   ],
+   "used_for": "Context only for member personal-relationship research"
+  },
+  {
+   "citation": "DerSimonian-Laird random-effects estimator",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "used_for": "R2 partially pooled industry slope (mentat-giving-forecast)"
+  },
+  {
+   "citation": "Cameron, Gelbach & Miller (2011), two-way cluster-robust variance; Holm step-down; Newey-West HAC; Driscoll-Kraay (requested); Ball (2024)",
+   "where": [
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-8,168,210",
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:71-76,389,588",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Inference in the sector growth regressions and SEATS-W"
+  },
+  {
+   "citation": "Bross (1958) ridit; Spearman-Brown; Kendall tau-b; pool-adjacent-violators (PAV)",
+   "where": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/design/spec_rigor.md",
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "used_for": "Ridit transforms, internal consistency and sensitivity tests (terrier-row-scoring); turnout calibration (terrier-canvass)"
+  },
+  {
+   "citation": "MAST multi-agent failure taxonomy (named only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/metaloop.md"
+   ],
+   "used_for": "Failure-attribution tags (metaloop-orchestration)"
+  },
+  {
+   "citation": "SR 11-7 model risk management (superseded 2026-04-17 by SR 26-2); quant-model-evaluation skill bibliography (Cinelli & Hazlett 2020; Politis & Romano 1994; Simar & Wilson 1998; Grubesic & Matisziw 2006; Fouirnaies & Hall 2018; Powell & Grimmer 2016; others)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md",
+    ".claude/skills/quant-model-evaluation/references/sources.md"
+   ],
+   "used_for": "Audit tooling references applied to Melange (melange-validation)"
+  },
+  {
+   "citation": "Data sources (not literature): MEDSL Dataverse election returns; Cook Political Report PVI; Voteview; congress-legislators; govinfo BILLSTATUS; Ballotpedia; openFEC and FEC bulk; OpenSecrets; IBISWorld; Census ACS/CBP/LODES/cb_2024 and cb_2020; FDIC SOD; NCUA Call Reports; HMDA; Polymarket/Kalshi/IEM; Crystal Ball/538",
+   "where": [
+    "fec/engine/build_competitiveness.py",
+    "fec/district/demographic_potential.py",
+    "DEMOGRAPHIC_POTENTIAL_METHOD.md:185-191",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Model inputs across systems"
+  }
+ ],
+ "evidence": [
+  {
+   "slug": "bacik-2025-measuring-dynamical-evolution",
+   "title": "Measuring the dynamical evolution of the United States lobbying network",
+   "year": "2025",
+   "component_id": "melange-pathfinding.staffer-overlap-routes",
+   "relation": "supports",
+   "claim": "Covered-position disclosures are made once and have no dates, so recency cannot be established. Co-listing on filings shows registrant-lobbyist contracts, not dated co-work.",
+   "system_side": "Filing-year-only episodes are routed separately as 'co_reported_firm_association'. They carry temporal_status 'filing_year_association_only' and weak=True, and are reachable only when include_weak is set (default False, filing_cost 5 >= historical_cost 3). Dated Politico co-work stays the main tie source.",
+   "transfer": "The paper describes federal LDA lobbyists, and the routes cover congressional staff. The paper's point that filing data cannot date relationships applies directly to the filing-year hops. It says nothing about the dated payroll-overlap hops. Routes are heuristic introduction paths, not access probabilities (D-025).",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "bombardini-2020-empirical-models-lobbying",
+   "title": "Empirical Models of Lobbying",
+   "year": "2020",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "suggests-extension",
+   "claim": "Former Senate staffers turned lobbyists experience a persistent 24% drop in lobbying revenues when their connected senator exits office (Blanes i Vidal et al. 2012); drops are larger for connections on Finance, Appropriations or Ways and Means and statistically insignificant otherwise. Bertrand et al. (2014) find lobbyists take up new issues as the politicians they contacted change committee assignments. The review flags B-i-V's exogeneity of senator exit as a strong assumption.",
+   "system_side": "Route cost uses time-decayed exposure (5-year staleness half-life), workplace concentration, and a member-context modifier built from cosponsor-graph proximity times eigenvector centrality. Neither file reads whether the anchoring member is still serving; member_context.py explicitly refuses staff or committee affiliation layers.",
+   "transfer": "The evidence measures lobbyists' revenue, not introduction success, closeness or influence. Under D-025 and the revolving-door wording rule, an added term may be described only as dependence on the patron's current office, never as access or influence. The review text does not state Blanes i Vidal's sample years. Absence of an office/committee term was checked only in these two files, not repo-wide (UNVERIFIED as a system-wide gap).",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "holyoke-2015-learnable-skills-unteachable",
+   "title": "Learnable Skills, or Unteachable Instinct? What Can and What Cannot Be Taught in the Lobbying Profession",
+   "year": "2015",
+   "component_id": "melange-pathfinding.staffer-overlap-routes",
+   "relation": "qualifies",
+   "claim": "Relationships with lawmakers are built on mutual need and each side's ability to supply something, and are targeted, not personal friendships (p.17-18, introduced as 'arguably'). A lobbyist's market value is their portfolio of relationships (citing Blanes i Vidal et al. 2012). About 52% of roughly 30,000 DC lobbyists (2012, Rehr) came through government, and 48% of those held two or more posts (LaPira and Thomas 2014, as cited p.5). These figures are secondary and the authors did not re-derive them.",
+   "system_side": "Routes run through dated co-work, with strength = proximity x log2(1 + days/30) and distance = ceil(1e6 x 128 / strength). The overlay costs are: current co-worker 1, reported activity 2, historical 3, filing 5, policy 8. Shared tenure stands in for how usable a tie is.",
+   "transfer": "Conceptual only. The paper never measures whether shared tenure produces usable relationships. It implies that co-work measures the opportunity for contact, not the mutual need that keeps a relationship going. Its revolving-door share is a federal DC figure from about 2012-2014 and fits the router's staff-to-lobbyist population. It does not support any cost constant or the log-days form. Route cost must stay a heuristic, not an introduction probability (D-025). No influence wording on revolving-door edges.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "furnas-2019-moneyed-interests-information",
+   "title": "Moneyed Interests, Information, and Action in Congress: A Survey Experiment",
+   "year": "2019",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "contradicts",
+   "claim": "The paper tests requester identity (donor vs constituent vs lobbyists) and information source, never dollar amounts; it makes no claim that money is capped. It does say staff want information and analysis from ideologically aligned experts and defer to requesters who bring think-tank research (pp.3, 18), so 'info is the lever' is a loose paraphrase, not a fabrication.",
+   "system_side": "recruitCost(p) = 1000 + 9000(1-p), clamped to $1k-$10k. The comment justifying it reads 'Furnas et al.: money is capped, info is the lever'. The per-hop align() factor uses SRCPRO/SRCANTI for co-/out-partisan pairs.",
+   "transfer": "The $1k-$10k bound rests on FEC contribution limits, which are law, not on this paper. The citation is a misattribution, and the cost function stands or falls without it. The paper's own result (aligned evidence earns staff side-taking) concerns what an outside requester brings to a staffer. It does not cover member-to-member asks along cosponsor paths.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "furnas-2019-moneyed-interests-information",
+   "title": "Moneyed Interests, Information, and Action in Congress: A Survey Experiment",
+   "year": "2019",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "qualifies",
+   "claim": "Staff are gatekeepers for Members' time and recommend bills and cosponsorships. Taking a meeting, though, is the lowest-commitment step: it barely varies with requester identity, and whether staff side with a requester depends on the evidence's ideological alignment, not on access.",
+   "system_side": "Finds the least-cost loopless work route (bidirectional Dijkstra, heuristic 0) from an origin to a virtual sink reached through staff anchored at a member office, with hop costs from absolute size-adjusted exposure. The route ends at an anchored staffer; nothing models what happens after contact.",
+   "transfer": "This supports treating staffer routes as routes to a contact point only. Under D-025, route cost is a heuristic and not an access or introduction probability. The paper adds that even a secured meeting predicts little about action, so route outputs should never be labelled as influence or outcome. It is limited to DC staff in 2017 and to stated responses.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kim-2020-mapping-political-communities",
+   "title": "Mapping Political Communities: A Statistical Analysis of Lobbying Networks in Legislative Politics",
+   "year": "2020",
+   "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+   "relation": "qualifies",
+   "claim": "Communities are latent memberships in the bipartite interest-group x politician lobbying network (k = 8, 113th Congress). Legislators with the most community memberships are often senior politicians or party leaders; legislators with entropy at least 2 (roughly 4+ communities) sit on power committees. The dc-biSBM, being a hard partition, assigns mixed actors (CHAMBER OF COMMERCE, BRITISH PETROLEUM, MCAFEE) to only one community, and the LSM places high-entropy actors in an undifferentiated centre region.",
+   "system_side": "The brain-vault note actors/melange-dashboard-june-capstone.md (line 83) cites Kim-Kunisky for 'the cosponsor network has real community structure the pathfinder exploits'. The template itself carries no Kim-Kunisky citation; budgetRecruit's comment cites GCOMB only. budgetRecruit is a max-coverage greedy over member-member cosponsor edges with Noisy-OR coverage and degree pruning and contains no community term.",
+   "transfer": "Does not carry over as cited: the paper's communities belong to an organisation x member lobbying graph, not the member-member cosponsor graph, and the code uses no communities. The brain note's citation should be re-scoped. If a community term is ever added, the paper argues for mixed membership over a hard partition because hub actors are the ones a partition misassigns.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "duan-2025-breaking-sorting-barrier",
+   "title": "Breaking the Sorting Barrier for Directed Single-Source Shortest Paths",
+   "year": "2025",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "qualifies",
+   "claim": "O(m log^(2/3) n) beats Dijkstra's O(m + n log n) only on sparse graphs, for single-source distances to ALL vertices on directed graphs with real non-negative weights, in the comparison-addition model. The analysis runs on a constant-degree transform with O(m) vertices and edges (m = O(n)). It returns distances without a full ordering; Dijkstra is optimal when the ordering is required (HHR+24). The constant C in Lemma 3.12 is not quantified and nothing is implemented.",
+   "system_side": "The default office route is a point-to-sink search on an undirected hop graph: bidirectional Dijkstra with heuristic 0 that stops once the frontier lower bounds pass the best meeting (docstring :12-21; ALGORITHM :79). A second pass (_fewest_steps_exact, :436-480) solves the settled nodes in exact integers by scaling dyadic floats. Yen loopless alternatives need repeated searches. _search_reference (:266-298) is a one-way test oracle only. Not in the code: the 2026-10-02 latency lane (memory file, not code) found pair_cache grew the sidecar from 7.0 to 17.5 GB, i.e. memory, not heap cost; ALT landmarks deferred.",
+   "transfer": "Carries over only if the system needs full single-source distance fields over the staffer graph (one origin to every office). The graph size is not established here: the ~4.66M figure traces to the co-tenure GUARANTEED pair count (4,660,388, staffer-sorting memory), which is an edge count, so the analyst's n ~ 10^6-10^7 is unsupported. The asymptotic ratio vs Dijkstra is about log^(1/3) n (roughly 2.5-3x for n in 10^6-10^7) before an unknown constant. Does not carry over to early-stopping point-to-sink, bidirectional, Yen or exact-tie passes, and does not touch the measured memory bottleneck. No recommendation to change the router.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "duan-2025-breaking-sorting-barrier",
+   "title": "Breaking the Sorting Barrier for Directed Single-Source Shortest Paths",
+   "year": "2025",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "context",
+   "claim": "Assumption 2.1 (all paths have distinct lengths) is made WLOG by ordering each path as the tuple <length l, vertex count alpha, vertices read from the end v_alpha..v_1> lexicographically, comparable in O(1) using Pred[] and alpha stored per bd[v]. The paper notes this is done like in many shortest-path papers.",
+   "system_side": "Staffer routes: costs within one part in 10^12 of the cheapest are ties; among them fewest steps wins, then least exact cost, then smallest node ids read from the sink end (D-082, Paul 2026-10-03).",
+   "transfer": "Analogous, not identical: the paper compares exact length first and uses vertex count only on exact ties; the system lets a 1e-12 relative cost band count as a tie and then puts steps BEFORE exact cost. Both read the vertex sequence from the end. The paper's order is a presentation device for its own analysis and does not validate the system's tolerance band or step-first rule.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "duan-2025-breaking-sorting-barrier",
+   "title": "Breaking the Sorting Barrier for Directed Single-Source Shortest Paths",
+   "year": "2025",
+   "component_id": "melange-pathfinding.staffer-overlap-routes",
+   "relation": "qualifies",
+   "claim": "The result is for real weights in the comparison-addition model. For integer weights in the word RAM model, the related-work line culminates in Thorup's O(m + n log log min{n, C}) for directed graphs [Tho04], where C is the maximum edge weight.",
+   "system_side": "Overlap-route distances are integers: distance_units = max(1, ceil(1e6 x 128 / strength)) (:33-34), and the work_time variant max(1, ceil(1e6 / strength)) (:211). The search is bidirectional Dijkstra over heap keys (:140-165).",
+   "transfer": "With integer weights the tighter asymptotic line is integer/word-RAM SSSP (Thorup), not this paper. Matters only if overlap-route latency becomes heap-bound, which has not been shown.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "duan-2025-breaking-sorting-barrier",
+   "title": "Breaking the Sorting Barrier for Directed Single-Source Shortest Paths",
+   "year": "2025",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "context",
+   "claim": "Dijkstra's O(m + n log n) is beaten only asymptotically on sparse graphs, for a directed graph with non-negative weights; the paper assumes every vertex is reachable from s.",
+   "system_side": "distToTarget is a heap-free max-product Dijkstra scanning an array over N = 533 members, O(N^2); tracePath greedily follows PE[cur][v] x dT[v]. PE is directed: EMU[v] (receiver) enters PEBASE[u][v] (:586) and source_shock(u)/target_resistance(v) enter PE[u][v] (:595-597), so PE[u][v] != PE[v][u] in general.",
+   "transfer": "At n = 533 the asymptotic gain is irrelevant. The paper adds nothing to reliability semantics (-log p) or the unestimated ASKM lift. Relevant only as a reminder that directed SSSP must relax edges in the query direction (see the distToTarget flag).",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "lawande-2022-systematic-review-analysis",
+   "title": "A Systematic Review and Analysis of Intelligence-Based Pathfinding Algorithms in the Field of Video Games",
+   "year": "2022",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "qualifies",
+   "claim": "Table 4 (with obstacles, single run): GBF is fastest from 8x8 up but its reported path is longer than the other three at 16x16 (37 vs 31 blocks) and 32x32 (81 vs 75). At 8x8 the table shows the reverse (GBF 13 vs 15 for the other three), an unexplained anomaly. Without obstacles all four report the same length (5/13/29/61, Table 3). The paper calls GBF 'not optimal'; it does not state the general rule that a greedy walk is optimal only when its estimate is exact (that is the analyst's inference).",
+   "system_side": "distToTarget (line 734) runs an exact max-product Dijkstra from the target over the full PE graph and does not consult the dropped set. tracePath (line 740) walks forward greedily by argmax PE[cur][v]*dT[v], skipping seen and dropped nodes. With drops, dT can still reflect routes through excluded members, so the walk can return a less reliable chain or stop short ('unreachable') when a route exists. buildPath (753-757) and bestSponsors (760-764) reuse the same dT. The comment at line 735 says 'PROVABLY-OPTIMAL'; dropped is set at line 1165. Single-path code reading, UNVERIFIED per DE-062.",
+   "transfer": "Only the algorithmic point carries over (greedy choice on an inexact estimate loses optimality); grid timings and lengths do not. Cheap remedy is to exclude dropped members inside distToTarget. Needs a second-path reproduction (e.g. a test that drops a bridging member) before any claim.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "lawande-2022-systematic-review-analysis",
+   "title": "A Systematic Review and Analysis of Intelligence-Based Pathfinding Algorithms in the Field of Video Games",
+   "year": "2022",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "qualifies",
+   "claim": "Informed (A*) search cuts expansions via an estimate H(n); the paper's estimates are grid/geometric. Dijkstra is described as using no heuristic (H(n)=0, F(n)=G(n)) and as extended to A* by adding a heuristic.",
+   "system_side": "The staffer router is bidirectional Dijkstra with terminal costs and heuristic 0, plus Yen loopless alternatives and exact-arithmetic tie resolution. A one-directional Dijkstra to a virtual sink (_search_reference) is kept only as a test oracle that no server path can select. Route metadata records 'heuristic': 0.",
+   "transfer": "No spatial embedding, so the paper's Euclidean estimates do not apply. A* gains would need an admissible non-metric estimate (e.g. ALT landmarks, deferred), which the paper does not test. Supports keeping h=0, not adding A* by name.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "lawande-2022-systematic-review-analysis",
+   "title": "A Systematic Review and Analysis of Intelligence-Based Pathfinding Algorithms in the Field of Video Games",
+   "year": "2022",
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "relation": "context",
+   "claim": "GBF 'will always try to pick the best track at that particular moment' (F(n)=H(n)); it is fastest of the four implemented but not optimal. D*/D* Lite is described with pseudocode in Section 3.2.3 but is not among the four algorithms implemented or benchmarked.",
+   "system_side": "build_route is a greedy construction: a heap orders candidate edges by (gain - lam*(1-p))/cost with an out-degree cap K (env default 5); the script keeps non-dominated points across lam in (0,0.5,1,2,4). The header names MOPBD* as a roadmap concept; there is no incremental replanning code.",
+   "transfer": "Analogy only: the route finder solves a budgeted coverage problem, not point-to-point shortest path. The paper has no D* Lite measurements, so it cannot justify building the replanning layer.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "chen-2016-most-reliable-path",
+   "title": "Most Reliable Path-finding Algorithm for Maximizing On-Time Arrival Probability",
+   "year": "2016",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "qualifies",
+   "claim": "The paper's 'most reliable path' maximizes on-time arrival probability Phi((b - mean)/SD) for a travel-time budget b. It states that this objective 'is non-additive and cannot be solved by existing' shortest-path methods, so it uses M-B dominance plus multi-criteria label-setting (MRP-TS) rather than Dijkstra.",
+   "system_side": "The recruitment chain is a max-product path: distToTarget runs a Dijkstra-style max-product search and tracePath follows the argmax of PE*dT. Reliability is the product of per-hop kernel probabilities, and chainHold is the product of activeP(p) with ASKM 0.07. The code comment cites Chen, Shi, Zhang & Lam 2016 as grounding for 'maximize the probability the whole chain holds' and calls the result 'PROVABLY-OPTIMAL'. A product of independent edge probabilities is additive in -log p (the Frank / Bellman reliable-path case), so Dijkstra is the right tool. That object is not the one this paper solves.",
+   "transfer": "The paper supports the system's method only in name. Its deadline-reliability algorithm would carry over only if the system modeled a stochastic time-to-join per hop and asked for P(target joins before a deadline such as markup), which it does not. As built, the right grounding is the classical max-product or -log p shortest path, not this paper. Road data, 2009 Wuhan; no legislative content.",
+   "strength": "strong",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "chen-2016-most-reliable-path",
+   "title": "Most Reliable Path-finding Algorithm for Maximizing On-Time Arrival Probability",
+   "year": "2016",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "qualifies",
+   "claim": "The method assumes independent link travel times. Sec. 2 notes the assumption can be relaxed with a two-level hierarchical network model (Chen et al. 2012); the Conclusions list correlation first among future directions, saying it is omitted \"for simplicity\" although urban link times are strongly correlated. Normal approximation of path travel time, checked against Monte Carlo ground truth on 100 randomly selected Wuhan paths, averages 98.3% accuracy at the 10th percentile and 94.9% at the 90th.",
+   "system_side": "chainHold multiplies per-hop activeP values as if every ask succeeds or fails independently, and the comment calls it a 'conservative floor' (rerouting only improves it). The asks in one chain share the same bill, issue salience, party context and ASKM lever, so their outcomes are likely positively correlated. Under positive correlation the product is not a floor on joint success. Paths are also ranked by passive pathReliability, while chainHold, which is shown to the user, is computed on the active-ask scale.",
+   "transfer": "Only the structural point transfers: path reliability built as a product or sum of independent per-link terms inherits an independence assumption that the source paper itself flags as its main limitation. The direction and size of correlation among legislator asks is untested. The UI already labels the figure as scenario output, not an empirical probability (tpl:1119, 1155).",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "chen-2016-most-reliable-path",
+   "title": "Most Reliable Path-finding Algorithm for Maximizing On-Time Arrival Probability",
+   "year": "2016",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "suggests-extension",
+   "claim": "MRP-TS's optimality is proven (Props. 4-5, Lemmas 1-3) and also checked empirically: it returns the same optimal paths as an independent multi-criteria A* on the same budgets, across 100 O-D pairs.",
+   "system_side": "The chain is labelled 'PROVABLY-OPTIMAL', but no second algorithm reproduces it. Agent reading (UNVERIFIED, DE-062): distToTarget(t) propagates d[v] = d[u]*PE[u][v] outward from the target, which is the reliability of target -> v. tracePath then walks sponsor -> target scoring PE[cur][v]*dT[v]. PE is asymmetric because of the receiver edge_mult EMU[v] and the source_shock/target_resistance role priors, so dT is computed in the reverse direction from the one tracePath needs. Also, dT ignores the 'dropped' set while tracePath skips dropped nodes, so the greedy walk can stall (reached=false) even when a path that avoids them exists.",
+   "transfer": "Chen et al.'s validation design (exact algorithm vs an independent exact solver on the same inputs) transfers directly, since it is a software check, not an empirical claim. The direction mismatch matters only when PE is asymmetric. That happens when the bundle carries emult or the issue's role priors are non-unit; with neutral multipliers the walk is exact. The size of the effect is bounded by the EMU range [0.80, 1.20] and has not been measured.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "chen-2016-most-reliable-path",
+   "title": "Most Reliable Path-finding Algorithm for Maximizing On-Time Arrival Probability",
+   "year": "2016",
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "relation": "suggests-extension",
+   "claim": "Mean-Budget dominance with multi-criteria label-setting finds exact non-dominated path sets fast. 11,087-18,115 non-dominated paths are handled in 162-276 ms on Wuhan. The FSD label-correcting benchmark generates 225,878 paths, of which 95.09% are M-B dominated.",
+   "system_side": "The cosponsor route Pareto front is assembled from five scalarized greedy runs (lambda in {0, 0.5, 1, 2, 4}, value = (gain - lambda(1-p))/cost), then filtered for dominance. It is an approximate front over the points those runs visit, not an exact non-dominated set. Points in non-convex regions of the front cannot be reached by any lambda.",
+   "transfer": "This is a weak, conceptual transfer. Chen's dominance rule is specific to normal path times and a path objective. The cosponsor router grows a recruitment tree with a recruiter capacity cap K, so exact label-setting would need a different dominance relation. It is relevant only if Paul wants the front to be exact rather than illustrative.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "chen-2016-most-reliable-path",
+   "title": "Most Reliable Path-finding Algorithm for Maximizing On-Time Arrival Probability",
+   "year": "2016",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "context",
+   "claim": "Penalizing path variability through SD makes the path objective non-additive, so Dijkstra loses exactness. Exact solutions need multi-criteria labels such as mean and variance.",
+   "system_side": "The staffer router adds uncertainty linearly per hop: cost = -ln(0.8 x strength) + w x u, with u explicitly 'not a probability'. Because the penalty is a per-hop sum, bidirectional Dijkstra with heuristic 0 stays exact, and the code backs this with exact-arithmetic tie handling.",
+   "transfer": "The paper serves as a boundary condition, not a criticism. The current additive design is correctly solved. If uncertainty were ever restated as an SD aggregated over the route, or as a probability of a usable introduction by a date, Dijkstra would no longer be exact and Chen-style label-setting would apply. Route costs remain heuristic outputs, never introduction or access probabilities (D-025).",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "ahmad-nd-shortest-path-algorithms",
+   "title": "Shortest Path Algorithms for Social Network Strengths",
+   "year": "",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "method-source",
+   "claim": "Algorithm 1 (from [5], Hangal et al.) enumerates all paths, multiplies edge influences along each, and returns the path minimizing Total_influence = log(1/D) + log(1/product of edge influences), with D = 0.95. As printed, log(1/D) is added once per path, not per hop, so it is a constant that cannot change which path wins. Table 2: average strongest vs shortest path length 6.8 vs 4.9 hops (Twitter) and 4.7 vs 3.3 (DBLP), over 500 random pairs per dataset. No path-quality metric is reported.",
+   "system_side": "Hop cost = -ln(HOP_FACTOR x strength) + w x uncertainty_cost, with HOP_FACTOR = 0.8, i.e. ln(1/0.8) + ln(1/strength) per hop. The ln(1/strength) sum matches the paper's log(1/product) term. The per-hop ln(1/0.8) is a hop-length penalty with no counterpart in Algorithm 1 as printed, where log(1/D) is a per-path constant. Solved by bidirectional Dijkstra with heuristic 0, not by enumerating paths. Edges are undirected.",
+   "transfer": "Only the log-inverse-product part of the objective carries over. The router's per-hop decay is its own design (possibly closer to Hangal's original paper, not checked here), not something Ahmad et al. print. The paper does not validate the objective: it never measures whether strongest paths succeed more often. Its influence is directed and normalized by investment; staffer strength is symmetric exposure. Route cost is a heuristic model output, not an introduction probability (D-025).",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ahmad-nd-shortest-path-algorithms",
+   "title": "Shortest Path Algorithms for Social Network Strengths",
+   "year": "",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "qualifies",
+   "claim": "Influence is asymmetric: if Y is highly influenced by X, the reverse is not guaranteed, even for undirected interactions such as co-authorship (Sec. 3.2; Sec. 1.1). Asymmetry 'has to be considered' in social search; the paper does not say in so many words that edges must be directed. Average node influence is 0.67 (Twitter) and 0.60 (DBLP), and most node influence values lie below one (Sec. 5.3, Table 2).",
+   "system_side": "ADJ is symmetric, but PEBASE[u][v] multiplies by the receiver's EMU[v], and configureIssueNetwork scales PE[u][v] by source_shock(u)/target_resistance(v), so PE is directed. distToTarget(t) relaxes d[v] = d[u] x PE[u][v] outward from t, so dT[v] is the best product along t -> ... -> v in the forward edge direction. tracePath scores sponsor -> target moves with PE[cur][v] x dT[v]. When PE is asymmetric, the chain the comment calls 'PROVABLY-OPTIMAL' is therefore not guaranteed to be the max-product sponsor-to-target chain. tracePath also skips 'dropped' nodes that distToTarget does not exclude, which is a second way the trace can depart from the optimum. UNVERIFIED single-path reading (DE-062).",
+   "transfer": "The paper's asymmetry point is enough to say edge direction matters for path search. The defect comes from reading the code, not from the paper. Its size depends on how far EMU (0.80-1.20) and the role priors push PE[u][v] away from PE[v][u], and on whether dropped nodes lie on the best chain. It may be small. A second path should confirm it (DE-062), for example by comparing Dijkstra on -log of the transposed PE with the traced chain.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ahmad-nd-shortest-path-algorithms",
+   "title": "Shortest Path Algorithms for Social Network Strengths",
+   "year": "",
+   "component_id": "melange-pathfinding.staffer-overlap-routes",
+   "relation": "context",
+   "claim": "Hop-count shortest paths ignore tie strength and asymmetry (Abstract). Tie strength matters for social search (Granovetter motivation, Sec. 1.1). The strongest path uses the product of normalized influences (Sec. 4).",
+   "system_side": "Overlap routes minimize summed integer distances plus one balanced unit (DISTANCE_SCALE) per introduction. There are two cost forms. Shared-background mode uses ceil(1e6 x 128 / strength), with strength = sum(weight x log2(1 + shared facts)). Work-time mode uses ceil(1e6 / strength), with strength = proximity x log2(1 + overlap days / 30). Both are additive inverse strengths, not -log of a bounded weight, so neither can be read as a product of per-hop reliabilities.",
+   "transfer": "Context only. The paper does not compare inverse-strength costs with log-product costs, and the overlap router is a deliberate design choice. Shared work days and shared background are heuristic tie scores, not measures of closeness, access or introduction probability (D-025). Influence language is barred on revolving-door edges.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "baptista-2022-universal-multilayer-network",
+   "title": "Universal multilayer network exploration by random walk with restart",
+   "year": "2022",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "suggests-extension",
+   "claim": "RWR scores proximity by summing over walks rather than taking a single path, and RWR has been shown to outperform local distance measures for gene-disease prioritization (Kohler et al. 2008, ref 21). The paper defines RWR as steady-state proximity from all nodes to the seed but does not use the phrase summing over all walks.",
+   "system_side": "Confirmed: the template uses a max-product Dijkstra (distToTarget multiplies passive probabilities and keeps the maximum), which orders paths the same way as a shortest path on -log p, though not literally on -log p. ASKM=0.07 and chainHold as the product of activeP along the chain are confirmed. bestSponsors ranks by chainHold, then cost, as stated.",
+   "transfer": "An RWR score seeded at the target, or at the pro-sponsor set, would add a multi-route robustness measure beside the single best chain. The paper's support comes from biological prioritization, not recruitment, and gives no congressional estimate. Any such score is a heuristic proximity, never an ask-success or access probability (D-025).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "sotoudeh-2024-network-based-measure",
+   "title": "A Network-Based Measure of Cosponsorship Influence on Bill Passing in the United States House of Representatives",
+   "year": "2024",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "qualifies",
+   "claim": "The paper measures whether bill-level aggregates of cosponsors' pairwise pass-rate scores separate passed from failed bills. It does not study recruitment, paths, ask success or per-edge probabilities. It never compares its measure against raw cosponsor count; it only cites prior work that cosponsor count is not a clear signal of success (pp. 3-4, refs 29 and 23).",
+   "system_side": "Template comment (make_dashboard_html_00.tpl lines 735-738) cites the paper for 'cosponsorship influence, not count, drives passage' as grounding for a PROVABLY-OPTIMAL max-product recruitment chain. It calls the chain reliability the exact maximal probability that the chain holds ('mathematical certainty'). Code computes chainHold as a product of activeP values with ASKM = 0.07 (lines 728-760).",
+   "transfer": "None. The paper's outcome is bill passage, not whether a target joins as cosponsor, and its score is not a probability. The citation overstates what the paper shows, and the probability wording conflicts with D-025.",
+   "strength": "strong",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "porter-2005-network-analysis-committees",
+   "title": "A network analysis of committees in the U.S. House of Representatives",
+   "year": "2005",
+   "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+   "relation": "qualifies",
+   "claim": "Porter et al. (2005) find hierarchical clusters in a committee-to-committee co-membership network built from House assignment data (single-linkage on normalized interlocks, about four levels). They do not study cosponsorship or recruitment communities.",
+   "system_side": "multiTarget and budgetRecruit (template lines 773-795) use neighbour coverage with GCOMB-style locality, a degree floor of max(1, 0.1 times mean degree), and no community partition. The only Porter-lineage citation in the template is Sotoudeh-Porter-Krishnagopal in the tracePath comment at line 738, not Porter 2005. The strings Porter-Mucha-Newman and Kim-Kunisky are not in the repo. fec/templates/ does not exist; the file is under fec/surfaces/templates/.",
+   "transfer": "The citation mismatch stands: the Porter 2005 paper does not ground the cosponsor recruitment code. The Sotoudeh citation (line 738) grounds passage influence, a different claim. Community detection exists elsewhere in fec/network/press_hcoi.py (Louvain, line 64) but is not used in pathfinding.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kalla-nd-campaign-contributions-facilitate",
+   "title": "Campaign Contributions Facilitate Access to Congressional Officials: A Randomized Field Experiment",
+   "year": "",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "suggests-extension",
+   "claim": "Who is asked changes which tier takes the meeting. The donor label raised chief-of-staff-or-above access (12.5% vs 2.4%, p=.006) but not access at the district-staff tier (48.4% vs 43.3%, p=.26).",
+   "system_side": "The router returns the least-cost introduction route to staff anchored at a member office. A member-context modifier of 1 + MEMBER_BETA times value is applied to terminal costs (staffer_closeness_routes.py:913-918 and 1014). MEMBER_BETA = 0.15 is defined at closeness_math.py:21. Route costs are heuristic outputs, not access probabilities (D-025).",
+   "transfer": "The paper supports recording the seniority of the person reached as a validation target, matching its six-rank coding. It does not justify converting route costs or ranks into access probabilities, which would break D-025. The paper measured a requester attribute in district-office meetings, not a warm introduction through a co-worker tie.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "cao-2025-social-network-group",
+   "title": "Social network group decision making: Characterization, taxonomy, challenges and future directions from an AI and LLMs perspective",
+   "year": "2025",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "suggests-extension",
+   "claim": "Trust propagation is done either with propagation operators along one path (six operator families) or by aggregating trust over multiple paths. Propagation has four properties: symmetry, follow-through, directness and divergence. Sun et al. (2023) and Tan et al. (2022) study optimal paths and long-chain effects.",
+   "system_side": "The chain uses the single most reliable path: Dijkstra on -log p, then chainHold = product of activeP(p) per hop, with ASKM 0.07. The code comment calls this a conservative floor because rerouting only improves it. Multi-path aggregation (cov = 1 - prod(1-p)) appears only in budgetRecruit coverage, not in the reported chain hold.",
+   "transfer": "Taking a product along one path is the multiplicative operator family the review lists. Aggregating over alternative paths would turn the floor into a fuller estimate. This only matters if the edge probabilities mean something empirically, and the cosponsor-kernel p and ASKM are uncalibrated. The paper offers a concept, not evidence that multi-path aggregation predicts real recruitment.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "trivedi-2020-efficient-influence-maximization",
+   "title": "Efficient Influence Maximization in Social-Networks Under Independent Cascade Model",
+   "year": "2020",
+   "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+   "relation": "qualifies",
+   "claim": "Under MICM on NetPhy the paper reports percent gains over ICM: DHICM +23.7% at k=30 and CELF +55.55% at k=10. These are different k values and gains over ICM, so they do not measure a head-to-head DHICM vs CELF gap under MICM. The paper does not say its discount assumes small p, and it does not test one-hop versus multi-hop spread.",
+   "system_side": "budgetRecruit greedy: gain = (1 minus cov[c]) plus the sum over direct neighbours of PE[c][v] times (1 minus cov[v]), with pruning of nodes below 0.1 times mean degree and a 1+2dT multiplier when a target is set. The coverage update touches direct neighbours only, so the objective is one-hop. Verified.",
+   "transfer": "The paper's MICM is a different edge-probability form from the kernel, so it cannot say how one-hop coverage fares at the kernel's p-range. The claim that the kernel reaches p of about 0.52 was not checked: the cited sector-networks note is not in the repo. Any approximation-quality claim stays UNVERIFIED until a second path reproduces it (DE-062).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "golovin-2011-adaptive-submodularity-theory",
+   "title": "Adaptive Submodularity: Theory and Applications in Active Learning and Stochastic Optimization",
+   "year": "2011",
+   "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+   "relation": "qualifies",
+   "claim": "The (1-1/e) greedy guarantee holds for the monotone submodular objective greedy maximizes (Sec 3.1-3.2 pp.6-8). Under IC with full-adoption feedback, observing which asks succeed keeps adaptive submodularity (Thm 19 p.21).",
+   "system_side": "budgetRecruit maximizes probabilistic coverage cov = 1 minus product of (1 minus p), which is monotone submodular. When a target is set, each candidate marginal g is multiplied by (1 + 2 dT[c]), and the code comment still claims the (1-1/e) guarantee for reported reach. No ask outcome is observed.",
+   "transfer": "Without a target the classical guarantee holds for reach. With a target the selection score is not the marginal of any fixed submodular function, so the (1-1/e) comment overstates the claim. An adaptive version would need recruit outcomes fed back, which is not built.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "ma-2022-adversarial-attack-graph",
+   "title": "Adversarial Attack on Graph Neural Networks as An Influence Maximization Problem",
+   "year": "2022",
+   "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+   "relation": "suggests-extension",
+   "claim": "Corollary 1 Eq. 6 with a = 0.01 over B = M^L (L = 4) is a saturated coverage function and is submodular. The paper says this objective outperforms one-step and centrality heuristics. The paper's experiments compare against Degree, Betweenness, PageRank, RWCS and GC-RWCS; no one-step coverage baseline is tested.",
+   "system_side": "budgetRecruit is cardinality-bounded (nSeeds), not cost-bounded as its comment says. Coverage cov = 1 - prod(1-p) is updated over DIRECT edges PE only, so coverage is one hop. Greedy marginal gain includes an optional target weight (1 + 2 dT) and a stance filter. The code comment claims the 1-1/e guarantee.",
+   "transfer": "The 1-1/e guarantee applies to plain greedy on the monotone coverage objective. It does not transfer cleanly to the target-weighted variant, where argmax of (1 + 2 dT) times marginal is not greedy on the reach objective. A multi-hop extension would replace p with an L-step walk weight on the kernel; on the cosponsor graph that is a heuristic reach score (D-025), not an introduction probability, and must not reintroduce the rejected per-edge volume normalization. Weak.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "arya-2025-relink-edge-activation",
+   "title": "RELINK: Edge Activation for Closed Network Influence Maximization via Deep Reinforcement Learning",
+   "year": "2025",
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "relation": "method-source",
+   "claim": "IM-CSN as edge activation: fixed seed set, each node may activate at most k of its out-edges (k in 5, 10, 20), reward is marginal IC spread. A trained Double DQN edge policy beats Random, Degree and FoF in 462, 464 and 462 of 480 configurations and PSNA in 456 of 480. Abstract says up to 15% higher spread; Sec 6.3 says improvements frequently exceed 15%, so the two statements differ.",
+   "system_side": "Docstring credits 'RELINK + MOPBD*' (cosponsor_route.py line 3). Champions are seeds and each recruiter whips at most K=5 colleagues (K env default 5, line 9). Greedy route for lambda in 0, 0.5, 1, 2, 4 on value-per-dollar (gain - lambda(1-p))/cost, then a Pareto front. Optional MC reach runs only when MCMODE=1 (off by default). K=5 and CEDGE=10000 are unestimated env defaults.",
+   "transfer": "Only the framing transfers: edge actions under a per-node budget. The paper's numbers are for a trained DDQN policy on simulated IC spread over public online graphs with random or uniform 0.5 weights. The built routes are greedy heuristics, so no RELINK result transfers to them. Any citation of 15% or 456/480 for Melange routes would be a misattribution.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "arya-2025-relink-edge-activation",
+   "title": "RELINK: Edge Activation for Closed Network Influence Maximization via Deep Reinforcement Learning",
+   "year": "2025",
+   "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+   "relation": "qualifies",
+   "claim": "The IM-CSN objective is non-submodular (Introduction, citing Huang et al. 2022). The paper gives no optimality guarantee for its own policy and lists optimality under submodular objectives as future work (Sec 7). In Fig 4 (k=20, uniform weights) Random and PSNA generally perform best among baselines, followed by FoF and Degree. On dense graphs (email-Eu-core, wiki-Vote, sx-mathoverflow) PSNA beats RELINK at smaller seed sets (Sec 6.3, Fig 6).",
+   "system_side": "closedCascadeRoute grows a tree from the selected member with 6 edges and fanout 2 per recruiter (tpl line 947). Edge score is arrival x marginal x (0.75 + 0.25 PR/PRMAX) (line 842). Code comment at line 831 says IM-CSN is non-submodular, so no (1-1/e) claim. budgetRecruit is a node-coverage greedy that claims (1-1/e) on its coverage proxy (lines 773-777). The hub-convergence disclosure test is at line 525 of the test file.",
+   "transfer": "The non-submodularity point and the warning that degree- or hub-favouring heuristics are weak under edge budgets carry over only as structural context. The paper's comparisons use public networks, mostly under IC with random weights, and its dense-graph losses to PSNA say nothing about the 533-member House graph. Hub convergence cannot be judged from the paper.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "luo-2020-path-planning-algorithm",
+   "title": "A UAV Path Planning Algorithm Based on an Improved D* Lite Algorithm for Forest Firefighting",
+   "year": "2020",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "suggests-extension",
+   "claim": "Step 6 replans when the next node is more than r = 20 m away or the target has moved. The search runs backward from the goal (step 2). Plain D* Lite is suited to short-range or local planning with little environmental change.",
+   "system_side": "buildPath calls distToTarget, a goal-rooted max-product field, then tracePath. distToTarget does not check the dropped set. tracePath skips dropped nodes only when choosing the next step, so its greedy descent reads field values that may route through dropped members.",
+   "transfer": "Only the idea of refreshing a goal-rooted field after the graph changes transfers. The paper's speed numbers do not (3D grids of about 1M cells vs a 533-node graph). At this size a recompute that skips dropped nodes is enough; incremental D* Lite is not needed.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "luo-2020-path-planning-algorithm",
+   "title": "A UAV Path Planning Algorithm Based on an Improved D* Lite Algorithm for Forest Firefighting",
+   "year": "2020",
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "relation": "qualifies",
+   "claim": "Plain D* Lite is adequate for short-range planning where the map changes little. The paper's speed gains come from shrinking 100x100x100 m and 120x120x100 m grids, with path lengths differing by up to about 8 percent (Env4, 337 vs 311 m).",
+   "system_side": "cosponsor_route.py builds a recruitment route greedily with out-degree budget K=5, once for each risk weight lambda in 0, 0.5, 1, 2, 4, then filters a Pareto front. MOPBD* appears in the docstring as a concept only. Nothing is replanned incrementally; each run rebuilds.",
+   "transfer": "The paper's own scale result argues against adding D* Lite to a 533-node graph where full recomputation is cheap. Map zooming trades optimality for speed, which the cosponsor objective does not want. Revisit only if routes are recomputed live on a much larger graph.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "luo-2020-path-planning-algorithm",
+   "title": "A UAV Path Planning Algorithm Based on an Improved D* Lite Algorithm for Forest Firefighting",
+   "year": "2020",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "qualifies",
+   "claim": "Speed comes from a geometric heuristic (max absolute coordinate difference) and from coarsening the map to a quarter of its size. Path lengths differ by up to about 8 percent between the two methods in Table 1.",
+   "system_side": "staffer_closeness_routes.py runs bidirectional Dijkstra with heuristic 0 and exact tie-breaking at 1e-12, with Yen loopless alternatives. The routing layer caches up to 64 results in an OrderedDict and evicts the oldest entry with no recency update on a hit, so it is FIFO, not LRU. The 4.66M overlap-pair figure was not checked.",
+   "transfer": "Neither speed lever transfers. A person-tie graph has no coordinates, so there is no admissible geometric heuristic, and map coarsening would break the proven-optimal contract. The only analog is hierarchical search, which would need its own correctness proof. Route costs remain heuristic outputs, not closeness or introduction probabilities (D-025).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "xu-2024-improved-lite-based",
+   "title": "An Improved D* Lite-Based Dynamic Route Planning Algorithm for Ships in Arctic Waters",
+   "year": "2024",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "qualifies",
+   "claim": "Paper says greedy path extraction after map changes can deadlock where a predecessor cost value exceeds its successor value (Fig. 3b). Its fix (Eq. 6, Algorithm 2) picks the unexplored successor minimizing passage cost plus g and excludes explored nodes. The 18,468 vs 28,351 freezing node counts compare the whole improved method (local update plus extraction plus path optimization) with the original D* Lite, not Eq. 6 alone. The paper does not say the g values are out of date or made consistent with the change.",
+   "system_side": "Dashboard buildPath runs one max-product Dijkstra from the target (distToTarget). distToTarget does not check the dropped set, while tracePath skips dropped members. When members are dropped, dT still counts routes through them, so the greedy trace can be suboptimal or return reached=false. The code comment labels the chain PROVABLY-OPTIMAL. With nothing dropped the extraction is exact.",
+   "transfer": "The mechanism is general graph search and does not depend on ice data, so it applies to the 533-node cosponsor graph whenever the member-out scenario is active. The paper's timings (single voyage, no hardware stated) do not transfer. Fix is a full recompute that honors dropped, which is cheap at this size.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "xu-2024-improved-lite-based",
+   "title": "An Improved D* Lite-Based Dynamic Route Planning Algorithm for Ships in Arctic Waters",
+   "year": "2024",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "qualifies",
+   "claim": "Paper's local-update rule (Eq. 5) cuts node updates by 34.9% (freezing) and 79.5% (melting) against the original D* Lite and planning time by 46.2% and 85.7%. Route length differs from full re-planning by about 0.1% (2,558.747 vs 2,561.408 n mi freezing; 2,419.087 vs 2,418.146 n mi melting). The paper gives no optimality guarantee; it reports error below 0.1% against the global re-planning routes.",
+   "system_side": "Staffer router is an exact bidirectional Dijkstra with heuristic 0. Ties are costs within 1e-12 relative, broken by fewer steps. Results are cached under a key that includes the graph revision, so a revision change forces a fresh search. No incremental reuse exists.",
+   "transfer": "Incremental replanning helps when the same origin and goal are re-queried after small local edge changes on a large graph. Staffer requests use different origins and targets, so the paper's gains do not transfer directly. The approximate update would conflict with an exact-cost requirement.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "xu-2024-improved-lite-based",
+   "title": "An Improved D* Lite-Based Dynamic Route Planning Algorithm for Ships in Arctic Waters",
+   "year": "2024",
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "relation": "context",
+   "claim": "Paper uses cost = delta*r + d (Eq. 12). Raising delta from 1 to 3 at Icemax 1.2 m (freezing) lowers average risk from 0.076 to 0.039 and lengthens the route from 2,558.7 to 2,645.5 n mi (+3.4%) (Table 5). Paper calls delta = 3 sufficient based on simulation experiments it does not show. The text does not call them unpublished. The paper shows no Pareto front.",
+   "system_side": "cosponsor_route.py builds greedy routes with a lambda risk penalty (value = (gain - lambda(1-p))/cost) over lambda in {0, 0.5, 1, 2, 4}, then keeps non-dominated (cost, spread, risk) points. It is not a shortest-path search. The file header cites MOPBD* (conceptual).",
+   "transfer": "The two works share only the weighted-sum risk cost. The system reports a front while the paper fixes one delta. Weighted-sum scalarization can miss non-convex front points in both.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ren-2022-multi-objective-path",
+   "title": "Multi-Objective Path-Based D* Lite",
+   "year": "2022",
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "relation": "qualifies",
+   "claim": "MOPBD* returns the exact Pareto-optimal set of source-to-goal paths (Theorem 1: C = C*). Multi-objective shortest path is NP-hard even with two objectives, and the front can grow exponentially with the number of nodes.",
+   "system_side": "Docstring line 3 says RELINK + MOPBD*. The code runs a greedy build_route for each lambda in 0, 0.5, 1, 2, 4 (line 70), scoring candidate edges as (gain - lam(1-p))/cost, then filters (cost, spread, risk) points by dominance (lines 64-76). It is a lambda-parameterised greedy heuristic over recruitment sets, not a weighted sum over the three objectives and not a path search.",
+   "transfer": "The paper claim concerns source-target paths with additive vector costs. The route finder uses a product-form reach and a mean-p risk over a recruitment set, so MOPBD* cannot be dropped in. The docstring overstates the method; the front is a heuristic approximation, not an exact Pareto set.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ren-2022-multi-objective-path",
+   "title": "Multi-Objective Path-Based D* Lite",
+   "year": "2022",
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "relation": "qualifies",
+   "claim": "Incremental reuse helps when cost changes are few and local. On the maze map with random obstacle add and delete (M = 2, 3, 4; 5 minute limit), MOPBD* beats from-scratch NAMOA* in general on median and average runtime, but its advantage shrinks as M grows and from-scratch NAMOA* wins at M = 4. The worst case can exceed from-scratch search when many states are invalidated.",
+   "system_side": "cosponsor_route.py keeps no saved search state: each run rebuilds routes from scratch (build_route called fresh for each lambda, lines 41-62 and 70-72). Edge probabilities come from MBC.build_P(adj) over the whole network (around line 22). The statement that these probabilities change in batch at pipeline refresh was not verified from code read here.",
+   "transfer": "The paper evidence covers single-robot grid planning with local edge changes at 1 to 5 minute limits on simulated grids in Python. It does not cover whole-network batch refresh or changes to global weights such as lambda or K.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ren-2022-multi-objective-path",
+   "title": "Multi-Objective Path-Based D* Lite",
+   "year": "2022",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "suggests-extension",
+   "claim": "Vector costs with a non-dominated set expose trade-offs that a single scalar sum hides. Epsilon-dominance (0.01 to 0.05) gives smaller stored sets and faster runs, at a cost in solution quality; the paper states no set-size or runtime bound. The advantage over from-scratch search shrinks as the number of objectives grows.",
+   "system_side": "Hop cost is minus log of HOP_FACTOR times strength plus a fixed weight times uncertainty (_hop_cost, lines 115-116). HOP_FACTOR is 0.8 in fec/staffer_network/closeness_math.py:20. Search is bidirectional Dijkstra with heuristic 0 (ALGORITHM, line 79). Yen loopless alternatives follow the same scalar (module docstring, line 23). Ties go to the fewest steps, then the least cost (around line 519).",
+   "transfer": "The extension applies only if the strength-uncertainty trade-off should be shown as a front rather than fixed by w. It would add latency where route speed is already a concern. Any front members remain heuristic model outputs, never closeness or introduction probabilities (D-025).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "zeller-2016-step-path-selection",
+   "title": "Using step and path selection functions for estimating resistance to movement: pumas as a case study",
+   "year": "2016",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "qualifies",
+   "claim": "Resistance is set to the inverse of the predicted relative probability, exp(sum b_i x_i), and the authors state that no empirical evidence supports equating that inverse with resistance. The routes and crossing locations it produces (top-20 current-flow pixels on I-15) shift with method (SSF vs PathSF), with scale (532-7,390 m) and with the paired vs unpaired framework.",
+   "system_side": "Route cost is a parallel inversion. Each hop costs -ln(0.8 x strength) plus a weighted uncertainty term, and bidirectional Dijkstra with heuristic 0 returns the minimum-cost route. The code already labels the score 'not a probability of access' and calls u 'not a probability'.",
+   "transfer": "Analogy only. In the paper, a fitted selection probability on a 30 m landscape becomes a cost. Here, hand-set exposure strengths between people become a cost. What carries over is the methodological warning: the probability-to-cost transform is an untested assumption, and route choice is sensitive to it. That supports the system's existing non-probability wording (D-025). It gives no evidence about which transform is right for staffer ties.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "zeller-2016-step-path-selection",
+   "title": "Using step and path selection functions for estimating resistance to movement: pumas as a case study",
+   "year": "2016",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "suggests-extension",
+   "claim": "PathSF compares each observed path with its own set of available alternatives in a conditional-logistic case-control design, and so estimates cost coefficients from observed route choices. It outperformed step-wise SSF at every scale except the finest (10-fold CCC 0.992 vs 0.976), and the authors recommend PathSF when there is a choice.",
+   "system_side": "The component's open question is whether shorter or cheaper routes match successful real introductions in an outreach log. Its costs (HOP_FACTOR 0.8, uncertainty weight, 5-year staleness half-life) are assumptions, not fitted values. The module states its costs are 'not fitted success or friendship probabilities'.",
+   "transfer": "This only applies if an outreach log of attempted and completed introductions is ever recorded. Each used route could then be paired with Yen-alternative routes as the available set, and conditional-logistic weights could be fitted for the hop-cost components. Until then it is a design template, not evidence. Any fitted output would stay a heuristic score, never an access or introduction probability (D-025), and would need a single-look holdout.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "zeller-2016-step-path-selection",
+   "title": "Using step and path selection functions for estimating resistance to movement: pumas as a case study",
+   "year": "2016",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "qualifies",
+   "claim": "Whole-path selection (PathSF) gives coefficients of larger magnitude than step-wise selection (SSF), and different characteristic scales for every cover type except chaparral. The road-crossing sites also differ between step-based and path-based models. Composing steps does not reproduce whole-path behaviour.",
+   "system_side": "The recruitment chain is ranked by the product of independent per-hop cosponsor-kernel probabilities (Dijkstra on -log p, then pathReliability). chainHold multiplies the per-hop activeP values, with ASKM 0.07 treated as constant and unestimated.",
+   "transfer": "Loose analogy. The paper shows that animal movement along a whole path is not the composition of independent steps. Legislators recruited through a chain may likewise not act as independent hops. The evidence concerns habitat selection, not social asks, so it only motivates checking hop independence against observed cosponsor join sequences. It does not show that the product rule is wrong here.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "abdelrahman-2025-conflict-based-search",
+   "title": "Conflict-Based Search for Multi-Agent Path Planning Using D*Lite for Dynamic Re-planning: Analysis and Verification",
+   "year": "2025",
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "relation": "suggests-extension",
+   "claim": "Replacing A* with incremental D* Lite inside CBS cuts mean execution time from 5.575 s to 0.04 s (99.2%) and nodes explored from 2142 to 250.5 (88.3%), at about 0.8% longer paths (15.73 vs 15.6). However, the 8-point case explores more nodes with D* Lite (198 vs 178). The number of runs is not reported.",
+   "system_side": "The route finder is a static greedy builder on the shared build_P kernel. It reruns build_route from scratch for each of the five lambda values and keeps a Pareto front over cost, expected cosponsors and risk. A per-recruiter whip cap of K=5 is the only shared-resource constraint. MOPBD* is named in the docstring as a concept only. The code does no incremental replanning and no repair when an edge or stance changes.",
+   "transfer": "The speedup does not transfer. It was measured on 3D voxel grids with moving obstacles, while this graph has 533 nodes and recomputing it costs very little. What carries over is the idea of repairing a route when a member joins, declines or changes stance, rather than rebuilding it. The K=5 whip cap loosely resembles a CBS conflict over a shared resource, but CBS resolves conflicts between agents competing for space and time, not recruiter bandwidth. Treat the paper as a design pointer only (weak, single-source, unreplicated, UNVERIFIED).",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "abdelrahman-2025-conflict-based-search",
+   "title": "Conflict-Based Search for Multi-Agent Path Planning Using D*Lite for Dynamic Re-planning: Analysis and Verification",
+   "year": "2025",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "suggests-extension",
+   "claim": "D* Lite reuses earlier search results when costs change, so a route can be repaired instead of recomputed. The authors credit this for faster conflict resolution in dynamic settings, but they report no replanning counts.",
+   "system_side": "The dashboard chain uses Dijkstra on -log p. chainHold multiplies activeP over the hops and is documented as P(every ask lands first-try, no reroute), a conservative floor that rerouting could only improve. ASKM=0.07 is an unestimated dial. No reroute-on-failure logic exists.",
+   "transfer": "The extension would need an observed event: a failed ask or a stance move that changes edge probabilities while a campaign is under way. Only then would incremental repair, or simply recomputing the route, give a reroute-aware chain hold. The paper gives no evidence about recruitment success. Edge p values are heuristic kernel outputs, not ask-success probabilities (D-025 wording applies).",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "abdelrahman-2025-conflict-based-search",
+   "title": "Conflict-Based Search for Multi-Agent Path Planning Using D*Lite for Dynamic Re-planning: Analysis and Verification",
+   "year": "2025",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "qualifies",
+   "claim": "Incremental planning is not always cheaper. In the 8-point case, D* Lite expanded 198 nodes against A*'s 178. The paper also does not report node counts for single-shot queries on unchanged graphs.",
+   "system_side": "The router runs bidirectional Dijkstra with heuristic 0 to a virtual sink, plus Yen loopless alternatives. It runs one search per request on a fixed evidence snapshot, with no work caps (exact proof of the optimal route). The latency lane kept one-way Dijkstra without a heuristic and deferred ALT.",
+   "transfer": "D* Lite pays off only when costs change between successive queries on the same graph. Each staffer request starts on a fixed snapshot, so incremental search buys little unless the sidecar starts updating evidence in place between queries. The current design, exact and stateless, has no gap that this paper fills.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "chen-2023-complex-contagion-influence",
+   "title": "Complex Contagion Influence Maximization: A Reinforcement Learning Approach",
+   "year": "2023",
+   "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+   "relation": "qualifies",
+   "claim": "The (1-1/e) greedy guarantee of Kempe et al. 2003 applies to submodular IC and LT. Under complex contagion no such guarantee holds, and CCIM is NP-hard to approximate even under simplified network models (citing Schoenebeck and Tao 2019).",
+   "system_side": "make_dashboard_html_00.tpl budgetRecruit (line 779) is greedy max coverage with coverage 1 - prod(1 - p) over recruiter edges. The comment at lines 773-776 claims the (1-1/e) guarantee. The closed-cascade route (line 832) is commented at line 831 as non-submodular with no (1-1/e) claim. The one live call (line 1126) passes target -1, so the target-distance multiplier (1 + 2 dT) is not applied there.",
+   "transfer": "The guarantee is true of the coverage proxy only, not of real recruitment. Dashboard wording should say so if threshold joining is plausible. The target-weighted branch multiplies marginals by (1 + 2 dT), which lies outside the classic argument, so the guarantee should not be cited for targeted calls.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "kamarthi-2020-influence-maximization-unknown",
+   "title": "Influence maximization in unknown social networks: Learning Policies for Effective Graph Sampling",
+   "year": "2020",
+   "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+   "relation": "supports",
+   "claim": "A learned query policy is needed only because the graph is unknown. OPT is greedy influence maximization on the full graph G* and is the ceiling; rewards are scaled as (influence minus CHANGE) over (OPT minus CHANGE), Eq. 1. With the graph known, greedy is the reference standard.",
+   "system_side": "budgetRecruit runs cost-bounded max-coverage greedy over the edge-probability matrix PE. Candidates are pruned to degree at least 0.1 x mean degree. The comment cites the 1-1/e guarantee and says no ML is needed at this scale.",
+   "transfer": "The paper premise (learning pays only when edges are hidden) applies only if the cosponsor graph is a partial sample of a latent network. The 1-1/e guarantee holds for greedy on the graph as observed, not for the true network if ties are missing.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ng-1999-policy-invariance-reward-transformations",
+   "title": "Policy Invariance Under Reward Transformations: Theory and Application to Reward Shaping",
+   "year": "1999",
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "qualifies",
+   "claim": "Corollary: shaped Q' = Q - Phi and V' = V - Phi, with Phi(absorbing) = 0 in the undiscounted case, so the shaped and original problems share the same argmax over actions. Remark (Robustness and learning): the identities hold for arbitrary policies, so an epsilon-accurate potential keeps policies epsilon-near-optimal. Choosing Phi = V* makes V' identically zero, which the authors call an easy value function to learn.",
+   "system_side": "buildPath (line 753) calls distToTarget(target) (line 734), a max-product proximity over the full PE graph that does not exclude dropped members. tracePath (line 740) takes the argmax of PE[cur][v] times dT[v] over unseen, non-dropped neighbours. With no drops this greedy step is exact because dT satisfies the Bellman equation. With a drop, dT still counts paths through the dropped member, so the greedy step can follow a dead end or a weaker chain. The comment at line 735 says PROVABLY-OPTIMAL and is wrong once a member is dropped. A toy replica of these functions (scratchpad folder ng1999, file trap2.js) gave chain product 0.009 where the best drop-avoiding chain is 0.36 (case 1), and reached=false while a path exists (case 2). This replicates the logic only, not the browser page.",
+   "transfer": "Deterministic max-product over per-ask probabilities, equivalent to a -log p shortest path (comment at line 735). Applies only when the dropped set is non-empty. Drops are set only from the drop text box in applyShocks (line 1165); the URL parameter read at line 1537 is coal, not drops, so the earlier URL claim is removed. The browser-level failure stays UNVERIFIED under DE-062; the logic failure is reproduced in a replica.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ng-1999-policy-invariance-reward-transformations",
+   "title": "Policy Invariance Under Reward Transformations: Theory and Application to Reward Shaping",
+   "year": "1999",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "method-source",
+   "claim": "Theorem (sufficiency and necessity): adding gamma*Phi(s') - Phi(s) for any real Phi leaves every optimal policy unchanged, and without prior knowledge of T and R no other additive shaping term guarantees this. The paper does not discuss A*, heuristics used in search, or bidirectional search.",
+   "system_side": "staffer_routing.py:386 and staffer_closeness_routes.py:79 both state Bidirectional Dijkstra with heuristic 0, with terminal costs and a virtual sink (search code from line 511). No heuristic is in use. The theorem covers changing the objective (rewards or arc costs). A search heuristic in A* changes search effort, not the objective, so it lies outside the theorem. Its correctness depends on admissibility or consistency, which is standard A* theory and not in this paper. The potential condition applies only if a heuristic is folded into arc costs as a reweighting, where telescoping keeps route ranking.",
+   "transfer": "Holds for deterministic additive costs. Bidirectional search, the 10^12 tie band and Yen ranking are outside the paper and need their own checks in original cost units. The premise that Paul wants learned or landmark heuristics is not in the item (paul_entries is empty) and is unverified here.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ng-1999-policy-invariance-reward-transformations",
+   "title": "Policy Invariance Under Reward Transformations: Theory and Application to Reward Shaping",
+   "year": "1999",
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "qualifies",
+   "claim": "Necessity: for any non-potential additive shaping term there exist dynamics and rewards under which the shaped optimum is not optimal in the original problem (Appendix A proves the two-action case). A constant added to every terminal arc telescopes to a potential term Phi(goal) and leaves route ranking unchanged. A term that varies by staffer or per step is not a potential and can change the winner.",
+   "system_side": "Lines 913-918: modifier = 1 + MEMBER_BETA*value, with MEMBER_BETA = 0.15 (closeness_math.py:21). Dividing by (1 + MEMBER_BETA) is a constant shift on every terminal arc when an office is set, so the code comment at line 916 about ranking is correct for that step. Line 919 also adds uncertainty_weight times the anchor uncertainty cost, which varies by target and is not a constant shift; the earlier draft omitted it, and it can change the winner. The modifier is the per-staffer term that is not a potential. In staffer_routing.py:424-425 the balance step penalty is added in the ranking key among candidate routes, a per-step term that is not a potential and changes the winner among candidates.",
+   "transfer": "Deterministic costs. The code calls the modifier member_context_max_bonus (line 1014) and comments prestige bonus (line 917). D-025 is not cited in this file, so the D-025 wording is not verified here.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "dai-2017-learning-combinatorial-optimization-graphs",
+   "title": "Learning Combinatorial Optimization Algorithms over Graphs",
+   "year": "2017",
+   "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+   "relation": "qualifies",
+   "claim": "On set covering built from the MemeTracker-derived graph, averaged over 1000 test graphs, Dai et al. report ratios of S2V-DQN 1.001, LP 1.0009 and Greedy 1.03. This is minimum set cover, not budgeted maximum coverage, and the paper makes no general claim about coverage objectives.",
+   "system_side": "budgetRecruit in fec/surfaces/templates/make_dashboard_html_00.tpl lines 773-793 scores a candidate by its marginal noisy-OR coverage gain, 1 minus cov[c] plus the sum of PE times (1 minus cov[v]), multiplied by (1 plus 2 dT[c]) when a target is set. Candidates below 0.1 times mean degree are pruned. The loop stops at nSeeds, not at a cost bound. The comment at lines 773-776 calls it cost-bounded, claims the (1-1/e) guarantee, and says no ML is needed at this scale.",
+   "transfer": "Dai's set cover is minimum cover; budgetRecruit is budgeted maximum coverage with a target reweighting and degree pruning, so the 3 percent greedy gap does not transfer directly. 533 nodes is inside Dai's tested range of up to 1200, but there is no training distribution. The guarantee does not hold strictly under the reweighting and pruning.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "dai-2017-learning-combinatorial-optimization-graphs",
+   "title": "Learning Combinatorial Optimization Algorithms over Graphs",
+   "year": "2017",
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "relation": "suggests-extension",
+   "claim": "A Q-function over a graph embedding, trained by n-step Q-learning with fitted Q-iteration, can serve as a greedy evaluation function and generalizes from 50-100 node training graphs to 1000-1200 node test graphs, with MaxCut BA ratio 1.0038 and MVC BA ratio 1.0062 (Table 2, 1000 test instances).",
+   "system_side": "build_route in fec/engine/cosponsor_route.py lines 41-56 is a greedy over candidate edges, with a heap keyed by (gain minus lam times (1 minus p)) divided by edge cost CEDGE over max(0.1, p). K defaults to 5 recruits per recruiter (line 9), and the loop stops when the best value is at most zero. The non-submodular sibling closedCascadeRoute in the template at lines 824-835 is explicitly labeled a sequential heuristic with no (1-1/e) claim.",
+   "transfer": "Requires a simulated instance distribution, for example cascades on perturbed or topic-specific kernels, as training data, which the system lacks. A learned Q-value is a heuristic score, never an ask-success or access probability (D-025). Any result stays UNVERIFIED until a second path reproduces it (DE-062).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "manchanda-2020-gcomb-learning-budget-constrained",
+   "title": "GCOMB: Learning Budget-constrained Combinatorial Algorithms over Billion-sized Graphs",
+   "year": "2020",
+   "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+   "relation": "method-source",
+   "claim": "Locality is neighbours not yet covered by the partial solution (Eq 3). Greedy reaches at least 99 percent of optimal on small graphs (Table 1b: BP-500 b=20 GCOMB 0.998, greedy 0.99, optimal 1). GCOMB matches greedy on real graphs and wins mainly on time at scale.",
+   "system_side": "budgetRecruit is greedy max coverage. Gain = (1 - cov[c]) + sum over v of PE[c][v] times (1 - cov[v]), with cov = 1 - prod(1-p) over selected recruiters. Candidates below max(1, 0.1 x mean degree) are skipped. The budget in $k becomes a seed count via K.CEDGE. The live caller passes target -1, so the target multiplier is off.",
+   "transfer": "The 1-1/e bound holds for cardinality-constrained monotone submodular coverage, which this objective is. Paper evidence for greedy near-optimality is only on 500 to 900 node graphs (Table 1b); applying it to a 533-member graph is an extrapolation. The GCOMB Eq 3 locality is a Q-learning state feature. The code uses the plain coverage marginal, which greedy already contains, so the GCOMB label overstates the mapping. The degree prune is a fixed rule, not the learned noise predictor.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "defigueiredo-2013-advancing-empirical-research",
+   "title": "Advancing the Empirical Research on Lobbying",
+   "year": 2013,
+   "component_id": "melange-pathfinding.staffer-overlap-routes",
+   "relation": "qualifies",
+   "claim": "Blanes i Vidal, Draca and Fons-Rosen (2012): lobbyist revenue of former Senate staffers falls about 23 percent when the senator they served is defeated or retires, in a 22-period panel with lobbyist and party-chamber-time fixed effects (pp.18-20). The essay reads this as the value of who you know (p.20).",
+   "system_side": "Staffer route cost uses shared-work and recency terms with a member-context modifier MEMBER_BETA 0.15. employment_history.py derives a revolving-door sidecar. Route cost is a heuristic model output, not closeness or access (D-025).",
+   "transfer": "The essay's evidence is a revenue effect for lobbyists, not a route-cost or access measure. Influence language stays barred on revolving-door edges.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  }
+ ]
+}

@@ -1,0 +1,86 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-allocation.budget-frontier",
+      "relation": "qualifies",
+      "paper_claim": "Introduction says greedy IM methods are generally more accurate with a theoretical performance guarantee but computationally intensive, while centrality methods are cheap but network-specific. SGNN replaces the greedy step with a learned per-node influence regressor and top-k selection. No SGNN numbers appear in the accessible preview.",
+      "paper_location": "Introduction, the paragraph citing Kempe [8] and refs [20] and [21]. The flattened preview text has no reliable paragraph numbers, so the label paragraph 2 is approximate.",
+      "system_side": "budget_frontier.py runs a lazy greedy: a heap of stale marginals, where each candidate marginal is spread(S+c) minus spread(S), clipped at zero and multiplied by a per-candidate factor fac. MC defaults to 20 edge-keyed CRN cascades. It stops at MAXSEEDS (default 60) or at zero marginal and reports a knee.",
+      "code_ref": "fec/engine/budget_frontier.py:153-170",
+      "transfer_conditions": "The submodular guarantee is not shown for this two-colour engine with leverage factors, so the claim that the greedy carries a guarantee here should not be made. A learned surrogate would trade away the marginal accounting for speed. Speed matters only if per-candidate MC greedy is infeasible, and the 533-member, 60-seed setting is not shown to be infeasible.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper claim confirmed at the cited Introduction location. Code confirmed: heap loop at lines 159-170, MC default 20 and MAXSEEDS default 60 at line 7, knee at line 172. Softened because the marginal is multiplied by fac and clipped at zero, and no submodular guarantee is established for this engine. Paragraph number 2 cannot be confirmed from flattened text."
+    },
+    {
+      "component_id": "melange-influence-engine.competitive-cascade-crn",
+      "relation": "qualifies",
+      "paper_claim": "Training labels are each node's individual influence computed under SIR and IC diffusion, and the seed set is the top k nodes by predicted influence. The preview does not say the simulations are single-source, and the paper does not model competition between seed sets.",
+      "paper_location": "Abstract; Introduction contribution (ii) and the sentence stating that the seed set is the top k nodes by predicted influence",
+      "system_side": "The cascade is a two-colour first-to-reach race: a node takes the colour of the first neighbour that reaches it, and spread counts only A-coloured activations. Pro seeds (Aseed) are A and anti seeds form the opposing set. Neutral bystanders are activated with probability min(0.9, ind/400000), which is a money-tied activation rather than a fixed-probability cascade.",
+      "code_ref": "fec/engine/budget_frontier.py:83-94",
+      "transfer_conditions": "Single-colour standalone-spread labels do not encode competition or seed overlap. A surrogate would need retraining on competitive-race marginal labels before standing in for this engine, and the paper never tests that case.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "The cascade logic at lines 83-94 is confirmed as a first-to-reach two-colour race counting only A. Pro seed set confirmed at line 114. Bystander activation confirmed at line 133. Softened because the paper does not say single-source, and the relation is qualifies rather than contradicts: the paper does not contradict the engine, it simply does not model competition."
+    },
+    {
+      "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+      "relation": "qualifies",
+      "paper_claim": "SGNN features come from struc2vec structural identity, and labels come from SIR and IC diffusion simulations. The regressor therefore predicts diffusion-based influence on structure, not purely structural spreading power.",
+      "paper_location": "Abstract (struc2vec features and diffusion labels); Introduction paragraph describing structural identity of nodes",
+      "system_side": "The cosponsor InfluenceScore (0.60 weighted out-degree, 0.25 betweenness, 0.15 eigenvector) had its centrality weight set to 0 in the Influence pillar on 2026-06-25 (AB13 from 0.65 to 0.0), with the stated reason that centrality is direction-blind. It still feeds the underdog lens at 0.5 weight.",
+      "code_ref": "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md:133",
+      "transfer_conditions": "Applies only if someone proposes learned structural embeddings as an influence signal. Any such signal would need stance gating and would remain a heuristic model output, never closeness or access (D-025).",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "The cited file moneyball-workbook-lineage-and-june-audit.md line 62 does not say weight 0 or direction-blind; it records the 0.35/0.65 delivery blend, which line 26 of that file marks as superseded. The correct source is moneyball-workbook.md line 133 (weight change and direction-blind reason) and line 137 (underdog lens). Paper side softened because labels are diffusion simulations, not structure alone."
+    }
+  ],
+  "related": [
+    {
+      "slug": "almazaydeh-2026-heuristic-centrality-methods",
+      "relation": "complements",
+      "why": "Both papers weigh cheap node rankings against greedy optimization in IM. Kumar builds a learned ranker; Almazaydeh tests whether centrality heuristics can match greedy. Item exists and title matches."
+    },
+    {
+      "slug": "trivedi-2020-efficient-influence-maximization",
+      "relation": "complements",
+      "why": "Both address efficient IM under the Independent Cascade model, which Kumar uses for labels alongside SIR. Relation changed from same-method because the methods differ (GNN regression versus a sampling or search method)."
+    },
+    {
+      "slug": "ma-2022-adversarial-attack-graph",
+      "relation": "complements",
+      "why": "Both join graph neural networks with influence maximization from opposite directions: Ma frames a GNN attack as IM, while Kumar uses a GNN to solve IM. Item exists and title matches."
+    },
+    {
+      "slug": "zareie-2023-influence-maximization-social",
+      "relation": "complements",
+      "why": "Survey of behaviour-aware IM methods, which places a structure-only learned ranker against methods that model user behaviour. Item exists; survey content not re-read in this verification."
+    },
+    {
+      "slug": "bharathi-nd-competitive-influence-maximization",
+      "relation": "complements",
+      "why": "Bharathi et al. model competitive IC, which the Melange engine follows in spirit. Kumar's single-colour labels do not model competition, so the two are not contradictory; Kumar simply does not cover the competitive case. Relation changed from contradicts."
+    },
+    {
+      "slug": "kamarthi-2019-influence-maximization-unknown",
+      "relation": "complements",
+      "why": "Another learning-based IM approach. Kamarthi et al. learn graph-sampling policies where Kumar learns a node-influence regressor; both trade guarantees for generalization across networks. Title matches."
+    },
+    {
+      "slug": "zareie-2020-similarity-based-link",
+      "relation": "complements",
+      "why": "Paul's annotation cross-references this social-graph learning work by title only. It shares the representation-learning theme but addresses link prediction, not seeding. Title matches."
+    }
+  ],
+  "summary_issues": [
+    "Overstated performance claim: summary says SGNN beats classical and recent IM baselines on several real networks. The abstract says it outperforms some of the classical and recently proposed methods on several real-life networks. Author claim, unverified.",
+    "Overstated InfluenceScore status: summary says InfluenceScore was retired. Its centrality weight was set to 0 in the Influence pillar (committee-only) on 2026-06-25 and it is kept at 0.5 in the underdog lens.",
+    "Wrong citation: the InfluenceScore bearing cites moneyball-workbook-lineage-and-june-audit.md line 62, which does not state the weight-0 change. Correct source is moneyball-workbook.md lines 133 and 137.",
+    "Unsupported detail: summary and bearing 2 describe the paper's labels as single-source diffusion. The preview only says influence is computed under SIR and IC; single-source is not stated.",
+    "Unsupported guarantee: summary and bearing 1 imply the greedy frontier carries a submodular guarantee for this engine. Not established for the two-colour engine with leverage factors.",
+    "Paragraph numbers in the bearings (paragraph 2, paragraph 3) cannot be confirmed from the flattened preview text; locators are approximate.",
+    "Coverage note in ext.json: says the text is 24,677 chars, while the item metadata n_chars is 24,620. The file is 24,677 bytes; the difference is encoding, not missing text. Dataset, N, metrics and limitations are absent from the preview, so all SGNN numbers remain UNVERIFIED."
+  ]
+}

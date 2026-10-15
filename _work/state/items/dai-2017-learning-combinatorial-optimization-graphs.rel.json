@@ -1,0 +1,57 @@
+{
+ "summary_md": "Dai, Khalil, Zhang, Dilkina and Song (NeurIPS 2017) learn greedy heuristics for NP-hard graph problems instead of hand-writing them. A structure2vec embedding (about 4-5 message-passing rounds, 64 dimensions) scores candidate nodes, and n-step Q-learning with fitted Q-iteration trains that score so a greedy loop adds one node at a time. Tested on minimum vertex cover, MaxCut, TSP and set cover, the learned policy (S2V-DQN) is near-optimal on synthetic graphs, holds up when trained on 50-100 nodes and run on 1000-1200 nodes (MVC ratio 1.0062), and beats hand heuristics on a 960-node MemeTracker diffusion graph (MVC ratio 1.0021 vs 1.2220 for greedy). It also wins on Ising MaxCut (1.0223) and TSPLIB (1.0475). Its edge is biggest where hand heuristics are weak (MVC, MaxCut). On set cover it nearly ties LP (1.001 vs 1.0009), and simple greedy trails by only 3 percent (1.03). It assumes many instances drawn from one distribution, offers no guarantees, and compares GPU runs against CPU baselines. For Melange this is the origin of the learned-greedy line (GCOMB, RL4IM, RELINK) that Paul cites. Every hand-built greedy in the system already fits its meta-algorithm with a hand-written score: the joint budget optimizer, budgetRecruit, the cosponsor route finder and closedCascadeRoute. The paper's own evidence suggests a learned score adds little where greedy is already exact or near-optimal (the fixed-state joint optimizer, coverage recruitment). The only plausible headroom is in the non-submodular route heuristics, and even there the training data does not exist: Melange has one 533-member graph per Congress, not a distribution of instances.",
+ "category": "Optimization",
+ "bearings": [
+  {
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "paper_claim": "A learned greedy score beats hand heuristics by large margins only where hand heuristics are far from optimal: MemeTracker MVC ratio 1.0021 vs MVCApprox-Greedy 1.2220 and MVCApprox 1.4080; Ising MaxCut 1.0223 vs MaxcutApprox 1.2825.",
+   "paper_location": "Section 5.4, Table 3; Appendix C.1-C.2",
+   "system_side": "The joint optimizer is a CELF lazy greedy over per-member concave $500 chunks. Its docstring says that in a fixed stance state the objective is separable and concave, so picking the largest marginal is the exact discrete optimum. Replanning happens only after modeled conversions. A learned score therefore has no headroom in the fixed state. Paul's expectation that a learned policy would replace greedy could only apply to the conversion-replanning regime.",
+   "code_ref": "fec/engine/optimize.py:3-10",
+   "transfer_conditions": "Holds while the concavity check passes (optimize.py:73-85) and the stance state is fixed. Once conversions change state, exactness is lost, but Dai still needs many training instances, and the system has one 533-member graph.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+   "relation": "qualifies",
+   "paper_claim": "On MemeTracker-derived set cover, hand greedy reaches ratio 1.03, S2V-DQN 1.001 and LP 1.0009. On coverage-type objectives greedy is within a few percent, and the learned policy closes most of that gap.",
+   "paper_location": "Appendix C.4 (set covering), Appendix B",
+   "system_side": "budgetRecruit is Dai's greedy meta-algorithm with a hand-written score: the marginal noisy-OR coverage gain 1-cov[c] + sum p(1-cov[v]), multiplied by a target-proximity factor (1+2 dT), with degree pruning below 0.1 x mean degree. Selection is bounded by a seed count. The comment concludes that no ML is needed at this scale.",
+   "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:773-793",
+   "transfer_conditions": "Dai's set cover is minimum cover, not budgeted maximum coverage, so the 3 percent gap is indicative only. 533 nodes is inside Dai's tested range (up to 1200), but there is no training distribution.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "relation": "suggests-extension",
+   "paper_claim": "A Q-function over a graph embedding, trained by n-step Q-learning, can stand in for a hand-designed greedy evaluation function and generalizes from 50-100 node training graphs to 1000-1200 nodes (MaxCut BA ratio 1.0038).",
+   "paper_location": "Sections 3-4, Algorithm 1; Section 5.2, Table 2",
+   "system_side": "The cosponsor route finder is a greedy over edges keyed by value per dollar minus lambda x risk, with K=5 recruits per recruiter. Its non-submodular sibling closedCascadeRoute (tpl:827-835) is explicitly labeled a heuristic with no (1-1/e) claim. These hand scores without guarantees are the only places where a learned Q could add value.",
+   "code_ref": "fec/engine/cosponsor_route.py:41-56",
+   "transfer_conditions": "Needs a simulated instance distribution, for example cascades on perturbed or topic-specific kernels, as training data. A learned Q-value is a heuristic score, never an ask-success or access probability (D-025). Any result stays UNVERIFIED until reproduced (DE-062).",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "The budgetRecruit comment (tpl:773-776) calls the routine cost-bounded and claims the classic (1-1/e) guarantee. The loop is actually bounded by seed count, and when a target is set each candidate's coverage marginal is multiplied by (1+2 dT[c]). That is greedy on a reweighted score, not on the coverage function, and degree pruning also restricts the candidates, so the stated guarantee does not strictly hold. This is a comment overclaim, UNVERIFIED by a second path.",
+  "No component has a distribution of training instances, such as per-topic or per-Congress kernels or perturbed cascades. A learned greedy policy (S2V-DQN, GCOMB, RL4IM) would need one.",
+  "Neither the system nor the paper measures how far the non-submodular route heuristics (cosponsor_route, closedCascadeRoute) are from optimal. Dai uses CPLEX optima for this; the system has no equivalent exact or ILP baseline at 533 nodes."
+ ],
+ "flags": [
+  "No conflict with the brain rules: the paper does not argue for dropping cosponsorship edges or for per-edge volume normalization. If adopted, learned Q-values must be worded as heuristic model scores, not closeness, access or introduction probabilities (D-025).",
+  "The paper's approximation ratios are averaged over its own synthetic test sets (typically 1000 graphs) or small benchmark sets (10 Ising instances, 38 TSPLIB instances), against CPLEX best-found values under a 1-hour cutoff. Quote them with that denominator.",
+  "Actual error, our code: the budgetRecruit comment's (1-1/e) and cost-bounded claims do not match the loop (see gaps)."
+ ],
+ "paul_alignment": "Paul has no entry for this paper. Through GCOMB, he expects a learned policy to replace greedy plus CELF at scale. The evidence here, with GCOMB's own benchmark (S2V-DQN 0.87 vs greedy 0.89 on maximum coverage), says learning pays off where hand heuristics are weak, not on 533-node coverage problems. The system already agrees: the template says no ML is needed at this scale, and the joint optimizer is exact in the fixed state. On learned replacement his note is stale; his GCOMB grounding for budget recruitment holds, apart from the guarantee overclaim.",
+ "related": [
+  {"slug": "manchanda-2020-gcomb-learning-budget-constrained", "relation": "extends", "why": "GCOMB extends the S2V-DQN learned-greedy approach to budget-constrained problems on billion-node graphs and benchmarks against it (S2V-DQN 0.87 vs GCOMB and greedy 0.89 on maximum coverage at b=15; S2V-DQN runs out of memory above 20k nodes)."},
+  {"slug": "chen-2021-contingency-aware-influence", "relation": "builds-on", "why": "RL4IM uses DQN with structure2vec-style embeddings taken from this paper, and uses S2V-DQN-IM as a baseline for contingency-aware influence maximization."},
+  {"slug": "chen-2023-complex-contagion-influence", "relation": "builds-on", "why": "RL4CCIM continues the S2V and RL4IM line, replacing the S2V encoder with a graph attention network and moving to complex contagion."},
+  {"slug": "kamarthi-2020-influence-maximization-unknown", "relation": "builds-on", "why": "Names Khalil et al. 2017 (this paper) as its closest prior work and extends DQN-on-graphs from fully observed graphs to unknown, sampled ones."},
+  {"slug": "arya-2025-relink-edge-activation", "relation": "complements", "why": "RELINK applies deep RL with edge-level actions to closed-network influence maximization. The system's closedCascadeRoute borrows its design, where a learned Q in the style of this paper would replace the hand score."},
+  {"slug": "watkins-1992-q-learning", "relation": "builds-on", "why": "The paper's n-step Q-learning and fitted Q-iteration training rests on Watkins' Q-learning."},
+  {"slug": "golovin-2011-adaptive-submodularity-theory", "relation": "complements", "why": "Supplies the greedy guarantee side that the joint optimizer keeps as a diagnostic bound. This paper supplies the learned, guarantee-free alternative."},
+  {"slug": "kempe-2015-maximizing-spread-influence", "relation": "complements", "why": "Submodular greedy influence maximization with (1-1/e) guarantees is the hand-greedy baseline this learning line tries to match or beat."}
+ ]
+}

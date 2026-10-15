@@ -1,0 +1,111 @@
+{
+ "summary_md": "Burnham's methods guide treats stance as textual entailment: a document's stance is how its author would answer a stated proposition. Stance is kept separate from sentiment. The guide compares three ways to classify it on about 2,135 human-coded Trump-approval tweets and newsletter sentences, scored by MCC. Supervised models: bag-of-words gets 0.49 to 0.51 and transformers 0.60 to 0.68. Zero-shot NLI: DeBERTaV3 Base gets 0.40 and Large 0.65. In-context LLMs: GPT-4 gets 0.78, or 0.80 with logit bias, but costs $12.52 per run and cannot be archived. The main practical finding is about context. Human coders disagree more when the target is not named (34.0% versus 19.5%), and NLI degrades most in that case. When outside knowledge is needed, supervised or in-context classifiers do better. The guide recommends NLI as the reproducible default. LLMs are fine for expanding training data or for validation, but not as the main source of labels. The arXiv text is v2. An online check confirms the published version in PSRM 13 (2025), 611-628, online September 2024. This bears directly on Paul's CU press-stance stack, which runs Burnham's own Political DEBATE base model (a later, politics-trained NLI model) as its main reader. The system's own history repeats the paper's context finding. Zero-shot DEBATE missed implicit anti-CU stances (oppose F1 0.08), and fine-tuning on 552 labels fixed this. The paper also highlights three things the system has not settled: model size (base versus large), labels that fall back to Claude pre-labels, and the lack of an MCC or hypothesis-wording check. All system-side figures are the project's own reports, measured on small held-out sets (n = 87 or 156). They are UNVERIFIED by a second path.",
+ "category": "Machine Learning & Sentiment Analysis",
+ "bearings": [
+  {
+   "component_id": "melange-stance.debate-nli-classifier",
+   "relation": "supports",
+   "paper_claim": "Context drives NLI accuracy. Human ambiguity is 34.0% when the target (Trump) is not mentioned versus 19.5% when it is. NLI classifiers degrade most in low-context documents, while supervised and in-context classifiers adapt better. NLI is comparable to supervised only when the document itself carries the information.",
+   "paper_location": "Section 3.3, p.10; Figure 2; Section 6, pp.23-24",
+   "system_side": "Zero-shot DEBATE base scored 53% accuracy and oppose F1 0.08 on the 156-row test. It read releases such as fighting Wall Street banks or CCCA/interchange as neutral because the anti-CU implication needs outside knowledge. Fine-tuning on CU labels raised this to 87.2% and oppose F1 0.78, measured against the Claude reference.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:26-31; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/finetune_debate.py:62-68; C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md:89",
+   "transfer_conditions": "Holds for CU press releases where the CU target is implied by the policy and not named. The paper's numbers come from one target (Trump) and generic DeBERTaV3 NLI, not Political DEBATE.",
+   "strength": "strong"
+  },
+  {
+   "component_id": "melange-stance.debate-nli-classifier",
+   "relation": "qualifies",
+   "paper_claim": "NLI size matters sharply for zero-shot stance: DeBERTaV3 Small MCC 0.15, Base 0.40, Large 0.65 (83% accuracy). Only Large is called comparable to supervised classifiers and human-level.",
+   "paper_location": "Table 4, p.14",
+   "system_side": "Production runs Political_DEBATE_base_v1.0 on CPU, fine-tuned on 552 rows (3 epochs). The large model is cached and the brain plan named it, but it was never fine-tuned and scored on the same member-grouped test. CPU time and memory were the reasons.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:38; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/finetune_debate.py:32",
+   "transfer_conditions": "The 2023 gap is for generic zero-shot NLI. Political DEBATE was trained on political data and is then fine-tuned here, which should narrow the gap. How much is untested.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-stance.debate-nli-classifier",
+   "relation": "qualifies",
+   "paper_claim": "In-context LLMs are useful for expanding training data and for validation (GPT-4 MCC 0.78 at temperature 0). Non-reproducible proprietary models should not be the primary source of labels, because they cannot be archived and few-shot prompts are unstable.",
+   "paper_location": "Section 4.3.1, pp.16-17; Table 5, pp.19-20; Section 6",
+   "system_side": "The fine-tune label is human_label when valid, otherwise the Claude pre_label. The Claude rater (claude-sonnet-4-6) sets no temperature, so the API default applies. The headline 87.2% is agreement with Claude. The member-grouped human-gold figures (about 85%, kappa 0.76; 0.839, kappa 0.742) are the better evidence.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/finetune_debate.py:40-48; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:32; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:84-86",
+   "transfer_conditions": "Applies to any train row whose human_label is empty. The share of Claude-only train rows was not counted here.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-stance.supervised-stance-stack",
+   "relation": "qualifies",
+   "paper_claim": "On Twitter, bag-of-words LR/RF/SVM reach MCC 0.49-0.51 versus RoBERTa 0.60, BERTweet 0.63 and PoliBERTweet 0.68. The paper also cites Laurer et al. 2024: with NLI-style transfer, 500 training examples let language models beat algorithms trained on thousands.",
+   "paper_location": "Table 3, p.12; p.12 citing Laurer et al. 2024",
+   "system_side": "Production stance pkl is LinearSVC on word plus char TF-IDF: 83.9% accuracy, macro-F1 0.816, untouched n = 87 (CI about +/-8.5 pts). A plain distilroberta reached macro-F1 0.757. The NLI-pretrained fine-tuned DEBATE got 0.839 accuracy, macro-F1 0.835, on its held-out n = 87. The small-data transformer that matched SVM is the NLI one, as Laurer predicts.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/train_stance_domain.py:24; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/train_stance_domain.py:74-77",
+   "transfer_conditions": "With 456 training rows and an 87-row test, all three readers fall within each other's CIs. The paper's ordering is for larger training sets and accuracy-balanced MCC, not macro-F1.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-stance.press-value-aggregate",
+   "relation": "supports",
+   "paper_claim": "Stance (the position on a proposition) and sentiment (emotional valence) are distinct dimensions to be measured independently. Sentiment may inform intensity but cannot stand in for stance.",
+   "paper_location": "Section 2.1, Definitions 1-2, pp.2-3",
+   "system_side": "Stage 5 splits direction from heat: press_value = final_sign x LSD intensity (|net|/words). The stance sign comes from DEBATE or the human overlay, never from the dictionary.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:9; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:141-143",
+   "transfer_conditions": "This is a conceptual endorsement only. The paper does not test whether multiplying sign by intensity improves measurement, so that component question stays open.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-stance.two-hop-decomposition",
+   "relation": "supports",
+   "paper_claim": "Stance is entailment relative to context C, meaning the information in the document plus the reader's knowledge. When the proposition's target is absent from the text, ambiguity rises (34.0% vs 19.5%) and accuracy depends on outside context.",
+   "paper_location": "Definition 4, pp.3-4; Sections 2.2-2.3; Section 3.3, p.10",
+   "system_side": "CU alignment = stance toward the named target x the target's CU valence. The valence hop (0.689) is the bottleneck, against 0.915 for the stance hop. A curated registry supplies the outside context, and the composition reached 0.782 accuracy with 5-fold CV on 400 tweet golds.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/apply_two_hop_stance.py:15; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/apply_two_hop_stance.py:27",
+   "transfer_conditions": "The paper never decomposes stance into two hops. It only explains why the CU-valence hop, which needs outside knowledge, is the hard one.",
+   "strength": "moderate"
+  }
+ ],
+ "gaps_exposed": [
+  "No MCC anywhere in the stance stack. Reports use accuracy, macro-F1 and Cohen's kappa (train_stance_domain.py:61-64). With class imbalance (support 2,323 / neutral 1,151 / oppose 224 in production), MCC with bootstrapped CIs is the metric the paper argues for.",
+  "Hypothesis wording is fixed and was never sensitivity-tested (stage5_debate.py:26-31). The paper's 9-synonym test gave an MCC range of 0.62-0.66, which is a cheap check to run on the 87-row test.",
+  "Fine-tuned DEBATE large has never been scored against base on the same member-grouped human-gold test. The paper's base-to-large zero-shot gap is 0.40 to 0.65 MCC.",
+  "The share of fine-tune train rows labelled only by Claude is uncounted. Also, claude_stance.py:80 and 95-97 write neutral with an ERR reason after 4 failed API attempts. Whether those rows can enter training as pre_label is UNVERIFIED.",
+  "The Claude rater runs at the API default temperature (claude_stance.py:84-86, no temperature argument). The paper's in-context protocol uses temperature 0 for reproducibility."
+ ],
+ "flags": [
+  "Venue correction: the stage-1 extraction says the PSRM 2025 venue is not supported by the text. An online scan shows the published version in Political Science Research and Methods 13 (2025), 611-628, online 19 September 2024. The arXiv v2 text is the pre-publication version.",
+  "No conflict with the SNA, LDA or reciprocity brain rules. The paper is about text classification only and argues for neither rejected SNA proposal.",
+  "The system's headline 87.2% is agreement with the Claude reference (distillation). Quote the member-grouped human-gold figures (about 85%, kappa 0.76) instead, with n stated."
+ ],
+ "paul_alignment": "Paul has no annotation entry for this paper. His position on the DEBATE reader (component literature) endorses transformer and LLM stance extraction and flags trouble with ambiguous statements. Burnham agrees, and locates that ambiguity in low-context documents where the target is not named, which is the system's implicit-oppose failure. Paul's view that bag-of-words SVMs are outdated matches Burnham's Table 3 in general. But here the production reader is a LinearSVC that ties fine-tuned NLI within CI, so that note is partly stale.",
+ "related": [
+  {
+   "slug": "b-2025-comparing-fine-tuned",
+   "relation": "same-method",
+   "why": "Both compare fine-tuned transformers with traditional ML for political-tweet stance. Khan's multi-view augmentation was tried in this system's SVM stack."
+  },
+  {
+   "slug": "kim-2025-measuring-interest-group",
+   "relation": "complements",
+   "why": "Kim uses GPT-4 labels for bill positions (96.9% vs human). Burnham's reproducibility caution about proprietary labelers applies directly to that design."
+  },
+  {
+   "slug": "birkenmaier-2025-measuring-politicians-public",
+   "relation": "complements",
+   "why": "Also benchmarks GPT-class models against SVM and XLM-R on political text, a parallel evidence line for the supervised-versus-in-context choice."
+  },
+  {
+   "slug": "dai-2025-large-language-model",
+   "relation": "extends",
+   "why": "LLM-enhanced stance detection, a later development of the in-context family that Burnham benchmarks."
+  },
+  {
+   "slug": "haselmayer-2017-sentiment-analysis-political",
+   "relation": "contradicts",
+   "why": "A dictionary-plus-crowdcoding sentiment approach to political text. Burnham argues sentiment is not a substitute for stance."
+  },
+  {
+   "slug": "rice-2018-corpus-based-dictionaries",
+   "relation": "complements",
+   "why": "Domain sentiment dictionaries are the intensity side that the system keeps separate from stance, as Burnham recommends."
+  }
+ ]
+}

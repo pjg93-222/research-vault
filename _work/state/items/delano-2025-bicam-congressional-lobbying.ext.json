@@ -1,0 +1,56 @@
+{
+ "title": "Bulk Ingestion of Congressional Actions and Materials Dataset (BICAM)",
+ "authors": [
+  "Ryan Delano",
+  "Aaron Rudkin",
+  "In Song Kim"
+ ],
+ "year": "2025",
+ "venue": "Scientific Data 12:1567 (2025)",
+ "doi": "10.1038/s41597-025-05737-8",
+ "document_type": "data descriptor (dataset paper), not a research article",
+ "coverage": "Full text read in one pass (49,035 chars, 552 lines of text file), including front matter, abstract, background, methods, all eleven data record sections, technical validation, usage notes, code availability, references and author notes. No page images, and the Supplementary Information (Bill-LDA Linkages, validation of LDA linkages) is not in the text file, so its details are unverified. Paul markup: none (n_annots 0, no annotation files). Metadata hints corrected: authors are full names, DOI and venue added, document type changed from academic-article to data descriptor. Lobbying linkage is covered only at the level described in the main text.",
+ "research_question": "No research question is posed. The paper's aim is to provide a standardized, linked, bulk-downloadable database of official U.S. congressional records (1789 to present) and to make Bill-to-LDA lobbying linkages available for interest-group research.",
+ "theory": "None stated. Background cites literature on committees, agenda control, bill text, amendments and hearings as motivation for the data, not as tested theory.",
+ "data": "Official sources: Congress.gov API and GovInfo.gov API, merged into a PostgreSQL relational database and exported as CSV. Eleven components: Bills (421,764; 6th-119th Congress), Amendments (123,061; 97th-119th), Members (2,597; 81st-119th), Committees (226 committees and 587 subcommittees; 1st-119th), Committee Reports (106,818; 16th-119th), Committee Prints (4,346; 67th-119th), Committee Meetings (12,238; 114th-119th), Hearings (74,918; 79th-119th), Treaties (758; 81st-119th), Nominations (43,858; 97th-119th), Congresses (119 sessions). Unit is the record; the lobbying linkage is between Bills and LDA Section 16 filings (LD-2 reports). LDA data come from the House and Senate; LobbyView and OpenSecrets are noted as existing compilations.",
+ "method": "Data engineering rather than statistical analysis. Steps: (1) gather from both government APIs with a custom Python package (pause/resume, error recovery, parallel download); (2) import into PostgreSQL, enforce types and unique keys, and connect components by identifiers; (3) merge the two upstream sources with rules-based corrections, keeping the most complete composite record; (4) add record linkages to Voteview (custom bill identifier, crosswalk to Voteview) and to LDA Section 16 filings by matching extracted bill numbers and titles to Bills using distance measures, with low-confidence matches manually scrutinized.",
+ "identification": "Not applicable. No causal or inferential design is used.",
+ "scope": "Population: all electronically available official U.S. congressional records. Institution: U.S. Congress and its committees, with sub-components varying in temporal start. Era: 1789 to the 119th Congress, with the download current to the paper's publication window and updated on bicam.net. Excluded: full Congressional Record transcripts, Congressional Communications, CRS reports, member press releases, executive-branch data (FEC donations and election results), and rollcall and lobbying data themselves (only linkages provided).",
+ "measures": "Standardized identifiers: bill_id, amendment_id (type, number, Congress), bioguide_id, icpsr, committee_code, report_id, print_id, meeting_id, hearing_id, treaty_id, nomination_id, and a custom Bill-to-Voteview crosswalk. Validation measures: download completeness, data type checks, identifier uniqueness, cross-component linkage checks, and cross-source agreement. Linkage confidence is a distance-based score; the paper does not report its numeric threshold or the match rate in the main text.",
+ "key_findings": [
+  "BICAM contains 421,764 bills spanning the 6th to 119th Congress, linked via bill_id (Methods, Bills section, p.6).",
+  "The Bills component includes 123,061 amendments from the 97th to 119th Congress (Amendments section, p.6).",
+  "All 2,597 members who served from the 81st to 119th Congress are included, with icpsr and bioguide_id keys (Members section, p.6).",
+  "BICAM covers 226 committees and 587 subcommittees, with committee history from the 1st to 119th Congress (Committees section, p.6).",
+  "Committee reports: 106,818 from the 16th to 119th Congress; committee prints: 4,346 from the 67th to 119th (p.6-7).",
+  "Hearings: 74,918 from the 79th to 119th Congress; committee meetings: 12,238 from the 114th to 119th Congress (p.7).",
+  "Nominations: 43,858 presidential nominations from the 97th to 119th Congress; treaties: 758 from the 81st to 119th (p.7).",
+  "Retrieving the full dataset via the Congress.gov API requires over 100 endpoints and a 5,000 requests per hour cap; at least 10 requests are needed for one bill (Methods, p.4).",
+  "The paper claims the Bill-LDA linkage detects significantly more bill lobbying than existing sources and captures ex-post lobbying (Introduction and Methods, p.4-5); no counts or precision/recall are given in the main text.",
+  "Validation is integrity-focused: completeness, type checks, unique identifiers, linkage consistency and cross-source agreement; the paper states that Congress itself is treated as ground truth (Technical Validation, p.7-8).",
+  "Discrepancies between the two APIs, such as missing bioguide_id for nickname members, are resolved by a rules-based merge (Technical Validation, p.8).",
+  "Discontinued third-party sources (Sunlight Foundation in 2016, ProPublica congressional data in 2024, NYT Congress API, GovTrack API) motivate the open, reproducible design (Introduction, p.2-3)."
+ ],
+ "limitations": [
+  "Main text reports no quantitative accuracy or error rate for the LDA linkage or for the overall data; validation is integrity-focused (p.7-8).",
+  "Bill-LDA matching uses distance measures on extracted bill numbers and titles; lower-confidence matches get extra scrutiny but the rules and threshold are in the Supplementary Information, not verified here (p.8).",
+  "Committee meeting witness and supporting documents remain in PDF and are not yet extracted to text (p.6).",
+  "Excluded components: full Congressional Record, CRS reports, congressional communications, member press releases, and rollcall and lobbying data themselves (p.5).",
+  "Sub-components have different temporal coverage, so historical analyses may be limited (p.3, p.6-7).",
+  "Manual effort is still needed for some discrepancies between sources (p.8).",
+  "The authors note that data availability depends on the continued operation of the upstream government APIs (p.3)."
+ ],
+ "paul_markup": [],
+ "short_quotes": [
+  "BICAM's primary advantage is its wide breadth, easy record linkages, and rolling updates"
+ ],
+ "references_of_note": [
+  "Kim and Kunisky 2021, Mapping political communities: lobbying networks in legislative politics, Political Analysis (ref 17) - the earlier Bill-LDA linkage this paper improves upon.",
+  "Kim 2016, Political cleavages within industry: firm level lobbying for trade liberalization, APSR (ref 9) - firm-level lobbying use of LDA data.",
+  "Kim 2024, LobbyView technical report, MIT (ref 15) - existing compiled lobbying data.",
+  "You 2017, Ex post lobbying, Journal of Politics (ref 18) - ex-post lobbying concept the linkage extends.",
+  "Powell and Grimmer 2016, Money in exile, Journal of Politics (ref 33) - campaign contributions and committee access.",
+  "Fouirnaies and Hall 2018, How do interest groups seek access to committees, AJPS (ref 32).",
+  "Lewis 2024 Voteview (ref 8) and Lauderdale and Clark 2014 (ref 26) - roll-call and text-based scaling linked by BICAM."
+ ]
+}

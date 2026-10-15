@@ -1,0 +1,1408 @@
+[
+ {
+  "slug": "marrero-2022-evaluating-voice-samples",
+  "note": false,
+  "meta": {
+   "title": "Evaluating voice samples as a potential source of information about personality",
+   "authors": [
+    "Zachariah N.K. Marrero",
+    "Samuel D. Gosling",
+    "James W. Pennebaker",
+    "Gabriella M. Harari"
+   ],
+   "year": "2022",
+   "venue": "Acta Psychologica 230 (2022) 103740 (open access, CC BY; received 15 Mar 2022, accepted 4 Sep 2022, online 18 Sep 2022)",
+   "doi": "10.1016/j.actpsy.2022.103740",
+   "sha12s": [
+    "adbeab3f0b2a"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "Evaluating voice samples as a potential source of information about personality",
+   "authors": [
+    "Zachariah N.K. Marrero",
+    "Samuel D. Gosling",
+    "James W. Pennebaker",
+    "Gabriella M. Harari"
+   ],
+   "year": "2022",
+   "venue": "Acta Psychologica 230 (2022) 103740 (open access, CC BY; received 15 Mar 2022, accepted 4 Sep 2022, online 18 Sep 2022)",
+   "doi": "10.1016/j.actpsy.2022.103740",
+   "document_type": "Empirical journal article (predictive machine-learning study)",
+   "coverage": "Full text read: all 1,313 lines of the text file (front matter, abstract, Introduction, Method, Preprocessing, Analytic strategy, Results, Discussion incl. Tables 2 and 3, Conclusion, data availability, CRediT, and references). No section skipped. Page numbers below are the journal's printed page numbers, inferred from the running headers in the text. Metadata hint was correct except for the DOI/article-number details, which are now confirmed from the text. Topic coverage: the paper contains nothing on lobbying, networks, path-finding, allocation, elections, persuasion/turnout, or legislators. Its only relevant area is text measurement (LIWC 2015 linguistic features, pyAudioAnalysis vocal features) and ML prediction methodology, both covered in full. paul_markup: no annotation file exists for this item (checked _annots, _raw, _work and annotations for adbeab3f0b2a; none found), so the list is empty.",
+   "research_question": "(1) How much information about personality (Big Five, self-report) is conveyed by the linguistic (LIWC 2015) and vocal (pyAudioAnalysis) features of short, semi-structured voice samples? (2) Do semi-structured voice samples reveal more about some personality traits than others? Secondary benchmarks: depression, age and gender (p.2, lines 148-156; p.4).",
+   "theory": "Six potential mechanisms linking voice samples to personality (p.1-2): (1) personality drives what people talk about; (2) personality drives how people talk (e.g., loudness, smoking affecting voice); (3) content of speech affects how others treat the speaker, which affects personality; (4) delivery style affects treatment, which affects personality; (5) and (6) a third variable (education, culture, biology) affects personality and either what is said or how it is said. Background: language-personality links across written and spoken text (Pennebaker et al., 2003; Yarkoni, 2010). Prior voice-personality work used either observer ratings or narrow vocal parameters (p.2). The paper states the mechanisms are not tested (p.7).",
+   "data": "Sample: UT Austin Introductory Psychology students in a Synchronous Massive Online Course, Fall 2018 (UT1000 Project). Of 1,342 students who completed a 3-week self-tracking assignment, 1,087 used the smartphone app; 213 (email) and 42 (journal) were excluded because they had no audio (p.2). 992 smartphone students gave 25,163 audio responses (mean 21.32 s; mean 40.28 words) (p.2). Preprocessing kept responses with at least 50 words per Google Speech-to-text, leaving 5,838 responses (p.3). One sample per person was kept (each person's first response with at least 50 words; 64% were their first response) = 614 analytic samples, mean 50.74 s and 92.41 words (SD 73.69) (p.3). Unit of analysis: one voice sample per participant. Table 1 Ns: Extraversion, Conscientiousness, Neuroticism, Openness, Agreeableness 545 each (means ~37-46, alpha 0.76-0.89); Depression 485 (CES-D-10, mean 11.26); Age 564 (mean 18.57, SD 1.34); Gender 564 (Female 374, Male 190) (p.3). The text does not explain why the Ns differ from the 614 analytic samples beyond noting different survey completion times (Table 1 note). Predictors: 94 LIWC 2015 dimensions (p.3) and 272 pyAudioAnalysis vocal features (136 per 1-s segment statistic, mean and SD over 1-s segments) (p.3). Outcomes: BFI-2 (60 items, 5-point scale) at end of week two; CES-D-10 about two weeks after the assignment (p.2). Recording prompt: describe your situation and current thoughts and feelings, plus about 10 s of environmental sound (p.2).",
+   "method": "Two-stage, automated machine learning pipeline in R 4.1.2 (mlr 2.19.0, mlrMBO 1.1.5) with XGBoost (1.5.2.1) as the learner (p.3-4). Stage 1 (global search): 150 Latin Hypercube hyperparameter configurations, each scored by 10-fold CV; a Gaussian Process surrogate and CMA-ES then propose new configurations for sequential model-based optimization, run for at least 50 cycles (extended while improvement continued) (p.4). Feature set fixed at 100%. Stage 2 (feature selection): nested 10-fold CV within each outer fold, Tree SHAP values for each test sample, a pseudo partial R-squared per feature (R-squared of model with the feature's SHAP removed vs. full model), repeated five times and weighted by error; top-30 features kept per outer fold and XGBoost refit with stage-1 hyperparameters held fixed; performance is the mean over the 10 outer folds (p.4). Evaluation: out-of-sample R-squared for regression defined as 1 minus CV test MSE divided by outcome variance (p.4). For classification, log loss is used rather than AUC, and scored as 1 minus model log loss over intercept-only log loss (p.5). Uncertainty: no standard test fits the repeated selection, so final models were re-estimated with 100-fold CV (about 9% more training data per fold), on the assumption that a generalizable model improves with more data (p.5). Post-hoc: reliability (Cronbach alpha, mean feature test-retest correlation) used to disattenuate performance (Spearman 1961) and to test whether scale reliability predicts model performance (p.7-8).",
+   "identification": "None causal. The design is cross-validated out-of-sample prediction only; the authors state that without an experimental design the causal direction of each mechanism cannot be established and most variables cannot be manipulated (p.7, lines 907-913). The generalizability standard is that a model fitted on some people predicts unseen people's self-reported traits from voice data (p.9).",
+   "scope": "Population: UT Austin Introductory Psychology students who used a smartphone app (mean age 18.6; 374 female, 190 male in the gender analysis), with self-report personality, depression, age and gender. Era: data collected Fall 2018, published 2022. Context: one standardized, open-ended voice prompt with mixed content and environments (not a lab reading task). The paper does not state the speech language or dialect. Results are described as a conservative estimate for brief (about 92 words), constrained, student-only samples (p.8).",
+   "key_findings": [
+    {
+     "finding": "Voice samples (joint LIWC + vocal features) explained 10.67% of variance in personality traits on average; LIWC alone 3.13%; vocal alone 6.24%.",
+     "location": "Abstract p.1; Results p.5, lines 568-571",
+     "numbers": "joint 10.67%, vocal 6.24%, LIWC 3.13% (average across Big Five traits, out-of-sample R-squared, 100-fold CV)"
+    },
+    {
+     "finding": "Up to about 16% of trait variance was explained, mainly for Extraversion, Conscientiousness, Neuroticism and Agreeableness.",
+     "location": "Results p.5, lines 572-575; Summary p.8",
+     "numbers": "up to 16%; joint-set models for E, C, N in the 10-20% range; single feature sets under 10%"
+    },
+    {
+     "finding": "Openness was the least well predicted trait (under 10% variance). Agreeableness and Openness were the two least well predicted traits in the discussion.",
+     "location": "Results p.5, lines 575-577; Discussion p.7, lines 849-852",
+     "numbers": "Openness below 10%"
+    },
+    {
+     "finding": "Depression was predicted at 11-18% of variance, and gender at over 90%. Vocal features predicted gender almost perfectly.",
+     "location": "Results p.5, lines 577-579; Discussion p.8, lines 1009-1013",
+     "numbers": "depression 11-18%; gender over 90%; depression mean 11.26 (CES-D-10, N=485)"
+    },
+    {
+     "finding": "Joint features beat single feature sets for all traits except Agreeableness (best with vocal features only). Gender was the other task where joint features were not best.",
+     "location": "Results p.5-6, lines 580-582, 614-616; Conclusion p.9, lines 1168-1171",
+     "numbers": "exception: Agreeableness (vocal-only best) and gender"
+    },
+    {
+     "finding": "Neuroticism was predicted better by linguistic features than by vocal features. Extraversion, Conscientiousness and Neuroticism were the traits where the joint set reached 10-20%.",
+     "location": "Results p.5, lines 583-595; Discussion p.8-9, lines 1014-1019",
+     "numbers": "E, C, N joint 10-20%; single sets under 10%"
+    },
+    {
+     "finding": "Joint-feature performance was more than the sum of the separate feature sets, which the authors read as an interaction between language and voice.",
+     "location": "Results p.6, lines 606-608; Discussion p.6-7, lines 662-670; Conclusion p.9, lines 1176-1181",
+     "numbers": "joint performance exceeded sum of LIWC and vocal performance"
+    },
+    {
+     "finding": "Top LIWC predictors: negate (Extraversion), pronoun (Conscientiousness), Analytic/Tone (Neuroticism). Top features are mostly vocal (MFCC, chroma, spectral entropy, delta features), not pitch or loudness. Feature rankings are reported as hard to interpret.",
+     "location": "Discussion p.6-8, Table 2 (p.6-7), lines 671-876",
+     "numbers": "top-5 features per condition in Table 2; features ordered by pseudo partial R-squared"
+    },
+    {
+     "finding": "Post-hoc: the reliability-prediction correlation was t(4)=2.65, r=0.80, p=.057, but leave-one-out CV gave r=0.309, so the true association is much smaller. Reliability did not change the ordering of traits.",
+     "location": "Post-hoc p.7, lines 930-935; Table 3 and text p.8, lines 944-954",
+     "numbers": "t(4)=2.65; r=0.80 (p=.057, CI -0.03 to 0.98); LOO r=0.309"
+    },
+    {
+     "finding": "Disattenuated (reliability-corrected) out-of-sample R-squared roughly tripled to quadrupled; the ordering of traits stayed the same. Original to disattenuated: E 0.16 to 0.57; C 0.11 to 0.47; N 0.15 to 0.56; O 0.04 to 0.17; A 0.07 to 0.26; depression 0.18 to 0.67.",
+     "location": "Table 3, p.8, lines 1065-1102; text p.8-9, lines 945-948, 1182-1190",
+     "numbers": "E 0.16->0.57; C 0.11->0.47; N 0.15->0.56; O 0.04->0.17; A 0.07->0.26; Dep 0.18->0.67"
+    },
+    {
+     "finding": "Sample reduction and sample size: 25,163 responses reduced to 5,838 with at least 50 words, then to 614 (one per person). Mean word count of final samples 92.41.",
+     "location": "Preprocessing p.3, lines 244-256",
+     "numbers": "25,163 -> 5,838 -> 614; mean 92.41 words"
+    },
+    {
+     "finding": "Model-based uncertainty: 100-fold CV improved out-of-sample R-squared by about 4% on average (gender by about 1.5%).",
+     "location": "Results p.5-6, lines 609-613",
+     "numbers": "approximately 4 percentage points on average; gender about 1.5%"
+    }
+   ],
+   "limitations": [
+    "Samples were brief (mean about 92 words), collected in a constrained context (a class-assignment prompt), and drawn from Introductory Psychology students; the authors call the results a conservative estimate (p.8, lines 1031-1041).",
+    "The criterion was self-report Big Five scores, which the authors acknowledge have their own biases; they call for non-self-report validation (p.8, lines 1049-1055).",
+    "The 50-word threshold is acknowledged as arbitrary; it was set from a Reddit study (25 words) and doubled (p.3, lines 237-243).",
+    "Two-stage modeling: hyperparameters tuned on 100% of features were reused after selecting the top 30, which the authors say may be suboptimal. This likely explains why the joint set underperformed vocal-only for Agreeableness (p.9, lines 1108-1135).",
+    "No pooling across tasks: predicted gender, age or depression were not used as features for personality prediction (p.9, lines 1136-1149).",
+    "No standard statistical test fits the repeated model and feature selection; the uncertainty approach relies on an untested assumption about 100-fold CV (p.5, lines 528-557).",
+    "Feature-level interpretation is heavily caveated: many features, non-monotonic effects, and variance explained is not the same as importance (p.6, lines 631-641). The explanations offered for feature-trait links are described as highly speculative (p.8, lines 1020-1022).",
+    "Post-hoc reliability correlation (r=0.80, p=.057) is not robust under leave-one-out (r=0.309) (p.7).",
+    "No causal identification and no experimental design; mechanisms in the Introduction were not tested (p.7, lines 907-913).",
+    "Ns differ across outcomes (Table 1 note: 545 for Big Five, 485 for depression, 564 for age and gender); the text does not fully reconcile these with the 614 analytic samples (p.3).",
+    "Raw voice data may contain personally identifiable information; the authors offer analyses or anonymized features on request (p.9, lines 1191-1194). Supplementary files: FeatureRankings.csv, SHAP_Data.RDS, SHAP_Indicators.RDS (p.6)."
+   ],
+   "measures": [
+    "Big Five personality: BFI-2 60-item (Soto & John, 2017), 5-point agreement scale, reverse items recoded; Cronbach alpha 0.76-0.89 (Table 1)",
+    "Depression: CES-D-10 (Andresen et al., 1994), 4-point scale, sum score; alpha 0.86",
+    "Age (mean 18.57, SD 1.34) and gender (self-reported, 374 female, 190 male)",
+    "Linguistic features: LIWC 2015, 94 dimensions (proportion of words per category except analytic thinking, authenticity, clout, emotional tone) (p.3)",
+    "Vocal features: pyAudioAnalysis, 272 features per sample from 34 basic audio dimensions over 50 ms and 1 s segments (p.3)",
+    "Transcription: Google Speech-to-text API used to count words for the 50-word threshold (p.3)",
+    "Out-of-sample R-squared (1 - CV test MSE / outcome variance) for regression; 1 - (model log loss / intercept-only log loss) for classification (p.4-5)",
+    "Pseudo partial R-squared per feature from Tree SHAP values (p.4)",
+    "Test-retest reliability of features (mean correlation of features from 1st and 2nd voice samples) for disattenuation (p.8)"
+   ],
+   "references_of_note": [
+    "Pennebaker, J. W., Mehl, M. R., & Niederhoffer, K. G. (2003). Psychological aspects of natural language use: Our words, our selves. Annual Review of Psychology, 54, 547-577 (language and personality; cited p.1-2)",
+    "Pennebaker, J. W., Boyd, R. L., Jordan, K., & Blackburn, K. (2015). The Development and Psychometric Properties of LIWC2015 (text-measurement instrument; p.3)",
+    "Yarkoni, T. (2010). Personality in 100,000 Words: A large-scale analysis of personality and word use among bloggers. Journal of Research in Personality, 44(3), 363-373 (word-use and personality at scale; p.1)",
+    "Mehl, M. R., Gosling, S. D., & Pennebaker, J. W. (2006). Personality in its natural habitat. JPSP, 90(5), 862 (naturalistic unobtrusive sampling; p.2)",
+    "Seraj, S., Blackburn, K. G., & Pennebaker, J. W. (2021). Language left behind on social media... PNAS, 118(7) (Reddit text; 25-word threshold; p.3)",
+    "Stern, J., et al. (2021). Do voices carry valid information about a speaker's personality? Journal of Research in Personality, 92 (vocal pitch and extraversion; p.2)",
+    "Vinciarelli, A., & Mohammadi, G. (2014). A survey of personality computing. IEEE Transactions on Affective Computing, 5(3), 273-291 (p.8)",
+    "Giannakopoulos, T. (2015). pyAudioAnalysis: An open-source Python library for audio signal analysis. PLoS ONE 10(12) (vocal feature extractor; p.3)",
+    "Lundberg, S. M., & Lee, S. I. (2017). A unified approach to interpreting model predictions (NeurIPS) and Lundberg et al. (2018) Tree SHAP (p.4)",
+    "Chen, T., & Guestrin, C. (2016). XGBoost: A scalable tree boosting system (KDD) (learner; p.4)",
+    "Lobo, J. M., Jimenez-Valverde, A., & Real, R. (2008). AUC: A misleading measure of the performance of predictive distribution models. Global Ecology and Biogeography, 17(2) (p.5)",
+    "Gneiting, T., & Raftery, A. E. (2007). Strictly proper scoring rules, prediction, and estimation. JASA, 102(477) (p.5)",
+    "Bischl, B., et al. (2016). mlr: Machine learning in R; Bischl et al. (2017) mlrMBO (model-based optimization; p.4)",
+    "Hutter, F., Hoos, H. H., & Leyton-Brown, K. (2011). Sequential model-based optimization for general algorithm configuration (p.4)",
+    "Spearman, C. (1961). The proof and measurement of association between two things (disattenuation; p.7)",
+    "Nothing in the reference list covers lobbying, legislative networks, elections, turnout, persuasion or legislators."
+   ],
+   "short_quotes": [
+    {
+     "quote": "voice samples accounted for 10.67 % of the variance in personality traits on average",
+     "location": "Abstract, p.1"
+    },
+    {
+     "quote": "The results reported here provide a conservative estimate of the degree to which features derived from voice samples could be used to predict personality traits.",
+     "location": "Section 6.3, p.8, lines 1031-1033"
+    },
+    {
+     "quote": "Without an experimental design, it is impossible to ascertain the causal directions associated with each mechanism",
+     "location": "Section 6.1, p.7, lines 907-909"
+    }
+   ],
+   "paul_markup": []
+  },
+  "summary_md": "Marrero, Gosling, Pennebaker and Harari (2022) took one short smartphone voice sample (mean 92 words, about 51 s) from each of 614 UT Austin intro-psychology students. They used XGBoost with Tree-SHAP feature selection to predict self-reported BFI-2 traits from 94 LIWC-2015 dimensions and 272 pyAudioAnalysis vocal features. The fit metric is out-of-sample R-squared from 100-fold CV, and the paper gives no permutation null. Averaged across the Big Five, the joint feature set explained 10.67% of variance, vocal features alone 6.24% and LIWC alone 3.13%. Extraversion, Conscientiousness and Neuroticism reached 10-20% with the joint set, Openness stayed under 10%, and gender was predicted at over 90%. The authors say the joint result is more than the sum of the two parts, but they give no causal identification and the criterion is self-report.\n\nThis paper is not new to the system. It was the stated method source for `big5_audio_faithful_prereg.md` and was cited in Addendum 1 of `big5_audio_prereg.md`. In July 2026 Melange ran three one-look audio tests at N=90 legislators. Two findings partly carried over: a full eGeMAPS-88 ridge predicted Pink-E (held-out r +0.284, perm-p .030) and Pink-ES (r +0.298, perm-p .017). The paper's headline did not carry over. Super-additivity missed every time: vocal added +0.001 over linguistic for E against Pink, and -0.004 over text against behavioural visibility. Voice did not measure C (r -0.081). The A-ES halo got worse (|r| 0.819 and 0.946).\n\nWhat the paper means for the system as built: it is the benchmark the audio lane has already tested and largely failed to reproduce in legislators. It explains why audio is display-only, and it does not support moving audio into the engine. Two leads remain open. Its top features (MFCC, chroma, spectral entropy, deltas) are mostly missing from eGeMAPS-88. It also shows reliability disattenuation, which the system never applies to its validity coefficients.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-audio-speech.prosody-and-disfluency",
+    "relation": "method-source",
+    "paper_claim": "Averaged over Big Five traits (N=614 students, 100-fold CV, out-of-sample R-squared): vocal features 6.24 percent, LIWC 3.13 percent, joint set 10.67 percent. Joint set described as exceeding the sum of the two separate sets. E, C and N reach the 10-20 percent range with the joint set.",
+    "paper_location": "Abstract p.1; Results p.5 lines 568-571 and 586-588; Results p.5-6 lines 606-608; Conclusion p.9 lines 1176-1181",
+    "system_side": "Pre-registered Marrero-style audio test (big5_audio_faithful_prereg.md, N=90 legislators, Pink criterion). Recorded: full eGeMAPS-88 ridge to Pink-E held-out r +0.284 (perm-p 0.030), Pink-ES +0.298 (perm-p 0.017); A and C null; super-additivity bar missed, vocal adding +0.001 for E. Round 2: vocal to diligence r -0.081 (perm-p 0.73); super-additivity for C -0.046 (missed). Round 2 also records an unregistered context result, +0.119 for E against visibility, labelled a win. Pilot: text-vs-fused delta -0.004 against visibility.",
+    "code_ref": "big5_audio_faithful_prereg.md:61-68; big5_audio_round2_prereg.md:42-53; big5_audio_prereg.md:140-144; fec/members/b5_audio_faithful.py:39-70",
+    "transfer_conditions": "Paper criterion is self-report BFI-2 from 18-year-old students, one prompted smartphone sample per person, out-of-sample R-squared. System criterion is Pink (reliability about 0.67, text-derived, shares source with the linguistic block) or behavioral visibility and diligence; audio is edited broadcast and floor speech from 90 legislators and the metric is held-out r. Numbers are not directly comparable. Super-additivity failed its registered bars in three looks; the +0.119 context result is exploratory and not a registered test.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers and quoted sentences checked at the cited lines. Repo figures match the prereg lines. Softened because the bearing omits the +0.119 round-2 context result that the record calls a win, and because the pilot delta came from a design the faithful prereg calls a strawman. Scope of the verdict is the registered bars only.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-audio-speech#eGeMAPS prosody and Whisper disfluency rates|eGeMAPS prosody and Whisper disfluency rates]]",
+    "system": "melange-audio-speech"
+   },
+   {
+    "component_id": "melange-audio-speech.prosody-and-disfluency",
+    "relation": "supports",
+    "paper_claim": "Vocal features predicted gender with over 90 percent of variance explained (N=564; 374 female, 190 male). Gender was one of two tasks where the joint set was not best (the other was Agreeableness). The paper did not use predicted gender as a feature or control when predicting personality.",
+    "paper_location": "Results p.5 lines 577-579 and 610-613; Discussion p.8 lines 1009-1013; Discussion p.9 lines 1136-1149; Conclusion p.9 lines 1170-1173",
+    "system_side": "Sex-confound finding: pitch_variability_raw had r(sex=F) = -0.266 and Cohen d = -0.944 over 1,324 clips and 309 members (brain note melange-audio-pipeline). Commit 4193f0140 replaced it with plain semitone SD (stddevNorm times amean). The descriptor script converts eGeMAPS semitone F0 to Hz only for within-speaker standardization. A Salam-style test found pace and volume_dynamics sex-clean (r(F) +0.06 and -0.05).",
+    "code_ref": "fec/members/b5_audio_descriptors_candidate.py:26-28,209-216,367; git commit 4193f0140 (present in repo log); brain note actors/melange-audio-pipeline.md pitch and Salam sections",
+    "transfer_conditions": "The paper shows gender is recoverable from its own vocal features in 564 students. It does not show this holds in other corpora, so the claim that sex is near-deterministic in any adult speech corpus is not supported by this paper and should not be cited to it. The sex-conditioning lesson applies in general terms; the r -0.266 figure is the system's own evidence.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper lines checked. Figures r -0.266, d -0.944, 1,324 clips and 309 members match the brain note, and commit 4193f0140 exists. Softened because the transfer text generalizes beyond the paper. The bans-cross-speaker-absolute-F0 clause is consistent with the script comment but was not confirmed beyond line 367.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-audio-speech#eGeMAPS prosody and Whisper disfluency rates|eGeMAPS prosody and Whisper disfluency rates]]",
+    "system": "melange-audio-speech"
+   },
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "qualifies",
+    "paper_claim": "LIWC 2015 features alone explained 3.13 percent of out-of-sample variance in self-reported Big Five (N=614 students, average sample about 92 words). The authors call the estimates conservative because samples were brief, constrained and drawn from students. Text names pronoun as top LIWC feature for C and negate for E; feature-level explanations are called highly speculative.",
+    "paper_location": "Results p.5 lines 568-571; Discussion p.7 lines 838-847; Discussion p.8 lines 1020-1022 and 1031-1041; Table 2 p.6-7",
+    "system_side": "big5_traits.py builds z-scored Big Five from closed-vocabulary LIWC-style and Empath counts using a Ramey-synth linear model with published-correlate weights as default. It swaps in Mairesse SMOreg weights when liwc/mairesse_smoreg.json exists. Members under 1500 tokens get a lowconf flag, and the file says consumers shrink them; the script itself only sets the flag.",
+    "code_ref": "fec/members/big5_traits.py:2-26,28,96-120,186-189,251",
+    "transfer_conditions": "The paper's 3.13 percent is a self-report criterion in students with about 92 words per sample. It does not validate the system's fixed signed weights, which the paper did not test. Its small-sample caution supports a thin-corpus floor only by analogy, since Melange members have far more text than 92 words.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers checked. Softened because the code does not describe fixed published-correlate weights as the only mode (the SMOreg swap is conditional), and lowconf is a flag, not a shrinkage step. The held-out CV figures against RKH (.21 for O to .51 for E) claimed in the rel were not found in the code read or the brain notes and remain unconfirmed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "qualifies",
+    "paper_claim": "Neuroticism was predicted better by linguistic than by vocal features (out-of-sample R-squared about 0.15, about 0.56 after disattenuation; Table 3 best-model rows). Table 2 lists LIWC top-5 features for N as function words, anx, Tone, Analytic and negemo; the text names no single top LIWC feature for N, and first-person singular is not in the N top five.",
+    "paper_location": "Results p.5 lines 583-595 and 604-605; Discussion p.8 lines 1014-1019; Table 2 p.6-7; Table 3 p.8",
+    "system_side": "emit_affective_n.py builds an E-residualized, party-controlled z-score from LLM affective facets; the LIWC-style index is only the convergent-validity anchor. Genre tests of this affective-N measure failed (rho 0.050 pooled, rho 0.161 hearing-only), per the brain note on the N-genre question.",
+    "code_ref": "fec/members/emit_affective_n.py:16-19,39-59; brain actors/moneyball-workbook-rules-scoring-and-sublayer-surgery.md line 67",
+    "transfer_conditions": "The paper is student self-report with about 92-word samples; the system measure is an LLM affective-facet score on legislator text. The paper supports text over voice for N only in its own sample. Its top N predictors differ from the system anchor terms (i, negemo, posemo), so the paper does not validate the anchor index.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Rel says the top LIWC predictors of N were Analytic and Tone. Table 2 extraction is row-ambiguous, but the first LIWC row for N reads function, with Tone and Analytic at ranks 3 and 4; the claim is overstated. The r +.24 anchor figure and the claim that the voice-ES look is spent were not confirmed. The genre rho values were confirmed in the brain note.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-validation.single-look-discipline",
+    "relation": "qualifies",
+    "paper_claim": "No standard test fits the repeated model and feature selection; uncertainty is handled by assuming a generalizable model improves with 100-fold CV (about 9 percent more training data per fold). No permutation null is reported. Post-hoc reliability-performance correlation t(4)=2.65, r=0.80, p=.057, falls to r=0.309 under leave-one-out.",
+    "paper_location": "Method p.5 lines 528-557; Post-hoc p.7 lines 930-935",
+    "system_side": "The audio prereg used Marrero effect size (r about .25-.33) as the expected signal. A power check found the permutation 95th percentile at +0.267 for N=40 and 88 features, above the locked +0.15 bar. N was raised (fetch eligibility default 80) and a permutation-significance gate applied; audio-E r +0.228 against a permutation floor of +0.234 did not pass.",
+    "code_ref": "big5_audio_prereg.md:97-121 and 139-150",
+    "transfer_conditions": "The paper's effect sizes come from N=545 self-report students and have no null distribution, so they should not set a pass bar for an N=90, 88-feature legislator design without a permutation floor. This is consistent with the system's stricter rule.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper numbers and the absence of a permutation null checked at the cited lines. System figures match prereg lines 99-101, 117 and 140-142.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-validation#Single-look holdout discipline and look ledger|Single-look holdout discipline and look ledger]]",
+    "system": "melange-validation"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary says the paper explains why audio is display-only. The paper never discusses display-only status; that decision is recorded in the audio prereg files (big5_audio_prereg.md, big5_audio_faithful_prereg.md).",
+   "Summary and paul_alignment say super-additivity missed every time. Three registered bars missed (+0.001 for E, -0.046 for C, and the -0.004 pilot which the faithful prereg calls a strawman design). Round 2 records +0.119 for E over linguistic against visibility as a win, though it is an unregistered context result.",
+   "Summary and paul_alignment attribute the make-psychology-load-bearing framing to the paper. The IF-the-pilot-proves-fruitful line is in big5_audio_prereg.md Addendum 1 (line 89), which cites Marrero and Simchon together; it is not the paper's framing.",
+   "paul_alignment quotes Paul as saying the system concluded audio is display-only and describes his interest in non-text channels. Neither the quote nor the stated interest was found in the audio prereg files or the brain audio note. Unverified; do not cite as Paul's position.",
+   "Summary says the disattenuation tool is never applied to the system's validity coefficients. Not verified in the code read; treat as unverified.",
+   "Summary says the three one-look audio tests ran in July 2026. The faithful prereg is locked 2026-07-08; the round-2 run date was not confirmed.",
+   "Summary and flags say the top LIWC predictors for N were Analytic and Tone. Table 2 extraction puts function words first in the LIWC column for N, and the paper text names no top LIWC feature for N. Corrected in the affective-N bearing.",
+   "Bearing 3 system-side figures for held-out RKH correlations (.21 for O to .51 for E) were not found in the code read or brain notes. Unconfirmed."
+  ],
+  "gaps_exposed": [
+   "The paper's top-ranked vocal features (MFCCs, chroma, spectral entropy, delta features) are mostly missing from eGeMAPS v02-88. eGeMAPS has only MFCC1-4 and no chroma, and the round-2 prereg names an MFCC route as untried. Any future audio look could only use a richer feature set if it is pre-registered and kept to a single look, and it would stay UNVERIFIED until a second path reproduces it (DE-062).",
+   "Disattenuation: the paper shows reliability-corrected out-of-sample R-squared roughly triples (E 0.16 to 0.57). The system reports validity coefficients against Pink (reliability about .67) and RKH but does not correct them, and attenuation is mentioned only in prose.",
+   "There is no self-report or observer personality criterion for legislators, so a Marrero-faithful self-report replication cannot be run. Pink is the stand-in criterion, and it shares method with the linguistic block, which biases the super-additivity bar against vocal features.",
+   "Venue and editing confound: the paper used one unedited smartphone sample per person. The system pools edited broadcast and floor audio with venue effects (disfluency about 26 per 1k words live vs 0.22 on NPR), and that variance is not modelled in the trait tests.",
+   "Nothing in the paper, or in the system's audio results, links voice-derived traits to legislative behaviour or lobbying responsiveness. Even if voice measured traits, that would not support feeding them into the receptivity layer."
+  ],
+  "flags": [
+   "Do not cite this paper as support for voice adding to text in legislators. Super-additivity MISSED in all three Melange looks (+0.001 against Pink-E, -0.004 against visibility, -0.046 for C), and the system's own record says the paper's super-additivity 'did not transfer'. The single exception is exploratory, not confirmatory: vocal added +0.119 for E against behavioural visibility in round 2. It stays UNVERIFIED (DE-062).",
+   "Addendum 1 of big5_audio_prereg.md (line 87) reads the paper as showing 'A carried MORE by voice than text = halo-relevant'. The authors attribute Agreeableness doing best with vocal-only features to hyperparameters tuned on the full feature set being reused after selection, which they call likely suboptimal (p.9, lines 1108-1135). That reading over-states the paper and should not be repeated.",
+   "Metric mismatch: the paper reports out-of-sample R-squared (1 - CV MSE / variance); Melange reports held-out correlation r. Converting the paper's 6-16% to r of about .25-.40 as an 'expected effect' is approximate, and any comparison should name both metrics and their denominators (N=545 self-report students vs N=90 legislators against Pink).",
+   "No conflict with D-025, D-021, the rejected SNA proposals or the reciprocity rulings: the paper has no network, lobbying or edge content."
+  ],
+  "paul_alignment": "Paul has not annotated this paper. His recorded interest is in non-text channels (audio, video), and his position under prosody-and-disfluency is that 'the system concluded audio is display-only'. The evidence agrees with that conclusion. The paper is optimistic about voice, but in Paul's own replications (he supplied the paper in July 2026, per Addendum 1) only the arousal-trait signal carried over. The super-additivity that would make voice worth adding did not. His note is not stale, but it is thinner than the record: it does not mention that the faithful replication validated vocal E/ES against Pink, or that three super-additivity tests and the halo attack all MISSED. Read together with Simchon, the paper was framed as the case for making psychology load-bearing 'IF the pilot proves fruitful'. The pilot did not prove fruitful for that purpose, so that conditional should be treated as closed.",
+  "related": [
+   {
+    "slug": "rubio-2024-feasibility-data-analytics",
+    "relation": "complements",
+    "why": "Cited with Marrero in big5_audio_prereg.md Addendum 1 (2026-07-08) for the voice-trait range (r about .3-.5) and the extraversion-primary endpoint; the item file title confirms the topic."
+   },
+   {
+    "slug": "simchon-2024-persuasive-effects-political",
+    "relation": "complements",
+    "why": "Cited with Marrero in Addendum 1 as the payoff argument, conditioned on the voice pilot; the framing is the audio prereg's, not the paper's."
+   },
+   {
+    "slug": "salam-2022-learning-personalised-models",
+    "relation": "complements",
+    "why": "Self-reported personality recognition from audio; the system ran a Salam-style sex-cleanliness test on its prosody features (brain note melange-audio-pipeline)."
+   },
+   {
+    "slug": "dietrich-2019-pitch-perfect-vocal",
+    "relation": "complements",
+    "why": "Congressional pitch method supplied in big5_audio_prereg.md Addendum 6 (2026-07-15) and used as the domain-specific alternative to student self-report in the active audio profile."
+   },
+   {
+    "slug": "mestre-2026-potential-pitfalls-audio",
+    "relation": "complements",
+    "why": "Background on audio-as-data pitfalls (alignment, features, classifiers) relevant to edited political audio; the link to the non-replication is interpretive and not shown by either source."
+   },
+   {
+    "slug": "koutsoumpis-2024-kernel-truth-text",
+    "relation": "same-method",
+    "why": "Meta-analysis of Big Five and LIWC links; useful context for how small the paper's LIWC-alone figure of 3.13 percent is against published LIWC-trait associations."
+   },
+   {
+    "slug": "pennebaker-2003-psychological-aspects-natural",
+    "relation": "cites",
+    "why": "Cited by the paper as the basis for language-personality links (p.1-2)."
+   },
+   {
+    "slug": "soto-2017-next-five-inventory",
+    "relation": "cites",
+    "why": "The BFI-2 is the paper's self-report criterion (p.2); no equivalent self-report exists for legislators."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Measuring Elite Personality Using Speech; Ramey is the basis named in big5_traits.py (Ramey-synth). The paper itself does not cite it."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "byrne-2014-chokes-under-pressure",
+  "note": false,
+  "meta": {
+   "title": "Who chokes under pressure (Big Five, decision-making)",
+   "authors": [
+    "Kaileigh A. Byrne",
+    "Crina D. Silasi-Mansat",
+    "Darrell A. Worthy"
+   ],
+   "year": "2015 (print, vol. 74, pp. 22-28; online 23 Oct 2014)",
+   "venue": "Personality and Individual Differences, 74 (2015) 22-28. Texas A&M University. DOI 10.1016/j.paid.2014.10.009 (from the text's header).",
+   "doi": "10.1016/j.paid.2014.10.009",
+   "sha12s": [
+    "67b8ebba0db0"
+   ],
+   "category": "Adjacent",
+   "category_slug": "adjacent"
+  },
+  "extraction": {
+   "title": "Who chokes under pressure (Big Five, decision-making)",
+   "authors": [
+    "Kaileigh A. Byrne",
+    "Crina D. Silasi-Mansat",
+    "Darrell A. Worthy"
+   ],
+   "year": "2015 (print, vol. 74, pp. 22-28; online 23 Oct 2014)",
+   "venue": "Personality and Individual Differences, 74 (2015) 22-28. Texas A&M University. DOI 10.1016/j.paid.2014.10.009 (from the text's header).",
+   "doi": "10.1016/j.paid.2014.10.009",
+   "document_type": "Journal article, two-experiment empirical study (lab experiments with undergraduates)",
+   "coverage": "Full text read in three chunks (lines 0-998), covering title, abstract, introduction, Experiment 1 method and results, Experiment 2 method and results, general discussion, limitations, references, and Tables 1-5 with notes. No Paul markup files existed (the computed task listed \"(none)\"), so paul_markup is empty. Nothing was skipped. The paper has no content on lobbying, networks, path-finding, allocation, elections, persuasion/turnout, legislators or text measurement.",
+   "research_question": "Whether the Big Five personality traits predict who thrives or chokes under pressure during dynamic decision-making, i.e., which traits predict performance decrements under social pressure (Exp 1) and under combined social plus time pressure (Exp 2). Neuroticism was the a priori focus; the other four traits were treated as exploratory (Intro, p. 23; Sections 2.2.3 and 4).",
+   "theory": "Trait activation theory (Tett & Guterman, 2000) plus distraction theory (Lewis & Linder, 1997; Beilock & Carr, 2005; Beilock et al., 2004): pressure consumes working-memory resources; neurotic individuals experience more anxiety and intrusive thoughts, so they are more likely to choose the immediately rewarding option.",
+   "data": "Experiment 1: N = 127 undergraduates at Texas A&M (76 female, 51 male), course credit. Low-pressure n = 63; high-pressure n = 64 (random assignment, Section 2.1.1). Unit: individual participant, each completing 250 trials. Experiment 2: N = 65 undergraduates (37 female, 28 male), course credit (Section 3.1.1). Three participants were excluded for completion time more than 2 SD from the mean (Section 3.2.1), so the analysed N is about 62. The reported regression df F(5,55) implies N = 61; the paper does not reconcile this. Period: not stated (Psychtoolbox for Matlab v2.5 on PCs).",
+   "method": "Lab experiments with a dynamic two-option decision task (Gureckis & Love, 2009; Worthy et al., 2011, 2012). The Increasing option pays less immediately but raises both options' future payoffs, so it is optimal. The Decreasing option pays more immediately but lowers future payoffs. Trial-by-trial foregone payoffs are shown. Dependent variable: average proportion of Increasing-option selections over 250 trials. Personality was measured with the 44-item Big Five Inventory. Experiment 1 analysis: Pearson correlations within each condition (Table 2); a two-step hierarchical regression (Step 1: condition dummy and five traits; Step 2: condition x trait interactions), then separate regressions within each condition to locate the interaction (Section 2.2.3; Table 3). Balance check: t-tests on the five traits by condition, Bonferroni-corrected, none significant at p > .01 (Section 2.2.1). Experiment 2: same task plus a 1705 s time limit with live On Pace / Behind Pace feedback; correlations with completion time and performance (Table 4) and a multiple regression of the five traits on performance (Table 5). There was no low-pressure arm in Experiment 2.",
+   "identification": "Experiment 1 identifies the pressure effect by random assignment to pressure condition (social pressure: a fictitious partner and an $8 shared bonus contingent on reaching 16,000 points). Personality is measured, not manipulated, so trait effects are associations, not causal effects. Experiment 2 has no concurrent control: it is compared to the Experiment 1 control sample (Section 3.3, p. 26), and combines social and time pressure, so its trait effects are not randomized. The authors frame Experiment 2 as a replication test of the Experiment 1 neuroticism effect.",
+   "scope": "Population: undergraduates at one US university (Texas A&M), recruited for course credit. Era: 2014 data collection (exact dates not stated). Institution: university laboratory. Domain: individual (not group) decision-making in one laboratory task. The authors say results may be limited to the decision-making domain and may not extend to other high-pressure situations (Section 4.1).",
+   "key_findings": [
+    {
+     "finding": "Exp 1 condition x neuroticism interaction: neuroticism had no significant relation to performance in the low-pressure condition but negatively predicted performance under social pressure.",
+     "location": "Section 2.2.3; Table 3; Section 4",
+     "numbers": "Interaction DR2 = .06, F(11,115) = 1.96, p = .04; condition x N b = .45, p = .02; high-pressure N b = .50, p < .01; low-pressure N not significant."
+    },
+    {
+     "finding": "Exp 1 main effects: pressure lowered performance; neuroticism negatively predicted performance in the first-step model. The first-step model only approached significance.",
+     "location": "Section 2.2.3; Table 3",
+     "numbers": "Step 1 R2 = .10, F(6,120) = 2.14, p = .054; condition b = .43, p = .02; neuroticism b = .25, p = .01; conscientiousness b = .16, p = .09 (trend)."
+    },
+    {
+     "finding": "Exp 1 correlations within condition: no trait correlated significantly with performance in the low-pressure condition; under pressure, conscientiousness and neuroticism were negatively correlated with performance. The conscientiousness link did not survive the regression and was not replicated in Exp 2.",
+     "location": "Section 2.2.2; Table 2; Sections 2.3 and 3.3",
+     "numbers": "High pressure: C r = .27, p < .05; N r = .34, p < .01. Low pressure: none significant."
+    },
+    {
+     "finding": "Exp 1 agreeableness interaction was a non-significant trend. Higher agreeableness was associated with lower performance under pressure, but not significantly.",
+     "location": "Section 2.2.3; Section 2.3",
+     "numbers": "Condition x A b = .33, p = .08 (trend); high-pressure A b = .18, p = .17 (ns)."
+    },
+    {
+     "finding": "Exp 2 (social plus time pressure) replicated the neuroticism effect. Neuroticism and agreeableness both negatively predicted performance; the overall model was significant. Conscientiousness did not predict performance under time pressure.",
+     "location": "Section 3.2.2; Table 5; Section 3.3",
+     "numbers": "Model R2 = .19, F(5,55) = 2.61, p < .05; N b = .31, p < .05; A b = .36, p < .01; O, C and E not significant (Table 5 reports b = .16, .16, .06 without significance marks)."
+    },
+    {
+     "finding": "Exp 2 correlations: agreeableness negatively correlated with performance; neuroticism and conscientiousness were negative but non-significant; completion time correlated strongly with performance.",
+     "location": "Section 3.2.1; Table 4",
+     "numbers": "A r = .29, p < .05; N r = .16 (ns); C r = .16 (ns); completion time x performance r = .62, p < .01."
+    },
+    {
+     "finding": "Exp 1 post-task importance ratings did not differ significantly by condition; the low-pressure group rated performance importance slightly lower.",
+     "location": "Section 2.2.1, footnote 1",
+     "numbers": "Low M = 4.68 (SD 2.42); high M = 5.17 (SD 2.14); not significant."
+    },
+    {
+     "finding": "Authors' overall conclusion: neuroticism is consistently linked to choking under pressure in this task; agreeableness is an unexpected exploratory finding; the conscientiousness result is not supported.",
+     "location": "Section 4 (general discussion, pp. 26-27)",
+     "numbers": "No new numbers; summarizes the above."
+    }
+   ],
+   "measures": [
+    "Big Five Inventory (BFI), 44 items, 5-point Likert (John, Donahue & Kentle, 1991). Cronbach's alpha .79-.88 (M = .83); convergent r = .73 with NEO-FFI and r = .81 with TDA (Section 2.1.2.1).",
+    "Decision-making performance: average proportion of Increasing-option selections across 250 trials (dependent variable in both experiments).",
+    "Pressure manipulation: social pressure via a fictitious partner and an $8 bonus contingent on reaching 16,000 points (about 80% optimal choices). Experiment 2 adds time pressure (1705 s limit, live On Pace / Behind Pace feedback).",
+    "Post-task importance rating on a 1 (not at all) to 7 (extremely) scale (Section 2.1.3).",
+    "Total completion time (Experiment 2 only; Table 4)."
+   ],
+   "limitations": [
+    "Social pressure included a monetary incentive absent from the low-pressure arm, so monetary and social pressure are confounded (Section 4.1).",
+    "Neuroticism group means differed between Experiment 1 conditions (low-pressure higher); the authors say this could have skewed results (Section 4.1).",
+    "No pressure manipulation check, anxiety or mood measure, or working-memory capacity measure; the working-memory mechanism is inferred, not tested (Section 4.1).",
+    "Between-subjects design with no within-subject control of group differences (Section 4.1).",
+    "Self-reported pressure did not differ significantly between conditions, and the low-pressure mean was higher than in earlier studies (Section 2.2.1, footnote 1).",
+    "Experiment 2 has no concurrent control; it is compared to the Experiment 1 control sample (Section 3.3).",
+    "The conscientiousness effect appeared in Experiment 1 correlations but not in the regression, and did not replicate in Experiment 2 (Sections 3.3 and 4).",
+    "The agreeableness finding is unanticipated and labelled exploratory (Section 4); its Experiment 1 interaction was not significant.",
+    "Sample: undergraduates at one university, individual decisions only; generalization limited (Section 4.1).",
+    "Reporting inconsistencies: Experiment 2 mean completion time is 1699 s in the text but 1670 s (SD 55.73) in Table 4; the text's 2 SD cutoff of 292 s does not match Table 4's SD. The Experiment 2 regression df F(5,55) implies N = 61, not the about 62 implied by excluding 3 of 65.",
+    "Footnote 2: the 1705 s limit required responses about 25% faster (about 500 ms per trial) than the Experiment 1 average of about 680 ms (Section 3.1, footnote 2)."
+   ],
+   "references_of_note": [
+    "Worthy, Otto & Maddox (2012), Working-memory load and temporal myopia in dynamic decision-making, J. Exp. Psych: LMC. Shows WM load shifts this exact task toward immediate rewards; the closest building block for the WM mechanism.",
+    "Beilock & Carr (2005), When high-powered people fail: working memory and choking under pressure in math, Psychological Science. Source of the social-pressure manipulation and the WM-distraction account.",
+    "Beilock, Kulp, Holt & Carr (2004), More on the fragility of performance, J. Exp. Psych: General. Pressure-induced WM distraction.",
+    "DeCaro, Thomas, Albert & Beilock (2011), Choking under pressure: multiple routes to skill failure, J. Exp. Psych: General. Pressure enhances WM distraction in the same social-pressure paradigm.",
+    "Tett & Guterman (2000), trait activation theory, J. Research in Personality. Theoretical basis for the trait-by-situation prediction.",
+    "Gureckis & Love (2009), Learning in noise: dynamic decision-making in a variable environment, J. Mathematical Psychology. Source of the decision task.",
+    "Worthy, Markman & Maddox (2009), Choking and excelling under pressure in experienced classifiers, Attention, Perception, & Psychophysics. Earlier social-pressure work."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "Neuroticism negatively predicted performance under social pressure",
+     "location": "Abstract (p. 22)"
+    }
+   ]
+  },
+  "summary_md": "Byrne, Silasi-Mansat and Worthy ran two lab experiments with Texas A&M undergraduates. Experiment 1 had N = 127, randomised to low or high social pressure. Experiment 2 had about 61 to 62 analysed, under social plus time pressure, with no control arm. The task was a dynamic two-choice task in which picking the option that pays less now but more later is optimal. Big Five traits came from the self-report BFI. Neuroticism was the pre-specified trait, and it was the only effect that held in both experiments. In Experiment 1 it had no effect at low pressure but predicted worse performance under pressure: condition x N b = .45, p = .02; added R2 for the interaction step = .06. Experiment 2 repeated it (N b = .31, p < .05). Agreeableness was exploratory. Its Experiment 1 interaction was only a trend (p = .08); it was significant only in the uncontrolled Experiment 2 (b = .36, p < .01). The conscientiousness correlation (r = .27 under pressure) did not survive regression and did not replicate. Extraversion was null. The paper itself flags that money and social pressure are confounded, that there was no manipulation check, and that the working-memory mechanism was never measured.\n\nWhy it matters here: this is the citation behind the receptivity layer's susceptibility composite (`.40A + .30N - .20C - .10E`). It reads that composite as how much a legislator moves under lobbying pressure. The paper only partly supports that. Its outcome is worse choices on a delayed-reward task, not giving in to persuasion. Its sample is students, not legislators. Its strongest trait (N) gets a smaller weight than its weakest positive trait (A). The project's own well-powered test of Byrne's mechanism came back null: H5, N x loss domain, partial r = +0.036, n = 441. So the N slot is cited to theory with no validation behind it, and should keep the UNVERIFIED label.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.receptivity-layer",
+    "relation": "qualifies",
+    "paper_claim": "Neuroticism was the only trait significant in the regression in both experiments. Exp 1: condition x N b = .45, p = .02 (minus sign lost in text extraction; authors describe a negative effect), interaction DR2 = .06, F(11,115) = 1.96, p = .04; under high pressure N b = .50, p < .01; under low pressure ns. Exp 2 (social plus time pressure, no low-pressure arm): N b = .31, p < .05; A b = .36, p < .01; model R2 = .19. Exp 1 agreeableness interaction only a trend, b = .33, p = .08. Authors call the agreeableness result exploratory.",
+    "paper_location": "Sections 2.2.3, 3.2.2, 4; Tables 3 and 5",
+    "system_side": "The susceptibility composite weights A at .40 and N at .30 (comment: 'A ranked above N per the user's framing'). The docstring says high A adds to N-driven choking 'under social pressure (their Exp-2 interaction)'. Exp 2 has no low-pressure arm, so it cannot show an interaction. The default behavioural basis fills the A slot with cooperation_v2 (share-based; code comment gives rho +0.888 with bpf), not trait agreeableness. susc drives susc_mult [0.70, 1.30] and edge_mult [0.80, 1.20].",
+    "code_ref": "fec/members/receptivity_layer.py:6-14 (docstring), :47 (SUSC_GAINS), :65 (BASIS default behavioral), :103 (RECEPT_COOP default v2), :186 (behavioural composite), :189 (lexical composite), :233 (provenance string). fec/moneyball_core.py:202-213 not re-read.",
+    "transfer_conditions": "Weak transfer. (1) Construct: the outcome is worse choices on a delayed-reward lab task, not being moved by a persuader. (2) Population: undergraduates earning course credit at one university, individual decisions, an $8 bonus; not legislators facing lobbyists. (3) Measurement: the paper uses self-report BFI; the system uses text or behavioural proxies (affective_n for N, cooperation_v2 for A). (4) Size: Exp 1 step-1 R2 = .10 (condition plus five traits); the interaction increment is DR2 = .06, so the paper gives no anchor for the plus or minus 30 percent multiplier range. The paper supports the direction of an N-under-pressure term only; it does not support A outweighing N or the size of the term.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Every paper number checked against the text (Sections 2.2.3, 3.2.2, Tables 3 and 5). Softened: the 6 percent figure is the interaction increment DR2 only, not the trait effect; the 'strongest trait N gets smaller weight than weakest positive trait A' wording is muddled, since in Exp 2 A b = .36 exceeds N b = .31 and A is labelled exploratory. Negative sign of b = .45 cannot be confirmed from the extracted text. Code lines confirmed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Receptivity layer (susceptibility, incentive, prospect domain, seed probability)|Receptivity layer (susceptibility, incentive, prospect domain, seed probability)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-influence-engine.receptivity-layer",
+    "relation": "qualifies",
+    "paper_claim": "Under high pressure conscientiousness correlated negatively with performance, r = .27, p < .05 (Exp 1 correlation only). In the Exp 1 regression it was a trend, b = .16, p = .09. Experiment 2 found C not predictive: r = .16 ns, and Table 5 gives b = .16 with no significance mark. Authors say no clear conclusion about conscientiousness is possible. Extraversion and openness had no effect in either experiment.",
+    "paper_location": "Section 2.2.2, Table 2; Section 2.2.3, Table 3; Sections 3.2.2, 3.3, 4; Table 5",
+    "system_side": "The composite subtracts .20 x C and .10 x E, so high-C and high-E members count as less susceptible (lines 186 and 189). The docstring at lines 9-10 says these dampeners are design priors, not Byrne findings.",
+    "code_ref": "fec/members/receptivity_layer.py:9-10, :186, :189, :233",
+    "transfer_conditions": "The paper's C direction is opposite to the code's dampener sign, but the only evidence is one uncontrolled correlation that the authors decline to interpret and that did not replicate. That qualifies the term; it does not contradict it. For C and E, the honest wording is that this paper gives no support to the dampener.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Numbers reproduced from Table 2, Table 3, Table 5 and Section 4. 'contradicts' overstates the evidence, so relation is changed to qualifies. The provenance string at :233 overstates support for the C and E terms.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Receptivity layer (susceptibility, incentive, prospect domain, seed probability)|Receptivity layer (susceptibility, incentive, prospect domain, seed probability)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "qualifies",
+    "paper_claim": "The paper explains N-driven choking by working memory: pressure and anxiety use up working memory, so neurotic people take the immediate reward. The authors measured no anxiety, mood or working-memory capacity and ran no pressure manipulation check. Self-rated importance did not differ by condition (Low M = 4.68, SD 2.42; High M = 5.17, SD 2.14; ns).",
+    "paper_location": "Introduction p. 23; Section 2.2.1 footnote 1; Sections 4 and 4.1",
+    "system_side": "affective_n fills the N slot that receptivity_layer labels as Byrne's channel (default RECEPT_N = affective at line 74; used at line 179). The bearing also cites the project's H5 test of N x loss domain (partial r = +0.036, n = 441) as a null.",
+    "code_ref": "fec/members/receptivity_layer.py:74-93, :179",
+    "transfer_conditions": "Byrne gives a theoretical reason to keep an N slot but no evidence that text-measured affective content captures the anxiety facet the paper invokes. The paper's mechanism was never measured, so a null in legislators neither confirms nor refutes Byrne. The N contribution keeps its UNVERIFIED label (DE-062).",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "All paper-side claims reproduced from Section 4.1 and footnote 1. The H5 figures and the genre-transfer rho values were not re-derived in this check; a repo search for 0.036 returned only unrelated audit hits, so those system-side numbers remain unverified here.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.persona-agency-communion",
+    "relation": "qualifies",
+    "paper_claim": "The agreeableness result rests on self-report BFI agreeableness predicting worse task performance. It is exploratory and significant only in the uncontrolled Exp 2 (b = .36, p < .01). The paper has nothing on projected or communal rhetoric.",
+    "paper_location": "Section 3.2.2, Table 5; Section 4",
+    "system_side": "The persona channel reads warm or communal rhetoric as approachable-agreeable and blends persona_susc_z = .60 z(communion) minus .40 z(agency) into susceptibility at PERSONA_W 0.30 (line 191).",
+    "code_ref": "fec/members/receptivity_layer.py:139-147, :191",
+    "transfer_conditions": "Byrne concerns self-reported trait A and says nothing about communal rhetoric in public statements. Citing Byrne for the persona direction is a second inferential step the paper does not cover. PERSONA_W is owner policy; this note is about provenance only.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Paper numbers reproduced. Code lines 139-147 and 191 confirmed. The construct gap between self-reported trait A and communal rhetoric is real and is stated in transfer_conditions.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Agency-communion persona channel|Agency-communion persona channel]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "'Its strongest trait (N) gets a smaller weight than its weakest positive trait (A)' is muddled. In Exp 2, A b = .36 exceeds N b = .31, and the authors label A exploratory. Better: N is the only pre-specified trait that replicated; A is exploratory and significant only in the uncontrolled Exp 2.",
+   "The summary's account of effect sizes is right, but bearing 1 said trait effects explain about 6 percent of variance. Correction: 6 percent is the interaction increment DR2 = .06; step-1 R2 = .10 (condition plus five traits).",
+   "The H5 result (n = 441, partial r = +0.036), genre-transfer rho .050/.161, and the adjective 'well-powered' are project claims, not paper claims. They were not re-derived in this check and the adjective is unsupported here.",
+   "The quoted audit phrase 'does not converge with comfort-curve' was not found in the Melange audits folder, so the quotation is unverified.",
+   "'Paul's position' and 'his notes are stale' are inferred from code docstring framing. No Paul annotation exists (n_annots = 0, paul_entries empty), so the attribution should read as code-comment framing, not Paul's stated position.",
+   "Experiment 2 N: the summary gives about 61 to 62 analysed. The regression df F(5,55) implies N = 61, and the paper does not reconcile this with excluding 3 of 65; the discrepancy is real and should be stated as unreconciled."
+  ],
+  "gaps_exposed": [
+   "The paper's construct is worse decisions under pressure, not being moved by a persuader. The system has no evidence connecting the two. The prospective H2 contract (Spearman of pressure_mult vs |tier movement|) is still the only planned test, and F5 found it underpowered (72 of 511 new-event members).",
+   "No anxiety or stress-state measure exists for members at the time they are lobbied. Byrne's effect appears only under pressure. The system applies trait N to every member all the time; the loss-domain flag is the only situational switch, and H5 found no N x loss interaction.",
+   "The ±30% susc_mult range and the .40/.30/.20/.10 weights have no anchor in effect sizes. The paper's trait effects are small (added R2 = .06; model R2 .10 to .19), and the ordering is set by owner framing, not evidence.",
+   "The paper's single replicated finding is N. The system's default behavioural basis puts its largest weight (.40) on cooperation_v2, which nearly duplicates bpf (rho .888). bpf already enters the targeting product, so the slot that carries the most weight has the least Byrne support."
+  ],
+  "flags": [
+   "Citation mislabel at fec/members/receptivity_layer.py:7-8. The docstring calls the agreeableness effect 'their Exp-2 interaction'. Exp 2 had no low-pressure arm, so no interaction could be tested. The only A interaction was in Exp 1, and it was a non-significant trend (p = .08).",
+   "Ordering conflict. The paper's evidence ranks N (pre-specified, replicated) above A (exploratory, uncontrolled). The composite weights A .40 above N .30 on owner framing. That is a legitimate owner choice, but the Byrne label at :189 and the provenance string at :233 suggest the paper backs it.",
+   "N-slot status: the project's Byrne-mechanism test (H5, n = 441) was NULL, and genre transfer failed. Any statement that receptivity 'implements Byrne' must carry the UNVERIFIED label (DE-062), and must not be described as validated susceptibility.",
+   "Coefficient signs in the extracted paper text are printed without minus signs (for example 'N b = .25'). Direction here is taken from the authors' prose ('negatively predicted'). Check against the PDF before quoting a sign."
+  ],
+  "paul_alignment": "Paul did not annotate this paper. His position on the receptivity layer is that psychological traits should adjust how a member responds to pressure, as edge parameters. Byrne agrees with that idea in principle: a trait-by-situation interaction exists for N. It disagrees on three specifics. First, the paper's outcome is choking, meaning worse decisions on a delayed-reward task, not being persuaded. Second, Paul's framing that very agreeable or submissive members should be 'very susceptible' rests on Byrne's weakest result (exploratory, uncontrolled), not its strongest. Third, the C and E dampeners are not Byrne findings, and the C evidence runs the opposite way. His notes are stale against the system in the way already recorded: the H5 Nokken-drift look tested exactly Byrne's N-under-pressure mechanism and came back null. The layer now runs on behavioural and affective proxies, not Big Five traits.",
+  "related": [
+   {
+    "slug": "linde-2016-politicians-take-risks",
+    "relation": "complements",
+    "why": "Supplies the loss-domain pt_mult in the same receptivity layer. The H5 test crossed Byrne's N with the loss domain. Both papers test decisions under pressure or risk in elites or students; effects in elites are smaller or unproven."
+   },
+   {
+    "slug": "palm-2025-influence-personality-traits",
+    "relation": "complements",
+    "why": "Systematic review of how Big Five traits moderate persuasion-strategy effects. That is the persuadability construct the receptivity layer needs, which Byrne's choking task does not measure."
+   },
+   {
+    "slug": "fouirnaies-2022-electoral-incentives-affect",
+    "relation": "complements",
+    "why": "Supplies the incent_mult term multiplied into the same pressure_mult product as Byrne's susceptibility term (receptivity_layer.py:6-21)."
+   },
+   {
+    "slug": "mondak-nd-online-appendix-personality",
+    "relation": "complements",
+    "why": "Expert ratings of US senators' traits, including N. Could test whether the system's N-slot measure tracks neuroticism, which Byrne's mechanism needs before transfer."
+   },
+   {
+    "slug": "celli-2012-role-emotional-stability",
+    "relation": "complements",
+    "why": "Text-based emotional-stability measure. Bears on whether affective-content N captures the anxiety facet Byrne's mechanism relies on."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Speech-based elite personality measurement. The lexical Big Five basis that fills the composite at receptivity_layer.py:189 comes from this family of measures; Byrne used the self-report BFI."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Byrne is the actual source of the system's communion→susceptibility mapping in the receptivity layer. Birkenmaier and Lechner only supply the measurement."
+   },
+   {
+    "slug": "rammstedt-2025-going-global-language",
+    "relation": "complements",
+    "why": "It is another Big Five self-report work in the vault. It concerns trait-behaviour links under pressure, the mechanism the affective-N slot cites, while Rammstedt concerns instrument comparability."
+   },
+   {
+    "slug": "amsalem-2018-effect-politicians-personality",
+    "relation": "complements",
+    "why": "Item confirms neuroticism was the a priori focus of a pressure-decision study. Amsalem's negative neuroticism-visibility link points the same way, and both bear on the receptivity N-slot."
+   },
+   {
+    "slug": "simchon-2024-persuasive-effects-political",
+    "relation": "complements",
+    "why": "Byrne supplies the person-level trait-to-susceptibility composite in Melange's receptivity layer; Simchon shows a message-by-trait interaction that a main-effects composite cannot capture."
+   },
+   {
+    "slug": "soto-2017-next-five-inventory",
+    "relation": "complements",
+    "why": "Pressure-choking study whose composite the receptivity N weight follows (the code comment cites Byrne et al.). Title confirmed; the BFI-2 facet results bear on which N component carries that mechanism."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "palm-2025-influence-personality-traits",
+  "note": false,
+  "meta": {
+   "title": "Palm and Tims: persuasion strategies and personality traits",
+   "authors": [
+    "Sander Palm",
+    "Maria Tims"
+   ],
+   "year": "2025",
+   "venue": "Personality and Individual Differences, vol. 247, article 113412 (online 20 Aug 2025)",
+   "doi": "10.1016/j.paid.2025.113412",
+   "sha12s": [
+    "d71000947e0b"
+   ],
+   "category": "Adjacent",
+   "category_slug": "adjacent"
+  },
+  "extraction": {
+   "title": "Palm and Tims: persuasion strategies and personality traits",
+   "authors": [
+    "Sander Palm",
+    "Maria Tims"
+   ],
+   "year": "2025",
+   "venue": "Personality and Individual Differences, vol. 247, article 113412 (online 20 Aug 2025)",
+   "doi": "10.1016/j.paid.2025.113412",
+   "document_type": "Systematic literature review (PRISMA-guided, narrative synthesis; not pre-registered, Sec 3.1)",
+   "coverage": "Read the entire extracted text (lines 0-1452: main text, Tables 1-3, Fig 1, CRediT and competing-interest statements, Appendix B journal table, full reference list). Appendix A figure is an image and is not in the text. Metadata hint was correct; DOI taken from the text. No markup or annotation files were listed (instruction said none), so paul_markup is empty. Table 3 is garbled in text extraction; where unclear, Section 4.3 prose was used.",
+   "research_question": "What is the influence of personality traits on the effect of persuasion strategies on influencing individual behavior? (Abstract; Sec 1, p.2)",
+   "theory": "Congruence theory (message-receiver matching; Rimal & Adkins 2003; Dodoo & Wen 2019). Elaboration Likelihood Model (Petty & Cacioppo 1984; central vs peripheral route, depends on motivation and ability). Big Five / five-factor model as trait taxonomy (McCrae & John 1992). Cialdini's six principles as strategy taxonomy (Sec 2.1-2.3, pp.1-2). The review does not test these theories.",
+   "data": "Unit: study/article. N = 80 included articles, published 1982 to September 2024, from 59 journals (Sec 3.3; App. B). Identification: 236 unique Web of Science hits plus 48 snowballed = 284 screened; 83 excluded at title/abstract (82 not relevant, 1 not English); 201 read in full; 121 excluded; 80 included (Sec 3.2-3.3, Fig 1, p.3). Coded on 12 dimensions (Sec 3.4). Per-study sample sizes are not reported in the review except Jankovic et al. (2022), n=27 (Sec 4.1). Authors state they do not have permission to share data.",
+   "method": "PRISMA-guided systematic review of Web of Science using AND-combined keyword pairs (Persuasion Strategies/Technologies with Personality Traits/Big Five/Five Factor Model) plus reference-list snowballing (Sec 3.2). Title/abstract then full-text screening; English only; journal ranking not used (Sec 3.3). Deductive coding of 6 dimensions (strategy type, author, moderators, mediators, outcomes, results) plus search term, method, research type, domain; inductive coding of study duration and sample (Sec 3.4). Synthesis is narrative: counts of studies and direction of reported effects. No pooled effect sizes, meta-analysis, or formal quality/risk-of-bias appraisal is described.",
+   "identification": "Not applicable: review with no causal identification strategy. The review notes that much of the included research is correlational and that some designs (e.g., Gerber et al. 2013) do not allow firm causal inference (Sec 4.2.4, p.5; Sec 5.3, p.8).",
+   "scope": "Population: mainly general population (62.5% of studies) and students (31.25%), patients 1.25% (Sec 4, pp.2-3). Domains: health 41.25%, business 25%, sustainability 7.5% (Sec 4). Era: 1982 to September 2024, most studies 2015-2024 (Sec 3.3). Language: English. Methods: quantitative 91.25%, mixed 8.75%; surveys 80%, field experiments 12.5%, real-world data 1.25%; 80% under 1 hour (Sec 4, p.3). Culture is discussed in Sec 5 but is not one of the 12 coding dimensions.",
+   "key_findings": [
+    {
+     "finding": "Matching trait-tailored strategies are more effective than non-matching (no strategy); contra-matching (random, non-ideal strategy) is often counterproductive, not merely ineffective. No effect sizes reported.",
+     "location": "Abstract p.1; Sec 4.1 p.3; Sec 5 p.6",
+     "numbers": "Count-based narrative; Jankovic et al. 2022 found no significant difference (n=27)"
+    },
+    {
+     "finding": "Susceptibility differs by Big Five trait: agreeableness most susceptible, neuroticism least.",
+     "location": "Abstract p.1; Table 2 p.4; Sec 4.2.1 and 4.2.5 pp.4-5",
+     "numbers": "Table 2: agreeableness High; extraversion Above average; conscientiousness Average; openness Below average; neuroticism Low"
+    },
+    {
+     "finding": "Extraversion positively associated with susceptibility (Gkika 2016; Ndulue 2022); Decker & Kramer (2023) found no high-vs-low difference in political microtargeting.",
+     "location": "Sec 4.2.2 p.5",
+     "numbers": "n/a"
+    },
+    {
+     "finding": "Conscientiousness generally average; Halko & Kientz (2010) found it most strongly correlated with responsiveness in health mobile apps.",
+     "location": "Sec 4.2.3 p.5",
+     "numbers": "n/a"
+    },
+    {
+     "finding": "Openness generally below average in health and tech contexts but context-dependent: positive in education (Ghorbani & Rashvand Semiyari 2022) and voter mobilization (Gerber et al. 2013).",
+     "location": "Sec 4.2.4 p.5",
+     "numbers": "n/a"
+    },
+    {
+     "finding": "Neuroticism least susceptible overall, yet Oyibo & Vassileva (2019) found it most consistently correlated with responsiveness to social-influence strategies; Gkika et al. (2016) found greater acceptance of social proof.",
+     "location": "Sec 4.2.5 p.5",
+     "numbers": "n/a"
+    },
+    {
+     "finding": "Trait-specific matches: agreeableness with reciprocity and liking; extraversion with liking, commitment and consistency, scarcity, reciprocity (social proof and authority not significant); conscientiousness with reciprocity (liking least influential); openness with no specific match (studies conflict); neuroticism most persuaded by commitment and consistency, and positively by scarcity (Alkis & Temizel 2015).",
+     "location": "Sec 4.3.1-4.3.5 pp.5-6; Table 3 p.7",
+     "numbers": "Table 3 cells garbled in extraction; prose used"
+    },
+    {
+     "finding": "Review composition: Big Five is the most-used moderator; Cialdini is author in 17.5% of studies; authority and scarcity each in 15%; susceptibility/perceived persuasiveness is the most common outcome.",
+     "location": "Sec 4 p.3; Table 1 p.4",
+     "numbers": "Big Five 33.75%; Cialdini 17.5%; authority 15%; scarcity 15%; susceptibility 25%; keyword search 56.25% vs snowballing 43.75%"
+    },
+    {
+     "finding": "Political persuasion: Zarouali et al. (2022) found personality-tailored political ads influenced voting intentions and attitudes toward parties; Gerber et al. (2013) found openness linked to positive response to voter mobilization, with no firm causal inference.",
+     "location": "Sec 4.1 p.3; Sec 4.2.4 p.5",
+     "numbers": "n/a"
+    },
+    {
+     "finding": "Practical implication: random strategy use risks counterproductive effects; profile the audience, estimate susceptibility, then choose one strategy for the majority or a matching strategy per subgroup.",
+     "location": "Sec 5.2 p.7",
+     "numbers": "WHO 2021 context cited: 650 million obese; 1.9 billion overweight adults (context, not a review finding)"
+    }
+   ],
+   "limitations": [
+    "Personality mostly measured by self-report, susceptible to social desirability bias (Sec 5.3 p.8).",
+    "Many studies used one-off surveys of perceived persuasiveness; behavioral change not confirmed; field experiments recommended (Sec 5.3).",
+    "Dominance of Cialdini's six principles narrows conceptual range (Sec 5.3).",
+    "Much research is correlational; relationships may be bidirectional or confounded (Sec 5.3).",
+    "Not pre-registered (Sec 3.1 p.2). Journal ranking deliberately not a criterion (Sec 3.3).",
+    "Narrative synthesis only: no pooled effect sizes or formal quality appraisal in the text, so the strength of the matching claim cannot be weighed from this paper alone.",
+    "Internal conflicts: openness results disagree (Alslaity & Tran 2020 found liking most persuasive for high openness, Sec 4.3.4), and the Table 3 openness row does not clearly match the prose.",
+    "Data not shareable per authors (Data availability)."
+   ],
+   "measures": [
+    "Personality: Big Five / five-factor model (OCEAN), mostly self-report (Sec 2.3; Sec 5.3).",
+    "Persuasion strategies: Cialdini's six principles (social proof, liking, authority, commitment and consistency, scarcity, reciprocity) (Sec 2.1).",
+    "Outcomes coded: susceptibility to persuasion, perceived persuasiveness, attitude change, healthy eating (Sec 4 p.3; Table 1).",
+    "Moderators/mediators coded: Big Five, need for cognition, promotion/prevention focus; customer perceived value, extraverted behaviour, goal facilitation appraisals (Sec 4)."
+   ],
+   "references_of_note": [
+    "Gerber, Huber, Doherty, Dowling & Panagopoulos (2013), Big five personality traits and responses to persuasive appeals: voter turnout experiments, Political Behavior 35 (reviewed Sec 4.2.4).",
+    "Zarouali, Dobber, De Pauw & de Vreese (2022), personality-profiling algorithm and political microtargeting, Communication Research 49(8) (Sec 4.1).",
+    "Decker & Kramer (2023), Is personality key? Political microtargeting, Media and Communication 11(3) (Sec 4.2.2).",
+    "Luttig & Lavine (2016), Issue frames, personality, and political persuasion, American Politics Research 44(3) (Sec 4.1).",
+    "Lepri, Staiano, Shmueli, Pianesi & Pentland (2016), role of personality in shaping social networks and mediating behavioral change, UMUAI 26 (reference list only).",
+    "Kosinski, Stillwell & Graepel (2013), digital records predict traits, PNAS 110(15) (Sec 5.3).",
+    "Matz et al. (2024), generative AI for personalized persuasion at scale, Scientific Reports 14 (Sec 5.3).",
+    "Kaptein, Markopoulos, De Ruyter & Aarts (2015), personalizing persuasive technologies with persuasion profiles, IJHCS 77 (Sec 4.1).",
+    "Hirsh, Kang & Bodenhausen (2012), Personalized persuasion, Psychological Science 23(6) (Sec 4.1).",
+    "Gkika et al. (2016), personality traits and influence strategies in personalized recommendations, EMPIRE workshop (Sec 4.2-4.3)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "matching strategies are significantly more effective than non-matching ones whereas contra-matching strategies are often found to be counterproductive.",
+     "location": "Abstract, p.1"
+    },
+    {
+     "quote": "Those possessing the trait agreeableness are most responsive to persuasion strategies, while those high on neuroticism are least affected.",
+     "location": "Abstract, p.1"
+    },
+    {
+     "quote": "a one-size-fits-all approach to persuasion strategies is less effective than one that considers the personality traits of the target audience.",
+     "location": "Sec 6 Conclusion, p.7"
+    }
+   ]
+  },
+  "summary_md": "Palm and Tims (2025) is a PRISMA-guided systematic review of 80 studies published between 1982 and September 2024. It asks whether Big Five traits moderate the effect of persuasion strategies, nearly always Cialdini's six principles. Most included studies are one-off self-report surveys of perceived persuasiveness. Samples are mainly the general public (62.5%) and students (31.25%), and the main domains are health (41.25%) and business (25%). The synthesis is narrative only: it counts studies and their reported directions, with no pooled effect sizes and no risk-of-bias appraisal.\n\n**Main claims:**\n- Strategies matched to a trait outperform no strategy, and mismatched strategies can backfire.\n- Ranked by susceptibility to persuasion, agreeableness is highest, then extraversion, conscientiousness and openness, with neuroticism lowest (Table 2).\n- Even so, one included study (Oyibo & Vassileva 2019) found neuroticism the trait most consistently correlated with responsiveness to social-influence strategies.\n- Only a few political studies are included (Zarouali 2022, Gerber 2013, Decker & Kramer 2023), and they disagree.\n\n**Why it matters here:** the receptivity layer turns personality into a single susceptibility scalar. Neuroticism gets a positive weight (+.30) and extraversion or dominance a negative one (-.10). The review's ranking runs against both signs, while it supports the +.40 agreeableness slot. The caveat is that the constructs differ. Byrne's composite, which the code cites, is about decisions breaking down under pressure, not about responding to a persuasion message. The review's evidence also comes from consumers and students, not legislators. So the review is weak evidence against the N and E signs, not a calibration source.\n\n**What it exposes:** the engine has no strategy dimension. It models one generic pressure, so the review's main result, which is about matching a strategy to a trait, has nothing in the system to attach to. This analysis is UNVERIFIED until a second path reproduces it (DE-062).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.receptivity-layer",
+    "relation": "qualifies",
+    "paper_claim": "Count-based susceptibility ranking across 80 studies: agreeableness High, extraversion Above average, conscientiousness Average, openness Below average, neuroticism Low (least susceptible). No pooled effect sizes.",
+    "paper_location": "Abstract p.1; Table 2 p.4; Sec 4.2.1-4.2.5 pp.4-5",
+    "system_side": "The susceptibility composite has the same structure on both bases. Lexical basis: susc_trait = .40A + .30N - .20C - .10E. Live default (RECEPT_TRAITS=behavioral, RECEPT_N=affective, RECEPT_COOP=v2): .40 coop_v2 + .30 affective_N - .20 diligence - .10 dominance. The code cites Byrne 2015 choking-under-pressure for N, and states that the C and E dampeners are design priors, not Byrne findings.",
+    "code_ref": "fec/members/receptivity_layer.py:6-14, fec/members/receptivity_layer.py:65,74,103, fec/members/receptivity_layer.py:186, fec/members/receptivity_layer.py:189",
+    "transfer_conditions": "Weak transfer. The review measures response to persuasion messages in consumers and students, using self-reported traits and perceived-persuasiveness outcomes in health and tech settings. The system's N slot is choking under pressure (Byrne), a different construct, and members' traits are read from text or behaviour, not self-report. The review supports the positive A or cooperation weight. It cuts against the positive N weight and gives no support to the negative E or dominance weight. It cannot set magnitudes because it reports no effect sizes. Neither sign change is recommended on this evidence alone: changing weights moves ranks and is a gated recalibration, which is Paul's call.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Receptivity layer (susceptibility, incentive, prospect domain, seed probability)|Receptivity layer (susceptibility, incentive, prospect domain, seed probability)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-influence-engine.receptivity-layer",
+    "relation": "qualifies",
+    "paper_claim": "Neuroticism is the least susceptible trait overall, yet Oyibo & Vassileva (2019) found it the trait most consistently correlated with responsiveness to social-influence strategies, and Gkika et al. (2016) found greater acceptance of social proof among high-neuroticism participants.",
+    "paper_location": "Sec 4.2.5 p.5",
+    "system_side": "edge_mult is an affine gain on the same susc scalar, applied to cascade receivers (peer or social influence). susc_mult scales pressure and money response. One scalar serves both channels.",
+    "code_ref": "fec/members/receptivity_layer.py:43-48, fec/members/receptivity_layer.py:198-199",
+    "transfer_conditions": "The paper suggests that the direction of N may differ by channel: positive for peer or social-proof influence, which the edge_mult cascade receiver models, and negative for direct persuasion appeals. That would argue against a single susceptibility dial for both channels. The paper's evidence is one or two persuasive-technology studies, so treat this as a hypothesis only.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Receptivity layer (susceptibility, incentive, prospect domain, seed probability)|Receptivity layer (susceptibility, incentive, prospect domain, seed probability)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-influence-engine.receptivity-layer",
+    "relation": "suggests-extension",
+    "paper_claim": "Trait-matched strategies are more effective than non-matching ones, and contra-matched (random, non-ideal) strategies are often counterproductive. Examples: agreeableness with reciprocity and liking; extraversion with liking, commitment, scarcity and reciprocity; neuroticism with commitment and consistency.",
+    "paper_location": "Abstract p.1; Sec 4.1 p.3; Sec 4.3.1-4.3.5 pp.5-6; Sec 5.2 p.7",
+    "system_side": "The engine models one undifferentiated pressure. pressure_mult = clip(susc_mult x incent x pt, 0.50, 1.60), with no strategy or appeal-type dimension, so a mismatch can only reduce gain and never backfire on this channel.",
+    "code_ref": "fec/members/receptivity_layer.py:227",
+    "transfer_conditions": "This only applies if lobbying asks were coded by appeal type, and the system has no such data. The matching evidence comes from health and persuasive-technology apps, with outcomes mostly measured as perceived persuasiveness rather than behaviour (Sec 5.3). Cialdini's 'reciprocity' here is a message strategy. It is unrelated to the system's unvalidated reciprocity assumption (D-104..D-108).",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Receptivity layer (susceptibility, incentive, prospect domain, seed probability)|Receptivity layer (susceptibility, incentive, prospect domain, seed probability)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-psychometrics.persona-agency-communion",
+    "relation": "qualifies",
+    "paper_claim": "Agreeableness is the most susceptible trait, which fits communal rhetoric as a sign of being approachable. Extraversion is above average in susceptibility, with liking and commitment working best, which runs against treating assertive or agentic presentation as resistance.",
+    "paper_location": "Sec 4.2.1-4.2.2 pp.4-5; Table 2 p.4",
+    "system_side": "persona_susc_z = .60 z(communion) - .40 z(agency), blended into susceptibility at PERSONA_W 0.30. Dominant or assertive rhetoric is treated as resisting pressure.",
+    "code_ref": "fec/members/receptivity_layer.py:139-147, fec/members/receptivity_layer.py:191",
+    "transfer_conditions": "Agency and communion are not Big Five dimensions, and mapping agency onto extraversion is loose. The positive communion sign gets mild support; the negative agency sign gets none. PERSONA_W stays, per the owner's ruling, and this bearing concerns only the signs inside the channel.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Agency-communion persona channel|Agency-communion persona channel]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "The engine has no strategy or appeal-type dimension. Lobbying pressure is a single scalar, so the paper's central result, that strategies should match traits and mismatches can backfire, cannot be represented. A wrong approach can only reduce gain, never cause a negative effect.",
+   "Peer or social-proof influence (edge_mult) and direct pressure (susc_mult) share one susceptibility scalar. The review hints that the N sign may differ between those two channels.",
+   "The signs of the N, C and E or dominance weights in the susceptibility composite have no literature support for persuasion as opposed to choking under pressure. This review weakly opposes the N and E signs, and nothing in the system tests them against a behavioural outcome. The H2 prospective contract is unspent.",
+   "There is no context or domain moderator. The review finds that openness and extraversion effects change sign across contexts (education, voter mobilization, political microtargeting), while the system applies one fixed composite across all CU issues."
+  ],
+  "flags": [
+   "Terminology clash: the paper's 'reciprocity' is Cialdini's message strategy (returning favours). It must not be cited as evidence for the system's competitiveness and reciprocity assumption, which remains NOT validated (D-104..D-108).",
+   "Do not use the Table 2 susceptibility ranking as a weight calibration source. It is a count-based narrative synthesis with no effect sizes, Table 3 is garbled, and openness results conflict within the paper.",
+   "The review's evidence comes from consumers and students, with self-reported traits and perceived-persuasiveness outcomes. The system has no validated N susceptibility signal (Nokken-Poole MISS; H5 null), and the psych audit reports 3/5 traits validated. Any claim built on this paper needs a status label and stays UNVERIFIED (DE-062).",
+   "Any change to the receptivity weight signs moves ranks and needs a ruling from Paul. PERSONA_W 0.30 is kept by owner ruling and is not questioned here."
+  ],
+  "paul_alignment": "The paper partly supports Paul's framing (\"very agreeable, or submissive to authority ... should be very susceptible\", quoted at receptivity_layer.py:11): agreeableness is the most persuadable trait in the review, which supports the +.40 A or cooperation slot. It cuts against the second leg of his susceptibility composite. The review ranks neuroticism least susceptible to persuasion, and gives extraversion above-average susceptibility rather than resistance. The code is already honest that the C and E dampeners are design priors, and the N weight rests on Byrne's choking result, a different construct from persuasion. His position note for the receptivity layer (traits placed as edge parameters, Oropeza; 10 personalities collapse into 4) does not engage this literature, and he has no annotation on this paper. In this respect his note is not stale, since it never made a claim this review could overturn. The live system has moved further from Big Five text traits to behavioural proxies (coop_v2, affective N, diligence, dominance), which weakens any direct transfer.",
+  "related": [
+   {
+    "slug": "byrne-2014-chokes-under-pressure",
+    "relation": "contradicts",
+    "why": "Byrne is the cited source for the positive N weight, based on N degrading decisions under pressure. Palm & Tims rank N least susceptible to persuasion. Same trait, opposite practical direction, because the two constructs differ."
+   },
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Provides the agency and communion measurement that feeds the persona channel. Palm & Tims give weak evidence on whether communion and agency should raise or lower susceptibility."
+   },
+   {
+    "slug": "tappin-2023-quantifying-potential-persuasive",
+    "relation": "complements",
+    "why": "Quantifies the returns to political microtargeting, which tests the practical claim (profile, then match) that Palm & Tims assert without effect sizes."
+   },
+   {
+    "slug": "simchon-2024-persuasive-effects-political",
+    "relation": "extends",
+    "why": "Studies personality-tailored political messaging made with generative AI, the frontier Palm & Tims point to through Matz et al. 2024."
+   },
+   {
+    "slug": "zareie-2023-influence-maximization-social",
+    "relation": "complements",
+    "why": "A survey of behaviour-aware influence maximization, cited by the receptivity layer for seed_prob. Palm & Tims supply the trait-moderation evidence that such models assume."
+   },
+   {
+    "slug": "koutsoumpis-2024-kernel-truth-text",
+    "relation": "complements",
+    "why": "Palm & Tims rely on self-reported traits. Koutsoumpis meta-analyses how weakly text-based (LIWC) traits track self-reports, which limits any transfer to the system's text-derived traits."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "selfhout-2010-emerging-late-adolescent",
+    "relation": "complements",
+    "why": "Palm reviews personality as a moderator of persuasion, the monadic receptivity question. Selfhout shows that in tie formation the pairwise similarity effect outweighs individual levels."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "zhou-2026-measuring-stance-dynamics",
+  "note": false,
+  "meta": {
+   "title": "Measuring stance dynamics in political debate using temporal graph neural networks",
+   "authors": [
+    "Zhiwei Zhou",
+    "Erick Elejalde"
+   ],
+   "year": "2026",
+   "venue": "Information Processing and Management, vol. 63, article 104705 (published online 4 March 2026; open access, CC BY). Metadata hint corrected: full author names, volume and article number, and DOI taken from the text.",
+   "doi": "10.1016/j.ipm.2026.104705",
+   "sha12s": [
+    "4f18cee0e06f"
+   ],
+   "category": "Neural Networks",
+   "category_slug": "neural-networks"
+  },
+  "extraction": {
+   "title": "Measuring stance dynamics in political debate using temporal graph neural networks",
+   "authors": [
+    "Zhiwei Zhou",
+    "Erick Elejalde"
+   ],
+   "year": "2026",
+   "venue": "Information Processing and Management, vol. 63, article 104705 (published online 4 March 2026; open access, CC BY). Metadata hint corrected: full author names, volume and article number, and DOI taken from the text.",
+   "doi": "10.1016/j.ipm.2026.104705",
+   "document_type": "Journal article (empirical ML / computational social science, Twitter stance inference)",
+   "coverage": "Full text read in three chunks covering all 1,134 lines of the extracted text (lines 0-399, 400-849, 850-1133), including abstract, introduction, related work, methods (Sec. 3, Eqs. 1-12, Algorithm 1), experiments (Sec. 4), stance-shift analysis (Sec. 5), discussion, limitations (Sec. 6.1), CRediT and data statements, and the full reference list. Paul's markup: no markup files were supplied (the task listed none), so paul_markup is empty. Not in the text file: supplementary material (Figs. S1-S2, Tables S1-S4), so the 5-fold CV table, the baseline gap in Fig. 2, and the per-period counts are not available here. Figures 2, 4, 5 and 6 are described only in the text, so their plotted values are not extracted. Page locations use the journal page footers. Relevance check: no lobbying, path-finding, allocation or legislator-level content; elections appear only as the referendum context; networks appear as user-hashtag and user-user graphs; text measurement appears as hashtag-based stance labels and FastText embeddings. Those topics are covered only as they bear on stance measurement.",
+   "research_question": "Can a temporal graph neural network infer user-level stance (favor vs. against) toward a referendum from user-hashtag and user-user interaction graphs at each 28-day period, including users who never post about the target, and can the resulting trajectories characterize opinion shifts at population, individual and neighborhood levels? (Sec. 1.1, p.2-3.)",
+   "theory": "Opinion change is treated as incremental, path-dependent and embedded in social context rather than abrupt reversal (Sec. 6, p.16). The model is motivated by social-influence and network-evolution theory (Flache et al., 2017; Bianchi & Squazzoni, 2015) and by the claim that inactive \"silent\" users keep stance information through embedding persistence across snapshots (Sec. 2 and 6). Social influence and homophily in temporal movement are asserted in the discussion (p.15-16) but are not tested beyond descriptive correlations. No formal opinion-dynamics model is estimated.",
+   "data": "Two Twitter (now X) datasets on the Chilean constitutional referendums, drawn from users following 384 Chilean news outlets, self-reported in Santiago, with at least 10 tweets across topics (Sec. 3.2, p.4-5). Original pool of about 9.2M users. Entry_DS (referendum of 25 Oct 2020): period 1 Jan to 24 Oct 2020; 849,171 tweets; 12,237 users; 171,615 hashtags; 80 labeled referendum hashtags (23 support, 57 oppose) used by 5,540 users; 11 periods of 28 days. Exit_DS (referendum of 4 Sep 2022): period 1 Jan to 3 Sep 2022; 356,214 tweets; 4,934 users; 57,211 hashtags; 106 labeled hashtags (50 support, 56 oppose) used by 1,897 users; 9 periods of 28 days (Table 1, p.5; Sec. 3.4, p.6). Unit of analysis: user-period snapshot (user stance per 28-day window). Totals across both datasets: about 1.21M tweets and 17,171 user rows (not deduplicated). Ground-truth stance comes from labeled-hashtag interaction counts (Eqs. 1-2). More than 95% of users interact with hashtags from one side only (p.6). Human validation: 100 user snapshots per dataset, two annotators (p.6-7). Word embeddings: FastText CBOW trained on all user-generated content, with preprocessing (Sec. 3.2). Data availability: \"on request\" (p.17).",
+   "method": "TWLGCN (Temporal Weighted LightGCN), an extension of WLGCN (Zhou & Elejalde, 2024). Each 28-day snapshot is a bipartite user-hashtag graph with count-weighted edges (Sec. 3.3). Four GCN propagation layers with symmetric degree normalization (Eq. 3), then multi-head attention over layer outputs (Eq. 4). User embeddings go to an MLP classifier with batch norm and dropout. Loss = focal loss (Eq. 5-6, class imbalance) + lambda1 * SSCL + lambda2 * ||H0||^2 (Eq. 11), with lambda1 = 1e-3 and lambda2 = 1e-6 (Sec. 4.1). SSCL, the Supervised Stance Contrastive Loss (Eq. 9-10), treats same-stance users and hashtags as positives and uses the adaptive reweighting alpha(x) = (rho + x)^(-lambda) from DynaDeno (Eq. 8). Noise-based augmentation of embeddings (Eq. 7). Sequential warm start: Xavier initialization at t=0; later periods inherit embeddings and MLP weights; hashtag initial embeddings from period-specific FastText (Sec. 3.3). User-user graphs: Pas (static follower/friend edges) and Act (per-period directed mention/quote/reply edges, Sec. 3.6, Eq. 12). Adam optimizer; max 1000 epochs; early stop after 50 epochs without validation macro-F1 gain. Stance probabilities from hashtag counts: p+ = |R+| / (|R+| + |R-|) (Eq. 1); ties are assigned by larger count, and ambiguous users are kept in training (p.6).",
+   "identification": "Not a causal design. Leakage control: 5-fold CV on annotated users (80% train / 20% validation). For every validation user, all edges to referendum-labeled hashtags are removed before training and inference, so validation users are \"referendum-silent\" (Sec. 4.1, p.9). Macro-F1 is computed per period on that period's active validation users. Shift analysis (flip categories, t-SNE distances, neighbor-dynamics heatmaps) is descriptive. Neighbor correlations are described as \"potential social influences\" (p.14) but no identification strategy is applied. Validation of labels: Cohen's kappa for human vs. human and human vs. hashtag labels (p.7). Open concern (not addressed in the text): FastText embeddings are trained on all user-generated content (Sec. 3.2), which may include validation users' text, and the paper does not say whether that text was restricted to training users.",
+   "scope": "Population: Twitter/X users in Santiago, Chile, who follow Chilean news outlets and meet activity filters (not representative; the authors say Twitter leaned liberal and supportive of the process, p.12). Institution: the two national constitutional referendums (2020 entry, 2022 exit). Era: January 2020 to September 2022, in 28-day periods. Language: Spanish hashtags (cultural use noted as a generalizability concern, p.16). Scope limited to a single platform and two referendums; no other elections, legislators, lobbying or policy venues.",
+   "key_findings": [
+    {
+     "finding": "TWLGCN variants keep macro-F1 steady across periods, while the non-TWLGCN baselines (WLGCN, EvolveGCN, DynaDeno) fluctuate much more sharply.",
+     "location": "Sec. 4.3.1, p.10; Fig. 2",
+     "numbers": "Steady 70%-90% macro-F1 over observed periods; exact baseline values are in Fig. 2 and Table S4 (supplement, not in text)."
+    },
+    {
+     "finding": "The abstract claims the model beats network-based baselines in macro-F1 by more than 5% at each period using only 0.2% labeled hashtags. The main text does not report the baseline gap numerically, so the claim cannot be checked from the text.",
+     "location": "Abstract, p.1; Sec. 4.3.1, p.10",
+     "numbers": "Claimed >5%; labeled hashtags 80/171,615 (about 0.05%) in Entry_DS and 106/57,211 (about 0.19%) in Exit_DS (Table 1, p.5)."
+    },
+    {
+     "finding": "Carrying embeddings forward across snapshots matters: the full model beats the discrete variant that re-initializes embeddings each period.",
+     "location": "Sec. 4.3.1, p.10",
+     "numbers": "On Exit_DS, the full TWLGCN outperforms the discrete variant by 1.3% to 9.8%."
+    },
+    {
+     "finding": "Adding active user-user relations (mentions, quotes, replies) gives the best overall performance. Passive follower/friend relations add little, and combining both does not help.",
+     "location": "Sec. 4.3.1, p.10; Sec. 6, p.15",
+     "numbers": "Act improves the base model by about 3% on both datasets."
+    },
+    {
+     "finding": "The supervised contrastive loss (SSCL) adds accuracy on top of focal loss. The authors attribute this to same-class contrastive signal.",
+     "location": "Sec. 4.3.1, p.10-11",
+     "numbers": "TWLGCN vs. TWLGCN w/o SSCL: about 2% gain in macro-F1."
+    },
+    {
+     "finding": "Human annotators agree substantially with each other on the stance of user snapshots, and with hashtag-derived labels, which supports hashtags as a stance proxy.",
+     "location": "Sec. 3.4, p.6-7",
+     "numbers": "Human-human Cohen's kappa 0.836 (Entry_DS) and 0.842 (Exit_DS); human vs. hashtag-derived kappa 0.81 to 0.94; 100 user snapshots per dataset."
+    },
+    {
+     "finding": "Population-level stance: the Entry_DS median stays slightly positive (about 0.2) with a small IQR. The Exit_DS median starts below zero and drifts toward positive values, with a widening spread near the referendum date.",
+     "location": "Sec. 5.1, p.12; Fig. 4",
+     "numbers": "Entry_DS median about 0.2; opposing views about 25% of users; Exit_DS median initially negative (no exact value given)."
+    },
+    {
+     "finding": "Sudden flips between opposing and supporting: the number of O-to-S and S-to-O flips mirror each other across periods, with a sharp rise in supporter-to-opponent flips between periods 7 and 8 in Entry_DS.",
+     "location": "Sec. 5.2, p.13 (Fig. 5a-b); Sec. 6, p.15-16",
+     "numbers": "No exact counts given in text."
+    },
+    {
+     "finding": "Flipping users move in the expected direction in embedding space relative to the annotated-hashtag centroids (periods 10 and 11, Entry_DS).",
+     "location": "Sec. 5.2.1, p.14 (Fig. 5c-d)",
+     "numbers": "O-to-S users increase average distance from the opposing-hashtag centroid by over 28%. S-to-O users reduce distance to the opposing centroid by over 10% and increase distance to the supporting centroid by 27%."
+    },
+    {
+     "finding": "Neighbors' stance shifts are correlated: users tend to shift in the same direction as their 1-hop and 2-hop neighbors (diagonal dominance). Authors describe this as tight-knit communities moving together; it is a descriptive correlation, not a tested influence effect.",
+     "location": "Sec. 5.2.2, p.14-15; Fig. 6; Sec. 6, p.15",
+     "numbers": "Heatmap values only in figure; no numeric summary in text."
+    },
+    {
+     "finding": "Coverage of users present from the first snapshot (users remain predictable in later snapshots even with no activity).",
+     "location": "Sec. 5, p.12",
+     "numbers": "Entry_DS 8,029 of 12,237 (65.6%); Exit_DS 3,315 of 4,934 (67.2%)."
+    },
+    {
+     "finding": "Filtering did not distort the temporal or activity distribution of tweets relative to the raw data.",
+     "location": "Sec. 3.2, p.5 (Fig. S1)",
+     "numbers": "Cosine similarity > 0.99 and Jensen-Shannon distance < 0.05 for both datasets."
+    },
+    {
+     "finding": "Ambiguous users (interacting with both sides) are kept in training because they sit on the semantic boundary.",
+     "location": "Sec. 3.4, p.6",
+     "numbers": "More than 95% of users interact with one side only."
+    },
+    {
+     "finding": "Window length: 28-day windows are chosen by a sensitivity analysis. Shorter windows fragment the graph (low giant-component fraction); longer windows mask rapid polarity shifts.",
+     "location": "Sec. 3.3, p.5 (Fig. S2)",
+     "numbers": "M = 28 days; 11 periods (Entry_DS) and 9 periods (Exit_DS)."
+    }
+   ],
+   "measures": [
+    "Macro-F1 per period on contemporaneous validation users (primary metric; chosen over accuracy because of class imbalance)",
+    "Stance probability per user per period (MLP output, described as in [-1, 1]); the mapping from MLP probability to that scale is not defined in the text",
+    "Stance shift delta p between consecutive periods, classified into seven dynamics (static via med + MAD threshold; O->MO, O->LO, O->S, S->O, S->LS, S->MS) (Sec. 5.2, p.13)",
+    "Hashtag-derived stance probabilities from interaction counts p+ = |R+|/(|R+|+|R-|) (Eq. 1)",
+    "Cosine similarity between user and hashtag embeddings; top-100 nearest hashtags per user and per annotated hashtag (Sec. 4.3.2)",
+    "Centroid distances in embedding space, visualized with t-SNE (100-dimensional representations)",
+    "Cohen's kappa for human-human and human-hashtag agreement",
+    "Giant connected component fraction (window-length sensitivity)",
+    "Neighbor-dynamics distribution per category, 1-hop and 2-hop (Sec. 5.2.2)",
+    "Jensen-Shannon distance and cosine similarity for filtering-bias check"
+   ],
+   "limitations": [
+    "Supervision is narrow: stance labels come only from a small set of referendum hashtags (80 and 106 labeled), so users who avoid those hashtags can only partly be validated (Sec. 6.1, p.16).",
+    "Labels are hashtag-derived proxies, with human agreement checked on only 100 snapshots per dataset (Sec. 3.4, p.6-7).",
+    "Generalizability: one platform (Twitter/X), two Chilean referendums, Spanish hashtags with cultural use; replication across platforms, elections and languages is needed. Hashtag hijacking is not systematically evaluated (p.16).",
+    "Fixed 28-day windows: shorter windows are sparse, longer ones over-smooth event-driven shifts; adaptive windows or continuous-time TGNNs are left for future work (p.16).",
+    "Sequential warm-start training (DTDG, online) rather than joint end-to-end temporal optimization, which the authors call a trade-off in favor of streaming use (p.17).",
+    "Sample is not representative: Santiago self-reported users following Chilean news outlets; Twitter leaned liberal and mostly supportive of the process (p.12).",
+    "Vote outcomes are compared only qualitatively (the entry vote passed, the exit vote did not); no quantitative validation against the vote or polls (p.12).",
+    "Neighbor-correlation and 'influence' claims are descriptive; the authors say leaders of shifts are future work (p.15).",
+    "Main-text performance gap versus baselines is not given numerically; full CV results are in the supplement (Table S4), not in the extracted text.",
+    "Data available only on request (p.17). Multimodal inputs, multitask learning and LLM-based user-level stance are unexplored (p.17)."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Zhou & Elejalde (2024), Unveiling the silent majority: stance detection and characterization of passive users on social media using collaborative filtering and graph convolutional networks, EPJ Data Science 13(1), 28. (WLGCN base model and silent-user framing; same datasets.)",
+    "Zhou & Elejalde (2023), Stance inference in Twitter through graph convolutional collaborative filtering networks with minimal supervision, WWW Companion. (Earlier version of the stance-from-hashtag approach.)",
+    "Wang et al. (2019), The silent majority speaks: inferring silent users' opinions in online social networks, WWW'19. (Silent-user stance inference from network relations.)",
+    "Ng & Carley (2022), Pro or anti? A social influence model of online stance flipping, IEEE TNSE 10(1). (Multi-hop neighbor influence on stance flips; vaccine data.)",
+    "Zhang et al. (2024a), DoubleH: Twitter user stance detection via bipartite graph neural networks, ICWSM. (User-hashtag bipartite stance model.)",
+    "Zhang et al. (2024b), Dynamic denoising of contrastive learning for GNN-based node embedding, IJCNN. (DynaDeno; adaptive reweighting rule and main baseline.)",
+    "Pareja et al. (2020), EvolveGCN, AAAI. (Dynamic GCN baseline; weight evolution.)",
+    "Rossi et al. (2020), Temporal graph networks for deep learning on dynamic graphs, arXiv:2006.10637. (Continuous-time TGNN contrast.)",
+    "You et al. (2022), ROLAND: graph learning framework for dynamic graphs, KDD. (Recurrent snapshot GNN contrast.)",
+    "Kazemi et al. (2020), Representation learning for dynamic graphs: a survey, JMLR. (Source of the DTDG framing.)",
+    "Khosla et al. (2020), Supervised contrastive learning, NeurIPS. (Multi-positive supervision that SSCL extends.)",
+    "Peng et al. (2024), Online social behavior enhanced detection of political stances in tweets, ICWSM. (Political stance from social behavior; high-order neighbors.)",
+    "Venâncio et al. (2024), Unraveling user coordination on Telegram: political mobilization during the 2022 Brazilian presidential election, ICWSM. (Election mobilization via interaction dynamics.)",
+    "Vepsäläinen et al. (2024), The role of social media platforms in forecasting elections: Twitter and Facebook, Digital Government. (Social media as election-forecast input.)",
+    "Flache et al. (2017), Models of social influence: towards the next frontiers, JASSS. (Theory the paper cites for opinion dynamics.)",
+    "Bikhchandani et al. (2024), Information cascades and social learning, JEL. (Opinion-change context.)",
+    "Shi et al. (2026), An empirical study of LLMs via in-context learning for stance classification, IPM 63(1). (LLM stance baseline context; LLMs not used in this paper.)",
+    "Lin et al. (2017), Focal loss for dense object detection, ICCV. (Class-imbalance loss used here.)"
+   ],
+   "short_quotes": [
+    {
+     "quote": "stance change is typically incremental, path-dependent, and embedded within social contexts",
+     "location": "Sec. 6 (Discussion), p.16"
+    }
+   ]
+  },
+  "summary_md": "Zhou and Elejalde build TWLGCN, a temporal graph network that infers whether a Twitter user favours or opposes a referendum. It works on a user-hashtag graph rebuilt every 28 days, plus optional user-user edges. The model is trained on only 80 to 106 hashtags labelled by side, from Chile's 2020 and 2022 referendums (about 1.21M tweets; 12,237 and 4,934 users). Each period's embeddings carry into the next. This beats re-starting each period by 1.3% to 9.8% on the 2022 dataset. Mention, quote and reply edges add about 3% macro-F1; follower edges add little. Labels taken from hashtags agree with human coders (kappa 0.81 to 0.94, on 100 snapshots per dataset). The second half is descriptive: seven classes of movement per transition, with a \"static\" band of median + MAD; flip curves that mirror each other; and neighbours who tend to shift in the same direction (Fig. 6). There is no null baseline and no causal test.\n\nThis matters because `fec/stance/stance_dynamics.py` is an explicit port of this paper, without the GNN. It uses 91-day windows on the CU press corpus, carries a member's last stance through silent windows, uses the seven-dynamics taxonomy, tests whether neighbours move together, and proposes stances for silent members from their neighbours. Checked against the live output (`data/stance/stance_dynamics.json`), the port has three problems. The paper's static band assumes a continuous probability. On pooled stance signs it comes out at 0.708, so almost every move counts as static. The neighbour co-movement test is null (134 same / 122 opposite, 52%). The 77.5% sign agreement for imputation (n=1,087) has no party or majority-class baseline, while the paper scores with macro-F1 because its classes are imbalanced. The paper backs the design ideas. It does not validate carrying a label forward, the 91-day window, or the imputation. All of those remain UNVERIFIED.",
+  "paul_entries": [
+   {
+    "citation": "Neural Networks link: sciencedirect S0306457326000968 (IP&M 2026)",
+    "folder": "",
+    "paul_takeaways": [],
+    "system_links": [],
+    "cross_refs": [],
+    "verbatim_anchor": "",
+    "doc": ""
+   }
+  ],
+  "bearings": [
+   {
+    "component_id": "melange-stance.stance-dynamics",
+    "relation": "method-source",
+    "paper_claim": "Stance is tracked as a trajectory over 28-day snapshots, with embedding persistence so silent users keep a stance. Movement is sorted into seven dynamics using a static band of median plus MAD. Mirror-image O-to-S and S-to-O flip curves suggest external events. Users with no direct stance are predicted through graph propagation over their neighbours.",
+    "paper_location": "Sec. 3.3 p.5; Sec. 5.2 p.13; Sec. 5.2.2 p.14-15; Sec. 6 p.15-16; Fig. 5-6",
+    "system_side": "Module docstring (lines 3-21) states the transplant. Code confirms 91-day default windows (line 26), last observed stance carried through silent windows (lines 48-55), the seven-dynamics classifier (lines 64-67), flip curves (lines 72-84), cosponsor and HCoI co-movement (lines 94-120), and CSV-only imputation proposals that leave the matrix untouched (lines 132-151). Re-run on the press CSV in scratch: 2,388 rows, 373 members, 18 windows.",
+    "code_ref": "fec/stance/stance_dynamics.py:3-21, 26, 48-55, 64-84, 94-151",
+    "transfer_conditions": "The design vocabulary transfers. The paper says the mirror symmetry suggests external events; it does not establish an event detector the module can rely on. The paper's neighbour inference is GNN message passing over learned embeddings, not a copy rule, so the system's neighbour-based imputation is an analogue only.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Trajectory framing, persistence, the seven dynamics and mirror curves are all in the paper text. Softened wording: the paper says the mirror symmetry suggests external events, and that unlabelled users get predictions from graph structure rather than explicit neighbour inference. The module matches its description. The static-band and imputation points are handled in bearings 2 and 4.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Stance dynamics and neighbour imputation|Stance dynamics and neighbour imputation]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.stance-dynamics",
+    "relation": "qualifies",
+    "paper_claim": "The median plus MAD static band is applied to continuous stance values p in [-1,1] from the MLP, computed over all users' absolute changes. The paper gives no condition that users must post in nearly every period; its 10-tweet filter only implies about one interaction per snapshot on average.",
+    "paper_location": "Sec. 5.2 p.13; Sec. 3.2 p.5; Sec. 3.3 p.5",
+    "system_side": "Band is computed on observed-to-observed transitions only, from confidence-weighted means of stance_sign in {-1,0,+1}, floored at 0.05 (code lines 56-63). Live static_band 0.7076 is reproduced. Of 2,989 transitions, 2,737 (91.6 percent) are static and 252 move: S-to-O 111, O-to-S 43, S-to-MS 88 (a move with no sign change), S-to-LS 7, O-to-LO 2, O-to-MO 1 (flip_curves in stance_dynamics.json, matching the scratch re-run).",
+    "code_ref": "fec/stance/stance_dynamics.py:56-73; data/stance/stance_dynamics.json static_band and flip_curves",
+    "transfer_conditions": "The band means what the paper intends only where stance is continuous and densely observed. With pooled quarterly signs it mainly measures how coarse the labels are. The paper gives no support for the seven-class counts. The within-side classes are rare because a move must exceed about 0.71 on a [-1,1] scale; they are not empty by construction.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "The band value and the 91.6 percent static share reproduce. The rel claim that only near-sign reversals register as movement is wrong: S-to-MS (88, no sign change) is the second-largest moving class after S-to-O (111). The claim that the paper's band presumes users who post in nearly every period is not in the paper.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Stance dynamics and neighbour imputation|Stance dynamics and neighbour imputation]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.stance-dynamics",
+    "relation": "qualifies",
+    "paper_claim": "Neighbour co-movement: users shift in the same direction as their 1-hop and 2-hop neighbours (diagonal dominance in Fig. 6). The authors describe tight-knit communities moving together, call it a descriptive correlation, and report no null model and no identification. The text gives no numbers; values appear only in the heatmaps.",
+    "paper_location": "Sec. 5.2.2 p.14-15; Fig. 6; Sec. 6 p.15-16",
+    "system_side": "Co-movement counts same versus opposite direction for neighbours who both move in a window. Diagonal dominance is declared above 0.55 (code line 106). Cosponsor result as stored: same 134, opposite 122, 52.3 percent, below threshold, so null. The HCoI figure of 49 percent cited in the rel is not stored in stance_dynamics.json. Scratch re-run on the current press_hcoi.json gives same 302, opposite 296, 50.5 percent, also below threshold. No permutation or common-shock control exists.",
+    "code_ref": "fec/stance/stance_dynamics.py:94-120; data/stance/stance_dynamics.json co_movement; data/stance/press_hcoi.json",
+    "transfer_conditions": "The paper's result is a descriptive correlation at 28-day resolution on Twitter, not evidence of influence. Do not carry the paper's potential social influences wording or its asymmetric social influence signals claim into system text. A null on one layer is a null on that layer only.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper text verified, including the no-null-model caveat. The cosponsor figure reproduces from the stored JSON. The 49 percent HCoI figure does not reproduce (50.5 percent on the current community file), so cite the reproduced value or mark the earlier figure UNVERIFIED. Both values are null under the ad hoc 0.55 rule.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Stance dynamics and neighbour imputation|Stance dynamics and neighbour imputation]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.stance-dynamics",
+    "relation": "qualifies",
+    "paper_claim": "Silent-user inference is validated with 5-fold cross-validation over annotated users. For validation users, all edges to referendum-labelled hashtags are removed before training and inference. Scoring is macro-F1 per period on that period's validation users, chosen over accuracy because of class imbalance. Reported TWLGCN levels are steady between 70 and 90 percent.",
+    "paper_location": "Sec. 4.1 p.9; Sec. 4.3.1 p.10",
+    "system_side": "Imputation takes the mean tier score of at least 5 cosponsor neighbours (MINNB=5, line 132) and keeps blank member-issue cells with |est| at least 0.75 (CONF, line 132). Masking check compares the neighbour estimate sign with the known label sign on confident cells only: 77.5 percent on n=1,087 (stance_dynamics.json). Proposals: 307 (CSV has 308 lines including header). True Neutral (score 0) counts as a negative sign (line 143). The final print says at least 3 informative neighbors while the threshold is 5 (line 152). No party-only or majority-class baseline, no macro-F1, no retraining, no 5-fold split.",
+    "code_ref": "fec/stance/stance_dynamics.py:132-153; data/stance/stance_dynamics.json masking_validation; data/stance/stance_imputation_proposals.csv",
+    "transfer_conditions": "The paper's protocol retrains a model with masked own-edges and reports macro-F1 across folds. The system's check is a neighbour-only estimate scored by raw sign agreement on a confidence-selected subset. Call it an analogue. The 77.5 percent is not comparable to the paper's macro-F1 range and stays UNVERIFIED (DE-062) until a party or majority baseline is run.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "The paper protocol is stated accurately. The code comment calling the check 'their protocol' overstates the match. The bearing omitted that the 77.5 percent is conditioned on |est| at least 0.75, which is added here.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Stance dynamics and neighbour imputation|Stance dynamics and neighbour imputation]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.stance-dynamics",
+    "relation": "qualifies",
+    "paper_claim": "Carrying learned embeddings and MLP weights forward between snapshots beats re-initialising each period, by 1.3 to 9.8 percent on Exit_DS. The 28-day window was chosen by a sensitivity analysis on giant-component fraction: shorter windows fragment the graph and longer ones mask rapid shifts.",
+    "paper_location": "Sec. 3.3 p.5 (sensitivity in Fig. S2, supplement); Sec. 4.3.1 p.10",
+    "system_side": "Persistence carries the last observed raw stance into silent windows (lines 48-55), not learned embeddings. Carried windows also enter transition counts (lines 69-73), which inflates static counts and credits flips to the window where posting resumes. The 91-day default (line 26) is justified by an analogy comment about quarters, with no sensitivity run.",
+    "code_ref": "fec/stance/stance_dynamics.py:26, 48-55, 69-73",
+    "transfer_conditions": "The paper's persistence gain is for warm-started learned representations that keep updating from new edges. It does not support freezing a categorical label. The window rule can be borrowed, but it needs per-window graphs the press corpus does not supply. Fig. S2 is in the supplement and was not checked.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Checked in Sec. 3.3 and 4.3.1. The paper validates embedding carry-over and a 28-day window with a sensitivity check. It does not validate label carry-forward, the 91-day window, or the system's imputation. The system-side description matches the code.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-stance#Stance dynamics and neighbour imputation|Stance dynamics and neighbour imputation]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-sna.multilayer-social-press-edges",
+    "relation": "suggests-extension",
+    "paper_claim": "Active per-period user-user edges (mentions, quotes and replies, given as examples) add about 3 percent macro-F1 on both datasets. Passive follower or friend edges add little, and combining both does not help. The paper's Act graph is directed from the initiating user to the target.",
+    "paper_location": "Sec. 3.6 Eq. 12 p.10; Sec. 4.3.1 p.10; Sec. 6 p.15",
+    "system_side": "The social interaction layer uses reposts (weight 1.0) and mentions (0.4), normalised by the author's post volume with a floor of 25, and capped at 0.25 per pair. Its output is symmetric (mean of both directions), not directed. Reposts, the layer's strongest edge, are not among the paper's Act edge types. stance_dynamics tests co-movement and imputation only on the cosponsor and HCoI layers, never on this layer.",
+    "code_ref": "fec/network/social_interaction_layer.py:3-20 (header and output); fec/stance/stance_dynamics.py:110-120",
+    "transfer_conditions": "The paper's evidence is that interaction edges help stance inference, not that they carry influence. Member accounts post far less than the paper's users, so expect sparser edges. Any test belongs in the descriptive lane. The layer's author-volume normalisation is a separate choice that this paper does not validate, and it must not be cited as support for the rejected per-edge volume normalisation.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper claim verified. The rel's system-side claim of a directed layer is wrong: the output is symmetric. The paper's Act list does not contain reposts.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-sna#Social and press-engagement layers|Social and press-engagement layers]]",
+    "system": "melange-sna"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "The summary says the paper's gains come from a GNN trained on dense tweet data. The paper describes its user-hashtag matrices as sparse per 28-day window (Sec. 3.6 p.10; Sec. 6 p.15). Replace dense with sparse.",
+   "The summary's account of Paul's note (his component position, and that he wants change-likelihood modelling) is not in the item: paul_entries holds only a bare link and no takeaways. Unverified here.",
+   "The summary's 77.5 percent sign agreement is reported without its condition: it covers only cells with |est| at least 0.75 (stance_dynamics.py line 142). It is also not a macro-F1 figure.",
+   "The 49 percent HCoI co-movement figure the summary relies on is not stored in data/stance/stance_dynamics.json. A scratch re-run on the current press_hcoi.json gives 50.5 percent (302 same, 296 opposite). Both values are null under the 0.55 rule.",
+   "The summary's claim that the paper's band and window are unvalidated is accurate. The summary should also note the paper's abstract says 20 monthly periods, but its periods are 28 days (11 plus 9, Sec. 3.3 p.5). Do not carry monthly into system text.",
+   "Summary figures checked and correct: 1.21M tweets, 80 and 106 labelled hashtags, kappa 0.81 to 0.94 on 100 snapshots per dataset, 1.3 to 9.8 percent persistence gain, about 3 percent Act gain, 134 versus 122 co-movement, 307 proposals, static band 0.708 with about 92 percent static share."
+  ],
+  "gaps_exposed": [
+   "No null or permutation baseline for neighbour co-movement (for example, shuffled neighbours within a window, or a control for common shocks per window). The 0.55 'diagonal dominance' threshold is arbitrary (stance_dynamics.py:106).",
+   "The imputation is scored by raw sign agreement (77.5%, n=1,087). There is no macro-F1 and no party-only or majority-class baseline, even though the component's own open question asks for a party baseline.",
+   "The static band is unusable on pooled sign data: it is 0.7076 live, so the seven-dynamics classes other than flips are nearly empty by construction.",
+   "The 91-day window has no sensitivity analysis. The paper picks its window from giant-component fraction against shift masking.",
+   "Carried (silent) windows enter the transition counts, inflating static counts and moving flips to the window where posting resumes.",
+   "Co-movement and imputation are never run on the repost/mention interaction layer, which is the analog of the paper's best-performing Act edges.",
+   "Documentation drift: the print at stance_dynamics.py:152 says '>=3 informative neighbors' while MINNB defaults to 5."
+  ],
+  "flags": [
+   "The neighbour co-movement result (in the paper's Fig. 6, and in any re-run here) is a descriptive correlation. It must not be described as influence or contagion, and the paper's 'potential social influences' wording should not be carried into system text.",
+   "The paper's symmetric degree normalisation inside GCN propagation (Eq. 3) is message-passing normalisation, not an argument for per-edge volume normalisation of SNA edges. That proposal was measured and REJECTED in this project, so it must not be cited as support for reviving it.",
+   "The 77.5% imputation sign agreement and the 52% / 49% co-movement nulls are single-path agent analyses: UNVERIFIED (DE-062) until a second path reproduces them.",
+   "Imputed stances remain proposals only. Stance labels are Paul's domain, and the module correctly leaves the matrix untouched."
+  ],
+  "paul_alignment": "Paul's annotation is a bare link ('Neural Networks link, sciencedirect S0306457326000968') with no takeaways. His component position lists the paper as a 'possible Neural Networks link' under stance-dynamics and says he wants temporal dynamics and modelling of how likely stances are to change. That note is stale. The link is not just possible: stance_dynamics.py has been an explicit port of this paper since the July 2026 enhancement wave, and the port's co-movement test came back null (52% cosponsor, 49% HCoI), which his notes predate. The paper partly agrees with what he wants: it supports treating stance as a trajectory and inferring stances for silent actors. But it gives no change-likelihood model; its shift analysis is descriptive. Its gains come from a trained GNN on dense tweet data, which the system deliberately did not build. Read correctly, the paper calls for better validation of the existing port (baselines, a working static band, a window sensitivity run), not more machinery.",
+  "related": [
+   {
+    "slug": "malaterre-2024-inferring-social-networks",
+    "relation": "complements",
+    "why": "Item exists. The HCoI acronym matches its hidden communities of interest method, so the link to the HCoI layer is plausible. This is a system-side link; the Zhou paper does not cite it."
+   },
+   {
+    "slug": "steinertthrelkeld-2018-twitter-data",
+    "relation": "complements",
+    "why": "Item exists (Twitter As Data). Relevant to the Twitter measurement issues behind hashtag-proxy labels. The July 2026 provenance claim in the rel was not checked."
+   },
+   {
+    "slug": "b-2025-comparing-fine-tuned",
+    "relation": "complements",
+    "why": "Item text is the paper Comparing Fine-Tuned RoBERTa with Traditional ML Models for Stance Detection in Political Tweets, so the rel rationale holds. The item ext title (Roman Urdu) is a stale mismatch and should be corrected in the item."
+   },
+   {
+    "slug": "dai-2025-large-language-model",
+    "relation": "complements",
+    "why": "Item exists and its title matches (LLM-enhanced logic tensor network for stance detection). The Zhou paper lists LLM-based user-level stance as future work (Sec. 6.1 p.17), which is accurate."
+   },
+   {
+    "slug": "hargittai-2015-bigger-always-better",
+    "relation": "complements",
+    "why": "Item exists. The paper concedes a non-representative Santiago news-follower sample (Sec. 3.2, Sec. 5.1 p.12, Sec. 6.1 p.16), and Hargittai is relevant to such biases. The paper does not cite her, so 'explains' should read 'relevant to'."
+   },
+   {
+    "slug": "kumar-2022-influence-maximization-social",
+    "relation": "complements",
+    "why": "Item exists (influence maximization with graph embedding and GNN). Both use graph embeddings on social graphs, but Kumar addresses seed selection and the Zhou paper addresses stance classification, so same-method overstates the link."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "zhan-2025-cost-minimized-stage",
+    "relation": "complements",
+    "why": "The system's stance-dynamics imputer cites Zhou-Elejalde silent-actor collaborative filtering as its template (fec/stance/stance_dynamics.py:147). Zhan-Cai gives a trust- and similarity-weighted alternative to the same neighbour-imputation idea."
+   },
+   {
+    "slug": "cao-2025-social-network-group",
+    "relation": "complements",
+    "why": "Zhou's temporal-graph stance dynamics is the source for the system's neighbour imputation. The review's DeGroot or Hegselmann-Krause framing is the opinion-dynamics theory behind that imputation."
+   },
+   {
+    "slug": "ma-2022-adversarial-attack-graph",
+    "relation": "complements",
+    "why": "Item describes a temporal GNN stance model with silent-user information. If such a model is adopted, the node-perturbation vulnerability shown by Ma et al. becomes a direct robustness question."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "dai-2025-large-language-model",
+  "note": false,
+  "meta": {
+   "title": "Large Language Model Enhanced Logic Tensor Network for Stance Detection",
+   "authors": [
+    "Genan Dai",
+    "Jiayu Liao",
+    "Sicheng Zhao",
+    "Xianghua Fu",
+    "Xiaojiang Peng",
+    "Hu Huang",
+    "Bowen Zhang (corresponding)"
+   ],
+   "year": "2025 (volume year; published online 29 Nov 2024; received 25 May 2024, accepted 22 Nov 2024)",
+   "venue": "Neural Networks, vol. 183 (2025), article 106956",
+   "doi": "10.1016/j.neunet.2024.106956",
+   "sha12s": [
+    "0b0d15f918d9"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "Large Language Model Enhanced Logic Tensor Network for Stance Detection",
+   "authors": [
+    "Genan Dai",
+    "Jiayu Liao",
+    "Sicheng Zhao",
+    "Xianghua Fu",
+    "Xiaojiang Peng",
+    "Hu Huang",
+    "Bowen Zhang (corresponding)"
+   ],
+   "year": "2025 (volume year; published online 29 Nov 2024; received 25 May 2024, accepted 22 Nov 2024)",
+   "venue": "Neural Networks, vol. 183 (2025), article 106956",
+   "doi": "10.1016/j.neunet.2024.106956",
+   "document_type": "Journal article (Full Length Article), machine learning / NLP",
+   "coverage": "Read the full text file in two chunks (lines 1-1168 and 1169-1390 of 1390), covering front matter, abstract, introduction, related work, methodology (Sections 3.1-3.3, Eqs 1-14), experiments (Sections 4.1-4.9, Tables 1-6), conclusion, CRediT/data statement, and the full reference list. Figures 1-5 (framework, CoT illustration, toy FOL, ablation bar chart, GPT-4 vs GPT-3.5 chart) are not present as text, so their values are not reported. Table column alignment in the text extraction is partly ambiguous; values are reported in the header order given in the text. No Paul markup file was supplied (the markup list was \"(none)\"), so paul_markup is empty. Metadata hint was correct on title, authors and venue; corrected to add the volume/article number, online date and DOI.",
+   "research_question": "Can first-order logic (FOL) rules elicited from LLMs by chain-of-thought prompting be encoded in a logic tensor network (LTN), and can fusing LTNs built from several LLMs produce interpretable and more accurate stance detection than fine-tuned PLMs, prompt-tuning, and LLM-only baselines, in both in-target and zero-shot settings?",
+   "theory": "Neurosymbolic learning: logic tensor networks (real logic with soft/product-style operators, after Badreddine et al. 2022) make predicates differentiable so that FOL rules constrain a deep network trained by backpropagation. Motivation draws on FOL-distillation work (Hu et al. 2016 DNNLR; posterior regularization) and on chain-of-thought prompting of LLMs. The paper asserts interpretability through FOL rationales; there is no formal interpretability test.",
+   "data": "Three English-language stance benchmarks. (1) SemEval-2016 Task 6 (SEM16; Mohammad et al. 2016): targets FM, LA, HC, DT (plus Ath and CC are named); Table 1 counts favor/against/neutral: DT 148/299/260 (707 total), HC 163/565/256 (984), LA 167/544/222 (933), FM 268/511/170 (949), so about 3,573 instances across the four targets listed. 15 percent of training data held out as dev. Unit: sentence-target pair (tweet). (2) VAST (Allaway and McKeown 2020): Table 2 lists 13,477 train / 2,062 dev / 3,006 test examples with stance labels Pro/Con/Neutral; the row labels for topic counts appear misaligned in the extraction (for example \"#Zero-shot Topics 4003\"). Evaluated on zero-shot topics under 100 percent and 10 percent training data. (3) ISD (Huang et al. 2023): text says 6,027 labeled tweets about DT_I and JB_I, averaging 2.14 hashtags per sentence, 80/20 train/test split; however Table 1 ISD rows sum to 5,588 (DT_I 3,105; JB_I 2,483), a discrepancy. Time period of data collection: not stated in the text. Population: social media posts about political figures and topics (abortion, feminism, Clinton, Trump, Biden, bike lanes, rail, cameras). LLM outputs come from gpt-3.5-turbo-0301, Claude-2-100k and LLaMA-2-70b-chat (temperature 0); GPT-4 appears only in Figure 5 (not extracted).",
+   "method": "FOLAR = three modules. (a) Knowledge Elicitation (Sec 3.1): chain-of-thought prompts ask an LLM to produce a FOL rule for each input and target, illustrated by Eq 1 and Table 5. (b) LTN (Sec 3.2): predicates are phrases embedded by a shared pretrained BERT, followed by fully connected layers; soft-logic operators are negation 1-U, conjunction product, disjunction U1+U2-U1U2, implication 1-U1+U1U2 (Eqs 2-5); output is a softmax over favor/neutral/against (Eq 6 composition). (c) Multi-Decision Fusion (Sec 3.3): one LTN per LLM (GPT-3.5, LLaMA-2, Claude-2), representation vectors concatenated into H and fused by attention-based dynamic routing over t iterations with layer normalization and sigmoid (Eqs 7-11); training minimizes cross-entropy (Eq 12). Training: AdamW, batch 16, up to 30 epochs, warm-up ratio 0.2, learning rate 1e-5, weight decay 1e-3. Baselines (Sec 4.4): statistical (Bicond, CrossNet, SEKT, TPDG); PLM (JoinCL, PT-HCL, TarBK, SDAgu, KPT, KEprompt, BERT-FT); LLM (Ts-CoT, KASD, MPPT, COLA) plus FOL-CoT (the LLM-only variant of FOLAR). Ablations: w/o FOL (compared to Ts-CoT-like structure), w/o LTN, w/o MDF (single GPT-3.5).",
+   "identification": "None in the causal sense. This is a predictive supervised classification benchmark. Generalization is tested by holding out targets (zero-shot: train on other SEM16 targets, test on one held-out target; VAST zero-shot topics) and by a 10 percent training-data condition on VAST. Each result is the average of three runs.",
+   "scope": "Population: English social media posts (tweets and similar short texts) with stance toward a named target, mostly US political figures and contentious topics. Institution: Shenzhen Technology University and collaborators (no institutional sample). Era: SEM16 (2016) and VAST (2020) benchmarks; LLM snapshots from 2023 (GPT-3.5-turbo-0301, Claude-2, LLaMA-2-70b). Not about lobbying, legislators, campaigns, networks, path-finding, allocation, elections as events, persuasion or turnout. Relevant to the project only as a text-measurement method (stance labeling of political text) and as an interpretable neurosymbolic classifier.",
+   "key_findings": [
+    {
+     "finding": "In-target SEM16 and ISD (Table 3, F_avg, three runs): FOLAR scores FM 70.6, LA 72.7*, HC 84.5*, DT_I 73.3*, JB_I 71.5*. The text says FOLAR beats the strongest competitor by 1.7 points on LA (COLA 71.0 per the table) and 2.0 points on DT_I (MPPT 71.3). FOLAR is not the top row on every column: FOL-CoT/w-o-MDF variant reports HC 85.5 and KEprompt reports FM 72.1 in the extracted table.",
+     "location": "Table 3 (lines 603-683); Sec 4.5.1 (lines 712-733)",
+     "numbers": "FOLAR LA 72.7 vs COLA 71.0 (+1.7); DT_I 73.3 vs MPPT 71.3 (+2.0); HC 84.5 vs w/o MDF 85.5; FM 70.6 vs KEprompt 72.1. Text: BERT-FT beats TPDG by 5.3 percent on ISD; KEprompt beats BERT-FT by 6.7 on LA."
+    },
+    {
+     "finding": "Zero-shot SEM16 (Table 4, F_avg): FOLAR scores HC 85.3*, FM 73.7*, LA 71.9*, DT 70.9 (not marked significant). Best SEM16 competitors in the table are Ts-CoT HC 83.2 and MPPT FM 70.9, LA 70.1.",
+     "location": "Table 4 (lines 730-925); Sec 4.5.2 (lines 934-958)",
+     "numbers": "FOLAR HC 85.3 vs Ts-CoT 83.2; FM 73.7 vs MPPT 70.9; LA 71.9 vs MPPT 70.1; DT 70.9 vs MPPT 70.7."
+    },
+    {
+     "finding": "Zero-shot VAST: FOLAR gains are larger in the 10 percent-data condition. Text reports +4.2 points on VAST (100 percent) and +6.2 points on VAST (10 percent) over the best competitor, consistent with All-column values FOLAR 81.0 vs KASD 76.8 and FOLAR 80.2 vs MPPT 74.0.",
+     "location": "Table 4 VAST columns (lines 734-745, 892-902); text lines 954-958",
+     "numbers": "VAST(100%) All: FOLAR 81.0* vs KASD 76.8 (+4.2); VAST(10%) All: FOLAR 80.2* vs MPPT 74.0 (+6.2). FOLAR Pro/Con: 74.0/78.6 (100%), 72.1/76.8 (10%)."
+    },
+    {
+     "finding": "Ablation, multi-decision fusion: removing MDF (single GPT-3.5 LTN) lowers zero-shot VAST scores. Derived gaps from Table 4 are about 5.8 points (100 percent) and 5.3 points (10 percent). The text says the drop is significant but does not give test statistics.",
+     "location": "Table 4 wo/MDF row (lines 914-924); Sec 4.6 (lines 1004-1019)",
+     "numbers": "wo/MDF All: 75.2 (VAST 100%) and 74.9 (VAST 10%) vs full FOLAR 81.0 and 80.2. SEM16 zero-shot wo/MDF: HC 74.1, FM 71.8, LA 71.2, DT 69.7 vs FOLAR 85.3, 73.7, 71.9, 70.9. Fig 4 values not extractable."
+    },
+    {
+     "finding": "LLM-only chain-of-thought with FOL rationales (FOL-CoT, no LTN training) beats Ts-CoT on VAST zero-shot. The FOL-CoT All values are identical in both VAST rows (79.8), which may be a copy error in the table.",
+     "location": "Table 4 FOL-CoT row (lines 903-913); Sec 4.5.2 (lines 966-974)",
+     "numbers": "FOL-CoT VAST(100%) All 79.8 vs Ts-CoT 73.4; FOL-CoT VAST(10%) All 79.8 vs Ts-CoT 70.3; FOL-CoT SEM16 HC 83.6 vs Ts-CoT 83.2."
+    },
+    {
+     "finding": "Manual check of FOL quality: three NLP researchers with master's degrees rated 100 randomly sampled test explanations on salience, non-redundancy and non-contradiction. Agreement (kappa, type not specified) exceeded 70 percent on all three criteria, averaging 76 percent.",
+     "location": "Sec 4.9 (lines 1168-1185)",
+     "numbers": "n = 100 instances; 3 raters; kappa > 0.70 per criterion; mean 0.76."
+    },
+    {
+     "finding": "Error analysis of 50 incorrect VAST predictions: two failure types, (a) implicit or sarcastic stance that the KE step cannot capture (for example the phrase 'master race'), and (b) over-inference by the LLM when clauses carry opposing polarity or the LLM links unrelated positive words to the target.",
+     "location": "Sec 4.8 and Table 6 (lines 1104-1167)",
+     "numbers": "50 sampled errors from VAST."
+    },
+    {
+     "finding": "Case study (Table 5): three examples where FOLAR's FOL rationales produce the correct label (bike lane - Against; camera - Support; Hillary Clinton - Against) while the baseline fails. Qualitative only; no counts given.",
+     "location": "Table 5 and Sec 4.7 (lines 1036-1103)",
+     "numbers": "3 examples; no aggregate numbers."
+    }
+   ],
+   "measures": [
+    "Average F1 of favor and against, F_avg (Eq 13), for SEM16 and ISD",
+    "Average F of favor, against and neutral, F_avg (Eq 14), for VAST",
+    "Cross-entropy loss (Eq 12)",
+    "Statistical significance marked at p < 0.05 (test not named)",
+    "Kappa agreement (type not stated) for manual FOL quality ratings, three criteria",
+    "Accuracy-style claims in text are F-score based; no accuracy table"
+   ],
+   "limitations": [
+    "The paper has no dedicated limitations section. Authors list future work: more complex logic forms, more contentious topics, newer dynamic logic, and better decision fusion (Conclusion, lines 1199-1206).",
+    "Implicit or sarcastic stance is not captured by LLM-elicited FOL (Sec 4.8, lines 1149-1157).",
+    "LLM over-inference and clause-level polarity conflicts cause errors (Sec 4.8, lines 1158-1167).",
+    "Results come from three runs with no reported standard deviations or confidence intervals; significance test (p < 0.05) is not named (lines 703-711).",
+    "Relies on proprietary, versioned LLM APIs (gpt-3.5-turbo-0301, Claude-2-100k) and temperature 0 to aid reproducibility; GPT-4 results appear only in a figure (lines 532-543, 1019-1025).",
+    "Data availability is stated as 'available on request' (line 1224), while the abstract says source code will be publicly available (lines 29-30).",
+    "Inconsistent SEM16 target handling: DT, Ath and CC are said to be excluded (lines 503-504) but DT is used in the zero-shot tables and the setting list (lines 509, 739).",
+    "ISD size: text says 6,027 tweets (line 515) but Table 1 rows sum to 5,588 (lines 463-471).",
+    "Table 2 topic-count rows look misaligned (for example '#Zero-shot Topics 4003' larger than examples per split logic) (lines 485-492).",
+    "FOL-CoT All values are identical in both VAST rows of Table 4 (79.8), suggesting a transcription or copy error (lines 903-913).",
+    "Fusion ablation (w/o MDF) uses only one LLM (GPT-3.5), so it does not separate MDF from simply choosing a different LLM (lines 1004-1009).",
+    "Manual FOL check uses only 100 instances and three raters, and the kappa variant is not specified (lines 1181-1185).",
+    "Gains over baselines are small on several in-target columns (for example FM, where KEprompt is higher in the extracted table)."
+   ],
+   "references_of_note": [
+    "Badreddine, d'Avila Garcez, Serafini & Spranger (2022), Logic tensor networks, Artificial Intelligence 303: the LTN formalism the paper builds on (core neurosymbolic reference).",
+    "Bianchi & Hitzler (2019), On the capabilities of logic tensor networks for deductive reasoning (AAAI spring symposium): LTN soft-logic use for ontological reasoning.",
+    "Hu, Ma, Liu, Hovy & Xing (2016), Harnessing deep neural networks with logic rules (ACL): DNNLR, FOL knowledge distilled into networks via posterior regularization.",
+    "Hu, Yang, Salakhutdinov & Xing (2016), Deep neural networks with massive learned knowledge (EMNLP): extension of logic-rule integration.",
+    "Zhang, Huang et al. (2022), Sentiment interpretable logic tensor network for aspect-term sentiment analysis (COLING): the authors' prior SILTN work with manually crafted FOL.",
+    "Huang, Zhang et al. (2022), Logic tensor network with massive learned knowledge for aspect-based sentiment analysis (Knowledge-Based Systems 257): LTN grounding via fully connected layers.",
+    "Huang et al. (2023), Knowledge-enhanced prompt-tuning for stance detection (TALLIP 22(6)): source of the ISD dataset and KEprompt baseline.",
+    "Mohammad et al. (2016), SemEval-2016 Task 6: Detecting stance in tweets: source of SEM16 with political targets (Hillary Clinton, Donald Trump).",
+    "Allaway & McKeown (2020), Zero-shot stance detection: a dataset and model using generalized topic representations (EMNLP): VAST corpus.",
+    "Zhang, Ding & Jing (2022), How would stance detection techniques evolve after the launch of ChatGPT?; Zhang, Fu, Ding et al. (2023), Investigating chain-of-thought with ChatGPT for stance detection (Ts-CoT).",
+    "Li, Liang et al. (2023), Stance detection on social media with background knowledge (KASD); Ding et al. (2024), cross-target stance detection via target analytical perspectives (MPPT); Lan et al. (2023), collaborative role-infused LLM agents (COLA): the LLM-based stance baselines.",
+    "Liang et al. (2021/2022), TPDG, PT-HCL, JointCL: cross-target contrastive and graph baselines on the same benchmarks.",
+    "Wei and Chain-of-thought lineage: Ling et al. (2023), Deductive verification of chain-of-thought reasoning (cited for CoT verification)."
+   ],
+   "short_quotes": [
+    {
+     "quote": "The FOL aids in organizing reasoning and visualizing decisions for stance detection",
+     "location": "Sec 3.1, lines 286-288"
+    },
+    {
+     "quote": "LLMs often exhibit bias in knowledge elicitation due to variations in their self-learning from training datasets and methodologies.",
+     "location": "Sec 1 Introduction, lines 101-103"
+    },
+    {
+     "quote": "This alignment with first-order logic ensures that the model's decisions are both interpretable and data-driven.",
+     "location": "Sec 1 Introduction, lines 116-118"
+    }
+   ],
+   "paul_markup": []
+  },
+  "summary_md": "Dai et al. (Neural Networks 183, 2025) propose FOLAR, a stance detector with three parts. First, chain-of-thought prompts ask an LLM to write a first-order-logic (FOL) rule for each text and target. Second, a logic tensor network (LTN) uses a shared BERT and soft operators (negation 1-U, product conjunction, implication 1-U1+U1U2) to turn the rule into a differentiable classifier. Third, the LTNs built from GPT-3.5, Claude-2 and LLaMA-2 are fused by attention routing. The tests use English political tweets (SemEval-2016, ISD) and VAST. On in-target SEM16 and ISD the gains are small: +1.7 F_avg on LA and +2.0 on DT_I, and FOLAR is not the best on FM or HC. Zero-shot VAST gains are larger: +4.2 with full training data and +6.2 with 10% of it. The fusion ablation is about 5.8 points, but it compares fusion with a single GPT-3.5 model, so fusion is not separated from the choice of LLM. The paper reports no standard deviations, does not name its significance test, and its tables contain internal inconsistencies. The interpretability claim rests only on a 100-item, 3-rater check.\n\nFor Paul's system, the paper matters most as a formal version of something already built. The two-hop CU-alignment rule in fec/stance/apply_two_hop_stance.py composes stance with valence by hard sign multiplication over a hand-curated registry. FOLAR is the soft, learned, LLM-elicited form of that rule. It also gives a candidate route for the registry-coverage problem, but its error analysis (the LLM linking unrelated positive words to the target) names the same failure that sank the system's automatic-registry variants. The fusion result points to a cheap check on single-labeller bias in the Claude pre-labels that the DEBATE reader distils. It does not show that switching to FOLAR would beat a fine-tuned DEBATE or SVM on 87 to 156 held-out CU press items. The domain, the text genre and the LLM versions all differ.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-stance.two-hop-decomposition",
+    "relation": "method-source",
+    "paper_claim": "FOL rules elicited from an LLM (Table 5 bike-lane rule links congestion to Against) are made differentiable with soft-logic operators: negation 1-U, conjunction U1*U2, implication 1-U1+U1*U2 (Eqs 2-5), and trained end to end with cross-entropy (Eq 12). Zero-shot VAST all-class F_avg: 81.0 vs 76.8 for KASD with 100 percent training data (+4.2); 80.2 vs 74.0 for MPPT with 10 percent (+6.2). Error analysis of 50 VAST errors (Sec 4.8) names LLM over-inference that links a positive clause to the target, and clause-level polarity conflicts.",
+    "paper_location": "Sec 3.1-3.2, Eqs 2-6; Table 4 (VAST columns); Table 5; Sec 4.8 and Table 6",
+    "system_side": "compose() in apply_two_hop_stance.py is a hard sign flip: support with positive valence stays support, and the reverse flips; neutral and unrelated pass through. lookup() takes the first registry entry whose match substring appears in target plus text, and the flat model alignment is the fallback on a miss (line 55). The file docstring reports stance-hop 0.915, valence-hop 0.689 and oracle ceiling 0.872, and the eval prints a flat baseline of 0.677. The composed 0.782 and F1 0.754 and the claim that every automatic-registry variant fell below the flat baseline are not in the cited code.",
+    "code_ref": "fec/stance/apply_two_hop_stance.py:18-33,53-55",
+    "transfer_conditions": "Transfer is limited to the decomposition idea. FOLAR targets are benchmark targets, whereas the valence hop needs CU-specific, owner-judged knowledge that LLM priors do not supply. The paper's over-inference failure matches the automatic-registry failure in the system. LLM-elicited valence rules stay UNVERIFIED (DE-062) until scored against the 400 tweet golds under single-look rules. The paper gives no evidence that a soft operator beats an exact registry lookup where the registry has coverage.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper side holds: the equations, the 81.0 vs 76.8 and 80.2 vs 74.0 comparisons and the error analysis all check against Tables 4 and 6 and Sec 4.8. The paper example is a bike-lane rule rather than a general negative-consequence rule, so the paraphrase is loosened. Code side holds for the hard sign flip and substring lookup with fallback. The 0.782 and 0.754 composed scores and the all-variants-below-baseline claim are not in the cited file, so the system side is trimmed to what the code and its docstring show.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Two-hop stance x valence decomposition with curated registry|Two-hop stance x valence decomposition with curated registry]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "suggests-extension",
+    "paper_claim": "Fusing decisions from three LLMs (GPT-3.5-turbo-0301, Claude-2-100k, LLaMA-2-70b-chat) by attention-based routing (Eqs 7-11) beats a single-GPT-3.5 variant: 81.0 vs 75.2 on zero-shot VAST with 100 percent training data (+5.8), and 80.2 vs 74.9 with 10 percent (+5.3). The authors say LLMs often exhibit bias in knowledge elicitation that varies with training data and methods.",
+    "paper_location": "Sec 3.3, Eqs 7-11; Sec 4.2 (model list); Table 4 wo/MDF row; Sec 4.6; Introduction (line 101-103)",
+    "system_side": "stage5_debate.py is zero-shot: the Political DEBATE base model (mlburnham/Political_DEBATE_base_v1.0) runs through a zero-shot-classification pipeline with hypothesis template 'This text is {}.' (line 31), and no training code appears in the file. claude_stance.py defaults to claude-sonnet-4-6 (line 32) and asks for a reason of at most 15 words (line 25). Its docstring calls the ensemble member a fine-tuned DEBATE and says the Claude pre-labels are corrected by a person. The 552-label training set and 87.2 percent agreement are not in the cited files.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:25,32; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:31,64-65",
+    "transfer_conditions": "The paper's ablation confounds fusion with the number of LLMs (one versus three), so it does not isolate a fusion effect, and no variance is reported. The benchmark inputs are tweets for SEM16 and ISD, while the paper does not describe VAST's source text and gives no collection dates, so a 2016-2020 framing is unsupported. The named model snapshots are the paper's choices; their retirement is not checked here. A second LLM rater would expose labeller-specific bias before human override, but the evidence is weak and new agent output stays UNVERIFIED (DE-062).",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper claim checks against Table 4 (81.0, 75.2, 80.2, 74.9) and the Sec 4.6 text. The system side does not match as written: the cited stage5_debate.py has no training, so DEBATE is not shown to be fine-tuned on Claude labels or to distil them. The 552-label and 87.2 percent figures do not appear in the cited files. The docstring is the only place that calls DEBATE fine-tuned.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.supervised-stance-stack",
+    "relation": "qualifies",
+    "paper_claim": "In-target (Table 3): FOLAR beats the best competitor by 1.7 on LA (72.7 vs COLA 71.0) and by 2.0 on DT_I (73.3 vs MPPT 71.3), but trails KEprompt on FM (70.6 vs 72.1). Zero-shot (Table 4): gains of +4.2 on VAST with 100 percent training data and +6.2 with 10 percent. The baselines include statistical, PLM, prompt and LLM methods. No TF-IDF or SVM baseline is reported.",
+    "paper_location": "Table 3; Table 4; Sec 4.4 (baseline list); Sec 4.5.1-4.5.2",
+    "system_side": "train_tweet_stance.py grids LinearSVC and LogReg over word plus char TF-IDF (lines 31-40) and scores by 5-fold stratified CV over the tweet golds (lines 42-54). The file docstring cites 400 golds. The file has no untouched test split. The figures 83.9 percent, macro-F1 0.816 on an untouched n=87 test, and 0.737 CV on 399 golds are not in the cited code and were not checked.",
+    "code_ref": "fec/stance/train_tweet_stance.py:31-40,42-54",
+    "transfer_conditions": "The paper cannot settle SVM versus LLM for this corpus because it runs no bag-of-words baseline. Its pattern (small in-target gains, larger low-data or new-target gains) suggests an LLM-rule reader would help most on new or rare CU targets, which has not been tested for CU stance. The evidence is benchmark-level, rests on three runs and gives no confidence intervals.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers check against Tables 3 and 4 (72.7, 71.0, 73.3, 71.3, 70.6, 72.1, +4.2, +6.2). The baseline wording is narrowed because statistical baselines (Bicond, CrossNet, SEKT, TPDG) are also included. The system side mentions an n=87 untouched test and 399 golds that the cited file does not contain, so those figures are dropped as unverified. The code path (TF-IDF plus LinearSVC, 5-fold CV) does match.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Supervised and stacked stance readers|Supervised and stacked stance readers]]",
+    "system": "melange-stance"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "summary_md says the fusion result points to a check on the Claude pre-labels that the DEBATE reader distils. The cited stage5_debate.py is zero-shot NLI with no training, so distillation is not shown. The 'fine-tuned on 552 labels' and 87.2 percent claims in bearing 2 are not in the cited files.",
+   "summary_md cites 87 to 156 held-out CU press items. The 87 appears only in the bearing 3 system_side, which does not match train_tweet_stance.py (5-fold CV, no untouched split). The 156 appears in no cited file.",
+   "The composed two-hop score 0.782 / F1 0.754 and the claim that every automatic-registry variant fell below the flat baseline are not in apply_two_hop_stance.py. The 0.915, 0.689, 0.677 and 0.872 figures are in the file docstring or eval output.",
+   "Pre-labeller identity is inconsistent across system files: claude_stance.py defaults to claude-sonnet-4-6, train_tweet_stance.py calls its api labels Opus prelabel, and its docstring cites Fable API labels. The single Claude rater claim needs the model and version named.",
+   "summary_md and bearing 2 describe the benchmarks as 2016-2020 tweets. The paper gives no collection dates, calls only SEM16 and ISD inputs tweets, and does not describe VAST's source text.",
+   "Paul-alignment statements are unverified: the item has no paul_entries, so Paul's notes (stale, Birkenmaier endorsement) cannot be checked. The claim that the system already records the stance-times-valence rule in a registry is consistent with apply_two_hop_stance.py.",
+   "Related link zhou-2026-measuring-stance-dynamics is said to come from the same journal, but its item lists Information Processing and Management. The Kim 96.9 percent figure covers only the 391 items both coders agreed, not all items.",
+   "Extraction errors (ext, not rel) to fix before reuse: zero-shot SEM16 best competitors are wrong. MPPT HC 83.6 beats Ts-CoT 83.2; COLA LA 71.0 beats MPPT 70.1; COLA DT 71.2 beats FOLAR DT 70.9, so FOLAR does not win zero-shot DT. The 85.5 HC value is the w/o MDF row, not FOL-CoT, whose HC is 83.6.",
+   "Kappa: the paper reports kappa scores above 70 percent with an average of 76 percent, with the variant unnamed. Writing kappa about 0.76 in gaps_exposed misstates the paper's reporting.",
+   "The retirement of gpt-3.5-turbo-0301 and Claude-2 snapshots is not stated in the paper and was not checked here, so treat it as unverified.",
+   "The paper's interpretability claim is asserted, not tested. The only check is 100 items rated by three raters, plus qualitative Table 5 examples. Both the summary and the flags say this correctly; no change needed.",
+   "Coverage: all 3 bearings and all 5 related links were re-checked against the text and the cited code. Not covered: the 552-label set, the 87.2 percent agreement, the n=87 and 156 counts, and Paul's annotations, none of which appear in the cited files."
+  ],
+  "gaps_exposed": [
+   "The valence hop has no soft or probabilistic form: compose() is hard sign multiplication, so valence confidence and partial registry matches are discarded (apply_two_hop_stance.py:27-33).",
+   "The pre-labels come from a single LLM (Claude). No second or third LLM rater exists to measure labeller-specific bias before human override, which bears on the open question of how much DEBATE accuracy is LLM agreement.",
+   "Claude's reason field is captured (claude_stance.py:93) but is never checked for quality. The paper at least rates rationales for salience, non-redundancy and non-contradiction (n=100, kappa about 0.76).",
+   "No low-data or new-target evaluation condition exists for CU stance. The paper shows that method rankings differ most in that condition."
+  ],
+  "flags": [
+   "Nothing here conflicts with the SNA wording rules (D-025, D-021, the rejected cosponsorship and normalization proposals). The paper is pure text classification.",
+   "Any LLM-elicited FOL rules or valence links adopted from this method are new agent analysis and stay UNVERIFIED until a second path (human gold) reproduces them (DE-062). The paper's own error analysis shows LLM over-inference on target links, the same failure that made the automatic-registry variants fall below the flat baseline.",
+   "The paper's quality is weak for adoption. It reports no SDs or CIs over three runs and does not name its significance test. FOL-CoT shows the same 79.8 in both VAST rows (a likely copy error). The ISD counts disagree (6,027 in the text vs 5,588 in the table), and the SEM16 target exclusions are inconsistent. Data are 'available on request', and the gpt-3.5-turbo-0301 and Claude-2 snapshots are retired, so the results cannot be reproduced.",
+   "The interpretability claim is asserted, not tested. Do not quote FOLAR rationales as explanations of stance without a separate validation."
+  ],
+  "paul_alignment": "The paper agrees with Paul's endorsement of LLM-based position extraction (Kim J. 2025, Birkenmaier). It also confirms the weakness he flagged, disentangling ambiguous statements: implicit or sarcastic stance and clause-level polarity conflicts are FOLAR's two named failure types. On the two-hop component, the paper's FOL implication operator is a formal answer to his question of how agreement is quantified when actors relate through a third party. The system already answers that question with the stance-times-valence registry, which his notes do not yet record. His notes are stale on that point, not this paper's. Paul has no annotation of Dai et al. The paper does not support replacing the SVM or DEBATE readers, which goes further than his view that bag-of-words baselines are outdated: FOLAR's in-target gains are small, and no SVM baseline was run.",
+  "related": [
+   {
+    "slug": "b-2025-comparing-fine-tuned",
+    "relation": "complements",
+    "why": "Same task (stance in political tweets), comparing fine-tuned RoBERTa with traditional ML. Its title supports the framing as a source of the SVM and PLM comparison Dai omits; the full paper was not checked for those numbers."
+   },
+   {
+    "slug": "park-2025-automatic-construction-direction",
+    "relation": "complements",
+    "why": "A direction-aware lexicon addresses clause-level polarity direction, one of FOLAR's two named error types. The claim that the system rejected a whole-text version in bill-sign handling was not checked against the repo."
+   },
+   {
+    "slug": "ornstein-2024-train-your-stochastic",
+    "relation": "complements",
+    "why": "General guidance on using LLMs to label political text. It bears on validating FOLAR-style LLM-elicited labels and rationales."
+   },
+   {
+    "slug": "zhou-2026-measuring-stance-dynamics",
+    "relation": "complements",
+    "why": "Zhou models stance dynamics over time with temporal graph neural networks in Information Processing and Management. The earlier note that it is from the same journal as Dai is wrong; Dai is in Neural Networks. Dai classifies static stance."
+   },
+   {
+    "slug": "kim-2025-measuring-interest-group",
+    "relation": "same-method",
+    "why": "Both use LLMs to extract positions toward a named target. Kim reports 96.9 percent agreement with two human coders, but only on the 391 items both coders agreed. Dai reports no equivalent agreement for its stance outputs."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ }
+]

@@ -1,0 +1,91 @@
+{
+  "summary_md": "Bouton, Cage, Dewitte and Pons (NBER WP 30050, revised June 2026) build a contribution-level panel of about 340 million FEC individual contributions (2005-2020) by parsing ActBlue and WinRed earmark memos, which makes sub-200-dollar donors visible. Their main finding is that small donors are a passive force. They tripled to 21.8 million by 2020 but supplied only 12.8 percent of 2020 money. They back the same kinds of candidates as large donors, send about 88 percent of their money out of district, and do not concentrate on close races (close-seat coefficient +0.11 pp, not significant, versus +0.18 pp for large donors; Democratic congressional candidates 2012-2020). Their giving spikes on salient events, while large donors spike at quarterly deadlines. TV ads raise small-dollar giving by 6.3 percent of the mean per 1,000 ads, and Meta ads do so only in primaries. For Paul's systems the substantive results are background. The data appendix matters more for Mentat. First, it documents that an earmarked gift from a donor above the 200-dollar aggregate appears in both the conduit report and the recipient committee report. The authors pair and drop 87 percent of these duplicates, whereas Mentat counts both legs under ruling R8; this is flagged, not recommended. Second, the donor-grouping rules always require a street address and reject employer and occupation as grouping keys. Mentat's identity ladder auto-accepts on exact name plus ZIP alone. Third, conduit coverage changes over time (76.4 percent of contributions 2006-2020, 91.1 percent in 2020, WinRed only from 2019), so cross-cycle partisan comparisons of employee giving carry a visibility artifact. The paper says nothing about whether dollars buy access or alignment.",
+  "category": "Campaign Politics",
+  "bearings": [
+    {
+      "component_id": "mentat-fec-attribution.dedup-and-versions",
+      "relation": "qualifies",
+      "paper_claim": "A recipient committee must itemize an earmarked contribution when the donor's cycle aggregate to it exceeds 200 dollars, so the same gift appears in both the conduit report (11A(i), with an earmark memo) and the committee report. The authors matched 87 percent of earmarked committee-itemized donations to their conduit twin and dropped the committee leg. The unmatched remainder is 3 percent of all contributions.",
+      "paper_location": "Appendix A.3.1 Earmarked contributions (Background and Processing), pp. 5-6 of appendix",
+      "system_side": "Under ruling R8 (re-ratified 2026-07-27, recipient-as-shown), Mentat counts the conduit leg as a real row, and the guard G3 against conduit double counting was deleted. The downstream-earmark mask is kept as an analytical flag only and never selects report rows. The sub_id duplicate guard cannot catch the two legs because they carry different sub_ids.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/R/export_guards.R:110-113; C:/Users/pgoff/Mentat/mentat/R/report.R:1566-1568,1601-1606,2775-2786",
+      "transfer_conditions": "Applies only to employees whose cycle aggregate to the recipient exceeds 200 dollars, which is exactly the itemized, employer-matched population Mentat attributes. Sub-200 gifts appear once (conduit leg only). The size of the overlap in Mentat books is unmeasured. Money collection is frozen; any change needs Paul's per-change OK.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "mentat-fec-attribution.identity-ladder",
+      "relation": "method-source",
+      "paper_claim": "Donor grouping across 340M contributions uses explicit rules. Two records are one person only if they match exactly on three of first name, surname, full street and ZIP, and fuzzily on the fourth (nickname index, fuzzy surname, fuzzy street, or city-state for ZIP). Occupation and employer are judged too inconsistent to use as grouping variables. The authors expect a very small false-positive rate but do not measure it.",
+      "paper_location": "Appendix A.4.1 Grouping, Steps 1-2 and footnote 4",
+      "system_side": "The ladder returns AUTO on exact name plus same ZIP with no street check. It returns HIGH on exact name plus same city, or nickname plus same ZIP, and both AUTO and HIGH are kept. It uses employer contradiction to grade levels. The street fields are collected but never consulted by the ladder.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:2087-2157,2120-2134,2896; C:/Users/pgoff/Mentat/mentat/R/collect.R:7,1415-1416",
+      "transfer_conditions": "The paper groups donors across all committees, while Mentat links same-name rows to an employer-matched seed within a company run. A false merge in Mentat adds a stranger's money to a company total, so the cost is higher and a street-based tier would matter more. The paper's rules have no measured precision, so they are a design benchmark, not a validated standard.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "mentat-fec-attribution.collection-completeness",
+      "relation": "measurement-source",
+      "paper_claim": "Conduits itemize every earmarked gift regardless of size. Conduit rows were 76.4 percent of individual contributions 2006-2020 and 91.1 percent in 2020, and processing them more than doubles observed contributions. WinRed launched only in 2019, so Republican small-dollar visibility is effectively 2020-only. Committee-reported unitemized totals overstate small-donor money by a factor of 1.8 to 3.1.",
+      "paper_location": "Section 2.1 (rise of conduit contributions) and Section 2.2, pp. 6-10; Figure 1; Appendix A.4.3",
+      "system_side": "Mentat flags ActBlue and WinRed rows as conduit legs and treats an empty Conduit category as a legitimate zero. There is no adjustment for coverage that varies by cycle and party, so sub-200 employee gifts given directly rather than through a conduit are invisible in every cycle.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:1452-1454; C:/Users/pgoff/Mentat/mentat/R/export_guards.R:447-449",
+      "transfer_conditions": "Matters for any cross-cycle or partisan-split comparison of individual employee giving that spans 2019: Republican small-dollar visibility jumps with WinRed. It does not affect PAC-to-candidate totals. The pending WinRed petition (REG 2022-05) to relax conduit itemization could reverse the gain, but its status was not confirmed in the online scan.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "mentat-sector-growth-study.seats-weekly-test",
+      "relation": "suggests-extension",
+      "paper_claim": "Weekly individual giving is dominated by calendar and event shocks. 30 of 31 abnormal weeks for large donors fall at quarterly FEC deadlines (27 of 43 for small donors). The week of Justice Ginsburg's death carried 13.0 percent of 2020 small-donor contributions versus 5.9 percent for large donors.",
+      "paper_location": "Section 5.1 Timing, p. 25; Figure 6",
+      "system_side": "The SEATS-W weekly model regresses the D share of giving on expected D seats plus cycle fixed effects and a linear week-of-cycle trend. It has no quarter-end or salient-event indicators.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:511-515",
+      "transfer_conditions": "Relevant only if the weekly series includes individual (employee) receipts, and only if deadline or event surges differ by party. An event such as Dobbs in 2022 could move both the forecast and giving. A quarter-end and event-week sensitivity is a candidate check, not a demonstrated bias. This is unverified agent analysis (DE-062).",
+      "strength": "weak"
+    },
+    {
+      "component_id": "melange-influence-engine.competitiveness-multiplier",
+      "relation": "context",
+      "paper_claim": "Relative to safe Democratic seats, candidates in close races (mean Democratic margin within 10 points) receive +0.11 pp of a small donor's giving (48 percent of mean, not significant) and +0.18 pp of a large donor's (75 percent of mean, p below .05). Many contributions go to sure winners and sure losers. Scope is Democratic congressional candidates, 2012-2020, with donor fixed effects; Republicans were not studied.",
+      "paper_location": "Section 4.3, pp. 16-18; Table 3",
+      "system_side": "c = 1 + 1.0 exp(-max(lean,0)/5) scales effective CU and competitor dollars in competitive seats. AMPLITUDE and SCALE are uncalibrated owner judgment, and the assumption that dollars buy more there is not validated.",
+      "code_ref": "fec/moneyball_core.py:74-93",
+      "transfer_conditions": "The paper measures where individual donors send money, not what a dollar buys from a legislator. It neither supports nor refutes c. Quote the close-seat figures only with the label: Democratic candidates only, UNSTRATIFIED by party.",
+      "strength": "weak"
+    }
+  ],
+  "gaps_exposed": [
+    "Mentat has no measured estimate of how many employer-matched dollars appear twice (conduit leg plus earmark-target leg) under R8. A read-only count pairing conduit rows with committee rows that carry an EARMARKED THROUGH memo, by company and cycle, would size it.",
+    "The identity ladder has no street-address tier. It auto-accepts exact name plus ZIP and keeps exact name plus city, and its precision against a hand-coded sample is unmeasured (component question still open).",
+    "No cycle-varying coverage note on individual-giving partisan splits across the 2019 WinRed launch. Direct sub-200 gifts stay invisible.",
+    "SEATS-W has no quarter-end or salient-event indicators in its weekly specification."
+  ],
+  "flags": [
+    "The paper's both-legs evidence sits against Paul's ruling R8 (conduit legs COUNT, re-ratified 2026-07-27, G3 deleted). It is reported as evidence only. Money collection is frozen, so nothing changes without Paul's per-change OK.",
+    "The close-seat coefficients are pooled over Democratic candidates only and do not test whether money buys access or alignment. They must not be cited as validating reciprocity or the competitiveness multiplier (D-104..D-108).",
+    "The paper's donor-grouping rules are described as conservative, but no precision or recall is reported, so they are a design benchmark, not a validated standard.",
+    "All bearings are new agent analysis and remain UNVERIFIED until a second path reproduces them (DE-062)."
+  ],
+  "paul_alignment": "No Paul entry or markup exists for this work, so there is no takeaway to check and nothing stale. Identity ladder: he highlighted false-positive-limiting matching, and the paper requires a street address where the ladder accepts name plus ZIP. Dedup: he flagged duplicate filings as a hazard; the paper shows the two conduit legs are one gift, against his R8 ruling (flagged only). Competitiveness: Bouton finds only modest close-race overweighting by individual donors and says nothing on what dollars buy.",
+  "related": [
+    {
+      "slug": "bonica-2013-mapping-ideological-marketplace",
+      "relation": "same-data",
+      "why": "Bouton et al. take candidate ideology terciles from Bonica's CFscores, which are built from the same FEC individual contribution records. Their close-race result qualifies Bonica's account of donors steering money to competitive races, at least for Democratic individual donors 2012-2020."
+    },
+    {
+      "slug": "bonica-2025-money-campaign-finance",
+      "relation": "same-data",
+      "why": "Both use FEC individual contribution microdata, which has no unique donor identifier, and must group donors by name and address rules. That makes them joint method references for Mentat's identity ladder."
+    },
+    {
+      "slug": "kalla-nd-campaign-contributions-facilitate",
+      "relation": "complements",
+      "why": "Bouton et al. study where donor money goes but not what it buys. Kalla and Broockman's field experiment on contributions and access covers the effect side that the competitiveness multiplier and flip model assume."
+    },
+    {
+      "slug": "cagala-2021-optimal-targeting-fundraising",
+      "relation": "complements",
+      "why": "Bouton et al. read small donors as passive responders to solicitations and ads. Cagala et al. model how fundraisers target solicitations, which is the supply side of that response."
+    }
+  ]
+}

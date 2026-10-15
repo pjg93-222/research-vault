@@ -1,0 +1,130 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-sna.press-hcoi-communities",
+   "relation": "method-source",
+   "paper_claim": "LDA k=25 on 16,917 articles; author topic profiles per roughly 21-year period, weighted by authorship share; keep authors with weighted publications above 2; Pearson r at least 0.6; Louvain (Gephi default); community profile = average of member profiles; genealogy by closest Hellinger pairing between adjacent periods; modularity 0.427 to 0.834 and communities 4 to 13.",
+   "paper_location": "Section 2.2 p.6-9 (text lines 260-403); Table 3 p.10 (lines 449-484); Section 3.2 p.13-14",
+   "system_side": "press_hcoi.py follows the same steps but uses 20 curated regex-tagged press categories, not 19, in place of LDA topics. Each item's weight is split evenly over its labels and weighted by recency. r cutoff 0.6 (HCOI_CORR); MIN_W 3.0 as the transient-author filter; Louvain seed 7; communities under 3 members dropped; one median-date split into two periods; Hellinger matching; PERSISTS / drifts / NOVEL cutoffs 0.25 and 0.45. Stored data/stance/press_hcoi.json: 155 members profiled, 6 communities, 1900 edges, 20 categories.",
+   "code_ref": "fec/network/press_hcoi.py:22-27,37-77,102-116",
+   "transfer_conditions": "Mechanics carry over. The evidence does not: the paper covers an 88-year academic corpus in four periods with over 80 percent new authors per period and only qualitative validation. Here the split is two half-periods of one press stream, so NOVEL and PERSISTS labels reflect the script's own thresholds. Quote member denominators as 155 profiled, not the 385 in the script docstring, which is stale.",
+   "strength": "strong",
+   "verdict": "softened",
+   "verifier_note": "Paper side reproduced: k=25, 16,917 articles, 8,009 authors, weight above 2, r 0.6, Louvain, Hellinger matching, Table 3 modularity and community counts. System side wrong on category count: 20 entries in the CATEGORIES block of the R source and 20 categories in the stored artifact, not 19."
+  },
+  {
+   "component_id": "melange-sna.press-hcoi-communities",
+   "relation": "qualifies",
+   "paper_claim": "HCoIs are about who-talks-about-the-same-things-as-who. Links are mediated by texts, are not social ties, and serve as a heuristic for possible real ties. (The analyst gloss that communities are not labelled from alignment is not stated in the paper.)",
+   "paper_location": "Section 4 Discussion p.15 (text lines 652-663)",
+   "system_side": "profiles() in press_hcoi.py counts attention across categories only and never reads the stance column, so a community can in principle hold members on both sides of an issue. The coalition assumption text attributed to the paper sits in a component file that was not opened; the paper does not support reading HCoIs as coalitions. The 49 percent co-movement null is not reproduced (see the stance bearing).",
+   "code_ref": "fec/network/press_hcoi.py:37-51",
+   "transfer_conditions": "The attention-not-alignment limit is definitional and transfers fully. Reading an HCoI as a coalition needs a signed profile (attention times stance), which neither the paper nor press_hcoi.py builds.",
+   "strength": "strong",
+   "verdict": "softened",
+   "verifier_note": "Paper quote at lines 652-663 verified. Code verified: no stance input in profiles(). The H-5 membership example was not checked against an artifact."
+  },
+  {
+   "component_id": "melange-sna.press-hcoi-communities",
+   "relation": "qualifies",
+   "paper_claim": "The paper offers no evidence that text-similarity ties carry influence or transmission; it frames HCoI mapping as a heuristic for actual social connections that would still need confirmation.",
+   "paper_location": "p.15 (text lines 660-663); Conclusion p.16 (lines 738-741)",
+   "system_side": "build_multilayer_network.py admits HCoI edges at weight 0.6 x r x HCOI_W. HCOI_W defaults to 0.2, so 0.12 is the ceiling at r = 1 (a maximum from the formula, not a clamp in code), about 0.02 kernel probability per step. The CU config admits only edges touching a cosponsor-isolated member; the holistic dominance rule admits HCoI edges generally. The 857-edge holistic count and the 4 of 41 reconnection count were not reproduced. The stored press_hcoi.json D4 block reads 14 isolated members and 0 placed in a community.",
+   "code_ref": "fec/network/build_multilayer_network.py:10-25 (header), 71-82 (admit rule), 130-140 (HCoI branch)",
+   "transfer_conditions": "Using HCoI edges as a low-weight reachability patch fits the paper's heuristic framing. Treating them as transmission edges in cascade, coalition or route outputs goes beyond what the paper tested, and any output depending on them must say it rests on a topical-similarity heuristic. The 2026-08-18 ruling is cited only in code comments and was not checked.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper claim verified. Gate, weight formula and 0.02 per-step figure (0.12/6.12) verified. The 857 and 4 of 41 figures not reproduced from artifacts read."
+  },
+  {
+   "component_id": "melange-stance.stance-dynamics",
+   "relation": "supports",
+   "paper_claim": "HCoI ties are links from thematic similarity of texts, mediated by the texts rather than social ties. The paper does not discuss stance, agreement or change in agreement.",
+   "paper_location": "p.15 (text lines 652-663)",
+   "system_side": "stance_dynamics.py runs a neighbour co-movement test on HCoI same-community pairs (lines 111-121). Imputation proposals use only cosponsor adjacency; hadj is used only in the co-movement test. Thresholds: at least 5 neighbours (SD_MINNB) and confidence at least 0.75 (SD_CONF). The stored stance_dynamics.json co_movement block reads same 134, opposite 122, which is 52 percent with no layer label, so the 49 percent null is not reproduced.",
+   "code_ref": "fec/stance/stance_dynamics.py:94-124,132",
+   "transfer_conditions": "The paper's silence on stance supports keeping HCoI out of stance imputation only as an argument from the construct, not from the paper's evidence. The null result needs a labelled layer in the output before it is cited.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Code and thresholds verified. The 49 percent figure conflicts with stored 134 of 256 (52.3 percent) unless the stored block belongs to another layer; unresolved."
+  },
+  {
+   "component_id": "melange-legislative-data.category-taxonomy",
+   "relation": "suggests-extension",
+   "paper_claim": "k was chosen by combining Cv coherence (scanned over k = 5 to 100, with no coherence gain above 35) and manual reading of top words; any topic model is acceptable if assignments are continuous probabilities rather than crisp.",
+   "paper_location": "p.6-8 (text lines 264-267, 311-313); p.16 (lines 694-699)",
+   "system_side": "The HCoI profile input is a regex categorisation into 20 CU press categories, not 19: 20 entries in the CATEGORIES block of cu_press_release_scraper.R and 20 categories in the stored press_hcoi.json. Each item's labels are crisp and split evenly (press_hcoi.py lines 25-27, 45). No precision check against human coding and no coherence or overlap check on the categories was found.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R:1739-1847; fec/network/press_hcoi.py:25-27,45",
+   "transfer_conditions": "The continuous-assignment requirement is met only loosely: member profiles are continuous after averaging, item tags are crisp. A coherence-selected LDA on the same corpus or a precision sample of the regex tags would show whether communities reflect the taxonomy or the text. Any result stays a diagnostic until reproduced.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper side verified. The 19 count is wrong (20 in source and artifact). The paper's below-35 remark is the relevant range for the k choice."
+  },
+  {
+   "component_id": "melange-legislative-data.press-collector-cap",
+   "relation": "qualifies",
+   "paper_claim": "The quality of an HCoI network depends on the representativeness of the corpus, which is crucial for conclusions. The authors also flag the venues and languages they left out.",
+   "paper_location": "p.4 (text lines 188-193); p.16 (lines 682-684)",
+   "system_side": "cu_text_collector.R caps each member at 1000 URLs by default (CU_TC_CAP, line 128), taking CU-candidate titled pages first and a sample of the rest. The coverage percentages in the analyst output (D 92.5 vs R 87; Senate 83 vs House 96) were not located in the code and were not verified.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_text_collector.R:112-128",
+   "transfer_conditions": "The caution applies. Before reading HCoI membership substantively, check party and chamber gaps in who is profiled (155 members profiled in the current artifact). Any figure should name its window and denominator.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper claims verified. Cap verified at line 128. Coverage percentages not verified."
+  },
+  {
+   "component_id": "melange-sna.press-coalition-ward",
+   "relation": "suggests-extension",
+   "paper_claim": "Communities in adjacent periods are matched by closest Hellinger distance to trace persistence, splits and novel communities; four novel communities appear in 1974-95 with no clear filiation.",
+   "paper_location": "Section 3.2 p.13-14 (text lines 577-601); Fig. 9",
+   "system_side": "Ward.D2 clustering on z-scored category profiles plus a lean feature weighted 3.0 (COALITION_LEAN_WEIGHT, line 3089); minimum 6 members (line 3085). When no k is passed, k = max(2, min(8, round(sqrt(n/2)))), and the call at line 3327 passes none, so the bloc count is at most 8, not 9. Bloc labels come from mean aggregate lean (pro-credit-union, hostile-to-credit-union, or mixed), so the claim that all blocs are mislabelled as pro-CU is not supported by the code.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R:3085,3089,3327 and label code near 3186-3196",
+   "transfer_conditions": "The genealogy step would answer the stability question only if blocs were re-run per period and matched by Hellinger distance. Unlike HCoIs these blocs include stance lean, so a genealogy here would track alignment. The paper's evidence for the step is qualitative, so this stays a weak bearing.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper claim verified. The 9-bloc figure and the all-pro-CU labelling are not supported by the code."
+  }
+ ],
+ "related": [
+  {
+   "slug": "ardekani-2026-computational-graph-theoretic",
+   "relation": "same-method",
+   "why": "Paul's cross-reference notes for Malaterre list Ardekani et al. for Louvain community detection. Ardekani builds communities from a relational legislative citation network; Malaterre builds them from text similarity alone. Link verified."
+  },
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "relation": "complements",
+   "why": "Aref partitions a signed network under generalized balance, which encodes agreement and disagreement. HCoI attention profiles carry no sign, so the two are complementary on alignment. The system counterpart named in the analyst output was not checked."
+  },
+  {
+   "slug": "pritoni-2025-lobbying-coalitions-determinants",
+   "relation": "complements",
+   "why": "Pritoni's systematic review covers determinants of lobbying coalitions, including issue salience and brokers (both recur in the item). That is the coalition theory the HCoI-as-coalition reading would need, and Malaterre does not supply it."
+  },
+  {
+   "slug": "zhou-2026-measuring-stance-dynamics",
+   "relation": "complements",
+   "why": "Zhou models stance change on temporal interaction graphs (user-hashtag and user-user). Topical-similarity graphs do not carry the communication ties that modelling assumes. The 49 percent null the analyst cites is not reproduced, so the link should not lean on it."
+  },
+  {
+   "slug": "steinertthrelkeld-2018-twitter-data",
+   "relation": "complements",
+   "why": "Both are text-data resources for social scientists. Steinert-Threlkeld covers Twitter data acquisition and processing and does not treat politicians' text as relational data; representativeness is mentioned only briefly. Use only for data-collection caveats."
+  },
+  {
+   "slug": "kim-nd-mapping-political-communities",
+   "relation": "complements",
+   "why": "Kim infers latent community memberships from bipartite lobbying networks; Malaterre infers communities from text alone. The two partitions could be compared on the same members as independent views."
+  }
+ ],
+ "summary_issues": [
+  "The summary says press_hcoi.py was built on 2026-07-01. Git history for fec/network/press_hcoi.py starts at the 2026-07-02 baseline commit 62a209e2f, so the date is unconfirmed.",
+  "The 19 regex-tagged categories (summary, gap 3, bearing 5) are wrong: the R source and data/stance/press_hcoi.json both have 20 categories.",
+  "The HCoI stance co-movement null (49 percent) is not reproduced: stance_dynamics.json co_movement reads same 134, opposite 122 (52 percent), with no layer label.",
+  "The recovery figure of 4 of 41 cosponsor-isolated members is not reproduced from the current press_hcoi.json, whose D4 block reads 14 isolated and 0 placed in a community. Name the run or admission count before quoting it.",
+  "Gap 5 refers to 8 communities; the current press_hcoi.json has 6 (sizes 50, 42, 20, 19, 11, 7).",
+  "The 385-member denominator in the press_hcoi.py docstring is stale; the current artifact profiles 155 members (MIN_W 3.0).",
+  "The summary says density falls from 0.167 to 0.030, but density is not monotone (0.027 in 1974-95, then 0.030). Table 3 cohesion values (31,558; 18,876; 25,465; 41,115) and betweenness values cannot match their labels at N of about 8,009: density 0.167 implies average degree near 1,300. Do not quote those table values without checking the source table.",
+  "Gap 4 and the Ward bloc count of 9 are wrong: the default caps the bloc count at 8."
+ ]
+}

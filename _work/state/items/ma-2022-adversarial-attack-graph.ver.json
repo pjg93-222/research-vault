@@ -1,0 +1,101 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-influence-engine.lt-priming",
+      "relation": "qualifies",
+      "paper_claim": "Proposition 2: if each threshold CDF F_j is concave on [0, +inf), the expected spread h(S) is submodular, so greedy selection applies. Corollary 1 (uniform thresholds, Eq. 6) gives a saturated coverage objective that is submodular. Lemma 1: influence maximization on the directed bipartite linear threshold graph is NP-hard, by reduction from Set Cover with thresholds alpha/2.",
+      "paper_location": "Section 4.2-4.3: Lemma 1 p.678; Proposition 2 p.678; Corollary 1 p.678-679; proof of Proposition 2 in Appendix A.2 p.684",
+      "system_side": "lt_priming THETA ladder: deterministic constants from 0.6 (Highly Persuadable) to 3.0 (Opponent). prime() adds net_lean/120 and 0.25 per declared Opponent cell, sums P[u][v] times xf over pro sources, and solves each target separately for the cheapest mix of recruits and money. No seed-set objective is optimized.",
+      "code_ref": "fec/engine/lt_priming.py: THETA about lines 20-21; prime() about lines 96-104",
+      "transfer_conditions": "The concavity result transfers as mathematics only. Lemma 1 is an NP-hardness result for deterministic thresholds; the paper does not state a converse that missing concavity implies hardness. A point-mass (step) threshold CDF is not concave on [0, +inf), so the paper's submodularity guarantee does not cover lt_priming's deterministic thresholds if they were aggregated into a seed-set objective. Moderate for the mathematics, weak for empirical relevance.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Proposition 2, Corollary 1 and the THETA values, COMMIT=0.25 and the pressure sum were reproduced from the text and code. Softened: Lemma 1 is an unconditional NP-hardness result for the deterministic problem, not a dichotomy keyed to concavity. lt_priming also adds a lean term to theta, so theta is not purely the tier ladder."
+    },
+    {
+      "component_id": "melange-allocation.per-topic-allocators",
+      "relation": "qualifies",
+      "paper_claim": "Table 1: both InfMax methods beat Degree, Betweenness and PageRank in all 18 setups. The paper says both proposed methods beat all baselines in all but 3 of 18 setups. Pubmed GAT at 30 percent threshold: GC-RWCS 69.1, InfMax-Unif 64.1, no attack 85.2. In a 4-community SBM the better selectors spread seeds more evenly (qualitative).",
+      "paper_location": "Section 5.2 Table 1, pp.680-681; Section 5.4 Figure 3, p.681",
+      "system_side": "per_topic_coalition ranks neutral candidates by ev (engagement priority times delivery) and keeps the top 45, not by singleton marginal. Singleton marginal spread({n}) minus base is then computed over those 45 and used as the allocation weight, boosted by (1 + 0.8 times bpf). The 2M budget is water-filled with a 50k per-seed cap. The joint spread of the funded set is reported afterwards and does not shape the allocation.",
+      "code_ref": "fec/engine/per_topic_coalition.py: lines 113-125 (cand top-45 cut, mg, boost, coal_waterfill, joint spread)",
+      "transfer_conditions": "The paper's objective is GNN misclassification on citation graphs at a 1 percent node budget. The CU objective is a Monte Carlo competitive cascade on the cosponsor kernel. The structural point transfers: weighting by singleton marginals ignores overlap, so funded seeds can cluster. The code already measures the joint-vs-naive gap. The community-spread finding is qualitative. Weak to moderate.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Table 1 numbers for the stand-alone baselines and the Pubmed GAT example were reproduced. The 3-of-18 count was not reproduced: the best of the two InfMax methods strictly beats the best baseline in 17 of 18 setups (only Citeseer GCN 10 percent fails); both methods strictly beat it in 14 of 18 (non-wins: Citeseer GCN 10, Citeseer GAT 10, Citeseer JK 10, Cora GCN 30). The system_side ranking claim is wrong: the top-45 cut uses ev, and singleton marginals only set allocation weights."
+    },
+    {
+      "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+      "relation": "suggests-extension",
+      "paper_claim": "Corollary 1 Eq. 6 with a = 0.01 over B = M^L (L = 4) is a saturated coverage function and is submodular. The paper says this objective outperforms one-step and centrality heuristics. The paper's experiments compare against Degree, Betweenness, PageRank, RWCS and GC-RWCS; no one-step coverage baseline is tested.",
+      "paper_location": "Corollary 1 Eq. 6, pp.678-679; Section 5.1 settings p.679; Table 1 pp.680-681",
+      "system_side": "budgetRecruit is cardinality-bounded (nSeeds), not cost-bounded as its comment says. Coverage cov = 1 - prod(1-p) is updated over DIRECT edges PE only, so coverage is one hop. Greedy marginal gain includes an optional target weight (1 + 2 dT) and a stance filter. The code comment claims the 1-1/e guarantee.",
+      "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl: about lines 773-800 (multiTarget, budgetRecruit)",
+      "transfer_conditions": "The 1-1/e guarantee applies to plain greedy on the monotone coverage objective. It does not transfer cleanly to the target-weighted variant, where argmax of (1 + 2 dT) times marginal is not greedy on the reach objective. A multi-hop extension would replace p with an L-step walk weight on the kernel; on the cosponsor graph that is a heuristic reach score (D-025), not an introduction probability, and must not reintroduce the rejected per-edge volume normalization. Weak.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Corollary 1 and the one-hop coverage update were reproduced. Softened: cost-bounded is a misnomer; the paper does not test one-step heuristics, so the outperformance clause is not supported as a one-step comparison; the 1-1/e claim does not cover the target-weighted variant."
+    },
+    {
+      "component_id": "melange-sna.katz-bonacich-benchmark",
+      "relation": "context",
+      "paper_claim": "As seed selectors, plain centralities are weaker than random-walk column sums with saturation. In Table 1, Degree and Betweenness fall below RWCS, GC-RWCS and InfMax, and PageRank is intermediate.",
+      "paper_location": "Section 5.1 baselines and Section 5.2 Table 1, pp.679-681",
+      "system_side": "kb_benchmark computes Katz-Bonacich centrality b = (I - delta A)^-1 1 with delta = 0.85 over the spectral radius, on the live kernel P = build_P(adj), counting weighted out-walks. It is a Spearman diagnostic only and no chain step consumes it.",
+      "code_ref": "fec/engine/kb_benchmark.py: lines 1-40 (header, DELTA_FRAC, matvec)",
+      "transfer_conditions": "The paper concerns GNN attack selection on citation benchmarks, not legislators, so it is context only. KB and walk-sum scores remain heuristic outputs (D-025). The defensible transfer is narrower: unsaturated walk sums (RWCS) are not a strong selection rule in this paper, which is consistent with keeping KB diagnostic only.",
+      "strength": "weak",
+      "verdict": "refuted",
+      "verifier_note": "The ordering claim is contradicted by Table 1. Degree and Betweenness give lower post-attack accuracy, meaning stronger attacks, than RWCS and PageRank in all 18 setups, and are weaker than GC-RWCS and both InfMax methods in all 18. PageRank is the weakest baseline (highest post-attack accuracy) in 14 of 18 setups and RWCS in 4. Means over 18 setups: PageRank 74.5, RWCS 74.1, Betweenness 67.6, Degree 67.0, GC-RWCS 62.5, InfMax-Unif 61.1, InfMax-Norm 61.0. The code description holds: diagnostic only, delta scaled by the spectral radius."
+    },
+    {
+      "component_id": "melange-stance.stance-dynamics",
+      "relation": "suggests-extension",
+      "paper_claim": "Perturbing features of only 1 percent of nodes, chosen by an influence-maximization criterion, sharply lowers accuracy of GCN, GAT and JK-Net. Cora GAT falls from 87.7 (no attack) to 55.9 under InfMax-Unif at the 10 percent degree threshold. The paper's model (B = M^L) implies that propagation lets a few nodes affect many predictions; no propagation ablation is reported.",
+      "paper_location": "Abstract p.675; Section 5.2 Table 1 pp.680-681; Section 4.2 Eq. 4-5 p.677-678",
+      "system_side": "Neighbour imputation takes the one-hop mean TSCORE of at least 5 labelled cosponsor neighbours and keeps proposals with |est| at least 0.75. The masking validation sign agreement is stored in data/stance/stance_dynamics.json as 0.775 over n = 1087. Proposals go to a CSV only; the matrix is unchanged.",
+      "code_ref": "fec/stance/stance_dynamics.py: lines 131-146 (MINNB, CONF, neighbour mean, proposals); lines 143-157 (masking validation and JSON output)",
+      "transfer_conditions": "The system has no GNN and uses a one-hop mean with human adjudication, so propagation is shallow and an adversary is implausible. The transferable idea is a sensitivity test: flip or corrupt the labels of a few high-coverage members, chosen by walk coverage rather than at random, and count sign changes in the proposals. Any result stays UNVERIFIED until reproduced (DE-062). Weak.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "The Table 1 numbers were reproduced (Cora GAT 87.7, 55.9, GC-RWCS 57.5). The 5-neighbour and 0.75 thresholds were confirmed in the code. The 77 percent figure matches the stored 0.775 (n = 1087, file dated 2026-07-01). Softened: the sentence that propagation is what lets few nodes affect many predictions is the analyst's inference, not a tested result. The runtime print still says at least 3 neighbours, a stale message."
+    }
+  ],
+  "related": [
+    {
+      "slug": "chen-nd-complex-contagion-influence",
+      "relation": "complements",
+      "why": "Its item states that complex contagion with S-shaped adoption breaks submodularity, which is the non-concave-threshold case where Proposition 2 does not apply. Verified against the item's theory field; the Chen text itself was not re-read here."
+    },
+    {
+      "slug": "borodin-nd-threshold-models-competitive",
+      "relation": "complements",
+      "why": "Title matches a competitive threshold-model paper, where submodularity can fail. The Ma et al. result gives the single-campaign condition. Item title checked only; the content was not re-read here."
+    },
+    {
+      "slug": "almazaydeh-2026-heuristic-centrality-methods",
+      "relation": "contradicts",
+      "why": "Almazaydeh argues centrality heuristics challenge greedy optimization in influence maximization. Ma et al. find Degree, Betweenness and PageRank weaker than greedy-type selectors on this coverage objective. The two papers study different objectives, so this is a tension rather than a direct contradiction."
+    },
+    {
+      "slug": "kumar-2022-influence-maximization-social",
+      "relation": "complements",
+      "why": "Title shows Kumar uses a GNN to solve influence maximization, while Ma et al. use influence maximization to attack a GNN. The item was checked by title only."
+    },
+    {
+      "slug": "zhou-2026-measuring-stance-dynamics",
+      "relation": "complements",
+      "why": "Item describes a temporal GNN stance model with silent-user information. If such a model is adopted, the node-perturbation vulnerability shown by Ma et al. becomes a direct robustness question."
+    }
+  ],
+  "summary_issues": [
+    "Summary says Degree and Betweenness are the weakest baselines. Table 1 shows they beat RWCS and PageRank in every one of 18 setups. PageRank is the weakest baseline in 14 of 18 setups and RWCS in 4.",
+    "Summary and bearing repeat the paper's count that both proposed methods beat all baselines in all but 3 of 18 setups. Not reproduced: strict both-method wins occur in 14 of 18 setups; best-method wins in 17 of 18.",
+    "Summary says Paul's frontier and coalition allocators use lazy greedy over Monte Carlo spread. per_topic_coalition.py uses singleton marginals with water-filling and no greedy loop; budget_frontier.py has no lazy, CELF or greedy term by grep. Unsupported as written.",
+    "Guarantee wording: submodularity and the greedy guarantee apply to the expected objective h(S) under the threshold assumptions, not to the realized misclassification rate. The paper leaves concentration open (Section 4.4).",
+    "The Paul alignment note (margin note on Chen 2023, static and submodular tier, GCOMB and CELF expectations) cannot be checked from this item. paul_entries is empty and no annotation exists for this work, so it should not enter the vault as a finding about this paper.",
+    "The golovin-2011 link (builds-on) is unsupported: Ma et al. do not cite Golovin or Krause. Dropped from related.",
+    "The stance bearing sentence that propagation is what lets few nodes affect many predictions is an inference from the model, not a tested result. Softened in its verdict.",
+    "Summary says the greedy guarantee holds only when each threshold CDF is concave. Proposition 2 is a sufficient condition, not an if-and-only-if, and Lemma 1 is an unconditional hardness result for the deterministic problem. The same overstatement appears in the rel gaps field."
+  ]
+}

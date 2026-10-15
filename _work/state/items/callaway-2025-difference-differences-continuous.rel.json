@@ -1,0 +1,65 @@
+{
+ "summary_md": "Callaway, Goodman-Bacon and Sant'Anna (arXiv 2107.02637v8, 2025) work out what difference-in-differences identifies when treatment comes as a continuous dose rather than an on/off switch. Under ordinary parallel trends, only effects for the units that actually got dose d are identified (ATT(d|d), and ATT_loc pooled over treated units). Comparing outcomes across dose levels mixes the causal response with a selection-bias term (Thm 3.2). Causal responses such as ACRT(d), the derivative in dose, need strong parallel trends: the response to each dose must be the same across dose groups. Pre-period data cannot test that assumption. The common two-way fixed effects (TWFE) dose-by-post slope is a weighted average with non-obvious weights. In the levels form those weights integrate to zero and are negative below the mean dose (Thm 3.4). The slope also depends on the dose units and on whether untreated units are included. In the Medicare PPS hospital application (5,881 hospitals, 1980-1986), TWFE gives 1.14. That sits near ATT_loc = 0.80 only because two biases offset. ACRT_glob = -0.08 (s.e. 0.19), and dropping untreated units shrinks TWFE by 78 percent while the causal responses do not move. Estimation uses binarized DiD plus B-spline sieve regressions with honest uniform bands. The paper bears most on the Mentat sector-growth regressions, which put a continuous growth measure into sector-plus-year fixed-effects models with no zero-dose group. It also bears, as a design template, on the open question of whether money's effect is concave, which the Melange money terms assume but never estimate. Purely econometric. No lobbying, network or legislator content.",
+ "category": "Causal & Methodological",
+ "bearings": [
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "qualifies",
+   "paper_claim": "The TWFE slope on a continuous dose is a weighted integral of ATT(d|d). In the levels form the weights integrate to zero and are negative below the mean dose (Thm 3.4b). Under plain parallel trends, the causal-response form adds a selection-bias term (Thm 3.4a). With no untreated units, only differences relative to the lowest dose are identified (Remarks 3.1, 3.2). In the application TWFE = 1.14 vs ATT_loc = 0.80 and ACRT_glob = -0.08, and the slope changes with dose units and comparison group.",
+   "paper_location": "Sec 3.3 Thm 3.4 and Eq 3.1 (p.15-17); Remarks 3.1-3.2 (p.14-15); Sec 6 (p.27-30); Appendix C staggered extension",
+   "system_side": "Growth (prior-year, same-year or predicted pct) is a continuous regressor observed in every sector-year, with no zero-dose group. It enters sector-FE models and R-yearFE / R-logFE robustness fits with sector plus year fixed effects. The lobbying lead flips sign under year FE, and growth adds no adjusted R2. The study reads results as associations only. Year-FE pooled slopes are labelled UNSTRATIFIED because no sector-only estimate exists.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:31; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:664-666; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:385-398; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:250-256; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_report.R:593",
+   "transfer_conditions": "The paper's formal results cover two-period and staggered absorbing doses. Sector growth changes every year and is non-absorbing, so the decomposition does not carry over exactly; the de Chaisemartin-D'Haultfoeuille estimators cited in the paper fit that case. The qualitative lesson does transfer: a null or sign-flipping pooled growth slope under sector plus year FE can come from implicit weighting and heterogeneous sector responses, not only from no response. The study's no-causal framing already guards the reading. Window and denominator: sector-years in each test's gated sample.",
+   "strength": "strong"
+  },
+  {
+   "component_id": "melange-influence-engine.flip-model",
+   "relation": "suggests-extension",
+   "paper_claim": "A dose-response curve (ACRT(d), the marginal effect of dose) is identified only under strong parallel trends. Cross-dose comparisons otherwise carry selection bias, ATT(l|h) - ATT(l|l) (Thm 3.2). Nonparametric B-spline estimates with uniform bands can change sign along the dose: in the application ACRT(m) is negative above m = 0.41, which covers 71 percent of treated units, while ATT_loc stays positive. A quadratic functional form is precise only if it is correct.",
+   "paper_location": "Thm 3.2-3.3 and Cor 3.1 (p.11-14); Sec 4 estimation (eq 4.1, 4.2, 4.6); Sec 6.3 (p.29-30); Appendix B",
+   "system_side": "Flip and money-response terms assume, rather than estimate, a concave money dose-response. pflip uses (c cu+1)/((c cu+1)+HALFF R) with HALFF 0.10. money_response shifts lean by MAXSHIFT x r/(r+HALF), with r = amount/receipts, MAXSHIFT 18 and HALF 0.10, calibrated from literature priors. The component's own open question asks whether the money effect is concave in the contribution-to-receipts ratio.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/flip_model.py:34; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/flip_model.py:92-96; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/money_response.py:15-16; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/money_response.py:68-74",
+   "transfer_conditions": "Testing the concavity would take a member panel: CU-aligned votes or stance before and after giving, a zero-dose group of unfunded members, and dose measured as share of receipts. PACs give to allies, so dose is selected on expected response. Strong parallel trends is then implausible, and any estimated curve beyond ATT_loc would carry selection bias. This is a design template for a future test, not evidence about the current HALF or MAXSHIFT values. Any result stays UNVERIFIED until a second path reproduces it.",
+   "strength": "moderate"
+  }
+ ],
+ "gaps_exposed": [
+  "No estimated money dose-response anywhere: the saturating shapes in flip_model.py and money_response.py are priors, not fitted from a before/after panel with an unfunded comparison group.",
+  "Sector-growth fits report a pooled growth slope but not the implicit weights each sector-year gets (the Eq 3.1 Wald-type numerator and denominator). So a null cannot be told apart from offsetting heterogeneous sector responses.",
+  "Sector growth has no zero-dose group. Under the paper's Remark 3.1, any growth contrast is identified only relative to other growth levels, not relative to no growth.",
+  "Growth is non-absorbing and time-varying. The study has no estimator built for switching continuous treatments (e.g. de Chaisemartin-D'Haultfoeuille style), only TWFE and first-difference variants."
+ ],
+ "flags": [
+  "No conflict with brain rules. The sector-growth code already labels year-FE pooled slopes UNSTRATIFIED (sgs_estimate.R:250-256) and frames results as associations only (sgs_report.R:593), as the pooled-coefficient rule requires.",
+  "The paper's application is hospitals under Medicare PPS, not political spending. Any transfer to giving or legislator behaviour is a design lesson, not an effect size.",
+  "No Paul annotations exist for this work (annot_sha12s empty; paul_entries empty), so there is no stated takeaway to check against."
+ ],
+ "paul_alignment": "Paul has no entry or markup for this paper, so there is no takeaway to compare. His sector-growth position cites the Imai and Kim two-way fixed effects caution. This paper extends that caution from binary to continuous treatment and agrees with it: TWFE slopes on a dose are weighted mixtures that need strong parallel trends for a causal-response reading. The system already treats these slopes as non-causal associations and reports a null growth effect. No current note is made stale; the paper gives a sharper reason not to read the null as no effect.",
+ "related": [
+  {
+   "slug": "imai-2021-fixed-effects-regression",
+   "relation": "complements",
+   "why": "Imai and Kim show what two-way fixed effects identifies with binary panel treatments; this paper does the same for continuous doses. Both bear directly on the sector-growth TWFE design."
+  },
+  {
+   "slug": "mackinnon-2017-wild-bootstrap-inference",
+   "relation": "complements",
+   "why": "The sector-growth study uses wild sector-cluster bootstrap inference with few, unequal clusters. MacKinnon covers that inference layer, while this paper covers what the point estimate means."
+  },
+  {
+   "slug": "kalla-nd-campaign-contributions-facilitate",
+   "relation": "complements",
+   "why": "A randomized test of whether money buys access is the experimental counterpart of the observational dose-response design this paper formalizes for money terms in the flip model."
+  },
+  {
+   "slug": "sverdrup-nd-introduction-grf-causal-forests",
+   "relation": "complements",
+   "why": "Generalized random forests estimate heterogeneous effects. The paper points to Neyman-orthogonal and machine-learning estimation of ACRT_glob as future work, and grf is one route to modelling heterogeneity across dose groups."
+  },
+  {
+   "slug": "ansolabehere-2002-little-money-politics",
+   "relation": "complements",
+   "why": "Ansolabehere's null on vote buying is the prior behind the small MAXSHIFT in money_response.py. This paper shows what design would be needed to estimate that dose-response instead of assuming it."
+  }
+ ]
+}

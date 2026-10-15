@@ -1,0 +1,66 @@
+{
+ "slug": "lemens-2025-positioning-political-texts",
+ "title": "Positioning Political Texts with Large Language Models by Asking and Averaging",
+ "authors": [
+  "Gael Le Mens",
+  "Aina Gallego"
+ ],
+ "year": "2024",
+ "venue": "arXiv 2311.16639 (v3, 5 Sep 2024); text states conditionally accepted in Political Analysis",
+ "doi": "",
+ "document_type": "working paper / preprint research note (arXiv v3, dated September 6, 2024)",
+ "coverage": "Full text read (127,713 chars): abstract, intro, Sec 2-4, references, Appendices A-H; figure label noise skimmed. Figure-only items (A8, H.2) not extracted. No lobbying, network, path-finding, allocation, election or turnout content; matches are legislators and text measurement. Paul markup: none (no annot_sha12s, no _annots file); p.note false. Year hint 2025 corrected to 2024 (text dated Sept 2024).",
+ "research_question": "Can instruction-tuned LLMs position short texts (tweets, sentences) on ideological or policy dimensions by directly asking for a 0 to 100 score and averaging those scores to position longer texts and political actors, and how do the estimates compare with expert, crowd, roll-call, campaign-finance and classifier benchmarks?",
+ "data": "(1) 899 US Congress tweets after GPT-4 cutoff (from 900 in Le Mens et al. 2023a); benchmark mean of about 20 Prolific raters per tweet (597 raters; 14,362 responses, Fig A1); tweet dates not given. (2) 98 senators (Fig 2 caption; App A.2 says 97) of the 117th Congress, 100 random tweets each; benchmark DW-NOMINATE first dimension, plus 2020 CFscore (App A8). (3) 18 British manifestos (Benoit et al. 2016), economic and social scales; expert and crowd sentence coding benchmarks. (4) 36 speeches, one European Parliament coal-subsidy debate, 10 languages; benchmark mean of six crowd codings.",
+ "method": "Direct query: LLM gives a 0 to 100 JSON Score on a left-right, economic, social or pro/anti-subsidy scale, NA allowed for non-political text; temperature 0, max 20 tokens. Manifestos and speeches scored sentence by sentence and averaged. Comparators: fine-tuned BERT, GloVe and tf-idf classifiers. Validity by Pearson r with benchmarks; split-half reliability with Spearman-Brown. Robustness: dimension prompts, whole-document prompts, typicality scoring, ENO. No inference beyond correlations.",
+ "scope": "US Congress members (tweets, 117th Congress senators), UK party manifestos (economic and social policy dimensions), European Parliament debate on a coal state-aid proposal in 10 languages. Era: tweets from 2023-era Congress, senators 2021-2023, manifestos from 1987-2010 labels in figures, EU debate policy horizon 2010 to 2014. Generalization is explicitly limited by the authors to the settings tested.",
+ "key_findings": [
+  "Tweets (N=899, Sec 3.1, Fig 1): GPT-4o r=0.92 with crowd mean (557 scored tweets); GPT-4 r=0.90; MiXtral 8X22B 0.90; Llama 3 70Bq4 0.88; Llama 3 8B 0.80; fine-tuned BERT 0.78; tf-idf 0.66; GloVe 0.63.",
+  "Tweets within party (Fig 1): GPT-4o r=0.68 among Democratic tweets and 0.66 among Republican tweets. Text says no classifier matches the best LLMs, especially for within-party differences.",
+  "Senators of the 117th Congress (Sec 3.2, Fig 2): GPT-4o r=0.97 with first-dimension DW-NOMINATE; GPT-4 0.97; Llama 3 70Bq4 0.97; MiXtral 8X22B 0.96; Llama 3 8B 0.96; BERT 0.93; tf-idf 0.90; GloVe 0.86. Within-party GPT-4o r=0.72 (Democrats) and 0.72 (Republicans).",
+  "Senators and CFscore (App A8, figure-only): LLM positions correlate highly with 2020 campaign-finance scores overall but less so within party; coefficients are not stated in the text.",
+  "UK manifestos, economic dimension (Sec 3.3, Fig 3): GPT-4o r=0.98 overall with expert coding (Labour 0.98, Conservatives 0.33, Liberal Democrats 0.25). Crowd coding r=0.96; fine-tuned BERT 0.96; GPT-4 0.98; MiXtral 8X22B 0.97.",
+  "UK manifestos, social dimension (Fig 4): GPT-4o r=0.94 overall (Conservatives 0.79, Liberal Democrats 0.31, Labour 0.96); crowd coding 0.92; BERT 0.92; Llama 3 8B 0.88 overall with Labour only 0.46.",
+  "Whole-manifesto single prompts (App G.2, Figs A12-A13): overall economic r about 0.96 to 0.98 and social about 0.83 to 0.92, with weaker within-party fit; GPT-4 Turbo failed to return social scores for two manifestos. Authors prefer sentence-level scoring.",
+  "EU speeches in 10 languages (Sec 3.4, Fig 5): GPT-4o r=0.93 overall with six-language crowd average (Against speakers 0.91, For speakers 0.80); GPT-4 Turbo 0.86 (Against 0.07); Llama 3 70B 0.82 (Against 0.05); MiXtral 8X22B 0.78 (Against 0.04); Aya 23 35B 0.74; Llama 3 8B 0.52.",
+  "Cost and speed (Sec 4): GPT-4 API cost about 1.5 USD for the 900 tweets, versus about 1,626 pounds for the crowd coding of the same tweets; the authors note sentence-by-sentence scoring takes about one to two seconds per sentence on local models.",
+  "Non-response pattern (App E, Table A1): tweets that received an LLM score had more human ratings on average (GPT-4o 18.7) than unscored tweets (11.6), consistent with NA signaling low political content.",
+  "Effective number of observations (App E.3, Table A2): LLM scores for all tweets are worth about 3 to 7 human raters. Text says 5 to 7 for GPT-4, MiXtral and Llama 3 70B; the table lists 7 for GPT-4o.",
+  "Typicality-difference variant for tweets (App D, E.2, figure-only): correlations similar to baseline, some within-party gains, scores for all tweets."
+ ],
+ "limitations": [
+  "Authors state validity is limited by the information in the input texts and that LLM estimates may differ from expert-survey positions because inputs differ.",
+  "Authors warn LLMs can be biased or unreliable in some settings and that case-by-case empirical validation remains essential before use in other domains or dimensions.",
+  "Multilingual accuracy varies by model and language, and systematic differences can bias downstream econometric analysis; authors call this an open problem.",
+  "Within-party correlations are weak for some groups (e.g. Conservative and Liberal Democrat economic positions, Labour social positions for Llama 3 8B), and the tweet within-party gap persists.",
+  "Single-prompt scoring of whole documents lowers performance for manifestos; the best single-prompt model setting for long texts is unresolved.",
+  "Training-data overlap with benchmark texts is unknown; the authors say the LLMs were most likely not trained specifically on these manifestos.",
+  "Reproducibility holds only for open models with fixed weights; API models change over time, and temperature 0 leaves residual ties and non-determinism.",
+  "Internal inconsistencies: senator N is 98 in the Fig 2 caption but 97 in App A.2; figure captions say 118th Congress for the tweets while the text says the 117th for senators; ENO values in text and Table A2 differ for GPT-4o.",
+  "Non-response (NA) is not modeled; scores are averages over only the sentences or tweets an LLM answered, which can change the composition of the average.",
+  "The paper is a research note; many robustness results (A8, H.2, Fig 5 subsets) are figure-only and not numerically reported in the text."
+ ],
+ "paul_markup": [],
+ "short_quotes": [
+  "We ask an LLM where a tweet or a sentence of a political text stands on the focal dimension and take the average",
+  "This approach is generally more accurate than the positions obtained with supervised classifiers trained on large amounts of research data.",
+  "Case-by-case empirical validation remains essential."
+ ],
+ "theory": "No substantive theory is tested. The framing is measurement: text scaling estimates latent positions in ideological or policy spaces, and the paper builds on the direct-query typicality method of Le Mens et al. (2023a).",
+ "identification": "None in the causal sense. Validity is established by concurrent correlation with external benchmarks (crowd ratings, expert coding, roll-call DW-NOMINATE, campaign-finance CFscore) and by comparison with supervised classifiers.",
+ "measures": "Outcome: LLM Score 0 to 100 (0 = extremely left or liberal or anti-subsidy; 100 = extremely right or conservative or pro-subsidy), averaged over sentences or tweets. Benchmarks: crowd position estimate (mean of about 20 raters), expert coding, crowd-sentence coding, DW-NOMINATE first dimension, 2020 CFscore, six-language crowd mean. Metrics: Pearson r, split-half reliability with Spearman-Brown correction, ENO, mean human ratings for scored and unscored tweets, API cost.",
+ "references_of_note": [
+  "Le Mens, Kovacs, Hannan, Pros (2023a) Uncovering the semantics of concepts using GPT-4, PNAS 120(49)",
+  "Le Mens, Kovacs, Hannan, Pros (2023b) BERT typicality versus human genre-typicality judgments, Sociological Science 10",
+  "Benoit, Conway, Lauderdale, Laver, Mikhaylov (2016) Crowd-sourced text analysis, APSR 110(2)",
+  "Ornstein, Blasingame, Truscott (2024) How to train your stochastic parrot, working paper (GPT-3 probabilistic scaling)",
+  "Wu, Nagler, Tucker, Messing (2023) LLMs estimate latent positions of politicians via pairwise comparisons, working paper",
+  "Gilardi, Alizadeh, Kubli (2023) ChatGPT outperforms crowd workers for text annotation, PNAS 120(30)",
+  "Tornberg (2023) ChatGPT-4 outperforms experts and crowd workers annotating political tweets, arXiv 2304.06588",
+  "Ziems et al. (2023) Can large language models transform computational social science, arXiv 2305.03514",
+  "Nokken and Poole (2004) Congressional party defection in American history, Legislative Studies Quarterly 29(4)",
+  "Bonica (2014) Mapping the ideological marketplace, AJPS 58(2)",
+  "Erev, Roth, Slonim, Barron (2007) Learning and equilibrium as useful approximations, Economic Theory 33(1), source of ENO",
+  "Laver, Benoit, Garry (2003) Extracting policy positions from political texts using words as data, APSR 97(2)"
+ ]
+}

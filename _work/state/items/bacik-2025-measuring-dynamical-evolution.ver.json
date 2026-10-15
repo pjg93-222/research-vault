@@ -1,0 +1,159 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-lobbying.lobbied-member-link",
+   "relation": "supports",
+   "paper_claim": "The LDA does not require registrants to disclose direct contacts with legislators, so the paper infers legislator connections from lobbyists' disclosed past employment; a legislator is included if at least one active lobbyist worked for them. About 90% of lobbyists have no documented government or legislator association, and 20% had a known government connection in 2023.",
+   "paper_location": "main pp. 2-3; SI I.D (pp. 20-21); SI III (Fig S9); SI IV.B (Fig S12C-D); SI p. 23",
+   "system_side": "The member-year network credits every sponsor and cosponsor of a lobbied bill (build_network_2021_rebuild.py:13), so the system treats the link as REFUTED as evidence of influence. The interaction ledger states that the LD-2 form has no position field and ships position_basis='not_disclosed'.",
+   "code_ref": "fec/lobbying/build_network_2021_rebuild.py:13; fec/lobbying/lobby_interactions.py:19-24",
+   "transfer_conditions": "The evidence carries over fully because it describes the same federal LD-2 form. The paper uses the same data and states plainly that legislator contact is unobserved, so nothing in LD-2 can rescue the bill-roster join. An independent contact measure is still required. The paper's own legislator edges come from revolving-door disclosure, so they are not contact evidence either, and influence language is barred on them.",
+   "strength": "strong",
+   "verdict": "softened",
+   "verifier_note": "Paper side holds: main p.3 says the LDA does not require registrants to disclose direct contacts with legislators, so connections are inferred from lobbyists' past employment; 20% of lobbyists had a known government connection in 2023; SI p.23 says ca. 90% of lobbyists have no documented associations. The quoted phrase 'legislator inclusion via active lobbyist' is not verbatim (SI text: a legislator is included if at least one active lobbyist worked for them). Code side: build_network_2021_rebuild.py:13 confirms every sponsor/cosponsor of a lobbied bill is credited; lobby_interactions.py:19-24 confirms only that LD-2 has no position field, not a 'no member field' statement, and P(joined|lobbied)=1 is the system's own refutation, not text at those lines."
+  },
+  {
+   "component_id": "melange-lobbying.finance-client-classification",
+   "relation": "supports",
+   "paper_claim": "For the SOPA case study, only about 40% of the clients lobbying on SOPA in Q4 2011 could be mapped to NAICS sectors through Compustat, and the probabilistic analysis is restricted to them. Client disambiguation is search-assisted and the paper says it is weak for long-bankrupt firms and non-public-facing firms that resolve to third-party directories. The analysis window runs 1999-2023.",
+   "paper_location": "SI XII.A (p. 55); SI I.C fn. 2 (p. 18); SI Fig S2; main Fig 3A-B",
+   "system_side": "Client names decide classification and NAICS is only suggestive. High confidence requires a name rule. In the 2024-10-25 bulk-export vintage, issue-code coverage collapses after filing_year 2021.",
+   "code_ref": "fec/lobbying/collect_lobbyview.py:12-18,34,208-224",
+   "transfer_conditions": "The 40% figure is for one bill-quarter sample (SOPA, Q4 2011), not all LobbyView clients; no all-client or finance-client coverage share is reported. It supports not relying on NAICS for credit-union versus bank classification only as an illustration. Whether the post-2021 issue-code collapse is a bulk-export vintage artifact remains UNVERIFIED and should be checked against the OSF release.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "The ~40% NAICS figure is NOT for all LobbyView clients: SI XII.A says about 40% of the clients lobbying on SOPA in Q4 2011 could be mapped to Compustat/NAICS, and the probabilistic analysis is restricted to them. The client-disambiguation limitation (fn. 2: long-bankrupt firms, non-public-facing firms resolving to third-party directories) is confirmed. Code side (collect_lobbyview.py decision log: names decisive, NAICS suggestive; issue-code coverage collapses after filing_year 2021) confirmed. The bearing holds only as: NAICS coverage was partial even for one high-profile bill-quarter sample."
+  },
+  {
+   "component_id": "melange-lobbying.contact-inference",
+   "relation": "method-source",
+   "paper_claim": "The paper defines a government-association function g(l,y), which is monotone in year, and a political-association function p(l,y), which is not monotone. Both are built from one-time disclosures of covered positions, and lobbyists give no timelines for those positions, so recency cannot be established.",
+   "paper_location": "SI I.D, pp. 20-21",
+   "system_side": "No shipped code path for the contact-inference lane was found; the nearest shipped surface records position_basis='not_disclosed'. The gold-positive design described for the component is not verifiable from code.",
+   "code_ref": "component lists no code path (lane path not recorded); nearest shipped surface: fec/lobbying/lobby_interactions.py:19-24 (position_basis='not_disclosed')",
+   "transfer_conditions": "The g and p definitions can be reused as documented, timestamp-free association labels. They are not contact evidence and must not become edge weights (D-021). Any use needs a 'no timeline' label, because the paper itself says it cannot date the ties.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper side reproduced: SI I.D defines g(l,y) with y1<y2 implying g(l,y1) subset of g(l,y2), and p(l,y) without that property because legislators leave office; lobbyists need not give timelines so recency cannot be identified. System side is not checkable: the component has no code path, and the gold-positive/negative design is not at lobby_interactions.py:19-24 (which only records position_basis='not_disclosed')."
+  },
+  {
+   "component_id": "melange-pathfinding.staffer-overlap-routes",
+   "relation": "supports",
+   "paper_claim": "Covered-position disclosures are made once and have no dates, so recency cannot be established. Co-listing on filings shows registrant-lobbyist contracts, not dated co-work.",
+   "paper_location": "SI I.D (pp. 20-21); SI p. 22 (registrant-lobbyist contract edge definition)",
+   "system_side": "Filing-year-only episodes are routed separately as 'co_reported_firm_association'. They carry temporal_status 'filing_year_association_only' and weak=True, and are reachable only when include_weak is set (default False, filing_cost 5 >= historical_cost 3). Dated Politico co-work stays the main tie source.",
+   "code_ref": "fec/surfaces/staffer_routing.py:80-88,157-159,191,346-365",
+   "transfer_conditions": "The paper describes federal LDA lobbyists, and the routes cover congressional staff. The paper's point that filing data cannot date relationships applies directly to the filing-year hops. It says nothing about the dated payroll-overlap hops. Routes are heuristic introduction paths, not access probabilities (D-025).",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Paper: SI I.D no-timeline statement and registrant-to-lobbyist contract edges (SI p.22) confirmed. Code: staffer_routing.py:79-88 routes filing-year-precision episodes to filing_by_person; :157 include_weak False, filing_cost 5, historical_cost 3; :191 filing_cost=max(filing_cost, historical_cost); :346-365 the weak hop is only built when include_weak, labelled co_reported_firm_association / filing_year_association_only / weak=True. Separately, the reported-activity hop (:304-321, cost 2) is gated by an activity provider, not include_weak, so the D-021 flag stands."
+  },
+  {
+   "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+   "relation": "supports",
+   "paper_claim": "Registrants split into K-Street firms that file for others and in-house self-filers. The monetary field differs between them (income for firms, expenses for self-filers), and self-filers have a higher reporting threshold.",
+   "paper_location": "SI p. 17 (self-filer flag, monetary field and threshold); SI p. 19 (formal registrant-type definitions)",
+   "system_side": "The lobbying card shows hired_firms (income_total) and in_house (expenses_total) side by side and never adds them.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:553-566",
+   "transfer_conditions": "This is the same LD-2 accounting, so the evidence carries over fully. The paper also assigns low-cost reports a threshold value as an upper bound. If Mentat's sector_spend rows ever take values from LobbyView, check whether they include that imputation.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Paper SI p.17: self-filers report costs (line 13), others report income (line 12); self-filers face a higher threshold; below-threshold amounts are set to the threshold as an upper bound. Code giving_forecast.py:553-566 docstring: hired_firms=income_total, in_house=expenses_total, never added."
+  },
+  {
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "qualifies",
+   "paper_claim": "The paper's election-cycle 'synchronization' refers to target portfolios: agency-approach correlations form blocks by presidential administration, and some agencies such as the National Economic Council follow the presidential cycle. It reports no effect of election phase on lobbying dollars, and it aggregates data annually.",
+   "paper_location": "main pp. 5-6; Fig 3F; SI XI (Figs S34-S38); SI p. 16 (annualization)",
+   "system_side": "Mentat's analysis baseline repeats the latest complete cycle from the same four-year election phase (seasonal-naive), and giving_forecast.py carries a presidential-cycle term and same-phase share anchors; the lobbying card shows hired-firm and in-house levels separately.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/app/analysis_metrics.py:690-693; C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:384-386,501,621-624",
+   "transfer_conditions": "The paper supports a four-year, administration-linked periodicity in whom lobbyists target, not in how much they spend. It cannot justify a phase coefficient on lobbying dollars, which has to rest on Mentat's own backtests. The PAC side (D-092) is not addressed at all, because the paper excludes PAC channels.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper side confirmed: main text says some entities including the National Economic Council show a periodic pattern synchronized with the presidential election cycle, and the agency correlation matrix is block-diagonal by presidential term; no dollar-phase effect is reported. System side only partly at the cited lines: analysis_metrics.py:690-693 is the seasonal-naive same-four-year-phase baseline (confirmed); giving_forecast.py:553-566 is _lda_history (lobbying card levels), not a phase refit. A presidential-cycle term exists elsewhere in giving_forecast.py (:501, :621-624, same_phase anchors :384-386); the 'log models' wording was not verified."
+  },
+  {
+   "component_id": "melange-sna.bipartisanship-bpf",
+   "relation": "qualifies",
+   "paper_claim": "The Senate bipartisan cosponsorship index fell about 40% over the last 25 years (1999-2023), and legislator modularity is higher than lobbyists' and rising for senators. Lobbyist cross-party collaboration stayed relatively stable and lobbyist modularity is near zero.",
+   "paper_location": "SI XIII (Fig S46), pp. 48-50",
+   "system_side": "bpf is a static per-member cross-party cosponsorship share read from bipartisan.json with a default of 0.24 for missing members (moneyball_core.py:68-72).",
+   "code_ref": "fec/moneyball_core.py:68-72",
+   "transfer_conditions": "The paper's index is a chamber-level aggregate, not a member-level trait. It shows the cross-party baseline is strongly era-dependent, so a bpf or default fixed in one window should not be carried across Congresses without naming the window. It does not validate bpf as a measure of bridging.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper: SI XIII says Senate bipartisan cosponsorship dropped about 40% over the last 25 years; lobbyist cross-party collaboration stayed relatively stable and lobbyist modularity is near zero. A House index decline was not located in the text (only higher legislator modularity, rising for senators), so 'the House index also fell' is dropped. Code: moneyball_core.py:68-72 confirms bpf = bipartisan.json value /100 with default 24 -> 0.24; the 'feeds cpf_diffusion' clause is not visible at the cited lines."
+  },
+  {
+   "component_id": "melange-staffer-network.identity-resolution",
+   "relation": "qualifies",
+   "paper_claim": "LobbyView's lobbyist name disambiguation is score-based and uncertain. Client matching relies on search-assisted lookup that resolves to third-party directories and fails for defunct firms.",
+   "paper_location": "SI I.C fn. 2 (p. 18); SI p. 20 (lobbyist disambiguation)",
+   "system_side": "A never-guess ladder plus payroll-evidence pins, with record-pair titles and organization strings required to be at least 8 characters.",
+   "code_ref": "fec/surfaces/staffer_identity_auto.py:106,176,211-215",
+   "transfer_conditions": "The domains differ: LDA lobbyist names versus congressional payroll staff. Wherever LobbyView lobbyist IDs enter the staffer graph as identities (D-021 allows identity use), treat them as probabilistic merges, not ground truth. The system's ladder is stricter than LobbyView's.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Paper SI p.20: score-based entity resolution for lobbyists (blocking on name, covered-position history, registrants, years); fn. 2 search-assisted client disambiguation with third-party-directory and defunct-firm limitations. Code staffer_identity_auto.py:106,176,211-215 confirms the >=8-character requirement for normalized titles and organization strings, with source_bound provenance."
+  }
+ ],
+ "related": [
+  {
+   "slug": "kim-2018-lobbyview-firm-level",
+   "relation": "same-data",
+   "why": "The LobbyView database paper; Bacik et al. analyze the current LobbyView database (cited as ref 7, lobbyview.org)."
+  },
+  {
+   "slug": "kim-nd-mapping-political-communities",
+   "relation": "same-data",
+   "why": "Kim and Kunisky build bipartite lobbying networks from the same LobbyView and LDA bill links. They give the community-structure counterpart to Bacik's time evolution."
+  },
+  {
+   "slug": "kim-2025-measuring-interest-group",
+   "relation": "same-data",
+   "why": "It adds LLM-coded bill positions to LobbyView reports. That fills the position field LD-2 lacks, which Bacik's network also lacks."
+  },
+  {
+   "slug": "azaiez-2025-hypergraph-analysis-european",
+   "relation": "extends",
+   "why": "It takes the hypergraph and higher-order approach that Bacik defers to future work, applied to the EU lobby network."
+  },
+  {
+   "slug": "bombardini-2020-empirical-models-lobbying",
+   "relation": "cites",
+   "why": "Bacik cites it (ref 1) as the survey of empirical lobbying models that the descriptive network work sits beside."
+  },
+  {
+   "slug": "anon-2019-partisan-ties-lobbying",
+   "relation": "cites",
+   "why": "Bacik cites it as ref 47 (Furnas, Heaney and LaPira 2019, Research & Politics) on the partisan ties of lobbying firms, which bears on its finding that lobbying is not polarized."
+  },
+  {
+   "slug": "furnas-nd-conflating-lobbying-pacs",
+   "relation": "complements",
+   "why": "It covers the PAC channel that Bacik excludes, and finds low overlap between lobbying and PAC spending."
+  },
+  {
+   "slug": "kim-2020-strategic-sequential-links",
+   "relation": "complements",
+   "why": "It links donations to lobbying, the step Bacik only mentions. This is relevant to the FEC-LDA bridge."
+  },
+  {
+   "slug": "harrison-2018-application-data-mining",
+   "relation": "same-data",
+   "why": "It mines LDA records for spending patterns using the same disclosure source and faces similar extraction problems."
+  },
+  {
+   "slug": "kalla-nd-campaign-contributions-facilitate",
+   "relation": "cites",
+   "why": "Bacik cites the access experiment (ref 49) when discussing access. The LDA data cannot observe that access."
+  }
+ ],
+ "summary_issues": [
+  "The '40% NAICS coverage' is misattributed: the paper's ~40% Compustat/NAICS mapping is for clients that lobbied on SOPA in Q4 2011 (SI XII.A), not all LobbyView clients, so 'the paper's 40% NAICS coverage supports the rule that client names decide classification' overstates the evidence.",
+  "The cut-off is c0 ~ 85 in the main text and 86 in the Fig. 2 caption/SI; the exponent is 1.46 (Fig. 2F caption) or 1.54 (SI fit). 'About 1.5' is fine; quote the cut-off as 85-86.",
+  "The summary says the LDA 'never records registrant-legislator contact'; the paper says the LDA does not require registrants to disclose direct contacts with legislators. Use the paper's wording.",
+  "The revolving-door figures are internally inconsistent in the paper (main text 80% Senators / 60% Representatives; SI Fig. S9 text ~80% / 50%); any later use must name both and carry the no-dates caveat.",
+  "The claim that the House cross-party index also fell (bearing on bpf) was not located in the text; only the Senate ~40% drop and rising senator modularity are stated."
+ ]
+}

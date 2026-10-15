@@ -1,0 +1,1051 @@
+[
+ {
+  "slug": "lemens-2025-positioning-political-texts",
+  "note": false,
+  "meta": {
+   "title": "Positioning Political Texts with Large Language Models by Asking and Averaging",
+   "authors": [
+    "Gael Le Mens",
+    "Aina Gallego"
+   ],
+   "year": "2024",
+   "venue": "arXiv 2311.16639 (v3, 5 Sep 2024); text states conditionally accepted in Political Analysis",
+   "doi": "",
+   "sha12s": [
+    "9b4e8f6de1bb"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "slug": "lemens-2025-positioning-political-texts",
+   "title": "Positioning Political Texts with Large Language Models by Asking and Averaging",
+   "authors": [
+    "Gael Le Mens",
+    "Aina Gallego"
+   ],
+   "year": "2024",
+   "venue": "arXiv 2311.16639 (v3, 5 Sep 2024); text states conditionally accepted in Political Analysis",
+   "doi": "",
+   "document_type": "working paper / preprint research note (arXiv v3, dated September 6, 2024)",
+   "coverage": "Full text read (127,713 chars): abstract, intro, Sec 2-4, references, Appendices A-H; figure label noise skimmed. Figure-only items (A8, H.2) not extracted. No lobbying, network, path-finding, allocation, election or turnout content; matches are legislators and text measurement. Paul markup: none (no annot_sha12s, no _annots file); p.note false. Year hint 2025 corrected to 2024 (text dated Sept 2024).",
+   "research_question": "Can instruction-tuned LLMs position short texts (tweets, sentences) on ideological or policy dimensions by directly asking for a 0 to 100 score and averaging those scores to position longer texts and political actors, and how do the estimates compare with expert, crowd, roll-call, campaign-finance and classifier benchmarks?",
+   "data": "(1) 899 US Congress tweets after GPT-4 cutoff (from 900 in Le Mens et al. 2023a); benchmark mean of about 20 Prolific raters per tweet (597 raters; 14,362 responses, Fig A1); tweet dates not given. (2) 98 senators (Fig 2 caption; App A.2 says 97) of the 117th Congress, 100 random tweets each; benchmark DW-NOMINATE first dimension, plus 2020 CFscore (App A8). (3) 18 British manifestos (Benoit et al. 2016), economic and social scales; expert and crowd sentence coding benchmarks. (4) 36 speeches, one European Parliament coal-subsidy debate, 10 languages; benchmark mean of six crowd codings.",
+   "method": "Direct query: LLM gives a 0 to 100 JSON Score on a left-right, economic, social or pro/anti-subsidy scale, NA allowed for non-political text; temperature 0, max 20 tokens. Manifestos and speeches scored sentence by sentence and averaged. Comparators: fine-tuned BERT, GloVe and tf-idf classifiers. Validity by Pearson r with benchmarks; split-half reliability with Spearman-Brown. Robustness: dimension prompts, whole-document prompts, typicality scoring, ENO. No inference beyond correlations.",
+   "scope": "US Congress members (tweets, 117th Congress senators), UK party manifestos (economic and social policy dimensions), European Parliament debate on a coal state-aid proposal in 10 languages. Era: tweets from 2023-era Congress, senators 2021-2023, manifestos from 1987-2010 labels in figures, EU debate policy horizon 2010 to 2014. Generalization is explicitly limited by the authors to the settings tested.",
+   "key_findings": [
+    "Tweets (N=899, Sec 3.1, Fig 1): GPT-4o r=0.92 with crowd mean (557 scored tweets); GPT-4 r=0.90; MiXtral 8X22B 0.90; Llama 3 70Bq4 0.88; Llama 3 8B 0.80; fine-tuned BERT 0.78; tf-idf 0.66; GloVe 0.63.",
+    "Tweets within party (Fig 1): GPT-4o r=0.68 among Democratic tweets and 0.66 among Republican tweets. Text says no classifier matches the best LLMs, especially for within-party differences.",
+    "Senators of the 117th Congress (Sec 3.2, Fig 2): GPT-4o r=0.97 with first-dimension DW-NOMINATE; GPT-4 0.97; Llama 3 70Bq4 0.97; MiXtral 8X22B 0.96; Llama 3 8B 0.96; BERT 0.93; tf-idf 0.90; GloVe 0.86. Within-party GPT-4o r=0.72 (Democrats) and 0.72 (Republicans).",
+    "Senators and CFscore (App A8, figure-only): LLM positions correlate highly with 2020 campaign-finance scores overall but less so within party; coefficients are not stated in the text.",
+    "UK manifestos, economic dimension (Sec 3.3, Fig 3): GPT-4o r=0.98 overall with expert coding (Labour 0.98, Conservatives 0.33, Liberal Democrats 0.25). Crowd coding r=0.96; fine-tuned BERT 0.96; GPT-4 0.98; MiXtral 8X22B 0.97.",
+    "UK manifestos, social dimension (Fig 4): GPT-4o r=0.94 overall (Conservatives 0.79, Liberal Democrats 0.31, Labour 0.96); crowd coding 0.92; BERT 0.92; Llama 3 8B 0.88 overall with Labour only 0.46.",
+    "Whole-manifesto single prompts (App G.2, Figs A12-A13): overall economic r about 0.96 to 0.98 and social about 0.83 to 0.92, with weaker within-party fit; GPT-4 Turbo failed to return social scores for two manifestos. Authors prefer sentence-level scoring.",
+    "EU speeches in 10 languages (Sec 3.4, Fig 5): GPT-4o r=0.93 overall with six-language crowd average (Against speakers 0.91, For speakers 0.80); GPT-4 Turbo 0.86 (Against 0.07); Llama 3 70B 0.82 (Against 0.05); MiXtral 8X22B 0.78 (Against 0.04); Aya 23 35B 0.74; Llama 3 8B 0.52.",
+    "Cost and speed (Sec 4): GPT-4 API cost about 1.5 USD for the 900 tweets, versus about 1,626 pounds for the crowd coding of the same tweets; the authors note sentence-by-sentence scoring takes about one to two seconds per sentence on local models.",
+    "Non-response pattern (App E, Table A1): tweets that received an LLM score had more human ratings on average (GPT-4o 18.7) than unscored tweets (11.6), consistent with NA signaling low political content.",
+    "Effective number of observations (App E.3, Table A2): LLM scores for all tweets are worth about 3 to 7 human raters. Text says 5 to 7 for GPT-4, MiXtral and Llama 3 70B; the table lists 7 for GPT-4o.",
+    "Typicality-difference variant for tweets (App D, E.2, figure-only): correlations similar to baseline, some within-party gains, scores for all tweets."
+   ],
+   "limitations": [
+    "Authors state validity is limited by the information in the input texts and that LLM estimates may differ from expert-survey positions because inputs differ.",
+    "Authors warn LLMs can be biased or unreliable in some settings and that case-by-case empirical validation remains essential before use in other domains or dimensions.",
+    "Multilingual accuracy varies by model and language, and systematic differences can bias downstream econometric analysis; authors call this an open problem.",
+    "Within-party correlations are weak for some groups (e.g. Conservative and Liberal Democrat economic positions, Labour social positions for Llama 3 8B), and the tweet within-party gap persists.",
+    "Single-prompt scoring of whole documents lowers performance for manifestos; the best single-prompt model setting for long texts is unresolved.",
+    "Training-data overlap with benchmark texts is unknown; the authors say the LLMs were most likely not trained specifically on these manifestos.",
+    "Reproducibility holds only for open models with fixed weights; API models change over time, and temperature 0 leaves residual ties and non-determinism.",
+    "Internal inconsistencies: senator N is 98 in the Fig 2 caption but 97 in App A.2; figure captions say 118th Congress for the tweets while the text says the 117th for senators; ENO values in text and Table A2 differ for GPT-4o.",
+    "Non-response (NA) is not modeled; scores are averages over only the sentences or tweets an LLM answered, which can change the composition of the average.",
+    "The paper is a research note; many robustness results (A8, H.2, Fig 5 subsets) are figure-only and not numerically reported in the text."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "We ask an LLM where a tweet or a sentence of a political text stands on the focal dimension and take the average",
+    "This approach is generally more accurate than the positions obtained with supervised classifiers trained on large amounts of research data.",
+    "Case-by-case empirical validation remains essential."
+   ],
+   "theory": "No substantive theory is tested. The framing is measurement: text scaling estimates latent positions in ideological or policy spaces, and the paper builds on the direct-query typicality method of Le Mens et al. (2023a).",
+   "identification": "None in the causal sense. Validity is established by concurrent correlation with external benchmarks (crowd ratings, expert coding, roll-call DW-NOMINATE, campaign-finance CFscore) and by comparison with supervised classifiers.",
+   "measures": "Outcome: LLM Score 0 to 100 (0 = extremely left or liberal or anti-subsidy; 100 = extremely right or conservative or pro-subsidy), averaged over sentences or tweets. Benchmarks: crowd position estimate (mean of about 20 raters), expert coding, crowd-sentence coding, DW-NOMINATE first dimension, 2020 CFscore, six-language crowd mean. Metrics: Pearson r, split-half reliability with Spearman-Brown correction, ENO, mean human ratings for scored and unscored tweets, API cost.",
+   "references_of_note": [
+    "Le Mens, Kovacs, Hannan, Pros (2023a) Uncovering the semantics of concepts using GPT-4, PNAS 120(49)",
+    "Le Mens, Kovacs, Hannan, Pros (2023b) BERT typicality versus human genre-typicality judgments, Sociological Science 10",
+    "Benoit, Conway, Lauderdale, Laver, Mikhaylov (2016) Crowd-sourced text analysis, APSR 110(2)",
+    "Ornstein, Blasingame, Truscott (2024) How to train your stochastic parrot, working paper (GPT-3 probabilistic scaling)",
+    "Wu, Nagler, Tucker, Messing (2023) LLMs estimate latent positions of politicians via pairwise comparisons, working paper",
+    "Gilardi, Alizadeh, Kubli (2023) ChatGPT outperforms crowd workers for text annotation, PNAS 120(30)",
+    "Tornberg (2023) ChatGPT-4 outperforms experts and crowd workers annotating political tweets, arXiv 2304.06588",
+    "Ziems et al. (2023) Can large language models transform computational social science, arXiv 2305.03514",
+    "Nokken and Poole (2004) Congressional party defection in American history, Legislative Studies Quarterly 29(4)",
+    "Bonica (2014) Mapping the ideological marketplace, AJPS 58(2)",
+    "Erev, Roth, Slonim, Barron (2007) Learning and equilibrium as useful approximations, Economic Theory 33(1), source of ENO",
+    "Laver, Benoit, Garry (2003) Extracting policy positions from political texts using words as data, APSR 97(2)"
+   ]
+  },
+  "summary_md": "Le Mens and Gallego (arXiv 2311.16639, v3 dated September 2024) test a simple measurement recipe: ask an instruction-tuned LLM for a 0 to 100 position score for each short text (a tweet or one manifesto sentence), let it answer NA when the text is not on the dimension, and average the answered scores to place longer documents or actors. Across four settings the best models track human benchmarks closely. On 899 Congress tweets, GPT-4o reaches r=0.92 with a mean of about 20 crowd raters. For 117th-Congress senators, the comparison is with the first Nokken-Poole roll-call dimension, and r=0.97. On 18 UK manifestos, r=0.98 on the economic dimension and 0.94 on the social one, against expert coding. On 36 European Parliament coal-subsidy speeches in 10 languages, r=0.93 with crowd coding. Fine-tuned BERT, tf-idf and GloVe classifiers score lower. The headline figures are mostly between-party, though. Within-party correlations fall to 0.66 to 0.72 for tweets and senators. On the pro/anti-subsidy dimension, the Against group drops to 0.04 to 0.07 for every model except GPT-4o. All validity evidence is concurrent correlation, and Claude models were not tested. For Paul's systems, the paper supports using an LLM as a stance rater and contrasts with classical TF-IDF readers. It also points to three things the CU stance pipeline does not yet have: a continuous position score, explicit not-applicable handling kept separate from neutral, and validity reported within party. Because the paper's dimensions are left-right and pro/anti-subsidy, it cannot validate the target-specific credit-union stance on its own.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "supports",
+    "paper_claim": "Asking an LLM directly for a 0-100 position score (JSON only, temperature 0, NA allowed) gives text-level positions. GPT-4o r=0.92 against crowd means, but on the 557 of 899 tweets that received a score (NA excluded). API cost about 1.5 USD for 900 tweets versus 1,626 GBP for human coding. Table A2 ENO for the LLMs in the table is 3 to 7 human raters.",
+    "paper_location": "Sec 2.1 (prompt, temperature 0, max 20 tokens, JSON); Sec 3.1 and Fig 1 (NAll=557); Sec 4 Discussion (1.5 USD vs 1,626 pounds); App E.3 Table A2",
+    "system_side": "claude_stance.py is a Claude API rater that returns JSON only (stance, confidence, reason). Its docstring says it pre-labels the ~400 hand-coding set and is the third ensemble member beside fine-tuned DEBATE and the bill signal. Code matches this description.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:3-9,19-25,84-91",
+    "transfer_conditions": "The paper tests GPT-4, GPT-4o, MiXtral and Llama 3 (Table 1 lists no Claude model) on left-right and subsidy dimensions against independent crowd and expert benchmarks. The system rater is categorical (support/oppose/neutral), not a 0-100 scale, and its gold labels were pre-labelled by the same rater. The paper's accuracy figures cannot be quoted as properties of the Claude rater.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Holds except the denominator. r=0.92 is over the 557 scored tweets, not all 899 (Fig 1, Table A1, Fig A2). Cost, ENO and the 0-100 prompt are reproduced. Reword as GPT-4o r=0.92 with crowd means on the 557 of 899 tweets it scored, NA excluded.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.supervised-stance-stack",
+    "relation": "qualifies",
+    "paper_claim": "LLM direct query beats text classifiers on the paper's own benchmarks. Tweets: GPT-4o r=0.92 versus fine-tuned BERT 0.78, tf-idf 0.66, GloVe 0.63. Senators: GPT-4o 0.97 versus BERT 0.93, tf-idf 0.90. The paper says no classifier matches the best LLMs on within-party differences. Its classifiers are typicality readers (naive Bayes tf-idf, BERT, GloVe) trained on about 1 million party-labelled Congress tweets, not stance classifiers trained on human stance labels. No linear SVM is tested.",
+    "paper_location": "Abstract; Sec 3.1 and Fig 1 (text on naive Bayes TF-IDF and about 1 million training tweets); Sec 3.2 and Fig 2",
+    "system_side": "fec/stance/train_tweet_stance.py builds a LinearSVC on word and char_wb TF-IDF with a CV grid over C, so the system's best classical reader is the SVM as described. The 83.9% accuracy, macro-F1 0.816 (n=87), 0.757 transformer and 0.737 CV (399 golds) figures are not in the code and were not checked against outputs.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/train_tweet_stance.py:17,34-39",
+    "transfer_conditions": "The paper compares continuous left-right positions, scored by correlation, against party-typicality readers. The system compares three-class target stance, scored by accuracy, against a stance-trained SVM. The paper does not test a stance-trained linear model, so it cannot contradict the system's SVM-over-transformer result. Treat it as a head-to-head test to run.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The paper's comparators are not the system's kind of classifier. Its TF-IDF is naive Bayes on party typicality, and no LinearSVC is tested. Relation changed from contradicts to qualifies. The within-party claim and the tweet and senator numbers are accurate.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Supervised and stacked stance readers|Supervised and stacked stance readers]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.media-blend",
+    "relation": "suggests-extension",
+    "paper_claim": "Sec 2.1: a document's position is the average of the sentence or tweet scores for which the LLM returned a numeric score, so NA units are dropped from the average. App E, Table A1 (GPT-4o row): tweets that received a score had 18.7 human ratings on average versus 11.6 for unscored tweets, which the paper reads as NA marking low political content.",
+    "paper_location": "Sec 2.1; App E and Table A1 (GPT-4o row)",
+    "system_side": "SIGN maps neutral to 0.0 and build_media_blend adds sign times intensity times decay divided by len(hits) per post, so neutral posts contribute zero and are not removed from any count. claude_stance.py sets stance to neutral with confidence 0.0 when the API call fails or the reply cannot be parsed, so API failure and real neutrality look the same in the output.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/build_media_blend.py:54,130; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:80,89-91,96-99",
+    "transfer_conditions": "The paper validates averaging for left-right placement, not for CU advocacy intensity. Averaging measures position while the blend sums volume. Whether volume should count is Paul's policy call, not a recommendation to normalise. Any change needs Paul's ruling and zero-rank-delta or look discipline.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper numbers 18.7 and 11.6 confirmed in the Table A1 GPT-4o row. Code behaviour confirmed by reading the lines, not by running. The extension is the analyst's suggestion, not the paper's, and the transfer conditions already say so.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-stance#Media blend (press + social) with recency decay|Media blend (press + social) with recency decay]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.two-hop-decomposition",
+    "relation": "qualifies",
+    "paper_claim": "Sec 3.4 and Fig 5 (36 coal-subsidy speeches, 10 languages, six-language crowd mean): GPT-4o overall r=0.93, with Against 0.91 and For 0.80. Against-group r is 0.07 for GPT-4 Turbo, 0.04 for MiXtral 8X22B and 0.05 for Llama 3 70B, but GPT-4o is strong within Against. Tweets within party for GPT-4o: 0.68 Democrats and 0.66 Republicans (Fig 1).",
+    "paper_location": "Sec 3.4 and Fig 5; Sec 3.1 and Fig 1",
+    "system_side": "apply_two_hop_stance.py docstring states a model stance hop of 0.915 and a model valence hop of 0.689 on the 400 tweet golds, with a composed ceiling of 0.872. The curated-registry accuracy of 0.782 and the bottleneck reading are not in the file and were not checked against outputs.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/apply_two_hop_stance.py:3-5,15,61-62",
+    "transfer_conditions": "The paper tests one policy dimension (coal subsidy, 36 speeches) against crowd benchmarks. The weak within-Against cases belong to models other than GPT-4o, which is strong in both groups. The paper does not discuss within-camp weakness, so any link to the valence hop is the analyst's inference and suggestive only.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The three low Against values (0.07, 0.04, 0.05) and the 0.93 overall match Fig 5. The summary's every-model claim is wrong. The paper's top model shows 0.91 within Against, which undercuts the inference that direct queries are weak within a camp. Code path corrected to fec/stance/.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Two-hop stance x valence decomposition with curated registry|Two-hop stance x valence decomposition with curated registry]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+    "relation": "qualifies",
+    "paper_claim": "Sec 3.3 and Figs 3-4: sentence-by-sentence then averaged GPT-4o scores track expert coding on manifestos at r=0.98 (economic) and 0.94 (social). GPT-4 gives 0.98 and 0.92. Single whole-manifesto prompts (App G.2, Figs A12-A13) give economic r 0.96 to 0.98, similar to sentence scoring, and social r 0.83 to 0.92 with weaker within-party fit. Sec 4 says the paper has no clear recommendation on chunk versus single prompt. Sentences with NA are dropped from the average, not coded 0.",
+    "paper_location": "Sec 3.3 and Figs 3-4; App G.2 and Figs A12-A13; Sec 4 (single prompt versus sentence paragraph)",
+    "system_side": "big5_llm.py de-identifies author name, state, party and title before scoring, codes cannot-tell as 0 among -1/0/+1 item responses, uses about 1,200-word chunks sampled across each corpus, and averages upward. The +0.064 versus 0.12 gate and the display-only status are not in this file.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/big5_llm.py:8-17,51,216-221",
+    "transfer_conditions": "The paper's units are single sentences from party manifestos and speeches, not chunks of member speech, and it drops NA rather than coding it 0. The paper does not discuss de-identification or name priors, so the claim that its senator r=0.97 reflects name priors is the analyst's speculation. The paper does not say whether names were removed from senators' tweets. The traits differ, so it cannot rescue the failed behavioural gate.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The 0.94 to 0.98 manifesto range holds only for the top two models. Single-prompt economic scoring is about as good as sentence scoring, so do worse applies to social only. The paper does not say texts are not de-identified; it does not discuss the topic. Supports chunk-then-average overstates the paper, which disclaims a general recommendation.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#LLM item-level reader (Pink), ridge hybrid and CT-CM latent model|LLM item-level reader (Pink), ridge hybrid and CT-CM latent model]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Denominator error: the summary says GPT-4o reaches r=0.92 on 899 tweets, but r=0.92 is over the 557 tweets that received an LLM score (NA excluded). Fig 1, Table A1 and Fig A2 all give NAll=557.",
+   "Wrong range: the summary says the Against group drops to 0.04 to 0.07 for every model except GPT-4o. Only GPT-4 Turbo (0.07), MiXtral 8X22B (0.04) and Llama 3 70B (0.05) are in that range. GPT-3.5 Turbo is 0.56, Llama 3 8B 0.50, Aya 23 35B 0.35 and MiXtral 8X7Bq6 0.16 (Fig 5).",
+   "Overbroad claim: the summary says fine-tuned BERT, tf-idf and GloVe classifiers score lower. That holds for tweets and senators. On manifestos BERT gets 0.96 (economic) and 0.92 (social), close to GPT-4 levels (Figs 3-4). Restrict the claim to tweets and senators.",
+   "Overstated reading: the summary says the paper supports using an LLM as a stance rater. The paper scores left-right and pro/anti-subsidy positions and does not test stance classification. Reword as position scoring that may inform a rater.",
+   "Classifier description: the summary says the paper contrasts with classical TF-IDF readers. The paper's TF-IDF is a naive Bayes party-typicality reader, not a LinearSVC trained on stance labels, and no SVM is tested.",
+   "Strata missing: the lead quotes pooled overall correlations (0.92 tweets, 0.97 senators, 0.98 and 0.94 manifestos, 0.93 speeches) without within-party or within-camp strata. The rule requires the strata or an UNSTRATIFIED label next to them. Within-party figures are tweets 0.68 D and 0.66 R; senators 0.72 and 0.72.",
+   "ENO flag is inaccurate: the flag says ENO for GPT-4o is 7 in Table A2 but 5 to 7 in the text. The text gives 5 to 7 for GPT-4, MiXtral 8X22B and Llama 3 70B, which Table A2 lists as 5 each. GPT-4o's 7 is not mentioned in the text. The Discussion says about 4 or more raters, which is a third figure. Correct the flag to this three-way inconsistency.",
+   "Confirmed flags: the year hint 2025 conflicts with the text (dated September 6, 2024, arXiv v3), and the senator count is 98 in the Fig 2 caption but 97 in App A.2. Both flags are correct as written."
+  ],
+  "gaps_exposed": [
+   "No continuous LLM position score for CU stance. The rater returns support, oppose or neutral only, so within-category intensity relies on LSD tone rather than a direct position query.",
+   "claude_stance.py records API errors and unparseable replies as neutral with confidence 0. That makes non-response look like a neutral stance. The paper keeps NA separate and documents its composition effect.",
+   "There is no within-party validity figure for the stance pipeline or the press pillar. The paper shows overall correlations of 0.92 to 0.97 shrink to 0.66 to 0.72 within party, and CU stance mostly varies within party.",
+   "There is no reliability estimate (split-half with Spearman-Brown, or effective number of raters) for the Claude rater against independent human coders. Its gold labels were pre-labelled by the same rater.",
+   "There has been no head-to-head test of an LLM direct-query rater against the TF-IDF LinearSVC on the untouched n=87 or the 760-row gold frame."
+  ],
+  "flags": [
+   "Concurrent-correlation validity only. Senator r=0.97 is against the first Nokken-Poole dimension and is largely between-party; quote it only with the within-party figures (0.72 per party), per the stratification rule.",
+   "The paper tests no Claude models and no credit-union dimension, so its accuracy figures cannot be quoted as properties of the system's Claude rater. Any adoption would be a new agent analysis and stays UNVERIFIED until a second path reproduces it (DE-062).",
+   "Year hint 2025 conflicts with the text, which is dated September 2024 (arXiv v3). The slug keeps 2025.",
+   "Internal inconsistencies in the paper: the senator count is 98 in the Fig 2 caption and 97 in App A.2, and ENO for GPT-4o is 7 in Table A2 but 5 to 7 in the text."
+  ],
+  "paul_alignment": "Paul has no annotations on this work. It agrees with his recorded positions on the stance components: he endorses LLM position extraction (Kim's GPT-4 labels; Birkenmaier and Lechner's GPT-4o beating SVM) and calls bag-of-words SVMs outdated. Here a TF-IDF LinearSVC is still the system's best classical reader, which this paper argues against. The weak within-party and within-camp fits also support the weakness he flagged, ambiguous statements. His notes do not cover non-response handling or within-party validity, so they are incomplete rather than stale.",
+  "related": [
+   {
+    "slug": "ornstein-2024-train-your-stochastic",
+    "relation": "same-method",
+    "why": "This is the GPT-3 probability-based scaling the paper benchmarks against (its footnote 2 reports expert correlations of .92 and .8). Both position political texts with LLMs; this paper replaces token probabilities with a direct score query."
+   },
+   {
+    "slug": "burnham-2024-political-debate-zero",
+    "relation": "complements",
+    "why": "Political DEBATE is the NLI base model the system fine-tunes for CU stance. Le Mens offers the generative direct-query alternative for the same reader slot."
+   },
+   {
+    "slug": "burnham-2023-stance-detection-practical-guide",
+    "relation": "complements",
+    "why": "This guide covers target-specific stance classification. Le Mens covers continuous positioning; together they frame the categorical versus scaled choice for the CU rater."
+   },
+   {
+    "slug": "poole-1999-nominate-after-years",
+    "relation": "complements",
+    "why": "The senator benchmark is the first Nokken-Poole roll-call dimension, a period-specific NOMINATE variant."
+   },
+   {
+    "slug": "bonica-2013-mapping-ideological-marketplace",
+    "relation": "complements",
+    "why": "CFscores are the second actor-level benchmark (App A8). They correlate highly overall but less within party."
+   },
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "same-method",
+    "why": "This also measures politicians from their text with GPT-4o, here for agency and communion. The Paul-usage part of the why text was not verified in this run; the shared method is real."
+   },
+   {
+    "slug": "b-2025-comparing-fine-tuned",
+    "relation": "complements",
+    "why": "This compares fine-tuned RoBERTa with classical ML for political-tweet stance, the same supervised-versus-classical contrast Le Mens extends to LLMs."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "peters-2024-language-models-infer",
+    "relation": "same-method",
+    "why": "Title and text confirm a design of asking an LLM about each text and averaging the responses, parallel to Peters' three-query averaging."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "mackinnon-2017-wild-bootstrap-inference",
+  "note": false,
+  "meta": {
+   "title": "Wild Bootstrap Inference for Wildly Different Cluster Sizes",
+   "authors": [
+    "James G. MacKinnon",
+    "Matthew D. Webb"
+   ],
+   "year": 2017,
+   "venue": "Queen's Economics Department Working Paper 1314 (reissued and corrected 2019-08); published as Journal of Applied Econometrics 32 (2017) 233-254",
+   "doi": "",
+   "sha12s": [
+    "90c86220a8fd"
+   ],
+   "category": "Causal & Methodological",
+   "category_slug": "causal-methodological"
+  },
+  "extraction": {
+   "title": "Wild Bootstrap Inference for Wildly Different Cluster Sizes",
+   "authors": [
+    "James G. MacKinnon",
+    "Matthew D. Webb"
+   ],
+   "year": 2017,
+   "venue": "Queen's Economics Department Working Paper 1314 (reissued and corrected 2019-08); published as Journal of Applied Econometrics 32 (2017) 233-254",
+   "doi": "",
+   "document_type": "working paper (Monte Carlo and placebo-law simulation study with one empirical replication; published journal version exists)",
+   "coverage": "Full text read (3813 lines): front matter, Sections 1-9, references, Appendix A.1-A.8 with captions. Text only, so figure curves were not visible. Paul markup: none (no annotation file), nothing dropped. Corrected 2019-08 reissue. Relevance: no lobbying, network, path-finding, allocation, election, persuasion, legislator or text-measurement content; closest is cluster inference for state-level policy treatments (Sections 5, 7, 8).",
+   "research_question": "When is inference with cluster robust variance estimator t statistics (CRVE, with t(G-1) critical values) reliable, and which alternatives (effective number of clusters G* critical values, restricted or unrestricted wild cluster bootstrap) work when cluster sizes are very unequal or the number of treated clusters is small?",
+   "theory": "Asymptotic validity of the CRVE under White (1984) assumptions A1 (number of clusters grows), A2 (same within-cluster error correlation) and A3 (equal cluster sizes). Wild cluster bootstrap with Rademacher weights (Cameron, Gelbach and Miller 2008; Webb 2014 for G below about 12). Effective number of clusters G* of Carter, Schnepel and Steigerwald (2017). Section 6 analytic argument: with G1 fixed, the treatment coefficient is inconsistent, and the variance of the residual sum for a treated cluster shrinks by the factor (M1 minus N1) over M1 under IID errors (eq. A.2).",
+   "identification": "Not a causal identification paper. Test size is the object: the null beta equal to zero holds in the simulations and placebo laws, and the question is whether CRVE t tests and bootstrap P values have correct size when cluster sizes are unequal and the number of treated clusters is small.",
+   "data": "Monte Carlo (Sections 4-6, Appendix A.2, A.6): simulated samples of N = 2000 observations (G = 50 or 100 clusters, equal sizes or sizes proportional to U.S. state populations without DC; smallest state cluster 4 obs and largest 242 for G = 50; 400,000 replications; 399 bootstrap draws). Appendix A.6 uses N = 50G with G = 12, 16, 20, 25, 32. Placebo laws (Section 7): U.S. Current Population Survey, women aged 25-50, 1979-1999, log weekly earnings, earnings under 20 dollars dropped, 547,518 micro observations, 51 states including DC, year of treatment start 1985-1995; 100,000 or 10,000 replications; G* computed on a 1/100 subsample; rho-hat about 0.031-0.032. Aggregate version: 1071 state-year cells of 21 obs each. Empirical example (Section 8): Angrist and Kugler (2008) Colombia, men 181,882 obs in 32 departments (aggregate 288 dept-year cells); teenage boys 22,141 obs in 38 departments (aggregate 340 cells); 99,999 bootstrap samples.",
+   "method": "Monte Carlo rejection frequencies at nominal .05 (and .10 and .01 in places) for: CRVE t with t(N-2), t(G-1), t(G*-1) and t(G*) critical values (G* at rho = 0.99 and rho-hat); restricted wild cluster bootstrap (WCR) with symmetric P values; unrestricted bootstrap (WCU, Appendix A.3); HCCME t with normal critical values. Rho-hat from the cluster-dummy regression. Power comparison of micro versus aggregate estimators (Appendix A.8) with bootstrap tests.",
+   "scope": "Inference in linear models with clustered errors, with a focus on U.S. state-level clusters. Simulation designs are synthetic; placebo-law and empirical examples use CPS 1979-1999 earnings and Colombian household data from 1995-2000. Results are for G from 12 to 200 clusters and at most 2000 observations in the main Monte Carlo designs.",
+   "key_findings": [
+    "Section 4, Table 1 (p.6): with 50 equal-sized clusters, t(G-1) rejection rises with the regressor's within-cluster correlation and exceeds 0.065 when rho_x is 1 (value 0.06568 at rho_eps 0). Wild bootstrap rejections in Tables 1 and 3 all lie close to .05 (Table 1 range 0.04924 to 0.05084, p.8).",
+    "Section 4, Table 2 (p.7): with 50 state-sized clusters (sizes 4 to 242), t(G-1) rejection is 0.05784 with both correlations zero and reaches 0.10718 at rho_eps 0.9 and rho_x 1 (text says 0.1073, a small mismatch with the table). Bootstrap rejections range 0.04905 to 0.05277 (p.10).",
+    "Section 4 (p.10): with state-sized clusters, t(G*-1) critical values underreject severely when rho_x is large; worst case rejection 0.0166 at rho_eps 0 and rho_x 0.6, where average G* is 9.43 using rho-hat and 5.97 using rho 0.99.",
+    "Section 4, Table 4 (p.9): with 100 state-sized clusters (each state appearing twice), t(G-1) rejection reaches 0.08442 (rho_eps 0.9, rho_x 1); the wild cluster bootstrap never exceeds 0.05124. The rule of 42 fails under unequal clusters even at 100 clusters.",
+    "Section 5, Figure 1 (p.11): for DiD with t(G-1) critical values, severe overrejection when G1 (treated clusters) or G minus G1 is near 0; with equal-sized clusters rejection is near .05 for G1 from 17 to 34. Overrejection is worse when the smallest clusters are treated first.",
+    "Section 5, Figure 2 (p.12): t(G*-1) critical values overreject except when the number of treated clusters is very small or very large; extreme underrejection at G1 = 1 and G1 = 49. Figure 3 (p.13): restricted wild bootstrap underrejects severely when G1 or G minus G1 is very small but works extremely well for G1 from about 7 to 43 (equal-sized clusters).",
+    "Section 6 (pp.16-17, Figure 4): with G1 = 1 and 50 equal clusters, the 0.975 quantile of the CRVE t statistic is 14.226 versus 2.010 for t(49); the t(G-1) test rejects 77.75 percent of the time at .05; restricted wild bootstrap tests never reject at conventional levels when G1 = 1 in the experiments.",
+    "Section 6 (p.19): for DiD with equal-sized clusters, the wild cluster bootstrap (restricted or unrestricted) can probably be used safely for 7 <= G1 <= G-7; likely misleading below 4 or above G-4. Appendix A.6 (p.39): with unbalanced clusters and G of 20 or 32, the restricted bootstrap is acceptable for 6 <= G1 <= G-5. Exact cutoffs are data dependent.",
+    "Section 7 (pp.21-23): placebo laws with micro CPS data; HCCME t tests reject more than 50 percent of the time at .05 for all G1; t(G-1) CRVE rejects at least 0.063 whenever many states are treated and about 0.07 half the time, with severe overrejection when few states are treated; restricted bootstrap underrejects severely when G1 is very small but performs extremely well for larger G1 (Figure 9).",
+    "Section 7 (p.24, Figure 10): with aggregated state-year data (balanced cells), CRVE t(G-1) performs very well for most G1 and slightly underrejects; restricted wild bootstrap performs extremely well for G1 at least 5. Appendix A.7 reports unrestricted bootstrap rejection 0.7184 at .05 for G1 = 1 with aggregate data.",
+    "Section 8, Table 5 Panel A (p.27): adult men (32 departments, N = 181,882), rural 1998-2000 coefficient 0.1219 with s.e. 0.0359 (t = 3.395); t(G-1) p = 0.002, bootstrap p = 0.028, t(G*-1) p = 0.059 with G* = 3.402. Rural 1995-1997 has t(G-1) p = 0.045 but bootstrap p = 0.186. Only the rural 1998-2000 term is significant at .05 under the bootstrap.",
+    "Section 8, Table 5 Panel B (p.27): teenage boys (38 departments, N = 22,141), rho-hat 0.155, G* between 8.9 and 12.9; both rural coefficients significant under t(G-1) (p 0.028 and 0.048) and bootstrap (p 0.030 and 0.050), but t(G*-1) p-values are 0.051 and 0.067. Urban coefficients have p of at least 0.6."
+   ],
+   "limitations": "Authors state: placebo-law G* uses a 1/100 subsample; Bell-McCaffrey and Imbens-Kolesar corrections not studied; Ibragimov-Muller does not apply to most designs; Rademacher weights not recommended below about 12 clusters. Bootstrap reliability depends on G1 with no clean cutoff, and heteroskedasticity by treatment status could change results. G* depends sharply on rho. No G* for joint tests. Pure-treatment results changed after a rho correction (Appendix A.2), unexplained.",
+   "paul_markup": [],
+   "short_quotes": [
+    "we show that the rule of 42 no longer holds when the assumption of equal-sized clusters is relaxed (Section 1, p.2)",
+    "the wild cluster bootstrap procedure always performs extremely well (Section 1, p.3)",
+    "this procedure fails when a small number of clusters is treated (Abstract, p.1)"
+   ],
+   "measures": "Rejection frequency at nominal .05; cluster robust t statistic; effective number of clusters G* (depends on rho); treated clusters G1 and treated observations M1; ratio N1 over M1 for the largest treated cluster; rho-hat from cluster dummies; HCCME standard error; symmetric bootstrap P value.",
+   "references_of_note": [
+    "Carter, Schnepel and Steigerwald (2017) Review of Economics and Statistics 99(4): effective number of clusters G*",
+    "Cameron, Gelbach and Miller (2008) Review of Economics and Statistics 90(3): wild cluster bootstrap",
+    "Webb (2014) Working Paper 1315: six-point wild bootstrap for few clusters",
+    "Bertrand, Duflo and Mullainathan (2004) QJE: placebo laws design",
+    "Angrist and Kugler (2008) Review of Economics and Statistics 90(2): Colombia coca difference-in-differences",
+    "Donald and Lang (2007); Bester, Conley and Hansen (2011): t(G-1) critical values",
+    "Conley and Taber (2011); Bell and McCaffrey (2002): few treated clusters",
+    "MacKinnon and Webb (2020) Journal of Econometrics: randomization inference with few treated clusters (cited as forthcoming)",
+    "Cameron and Miller (2015) Journal of Human Resources: practitioner guide to cluster robust inference"
+   ]
+  },
+  "summary_md": "MacKinnon and Webb (Queen's WP 1314, corrected 2019; JAE 2017) study when cluster-robust (CRVE) t tests with t(G-1) critical values give correct size, and when the wild cluster bootstrap does better. Using Monte Carlo designs with 50 or 100 clusters sized like U.S. states (4 to 242 observations), CPS placebo laws (547,518 obs, 51 states) and a Colombian replication, they show the rule of 42 fails once cluster sizes are unequal: t(G-1) rejects up to 0.107 at nominal .05 with 50 state-sized clusters and 0.084 even with 100. The restricted wild cluster bootstrap (WCR) stays near .05 in those designs (0.049 to 0.053). The bootstrap breaks when few clusters are treated: with one treated cluster of 50 the t(G-1) test rejects 77.75 percent of the time while the WCR never rejects; WCR is safe roughly for 7 <= G1 <= G-7 with equal clusters and 6 <= G1 <= G-5 with unbalanced clusters at G of 20 to 32. The effective-clusters G* correction is erratic. Rademacher weights are not advised below about 12 clusters. For Paul's systems the paper is the method source for one component: the Mentat sector growth study already runs a WCR bootstrap-t by sector with Webb six-point weights, enumerating all 6^G draws when small, and labels per-sector terms resting on one cluster DESCRIPTIVE, which matches the paper's G1 = 1 warning. The open point is scale: the study runs with 3 to 9 sector clusters, below the 12-cluster floor of every design the paper tests, so the paper supports the procedure choice but does not certify its size at G = 9 or 5. No network, lobbying-edge or influence claim follows.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "method-source",
+    "paper_claim": "With unequal state-sized clusters (G = 50, Table 2) CRVE t(G-1) rejection at nominal .05 runs from 0.0567 to 0.1078 across the rho grid (0.10718 at rho_eps 0.9, rho_x 1); at G = 100 (Table 4) it reaches 0.08442; the restricted wild cluster bootstrap stays between 0.04905 and 0.05277 (Table 2). The conclusion recommends WCR over t(G-1) and says G* critical values often improve matters but do not always work as well.",
+    "paper_location": "Section 4, Tables 2 and 4 (pp.7-10); Section 9 Conclusion (pp.25-26)",
+    "system_side": "Focal coefficients are tested with a wild cluster restricted bootstrap-t, null imposed, CR1 SE in the statistic, symmetric two-sided p, test-inverted 95 percent CI, B = 9,999 or full enumeration. Clusters are sectors for sector-year tests but champions (bioguide) for the H5 tests, so the analyst's sector-only system_side is overbroad.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:1-12; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:58-63",
+    "transfer_conditions": "The paper's size evidence is for Rademacher weights. The study uses Webb six-point weights, which this paper does not evaluate; it only cites Webb (2014) for G below about 12. Paper designs are linear models with G from 12 to 200. Whether the study's sector cluster sizes are near-balanced was not checked against study data in this pass; H5 bioguide clusters are the likely unequal-size case.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Table 2 and Table 4 numbers checked in the text file. Corrections: the lower bound of the t(G-1) range is 0.0567 (not 0.058) and the grid maximum is 0.10776 at rho_eps 0.8, rho_x 1 (not 0.107). The sector-only clustering claim fails for H5 per the config comment. The paper evaluates Rademacher weights only, so support for the Webb six-point choice is not established by this paper.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "qualifies",
+    "paper_claim": "The paper says Rademacher weights should not be used when G is below about 12 and points to Webb (2014) for that regime, but does not itself test Webb six-point weights. Its evidence starts at G = 12 (Appendix A.6 uses G = 12, 16, 20, 25, 32; Sections 6 and 7 use larger G). It says the exact G1 cutoffs for safe bootstrap inference are data dependent.",
+    "paper_location": "Section 3 step 4 (p.5, Webb 2014 note); Section 6 (p.19); Appendix A.6 (p.39)",
+    "system_side": "The study clusters by its nine sectors (config STUDY_SECTORS lists nine), uses Webb six-point weights with exact enumeration when 6^G is at most 9,999, requires at least 3 sector clusters for LobbyView bootstrap inference (DESCRIPTIVE below), and prints the 2/6^G p floor for DESCRIPTIVE tests. MIN_SECTORS is 2, so runs with 2 clusters are possible in code.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:27-28, 43, 59-63, 113; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:258-266; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_rng.R:231-235",
+    "transfer_conditions": "The paper gives no rejection rates at G of 3 to 9 and no evidence on six-point weights. Bootstrap p-values at 3 to 9 sectors are therefore unverified by this paper and need the study's own placebo or simulated-null check, or Webb (2014), before being read as correctly sized.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "The G floor, the Webb 2014 pointer and the enumeration and floor logic check out in text and code. The paper does not validate six-point weights, so the analyst's claim that the paper supports the procedure choice covers WCR in general, not the weight choice. The 3-cluster threshold is LobbyView-specific; MIN_SECTORS is 2.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "supports",
+    "paper_claim": "With G1 = 1 (one treated cluster among 50 equal-sized clusters), the CRVE t(G-1) test rejects 77.75 percent of the time at .05, and the restricted wild bootstrap never rejects at any conventional level in these experiments. For equal-sized DiD the paper says the bootstrap can probably be used safely for 7 <= G1 <= G-7 and is likely misleading below 4 or above G-4.",
+    "paper_location": "Section 6, Figure 4 and text (pp.16-17); Section 6 p.19 for cutoffs; Section 5 Figure 1 for t(G-1) overrejection as G1 nears 0",
+    "system_side": "Per-sector terms resting on one sector cluster and saturated SHIFT terms are labelled DESCRIPTIVE with bootstrap lines as reference only. The review adds each year's share of absolute OLS weight for each focal term.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:13-14, 161, 258; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:266, 282-314, 370",
+    "transfer_conditions": "The paper's G1 is a count of treated clusters for a binary DiD regressor. For continuous growth terms the analogue is how concentrated OLS weight is across sectors; the study reports this per year but not per sector. The 4-to-7 cutoffs are for the bootstrap in equal-sized DiD and do not transfer as numeric cutoffs to continuous terms.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "77.75 percent and the never-reject statement are confirmed in text. The 4-to-7 window is stated for the bootstrap in equal-sized DiD, not for the t(G-1) test, so the analyst's sentence that both fail below 4 to 7 overstates the paper. The DESCRIPTIVE labelling is implemented in sgs_review.R and sgs_estimate.R; the review file header at lines 11-14 only describes it.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "supports",
+    "paper_claim": "Conclusion: cluster-robust t inference should not be trusted even when the sample is large and the rule of 42 is satisfied, because overrejection with wildly unequal cluster sizes is serious; the paper's results are for one-way clustering.",
+    "paper_location": "Section 4, Tables 2 and 4 (pp.7-10); Section 7 (pp.21-23); Conclusion (pp.25-26)",
+    "system_side": "The two-way sector-by-year CR1 SE with min(G_sector, G_year) - 1 df is computed only as a sensitivity when both dimensions have at least 3 clusters, and is explicitly not the study's inference.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-10",
+    "transfer_conditions": "The paper tests one-way clustering only, so the claim that the two-way CRVE inherits the t(G-1) warning a fortiori is the analyst's reasoning, not a paper result. The about 7 years figure was not checked against study data.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "The conclusion wording and the rule-of-42 failure at G = 100 are confirmed. The two-way extension is the analyst's inference and is labelled as such in the transfer conditions. The code comment matches the described sensitivity-only use.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Upper bound: summary says t(G-1) rejects up to 0.107 with 50 state-sized clusters; the grid maximum in Table 2 is 0.10776 (about 0.108) at rho_eps 0.8, rho_x 1. The 0.10718 cell is at rho_eps 0.9, rho_x 1.",
+   "Summary says the study runs with 3 to 9 sector clusters. Config MIN_SECTORS is 2; the 3-cluster threshold applies only to LobbyView bootstrap inference.",
+   "Summary says the paper supports the procedure choice of Webb six-point weights at 3 to 9 clusters. The paper evaluates Rademacher weights only and cites Webb (2014) for G below 12 without testing it.",
+   "Summary calls the G* correction erratic. The paper describes a directional pattern: overrejection when rho_x is large, underrejection when rho_eps is large, and sensitivity to rho. Erratic overstates or misdescribes it.",
+   "Summary says WCR is safe roughly for 6 <= G1 <= G-5 with unbalanced clusters at G of 20 to 32. That range comes from Appendix A.6 under one extreme unbalance design (gamma = 3, smallest cluster 8, largest 146 to 167) and should be stated as design-specific.",
+   "Summary says the study clusters by sector for every focal coefficient. Config says champions (bioguide) cluster the H5 tests.",
+   "Summary says the paper recommends WCR over G* critical values. The conclusion supports WCR generally, and says G* often helps but does not always work as well; the recommendation is not unconditional, since both fail when only a few clusters are treated.",
+   "Not verified in this pass: the brain note cluster count of 5 for the lobbying and champion reading, the about 7 years figure, and the near-balanced sector cluster sizes of the study data. These need the study data or the brain record to check."
+  ],
+  "gaps_exposed": [
+   "No size check of the WCR bootstrap at the study's actual cluster counts (3 to 9 sectors); the paper's evidence starts at G = 12, so a placebo or simulated-null rejection rate on the study's own design would be needed before bootstrap p-values are read as correctly sized.",
+   "No per-sector OLS-weight (leverage) share is reported for focal growth terms, the continuous-regressor analogue of the paper's G1 problem; leave-one-sector-out refits exist but are EXPLORATORY with HC1 only.",
+   "The H5 champion-clustered tests (bioguide clusters, about 21 members) likely have unequal cluster sizes, the regime where the paper shows t(G-1) overrejection; whether the study reports cluster-size spread for those clusters was not confirmed."
+  ],
+  "flags": [
+   "Brain note records 5 clusters for the lobbying and champion reading and the reply that it is supportive, not confirmed; the paper reinforces that caution since it gives no validation for WCR below 12 clusters.",
+   "No conflict with D-021, D-025, D-104..D-108 or the rejected SNA proposals; the paper has no network or lobbying content."
+  ],
+  "paul_alignment": "Paul has no annotation entry for this work and no markup. The system as built already follows the paper's main recommendation (restricted wild cluster bootstrap over t(G-1), Webb weights for few clusters, DESCRIPTIVE labels when one cluster carries the variation), so the paper agrees with the design choice. It does not settle whether the bootstrap is correctly sized at 5 to 9 sectors, consistent with the brain's supportive-not-confirmed reading.",
+  "related": [
+   {
+    "slug": "zeileis-nd-various-versatile-variances",
+    "relation": "complements",
+    "why": "Checked: the Zeileis text documents an R implementation of clustered covariances including multiway clustering and CR1-type corrections, so it covers how the study's CR1 and two-way SEs are computed. Kept."
+   },
+   {
+    "slug": "imai-2021-fixed-effects-regression",
+    "relation": "complements",
+    "why": "Checked: the item is Imai and Kim on two-way fixed-effects regression for causal inference with panel data, matching the identification side of the year-FE sensitivity. Kept."
+   },
+   {
+    "slug": "callaway-2025-difference-differences-continuous",
+    "relation": "complements",
+    "why": "Checked: the item is Callaway, Goodman-Bacon and Sant'Anna on DiD with a continuous treatment, matching the identification side for continuous growth terms. Kept."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "montgomery-2017-effects-congressional-staff",
+  "note": false,
+  "meta": {
+   "title": "The Effects of Congressional Staff Networks in the U.S. House of Representatives",
+   "authors": [
+    "Jacob M. Montgomery",
+    "Brendan Nyhan"
+   ],
+   "year": 2017,
+   "venue": "Journal of Politics (text reads: Forthcoming, Journal of Politics)",
+   "doi": "",
+   "sha12s": [
+    "a67b202a3c29"
+   ],
+   "category": "Social Network Analysis",
+   "category_slug": "social-network-analysis"
+  },
+  "extraction": {
+   "slug": "montgomery-2017-effects-congressional-staff",
+   "title": "The Effects of Congressional Staff Networks in the U.S. House of Representatives",
+   "authors": [
+    "Jacob M. Montgomery",
+    "Brendan Nyhan"
+   ],
+   "year": 2017,
+   "venue": "Journal of Politics (text reads: Forthcoming, Journal of Politics)",
+   "doi": "",
+   "document_type": "journal article",
+   "coverage": "Read the full text file (2847 lines, about 107k chars) in chunks: front matter, abstract, introduction, sections 2-3 (theory, data, network construction, SAR model), section 4.1-4.3 (Tables 1-5), section 5 discussion and limitations, references, biographical statements, and the Online Appendix (coding lists, descriptives, robustness Table A1). Printed page numbers used for locations; appendix pages are unnumbered in the text, so cited as Online Appendix. Paul markup: none. p.annot_sha12s is empty and n_annots is 0, so paul_markup is []. p.note not applicable (not a Paul note). Topic check: staff networks and member-to-member ties are the core subject; persuasion, turnout, path-finding, allocation and text measurement are absent; elections enter only as district presidential vote control; lobbying appears only in cited literature (Bertrand et al. 2014; Cain and Drutman 2014; Drutman 2012), not analyzed. Metadata: title, authors, and venue match the text. doi is not in the text, so left blank. The year 2017 is kept from metadata because the text gives no year (it says Forthcoming). Text issues noted: p.19 says 105th to 112th Congress while data end at 111th; p.27 calls the 110th Congress ideology rho reliably positive, but Table 4 gives 0.024 (SE 0.021); the placebo ideology pooled point 0.006 sits oddly inside its interval [-0.016, 0.067] (p.29). Nothing dropped from the extraction.",
+   "research_question": "Do members of Congress who exchange senior or policy staff across offices become more similar in legislative effectiveness and in roll-call ideology than chance or observed covariates would predict? Secondary: do staff ties transmit expertise and positions across legislators, as opposed to homophily in staff hiring?",
+   "theory": "Staff are not mere extensions of members (p.3-4). Two mechanisms (p.7-8): (1) a staffer carries knowledge, relationships with party leaders and expertise from a prior boss to a new boss; (2) staff who move between offices facilitate coordination between the two offices. Hypothesis 1: linked offices are more similar in legislative effectiveness. Hypothesis 2: linked offices vote more similarly. Senior staff are expected to matter for effectiveness; policy staff for roll-call voting (p.9).",
+   "data": "CQ First Street personal-staff records for House members, digitized from CQ Press directories 1993-2009 and updated after (p.10). Subset to personal staff, 103rd-111th Congresses; staff ties built for the 105th-111th Congresses. Unit: member-Congress. 3,973 member-Congress observations in the period; staff data missing for 112 (2.8%) (p.11). Regression N per Congress 435-446 (Tables 1-4). Outcomes: Volden and Wiseman (2014) legislative effectiveness scores (LES, range 0-18.7, mean 0.996, SD 1.526 in the 105th-111th); Bayesian one-dimensional ideal points from Clinton, Jackman and Rivers (2004), estimated with pscl on Voteview roll calls (Online Appendix). Committee staff excluded because majority/minority status and member links are unreliable (p.31; Online Appendix). Descriptives: 12 percent of senior/policy staff held such a post for two or more House members, 44 percent among those serving five or more Congresses (p.13); fewer than 50 of 12,938 senior/policy staffers crossed party lines (p.14).",
+   "method": "Bayesian heteroskedastic spatial autoregressive model with covariates, y = X beta + rho W y + e, with e having variance sigma^2 V (diagonal scalars, Student-t-like errors, r = 4), estimated in Matlab with sar_g (LeSage and Pace 2009) (p.17-18). W is a row-standardized, symmetric count of staff who worked for both members in the current or previous two Congresses (p.18). Separate cross-sectional model per Congress, pooled across Congresses with the Gelman et al. (2004) procedure because W changes over time (p.19). Direct, total and indirect effects from the (I - rho W)^-1 expansion (p.20). Two networks: senior-only ties and senior-plus-policy ties. Controls: seniority, majority party, female, African American, Hispanic, committee chair, subchair, majority and minority leadership, power committee (LES); Democrat, female, race and ethnicity, district presidential vote and its square (ideology). Falsification: placebo ties from lower-level staff and from future senior ties (p.29-30).",
+   "identification": "Observational. Identification rests on the spatial lag rho capturing outcome similarity among members linked by staff moves, net of covariates. No design isolates an exogenous staff shock. Falsification tests are used to probe homophily: lower-level staff ties and future senior ties, which should not causally matter (p.29-30). The authors state homophily cannot be fully ruled out (p.30). Causal language for race is acknowledged as problematic (p.28, footnote 34).",
+   "scope": "U.S. House only; personal senior and policy staff only; committee staff excluded; 105th-111th Congresses (roughly 1997-2010 by calendar arithmetic; text does not give years for these Congresses). Explicitly does not test the 1970s-era 'textbook Congress' (p.31).",
+   "measures": "Staff tie weight: count of shared senior or policy staffers across current and previous two Congresses, row-standardized (p.18). Senior staff: chief of staff, director variants, administrative assistant variants; policy staff: legislative assistant, counsel, issue specialists (p.4 note 2; Online Appendix keyword lists). LES from Volden and Wiseman (2014); ideology from Clinton, Jackman and Rivers (2004); district vote from Jacobson data (Online Appendix).",
+   "key_findings": [
+    "Senior-staff ties, LES: pooled rho = 0.043, 95% CI [0.0095, 0.096]; positive in 5 of 7 Congresses but not each reliably above zero (Table 1, p.22-23).",
+    "Senior plus policy ties, LES: pooled rho = 0.013, 95% CI [-0.015, 0.037]; authors call it consistent with expectations but not conclusive (Table 2, p.24).",
+    "Senior-staff ties, ideology: pooled rho = -0.003, 95% CI [-0.029, 0.020]; no reliable effect on roll-call ideal points (Table 3, p.26).",
+    "Senior plus policy ties, ideology: pooled rho = 0.028, 95% CI [0.0129, 0.0465]; reliably positive in the 109th and 110th Congresses per text (Table 4, p.27).",
+    "Ideology R2 above 0.88 in every Congress, so the tie effect is small against the covariates (p.27-28).",
+    "Committee chair direct effect on LES 1.853, 90% CI [1.376, 2.352]; indirect effect via ties 0.442, 90% CI [0.131, 0.826] (p.24).",
+    "Being African American, 109th Congress ideology: direct effect 0.176, 90% CI [0.042, 0.317]; indirect effect via ties 0.0093, 90% CI [0.0003, 0.0238] (p.28).",
+    "Falsification, lower-level staff ties on LES: pooled rho about -0.016; text gives CI [-0.070, 0.027], which excludes the 0.043 headline point (Table 5 p.30; text p.29).",
+    "Falsification, future senior ties on LES: pooled CI [-0.033, 0.071] overlaps the headline estimate, so homophily cannot be excluded (p.29).",
+    "Falsification, lower-level ties on ideology: pooled 0.006, CI [-0.016, 0.067] overlaps the Table 4 estimate (p.29).",
+    "Robustness (Online Appendix Table A1): no-covariate and committee-fixed-effects models keep the LES pattern for senior ties; two-Congress window leaves the senior LES interval barely including zero (-0.0006, 0.1088).",
+    "Authors conclude staff may act as extensions of members (Kingdon 1973) and that the ideology link is partly homophily (p.30-31)."
+   ],
+   "limitations": [
+    "Cannot test long-term changes in staff roles or the textbook Congress era (p.31).",
+    "House only; Senate not studied (p.31).",
+    "Committee staff excluded; their effects untested (p.31; Online Appendix).",
+    "Imperfect outcome measures, LES and ideal points (p.31).",
+    "No multiplex analysis with cosponsorship or other dyadic ties (p.31).",
+    "Homophily between staff and members not fully ruled out; future designs needed (p.31).",
+    "Staff missing for 2.8 percent of observations, and some members repeatedly fail to match (Online Appendix).",
+    "Covariate choice affects inference; committee dummies removed power committee for collinearity (Online Appendix)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "staff may help serve as extensions of members"
+   ],
+   "references_of_note": [
+    "Volden and Wiseman 2014 - Legislative Effectiveness in the United States Congress (LES source)",
+    "Clinton, Jackman and Rivers 2004 - statistical analysis of roll call data (ideal points)",
+    "LeSage and Pace 2009 - Introduction to Spatial Econometrics (sar_g estimator)",
+    "Gelman et al. 2004 - Bayesian Data Analysis (pooling)",
+    "Ringe, Victor and Gross 2013 - staff ties in the European Parliament, information networks",
+    "Kingdon 1973 and 1989 - Congressmen's voting decisions (staff as extensions)",
+    "DeGregorio 1995 - staff utilization, committee chairs and senior aides",
+    "Salisbury and Shepsle 1981a, 1981b - staff turnover and member as enterprise",
+    "Bertrand, Bombardini and Trebbi 2014 - lobbying process (cited for staff employment prospects)",
+    "Cain and Drutman 2014 - revolving door regulatory change (cited)",
+    "Drutman 2012 - former House staffers registered to lobby (cited; source of policy-staff keyword coding)",
+    "Nyhan and Montgomery 2015 - consultant networks (SAR precedent)",
+    "Jensen 2011; Karol 2014 - staff party loyalty"
+   ]
+  },
+  "summary_md": "Montgomery and Nyhan ask whether House members linked by shared personal staff become alike in legislative effectiveness (Volden-Wiseman LES) and roll-call ideology (CJR ideal points). A tie between two members is the count of senior or policy staffers who worked for both offices in the current or previous two Congresses, row-standardized, over the 105th-111th Congresses (435-446 members per Congress). They fit a Bayesian heteroskedastic spatial autoregressive model per Congress and pool the seven estimates. Senior-staff ties show a small positive LES lag (pooled rho 0.043, 95% CI 0.0095 to 0.096; positive in 5 of 7 Congresses). Adding policy staff weakens it (0.013, CI -0.015 to 0.037). For ideology, senior ties show nothing (-0.003). Senior plus policy ties show a small positive lag (0.028, CI 0.013 to 0.047), but covariates already explain R2 above 0.88. Placebo tests help only partly. Lower-level staff ties give a null LES lag. Future senior ties (CI -0.033 to 0.071) and the lower-level ideology placebo overlap the headline estimates, so homophily is not ruled out. The authors conclude that staff may act as extensions of their members. For Paul's systems the paper is most useful as a comparison for the staffer network. Montgomery's tie is an office-to-office sequence link, which the system already emits as directed office moves and shared_with counts. The system deliberately does not treat that link as a person-to-person edge. In this paper the link carries only a weak signal of similarity, and the signal is partly confounded by homophily. It supports showing these counts as descriptive data. It does not support treating them as transmission channels. All findings are observational and House-only. The window is 1997-2010 and excludes committee staff.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-staffer-network.overlap-edge-rule",
+    "relation": "supports",
+    "paper_claim": "The tie is a member-member count of senior or policy staffers who worked for both offices in the current or previous two Congresses, undirected and row-standardized (p.11, p.18). Senior-tie LES pooled rho is 0.043, 95% CI 0.0095 to 0.096; senior-only ideology is -0.003, CI -0.029 to 0.020. The future-senior placebo CI of -0.033 to 0.071 overlaps the headline, so homophily is not excluded (p.29).",
+    "paper_location": "p.11 (W as undirected count, fn 12); p.18 (row-standardized, 3-Congress window); Table 1 p.23 (pooled 0.043); Table 3 p.26 (ideology -0.003); Table 5 p.30 (placebos)",
+    "system_side": "office_moves are directed consecutive-span pairs, emitted with SEQUENCE IS NOT A SOCIAL EDGE and canonical_eligible False. The paper's tie is not a sequence link: it is the undirected co-service count, whose closest analogue in the system is shared_with / pair_people, which has no window. The rule against treating sequence as a person-person edge is still consistent with the paper's caution about homophily.",
+    "code_ref": "audits/staffer_network/build_staffer_social_network.py:2544-2550 (SEQUENCE comment); :2630-2641 (note, canonical_eligible False). Verified. shared_with path: fec/surfaces/build_staffer_network_section.py:1239-1242, 1253-1254",
+    "transfer_conditions": "House personal offices, 105th-111th Congresses; observational; member-level outcome similarity, not transmission. The text gives Congress numbers only, so the 1997-2010 window is a calendar inference, not the paper's statement.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Numbers and CIs match the text. The analyst's claim that the tie is a directed office-to-office sequence link is wrong: the paper states the ties are undirected (p.11, fn 12). The supports relation holds only for the conclusion that the link should stay descriptive. Fields rewritten accordingly.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-staffer-network#Concurrent-service OVERLAP edge rule|Concurrent-service OVERLAP edge rule]]",
+    "system": "melange-staffer-network"
+   },
+   {
+    "component_id": "melange-staffer-network.overlap-edge-rule",
+    "relation": "qualifies",
+    "paper_claim": "Only senior and policy staff carry signal. Lower-level staff ties are a placebo with a null LES lag (pooled -0.016, text CI -0.070 to 0.027). Adding policy staff to senior ties weakens the LES lag (pooled 0.013, CI -0.015 to 0.037; Table 2 p.24).",
+    "paper_location": "p.4 fn 2 (senior and policy title definitions); p.24 Table 2; p.29 text (placebo CI); p.30 Table 5",
+    "system_side": "shared_staff counts people attached to two or more member offices, with no title filter at the count stage and no time window. SHARED EMPLOYEE and intern titles are dropped only from the top_staff eligible list. shared_with takes top partners from pair_people by count, with no window.",
+    "code_ref": "fec/surfaces/build_staffer_network_section.py:160-162 (SHARED_STAFF_NOTE); :297-298 (excluded titles); :1239-1242 (pair_people to shared_partners); :1251 (shared_staff); :1258-1266 (title exclusion applies to eligible top-staff list). Verified.",
+    "transfer_conditions": "Applies if shared_with or shared_staff is ever read as a member relationship signal. The paper's senior-only and 3-Congress specification is the comparison; shipped counts are descriptive only.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper numbers match the text. Code claims hold: no title filter and no window in the count; title exclusion only on the eligible top-staff list. Caveat: people tuple field 8 is len(bios); I did not trace upstream what bios holds.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-staffer-network#Concurrent-service OVERLAP edge rule|Concurrent-service OVERLAP edge rule]]",
+    "system": "melange-staffer-network"
+   },
+   {
+    "component_id": "melange-staffer-network.access-uncertainty",
+    "relation": "context",
+    "paper_claim": "Ties built over the current plus two prior Congresses carry the LES signal. Narrowing to a two-Congress horizon leaves the senior LES interval barely including zero (-0.0006 to 0.1088; 94% interval 0.0016 to 0.1066). This is window sensitivity, not a decay estimate.",
+    "paper_location": "p.18 (window); Online Appendix Table A1, Models 3-6 and the note on the two-congress horizon",
+    "system_side": "Access-uncertainty cost uses a fixed 5-year staleness half-life on years since last joint overlap (staleness = ln2 * age / 5). The file labels its calibration as 'Exploratory log-cost scenarios; not fitted success or friendship probabilities', and the docstring calls the costs assumptions that must not be shown as probabilities.",
+    "code_ref": "fec/staffer_network/relationship_uncertainty.py:10-14 (constants); :36-38 (staleness term); :49-55 (specification; calibration label at :54). Verified.",
+    "transfer_conditions": "Weak. The paper's window concerns member-member outcome similarity, not whether staffer-staffer relationships remain usable. It cannot calibrate the half-life.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Window interval and the not-a-decay-estimate caveat verified in the text. Code constants, staleness formula and exploratory label verified. The code does not claim calibration, so no change needed.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-staffer-network#Recency and access-uncertainty factor|Recency and access-uncertainty factor]]",
+    "system": "melange-staffer-network"
+   },
+   {
+    "component_id": "melange-legislative-data.effectiveness-shadow",
+    "relation": "suggests-extension",
+    "paper_claim": "Members sharing senior staff have modestly correlated LES net of covariates (pooled rho 0.043). Committee chair direct effect is 1.853 (90% CI 1.376 to 2.352); indirect effect via ties is 0.442 (90% CI 0.131 to 0.826).",
+    "paper_location": "Table 1 p.23 (pooled 0.043); p.24 text (chair direct 1.853, indirect 0.442)",
+    "system_side": "The five-stage shadow score (BILL, AIC, ABC, PASS, LAW) in the cited engine file is a versioned illustrative candidate policy that requires calibration. The claim that it is validated against CEL LES for ceremonial share only is not in the cited engine file; the ceremonial-share and CEL work sits in fec/members/lep_criterion.py. I found no network-similarity check in the cited files.",
+    "code_ref": "fec/engine/legislative_effectiveness.py:1-31 (five stages; ScoringPolicy labelled illustrative, needs calibration). Validation support is in fec/members/lep_criterion.py:3-8, :31, :59, :83 (ceremonial share on CEL data), a different file from the one cited.",
+    "transfer_conditions": "Optional second criterion: shadow scores should show a similar small lag on senior-title ties if they track LES. This is UNVERIFIED, needs office_moves restricted to senior titles, and is not evidence that the shadow score is valid.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper figures verified. The shadow score is correctly described as a candidate needing calibration. The validation claim is attributed to the wrong file; the nearest support is lep_criterion.py, which pairs ceremonial share with CEL data but was not checked as a validation study.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-legislative-data#Five-stage legislative effectiveness shadow and CEL criterion|Five-stage legislative effectiveness shadow and CEL criterion]]",
+    "system": "melange-legislative-data"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Calls Montgomery's tie an office-to-office sequence link that the system emits as directed moves. The paper's W is an undirected, row-standardized co-service count over the current and two prior Congresses (p.11, fn 12, p.18). Sequence is the theory, not the operational tie.",
+   "States the window as 1997-2010. The text gives only the 105th-111th Congresses and never states years; 1997-2010 is calendar arithmetic.",
+   "Says the senior ideology result shows nothing (-0.003). Strictly, the paper says only that it is not reliably distinguishable from zero (95% CI -0.029 to 0.020); Table 3 has 4 of 7 Congress estimates positive, so the summary's flat reading is a fair shorthand but not a finding of no effect."
+  ],
+  "gaps_exposed": [
+   "No member-level staff-sharing measure matches the paper's specification (senior/policy titles only, current plus two prior Congresses, row-standardized). shared_with counts every shared person with no window, so a published-style replication on the system's payroll data is not possible as shipped.",
+   "No check exists for homophily versus transmission on staff-move links (for example, a future-ties placebo). Any use of office_moves beyond description lacks a falsification design.",
+   "Committee staff are excluded in the paper, but the system's co-tenure layer gives committee containers kappa 0.75/0.60/0.40. No literature here addresses committee-staff ties.",
+   "The paper does not test multiplex combination with cosponsorship (its own limitation, p.31). Whether staff-move ties add information beyond the cosponsor kernel edges is untested in the system."
+  ],
+  "flags": [
+   "Causal wording (effects, indirect effects transmitted through ties) outruns the design. Placebos do not exclude homophily (p.29-31). If cited in Melange, staff-sharing ties must not be described as influence, access or introduction channels (D-025). The paper's figures are similarity estimates on 1997-2010 House data.",
+   "Pooled rho values pool seven per-Congress estimates spanning a majority flip (110th). Quote them with the per-Congress strata in Tables 1-4, not as a single pooled coefficient.",
+   "The source text is internally inconsistent. p.19 says 105th to 112th Congress while the data end at the 111th. p.27 calls the 110th ideology rho reliably positive, but Table 4 gives 0.024 (SE 0.021). The lower-level ideology placebo point 0.006 sits oddly inside its interval [-0.016, 0.067].",
+   "The row-standardized W is a SAR convention (per-row normalization), not the rejected per-edge volume normalization. The paper does not argue for either rejected SNA proposal.",
+   "The paper cites Drutman 2012 and Bertrand et al. 2014 on staff becoming lobbyists but does not analyze revolving-door edges. Nothing here licenses influence language on revolving-door edges or the use of LDA as an edge source (D-021)."
+  ],
+  "paul_alignment": "No Paul entry for this work. His staffer position (staffers as gatekeepers, professional ties as conduits) is tempered here. Shared senior staff predict only small LES similarity, ideology barely moves beyond covariates, and homophily is not excluded. The system as built agrees: sequence stays an office-move property, never a person-person edge, and shared-staff counts are descriptive. His overlap note is not stale; this paper adds the empirical reason sequence links should stay descriptive.",
+  "related": [
+   {
+    "slug": "haythornthwaite-1996-social-network-analysis",
+    "relation": "complements",
+    "why": "Vault item exists; title confirms information-exchange framing of ties. Montgomery does not cite it, so the link is conceptual only."
+   },
+   {
+    "slug": "sotoudeh-2024-network-based-measure",
+    "relation": "complements",
+    "why": "Vault item exists; text contrasts its cosponsorship influence measure with LES, so the contrast is real. Its outcome is bill passing, not LES."
+   },
+   {
+    "slug": "bucchianeri-2025-legislative-effectiveness-american",
+    "relation": "same-method",
+    "why": "Vault item exists; applies the Volden-Wiseman LES framework to American states, the same outcome method with a different population."
+   },
+   {
+    "slug": "aroyehun-2026-politics-of-feelings",
+    "relation": "same-method",
+    "why": "Vault item exists; uses Volden-Wiseman LES as outcome, but the same underlying data was not verified, so same-data is downgraded."
+   },
+   {
+    "slug": "bacik-2025-measuring-dynamical-evolution",
+    "relation": "complements",
+    "why": "Vault item exists; title confirms a US lobbying network over time. Montgomery does not model lobbying, so the bracketing claim is conceptual."
+   },
+   {
+    "slug": "furnas-2019-moneyed-interests-information",
+    "relation": "complements",
+    "why": "Vault item exists; the survey experiment includes junior and senior congressional staff, which fits the staff-as-information-processor framing."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "battaglini-2018-effectiveness-connected-legislators",
+    "relation": "complements",
+    "why": "Item exists (title match, staff networks in the House). It is a network source less endogenous than cosponsorship, as the rel says."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "osnabrugge-2021-playing-gallery-emotive",
+  "note": false,
+  "meta": {
+   "title": "Playing to the Gallery: Emotive Rhetoric in Parliaments",
+   "authors": [
+    "Moritz Osnabrugge",
+    "Sara B. Hobolt",
+    "Toni Rodon"
+   ],
+   "year": 2021,
+   "venue": "American Political Science Review 115(3), 885-899",
+   "doi": "10.1017/S0003055421000356",
+   "sha12s": [
+    "f4f797a4a9d8"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "Playing to the Gallery: Emotive Rhetoric in Parliaments",
+   "authors": [
+    "Moritz Osnabrugge",
+    "Sara B. Hobolt",
+    "Toni Rodon"
+   ],
+   "year": 2021,
+   "venue": "American Political Science Review 115(3), 885-899",
+   "doi": "10.1017/S0003055421000356",
+   "document_type": "journal article",
+   "coverage": "Full text read in chunks (84,751 chars): front matter, abstract, theory, data, measurement, Tables 1-5, alternative mechanism, Ireland, conclusion, references. No _annots files (annot_sha12s empty), no paul_entries, no ext/rel overrides, so paul_markup is empty. Appendices A-J not in the text file. Page images not rendered. Lobbying, networks, path-finding, allocation: no content. Elections, legislators, persuasion, text measurement: covered. DOI hint corrected from empty. Markup items dropped: 0.",
+   "research_question": "When and why do legislators use emotive rhetoric in parliamentary speeches? Is emotive language used strategically to appeal to voters, so that it rises when a debate has a larger public audience?",
+   "theory": "Rational choice (Downs 1957): politicians maximise electoral appeal. Emotive language is a persuasion tool that shapes how voters process messages (Brader 2005; Weeks 2015; Bless et al. 1992). Legislators address voters in high-profile debates and colleagues in low-profile ones, so emotive rhetoric should be higher in high-profile debates. Trade-off: overt emotion can signal weak credibility, so speakers balance ethos, logos and pathos depending on audience. Hypothesis H: legislators make greater use of emotive rhetoric in high-profile debates than in low-profile debates (p. 4).",
+   "data": "Unit: individual speech. UK: 958,925 House of Commons speeches, 2001-2019 (Table 1, p. 6), from Rheault et al. (2016) for 2001-2014 plus TheyWorkForYou. Speeches under 40 characters and Speaker/deputy Speaker speeches dropped. Debate counts: PMQs 34,030; Queen's Speech 15,160; Ministerial Question Time 279,076; Urgent Questions 37,523. MP covariates: party, leadership, minister, shadow cabinet, seniority, chair, gender, age. Ireland: 945,734 Dail speeches, Nov 2002-2013 (Herzog and Mikhaylov 2018). Replication data: Harvard Dataverse doi 10.7910/DVN/QDTLYV.",
+   "method": "Dictionary score per speech = percent emotive words minus percent neutral words, -100 to 100 (p. 6-7). Dictionary: ANEW seeds (851 emotive, 970 neutral) expanded with skip-gram embeddings (window 10, 250 dims) and cosine scoring against seeds; final 2,015 emotive and 2,095 neutral words (UK), 1,692 and 1,764 (Ireland). OLS, SEs clustered by MP, five specifications (baseline, time trend, MP fixed effects, controls and party FE, length-weighted MP FE). Topic check: scikit-learn classifier trained on Manifesto corpus, seven topics, used as topic fixed effects (Table 4).",
+   "identification": "No causal identification. The authors say explicitly that the design cannot causally identify the effect of audience exposure (p. 10). Within-MP fixed effects remove time-constant speaker traits. PMQ questioners are selected randomly from interested MPs, which the authors say reduces selection bias (p. 9). Topic fixed effects test the alternative that topic drives the gap.",
+   "measures": "Emotive score (emotive minus neutral percent, per speech; mean 0.88, SD 8.95, p. 7). Alternatives in appendices: share of emotive words, Lowe et al. (2011) scaling, LIWC, multilevel clustering by MP and party, positive and negative affect split. Debate-type dummies: PMQs, Queen's Speech opening day, other Queen's Speech days, Ministerial Question Time, Urgent Questions (reference: other debates). Electoral cycle: days to the next general election. Irish Leaders' Questions dummy.",
+   "scope": "UK House of Commons, 2001-2019, all speeches meeting the length rule; Irish Dail lower house, November 2002-2013, Leaders' Questions versus other debates. Lower houses only. Analysis is observational across debate formats within two parliaments.",
+   "key_findings": [
+    "Baseline model (Table 3, Model 1, p. 8): speeches in PMQs score 2.226 points higher on the emotive-minus-neutral scale (SE 0.128, p<0.01).",
+    "With time trend, MP fixed effects and controls (Model 4, p. 8-9): PMQs effect 1.618 (SE 0.167); MP fixed effects alone (Model 3) 1.562 (SE 0.137).",
+    "Length-weighted MP fixed-effects model (Model 5, p. 9): PMQs 1.663 (SE 0.214) and Queen's Speech opening day 2.064 (SE 0.166).",
+    "Queen's Speech opening day debate: 2.172 in Model 1 (SE 0.214); other Queen's Speech days 0.581 (SE 0.106), p. 8.",
+    "Ministerial Question Time is slightly negative (-0.293 in Model 1; -0.207 in Model 5); Urgent Questions effect not robust (Table 3, p. 8-9).",
+    "Predicted levels from Model 4 (Figure 3, p. 9): about 2.5 for PMQs, about 3.0 for Queen's Speech opening day, 1.5 for other Queen's Speech days, and 1.0 or lower for other debate types.",
+    "Electoral cycle: each 100 days closer to a general election raises emotive rhetoric by 0.015 (p. 10); the authors call this small because the Commons closes 25 working days before elections.",
+    "Topic fixed effects (Table 4, p. 11): PMQs effect 2.020 in Model 1 and 1.383 to 1.525 in other models, all p<0.01; the authors conclude topics do not explain the PMQ gap.",
+    "Topic averages (Figure 4, p. 10): fabric of society has the highest mean emotiveness and economy the lowest.",
+    "Ireland (Table 5, p. 12): Leaders' Questions coefficient 4.591 (Model 1), 3.975 (Model 3), 3.792 (Model 4), 2.497 (Model 5), all p<0.01, N = 945,734 speeches.",
+    "Most speeches are neither highly emotive nor highly neutral: mean emotive score 0.88 with SD 8.95 on the -100 to 100 scale (p. 7).",
+    "Authors conclude that emotive rhetoric is used primarily when legislators address voters as well as colleagues, and that the pattern generalises to Ireland (p. 12-13)."
+   ],
+   "limitations": [
+    "Authors state the design cannot causally identify audience exposure; the pattern is described as a plausible explanation (p. 10).",
+    "Generic ANEW dictionary was not built for political text, so measurement error is possible (p. 6); domain words were added via embeddings.",
+    "Score is a share of emotive versus neutral words, so the authors note a few emotive words can shift a speech's meaning (p. 7).",
+    "Dictionary method chosen over supervised annotation for cost reasons (p. 5); the study does not measure positive versus negative sentiment in the main text.",
+    "Urgent Questions and some Ministerial Question Time effects are not robust; Ireland covers one debate type and 2002-2013.",
+    "Appendices A-J are not in the extracted text, so the robustness checks cited to them cannot be verified here.",
+    "Abstract reports two million speeches; the body reports 958,925 UK and 945,734 Irish speeches. Treat the body figures as the analysed sample."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "the high level of emotive rhetoric in PMQs is not the result",
+    "Our argument is that politicians are most likely to employ such rhetoric"
+   ],
+   "references_of_note": [
+    "Rheault et al. 2016, PLoS ONE: earlier emotion measure in parliamentary debates and source of the UK speech data",
+    "Rice and Zorn 2019: corpus-based dictionaries for specialised vocabularies (dictionary plus embeddings)",
+    "Bradley and Lang 2017: ANEW affective norms dictionary",
+    "Osnabrugge, Ash and Morelli 2020: cross-domain supervised topic classification",
+    "Slapin and Kirkland 2020: rebel MPs and legislative speech in the UK",
+    "Spirling 2016: franchise extension and parliamentary language",
+    "Brader 2005: emotional appeals in political ads",
+    "Eggers and Spirling 2014: definition of a debate in Westminster records",
+    "Herzog and Mikhaylov 2018: database of Irish parliamentary speeches",
+    "Lowe et al. 2011: scaling policy preferences from coded texts"
+   ]
+  },
+  "summary_md": "Osnabrugge, Hobolt and Rodon (APSR 2021) ask whether legislators use emotive language strategically, raising it when a debate reaches voters rather than only colleagues. They score 958,925 UK House of Commons speeches (2001-2019) and 945,734 Irish Dail speeches (2002-2013) with a dictionary built from ANEW seed words (emotive = clearly positive or negative, neutral = neither) expanded through corpus-trained skip-gram embeddings; each speech gets percent emotive minus percent neutral words (mean 0.88, SD 8.95 on a -100 to 100 scale). OLS with MP-clustered errors shows Prime Minister's Questions speeches score 2.23 points higher than ordinary debates, and 1.56 to 1.66 higher within the same MP once MP fixed effects are added; the Queen's Speech opening day is similar, Ministerial Question Time is slightly lower, and topic fixed effects do not remove the gap. Ireland's Leaders' Questions shows 2.5 to 4.6. The electoral-cycle effect is tiny (0.015 per 100 days). The authors state the design is observational and cannot causally identify audience exposure. For Paul's systems the paper matters in two places. First, it is direct evidence that the same speaker's affect-word rates move with venue and audience, which bears on the lexical Big Five and affective-N slots: Melange pools social posts, floor speech and interviews per member before z-scoring, and the interview-to-floor N transfer already failed. It supports Paul's ask for venue-specific frameworks. Second, its valence-agnostic emotive score is closer to the unused lsd_charge option than to the live abs(net)/words intensity in the press pipeline, and its audience logic cautions that press-release heat may index performance for the public rather than commitment.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "qualifies",
+    "paper_claim": "Within the same MP (MP fixed effects), PMQ speeches score 1.562 to 1.663 points higher on the emotive-minus-neutral scale than other debates (Table 3 Models 3-5; speech-level SD 8.95; UK 2001-2019, 958,925 speeches). The Queen's Speech opening day is 2.064 in Model 5. The authors read this as a venue pattern and say it is not causally identified.",
+    "paper_location": "Table 3 p. 8 with Models 3-5 on p. 9; SD on p. 7; causal caveat p. 10",
+    "system_side": "The default corpus pools social posts, CREC floor speech and INTERVIEW turns per member into one text list (CHRG excluded by default). Per-member category rates are per-1000-word. Genre is only a validation hook (BIG5_SOURCES), not a covariate, so members with different venue mixes can differ in affect rates for venue reasons.",
+    "code_ref": "fec/members/big5_traits.py:36-73 (corpus pooling and BIG5_SOURCES hook); fec/members/big5_traits.py:220 (per-1000-word rates); fec/members/big5_traits.py:179-182 (posemo/negemo weights in E, ES, A, C)",
+    "transfer_conditions": "Applies only if US floor speech, interviews and social posts differ in audience exposure the way PMQs differs from ordinary Commons debate. The paper covers UK and Irish lower houses with a valence-agnostic ANEW-based score, not LIWC posemo/negemo. The speech-level shift is about 0.18 SD. Observational, not causal.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Numbers verified in Table 3 (2.226, 1.562, 1.618, 1.663, 2.064). Dropped the claim that venue, not speaker, shifts word rates: the paper says the design cannot causally identify audience effects, so the bearing states only that the gap persists within MP. Code line range corrected: E weights sit at line 179, not 180-183. The z-scoring step was not re-read in this pass.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "supports",
+    "paper_claim": "The authors argue, without causal identification, that legislators raise emotive rhetoric when addressing voters: PMQ speeches are higher within the same MP (about +1.6, Table 3) and Irish Leaders' Questions higher by +2.5 to +4.6 (Table 5, N=945,734). The paper does not test whether speakers keep their rank order in affect across venues.",
+    "paper_location": "Theory pp. 3-4; Table 3 p. 8; Table 5 p. 12; causal caveat p. 10",
+    "system_side": "affective_n is built from INTERVIEW turns only (source filter in emit_affective_n.py), and the recorded transfer of interview N to floor and hearing text failed. The paper gives a plausible venue mechanism for that failure. The rho values cited in the item (.050, .161) were not found in the cited code or in fec/members text files checked in this pass.",
+    "code_ref": "fec/members/emit_affective_n.py:30-38 (source='INTERVIEW' filter); fec/members/affective_n_validate.py:44 (correlation helper only; no rho output stored here)",
+    "transfer_conditions": "Explains, does not prove, the transfer failure. The paper tests average venue shifts, not member rank-order preservation, which is what rho measures. Does not license re-scoring floor text.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Ireland range 2.5 to 4.6 verified in Table 5. The text pass cannot tell which Table 5 columns carry MP fixed effects, so 'the same legislators' is not established for Ireland and was removed. The rho values could not be traced to any file and are left unverified.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-stance.lsd-tone",
+    "relation": "method-source",
+    "paper_claim": "Emotiveness is measured valence-agnostically: percent emotive words (ANEW, 851 emotive seeds) minus percent neutral words (970 neutral seeds). Skip-gram embeddings expand the dictionary to 2,015 emotive and 2,095 neutral UK words, following Rice and Zorn (2019). Scale runs from -100 to +100; mean 0.88, SD 8.95.",
+    "paper_location": "Measurement section pp. 5-7 (Equation 1; dictionary counts p. 6; scale and SD p. 7)",
+    "system_side": "Live press intensity is abs(lsd_net_norm), i.e. abs(pos - neg)/words, chosen by the CU_S5_INTENSITY default of net_norm. stage5_lsd.R also emits lsd_charge = (pos + neg)/words, used only when INTENSITY is charge. The LSD tone dictionary is generic with no domain expansion (not re-verified in this pass).",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:45 (INTENSITY default net_norm); C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:141-143 (heat and press_value); C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:49-61 (lsd_tone with lsd_net_norm and lsd_charge)",
+    "transfer_conditions": "Applies if 'how heated' should mean emotional charge regardless of direction. The paper validates on parliamentary speech, not press releases. Switching intensity changes press_value and the Press pillar, a change-control decision for Paul, not a recommendation here.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Dictionary counts (851, 970, 2,015, 2,095) and scale mean 0.88 and SD 8.95 verified in the text. Code lines verified: default at run_stage5.R:45, heat and press_value at :141-143, lsd_charge and lsd_net_norm inside lsd_tone. Human-validation appendices are not in the text.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-stance#Lexicoder LSD2015 tone intensity|Lexicoder LSD2015 tone intensity]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.press-pillar",
+    "relation": "qualifies",
+    "paper_claim": "Hypothesis H (p. 4): legislators use more emotive rhetoric in high-profile debates with a larger general audience. The theory section adds that overt emotion can signal weak credibility, so speakers balance ethos, logos and pathos by audience. The paper studies parliamentary speech only, not press releases.",
+    "paper_location": "Hypothesis p. 4; theory pp. 3-4; conclusion pp. 12-13",
+    "system_side": "press_value = stance sign x heat, where heat defaults to abs(lsd_net_norm) (run_stage5.R:141-143). press_matrix in moneyball_core.py normalizes signed extrema within each domain. Press releases are one public-facing venue, so the intensity term may index messaging style more than commitment; this is analyst inference, not a paper finding.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:141-143; fec/moneyball_core.py:214-236 (press_matrix)",
+    "transfer_conditions": "Holds only to the extent that between-member intensity differences reflect style rather than commitment. The paper shows within-speaker venue shifts in parliament, not between-member style differences within one venue.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The original line 'Politicians are most emotive when addressing voters' paraphrases H and the conclusion too strongly; reworded to the text. Hypothesis H location and the credibility trade-off verified. The claim that press-release intensity indexes audience performance is the analyst's extension and is now labeled as such.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/moneyball-rank-pillars#Press pillar (own-domain, signed raw-max)|Press pillar (own-domain, signed raw-max)]]",
+    "system": "moneyball-rank-pillars"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "The summary says the paper 'supports Paul's ask for venue-specific frameworks' and that 'his note is not stale'. The item has paul_entries empty and no annotation, so this Paul attribution is unsupported here and should be removed or sourced.",
+   "The summary's statement that the interview-to-floor N transfer failed (rho .050, .161) has no traceable source in the cited code or fec/members text files checked; unverified.",
+   "The summary's statement that venue, not speaker, shifts emotive word rates overstates the paper, which says the design cannot causally identify audience effects (p. 10).",
+   "The summary and bearings place the electoral-cycle and causal-caveat text on p. 10; in the extracted text the running-head page numbers are ambiguous, so the page cite is approximate.",
+   "Appendices A-J are not in the extracted text; robustness claims that cite them (LIWC, alternative scalings, human validation) are unverified.",
+   "Four of the seven related links (Ramey, Aroyehun, Haselmayer, Koutsoumpis) are not cited by this paper; they are analyst judgements between vault items and are kept but labeled.",
+   "Abstract reports two million speeches; body analysed samples are 958,925 UK and 945,734 Irish. The summary uses the body figures correctly."
+  ],
+  "gaps_exposed": [
+   "No venue or genre adjustment in the lexical Big Five: affect-category rates are pooled across social, floor and interview text per member; a per-genre z-score or genre-mix covariate is absent (BIG5_SOURCES is a validation hook only).",
+   "Press intensity uses abs(net)/words, which cancels mixed-valence heat; the valence-agnostic lsd_charge option exists but has not been validated against human-coded intensity (open question on melange-stance.lsd-tone).",
+   "No test of whether stance sign x intensity predicts CU-aligned behaviour better than stance sign alone; the paper's audience logic makes that test more pressing.",
+   "No domain-expanded dictionary for congressional press or floor text; a Rice and Zorn style embedding expansion is on disk as a paper but unused."
+  ],
+  "flags": [
+   "Observational design: the authors say they cannot causally identify the audience effect (p. 10); quote any use as association.",
+   "Pooled baseline (PMQs 2.226) mixes speakers and parties; quote the within-MP estimates (1.562 to 1.663, Table 3 Models 3-5) when citing a venue shift, with window UK 2001-2019 and denominator 958,925 speeches.",
+   "Abstract says about two million speeches; analysed samples are 958,925 UK (2001-2019) and 945,734 Irish (2002-2013) speeches; cite the body figures.",
+   "Appendices A-J (LIWC, positive/negative split, alternative scalings) are not in the extracted text and were not checked."
+  ],
+  "paul_alignment": "Paul has no annotation on this work. The evidence agrees with his stated position on the lexical Big Five that Ramey-style scoring needs venue-specific frameworks: this paper shows the same legislators shift emotive word use by venue and audience. His note is not stale: the system still pools venues by default (big5_traits.py:36-73) with genre restriction only as a validation hook, while the affective-N slot stays interview-only after its transfer test failed, which is consistent with this paper.",
+  "related": [
+   {
+    "slug": "rheault-2016-measuring-emotion-parliamentary",
+    "relation": "same-data",
+    "why": "The paper takes its 2001-2014 UK Commons speech data from Rheault et al. (2016) (data section) and cites them for seed-word embedding scoring (measurement section). Verified in text."
+   },
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "same-method",
+    "why": "The paper expands its ANEW dictionary following Rice and Zorn (2019) corpus-based dictionary approach. Verified in text."
+   },
+   {
+    "slug": "dietrich-2019-pitch-perfect-vocal",
+    "relation": "complements",
+    "why": "The paper cites Dietrich, Hayes and O'Brien (2019) for visual or audio measurement of political emotion. Verified in text; the vocal-pitch channel is the analyst's comparison."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Not cited by this paper; analyst link. Ramey infers traits from floor speech, and this paper's venue result bears on that reading."
+   },
+   {
+    "slug": "aroyehun-2026-politics-of-feelings",
+    "relation": "extends",
+    "why": "Not cited by this paper; analyst link carrying the emotive-rhetoric construct into US Congress."
+   },
+   {
+    "slug": "haselmayer-2017-sentiment-analysis-political",
+    "relation": "complements",
+    "why": "Not cited by this paper; analyst link on dictionary plus crowd-coding validation of political negativity."
+   },
+   {
+    "slug": "koutsoumpis-2024-kernel-truth-text",
+    "relation": "complements",
+    "why": "Not cited by this paper; analyst link on LIWC-to-Big-Five meta-analysis bounding trait versus context in affect rates."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "decter-frain-2016-impressive-words-linguistic",
+    "relation": "complements",
+    "why": "Also treats parliamentary rhetoric as aimed at an outside audience, but works on emotive language where this paper works on agentic and communal language."
+   },
+   {
+    "slug": "hargrave-2022-longer-conforming-stereotypes",
+    "relation": "cited-by",
+    "why": "Real link: the Hargrave text cites Osnabrugge, Hobolt and Rodon 2021 (Playing to the Gallery) on emotive rhetoric in parliaments."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "peters-2024-language-models-infer",
+  "note": false,
+  "meta": {
+   "title": "Large Language Models Can Infer Psychological Dispositions of Social Media Users",
+   "authors": [
+    "Heinrich Peters",
+    "Sandra Matz"
+   ],
+   "year": 2024,
+   "venue": "arXiv preprint arXiv:2309.08631v2 (cs.CL); authors at Columbia University",
+   "doi": "",
+   "sha12s": [
+    "02d78d450d8c"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "slug": "peters-2024-language-models-infer",
+   "title": "Large Language Models Can Infer Psychological Dispositions of Social Media Users",
+   "authors": [
+    "Heinrich Peters",
+    "Sandra Matz"
+   ],
+   "year": 2024,
+   "venue": "arXiv preprint arXiv:2309.08631v2 (cs.CL); authors at Columbia University",
+   "doi": "",
+   "document_type": "preprint",
+   "coverage": "Full text read in one pass (49,030 chars; text file lines 1-638): front matter, abstract, introduction, method (2.1 data, 2.2 measures and prompting), results (3.1 correlations, 3.2 gender and age groups, 3.3 observer ratings), discussion (4.1-4.4), limitations, acknowledgments, author contributions and references. Paul annotations: none (annot_sha12s empty, n_annots 0, paul_entries empty), so paul_markup is empty. Page numbers are not recoverable from the text file, so locations are given by section number. Figures 1-4 were read from captions only (no images). Supplementary tables S1-S6 are not in the text file. Topics checked and absent: lobbying, legislators, networks, path-finding, allocation, elections, turnout. Persuasion appears only as motivation and citation (refs 8, 47, 50). Text measurement is central. Metadata hints: title, authors and venue are correct. Year 2024 kept as the v2 date (5 Jun 2024); first arXiv posting was 2023. DOI empty because none appears in the text.",
+   "research_question": "Can zero-shot GPT-3.5 and GPT-4 infer the Big Five personality traits of social media users from their Facebook status updates, and does inference accuracy vary across gender and age groups?",
+   "theory": "Zero-acquaintance judgment accuracy: people can judge strangers traits from behavioral traces (refs 9-13). Digital footprints predict traits when supervised models are trained on self-reports (refs 14-19). Authors propose LLMs may have a human-like ability to profile people from text without direct interaction. Bias explanations considered: training-data bias versus differences in online self-expression by group. Neither is tested.",
+   "data": "Sample of 1,000 adult MyPersonality Facebook app users, randomly subsampled (Sec 2.1). Mean age 24.2 (SD 8.8); 63.1 percent female. Eligible users completed the full 100-item IPIP and had at least 200 status updates; the most recent 200 were used. Unit is the user. Mean update length 17.10 words (SD 15.03). App active 2007-2012 (Sec 4.2). Self-report: IPIP 100-item Big Five. Third-person subsample: 68 users rated by Facebook friends on a 10-item IPIP (Sec 3.3). Models: gpt-3.5-turbo-0301 and gpt-4-0314 via API. IRB approval Columbia protocol AAAU8559.",
+   "method": "Zero-shot prompting with default system prompt 'You are a helpful assistant' and an inference prompt asking for 1-5 scores on each Big Five trait, numbers only (Sec 2.2). Text fed in chunks of 20 messages; chunk scores averaged. Each inference queried three times and averaged (inter-round r from .73 to .96). Analyses: Pearson correlations between inferred and self-reported scores with Bonferroni correction; mean comparisons across gender and a median-split age groups by t-tests on inferred scores and on absolute residuals; within-group correlations and within-group z-standardization to test whether bias is in level versus rank order (Sec 3.2); correlations by message volume from 20 to 200 messages (Sec 3.1); observer-rating comparison (Sec 3.3).",
+   "identification": "None causal. Zero-shot design means no training or test split; accuracy is a correlation with self-report. Group bias claims rest on mean differences and residual t-tests. Not controlled for demographics passed to the model, since none were provided.",
+   "scope": "Facebook users who took MyPersonality psychometric tests in 2007-2012, mostly young adults, with 63 percent women. Country and language are not stated. Models are 2023 GPT versions. Authors state the sample may not represent the wider population.",
+   "measures": "Inferred Big Five scores (1-5, averaged over chunks and three queries). Self-reported IPIP 100-item scores. Third-person IPIP 10-item observer ratings. Residual is inferred minus self-reported; absolute residual used for accuracy by group.",
+   "key_findings": [
+    "Average Pearson r between inferred and self-reported traits: GPT-3.5 .27, GPT-4 .31 (Sec 3.1). Abstract reports average .29, range .22-.33 across both models.",
+    "GPT-4 per-trait r: Openness .33, Extraversion .32, Agreeableness .32, Neuroticism .29, Conscientiousness .26. GPT-3.5: Openness .28, Extraversion .29, Agreeableness .30, Neuroticism .26, Conscientiousness .22 (Sec 3.1).",
+    "All correlations significant at p below .001 after Bonferroni correction. Differences between GPT-3.5 and GPT-4 not significant for any single trait (Sec 3.1).",
+    "Accuracy rises with message volume; most of the maximum is reached by about 20 messages. Conscientiousness levels off earlier (Sec 3.1, Fig 2).",
+    "Score distributions: both models underestimate Conscientiousness and Agreeableness and overestimate Neuroticism. GPT-3.5 underestimates Openness and Extraversion; GPT-4 overestimates Extraversion (Sec 3.1, Fig 1).",
+    "Gender: inferred Openness, Conscientiousness, Extraversion and Agreeableness are higher for women in both models (Agreeableness t=13.63 for GPT-4). No significant inferred Neuroticism difference (Sec 3.2.1, Fig 3).",
+    "Gender accuracy: absolute residuals are larger for men on Conscientiousness, Agreeableness and Neuroticism in both models (Agreeableness t=-9.22 for GPT-3.5). Within-gender correlations do not differ significantly (Sec 3.2.1, Fig 4).",
+    "Age: inferred Conscientiousness and Agreeableness are higher and Neuroticism lower for older users in both models. Openness and Extraversion are lower for older users only in GPT-3.5 (Sec 3.2.2, Fig 3).",
+    "Age accuracy: GPT-3.5 residuals are larger for older users on Openness (t=4.78) and Conscientiousness (t=2.64). GPT-4 shows no residual age difference. Within-age correlations do not differ (Sec 3.2.2, Fig 4).",
+    "Observer comparison (n=68): self-report versus observer mean r .304; LLM versus observer mean r .269 for GPT-3.5 and .276 for GPT-4. Authors call LLM accuracy on par with human observers (Sec 3.3).",
+    "For Conscientiousness, LLM-observer agreement exceeds the agreement of either LLM or observers with self-reports (Sec 3.3, Sec 4.1).",
+    "Against supervised models: Park et al. report average r .37 (range .26-.41) with in-domain training; zero-shot LLM average .29 is slightly lower (Sec 4.1)."
+   ],
+   "limitations": "Black box: cue utilization and origin of gender and age biases unexamined (Sec 4.2). Data from MyPersonality, 2007-2012 language may differ from current text, possibly understating accuracy. Non-representative sample of curious users; Openness underestimation may reflect this. Only the 200 most recent posts; chunking due to token limits. Only zero-shot prompting with default settings; no chain-of-thought or fine-tuning tested. Demographics not supplied to models; authors suggest this could help or amplify bias. Observer analysis is preliminary with n=68. Live interaction not studied. Privacy and misuse recommendations deferred to future research. Supplementary statistics S1-S6 not reviewed.",
+   "paul_markup": [],
+   "short_quotes": [
+    "a level of accuracy that is similar to that of supervised machine learning models specifically trained to infer personality",
+    "The findings suggest that GPT's personality inferences are less accurate for men than women.",
+    "these biases seem to be limited to the absolute measures of accuracy"
+   ],
+   "references_of_note": [
+    "Park et al. 2015, JPSP, automatic personality assessment through social media language (ref 17): supervised baseline r .37",
+    "Kosinski, Stillwell, Graepel 2013, PNAS, private traits predictable from digital records (ref 14)",
+    "Youyou, Kosinski, Stillwell 2015, PNAS, computer-based judgments more accurate than human (ref 31)",
+    "Matz et al. 2017, PNAS, psychological targeting as digital mass persuasion (ref 47)",
+    "Matz et al. 2024, Sci Rep, generative AI for personalized persuasion at scale (ref 8)",
+    "Peters, Cerf, Matz 2024, OSF preprint, LLMs infer personality from free-form interactions (ref 43)",
+    "Back et al. 2010, Psychological Science, Facebook profiles reflect actual personality (ref 13)",
+    "Azucar, Marengo, Settanni 2018, meta-analysis of digital footprint Big Five prediction (ref 15)"
+   ]
+  },
+  "summary_md": "Peters and Matz test whether off-the-shelf chat models can read Big Five personality from ordinary social media text with no training. They took 1,000 MyPersonality Facebook users (2007-2012, mean age 24, 63 percent women) who had completed the 100-item IPIP and had at least 200 status updates. GPT-3.5 and GPT-4 (2023 snapshots) were asked zero-shot for a 1-5 score on each trait. Text went in 20-message chunks, chunk scores were averaged, and each call was repeated three times and averaged. Inferred scores correlate with self-report at a mean r of .29: .31 for GPT-4 and .27 for GPT-3.5, with a per-trait range of .22-.33. Supervised in-domain models reach about .37. Accuracy is mostly reached by about 20 messages. Both models shift levels: they underestimate Conscientiousness and Agreeableness and overestimate Neuroticism. Absolute errors are larger for men on C, A and N, and for older users under GPT-3.5. Within-group correlations do not differ, so the bias is in level, not rank order. In a subsample of 68 users rated by friends, LLM-observer agreement (about .27) is close to self-observer agreement (.30). For Conscientiousness the LLM agrees more with observers than with self-report. For Melange, the paper backs the design of the display-only LLM item reader (chunk, then average) and sets a realistic ceiling for zero-shot accuracy. It also warns that agreement with observer panels may reflect shared impressions rather than traits. And it gives a reason to check the live affective-N input, which is partly LLM-derived, for gender as well as party bias. The population, text genre and criterion are all far from congressional speech, so none of its numbers can stand in as validity evidence for Melange.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+    "relation": "qualifies",
+    "paper_claim": "Zero-shot holistic 1-5 Big Five ratings by GPT-4 from the last 200 Facebook updates (20-message chunks, chunk means, three queries averaged) correlate with IPIP-100 self-report at mean r .31 for GPT-4 and .27 for GPT-3.5 (n = 1,000 users; pooled average .29; per-trait range .22-.33 across both models). Supervised in-domain models reach about .37 (Park et al., as cited in Sec 4.1).",
+    "paper_location": "Abstract; Sec 2.2; Sec 3.1; Sec 4.1",
+    "system_side": "big5_llm.py is an item-level reader: 20 IPIP-style observer-keyed items (4 per trait), 3-point responses (-1/0/+1), de-identified author text, default model Claude Sonnet (Opus and Haiku optional), chunks of 1,200 words with up to 6 chunks per genre, chunk scores averaged and then z-scored within the scored pool. The vault topic note records a diagonal mean over A, E and O of +0.064 for the Opus run (ES sign-flipped), below the 0.12 bar.",
+    "code_ref": "fec/members/big5_llm.py:3-18,51,84-94,206-221,354-361",
+    "transfer_conditions": "Holds only for informal first-person posts by ordinary young users scored against self-report. Member floor speech and interviews differ in genre and have no self-report criterion. The paper reports one accuracy level for one holistic prompt on one sample. It does not state a ceiling, so the figure is a reference point, not a bound. The item-level, de-identified design differs from the paper's holistic prompt.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers checked at the abstract and Sec 2.2, 3.1 and 4.1; all correct. The paper does not state a ceiling of about .3, so that wording is removed from transfer_conditions. big5_llm.py lines 3-18, 51 and 84-94 match the description. Display-only status was not confirmed in the code read; the +0.064 figure comes from the vault topic note, not from code.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#LLM item-level reader (Pink), ridge hybrid and CT-CM latent model|LLM item-level reader (Pink), ridge hybrid and CT-CM latent model]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+    "relation": "suggests-extension",
+    "paper_claim": "Each inference was queried three times and averaged. Between-round correlations ranged from .73 (GPT-4, Openness) to .96 (GPT-3.5, Agreeableness), so single-call noise is not negligible.",
+    "paper_location": "Sec 2.2",
+    "system_side": "The primary score uses rep 0, a single call per chunk. The --rep flag reruns the same chunks with fresh calls to compute ICC across reps; those reps are not averaged into the published score.",
+    "code_ref": "fec/members/big5_llm.py:40",
+    "transfer_conditions": "Applies if the item-level Claude ratings show between-rep variance like the paper's. The paper is a holistic prompt on GPT models, so the size does not transfer directly. Any change to published scores would be new agent analysis, UNVERIFIED until a second path reproduces it (DE-062).",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Paper range .73-.96 confirmed at Sec 2.2 (the .73 and .96 values are GPT-4 Openness and GPT-3.5 Agreeableness). big5_llm.py line 40 confirms rep 0 is the primary pass and that --rep reps are for reliability.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-psychometrics#LLM item-level reader (Pink), ridge hybrid and CT-CM latent model|LLM item-level reader (Pink), ridge hybrid and CT-CM latent model]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.gold-panel-validation",
+    "relation": "qualifies",
+    "paper_claim": "In 68 users rated by Facebook friends on a 10-item IPIP, LLM-observer agreement averaged r .269 (GPT-3.5) and .276 (GPT-4), against .304 for self-report-observer agreement. For Conscientiousness, LLM-observer agreement exceeded the agreement of either the LLM or observers with self-report. The analysis is described as preliminary.",
+    "paper_location": "Sec 3.3; Sec 4.1",
+    "system_side": "Big Five validity is anchored to observer panels: the Personality on the Hill appendix, given in the vault gold-set note as 129 Senate insiders and 125 academics. The research note on that appendix counts about 126 academic rows from the text. The gold-set note names observer panels as the only anchor.",
+    "code_ref": "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md:19; C:/Users/pgoff/Documents/research/papers/mondak-nd-online-appendix-personality.md",
+    "transfer_conditions": "If LLM readings track the same outward impressions that observers form, convergence with expert or insider panels may index shared reputation or presentation rather than the underlying trait. The evidence is preliminary (n = 68) and rests on friends rating peers, not experts rating senators.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers verified at Sec 3.3 and 4.1 (n = 68; means .304, .269, .276; Conscientiousness pattern). The panel counts are the analyst's; the gold-set note line 19 gives 129 and 125, but the appendix note counts about 126 academic rows, so the bearing should carry both. The statement that no self-report criterion exists is an inference from the gold-set note, not a quote from it. Validator code was not read.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Big Five validation against Senate gold panels and criteria|Big Five validation against Senate gold panels and criteria]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "qualifies",
+    "paper_claim": "Inferred Neuroticism correlates with self-report at r .29 for GPT-4 and .26 for GPT-3.5 (n = 1,000). Both models overestimate N. Absolute N residuals are larger for men (t = -4.55 GPT-3.5; t = -2.39, p = .017 GPT-4), while within-gender correlations do not differ significantly, so the bias is in level, not rank order.",
+    "paper_location": "Sec 3.1 and Fig 1; Sec 3.2.1 and Fig 4",
+    "system_side": "RECEPT_N defaults to affective. The N slot takes an LLM affective-facet measure (the sum of Haiku pessimism, anxiety, depression and volatility labels), E-residualized and party-controlled, and enters the trait susceptibility term at weight .30. Missing values are set to a neutral 0.",
+    "code_ref": "fec/members/receptivity_layer.py:74,179,186; fec/members/emit_affective_n.py:3-7,39-43",
+    "transfer_conditions": "The paper's pattern suggests within-pool z removes common level bias, but a demographic level offset would pass into a mixed-gender roster. Relevant only if the Haiku facet prompts on interview text share GPT's level bias by gender. The paper's N is an IPIP trait score on social media posts; the system input is a facet sum on interview text.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Paper numbers verified at Sec 3.1 and 3.2.1. receptivity_layer.py line 74 default confirmed; the susceptibility term uses .30 times Nn; missing values are neutral 0; E-residualization and party control are stated in the comments. Stale point: the emit_affective_n.py docstring still describes a LIWC base averaged into the score, but the round-7b comment and the llm-only score line show LIWC is an anchor, not a component. The docstring should not be cited as the description of the default path.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.shrinkage-and-weighting",
+    "relation": "context",
+    "paper_claim": "Correlations rise with message volume from one 20-message chunk to ten chunks, but a substantial share of variance is captured with 20 messages and most correlations are close to their maximum well before 200 messages. Conscientiousness levels off earliest (Sec 3.1, Fig 2).",
+    "paper_location": "Sec 3.1; Fig 2 (caption and text)",
+    "system_side": "P6 gated shrinkage pulls members with fewer than 8 chunks toward 0. Interview chunks get double weight (C_INT_W 2.0) for Conscientiousness only.",
+    "code_ref": "fec/members/big5_llm.py:352-353,362-387",
+    "transfer_conditions": "The saturation volume comes from personal, cue-dense posts. Political text carries few personality cues, so saturation probably needs far more text. The paper's curve should not be used to relax the n_chunks gate. 20 messages at 17.10 words each is about 342 words, one 1,200-word chunk is much larger.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The bearing's 'most of the maximum is reached by about 20 messages' is not in the paper. The paper says a substantial share of variance is captured at 20 messages, and Fig 2 is a caption-only read. The gate, shrinkage and 2.0 interview weight are confirmed in big5_llm.py. The 342-word arithmetic is 20 x 17.10.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Interview weighting (C_INT_W) and gated shrinkage (P6)|Interview weighting (C_INT_W) and gated shrinkage (P6)]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary says accuracy is mostly reached by about 20 messages. The paper says a substantial share of variance is captured at 20 messages and most correlations are near maximum well before 200. The stronger wording is not supported.",
+   "Summary says absolute errors are larger for older users under GPT-3.5. That holds only for Openness and Conscientiousness; Agreeableness residuals are smaller for older users under GPT-3.5 (t = -2.64, Sec 3.2.2).",
+   "Summary says the paper backs the design of the display-only item reader. The paper tests one holistic prompt and never evaluates item-level or chunked designs; chunk-then-average is only its procedure. Endorsement is overstated.",
+   "Summary says the paper sets a realistic ceiling for zero-shot accuracy. The paper reports one zero-shot level and states no ceiling.",
+   "Summary and item key_findings quote the pooled r .29 for the whole sample (63.1 percent women, mean age 24.2) without strata. Unless labeled UNSTRATIFIED, it should be quoted with the within-gender and within-age values, which the text reports only as not significantly different; the stratum values sit in S2-S5, not in the text file.",
+   "Summary says the paper warns that observer agreement may reflect shared impressions. The paper says cues may not be valid predictors of self-perception and LLMs may replicate human judgment biases. Shared impressions is the analyst's gloss and should be labeled as such.",
+   "paul_alignment says Paul's recorded position names GPT-4o and DeepSeek-V3 as the only validated models. No such statement was found in the vault concepts; DeepSeek-V3 appears in the Birkenmaier research note and in vault framework and psychometrics notes, but not as an 'only validated' claim. Paul's position is unverified here.",
+   "The academic observer count differs: the gold-set note gives 125 and the appendix note counts about 126 rows from text. Summary and bearings should state which source they use.",
+   "Slug years differ from publication years for azucar-2017 (published 2018) and koutsoumpis-2024 (published 2022). Naming only; the links point to the right papers.",
+   "Summary says Peters is a reason to check the live affective-N input for gender bias. This is a reasonable inference from the paper's N-residual gender pattern, but it is the analyst's inference, not a finding of the paper."
+  ],
+  "gaps_exposed": [
+   "No self-report or friend-rating criterion exists for members, so LLM trait accuracy cannot be compared with the paper's r .29 benchmark on the same footing.",
+   "The affective-N input (live via RECEPT_N=affective) is party-controlled but not checked for gender-dependent level bias, which the paper documents for LLM-inferred N, A and C.",
+   "The primary LLM pass is a single call per chunk. Between-rep variance is measured via --rep, but reps are not averaged into the score.",
+   "Whether LLM agreement with the Senate insider and academic panels reflects shared impression rather than trait is untested. The paper's C result (LLM-observer agreement above self agreement) makes this a live alternative."
+  ],
+  "flags": [
+   "The paper's motivation includes psychological targeting and persuasion at scale (Matz 2017, 2024). Its accuracy numbers must not be quoted as validity for Melange member traits, and any new analysis built on it stays UNVERIFIED until a second path reproduces it (DE-062).",
+   "The near-observer accuracy claim rests on n = 68 and should not be generalized to expert-panel convergence.",
+   "No conflict with the SNA, LDA or reciprocity rules: the paper is silent on networks, lobbying and elections."
+  ],
+  "paul_alignment": "Paul has no annotation on this work. His recorded position on the LLM reader is that LLM-based trait reading is endorsed, with GPT-4o and DeepSeek-V3 the only validated models (from Birkenmaier and Lechner). Peters supports feasibility, but only at modest accuracy (r about .3) on non-elite users, against self-report, with demographic level bias. That is weaker than an endorsement implies. The system's own record (reader display-only, diagonal +0.064) is already more cautious. The note is stale: an LLM-derived N facet now feeds live receptivity via affective N.",
+  "related": [
+   {
+    "slug": "cao-2024-language-models-personality",
+    "relation": "complements",
+    "why": "Cao and Kosinski show that LLM-derived perceptions of public figures can be predicted from name embeddings alone (text check of the paper). That is the reputational-prior risk the de-identification step guards against, and it bears on how observer agreement is read."
+   },
+   {
+    "slug": "azucar-2017-predicting-personality-traits",
+    "relation": "cites",
+    "why": "The note confirms Azucar, Marengo and Settanni as the meta-analysis Peters cites as ref 15. Published 2018 (online Dec 2017); the slug year is 2017, a naming difference only."
+   },
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "The note reports few-shot prompting of DeepSeek-V3 and GPT-4o reaching macro-F1 0.74-0.77 on elite text for agency and communion cues. This is the elite-text genre Peters does not cover."
+   },
+   {
+    "slug": "koutsoumpis-2024-kernel-truth-text",
+    "relation": "complements",
+    "why": "Meta-analysis of Big Five and LIWC relations, the closed-vocabulary baseline against which zero-shot LLM inference is compared. Published 2022; the slug year is 2024, a naming difference only."
+   },
+   {
+    "slug": "mondak-nd-online-appendix-personality",
+    "relation": "complements",
+    "why": "The appendix gives the Senate insider and academic observer panels used as the system criterion. Its text-count of academic rows (about 126) differs from the 125 in the gold-set note."
+   },
+   {
+    "slug": "lemens-2025-positioning-political-texts",
+    "relation": "same-method",
+    "why": "Title and text confirm a design of asking an LLM about each text and averaging the responses, parallel to Peters' three-query averaging."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Ramey et al. run floor speech through LIWC and MRC features with pre-trained Mairesse SMOreg models, a closed-vocabulary approach on elite speech. Peters is the open-ended LLM alternative on non-elite text."
+   },
+   {
+    "slug": "palm-2025-influence-personality-traits",
+    "relation": "complements",
+    "why": "Palm and Tims is a systematic review of whether Big Five traits moderate persuasion strategies. The research note lists its evidence status as unverified, so this link is kept on the note's abstract only."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ }
+]

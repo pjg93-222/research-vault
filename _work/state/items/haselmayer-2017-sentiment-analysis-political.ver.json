@@ -1,0 +1,74 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-stance.lsd-tone",
+   "relation": "measurement-source",
+   "paper_claim": "Validation on 200 sentences: aggregated lay crowd vs aggregated expert r = 0.82. Domain dictionary vs expert r = 0.65 at 84% coverage, about 0.6 when the 32 unmatched sentences are set to zero. Momtazi r = 0.13 (46% coverage) and SentiWS r = 0.19 (31% coverage). Authors state that dictionary analysis requires a customized dictionary and recommend caution with general-purpose dictionaries.",
+   "paper_location": "Sec. 6 pp. 2631-2632; Table 1 p. 2633; Conclusion p. 2637; App. 3 p. 2639",
+   "system_side": "press_value tone intensity is stock LSD2015, uncustomized. stage5_lsd.R lsd_tone (lines 48-61) removes negator-plus-word hits and flips them: negated negatives count as positive and negated positives as negative. lsd_net_norm = (pos - neg) / words. run_stage5.R line 141 takes abs(lsd_net_norm) as heat; line 143 sets press_value = final_sign x heat. The brain note at debate-stance-model.md line 102 records only a three-case smoke test (pro +4 / negated 0 / neutral 0) and calls LSD validated, (a functional check by the paper standard).",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:48-61; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:141-143; C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md:102",
+   "transfer_conditions": "The validation protocol transfers: about 200 releases rated 0-4 by lay coders and experts, correlated with |lsd_net_norm|. The size of the generic-dictionary penalty does not transfer directly, because the paper's comparators are machine-translated German lexicons, not LSD2015. This paper does not establish that LSD2015 performs well on English news; the Young and Soroka citation is general sentiment work, not an LSD validation. The paper scores sentences for negativity only, while LSD here is bidirectional and scores whole release bodies.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Table and text numbers confirmed (r 0.82, 0.65, 0.6, 84%, 32 sentences, Momtazi 0.13/46%, SentiWS 0.19/31%). The phrase 'each domain needs its own dictionary' overgeneralizes; the paper argues for a customized dictionary for its own domain and language. The system_side negation description is incomplete: negated hits are flipped, not removed. The LSD-validated-on-English-news transfer claim is outside this paper and was not verified."
+  },
+  {
+   "component_id": "melange-stance.legacy-regex-scorer",
+   "relation": "contradicts",
+   "paper_claim": "Sentence tonality is set by the single most negative dictionary word (max rule). A negator immediately before a word excludes that word, and an intensifier multiplies it by 1.25. Word scores are crowd-derived means on a 0-4 scale. Mean word scores with the max rule and booster/negation handling give r = 0.65 (n = 168 test sentences). Other aggregation combinations give r from 0.38 to 0.58.",
+   "paper_location": "Sec. 5 pp. 2630-2631; App. 2 Table 5 p. 2638",
+   "system_side": "The graded layer header in cu_press_release_scraper.R cites Haselmayer and Jenny and says sentence tonality follows the strongest cue. The code does not: weighted_tone (about lines 2443-2475) sums every fired cue across all CU sentences into Wp and Wn, and graded_from_signed buckets |Wp - Wn| by GRADED_CUTS. The negator window covers two preceding tokens; a 0.75 downtoner is added (line 139), not in the paper. TONE_LEXICON has 44 hand-weighted entries (weights 1, 2, 3), not crowd-derived scores. run_stage5.R lines 146-160 reuse the magnitude only for display score_label; press_value does not use it.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R:121-132 (header), 138-139 (AMPLIFY_FACTOR, DOWNTONE_FACTOR), 2320-2360 (TONE_LEXICON), 2379 (graded_from_signed), 2443-2475 (weighted_tone), 2786-2803; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:146-160",
+   "transfer_conditions": "This is a fidelity finding, not an empirical one. It matters for the display score_label magnitude and the comparison column only, because press_value and the press pillar do not consume the graded layer. No external claim that these graded labels follow Haselmayer and Jenny should be made.",
+   "strength": "strong",
+   "verdict": "reproduced",
+   "verifier_note": "Paper method description and Table 5 values confirmed. Code mismatch confirmed by reading weighted_tone, the two-token negator window, the 0.75 downtoner and the lexicon. The header line range is slightly off (about 121-132). The relation is a mismatch between the code's citation and the paper, not a paper finding that contradicts the code. Lexicon count is 44 by my count, consistent with 'about 45'."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.press-pillar",
+   "relation": "qualifies",
+   "paper_claim": "Dictionary-based tonality runs in the same direction as expert coding but compresses effects. In App. 3 Table 6 the government-pair coefficient is -0.13 with the dictionary vs -0.40 with expert coding, and electoral losses are 0.12 vs 0.23. Authors call dictionary estimates more conservative than manual coding. Pooled regression with party fixed effects, standard errors clustered by party pair; adjusted R2 0.03 with n = 619 (Table 3 and Table 6 dictionary columns).",
+   "paper_location": "App. 3 Table 6 p. 2639; Sec. 7.1 Table 3 p. 2635",
+   "system_side": "press_value = final_sign x LSD heat (run_stage5.R lines 141-143). The per-category rollup in run_stage5.R (lines 171-182) is a decay-weighted mean of press_value, not a sum. The Python side (fec/moneyball_core.py lines 214-237) reads workbook raw values, applies normalize_signed_extrema from fec/stance/media_rules.py (about lines 215-230), which divides positive values by the largest positive and negative values by the absolute largest negative, and uses tier weights from row 535. Whether sign x intensity beats sign alone has not been tested; that repo-status claim was not verified here.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:141-143,171-182; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/moneyball_core.py:214-237; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/media_rules.py:215-230",
+   "transfer_conditions": "The evidence is one Austrian campaign, in German, on negativity only. It suggests dictionary intensity carries a weaker, noisier version of the human-coded signal, so multiplying stance sign by that intensity may add noise. The paper does not test a stance x intensity product, so this is a caution, not a refutation. The paper's pooled coefficients should be labelled as pooled across parties with party fixed effects if quoted.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper-side numbers confirmed in Table 6 and Table 3. The system-side description says the press pillar sums by category; the stage 5 rollup is a decay-weighted mean and the normalization is in Python, so the description is corrected here. The 'never tested' claim is a repo-status claim and was not checked."
+  }
+ ],
+ "related": [
+  {
+   "slug": "rice-2018-corpus-based-dictionaries",
+   "relation": "complements",
+   "why": "Both argue for domain-specific sentiment dictionaries. Rice and Zorn derive one from the corpus with word vectors; this paper derives one from crowd ratings. The legacy scorer cites both papers. Verified against the Rice item's research question."
+  },
+  {
+   "slug": "merkley-nd-party-cues-news",
+   "relation": "complements",
+   "why": "Merkley and Stecula use Lexicoder with a custom dictionary to detect party cues, not to measure sentiment intensity. The link is a method precedent for custom dictionaries, not a validation of tone. Verified against the Merkley item text."
+  },
+  {
+   "slug": "park-2025-automatic-construction-direction",
+   "relation": "same-method",
+   "why": "Also a domain-lexicon construction method. The rejected bill-sign-handling test (3 good / 43 bad) is claimed in the analyst text and was not checked here; the link rests on the shared point that preprocessing and aggregation choices drive validity."
+  },
+  {
+   "slug": "ornstein-2024-train-your-stochastic",
+   "relation": "complements",
+   "why": "Offers LLM few-shot coding of political text as an alternative to the crowdcoding step used for intensity gold labels. Verified against the Ornstein item research question."
+  },
+  {
+   "slug": "h-2023-artificial-intelligence-sentiment",
+   "relation": "complements",
+   "why": "Scoping review of AI sentiment analysis in competitive research. The lexicon-versus-ML framing was not confirmed in the item text, so this is a weak link kept only because the item exists and covers sentiment methods."
+  }
+ ],
+ "summary_issues": [
+  "The summary says the evidence comes from 2013. The corpus spans 1995-2013, the validation sample pools four campaigns from 2002-2013, and only the two applications use the 2013 campaign.",
+  "The related link to b-2025-comparing-fine-tuned was removed. That study compares a fine-tuned RoBERTa with TF-IDF classifiers for Roman Urdu stance; it does not test dictionary intensity, so the contradicts relation is not supported.",
+  "The summary says the intensity measure is scored as |net| / words. That is correct for the default INTENSITY setting, but net itself flips negated hits rather than removing them (stage5_lsd.R lines 48-61).",
+  "Paul's highlight claims and the paul_alignment statements about Birkenmaier and the stale components list were not verified; this item has no Paul entries of its own.",
+  "The ext coverage field says Appendices 1-6 were read; the text also has Appendix 7 (CrowdFlower coding task, p. 2640 onward). Minor."
+ ]
+}

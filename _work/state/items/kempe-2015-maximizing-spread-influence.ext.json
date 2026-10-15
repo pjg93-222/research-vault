@@ -1,0 +1,60 @@
+{
+ "slug": "kempe-2015-maximizing-spread-influence",
+ "title": "Maximizing the Spread of Influence through a Social Network",
+ "authors": [
+  "David Kempe",
+  "Jon Kleinberg",
+  "Eva Tardos"
+ ],
+ "year": "2015",
+ "venue": "Theory of Computing 11(4), 2015, pp. 105-147 (extended version of KDD 2003 and ICALP 2005 papers)",
+ "doi": "10.4086/toc.2015.v011a004",
+ "document_type": "journal article (theoretical computer science; extended journal version of two conference papers)",
+ "coverage": "Read the full extracted text (2166 lines, about 125k chars) in chunks, including abstract, introduction, all models, all theorems and proofs, experiments in Section 8, conclusions, and references. Metadata hints corrected: DOI was blank and is 10.4086/toc.2015.v011a004 (from the article header and the online record). Paul markup: none, because annot_sha12s is empty and no _annots file is linked. Paul entries: none. Page images were not rendered; locations are printed page numbers. Online scan: one web search confirmed the DOI, dates (received 2014-04-17, published 2015-04-22), and keywords. Downloaded the published PDF (397821 bytes, sha256 446f5dc5...) to _sources; it matches the existing _raw copy.",
+ "research_question": "How should a k-node seed set be chosen to maximize the expected final number of active nodes when influence spreads through a social network under threshold or cascade diffusion models? The paper asks whether the NP-hard influence maximization problem admits efficient approximation guarantees, and which model generalizations keep such guarantees.",
+ "theory": "Progressive diffusion models from mathematical sociology (Granovetter and Schelling threshold models) and interacting particle systems (independent cascade). Influence is submodular under these models, so greedy hill-climbing gives a (1-1/e-eps) guarantee via Nemhauser-Wolsey-Fisher. Triggering-set equivalence (Lemma 4.4) is the main proof device. Generalizations: general threshold, general cascade, decreasing cascade, submodular threshold, non-progressive, and multi-action marketing with diminishing returns.",
+ "data": "No empirical influence data. Experiments use a co-authorship graph built from the high-energy physics theory section of arXiv as of winter 2002: 10748 nodes (researchers with at least one coauthored paper), about 53000 node pairs with edges, parallel edges kept as tie strength. Single-author papers ignored. Unit of analysis: researcher. Influence parameters are set by simple rules, not estimated (Section 8.2). Each targeted set is evaluated with 10000 simulations; target set size k runs from 1 to 30.",
+ "method": "Theory: NP-hardness reductions (vertex cover, maximum coverage, set cover), monotone and submodular proofs via triggering sets, the Decreasing Cascade coupling argument (Theorem 5.1), a layered-graph reduction for non-progressive models (Theorem 6.1), and a hill-climbing analysis for budgeted marketing actions (Theorem 7.1). Empirics: greedy Monte Carlo hill-climbing compared with high-degree, distance-centrality, and random seed selection under Linear Threshold, weighted Cascade, and Independent Cascade with p = 1% and p = 10%.",
+ "identification": "Not applicable. This is a worst-case algorithm analysis and a simulation comparison on a fixed graph. No causal identification strategy is claimed.",
+ "scope": "Population: abstract diffusion models on directed graphs, tested on one collaboration network. Institution: theoretical computer science. Era: conference versions 2003 and 2005, journal version 2015, with 2014 revisions. Claims are about model-based seeding, not about real-world marketing outcomes.",
+ "measures": "Influence sigma(A) is the expected number of active nodes at quiescence, and weighted sigma uses node weights. Heuristic baselines are degree centrality (node degree) and distance centrality (smallest average shortest-path distance, with n used for disconnected pairs). Approximate sigma is estimated by simulation.",
+ "key_findings": [
+  "Greedy hill-climbing gives a (1-1/e-eps) approximation for influence maximization in the Linear Threshold and Independent Cascade models (Theorem 1.1, p.106; proof Section 4, pp.118-122).",
+  "Influence sigma(A) is monotone and submodular for every triggering-set model (Lemma 4.4, pp.119-120), including Independent Cascade (Theorem 4.5, p.121) and Linear Threshold with in-weights summing to at most 1 (Theorem 4.6, pp.121-122).",
+  "Decreasing Cascade is submodular (Theorem 5.1, p.124) even though no triggering-set equivalent exists (example, pp.123-124); the proof uses a residual-process coupling.",
+  "Exact influence maximization is NP-hard for Linear Threshold (Theorem 2.1, p.111), and for Independent Cascade it is hard to approximate better than 1-1/e (Theorem 2.2, p.113).",
+  "For general threshold models, influence maximization cannot be approximated within n^(1-eps) for any eps > 0 under P not equal NP (Theorem 3.3, pp.116-117).",
+  "Non-progressive influence maximization over horizon tau reduces exactly to progressive maximization on a layered graph with tau*|V| nodes (Theorem 6.1, p.127), so the guarantees carry over.",
+  "For budget split across marketing actions with diminishing returns, hill-climbing gives 1 - exp(-gamma k/(k+delta m)) of optimum (Theorem 7.1, pp.128-130).",
+  "Linear Threshold experiment on the hep-th co-authorship graph: greedy beats high-degree by about 18% and distance centrality by over 40% (Section 8.4, p.134; Figure 1).",
+  "Weighted Cascade curves have the same shape as Linear Threshold, with values about 25% smaller (Section 8.4, p.135; Figure 2).",
+  "Independent Cascade with p = 1%: each targeted node adds on average about three activations, so network effects are much weaker; random seeds do relatively better (Section 8.4, pp.135-136; Figure 3).",
+  "Independent Cascade with p = 10%: beyond about 12 targets, random seeds beat both high-degree and distance-centrality heuristics; those heuristics reach about 2415 activations and then barely grow (Section 8.4, pp.136-137; Figure 4).",
+  "Greedy keeps growing the active set in every experiment because it accounts for overlap of earlier seeds' reach (Section 8.4, pp.136-137); the paper says a local search step would likely improve results further (p.137)."
+ ],
+ "limitations": [
+  "Influence probabilities and thresholds are not inferred from data; the experiments use simple uniform or weighted settings (Section 8.2, p.133; Conclusions, pp.138-139).",
+  "The co-authorship graph is a proxy for social influence, with name-aliasing errors only partly corrected (Section 8.1, p.133).",
+  "Models are progressive in the main analysis; the non-progressive extension is a reduction, not a full experimental study (Section 6, pp.126-128).",
+  "No approximation hardness is known for Linear Threshold, so the optimal tight ratio there is open (Conclusions, p.138).",
+  "Sigma(A) is only estimated by Monte Carlo; the paper notes exact evaluation is #P-complete (Section 4, p.118), and weighted sampling can be inaccurate for exponentially large weights (footnote 3, p.119).",
+  "Experiments stop at k = 30 for computational reasons, and only one network is studied (Section 8.3, pp.134-135).",
+  "The paper leaves competing cascades, negative opinions, and a consistent timing-free competition model open (Conclusions, pp.137-138)."
+ ],
+ "paul_markup": [],
+ "short_quotes": [
+  "'a natural greedy strategy obtains a solution that is provably within 63% of optimal' (abstract, p.105)"
+ ],
+ "references_of_note": [
+  "Domingos and Richardson, Mining the network value of customers, KDD 2001 (p.106-107)",
+  "Richardson and Domingos, Mining knowledge-sharing sites for viral marketing, KDD 2002 (p.107)",
+  "Nemhauser, Wolsey, and Fisher, analysis of approximations for maximizing submodular set functions, 1978 (p.119)",
+  "Mossel and Roch, Submodularity of influence in social networks: from local to global, SIAM J. Comput. 2010 (p.108, p.126)",
+  "Salek, Shayandeh, and Kempe, WINE 2010 (characterization of Triggering-model equivalence, p.124)",
+  "Leskovec et al., Cost-effective outbreak detection in networks, KDD 2007 (CELF, p.108)",
+  "Borgs, Brautbar, Chayes, and Lucier, Maximizing social influence in nearly optimal time, SODA 2014 (p.109)",
+  "Granovetter, Threshold models of collective behavior, 1978 (p.107)",
+  "Goldenberg, Libai, and Muller, word-of-mouth and complex systems models, 2001 (p.106)",
+  "Wasserman and Faust, Social Network Analysis, 1994 (degree and centrality measures, p.108, p.133)"
+ ]
+}

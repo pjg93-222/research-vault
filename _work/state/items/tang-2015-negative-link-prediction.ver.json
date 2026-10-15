@@ -1,0 +1,82 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-sna.co-appearance-and-references",
+      "relation": "qualifies",
+      "paper_claim": "Pairs with negative interactions hold negative links far above chance: t-test p = 5.72e-89 (Epinions) and 1.93e-109 (Slashdot). The rule negIn reaches precision 0.2097 and F1 0.2826 on Epinions, and precision 0.1483 and F1 0.1986 on Slashdot. The ratio of negative-link pairs tends to increase with the number of negative interactions K. Reliability weight f(Nij) = 1 - 1/log(1+Nij) applies to pairs with negative interactions; other pairs get a constant r.",
+      "paper_location": "Sec. 3.3 pp. 89-90 and Fig. 3; Sec. 4.1 Eq. 2 p. 90; Table 3 p. 93",
+      "system_side": "Code confirmed: net = (pos - neg) / (pos + neg + neu), so neutral-substantive contexts sit in the denominator, and one scored negative context gives net -1.0. Counts re-read from member_references.json on disk: 7,944 edges, 1,161 with net below 0, 6,028 above 0, 755 at 0. Of the 1,161 negative edges, 567 (about 49 percent) have n_scored equal to 1. The dashboard n_scored >= 2 filter is confirmed. These counts come from one read path and remain UNVERIFIED under DE-062.",
+      "code_ref": "fec/members/member_reference_layer.py:366-373; fec/surfaces/build_dashboard_bundle.py:233-239",
+      "transfer_conditions": "Tang checks interaction-derived signs against declared negative links, which Congress lacks, so the transfer concerns interpretation only, not a calibrated precision. Tang's interaction labels are thresholded helpfulness ratings and MPQA lexicon polarity, a cruder reader than an LLM. Whether LLM-valenced precision is higher or lower is untested. Tang's count-based reliability weighting is a per-edge volume weight of the kind this project rejected, so it is flagged here, not recommended.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "All cited numbers reproduce from the paper text. Softened: the K trend is a tendency ('tend to increase'), and the reliability weight applies only to pairs with negative interactions, with constant r otherwise. The single-context -1.0 behavior and the file counts hold. The 'LLM reads better than MPQA' comparison is the analyst's opinion, not the paper's."
+    },
+    {
+      "component_id": "melange-sna.signed-coalitions",
+      "relation": "qualifies",
+      "paper_claim": "Balanced triads are 92.31 percent (Epinions) and 93.01 percent (Slashdot) of undirected triads (Sec. 3.2 p. 89). Setting negative-sample reliability weights to 1 (cj = 1) cuts precision by 8.70 percent on Epinions (Table 4) and 11.08 percent on Slashdot (Table 5). The balance regularizer raises precision from Cb = 0 to 0.001 (+4.02 and +4.41 percent), is relatively stable from 0.001 to 0.1 on Epinions, and drops sharply after 0.05 on Slashdot (Sec. 5.4, Fig. 5). Large Cb hurts. The paper does not say the regularizer helps only at small weight.",
+      "paper_location": "Sec. 3.2 p. 89; Tables 4-5 pp. 93-94; Sec. 5.4 and Fig. 5 pp. 94-95",
+      "system_side": "Code confirmed: signed_coalitions.py takes sign(net) and weight |net| with MINW default 0.0 (line 21) and no n_scored floor, so a one-context negative edge enters at full weight 1.0. Correction: the script says the output is not consumed by the chain, which holds for the pipeline. But signed_coalitions.json is read by run_legislation_dashboard_member_desk.py, run_legislation_shadow_recompute.py, make_member_desk.py (splinter_k2 antagonist list) and dashboard_integrity.py, so the output reaches member-desk and audit surfaces.",
+      "code_ref": "fec/network/signed_coalitions.py:21,28-31,41-46; fec/surfaces/make_member_desk.py:826",
+      "transfer_conditions": "Tang's balance figures come from declared trust networks. The system's signs are interaction-derived, which is the paper's noisy-label case, and the paper does not estimate how much frustration comes from noise. Tang's count-based reweighting is the rejected per-edge volume kind. The n_scored >= 2 floor the summary proposes is a count threshold of the same family, so it is flagged, not recommended on this paper's authority. Any sensitivity run needs its own project approval.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Balance percentages and ablation precision drops reproduce. Softened: the regularizer claim, which the paper does not state as helps only at small weight, and the chain-consumption claim, which needs the downstream consumers listed. The floor recommendation is flagged under the project's rejected-proposal rule."
+    },
+    {
+      "component_id": "melange-stance.two-hop-decomposition",
+      "relation": "supports",
+      "paper_claim": "Signed triads are overwhelmingly balanced: 92.31 percent (Epinions) and 93.01 percent (Slashdot) of undirected triads (Sec. 3.2 p. 89). This is a structural prior that sign products usually hold in person-to-person trust networks. The paper does not test stance-times-valence composition.",
+      "paper_location": "Sec. 3.2 p. 89",
+      "system_side": "Sign logic confirmed: compose(stance, v) returns support when stance is support and v is positive, and when stance is oppose and v is negative; it returns oppose for the other two combinations. Correction: compose() sets no cu_alignment variable; cu_alignment appears only as CSV column names (lines 37, 55-56). The 0.872 oracle ceiling and 0.677 flat baseline are in the file docstring. The 0.782 registry two-hop score (tweet_stance_stack.py docstring) is measured on the 400 tweet golds the design iterated against, not 5-fold CV; the 5-fold out-of-fold claim applies to the stacked model.",
+      "code_ref": "fec/stance/apply_two_hop_stance.py:27-33; fec/stance/apply_two_hop_stance.py:5,64; fec/stance/tweet_stance_stack.py:11",
+      "transfer_conditions": "Paper triads are person-to-person links. The system's third node is an interest reached through a curated valence registry. The paper supplies only a structural prior and does not validate the registry. The registry numbers are on the golds the design iterated against, so they are not an out-of-sample validation.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "The 92.31 and 93.01 figures reproduce. The sign-product logic matches compose(). The cu_alignment naming and the 5-fold CV description of the 0.782 figure are wrong and are corrected in system_side."
+    },
+    {
+      "component_id": "melange-lobbying.cosponsor-forecaster",
+      "relation": "supports",
+      "paper_claim": "Accuracy is misleading under extreme imbalance: a trivial all-missing classifier reaches 99.99 percent accuracy (Sec. 5.1 pp. 92-93). Imbalance is 1:4131 and 1:2534 (Sec. 4.1 p. 90). Parameterized baselines are reported at their best setting, and NeLP parameters are set per site, with no held-out tuning protocol described (Sec. 5.2 p. 93).",
+      "paper_location": "Sec. 4.1 p. 90; Sec. 5.1 pp. 92-93; Sec. 5.2 p. 93",
+      "system_side": "Confirmed: precision_at_k uses cutoffs 10, 25 and 50, bill-averaged (lines 1796-1853). split_verdict compares model average precision with the best of named baselines B1 member propensity, B2 sponsor affinity and B3 party match (lines 1865-1869 and 2063-2105). Average precision is the comparison metric, and no accuracy metric appears in cosponsor_forecast.py. Not confirmed: the frozen-before-scoring clause. That file has no freeze or pre-registration language, so the clause is removed here unless another artifact shows it.",
+      "code_ref": "fec/lobbying/cosponsor_forecast.py:1796-1853; fec/lobbying/cosponsor_forecast.py:1865-1869; fec/lobbying/cosponsor_forecast.py:2063-2105",
+      "transfer_conditions": "The metric choice carries across domains. Tang's unspecified tuning protocol and best-setting baseline reporting are a negative example of protocol, not a template for the system.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "All paper numbers and the imbalance and accuracy points reproduce. The system-side metric description holds for AUC, average precision and precision at k. The frozen-before-scoring statement is not supported by the cited code."
+    }
+  ],
+  "related": [
+    {
+      "slug": "leskovec-2010-predicting-positive-negative",
+      "relation": "builds-on",
+      "why": "Title confirmed as Predicting Positive and Negative Links in Online Social Networks (2010). Tang uses Leskovec et al.'s 16 weighted signed-triad features as part of its 45-feature set (Sec. 4.2)."
+    },
+    {
+      "slug": "aref-2021-identifying-hidden-coalitions",
+      "relation": "complements",
+      "why": "Title confirmed as hidden coalitions in the US House by optimally partitioning signed networks under generalized balance (2021). That is the method signed_coalitions.py implements, and Tang's balance and noisy-label results bear on it."
+    },
+    {
+      "slug": "aref-2020-detecting-coalitions-optimally",
+      "relation": "complements",
+      "why": "Title confirmed as detecting coalitions by optimally partitioning signed networks of political collaboration (2020). It applies the same frustration-minimization approach that Tang's balance evidence supports, with the same caution about interaction-derived signs."
+    },
+    {
+      "slug": "zareie-2020-similarity-based-link",
+      "relation": "complements",
+      "why": "Title confirmed as similarity-based link prediction using latent relationships (2020), which predicts positive links. Tang's features include Jaccard coefficients, but its classifier is an SVM and it targets negative links, so same-method overstates the overlap."
+    }
+  ],
+  "summary_issues": [
+    "The summary's '2015-era online trust platforms' is not supported: the paper gives no collection period (Table 1 and Sec. 3), and 2015 is only the publication year. Say the datasets are older snapshots with an unstated collection period.",
+    "The summary says precision drops the most (-8.70 and -11.08 percent) when count-based reliability weights are removed. That holds only as the largest single-component ablation (Tables 4-5). Removing all three components drops more: Epinions precision 0.2861 to 0.2342 (-18.1 percent), Slashdot 0.2139 to 0.1722 (-19.5 percent).",
+    "The summary's paul_alignment says Paul's note reads the layer more strongly than the evidence allows. No Paul markup or note was supplied with this item, so the claim cannot be verified and should be dropped or marked unverified.",
+    "The summary treats the share of negative-link pairs as rising with K. The paper says the ratios tend to increase, which is a softer claim than the summary's rises with K.",
+    "The summary's 'cheap test' (are negative-reference dyads close together in the cosponsor graph?) is an analyst extension of Tang's positive-network distance test, not a Tang result. Label it as an untested extension.",
+    "Bearing system_side fields name a shared chain and a 0.782 5-fold CV figure that the code does not support. Corrected in the bearings above; the summary should carry the same corrections."
+  ]
+}

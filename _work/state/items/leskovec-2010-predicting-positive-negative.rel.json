@@ -1,0 +1,93 @@
+{
+ "summary_md": "Leskovec, Huttenlocher and Kleinberg (WWW 2010) ask whether the sign of a hidden directed edge can be predicted from the rest of a signed network, using Epinions (119,217 nodes, 85.0 percent positive), Slashdot (82,144 nodes, 77.4 percent positive) and Wikipedia adminship votes (7,118 users, 78.7 percent positive). A logistic regression on 7 degree features plus 16 signed directed triad counts reaches about 93-94 percent accuracy on a balanced sample of edges with at least 25 common neighbours (Epinions error 6.58 percent versus 14.7 percent for Guha et al.), and the model transfers across sites with little loss. Learned triad coefficients agree with structural balance except for the enemy-of-my-enemy triad, where they match Davis weak balance (no prediction). Status theory explains directed patterns, and a global status ordering satisfies 79-85 percent of edges, well above permuted and rewired baselines. Global balance does not: a two-faction partition scores near the trivial all-positive value (about 0.80) and below degree-preserving rewired networks, so the authors find no significant faction structure. Negative links modestly improve prediction of where positive links exist (for example 0.5612 to 0.5911 on Epinions, chance 0.50). For Melange the sharpest consequence is for the signed mention-layer coalition diagnostic, which compares frustration only against the one-cluster baseline on a substrate that is 83 percent positive by edge count, with no rewired or sign-permuted null and with edge direction discarded. The paper also supports the relationships pilot keeping shared-enemy counts sign-agnostic, and offers a cheap structural consistency check for the LLM-valenced reference edges. All bearings here are new agent analysis and stay UNVERIFIED until reproduced by a second path.",
+ "category": "Social Network Analysis",
+ "bearings": [
+  {
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "qualifies",
+   "paper_claim": "Global balance (faction) structure is not significant: best two-set partitions satisfy 0.8344 / 0.8105 / 0.7809 of edges (Epinions / Slashdot / Wikipedia), close to the trivial all-positive partition (about 0.80) and BELOW degree-preserving rewired networks (0.8993 / 0.8310 / 0.8316); sign-permuted baselines score 0.8562 / 0.7779 / 0.7866.",
+   "paper_location": "Sec 4, p.649, Table 8",
+   "system_side": "signed_coalitions.py partitions the member_references mention layer by frustration local search and compares F(1), F(2), F(3) only with each other; the k=2 splinter is labelled the antagonist set. The 2026-07-19 artifact signed_coalitions.json has 520 members, 7,153 signed edges (83.3 percent positive by count), F(1) about 16.1 and F(2) 15.31 percent of total |net| weight, and a 14-member splinter. With no rewired or sign-permuted null, a 0.76-point drop cannot be told apart from degree-driven structure.",
+   "code_ref": "fec/network/signed_coalitions.py:71-81",
+   "transfer_conditions": "Paper signs are actor-declared on large web platforms; ours are LLM-valenced speech mentions among about 520 members, weighted by |net|. The comparison logic (partition objective versus permuted-sign and rewired baselines) transfers directly; magnitudes do not. Our objective is weighted, so the null must preserve weights as well as degrees.",
+   "strength": "strong"
+  },
+  {
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "suggests-extension",
+   "paper_claim": "Directed signed networks carry a global status ordering: 0.7905 / 0.8221 / 0.8538 of edges respect the best ordering versus 0.50 random, 0.7241 / 0.7568 / 0.7767 sign-permuted and 0.6377 / 0.6644 / 0.6321 rewired; status explains directed triads (a positive v-to-w-to-u path predicts a negative u-to-v edge, coefficients -0.0692 / -0.0293 / -0.0259) that undirected balance cannot.",
+   "paper_location": "Sec 3.2 p.646 Table 5; Sec 4 p.649 Table 8",
+   "system_side": "member_reference_layer.py stores directed speaker-to-target edges with net = (pos - neg) / (pos + neg + neu), but signed_coalitions.py appends every edge to both endpoints' adjacency, so direction is discarded before partitioning and no ordering or directed-triad test exists.",
+   "code_ref": "fec/network/signed_coalitions.py:34-36; fec/members/member_reference_layer.py:366-373",
+   "transfer_conditions": "Only meaningful if a negative public mention is read as an asymmetric judgement by the speaker about the target. Any ordering is a heuristic model output, never an influence, access or closeness claim (D-025). Pairs with both directions present are a case the paper sets aside; do not treat them as reciprocity evidence.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-sna.co-appearance-and-references",
+   "relation": "method-source",
+   "paper_claim": "Hidden edge signs are predictable from the rest of the network: 23-feature logistic regression gives about 93-94 percent balanced-sample accuracy at minimum embeddedness 25 (AUC about 0.90 balanced, 0.95 full data); triad features add little at low embeddedness, where degree features dominate; Wikipedia is hardest (0.8021 self-trained).",
+   "paper_location": "Sec 3.1 p.644 Figure 1; Sec 3.3 p.647 Table 6",
+   "system_side": "Reference-edge signs come from per-context LLM valence aggregated into net; checks are the 500-edge eyeball CSV and a 2-context minimum. A leave-one-out sign-prediction run on the mention layer would give an internal structural consistency check: if valence were noise, accuracy would sit near the positive base rate.",
+   "code_ref": "fec/members/member_reference_layer.py:346-373",
+   "transfer_conditions": "Needs an embeddedness census first: with about 7,153 signed edges over 520 nodes many dyads may have few common neighbours, where the paper shows triad features carry little information. Structural predictability measures consistency, not validity of the valence labels, and does not replace gold-label review.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-sna.co-appearance-and-references",
+   "relation": "supports",
+   "paper_claim": "Learned undirected triad coefficients match balance theory on every triad type except enemy-of-my-enemy, where they disagree with strong balance and fit Davis weak balance, which makes no prediction for that triad.",
+   "paper_location": "Sec 3.2, p.645-646, Table 3",
+   "system_side": "The member-relationships pilot uses shared negative targets (members whom both a and b referenced negatively) only as a discovery stratum and a descriptive feature, with an explicit comment that the shared-enemy pattern has no assumed affinity sign.",
+   "code_ref": "fec/research/member_personal_relationships/run.py:91-94,160",
+   "transfer_conditions": "Our pattern is directed (a and b both point negatively at c); the paper's evidence is cleanest for the undirected collapse. It supports withholding a sign, not inferring any relation between a and b.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-lobbying.cosponsor-forecaster",
+   "relation": "suggests-extension",
+   "paper_claim": "Adding negative-edge triad information improves prediction of positive-edge existence over positive-only features: 0.5612 to 0.5911 (Epinions), 0.5579 to 0.5953 (Slashdot), 0.6983 to 0.7114 (Wikipedia), on pairs matched for embeddedness, chance 0.50.",
+   "paper_location": "Sec 5, p.650, Table 9",
+   "system_side": "The ridge-logistic forecaster uses cosponsorship history, network degree and eigenvector, NOMINATE distances, party, state, chamber, seniority and committee features; it has no signed or mention-derived feature, and its frozen 265,396 predictions are unscored.",
+   "code_ref": "fec/lobbying/cosponsor_forecast.py:117-142",
+   "transfer_conditions": "Gains are 1.3 to 3.7 points on a matched task and may vanish against cosponsorship history; the forecaster must first beat a history baseline. Only references dated before the forecast Congress may enter, to avoid leakage. Weak on its own.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "signed_coalitions.py reports F(k) with no weight- and degree-preserving rewired null or sign-permuted null, so the 14-member splinter and its antagonist-set label are untested against chance structure.",
+  "Edge direction from member_references is discarded in the signed partition; no status-ordering or directed-triad test exists on the mention layer.",
+  "LLM-valenced reference signs have no structural consistency check (leave-one-out sign prediction) and no embeddedness census.",
+  "The component question whether negative references predict lower future cosponsorship is still untested; Sec 5 of this paper gives a matched-pair design for it.",
+  "The component catalogue lists 4,358 signed reference edges while the 2026-07-19 signed_coalitions.json counts 7,153 signed edges (net not zero) over 520 members; the catalogue figure needs its window and filter stated."
+ ],
+ "flags": [
+  "Wording (D-025): the code labels the k=2 splinter the antagonist set, and the June Phase-2 workbook used per-member frustration inside the Persuadable Index; this paper finds no significant global faction structure in three signed networks, so splinter membership and frustration are heuristic model outputs, not evidence of antagonism, closeness or persuadability, and need a null-model comparison before any such reading.",
+  "Reciprocity (D-104..D-108): the paper treats opposite-direction edge pairs as unsigned and offers no evidence on reciprocity; do not cite it as reciprocity validation.",
+  "No conflict with the two rejected SNA proposals: the paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization (its embeddedness thresholds are evaluation strata, not weights).",
+  "Windows and denominators: paper figures are 1999-2009 web snapshots over edges (balanced sample, minimum embeddedness 25 unless stated); system figures are from the 2026-07-19 artifact with total |net| weight or edge count as denominator.",
+  "All bearings are new agent analysis and remain UNVERIFIED until a second path reproduces them (DE-062)."
+ ],
+ "paul_alignment": "Paul has no annotation on this work (paul_entries empty, 0 annotations). He values Aref and Neal as an efficient alternative layer, with gaps of no path-finding and no time tracking. This paper tempers that: the signal sits in local triads and a directed status ordering, while a global two-faction split is not distinguishable from rewired baselines, so the layer also lacks a null and discards direction. His LLM-valence answer to negative ties is not contradicted; the paper supplies its missing structural check. No stale note.",
+ "related": [
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "relation": "complements",
+   "why": "Aref and Neal partition a signed House network by frustration (generalized balance); this paper shows global balance partitions can be indistinguishable from rewired baselines, the null comparison the Melange implementation of Aref-Neal lacks."
+  },
+  {
+   "slug": "aref-2020-detecting-coalitions-optimally",
+   "relation": "complements",
+   "why": "Same frustration-minimizing partition objective on political collaboration networks; Leskovec et al. supply the local-triad and global-baseline evidence for when balance structure is real."
+  },
+  {
+   "slug": "tang-2015-negative-link-prediction",
+   "relation": "extends",
+   "why": "Tang et al. build on this paper's signed-link prediction to predict negative links, including when explicit negative signs are scarce, the regime of the sparse negative mention edges."
+  },
+  {
+   "slug": "zareie-2020-similarity-based-link",
+   "relation": "complements",
+   "why": "Unsigned similarity-based link prediction; Sec 5 here shows negative links add information to positive-link prediction beyond positive-only neighbourhood features."
+  }
+ ]
+}

@@ -1,0 +1,105 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-influence-engine.seed-gate",
+      "relation": "method-source",
+      "paper_claim": "A selected seed is willing with a probability q that is known a priori. Footnote 2 says q is the same for all nodes because per-node values are impractical to know. Default q = 0.6; Q3 varies q over 0.2, 0.4, 0.6, 0.8. The paper estimates no real-world q.",
+      "paper_location": "Sec 3.1 p.3 (text 'known a priori', marker 2); footnote 2 p.3-4; Sec 5.1-5.2 p.5-6; Fig 5(a) p.6",
+      "system_side": "gate(n,cs) = max(0.15, seed_prob(n) x SGATE[stance]) at moneyball_core.py:630. SGATE values at 626-629 match the description (1.00 down to 0.35; unknown 0.85; Ally, Champion, Defender 1.0). seed_prob has a behavioral branch (0.60 + .10 coop + .06 breadth + .04 visibility, clipped 0.30-0.90) and a non-behavioral branch (0.60 + .10A + .06O + .04E, same clip).",
+      "code_ref": "fec/moneyball_core.py:626-630; fec/members/receptivity_layer.py:210-216",
+      "transfer_conditions": "The modeling idea transfers: invitation is not activation. The paper's q is homogeneous and its analysis is multi-round. SGATE is member-specific and used single-shot, so Theorems 1-3 do not cover it. The 0.60 baseline is the paper's simulation default, not an estimate. The source population is HIV peer leaders, not legislators. SGATE values remain design priors until measured.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Quotes and numbers check out against the text (lines 315-316, 367-371, 1002-1003, 1077). Corrections: the paper never says Bernoulli; the seed_prob description omits the non-behavioral branch; calling 0.60 arbitrary goes beyond the paper, which only calls it the default. Code lines verified."
+    },
+    {
+      "component_id": "melange-allocation.budget-frontier",
+      "relation": "supports",
+      "paper_claim": "The authors attribute RL4IM's slight edge over greedy CHANGE to proactively modeling unwillingness in the reward, versus CHANGE reacting to realized willingness. The edge is called slight and gets no numbers. At T=1 (single round, T x B = 8), RL4IM and CHANGE are the two best methods. The roughly-twice-Random result is stated for the q sweep (Q3), not for T=1. All results are synthetic graphs under IC with p=0.1.",
+      "paper_location": "Q3 p.6 (Fig 5a); Q4 p.6 (Fig 5b); paragraph after Q5 p.6; Sec 5.1 p.5",
+      "system_side": "spread() in budget_frontier.py draws each lobbied seed's activation against gate(n,cs) on a dedicated CRN stream (key offset 2^62, lines 127-128). A failed activation stays an opponent (lines 129-131). MAXSEEDS defaults to 60 (line 7). Lazy-greedy mechanics were not checked.",
+      "code_ref": "fec/engine/budget_frontier.py:7,126-131",
+      "transfer_conditions": "Supports only the design choice of putting take-up uncertainty inside the expected-spread objective. The paper models one colour; the system has a two-colour competitive cascade. The paper's synthetic graphs (about 200 nodes) are comparable in scale to the 533-member graph, but there are no political data. The slight edge is qualitative.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "The rel attaches roughly-twice-Random to the T=1 result; in the paper it belongs to the q sweep in Q3 (lines 1081-1083). The rest holds: lines 1089-1092 and 1101-1106, the synthetic-graph setup, and the code lines."
+    },
+    {
+      "component_id": "melange-allocation.per-topic-allocators",
+      "relation": "context",
+      "paper_claim": "Within a round, a seed's exact expected marginal contribution depends on which earlier seeds turned out willing, giving O(2^b) cases. The paper assumes the influence function is submodular, stated as usually submodular and citing Kempe et al. 2003 (Eq. 7).",
+      "paper_location": "Sec 4.3 Eqs. 6-8, Theorems 1-2, p.4 (Eq. 7 text at line 674)",
+      "system_side": "per_topic_coalition.py gates each lobbied seed inside each spread() call (lines 102-110). Individual marginals spread({n}) minus base (line 115) feed a water-fill (line 119). The funded set's joint spread is reported (lines 124-125) because summing marginals overstates the joint gain. The allocator is one-shot, with no rounds and no observed willingness.",
+      "code_ref": "fec/engine/per_topic_coalition.py:102-125",
+      "transfer_conditions": "The paper's O(2^b) dependence arises from realized willingness within sequential sub-steps. The coalition allocator averages willingness inside each spread() call, so there is no conditional dependence to ignore at allocation time. The shared point is only that seed non-additivity is real and the joint report exposes it. The surrogate reward needs homogeneous q and Eqs. 9-10, so it does not port to heterogeneous gates.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Code and Eq. 7 check out (line 674 says usually submodular). The supports framing overstates the analogy, so the relation is changed to context. The M2 comment at lines 122-125 is verified."
+    },
+    {
+      "component_id": "melange-validation.prospective-contract",
+      "relation": "qualifies",
+      "paper_claim": "q is the probability that a selected node is willing to act as a seed, conditional on being selected or invited. It is assumed known a priori, so it is a take-up rate, not an unconditional outcome.",
+      "paper_location": "Sec 3.1 p.3 (lines 314-316, probability of a node willing to be seed when selected as seed node)",
+      "system_side": "H1 protocol: Spearman correlation of frozen seed_prob with NEW cosponsorships adopted after the freeze, over members with panel coverage in both snapshots. Engaged-only scoring is unavailable until receipted contact data exists. Minimum data is 60 days and 150 members with any delta; otherwise status is UNDERPOWERED (outcome_contract.py:17-21 and 262-263).",
+      "code_ref": "fec/engine/outcome_contract.py:17-21,262-263",
+      "transfer_conditions": "Unconditional new cosponsorship mixes take-up with contact choice and base activity. A pass would not validate seed_prob as a contingency probability, and a miss would not refute it. The construct match needs an engaged-only arm built on a contact log.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "The protocol text, the Spearman definition, the 60-day and 150-member floor and the lack of engaged-only data all verify. Not verified: the 72 of 511 replay count and the look-unspent status, since no matching file was found in the audits folder within the search limit. The cited line 277 was not confirmed; the underpowered check is at 262-263."
+    }
+  ],
+  "related": [
+    {
+      "slug": "chen-nd-complex-contagion-influence",
+      "relation": "extends",
+      "why": "Item exists. Same group and RL-for-IM lineage. Paul's addendum attributes the non-submodular argument to this paper, but this paper assumes submodularity; the complex-contagion work is the one that carries that framing."
+    },
+    {
+      "slug": "golovin-2011-adaptive-submodularity-theory",
+      "relation": "complements",
+      "why": "Item exists. The paper contrasts itself with adaptive IM, which it says does not address willingness uncertainty. That is a contrast, not a contradiction, so the relation is changed from contradicts."
+    },
+    {
+      "slug": "kamarthi-2019-influence-maximization-unknown",
+      "relation": "complements",
+      "why": "Item exists. RL for IM under graph-exploration uncertainty, cited in Paul's addendum as the other learned-policy entry. The paper's own reference list dates it 2020, so the slug year may differ."
+    },
+    {
+      "slug": "zareie-2023-influence-maximization-social",
+      "relation": "complements",
+      "why": "Verified title: Influence maximization in social networks: a survey of behaviour-aware methods. Code comments in budget_frontier.py tie it to Chen as the SNAM source for seed_prob."
+    },
+    {
+      "slug": "bharathi-nd-competitive-influence-maximization",
+      "relation": "complements",
+      "why": "Verified title: Competitive Influence Maximization in Social Networks. It is the likely source of the competitive cascade the gate is inserted into; the gate link itself was not checked."
+    },
+    {
+      "slug": "kumar-2022-influence-maximization-social",
+      "relation": "same-method",
+      "why": "Verified title: influence maximization using graph embedding and graph neural networks. Shares the graph-embedding approach of the paper's structure2vec backbone."
+    },
+    {
+      "slug": "arya-2025-relink-edge-activation",
+      "relation": "same-method",
+      "why": "Verified title: RELINK, edge activation for closed-network IM via deep RL. Shares the deep-RL approach; the claim that it sits in the same S2V/DQN lineage was not checked."
+    },
+    {
+      "slug": "almazaydeh-2026-heuristic-centrality-methods",
+      "relation": "complements",
+      "why": "Verified title: heuristic centrality methods challenge greedy optimization in IM. Fits the paper's parity-with-greedy result, which suggests RL's advantage is runtime, not quality."
+    }
+  ],
+  "summary_issues": [
+    "The summary calls the 0.60 baseline arbitrary. The paper calls q=0.6 its simulation default and gives no basis, so arbitrary goes beyond the text.",
+    "The summary and bearing 1 call willingness Bernoulli. The paper states only a known probability q; the word is not in the paper.",
+    "The summary describes seed_prob as one formula. The code also has a non-behavioral branch (A, O, E terms, same clip) that the summary omits.",
+    "Bearing 2 attaches roughly-twice-Random to the T=1 result. In the paper it belongs to the q sweep (Q3).",
+    "Paul's addendum tier filing is checked: the paper assumes submodularity (Eq. 7), so it does not support a non-submodular tier. Its observe-then-act framing is accurate only between rounds; the system is single-shot.",
+    "Not verified: the 72 of 511 new-event count and the look-unspent status in H1. No matching file was found in the audits folder within the search limit.",
+    "The citation outcome_contract.py:277 was not confirmed; the minimum-data check is at lines 262-263.",
+    "Lazy-greedy mechanics in budget_frontier.py were not checked; only MAXSEEDS=60 (line 7) was verified.",
+    "Coverage: the output schema accepts bearings, related and summary_issues only, so the task's key_findings and paul_markup lists were not returned. Verification covered the paper's Sec 3.1, 3.2, 4.2-4.3, 5.1-5.2 and conclusion, footnote 2, and the three Melange code references plus H1 protocol."
+  ]
+}

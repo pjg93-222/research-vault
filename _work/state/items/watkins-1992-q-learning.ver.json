@@ -1,0 +1,76 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-allocation.joint-optimizer",
+      "relation": "qualifies",
+      "paper_claim": "The convergence theorem needs a look-up table and an infinite number of episodes for every starting state and action (p.281). The look-up table caveat and the citation of Watkins 1989 (that Q-learning may not converge correctly for other representations) are on p.281. No rate or finite-sample bound is given. Section 4 (p.286) says reusing stored episodes moves Q-learning toward certainty-equivalence planning, which is the limit of re-presenting old episodes infinitely often. Certainty equivalence costs dearly early in learning, citing Barto and Singh 1990 (p.280).",
+      "paper_location": "Section 2 pp.281-282 (look-up table, infinite episodes, theorem); Section 4 p.286 (continuum to certainty equivalence); p.280 (certainty-equivalence cost)",
+      "system_side": "optimize.py docstring (lines 3-12): lazy greedy allocates a 2.5M pot in 500-dollar steps over a fixed modeled stance state and calls the result exact there. No learning step. observations=[] at line 58 is never appended to; it is only echoed in the output dict at line 220. Modeled threshold crossings (conversions, lines 133-144) trigger replanning and are not observed outcomes.",
+      "code_ref": "fec/engine/optimize.py:3-12; fec/engine/optimize.py:58; fec/engine/optimize.py:133-144; fec/engine/optimize.py:220",
+      "transfer_conditions": "The theorem covers only a finite MDP with look-up-table values and unbounded sampling, and this optimizer has neither. The item's claim that one cycle over 533 members yields at most a few observed outcomes per member-action pair is not in the code or the paper and is unverified here. GCOMB and S2V-DQN use n-step or fitted Q-learning with function approximation, which this paper does not cover (checked in their item files). The claim that exact greedy is optimal in a fixed state rests on the docstring's separability and diminishing-returns assertion, which I did not independently check.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Quoted claims and code lines check out, except for page numbers: the look-up table caveat is on p.281, not p.282. The 533-member and few-observations inference has no support in code or paper. Paul's GCOMB preference could not be verified because paul_entries is empty and no markup exists."
+    },
+    {
+      "component_id": "melange-influence-engine.seed-gate",
+      "relation": "context",
+      "paper_claim": "Q-learning needs each state-action pair sampled an infinite number of times (p.281). Lemma B.3 (p.284; proof p.290) says action-replay estimates of rewards and transitions converge with probability 1 as the level grows, under learning-rate sum conditions. This concerns estimating model quantities from unbounded samples, not learning a gate parameter. No finite-sample rate is given.",
+      "paper_location": "Section 2 p.281 (infinite episodes); Section 3.1 Lemma B.3 p.284; appendix p.290",
+      "system_side": "moneyball_core.py lines 626-630: SGATE is a literal hand-set take-up dict (Highly Persuadable 1.00 down to Opponent 0.35, default 0.85). gate() multiplies it by seed_prob with a floor of 0.15. These lines contain no update path from observed outcomes. No Chen 2021 reference appears in moneyball_core.py or optimize.py.",
+      "code_ref": "fec/moneyball_core.py:626-630",
+      "transfer_conditions": "Learning take-up rates would need repeated observed contact-to-action outcomes per stance tier, which the system does not log. The paper's result is asymptotic and gives no sample size. The link is conceptual: Lemma B.3 concerns action-replay transition and reward estimates, not gate probabilities. Weak strength is right.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "The SGATE values, default and 0.15 floor match the code. Reading Lemma B.3 as a basis for the gate is a loose transfer. The claim that Paul ties SGATE to Chen et al. 2021 has no support in the code or item files reviewed here, so it is unverified."
+    }
+  ],
+  "related": [
+    {
+      "slug": "sutton-2018-reinforcement-learning-introduction",
+      "relation": "complements",
+      "why": "Real item (Sutton and Barto, 2018). Its content on the deadly triad and tabular versus function-approximation limits was not checked against the item text in this pass."
+    },
+    {
+      "slug": "manchanda-2020-gcomb-learning-budget-constrained",
+      "relation": "builds-on",
+      "why": "Verified in the item: GCOMB trains seed selection with n-step fitted Q-learning over GCN-derived node scores. That is function-approximation Q-learning, outside this paper's theorem."
+    },
+    {
+      "slug": "dai-2017-learning-combinatorial-optimization-graphs",
+      "relation": "builds-on",
+      "why": "Verified in the item: S2V-DQN uses n-step Q-learning with fitted Q-iteration over graph embeddings. That extends this paper's update to multi-step returns and function approximation, both outside the proof."
+    },
+    {
+      "slug": "chen-2021-contingency-aware-influence",
+      "relation": "builds-on",
+      "why": "Real item: contingency-aware influence maximization as a reinforcement learning approach (title and authors confirmed). Whether its learning step is Q-learning was not verified in the item text."
+    },
+    {
+      "slug": "chen-2023-complex-contagion-influence",
+      "relation": "complements",
+      "why": "Real item: complex contagion influence maximization as a reinforcement learning approach (title confirmed). The deep RL and Q-learning lineage claimed by the analyst was not confirmed, so the link is weakened to complements."
+    },
+    {
+      "slug": "arya-2025-relink-edge-activation",
+      "relation": "complements",
+      "why": "Real item: RELINK, deep reinforcement learning for edge activation (title confirmed). Its Q-learning lineage was not verified, so the link is weakened to complements."
+    },
+    {
+      "slug": "golovin-2011-adaptive-submodularity-theory",
+      "relation": "complements",
+      "why": "Real item (Golovin and Krause, 2011, adaptive submodularity). Its guarantee and sample-free claims were not checked against the item text; the link is conceptual."
+    }
+  ],
+  "summary_issues": [
+    "Theorem conditions are garbled in the text extraction. The wording 'divergent sums and finite sums of squares' is inferred from the Kushner and Clark use in B.3, not read from the theorem itself.",
+    "Several page cites are off. The look-up table caveat and infinite-episode condition are on p.281, not p.282. Lemma A is stated on p.283 (proof p.288). B.3 and B.4 are on p.284, not p.283. The quadratic growth bound is on p.284.",
+    "The summary says the authors warn Q-learning may fail with function approximation. The paper attributes that warning to Watkins 1989 (p.281), citing it.",
+    "The claim that an online scan found no RL applications to lobbying or allocating contributions has no supporting record in the item and is unverified.",
+    "Paul's expectation that GCOMB replaces greedy allocation at scale, and his tie of SGATE to Chen et al. 2021, have no support in the item files or the code reviewed. Paul's position could not be checked because paul_entries is empty and no markup exists.",
+    "The claim that the repo has no reinforcement learning holds for fec/*.py: a search for Q-learning, qlearn, reinforcement learning and GCOMB found no matches.",
+    "The claim that the built allocator's exact-greedy optimality makes a learned policy useless at this size rests on the code docstring's own assertion, which was not independently checked.",
+    "The statement that Paul's position is not stale cannot be checked from these files.",
+    "Coverage: all 533 member-scale and optimizer assertions were checked only where code lines exist; the 533 count and the few-observations inference are unsupported here. No paul_markup items exist to drop, so none were dropped."
+  ]
+}

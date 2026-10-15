@@ -1,0 +1,111 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-influence-engine.receptivity-layer",
+   "relation": "qualifies",
+   "paper_claim": "Removing reelection incentives lowers visible effort: the productivity index falls -0.24 SD (SE 0.03), with a range of -0.09 to -0.41 across specifications. Ideological positioning does not shift: |W-NOMINATE| +0.02 (SE 0.01), the party-split estimates are about 0, and interest-group ratings show no systematic change. The authors argue that legislators who run for other offices keep their electoral incentives, so the estimates are likely a lower bound.",
+   "paper_location": "Tables 2-3 p.669-670; Table 5 p.673; Figure 2 p.674; main text and fn 14 p.672",
+   "system_side": "incent_mult = 0.60 for every member on fec/retiring_members.txt. The docstring (receptivity_layer.py:15-16) cites Fouirnaies & Hall for final-term members reducing 'effort/responsiveness'; the retiring list header calls them 'less responsive to pressure'. The factor enters pressure_mult = clip(susc*incent*pt, 0.50, 1.60). The list header says it 'Includes members seeking OTHER office (Golden/Barr/Stefanik etc.)', and Andy Barr is the first entry. Line 129 (and docstring lines 17-19) also attribute the competitiveness term 1+.30(comp-0.5) to Fouirnaies-Hall, but the paper does not test seat competitiveness.",
+   "code_ref": "fec/members/receptivity_layer.py:15-21; fec/members/receptivity_layer.py:129-137; fec/members/receptivity_layer.py:227; fec/retiring_members.txt:1-9",
+   "transfer_conditions": "Weak for the 0.60 size and the 'responsiveness' reading. The paper estimates effort allocation in low-salience state chambers under exogenous, binding term limits. It does not estimate response to lobbying or money, and its null on positions points against extra movability or immovability. Congressional retirement is voluntary and self-selected, which is the confound the paper's within-person design is built to avoid. Its lower-bound argument (p.672) contradicts treating members who seek other office as having no electoral incentive. The direction (less effort in the final term) carries over; the magnitude and the mechanism of 'pressure response' do not.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper side checked: Table 2 p.669 (-0.24, SE 0.03, N=11,109), Table 3 p.670 (-0.09 with seniority controls, -0.41 matched NY/TX, N=11,416), Table 5 p.673 (|WNOM| +0.02 SE 0.01; Dem -0.00, Rep -0.01), Figure 2 p.674. Corrected: the lower-bound / other-office argument and fn 14 are on p.672, not p.671, and the argument is in the main text (fn 14 only cites Ban-Llaudet-Snyder on House runs). Code side checked: receptivity_layer.py:15-21 docstring says final-term members 'reduce effort/responsiveness'; the phrase 'less responsive to pressure' is in the retiring_members.txt header (line 3), not the docstring. Line 129 attribution, line 227 pressure_mult clip, list header 'Includes members seeking OTHER office', Andy Barr first entry: all confirmed."
+  },
+  {
+   "component_id": "melange-psychometrics.behavioral-dispositions",
+   "relation": "qualifies",
+   "paper_claim": "Floor-vote participation is state-dependent within the same legislator. It falls 2.70 points (SE 0.53) from a mean of 90.48 in the final term, about a 27% proportional rise in abstention. Committee activity falls about 8% (-0.31 from 3.84).",
+   "paper_location": "Table 4 cols 1-2 and 5-6, p.671",
+   "system_side": "diligence_z is the mean of z-log votes_cast within chamber (with a full-term guard at 25% of the chamber median) and LEP follow-through. It is labelled a C-role disposition and enters susceptibility at -0.20. Members on the retiring list therefore get lower diligence and higher susc, which partly offsets their incent 0.60. Electoral status enters the pressure term twice, with opposite signs, and is never modelled explicitly.",
+   "code_ref": "fec/members/behavioral_dispositions.py:13-14; fec/members/behavioral_dispositions.py:66-72; fec/members/receptivity_layer.py:186",
+   "transfer_conditions": "Moderate. Missing votes is a universal congressional behaviour, and the paper's within-person identification is cleaner than anything the system has. However, the state final-term drop of about 3 points is small next to the cross-member spread in congressional votes_cast. It matters most for members in their final Congress, or those campaigning for another office, whose absences are campaign-driven. The disposition reading holds only after electoral status is held fixed.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Table 4 p.671: -2.70 (0.53), mean 90.48; committee -0.31 (0.06), mean 3.84; the paper's own text gives the 27% abstention rise and the 8% decline. Code: behavioral_dispositions.py:13-14 and 66-72 confirm diligence_z = z-log votes_cast within chamber with a 25%-of-median guard plus LEP follow-through; receptivity_layer.py:186 confirms susc_trait = .40*coop + .30*N - .20*dil - .10*dom (behavioral basis). The opposite-signed double entry is analyst inference, correct as arithmetic."
+  },
+  {
+   "component_id": "melange-psychometrics.gold-panel-validation",
+   "relation": "qualifies",
+   "paper_claim": "Roll-call participation moves with electoral incentives inside the same person (-2.70 points in the final term, mean 90.48). As a criterion it therefore mixes trait and electoral situation.",
+   "paper_location": "Table 4 p.671; p.666 (missing votes as basic shirking)",
+   "system_side": "The interview-genre C criterion is a Spearman correlation between C and votes_cast (recorded PASS, rho +0.155), computed cross-sectionally with no stratum for electoral status (retiring or running for other office).",
+   "code_ref": "fec/members/big5_improvements_eval.py:185-191; fec/members/behavior_panel.py:18; fec/members/big5_llm.py:347",
+   "transfer_conditions": "Weak to moderate. The PASS is recorded and must not be re-run (single-look). The paper shows the criterion has a situational component, so any external claim from this look should carry an UNSTRATIFIED label on electoral status. This matters most if campaign-driven absences correlate with interview volume, for example among members running statewide.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Table 4 p.671 and p.666 (missing votes as shirking) confirmed. big5_improvements_eval.py:185-191 computes Spearman(interview C, votes_cast) with no electoral-status stratum; behavior_panel.py:18 is votes_cast (C+). The rho +0.155 PASS is recorded at fec/members/big5_llm.py:347, not in the cited refs (added)."
+  },
+  {
+   "component_id": "melange-validation.prospective-contract",
+   "relation": "qualifies",
+   "paper_claim": "In the final term, effort falls (sponsorship -6%, committee activity -8%, participation -2.7 points) while positions stay flat (W-NOMINATE and interest-group nulls).",
+   "paper_location": "Tables 4-5, p.671-673; Figure 2 p.674",
+   "system_side": "Under the protocol, H2 (labelled Byrne/F&H) tests Spearman(frozen pressure_mult, |overall-tier movement|) after the freeze. pressure_mult carries the 0.60 retiring factor. Tier movement depends on new evidence events, and retiring members produce fewer of them under this paper's effect, so a positive H2 could arise mechanically from lower activity rather than from responsiveness. The paper also predicts no true position change from the F&H channel.",
+   "code_ref": "fec/engine/outcome_contract.py:17-18; fec/engine/outcome_contract.py:277-278",
+   "transfer_conditions": "Moderate as a threat to interpretation. It applies only if tier movement is driven by evidence volume. If the contract is still unfrozen, a reported retiring/other-office stratum could be added. If it is frozen, any H2 result should carry this caveat. This is analysis, not a look, and stays UNVERIFIED until reproduced (DE-062).",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Tables 4-5 and Figure 2 confirmed. outcome_contract.py:18 H2 text (Byrne/F&H, pressure_mult vs |overall-tier movement|) and line 278 spearman on predictor['pressure_mult'] confirmed; the 0.60 enters pressure_mult (receptivity_layer.py:227). The mechanical-correlation threat is analyst inference and stays UNVERIFIED (DE-062)."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.legislative-pillar",
+   "relation": "qualifies",
+   "paper_claim": "Bill sponsorship volume falls about 6% when reelection incentives end (-1.63, SE 0.77, mean 27.32; N=16,727) with no ideological change. Sponsorship volume partly reflects electoral advertising (legislators' webpages list bills introduced) rather than position.",
+   "paper_location": "Table 4 cols 3-4 p.671; p.666; Table 5 p.673",
+   "system_side": "Agenda sums signed row contribution times |topic weight| over all selected rows (no per-member volume normalization), and Leg% blends agenda with an efficiency component before percent-ranking. A member's final-Congress drop in activity therefore lowers the agenda component of Leg% with no change in stance. Stance enters as the sign of each contribution, so volume and direction stay distinguishable, which fits the paper's finding that effort and position separate.",
+   "code_ref": "fec/engine/live_legislative_pillar.py:47-57; fec/engine/live_legislative_pillar.py:21-26",
+   "transfer_conditions": "Weak. The 6% effect at the state level is small, and in Congress it would touch only members in their final Congress or those running for other office. The paper supports the influence-vs-alignment split. It does not address the 4:2:1 role weights or cosponsorship.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper side confirmed: Table 4 cols 3-4 p.671 (-1.63 SE 0.77, mean 27.32, N=16,727; ~6% decline), advertising on webpages p.666, Table 5 null p.673. Code corrected: live_legislative_pillar.py:47-57 sums signed row contribution times |topic weight| into agenda; lines 21-26 are the percentrank helper. Agenda is one side of an agenda/efficiency blend, so a final-Congress activity drop lowers the agenda component of Leg%, not Leg% one-for-one. Stance enters as the sign of each contribution, not as a separate multiplier."
+  },
+  {
+   "component_id": "melange-labels-and-tiers.say-do-gate",
+   "relation": "qualifies",
+   "paper_claim": "Sponsorship is effort directed at voters' inferences, not a revelation of position: it falls when reelection ends while ideology stays flat. Legislators advertise bills introduced on their webpages.",
+   "paper_location": "p.666 (advertising, observable-effort hypothesis); Table 4 p.671; Table 5 p.673",
+   "system_side": "Path A treats an authored or original-cosponsored bill in the category as the costly signal that corroborates Champion or Defender. The overall gate's thin_high_volume rule (at least 10 direct bills with no more than 20% advanced) treats high-volume introduction as cheap talk.",
+   "code_ref": "fec/moneyball_core.py:880-896; fec/moneyball_core.py:926-931",
+   "transfer_conditions": "Weak. The paper supports the thin_high_volume reading, since introduction volume responds to electoral display. It also cautions that path A sponsorship is partly advertising, though a bill signed in the CU direction is still more than talk. The evidence comes from state legislatures with bill-introduction caps in half the states (p.666), and the paper does not test whether a bill's direction corroborates rhetoric.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "p.666 (advertising; bill-introduction limits in 'only half of the term-limited states in our sample') confirmed; Tables 4 and 5 confirmed. moneyball_core.py:880-896 path A = sponsored/original-cosponsored category (otherwise Champion/Defender capped to Ally); 926-931 thin_high_volume with SAY_DO_DIRECT_VOLUME_MIN=10 and SAY_DO_MAX_ADVANCEMENT_RATE=0.20 (lines 900-901), excluding exceptional authorship and applied only to a raw overall Champion."
+  }
+ ],
+ "related": [
+  {
+   "slug": "imai-2021-fixed-effects-regression",
+   "relation": "complements",
+   "why": "Fouirnaies & Hall rely on individual-level two-way fixed-effects DiD with a staggered final-term treatment and admit they cannot run pretrend tests (p.669). Imai & Kim's critique of TWFE causal assumptions applies directly when judging how far the -0.24 SD estimate should transfer."
+  },
+  {
+   "slug": "ramey-2016-measuring-elite-personality",
+   "relation": "complements",
+   "why": "Ramey links text-measured Conscientiousness to bill-sponsorship behavior (a lower share of ceremonial bills, Table 3). Fouirnaies & Hall show sponsorship and participation also move with electoral incentive inside the same person, a situational confound for any trait reading of those behaviours (diligence_z, the C criterion)."
+  },
+  {
+   "slug": "linde-2016-politicians-take-risks",
+   "relation": "complements",
+   "why": "The two are sibling factors in the receptivity layer: Fouirnaies & Hall drive incent_mult 0.60 and Linde & Vis drive pt_mult. Both condition on electoral situation, and the code notes they share an input (security drives both incent and pt)."
+  },
+  {
+   "slug": "bucchianeri-2025-legislative-effectiveness-american",
+   "relation": "complements",
+   "why": "Both papers study U.S. state legislatures. Bucchianeri's state-level effectiveness scores are the outcome-side counterpart to Fouirnaies & Hall's effort index, and would show whether final-term effort losses reduce effectiveness."
+  },
+  {
+   "slug": "poole-1999-nominate-after-years",
+   "relation": "complements",
+   "why": "Fouirnaies & Hall's ideology null rests on W-NOMINATE scaling of state roll calls, from the NOMINATE family Poole reviews. The paper itself states the scaling may be too coarse to detect issue-specific shifts (p.668, p.673)."
+  }
+ ],
+ "summary_issues": [
+  "The summary says the paper's 'footnote 14' contradicts the retiring list. The other-office / lower-bound argument is in the main text on p.672, and fn 14 (also p.672) only cites evidence that term-limited legislators run for the U.S. House more often, from a ~1% baseline. The bearing and flags also give p.671; the correct page is p.672.",
+  "The summary says the receptivity layer cites the paper for a 'less responsive' multiplier. The docstring says 'effort/responsiveness'; the 'less responsive to pressure' wording comes from the fec/retiring_members.txt header. The substance holds.",
+  "The -0.24 SD is a pooled estimate across 16 chambers (window ~1991-2016, denominator 11,109 legislator-terms). The summary quotes it with no strata. It should carry an UNSTRATIFIED label, or the heterogeneity the main text reports from Appendix Table A.3 (larger in CA and OK, where limits are cumulative).",
+  "Point (2) lists the 'agenda volume' among measures driven by sponsorship volume. Agenda is one component of a blended Leg% and is a signed sum, so the effect runs through that component only.",
+  "The related link to Poole 1999 cited the coarseness caveat at p.674. It is at p.668 and p.673. The relation was changed from same-method to complements, because the paper uses W-NOMINATE and Poole reviews D-/DW-NOMINATE.",
+  "The related link to Ramey 2016 said Ramey links conscientiousness to sponsorship. Ramey links it to the share of ceremonial bills, not to sponsorship volume. Wording corrected."
+ ]
+}

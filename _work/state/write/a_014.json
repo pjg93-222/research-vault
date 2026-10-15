@@ -1,0 +1,1732 @@
+[
+ {
+  "slug": "luo-2020-path-planning-algorithm",
+  "note": false,
+  "meta": {
+   "title": "A UAV Path Planning Algorithm Based on an Improved D* Lite Algorithm for Forest Firefighting",
+   "authors": [
+    "Zhaohui Luo",
+    "Youmin Zhang",
+    "Lingxia Mu",
+    "Jing Huang",
+    "Jing Xin",
+    "Han Liu",
+    "Shangbin Jiao",
+    "Guo Xie",
+    "Yingmin Yi"
+   ],
+   "year": "2020",
+   "venue": "2020 Chinese Automation Congress (CAC), IEEE. Metadata hint said \"IEEE\" only; the venue is the CAC conference (corrected).",
+   "doi": "10.1109/CAC51589.2020.9327111",
+   "sha12s": [
+    "690a2c02e3be"
+   ],
+   "category": "Path-Finding Algorithms",
+   "category_slug": "path-finding-algorithms"
+  },
+  "extraction": {
+   "title": "A UAV Path Planning Algorithm Based on an Improved D* Lite Algorithm for Forest Firefighting",
+   "authors": [
+    "Zhaohui Luo",
+    "Youmin Zhang",
+    "Lingxia Mu",
+    "Jing Huang",
+    "Jing Xin",
+    "Han Liu",
+    "Shangbin Jiao",
+    "Guo Xie",
+    "Yingmin Yi"
+   ],
+   "year": "2020",
+   "venue": "2020 Chinese Automation Congress (CAC), IEEE. Metadata hint said \"IEEE\" only; the venue is the CAC conference (corrected).",
+   "doi": "10.1109/CAC51589.2020.9327111",
+   "document_type": "Conference paper (simulation study, UAV path planning)",
+   "coverage": "Full extracted text read in two chunks (611 text lines): abstract, Sections I-IV, Tables 1-2, Figure captions, acknowledgements and all 16 references. Paul's markup: none (no markup files were supplied). Content touching lobbying, social networks, elections, persuasion/turnout, legislators or text measurement: none. The only relevant content is path-finding and graph search.",
+   "research_question": "Can an improved D* Lite incremental search, combined with map zooming and path smoothing, plan safe, short, real-time 3D paths for firefighting UAVs that reach suspected fire spots and UGVs (refuelling/material stations) when the 3D workspace is partly or wholly unknown?",
+   "theory": "No social or economic theory. The framing is algorithmic: D* Lite incremental/heuristic search (Koenig-style, cited as [4], [5]), a hierarchical/partitioned A* idea (HPA*, described in Sec. II intro, not referenced), and Catmull-Rom spline smoothing ([8]).",
+   "data": "Simulated 3D grid environments only, with no real forest data. Table 1: six environments (Env1-2 120x120x100 m; Env3-6 100x100x100 m), obstacle densities 0%, 1%, 5%, cuboid obstacles plus random 5x5x5 m^3 obstacles; single static target. Table 2: four improved-only environments (Env1-2 100x100x100 m; Env3-4 120x120x100 m). Fig. 6: four environments with multiple static targets. Fig. 7: one scenario with a dynamic target (UGV). Unit = one simulated planning run per scenario; no run count or repetitions reported. No time period (2020 paper). Hardware: Intel Core i7-9700, Ubuntu 18.04, Python 2.",
+   "method": "Improved D* Lite (Sec. II.B, steps 1-7, p.4234-4235): (1) zoom the map out to a quarter of its size; (2) if Euclidean start-to-goal distance is below 28, run plain D* Lite, otherwise plan on the shrunken map with reverse search from the target; (3) scan obstacles with radar range r = 20 m and refine a local window d = 2r = 40 m; (4) smooth the path with two methods: sight-line node removal (method 1) and centripetal Catmull-Rom spline insertion (method 2); (5) fill the trajectory where node coordinates differ by more than 1 on any axis; (6) re-plan when the path is invalidated (next node more than r away, or target moved). Heuristic h is the maximum absolute coordinate difference (Chebyshev-type). Multiple targets are visited greedily by nearest remaining Euclidean distance (Eq. 3, Sec. III.B). The UAV is treated as a point particle with dynamics neglected (Sec. III, p.4235).",
+   "scope": "Population: simulated forest firefighting UAVs (plus UGVs as moving targets), not real flights. Institution: Xi'an University of Technology and Concordia University. Era: 2020. Results are for synthetic grids with one static target per run in Table 1, and UGV tracking in one dynamic scenario.",
+   "key_findings": [
+    {
+     "finding": "Path length is nearly equal between the two algorithms: the gap is at most 10% in all six Table 1 environments (largest is Env4, 337 m vs 311 m, about 7.7%; others 0.4% to 6.4%).",
+     "location": "Sec. III.A, Table 1, p.4236",
+     "numbers": "Env1 715.9 vs 719 m; Env2 711.5 vs 739 m; Env3 302 vs 316 m; Env4 337 vs 311 m; Env5 292.2 vs 311 m; Env6 297.6 vs 306 m"
+    },
+    {
+     "finding": "Text claims D* Lite is much slower than the improved algorithm in Env1, Env2 and Env4, and that D* Lite is unsuitable in changing environments. Env4 agrees with this claim (D* Lite about 0.36 s vs improved about 0.14 s). Env1 and Env2 do not agree once the planning-time column is read as the paper's own 0.6 s / 2061 km/h example implies (time = small value); see caveat.",
+     "location": "Sec. III.A, p.4236, Table 1",
+     "numbers": "Env4: D* Lite 0.36 s vs improved 0.14 s; Env1 as extracted: 0.2 s vs 0.68 s; Env2 implied about 0.11 s vs 0.6 s"
+    },
+    {
+     "finding": "Env3 (1% obstacles) shows the improved algorithm far faster than D* Lite: about 12.6 s for D* Lite vs 0.25 s for the improved algorithm.",
+     "location": "Sec. III.A, Table 1, p.4236",
+     "numbers": "D* Lite 12.6 s, 302 m, 86 km/h; improved 0.25 s, 316 m, 4550 km/h"
+    },
+    {
+     "finding": "Under changing environments, the authors report D* Lite time rising by 27% with about 17 s, while the improved algorithm rises by 13.3% (Env5 to Env6).",
+     "location": "Sec. III.A, p.4236 (text, not fully reconciled to Table 1)",
+     "numbers": "Improved: Env5 0.15 s, Env6 0.17 s (+13.3%); D* Lite about 17 s (Env5)"
+    },
+    {
+     "finding": "Conclusion stated by the authors: plain D* Lite is suitable for short-range or local planning with little environmental change; the improved method is claimed for long-distance and changing environments.",
+     "location": "Sec. III.A, p.4236 (final paragraph)",
+     "numbers": "none"
+    },
+    {
+     "finding": "Improved algorithm on a single moving (UGV) target: total planning time 0.6 s, path length 343.5 m, computed planning speed 2061 km/h. This is the only dynamic-target number reported.",
+     "location": "Sec. III.C, Fig. 7, p.4237",
+     "numbers": "0.6 s; 343.5 m; 2061 km/h"
+    },
+    {
+     "finding": "Improved algorithm on four further environments (multiple static targets / Table 2): times 0.23 to 0.91 s, lengths 394.8 to 752.6 m.",
+     "location": "Sec. III.B, Fig. 6 and Table 2, p.4237",
+     "numbers": "Env1 0.34 s, 418.8 m, 4434.4 km/h; Env2 0.23 s, 394.8 m, 5685.1 km/h; Env3 0.91 s, 752.6 m, 2977.3 km/h; Env4 0.72 s, 734 m, 3667 km/h"
+    },
+    {
+     "finding": "Authors' headline claim: the method plans safe paths for UAVs effectively and quickly in real time across a variety of test scenarios. This rests on simulation only.",
+     "location": "Sec. IV, p.4237",
+     "numbers": "none"
+    }
+   ],
+   "measures": [
+    "Planning time (s)",
+    "Path length (m)",
+    "Planning speed (km/h) = path length / planning time, as defined by the paper (see 0.6 s / 343.5 m / 2061 km/h example)",
+    "Obstacle density (% of random obstacles)",
+    "Map size (m^3)",
+    "Turning angle and number of turns (qualitative only, no numbers)",
+    "Euclidean distance (Eq. 3) for target ordering"
+   ],
+   "limitations": [
+    "Simulation only: no field flights, no real forest, no hardware-in-the-loop; UAV modelled as a particle with dynamics neglected (p.4235).",
+    "UGV path planning explicitly excluded: 'Due to space limit' (Sec. I); 'Path planning of the UGVs will be considered as one of our future works' (Sec. III.C).",
+    "Single run per scenario; no repetitions, variance, or seeds reported; no statistical testing.",
+    "Only one comparator (plain D* Lite); no comparison with A*, HPA*, RRT, or other planners.",
+    "Table 1 text layer is scrambled; the time/speed/length cells do not reconcile cleanly for every row (Env2 trad speed 0.03 vs implied about 0.11; Env5-6 D* Lite cells ambiguous). The Env1-2 direction contradicts the text; the table should be checked against the rendered PDF.",
+    "Text claims 27% and 13.3% increases and a 17 s figure that cannot be fully traced to specific Table 1 cells.",
+    "Environment and map-scale parameters (cell size, unit for the 28 threshold, obstacle generator) are not specified well enough to reproduce.",
+    "Python 2 implementation; no code or data release mentioned.",
+    "Smoothing method 2 is said to 'slightly increase path length' but no length cost is quantified."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "No reference in the list concerns lobbying, social networks, elections, persuasion/turnout, legislators or text measurement; the list is path-search and robotics only.",
+    "[10] D. Harabor and A. Grastien, Online graph pruning for pathfinding on grid maps, AAAI 2011 (grid path search; relevant to graph search speed).",
+    "[11] S. Aine and M. Likhachev, Truncated incremental search, Artificial Intelligence 234, 2016 (incremental search, closest to the D* Lite reuse idea).",
+    "[14] T. Uras and S. Koenig, An empirical comparison of any-angle path-planning algorithms, SoCS 2015 (any-angle comparison; relevant to the smoothing step).",
+    "[4] J. Sun, Mobile Robot Path Planning, thesis 2010, and [5] L. Huang and F. Zhou, Path planning for mobile robots based on path optimization D* Lite, Control and Decision 2018 (D* Lite origin and variants, cited for the base algorithm).",
+    "[7] E. Murphy, Planning and Exploring Under Uncertainty, PhD thesis, Oxford 2010 (planning under uncertainty, partly known maps).",
+    "[8] C. Yuksel, S. Schaefer, J. Keyser, On the parameterization of Catmull-Rom curves, 2009 (the spline used in smoothing method 2).",
+    "[15] F. Yan et al., Path planning in complex 3D environments using a probabilistic roadmap method, IJAC 2013 (3D path planning comparator).",
+    "[16] A. Tuncer and M. Yildirim, Dynamic path planning of mobile robots with improved genetic algorithm, Computers & Electrical Engineering 2012 (dynamic-environment planning)."
+   ],
+   "short_quotes": [
+    {
+     "quote": "the improved D* Lite algorithm proposed in this paper can plan paths quickly and safely in both long-distance and complex changing environments",
+     "location": "Sec. III.A, p.4236"
+    },
+    {
+     "quote": "D* Lite algorithm is suitable for short-range or local path planning with little environmental changes.",
+     "location": "Sec. III.A, p.4236"
+    },
+    {
+     "quote": "The algorithm can quickly plan the safe paths to multiple static and dynamic targets by zooming out the maps.",
+     "location": "Sec. IV, p.4237"
+    }
+   ],
+   "identification": "Not applicable: simulation study with no causal identification strategy; performance is compared between two planners on the same simulated scenarios.",
+   "venue_note": "Correct venue: 2020 Chinese Automation Congress (CAC)."
+  },
+  "summary_md": "Luo et al. (2020, Chinese Automation Congress) change D* Lite for 3D firefighting-drone path planning in maps that are partly unknown. They shrink the map to a quarter of its size and search backward from the goal on that coarse map. They then refine a 40 m local window around the drone's 20 m radar range, smooth the path with sight-line pruning and a Catmull-Rom spline, and replan whenever the path is blocked or the target moves. Several targets are visited greedily, nearest first. All evidence is simulated: one run per synthetic grid, plain D* Lite as the only comparison, no variance, and a Table 1 whose time cells contradict the text for Env1 and Env2. The usable results are narrow. Path lengths are within about 8% of each other. Env3 shows a large speed gain (12.6 s vs 0.25 s), but only on a grid of about a million cells. The authors themselves conclude that plain D* Lite is fine for short-range planning where the map changes little.\n\nFor Paul's systems the paper matters for two reasons. First, his addendum names D* Lite and LPA* as the operational replanning layer. This paper suggests the benefit depends on scale: incremental and hierarchical search pays off on very large graphs. Paul's 533-member cosponsor graph is far smaller, and full recomputation there is cheap. Second, the dashboard's recruitment pathfinder already searches backward from the target, which is D* Lite's structure. Reading the code, I found that it does not update that search when a member is dropped in a what-if. This is exactly the replanning case the paper addresses. That finding is UNVERIFIED (no second check yet, DE-062). The staffer router's heuristic-0 search and Terrier's walk ordering are either already stronger than the paper's methods or cannot use them.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-pathfinding.member-recruitment-path",
+    "relation": "suggests-extension",
+    "paper_claim": "Step 6 replans when the next node is more than r = 20 m away or the target has moved. The search runs backward from the goal (step 2). Plain D* Lite is suited to short-range or local planning with little environmental change.",
+    "paper_location": "Sec. II.B steps 2 and 6 (p.4235); Sec. III.A final paragraph (p.4236)",
+    "system_side": "buildPath calls distToTarget, a goal-rooted max-product field, then tracePath. distToTarget does not check the dropped set. tracePath skips dropped nodes only when choosing the next step, so its greedy descent reads field values that may route through dropped members.",
+    "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:734 (distToTarget, no dropped check); :740 (tracePath skips dropped at the step choice); :753-757 (buildPath); :677 (dropped set)",
+    "transfer_conditions": "Only the idea of refreshing a goal-rooted field after the graph changes transfers. The paper's speed numbers do not (3D grids of about 1M cells vs a 533-node graph). At this size a recompute that skips dropped nodes is enough; incremental D* Lite is not needed.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper claims confirmed: step 6 text at lines 275-277 of the text file, p.4235; the quote 'suitable for short-range or local path planning with little environmental changes' is exact, p.4236. Code lines confirmed by reading the template. The consequence 'can return a worse chain or reached=false' is an untested inference: reword as 'may', and keep UNVERIFIED under DE-062.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Sponsor-to-target max-product path and chain hold|Sponsor-to-target max-product path and chain hold]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.cosponsor-route-pareto",
+    "relation": "qualifies",
+    "paper_claim": "Plain D* Lite is adequate for short-range planning where the map changes little. The paper's speed gains come from shrinking 100x100x100 m and 120x120x100 m grids, with path lengths differing by up to about 8 percent (Env4, 337 vs 311 m).",
+    "paper_location": "Sec. III.A, Table 1 and text, p.4236",
+    "system_side": "cosponsor_route.py builds a recruitment route greedily with out-degree budget K=5, once for each risk weight lambda in 0, 0.5, 1, 2, 4, then filters a Pareto front. MOPBD* appears in the docstring as a concept only. Nothing is replanned incrementally; each run rebuilds.",
+    "code_ref": "fec/engine/cosponsor_route.py:3-5 (docstring, MOPBD* concept); :9 (K default 5); :41 (build_route greedy heap); :70 (lambda sweep); :77 (Pareto filter)",
+    "transfer_conditions": "The paper's own scale result argues against adding D* Lite to a 533-node graph where full recomputation is cheap. Map zooming trades optimality for speed, which the cosponsor objective does not want. Revisit only if routes are recomputed live on a much larger graph.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "System side confirmed: lambda list, K default 5, greedy heap, no incremental search. Paper side: Env3 12.6 s vs 0.25 s and the improved method's 13.3 percent growth (0.15 to 0.17 s, Env5 to Env6) reproduce from Table 1. The 27 percent D* Lite growth does not reproduce from table cells, and the paper has no ablation attributing speed to map shrinking. Present that attribution as the analyst's inference.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Cosponsor recruitment route finder (Pareto front)|Cosponsor recruitment route finder (Pareto front)]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.staffer-closeness-routes",
+    "relation": "qualifies",
+    "paper_claim": "Speed comes from a geometric heuristic (max absolute coordinate difference) and from coarsening the map to a quarter of its size. Path lengths differ by up to about 8 percent between the two methods in Table 1.",
+    "paper_location": "Sec. II.B steps 1-3 and heuristic definition (p.4234-4235); Table 1 (p.4236)",
+    "system_side": "staffer_closeness_routes.py runs bidirectional Dijkstra with heuristic 0 and exact tie-breaking at 1e-12, with Yen loopless alternatives. The routing layer caches up to 64 results in an OrderedDict and evicts the oldest entry with no recency update on a hit, so it is FIFO, not LRU. The 4.66M overlap-pair figure was not checked.",
+    "code_ref": "fec/surfaces/staffer_closeness_routes.py:14-21 (docstring); :79 (ALGORITHM label); :861 (heuristic 0 in output). fec/surfaces/staffer_routing.py:65 (OrderedDict); :380-390 (_base, heuristic 0); :569-570 (hit returns without move_to_end); :670-672 (popitem oldest while over 64)",
+    "transfer_conditions": "Neither speed lever transfers. A person-tie graph has no coordinates, so there is no admissible geometric heuristic, and map coarsening would break the proven-optimal contract. The only analog is hierarchical search, which would need its own correctness proof. Route costs remain heuristic outputs, not closeness or introduction probabilities (D-025).",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Heuristic 0 and the 1e-12 tie rule are confirmed in code. The paper does not say coarsened paths are non-optimal. In Table 1 the improved method is shorter than D* Lite only in Env4 (311 vs 337 m) and longer in the other rows, so 'not optimal' is an analyst inference. 'LRU' is wrong: the cache is FIFO. The paper's heuristic is worded as max absolute value from the starting grid to two current grids, so 'Chebyshev-type' is an interpretation.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Staffer closeness route search|Staffer closeness route search]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "terrier-canvass.street-presets-and-turf",
+    "relation": "context",
+    "paper_claim": "Multiple targets are visited greedily, each time taking the nearest remaining target by Euclidean distance (Eq. 3). Multiple static targets took 0.23 to 0.91 s on 394.8 to 752.6 m paths (Table 2). No comparison to an ordering optimizer is reported.",
+    "paper_location": "Sec. III.B, Eq. 3, Fig. 6, Table 2 (p.4237)",
+    "system_side": "walk_route.py solves up to 8 runs exactly. Larger groups use 20 nearest-next starts, then 2-opt with direction flips and or-opt, with double-bridge kicks under a deterministic evaluation cap. Groups are joined by A* on the walk road network with a straight-line heuristic.",
+    "code_ref": "Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/walk_route.py:1-13 (docstring); :31 (ARTERIAL_FACTOR); :34 (EXACT_TASKS=8); :35 (STARTS=20); :37 (EVALS_PER_MS); :176 (dijkstra); :200 (_astar straight-line estimate)",
+    "transfer_conditions": "Nothing to adopt directly. The paper's single greedy pass is weaker than the ordering already built. A geometric heuristic is valid for street routing, and the system already uses one.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers confirmed in Table 2 (Env1-4: 0.34, 0.23, 0.91, 0.72 s; 418.8, 394.8, 752.6, 734 m) and the Eq. 3 greedy rule. System ordering features confirmed by the docstring and constants. 'TIGER network' does not appear in walk_route.py, which uses walk.sqlite3 road tables; that phrase was removed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/terrier-canvass#Street-plan presets, turf planner and walk routing|Street-plan presets, turf planner and walk routing]]",
+    "system": "terrier-canvass"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Env3 is said to be a grid of about a million cells. Table 1 gives only the 100x100x100 m map size and no cell resolution, so the cell count is not stated in the paper.",
+   "The paul_alignment text says Paul marked D* replanning 'Very interesting'. The annotation (_annots f585bac36b56, p.12) sits on the Lawande 2022 review, on a generic re-planning passage, not on the Luo paper. The attribution is wrong.",
+   "The 'Env5 to Env6 +27 percent for D* Lite' claim does not reconcile. Table 1 speed and length columns imply about 17 s for Env5 and about 13.6 s for Env6 on the D* Lite side, which is a decrease. The improved method's 13.3 percent growth (0.15 to 0.17 s) reproduces, though the text says 0.2 s.",
+   "The staffer routing cache is described as an LRU. staffer_routing.py evicts the oldest insertion (popitem with last=False) and does not move entries on hit, so it is FIFO.",
+   "The 'about 4.66M guaranteed overlap pairs after v6' figure in the staffer-closeness bearing was not verified in any file read here.",
+   "The claim that coarsening returns non-optimal paths is not in the paper. The paper reports length differences, which go both ways in Table 1: the improved path is shorter in Env4 (311 vs 337 m) and longer elsewhere. Attribution of the speed gains to map shrinking is the analyst's inference, since the paper has no ablation.",
+   "The Terrier bearing names a TIGER network. walk_route.py loads road tables from walk.sqlite3 and does not name TIGER. Corrected in the ver bearing.",
+   "The dropped-member replanning defect is supported by static reading of make_dashboard_html_00.tpl (lines 734, 740, 753-757). The consequence in the summary (worse chain or false not-reached) is not tested and must be marked UNVERIFIED under DE-062.",
+   "Claims that the staffer router is already stronger than the paper's methods, and that no incremental replanning exists because Paul's addendum anticipated it, are evaluative. No benchmark supports the first, and the addendum (line 65, Adaptative addendum) names D Lite and LPA* as the operational layer without saying absence was anticipated.",
+   "The Chen 2016 related link is described as the source of the max-product objective. Its title concerns on-time arrival probability; the product form is the dashboard's assumption, cited to Chen only in code comments."
+  ],
+  "gaps_exposed": [
+   "The dashboard's recruitment pathfinder does not replan when a member is dropped: distToTarget (make_dashboard_html_00.tpl:734) builds the target-rooted field without honouring the dropped set, while tracePath (:740) filters it. Any what-if drop on the best chain can yield a degraded chain or a false 'not reached'. UNVERIFIED until a second path reproduces a case (DE-062). The minimal fix is to skip dropped nodes in distToTarget; incremental D* Lite is not needed at N = 533.",
+   "No incremental or replanning search exists anywhere in the pathfinding family (cosponsor routes, recruitment paths, staffer routes), as Paul's addendum anticipated. On the evidence of this paper, though, that layer would pay off only on the large staffer graph, not the 533-node member graph.",
+   "No timing benchmark exists for staffer route search at full graph scale. Such a benchmark is needed before any decision on a hierarchical or incremental search, and it must come from logs or existing runs, never a load test."
+  ],
+  "flags": [
+   "The paper's own Table 1 is internally inconsistent: the Env1 and Env2 time cells contradict the text's claim that D* Lite is slower, and the 27% / 13.3% / 17 s figures do not trace to table cells. None of its speedup figures should be quoted as evidence for adopting D* Lite in Paul's systems. Each run is one simulation (window: 2020 synthetic grids; denominator: one run per scenario, no repetitions).",
+   "The dropped-member replanning defect is agent analysis from a static code read, so it stays UNVERIFIED under DE-062 until a second path reproduces it with a concrete dropped member and target.",
+   "No conflict with the SNA rejections (regular cosponsorship edges and per-edge volume normalization are untouched) or with D-021 (LDA is not used). Any route cost or chain-hold value discussed alongside this paper stays a modeled or heuristic output, not an introduction or closeness probability (D-025)."
+  ],
+  "paul_alignment": "Paul marked D* dynamic replanning 'Very interesting' and made D* Lite and LPA* the operational layer in his addendum. This paper gives that view only qualified support. Its own conclusion is that plain D* Lite is enough for short-range planning where the map changes little, and its gains come from coarsening very large 3D grids. That fits the staffer graph, with millions of pairs, much better than the 533-member cosponsor graph, where full recomputation is cheap. His note is not stale: no incremental replanning has been built. It also points to a concrete, cheap fix that the D* Lite framing makes visible. The dashboard's goal-rooted search is not refreshed when a member is dropped (UNVERIFIED). The fix is a recompute that respects the dropped set, not a D* Lite implementation.",
+  "related": [
+   {
+    "slug": "xu-2024-improved-lite-based",
+    "relation": "same-method",
+    "why": "Title is an improved D* Lite for dynamic route planning of ships in Arctic waters. The relation is title-level only; the body was not re-read here."
+   },
+   {
+    "slug": "ren-2022-multi-objective-path",
+    "relation": "same-method",
+    "why": "Title is Multi-Objective Path-Based D* Lite, matching the MOPBD* concept that cosponsor_route.py cites in its docstring."
+   },
+   {
+    "slug": "abdelrahman-2025-conflict-based-search",
+    "relation": "same-method",
+    "why": "Title shows D*Lite used for dynamic re-planning in multi-agent path planning. Relation is title-level only."
+   },
+   {
+    "slug": "chen-2016-most-reliable-path",
+    "relation": "complements",
+    "why": "Title is most-reliable path-finding for maximizing on-time arrival probability. The product-of-probabilities form that the dashboard uses is cited to Chen in code comments, not stated in the title."
+   },
+   {
+    "slug": "lawande-2022-systematic-review-analysis",
+    "relation": "complements",
+    "why": "Systematic review of intelligence-based pathfinding in video games. Paul's 'Very interesting' annotation sits on its p.12 re-planning passage, not on the Luo paper."
+   },
+   {
+    "slug": "duan-2025-breaking-sorting-barrier",
+    "relation": "complements",
+    "why": "Title is breaking the sorting barrier for directed single-source shortest paths, an exact algorithm. It bears on the exact-optimality contract of the staffer router, not on map coarsening."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "zeng-nd-multi-agent-reinforcement",
+    "relation": "complements",
+    "why": "Same UAV application domain. Luo plans paths for single drones with D* Lite, while Zeng controls a swarm with RL. Both are engineering simulations relevant to Paul's pathfinding reading only by analogy."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "golovin-2011-adaptive-submodularity-approach",
+  "note": false,
+  "meta": {
+   "title": "Adaptive Submodularity: A New Approach to Active Learning and Stochastic Optimization",
+   "authors": [
+    "Daniel Golovin",
+    "Andreas Krause"
+   ],
+   "year": "2010",
+   "venue": "No venue printed in the text. Self-cited as Golovin & Krause (2010), CoRR abs/1003.3967 (arXiv preprint). Correction to the metadata hint: JAIR 42 (2011), 427-486 is a separate, longer article with the same arXiv ID (its text is at _text/6ba342dad525.txt per the manifest), not this 13-page text.",
+   "doi": "",
+   "sha12s": [
+    "69ef3bf13239"
+   ],
+   "category": "Adaptive Influence Maximization",
+   "category_slug": "adaptive-influence-maximization"
+  },
+  "extraction": {
+   "title": "Adaptive Submodularity: A New Approach to Active Learning and Stochastic Optimization",
+   "authors": [
+    "Daniel Golovin",
+    "Andreas Krause"
+   ],
+   "year": "2010",
+   "venue": "No venue printed in the text. Self-cited as Golovin & Krause (2010), CoRR abs/1003.3967 (arXiv preprint). Correction to the metadata hint: JAIR 42 (2011), 427-486 is a separate, longer article with the same arXiv ID (its text is at _text/6ba342dad525.txt per the manifest), not this 13-page text.",
+   "doi": "",
+   "document_type": "Conference-style preprint (13 pages per manifest; theory paper, no experiments)",
+   "coverage": "Full text read in two chunks (lines 0-887, front matter through references; the file ends at the reference list). Every section was read: abstract, §1 intro, §2 setup, §3 adaptive submodularity (Defs 1-2, Prop 3), §4 greedy guarantee (Thm 4), §5 stochastic submodular maximization (Thm 5), §6 adaptive viral marketing (Thm 6), §7 active learning (Thm 7, Prop 8), §8 hardness (Thm 9), conclusions, references. No appendix or experiments section exists in this text. Proofs deferred to the extended version (Thm 7 proof, cost extensions) are not in the text and are reported as deferred. Paul's markup: checked. The manifest lists this PDF with n_annots = 0, and no JSON in _annots or annotations references ID 69ef3bf13239, so paul_markup is empty.",
+   "research_question": "When can a simple adaptive greedy policy be guaranteed near-optimal for stochastic optimization under partial observability, where feasible solutions are decision policies rather than sets? The paper defines adaptive submodularity as the policy-level analog of diminishing returns and asks which applications satisfy it (sensor placement with failures, adaptive viral marketing, pool-based active learning). It also asks how hard the general problem is without that property (§8).",
+   "theory": "Submodular set-function theory (Nemhauser, Wolsey & Fisher 1978) extended to policies. The key condition is that playing layer j of a policy tree earlier cannot decrease its marginal contribution (Def 2, Eq. 4). Equivalent form: for subrealizations Psi subset Psi', the expected marginal gain satisfies Delta_Psi'(e) <= Delta_Psi(e) (Prop 3, §3). Adaptive monotonicity is Def 1 (§3). Closure under nonnegative combinations and truncation is stated in §3.",
+   "data": "No dataset. Applications are analytic. (a) Sensor placement: finite location set E, sensor states O, independent failures P[Phi] = prod_e P[Phi(e)] (§5, p.6). (b) Adaptive viral marketing: directed graph G=(V,A) under the independent cascade model, with myopic or full-adoption feedback (§6, p.7). (c) Pool-based active learning: unlabeled pool X, finite hypothesis set H with prior p_H, binary or multi-class labels, no label noise (§7, p.8). No sample sizes, N, or period are reported.",
+   "method": "Analytic proofs only. Definitions of adaptive monotonicity and submodularity (Defs 1-2); derivative characterization (Prop 3, proof by constructing a path-shaped policy tree); greedy guarantee (Thm 4) via a telescoping argument adapted from Nemhauser et al. (1978) and Goundan & Schulz (2007); instantiations for three applications (Thm 5, Thm 6, Prop 8 / Thm 7); hardness via a reduction using a permanent-based puzzle and Feige & Lund (1997) (Thm 9).",
+   "identification": "Not applicable. There is no estimation or causal identification. The guarantees are worst-case bounds conditional on the prior P[Phi] and on the utility being adaptive submodular.",
+   "scope": "Population: none (no empirical units). Institution: none. Era: 2010 preprint. Domain: adaptive stochastic maximization and coverage, with examples in sensor placement, independent-cascade viral marketing (Kempe et al. 2003 model), and Bayesian pool-based active learning. Nothing in the text touches lobbying, elections, campaigns, legislators, persuasion or turnout, or text measurement. The only network-relevant content is §6 (influence spread on a directed graph with edge probabilities), which bears on seed allocation under a budget k.",
+   "key_findings": [
+    {
+     "finding": "Under adaptive monotonicity and adaptive submodularity, the alpha-approximate greedy policy achieves at least (1 - e^{-l/(alpha k)}) of the expected reward of the best policy with k items; with l = k and alpha = 1 this is the classic (1 - 1/e) guarantee.",
+     "location": "Thm 4, §4, p.5 (proof lines 279-338)",
+     "numbers": "bound 1 - e^{-l/(alpha k)}; alpha = 1 gives 1 - 1/e (~0.632)"
+    },
+    {
+     "finding": "If greedy can only be computed to additive error epsilon, the guarantee becomes (1 - e^{-l/k}) OPT - l*epsilon.",
+     "location": "§4, p.5, text after Thm 4 (lines 339-346)",
+     "numbers": "(1 - e^{-l/k}) * favg(T*) - l*epsilon"
+    },
+    {
+     "finding": "Sensor placement with multiple failure types (not only all-or-nothing failure) under independent failures is adaptive submodular, so the adaptive greedy policy achieves (1 - 1/e) of the best adaptive policy when the base objective f-hat is monotone submodular. This extends Asadpour et al. (2008).",
+     "location": "Thm 5, §5, p.6 (proof p.6-7)",
+     "numbers": "favg(T[k]) >= (1 - 1/e) favg(T*[k])"
+    },
+    {
+     "finding": "Adaptive viral marketing under the independent cascade model is adaptive submodular for any nonnegative monotone submodular reward over influenced nodes, under both myopic and full-adoption feedback. The greedy seed policy therefore achieves (1 - 1/e) of the best policy. This generalizes Kempe et al. (2003) from a fixed seed set to adaptive seeding.",
+     "location": "Thm 6, §6, p.7 (proof lines 530-581)",
+     "numbers": "(1 - 1/e) approximation; f(S,Phi) = f-hat(sigma(S,Phi))"
+    },
+    {
+     "finding": "In the Bayesian pool-based active learning setting, generalized binary search (greedy version-space reduction) needs at most OPT * (ln(1/min_h p_H(h)) + 1) expected queries, improving the leading constant of the ln term to 1 relative to the prior analysis.",
+     "location": "Thm 7 (statement §7, p.8; proof deferred to extended version, lines 644-645)",
+     "numbers": "OPT * (ln(1/min_h p_H(h)) + 1)"
+    },
+    {
+     "finding": "A lower bound of (1/2 - epsilon) ln(1/min_h p_H(h)) holds for active learning under the complexity assumption NP not in DTIME(n^{O(log log n)}), so the constant in Thm 7 is close to tight.",
+     "location": "§7, p.8, lines 627-631 (reduction from Chakaravarthy et al. 2007 with Feige 1998)",
+     "numbers": "(1/2 - epsilon) ln(1/min p_H); upper constant 1"
+    },
+    {
+     "finding": "Version-space reduction is adaptive monotone and adaptive submodular (Prop 8), which is the step that yields Thm 7.",
+     "location": "Prop 8, §7, p.8 (proof lines 660-697)",
+     "numbers": "n/a"
+    },
+    {
+     "finding": "Without adaptive submodularity the general Adaptive Stochastic Maximization problem is inapproximable: no polynomial-time algorithm with budget beta*k can approximate the reward of the optimal k-budget policy within O(|E|^{1 - epsilon/beta}), unless PH = Sigma2P. This holds even for pointwise linear objectives.",
+     "location": "Thm 9, §8, p.9 (proof lines 742-819)",
+     "numbers": "approximation factor O(|E|^{1 - epsilon/beta}) for any epsilon > 0"
+    },
+    {
+     "finding": "With item costs, the greedy guarantee for active learning improves to ln(1/min p_H(h)) + 1 and removes the dependence on max/min cost ratios in the earlier bound of Guillory & Bilmes (O(log(|H| max c / min c))). The cost extension is stated but its proof is deferred to the extended version.",
+     "location": "§7 'Extensions to Arbitrary Costs' paragraph, p.8 (lines 698-718)",
+     "numbers": "ln(1/min p_H) + 1 vs earlier O(log(|H| max c / min c))"
+    }
+   ],
+   "measures": [
+    "expected utility favg(pi) = E_Phi[f(E(pi,Phi),Phi)] (Eq. 1 and §2)",
+    "marginal benefit Delta_Psi(e) = E[f(dom(Psi) union {e}, Phi) - f(dom(Psi), Phi) | Phi ~ Psi] (Eq. 5)",
+    "approximation ratio relative to the best policy with budget k (Thm 4, 5, 6)",
+    "expected number of queries relative to OPT (Thm 7)",
+    "version-space prior mass p_H(V(Psi)) (§7)",
+    "stochastic dominance between random influenced-node sets S and S' (§6 proof)"
+   ],
+   "limitations": [
+    "Results are worst-case guarantees under a known Bayesian prior P[Phi]; no estimation from data or robustness to a misspecified prior is analyzed (§2, §5, §7).",
+    "Sensor placement guarantees (Thm 5) assume independent failures across locations, P[Phi] = prod_e P[Phi(e)] (§5, line 379).",
+    "Viral marketing (Thm 6) is analyzed under the independent cascade model only, with two feedback models (myopic and full-adoption) (§6, p.7).",
+    "Active learning (Thm 7) assumes no label noise and a finite hypothesis set H (§7, line 595).",
+    "Greedy may be computationally intractable in some applications; the guarantee then requires an alpha-approximate greedy rule with a loss factor alpha (§4, lines 256-259).",
+    "Proof of Thm 7 is deferred to the longer version, and the cost extensions and general adaptive stochastic coverage results are deferred to the extended version (lines 644-645, 625-626, 130-131).",
+    "Thm 9 is a worst-case hardness result under complexity-theoretic assumptions (PH != Sigma2P); it does not say how hard typical instances are.",
+    "No empirical evaluation or experiments are reported in this text.",
+    "Text does not mention lobbying, elections, legislators, persuasion/turnout, or text measurement, so its applicability to those domains is outside the paper."
+   ],
+   "references_of_note": [
+    "Kempe, Kleinberg & Tardos (2003), Maximizing the spread of influence through a social network, KDD: the independent cascade model and monotone submodular spread (§1, §6). Most relevant to networks.",
+    "Nemhauser, Wolsey & Fisher (1978), analysis of approximations for maximizing submodular set functions I: greedy (1-1/e) guarantee the paper generalizes (§2).",
+    "Asadpour, Nazerzadeh & Saberi (2008), Stochastic submodular maximization, WINE: all-or-nothing sensor failure case, extended in Thm 5 (§5).",
+    "Krause & Guestrin (2007), Near-optimal observation selection using submodular functions, AAAI: submodular sensor-placement objectives (§1, §5).",
+    "Golovin & Krause (2010) extended version (CoRR abs/1003.3967): holds cost, general coverage, and deferred proofs (§7, §9).",
+    "Kosaraju, Przytycka & Borgstrom (1999), Dasgupta (2004), and Guillory & Bilmes (2009, 2010): greedy binary search / active learning bounds that Thm 7 improves (§7).",
+    "Feige (1998), threshold of ln n for set cover: 1-1/e is tight unless P = NP (§2, §7).",
+    "Goemans & Vondrak (2006), stochastic covering and adaptivity (§5). Minoux (1978): lazy evaluation of greedy marginal gains (§4)."
+   ],
+   "short_quotes": [
+    {
+     "quote": "We prove that if a problem satisfies this property, a simple adaptive greedy algorithm is guaranteed to be competitive with the optimal policy.",
+     "location": "Abstract, p.1"
+    },
+    {
+     "quote": "Kempe et al. (2003) show that the set function which quantifies the expected number of nodes influenced is submodular.",
+     "location": "§1 Introduction, p.2"
+    },
+    {
+     "quote": "Problems (1) is hard to approximate under reasonable complexity theoretic assumptions.",
+     "location": "§2, p.3"
+    }
+   ],
+   "paul_markup": []
+  },
+  "summary_md": "Golovin and Krause extend the classic greedy guarantee for submodular sets (Nemhauser et al. 1978) to adaptive policies. In their setting you pick an item, observe its random outcome, and only then pick the next. Two properties are required. Adaptive monotonicity (Def 1) means an added item never lowers the expected reward. Adaptive submodularity (Prop 3) means an item's expected marginal gain only shrinks as more outcomes are observed. When both hold, the adaptive greedy policy achieves at least (1 - e^{-l/(alpha k)}) of the best k-item policy (Thm 4). With alpha = 1 and l = k this is 1 - 1/e, about 0.632. If marginals are estimated with additive error epsilon, the bound loses l*epsilon. The paper applies the result to three problems: sensors with independent failures (Thm 5), adaptive seeding under the independent cascade (Thm 6), and Bayesian active learning, where it gives an OPT*(ln(1/min p_H)+1) bound (Thm 7). Without adaptive submodularity, the general problem cannot be approximated within O(|E|^{1-epsilon/beta}) (Thm 9). This is a 13-page theory preprint with no data.\n\nWhat it means for Paul's system: the CU budget optimizer and the frontier both run lazy greedy, but neither is adaptive in the paper's sense. Nothing is observed. Seed take-up is drawn inside Monte Carlo, and \"conversions\" are deterministic modeled transitions. The optimizer already scopes its claims correctly. In a fixed stance state it is exact (separable and concave), and once a conversion can happen it reports no guarantee, which Thm 9 supports. The sharpest finding is in the dashboard's budgetRecruit. It claims the full (1-1/e), but because it multiplies each candidate's gain by a target-proximity weight in [1,3], Thm 4 only supports about 0.28 when a target is set. The paper also defines the step the system has not built: seed one member, observe whether they took up the ask (SGATE), then re-plan.",
+  "paul_entries": [
+   {
+    "citation": "Golovin & Krause 2011, JAIR 42 Adaptive Submodularity",
+    "folder": "",
+    "paul_takeaways": [],
+    "system_links": [],
+    "cross_refs": [],
+    "verbatim_anchor": "",
+    "doc": ""
+   }
+  ],
+  "bearings": [
+   {
+    "component_id": "melange-allocation.joint-optimizer",
+    "relation": "qualifies",
+    "paper_claim": "Thm 4: an alpha-approximate adaptive greedy gets at least (1 - e^{-l/(alpha k)}) of the best policy; alpha=1 and l=k give 1-1/e. Thm 9: for general instances no polynomial algorithm with budget beta*k approximates the optimum within O(|E|^{1-eps/beta}) unless PH = Sigma2P, even for pointwise linear f.",
+    "paper_location": "Thm 4 p.5 (text lines 265-276); Thm 9 p.9 (text lines 737-741)",
+    "system_side": "optimize.py runs a heap-based lazy greedy over INC increments (default INC=500). In a fixed stance state the objective is separable with verified concave chunks, giving an exact grid optimum. If a modeled money conversion is reachable the guarantee kind is 'none'. The Golovin-Krause data-dependent bound is labelled 'JAIR'11 Lemma 5.3 / A.9' at line 108.",
+    "code_ref": "fec/engine/optimize.py:3-11, 107-120, 131-144, 166-200",
+    "transfer_conditions": "Thm 4 needs an adaptive monotone and adaptive submodular objective. The fixed-state case is stronger than the paper because it is separable and concave, so the paper adds nothing there. Lemma 5.3 (Adaptive Data Dependent Bound) is in the JAIR text (file 6ba342dad525.txt, line 710) but not in the 13-page CoRR text. A.9 was not located. Thm 9 is worst-case over general instances and does not by itself show that greedy fails on the actual cosponsor instance.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Paper statements verified verbatim. Softened because the system_side says CELF, which the file never names (it uses heapq lazy evaluation). The rel's inference that Thm 9 explains why no guarantee should be claimed in conversion mode is an inference, not a consequence the theorem states. The code's guarantee kind 'none' is the right conservative behavior.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Joint CU budget optimizer|Joint CU budget optimizer]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+    "relation": "contradicts",
+    "paper_claim": "An alpha-approximate greedy picks e' with Delta(e') >= (1/alpha) max_e Delta(e). Thm 4 then gives 1 - e^{-1/alpha} at l=k. The full 1-1/e needs alpha=1.",
+    "paper_location": "alpha-approximate greedy definition, §4 p.5 (text lines 257-260); Thm 4 (lines 265-276)",
+    "system_side": "budgetRecruit picks argmax of g_c, where g_c = (1 - cov[c]) + sum over neighbours PE[c][v](1 - cov[v]). When a target is set, g_c is multiplied by (1 + 2*dT[c]), with dT the max-product proximity to the target (dT[target]=1, values in [0,1]). The multiplier is in [1,3]. The comment claims the classic (1-1/e) of about 0.63 holds.",
+    "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:734 (distToTarget) and 773-793 (budgetRecruit comment and body)",
+    "transfer_conditions": "The weighted rule as written gives alpha=3: if w_c in [1,3] and the chosen c maximises w_c*g_c, then g_chosen >= g_c/3 for every c. The unweighted coverage objective is monotone submodular, so Thm 4 with alpha=3 gives 1 - e^{-1/3} = 0.283. Caveat the rel missed: the candidate pool is pruned (DEG below 0.1 times mean degree, the dropped set, the stanceSafe filter) and the sponsor is forced, so even the untargeted 1-1/e is relative to the pruned pool, not the global optimum.",
+    "strength": "strong",
+    "verdict": "reproduced",
+    "verifier_note": "Arithmetic checked: 1 - e^{-1/3} = 0.2835. The multiplier and the (1-1/e) comment are verified at the cited lines. The no-target 1-1/e reading holds only over the searched candidate set, which the rel did not mention.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Best-sponsor, multi-target tree and budget max-coverage modes|Best-sponsor, multi-target tree and budget max-coverage modes]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-allocation.budget-frontier",
+    "relation": "qualifies",
+    "paper_claim": "With additive marginal error eps, greedy gets at least (1 - e^{-l/k}) OPT - l*eps. Thm 6: adaptive seeding under the single-colour independent cascade with any monotone submodular reward is adaptive submodular, giving 1-1/e under myopic or full-adoption feedback.",
+    "paper_location": "text after Thm 4, §4 p.5 (lines 340-347); Thm 6, §6 p.7 (lines 512-529)",
+    "system_side": "budget_frontier.py runs lazy greedy up to MAXSEEDS=60 with MC=20 replicates and common random numbers. The marginal is max(0, sp - cur)*fac[c]. The seed gate is a CRN draw applied before the cascade. The displayed curve is clamped non-decreasing (prev=max(prev,cur)) and the raw spread is stored alongside it.",
+    "code_ref": "fec/engine/budget_frontier.py:7, 120-170",
+    "transfer_conditions": "Thm 6 covers only the single-colour IC. The two-colour race with anti bystanders and the per-candidate fac weights place the objective outside Thm 6, so no 1-1/e transfers. The eps term is real: Monte Carlo noise over up to 60 seeds enters as -l*eps, and the clamp exists because of observed dips. eps is not bounded anywhere in the code.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Code facts verified: MC default 20, MAXSEEDS default 60, the clamp, the CRN gate. Paper claims verified. The rel's moderate strength is appropriate.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-allocation#Budget frontier with knee and electoral modes|Budget frontier with knee and electoral modes]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.seed-gate",
+    "relation": "suggests-extension",
+    "paper_claim": "Thm 5: with independent location states P[Phi] = product over e of P[Phi(e)] and a monotone submodular base f-hat, the adaptive greedy gets (1-1/e) of the best adaptive policy. Thm 6 covers IC cascades with feedback and does not mention take-up failures.",
+    "paper_location": "Thm 5 p.6 (lines 390-401; independence at lines 379-381); Thm 6 p.7 (lines 512-529)",
+    "system_side": "gate(n) = max(0.15, seed_prob * SGATE[tier]) in moneyball_core.py. Activation is drawn per member on a CRN stream before the cascade in budget_frontier.py. The allocator does not condition later picks on whether earlier seeds took up the ask.",
+    "code_ref": "fec/moneyball_core.py:626-630; fec/engine/budget_frontier.py:126-128",
+    "transfer_conditions": "An adaptive guarantee would need observed take-up between picks, independence across members, and a reward on the realized seed set that is monotone submodular and adaptive submodular. The rel's claim that whip and coalition timing correlate take-up is plausible but not shown by the paper. The SGATE values are unestimated, per the rel. The mapping from sensor failure to take-up is an analogy, not a theorem.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Thm 5 and the code gate verified. Softened: the rel's statement that an observe-then-replan policy would fall under the guarantee needs the reward to be adaptive submodular, which the rel did not check. The take-up case is not what Thm 5 or Thm 6 covers.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Contingent seed activation gate|Contingent seed activation gate]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.per-topic-allocators",
+    "relation": "qualifies",
+    "paper_claim": "The expected-spread function of Kempe et al. is submodular (cited in §1 and §6). Thm 4 extends the Nemhauser greedy guarantee to adaptive greedy on true conditional marginals.",
+    "paper_location": "§1 p.2 (text lines 66-68); §6 (lines 436-446); Thm 4 p.5",
+    "system_side": "per_topic_coalition.py computes singleton marginals mg[n] = spread({n}) - base over the top-45 gated candidates, boosts them by (1 + BETA_C*bpf) with BETA_C=0.8, water-fills the dollar budget, then reports the joint spread of the funded set beside the naive-additive sum, noting that spread is submodular.",
+    "code_ref": "fec/engine/per_topic_coalition.py:113-125; BETA_C defined at line 30",
+    "transfer_conditions": "The allocation uses singleton marginals at the base state, not conditional marginals, so no greedy guarantee transfers to the funded set. Reporting joint spread is consistent with submodularity. The Kempe submodularity claim is verified only as cited background; the Kempe result is not re-derived here.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Code lines and BETA_C=0.8 confirmed. The paper's treatment of IC spread is cited background and is stated as the paper states it.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-allocation#Per-topic flip and coalition allocators|Per-topic flip and coalition allocators]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.lt-priming",
+    "relation": "context",
+    "paper_claim": "Thm 9 is a worst-case hardness statement for general adaptive stochastic maximization: no polynomial algorithm within O(|E|^{1-eps/beta}) unless PH = Sigma2P, even for pointwise linear f.",
+    "paper_location": "Thm 9, §8 p.9 (text lines 737-741)",
+    "system_side": "lt_priming.py sorts candidate recruits by recruit_cost/add (dollars per influence unit) and accepts them against tier thresholds. The code path read makes no approximation claim.",
+    "code_ref": "fec/engine/lt_priming.py:112-130",
+    "transfer_conditions": "Thm 9 says hard instances exist in the general class. It does not establish hardness for the cosponsor graph. The rel's claim that threshold adoption is not submodular in general is not from this paper and was not checked here.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper statement verified. Code sort verified. The rel's implicit inference that Thm 9 applies to LT priming overreaches, because Thm 9 covers the general class.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Linear-threshold priming (cheapest tip)|Linear-threshold priming (cheapest tip)]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Sentence 'Without adaptive submodularity the general problem cannot be approximated within O(|E|^(1-epsilon/beta))' overstates Thm 9. Thm 9 is a worst-case hardness for constructed general instances (puzzle and treasure family), not an if-and-only-if with the absence of adaptive submodularity. Instances without adaptive submodularity can still be easy.",
+   "Paul's 'Chen 2023 margin note' that pressure from high-ranking members is not diminishing is unsourced. The item shows n_annots 0, an empty annot_sha12s list and a paul_entries record with no takeaways. Remove it or cite the actual note.",
+   "Paul's expectation about GCOMB-style learned policies and his 'static and submodular tier' position are not in any item field and cannot be verified from this item.",
+   "'The optimizer runs CELF lazy greedy' is not literally right: optimize.py uses heapq lazy evaluation and never names CELF. Say lazy greedy.",
+   "Lemma 5.3 'belongs to the extended JAIR version' is confirmed: Lemma 5.3 (Adaptive Data Dependent Bound) is at line 710 of 6ba342dad525.txt. The A.9 citation was not located and remains unverified.",
+   "The '13-page' length is not checkable from the text file, which has no page markers. Treat the manifest page count as unverified.",
+   "flags item 'Thm 9 hardness applies, so any greedy (1-1/e) language on cascade-based allocators would be unsupported' overreaches. When Thm 4 stops applying, the honest statement is that the guarantee is unavailable, not that hardness has been shown for that model.",
+   "budgetRecruit's untargeted (1-1/e) claim holds only relative to the pruned candidate pool (DEG below 0.1 mean degree, dropped set, stanceSafe) with a forced sponsor. State that scope when repeating the claim.",
+   "The summary's 'the paper defines the step the system has not built: seed one member, observe take-up, then re-plan' is an analogy. The paper's observations are item states in a policy tree (sensor states, edge status), not take-up decisions.",
+   "The extended-version JAIR metadata (vol 42, pp. 427-486) is external to the text and cannot be confirmed from the 887-line CoRR text. The text itself names only Golovin and Krause (2010), CoRR abs/1003.3967."
+  ],
+  "gaps_exposed": [
+   "No observe-then-replan (adaptive) allocation. Seed take-up (SGATE) is only ever simulated inside Monte Carlo, never observed between choices, so the paper's adaptive guarantee, which compares against the best adaptive policy, is out of reach for every built allocator.",
+   "budgetRecruit's (1-1/e) comment ignores the alpha-approximation penalty from its (1+2*dT) target weighting. The supportable bound is about 0.28 when a target is set.",
+   "The Monte Carlo marginal error epsilon (MC=20, observed dips) is never bounded or propagated into the frontier's knee or guarantee language, even though Thm 4's corollary shows it costs l*epsilon.",
+   "No allocator tests whether its objective is adaptive submodular. The competitive two-colour race with anti bystanders falls outside Thm 6, and the system has no empirical check for diminishing returns on the spread objective; the optimizer checks concavity only for its own fixed-state separable objective.",
+   "The extended JAIR version (holding the data-dependent bound the code cites) is a separate document; the optimizer's citation 'JAIR'11 Lemma 5.3 / A.9' cannot be verified from this text."
+  ],
+  "flags": [
+   "Citation scope: fec/engine/optimize.py:108 cites 'JAIR'11 Lemma 5.3 / A.9' for its data-dependent bound. That lemma is not in this 13-page CoRR preprint. Verify it against golovin-2011-adaptive-submodularity-theory before quoting the bound in any write-up.",
+   "Overclaim in the dashboard: make_dashboard_html_00.tpl:775-776 states the (1-1/e)≈0.63 guarantee for budgetRecruit. Under Thm 4 the target-weighted mode supports only about 1 - e^{-1/3} ≈ 0.28. UNVERIFIED (single agent path, DE-062) until reproduced.",
+   "Paul's Chen 2023 margin note says pressure from high-ranking members is 'not diminishing'. If that holds, adaptive submodularity fails and Thm 9's hardness applies, so any greedy (1-1/e) language on cascade-based allocators would be unsupported.",
+   "No conflict with the barred SNA proposals: the paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization, and it makes no LDA or reciprocity claims."
+  ],
+  "paul_alignment": "The evidence partly agrees with Paul, and his note is somewhat stale. He calls 'adaptive greedy plus CELF' the operational layer. The built optimizer uses CELF lazy greedy, but it is deliberately NOT adaptive. In a fixed stance state it is exact through separable concavity, which is stronger than Golovin-Krause, so the adaptive guarantee adds nothing there. In conversion mode it correctly claims no guarantee, which Thm 9 supports. The truly adaptive piece the paper describes would be lobbying, observing contingent take-up (the SGATE draw) and re-planning. That is not built, and the system's own docstring says so. Paul's expectation that GCOMB-style learned policies will replace greedy is outside this paper. His positions on per-topic-allocators and budget-frontier, which place them in a 'static and submodular tier', are partly right: the coalition allocator is not greedy on conditional marginals, and the frontier's competitive objective is not proven submodular.",
+  "related": [
+   {
+    "slug": "golovin-2011-adaptive-submodularity-theory",
+    "relation": "extends",
+    "why": "Same authors, longer JAIR version. Lemma 5.3 (Adaptive Data Dependent Bound) is present in its text at line 710 of 6ba342dad525.txt, which is the lemma optimize.py cites. A.9 was not located by grep, so only Lemma 5.3 is confirmed."
+   },
+   {
+    "slug": "chen-2021-contingency-aware-influence",
+    "relation": "builds-on",
+    "why": "Item exists. Contingency-aware seeding is the setting the code's SGATE gate resembles. The rel's claim that Thm 5 and Thm 6 analyze independent take-up failures is wrong: Thm 5 is sensor failure and Thm 6 is IC cascade feedback. Keep the link as a topical pointer only."
+   },
+   {
+    "slug": "bharathi-nd-competitive-influence-maximization",
+    "relation": "complements",
+    "why": "Item exists. This paper's Thm 6 covers only the single-colour IC, so the competitive model sits outside it. Content of the Bharathi item was not opened in this check."
+   },
+   {
+    "slug": "borodin-nd-threshold-models-competitive",
+    "relation": "complements",
+    "why": "Item exists. Competitive threshold models are a natural place where Thm 4 does not apply. Content of the Borodin item was not opened in this check."
+   },
+   {
+    "slug": "chen-nd-complex-contagion-influence",
+    "relation": "complements",
+    "why": "Item exists. This paper does not discuss complex contagion, so the 'contradicts' label is not supported by Golovin-Krause; the relation is at most topical. Changed from contradicts to complements."
+   },
+   {
+    "slug": "arya-2025-relink-edge-activation",
+    "relation": "complements",
+    "why": "Item exists. The dashboard closedCascadeRoute comment at template line 831 does say IM-CSN is non-submodular and disclaims a (1-1/e) claim, which is consistent with Thm 9 and Thm 4 not applying. The Arya paper's content was not opened."
+   },
+   {
+    "slug": "almazaydeh-2026-heuristic-centrality-methods",
+    "relation": "complements",
+    "why": "Item exists. The dashboard PageRank comment cites a 2026 Scientific Reports benchmark as a counterweight to greedy. This paper says nothing on that benchmark, so the link is topical only."
+   },
+   {
+    "slug": "trivedi-2020-efficient-influence-maximization",
+    "relation": "same-method",
+    "why": "Item exists. Greedy IM under the independent cascade is the non-adaptive special case that Thm 6 generalizes, so the same-method label holds."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "boxsteffensmeier-2018-taking-congress-interest",
+  "note": false,
+  "meta": {
+   "title": "Cue-Taking in Congress: Interest Group Signals from Dear Colleague Letters",
+   "authors": [
+    "Janet M. Box-Steffensmeier",
+    "Dino P. Christenson",
+    "Alison W. Craig"
+   ],
+   "year": "2019",
+   "venue": "American Journal of Political Science, 63(1), pp. 163-180 (online 2018)",
+   "doi": "10.1111/ajps.12399",
+   "sha12s": [
+    "f5fc4ee3ee6e"
+   ],
+   "category": "Lobbying",
+   "category_slug": "lobbying"
+  },
+  "extraction": {
+   "title": "Cue-Taking in Congress: Interest Group Signals from Dear Colleague Letters",
+   "authors": [
+    "Janet M. Box-Steffensmeier",
+    "Dino P. Christenson",
+    "Alison W. Craig"
+   ],
+   "year": "2019",
+   "venue": "American Journal of Political Science, 63(1), pp. 163-180 (online 2018)",
+   "doi": "10.1111/ajps.12399",
+   "document_type": "academic-article",
+   "coverage": "Read the full text file (about 95k chars, 1931 lines: front matter, introduction, theory, data and methods, results, conclusion, references, and a pointer to supporting information) in chunks; no section skipped. Metadata hints corrected: full author names taken from the text; year is 2019 (AJPS vol 63 no 1, January 2019; online 2018), not 2018; DOI taken from the text. Appendices A and B are referenced but not in the text file. Paul's annotations: 78 entries in the annotation file (73 Highlight, 5 Ink marks with no covered text). None carries a note (all content fields empty), so every note is empty. paul_markup holds 40 of the 78 entries, chosen for substance in document order; 38 dropped (5 Ink marks, numeric table fragments, and minor duplicate or fragment highlights). Page images not rendered; table values are from text extraction. Not a Paul research note.",
+   "research_question": "Why do some bills move forward while others languish? Do interest group endorsements listed in Dear Colleague letters signal bill quality to members of Congress, and does their effect vary across the legislative process?",
+   "theory": "Cue-taking under limited information: members with limited time and staff rely on informative signals, and interest group endorsements are cheap, quick cues. H1 and H1a: endorsements from well-connected groups (high eigenvector centrality) are informative, most strongly early in the process. H2 and H2a: the number of endorsing groups matters more later, because it signals broad support and a larger lobbying ground game. Builds on Hall and Deardorff (2006) on lobbying as legislative subsidy and on the Kingdon cue literature.",
+   "data": "Electronic Dear Colleague letters sent between House members, 106th to 111th Congresses (1999-2010): 93,967 letters, of which 6,633 bills had letters urging support. Unit is the bill. 27 percent of bills with letters had letters naming interest groups. Endorsing organizations matched to 11,019 organizations in the Amicus Curiae Networks Project plus hand-added names. Outcomes (cosponsors, reported from House committee, passed House) and sponsor data from the Congressional Bills Project. Hot Bills list from the Senate Library. Regression N = 6,597.",
+   "method": "Negative binomial regression of the cosponsor count with Congress fixed effects (Table 3; AIC 60,835.04). Logit models for Reported House and Passed House (Table 4), each including cosponsor count as a regressor to capture an indirect path from social power to passage. Standard errors in parentheses; significance stars.",
+   "identification": "No causal identification design (no instrument, natural experiment, or bill-level panel). Associational estimates with Congress fixed effects, sponsor and bill controls, and the cosponsor count entered as a downstream regressor. Footnote 11 notes that solicited and group-initiated endorsements cannot be distinguished.",
+   "scope": "US House of Representatives only; bills that were the subject of Dear Colleague letters urging support, 1999-2010 (106th to 111th Congresses). Not the full population of introduced bills, and not the Senate, except that robustness on all bills in the 111th Congress is reported in supporting information (not in the text file).",
+   "key_findings": [
+    {
+     "finding": "Early stage: bills endorsed by well-connected groups attract more cosponsors. Interest Group Social Power has a positive, significant effect on the cosponsor count.",
+     "location": "Table 3 and Figure 3, pp. 175-176",
+     "numbers": "coef 0.055 (SE 0.011), p<.001; predicted cosponsors 33 with unconnected endorsers, 38 with an endorser at centrality 2.51 (Anti-Defamation League), 51 with one at 7.66 (Planned Parenthood)"
+    },
+    {
+     "finding": "Breadth also raises early cosponsorship: each additional endorsing group adds cosponsors. Matching one moderately connected endorser takes 19 low-centrality groups.",
+     "location": "Table 3 and Figure 4, p. 176",
+     "numbers": "Interest Group Count coef 0.007 (SE 0.001), p<.001; 61 average-centrality endorsers match the 51 predicted for a Planned Parenthood-level endorsement"
+    },
+    {
+     "finding": "Social power has no significant direct effect on committee reporting or floor passage. The authors describe a single well-connected endorsement as no longer enough late in the process.",
+     "location": "Table 4, p. 177",
+     "numbers": "Reported House 0.020 (SE 0.031); Passed House -0.035 (SE 0.032); both not significant"
+    },
+    {
+     "finding": "Breadth matters at the floor stage: the number of endorsing groups significantly predicts House passage but not committee reporting.",
+     "location": "Table 4, p. 177",
+     "numbers": "Passed House 0.013 (SE 0.004), p<.001; Reported House 0.004 (SE 0.003), not significant"
+    },
+    {
+     "finding": "Predicted passage probability rises with the number of endorsing groups, though slowly.",
+     "location": "Figure 5 and text, pp. 177-178",
+     "numbers": "predicted probability 0.09 with no endorsements, 0.10 with 10 groups, 0.20 with 75 groups"
+    },
+    {
+     "finding": "Cosponsorship is an indirect channel from social power to success: cosponsor count predicts both committee reporting and passage.",
+     "location": "Table 4 and text, pp. 177-178",
+     "numbers": "cosponsors coef 0.002 (SE 0.001), p<.01 for Reported House; 0.004 (SE 0.001), p<.001 for Passed House"
+    },
+    {
+     "finding": "Hot bills and commemorative bills attract more cosponsors; hot bills and majority-party sponsors are more likely to pass.",
+     "location": "Table 3 and Table 4, pp. 176-178",
+     "numbers": "hot bill cosponsors coef 0.365 (p<.001), about 15 additional cosponsors; commemorative bills average 78 cosponsors vs 33; Passed House: hot bill 2.428, majority 1.353, both p<.001"
+    },
+    {
+     "finding": "Network measure example: standardized eigenvector centrality in the amicus curiae network separates well-connected groups from peripheral ones.",
+     "location": "Pp. 172-173 and Table 2, p. 174",
+     "numbers": "NOW 8.2962; NEA 2.6653; AFL-CIO 0.8824; AHA -0.1095; ASA -0.2053 (set as the minimum for groups absent from the network)"
+    },
+    {
+     "finding": "Sample scale: Dear Colleague letter volume rose sharply over the period.",
+     "location": "p. 168",
+     "numbers": "31,994 electronic letters in the 111th Congress vs 15,477 in the 109th (up 106.7 percent)"
+    },
+    {
+     "finding": "Hypothesis pattern: H1a (social power stronger early) and H2a (breadth stronger late) are both supported as stated by the authors.",
+     "location": "Pp. 176-178",
+     "numbers": "early social power significant, late social power not; early count significant, late count significant for passage only"
+    },
+    {
+     "finding": "Conclusion on pluralism: well-connected groups act as early gatekeepers, but broad multi-group support is necessary for passage.",
+     "location": "Pp. 178-179",
+     "numbers": ""
+    }
+   ],
+   "limitations": [
+    "Endorsements may be solicited by a member's office or initiated by the group; letters do not reveal which (footnote 11, p. 171).",
+    "Endorser names were matched to the amicus network and hand-checked; groups absent from the network receive the minimum centrality score, which the authors say understates their influence (footnote 18, p. 173).",
+    "The amicus curiae network is used as a proxy for legislative relationships; the authors assume judicial and legislative relationships persist across branches (footnote 15, p. 172).",
+    "The analysis is restricted to bills that were the subject of Dear Colleague letters, with opposition letters removed (footnote 14, p. 171). Results for all bills appear only in supporting information.",
+    "Hot bill status may be determined after endorsements, which complicates its use as a control (footnote 21, p. 175).",
+    "Some letters are purpose-coded from a hand-coded subsample of 4,656 letters (footnote 9, p. 169).",
+    "Endorsing groups may not interact with one another, so endorsement lists do not establish coordination (p. 172).",
+    "The authors report no systematic per-Congress pattern in the social power and count effects (footnote 22, p. 175).",
+    "Associational results; no causal design. The authors describe the results as complex and open new questions (p. 178)."
+   ],
+   "measures": [
+    "Cosponsors: count of cosponsors in the Congress",
+    "Reported House and Passed House: binary outcomes from the Congressional Bills Project",
+    "Interest Group Social Power: maximum standardized eigenvector centrality among endorsing groups (amicus curiae network)",
+    "Interest Group Count: number of endorsing groups named in the letter",
+    "Hot Bills: Senate Library Hot Bills List",
+    "Commemorative: Congressional Bills Project designation",
+    "Majority, Seniority, Referring Committee, Committee Chair, Ranking Member: sponsor characteristics",
+    "Ideological Extremity: absolute difference between first-dimension DW-NOMINATE score and chamber median",
+    "Congress fixed effects"
+   ],
+   "references_of_note": [
+    "Hall and Deardorff (2006), Lobbying as Legislative Subsidy, APSR 100(1)",
+    "Box-Steffensmeier and Christenson (2014), The Evolution and Formation of Amicus Curiae Networks, Social Networks 36",
+    "Wilson and Young (1997), Cosponsorship in the U.S. Congress, LSQ 22(1)",
+    "Volden and Wiseman (2014), Legislative Effectiveness in the United States Congress",
+    "Wilkerson, Smith and Stramp (2015), Tracing the Flow of Policy Ideas in Legislatures, AJPS 59(4)",
+    "Koger (2003), Position-Taking and Cosponsorship in the U.S. House, LSQ 28(2)",
+    "Hojnacki (1997), Interest Groups' Decisions to Join Alliances or Work Alone, AJPS 41(1)",
+    "Straus (2012), Use of Dear Colleague Letters in the U.S. House, Journal of Legislative Studies",
+    "Adler and Wilkerson (2015), Congressional Bills Project"
+   ],
+   "short_quotes": [
+    {
+     "quote": "The vast majority of Dear Colleagues are sent electronically these days.",
+     "location": "p. 168, CAO official quoted"
+    },
+    {
+     "quote": "securing an endorsement from a single socially powerful organization is the best strategy to build support for his or her legislation",
+     "location": "p. 176"
+    },
+    {
+     "quote": "Our results demonstrate the power of interest group endorsements for members of Congress who must make decisions about legislation with incomplete information.",
+     "location": "p. 178"
+    }
+   ],
+   "paul_markup": [
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Why do some pieces of legislation move forward while others languish?",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "We demonstrate that endorsements from particularly well-connected interest groups are a strong cue for members with limited information early in the legislative process and help grow the list of bill cosponsors.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "However, the challenges of doing so with imperfect information have been well documented",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Even if they read every bill, members cannot be expected to effectively comprehend the implications of complicated legislative text across a broad array of policy issues.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "we identify the interest groups who have endorsed legislation and determine the impact of those endorsements at multiple stages of the legislative process.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "By contrast, endorsements from a larger number of groups are better indicators of success later in the process when members need to amass a winning coalition of 218 votes.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "devote more of their limited time to fundraising, and have fewer policy staff to support them.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Nowhere in this allocation is time for reviewing legislation introduced by other members or any sort of policy analysis.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "As a result, there has been a steady decline in the number of issues Congress can address and its capacity for gathering the information necessary to create policy",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "Members also rely on interest groups to provide the information they need to make policy decisions.",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "This information is invaluable to members making voting decisions.",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "Therefore, a member who is concerned with the approval of a particular interest group will know that a bill is safe to support if it has their endorsement.",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "Some organizations are more influential than others because they have more resources, greater name recognition, or better connections within the interest group community.",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "The strength of their relationships with other organizations means they are likely to be well known and in a position to influence other groups.",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "Members of Congress work to gain the support of stakeholders when they introduce a bill because they expect it will increase the likelihood of success.",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "Put simply, we expect that when a bill is endorsed by a large number of organizations, the endorsements collectively demonstrate broad support for the policy in question",
+     "note": ""
+    },
+    {
+     "page": "5",
+     "type": "Highlight",
+     "text": "In addition to signaling that a bill has broad support, endorsements from a large number of organizations translate into a larger ground game.",
+     "note": ""
+    },
+    {
+     "page": "5",
+     "type": "Highlight",
+     "text": "In what follows, we test whether interest group endorsements play a role in the decision to cosponsor legislation and a bill's success in the House of Representatives.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "It can be a crucial factor in building support for legislation, as it is a great way to disseminate what outside organizations are supporting legislation",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "Fourteen percent of the Dear Colleague letters are from members asking their colleagues to sign a letter to the administration, committee chairs, or congressional leadership.",
+     "note": ""
+    },
+    {
+     "page": "8",
+     "type": "Highlight",
+     "text": "Members of Congress and their staff have to reach out to organizations they think may be interested in supporting the bill, provide them with the legislative language prior to introduction, wait for the organization to review the bill",
+     "note": ""
+    },
+    {
+     "page": "8",
+     "type": "Highlight",
+     "text": "If nearly every bill introduced was endorsed by an interest group, the value of those signals would be significantly weakened,",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight",
+     "text": "In contrast, the interest groups that have endorsed a bill and are listed together on a Dear Colleague letter may not have any interaction.",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight",
+     "text": "As reported by the interest groups themselves, the relationships demonstrated by the cosigning of an amicus curiae brief before the Court do not disappear when those groups are lobbying Congress.",
+     "note": ""
+    },
+    {
+     "page": "10",
+     "type": "Highlight",
+     "text": "Interest groups with strong connections to other prominent and well-connected organizations have a great deal of social power within the interest group community.",
+     "note": ""
+    },
+    {
+     "page": "10",
+     "type": "Highlight",
+     "text": "NOW has more social power than the other three organizations, and therefore an endorsement from them is going to send a stronger signal to the average member of Congress than one from the ASA",
+     "note": ""
+    },
+    {
+     "page": "11",
+     "type": "Highlight",
+     "text": "Interest Group Social Power, which is the largest standardized eigenvector centrality score of the interest groups that have endorsed a bill.",
+     "note": ""
+    },
+    {
+     "page": "11",
+     "type": "Highlight",
+     "text": "That is, maximum eigenvector centrality allows us to examine whether members are swayed by a single endorsement from a powerful interest group",
+     "note": ""
+    },
+    {
+     "page": "12",
+     "type": "Highlight",
+     "text": "We expect legislation designated as a hot bill is more likely to pass the House and be signed into law.",
+     "note": ""
+    },
+    {
+     "page": "13",
+     "type": "Highlight",
+     "text": "The average bill with no endorsements is estimated to have 33 cosponsors.",
+     "note": ""
+    },
+    {
+     "page": "13",
+     "type": "Highlight",
+     "text": "It takes 61 endorsements from interest groups with no more than the average eigenvector centrality score to match the 51 cosponsors predicted for a bill endorsed by one of the groups with the greatest social power",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "securing an endorsement from a single socially powerful organization is the best strategy to build support for his or her legislation",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "As expected, Interest Group Count is positive and statistically significant in predicting whether a bill passes the House",
+     "note": ""
+    },
+    {
+     "page": "15",
+     "type": "Highlight",
+     "text": "Members have fewer bills competing for their attention, they are receiving input from more sources as multiple interest groups engage in direct lobbying, and the stakes are higher",
+     "note": ""
+    },
+    {
+     "page": "16",
+     "type": "Highlight",
+     "text": "In the earliest stages of the legislative process, bills that are vetted by an outside organization of high social power send a strong signal that they are worth considering",
+     "note": ""
+    },
+    {
+     "page": "16",
+     "type": "Highlight",
+     "text": "do not appear to have a direct effect at the end of the legislative process",
+     "note": ""
+    },
+    {
+     "page": "16",
+     "type": "Highlight",
+     "text": "Indeed, it takes a relatively large list of groups to have a substantively meaningful effect on the probability of passage.",
+     "note": ""
+    },
+    {
+     "page": "16",
+     "type": "Highlight",
+     "text": "Legislators in search of cosponsors would be wise to find a particularly well-connected group to note in their Dear Colleague letters.",
+     "note": ""
+    },
+    {
+     "page": "16",
+     "type": "Highlight",
+     "text": "the organizations that build stronger connections and are better positioned within the interest group community are more influential, particularly when legislators' time and information are the most scarce.",
+     "note": ""
+    },
+    {
+     "page": "17",
+     "type": "Highlight",
+     "text": "However, broad support from multiple interests is necessary for bill passage, suggesting that pluralism, or at least the appearance of it, is alive and well in the end.",
+     "note": ""
+    }
+   ]
+  },
+  "summary_md": "Box-Steffensmeier, Christenson and Craig (AJPS 63(1), 2019; online 2018) study 6,633 House bills that were the subject of supportive Dear Colleague letters, 106th to 111th Congresses (1999-2010; regression N = 6,597). They code the interest groups named as endorsers in each letter and measure two signals: Interest Group Social Power, the highest standardized eigenvector centrality of any endorser in the amicus curiae co-signing network, and Interest Group Count, the number of endorsers. In a negative binomial model of cosponsor counts with Congress fixed effects, both are positive (0.055 and 0.007, p<.001). Predicted cosponsors rise from 33 with no endorsement to 51 with a top-centrality endorser; 61 average-centrality endorsers are needed to match that. Logit models of committee reporting and House passage show no direct social-power effect. Count predicts passage (0.013) but not reporting. Cosponsor count predicts both later stages (0.002, 0.004). Majority-party sponsorship (1.353) and hot-bill status (2.428) are the largest passage predictors. The paper has no causal design. Endorsements may be solicited by the sponsor's office, and estimates are pooled across six Congresses and both parties. For Paul's systems, the paper is mainly a source of features and a set of caveats. No built component uses endorsement or group-signal data. The cosponsor forecaster has only member-dyad features, so bill-level outside-support signals are a possible addition. Any LDA-based substitute must respect D-021, however. The legislative pillar's efficiency term credits raw advancement rates without the majority-party adjustment that this paper's passage model shows matters. The solicitation ambiguity matches the system's finding that the lobbied-member link is circular.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-lobbying.cosponsor-forecaster",
+    "relation": "suggests-extension",
+    "paper_claim": "Bill-level endorsement signals predict cosponsor counts: max endorser standardized eigenvector centrality coef 0.055 (SE 0.011) and endorser count coef 0.007 (SE 0.001), both p<.001, negative binomial with Congress FE, N = 6,597 House bills with supportive Dear Colleague letters, 106th-111th Congresses. Predicted cosponsors: 33 for a bill endorsed only by unconnected groups (score -0.2053) or with no endorsements; 38 with centrality 2.51 (Anti-Defamation League); 51 with centrality 7.66 (Planned Parenthood).",
+    "paper_location": "Table 3 and Figures 3-4, pp. 175-176 (verified)",
+    "system_side": "cosponsor_forecast.py feature list (lines 117-142) is a ridge-logistic model. It uses member-dyad features (prior sponsor affinity, prior member cosponsorships, network degree and eigenvector, NOMINATE distances, party, state, seniority, prior coservice, member on referred committee) PLUS bill-level and sponsor-level covariates (bill_committee_referrals, bill_type, policy_area, sponsor_majority_party). The analyst claim of member-dyad features only is wrong. No endorsement or outside-support feature exists (confirmed). The 265,396-row count and unscored status were not found in the repo.",
+    "code_ref": "fec/lobbying/cosponsor_forecast.py:117-142 (feature list verified; no endorsement feature present)",
+    "transfer_conditions": "Paper estimates are pooled across Congresses and both parties with no party or majority strata reported, so quote as UNSTRATIFIED. The outcome is a bill-level cosponsor count, not a dyad join. Any added bill-level signal must be dated before introduction. Endorsements are public pro-bill signals, but the paper does not show they reflect group influence because solicitation direction is unresolved (footnote 11). LDA counts are not a substitute under D-021.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Numbers, N, and table location verified against the text. Softened the system-side description, which contradicts itself (member-dyad only versus bill-level covariates in the code). Unverified: the 265,396-row count and the unscored status.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#Ridge-logistic cosponsor forecaster|Ridge-logistic cosponsor forecaster]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.legislative-pillar",
+    "relation": "qualifies",
+    "paper_claim": "Passed House logit (Table 4, N = 6,597): hot bill 2.428 (SE .161), commemorative 1.386 (SE .150), majority-party sponsor 1.353 (SE .220), endorser count 0.013 (SE .004), cosponsors 0.004 (SE .001). Endorser social power is -0.035 (SE .032, ns) for passage and 0.020 (SE .031, ns) for reporting.",
+    "paper_location": "Table 4 and Figure 5, pp. 177-178 (table verified on p. 177)",
+    "system_side": "live_legislative_pillar.py lines 60-81 confirmed: per-category efficiency is the decay-weighted signed share of advanced bills, divided by the max absolute value across members, then percentile-blended. No majority-party, hot-bill, or salience adjustment appears in that block.",
+    "code_ref": "fec/engine/live_legislative_pillar.py:60-81 (verified)",
+    "transfer_conditions": "The paper estimates a covariate association over letter-bearing House bills pooled across 106th-111th Congresses. It is not a per-member efficiency model and says nothing about efficiency metrics. Reading the majority coefficient as showing that a raw advancement rate rewards majority status is an inference, not the paper's claim, and any adjustment is Paul's call.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Coefficients and N verified. Softened the interpretation: the paper reports majority status as a control association and does not show the efficiency rate is biased. Commemorative (1.386) is larger than majority (1.353), so majority is not a top-two passage predictor.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/moneyball-rank-pillars#Legislative pillar (stance-gated agenda plus efficiency)|Legislative pillar (stance-gated agenda plus efficiency)]]",
+    "system": "moneyball-rank-pillars"
+   },
+   {
+    "component_id": "melange-legislative-data.effectiveness-shadow",
+    "relation": "supports",
+    "paper_claim": "Stage-specific coefficients (Tables 3-4): endorser social power predicts cosponsors (0.055) but not reporting (0.020) or passage (-0.035). Endorser count predicts passage (0.013) but not reporting (0.004, ns). Cosponsor count predicts reporting (0.002, p<.01) and passage (0.004, p<.001).",
+    "paper_location": "Tables 3-4, pp. 175-178 (verified)",
+    "system_side": "legislative_effectiveness.py lines 17-28 confirmed: stages BILL, AIC, ABC, PASS, LAW; role weights; cosponsor_half_life_days 180; policy_status shadow_candidate, consistent with not activated.",
+    "code_ref": "fec/engine/legislative_effectiveness.py:17-28 (verified)",
+    "transfer_conditions": "The paper gives stage-specific coefficients on one sample of letter bills (N = 6,597) and does not argue for stage-based modelling; the stage pattern is an empirical observation only. It does not test cosponsor timing decay and gives no support for the 180-day half-life. Pooled, UNSTRATIFIED.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Coefficients verified. Softened the relation from supports-as-argument to empirical pattern only, since the paper makes no modelling recommendation.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-legislative-data#Five-stage legislative effectiveness shadow and CEL criterion|Five-stage legislative effectiveness shadow and CEL criterion]]",
+    "system": "melange-legislative-data"
+   },
+   {
+    "component_id": "melange-lobbying.lobbied-member-link",
+    "relation": "supports",
+    "paper_claim": "Footnote 11 (p. 170): a member reviewing a Dear Colleague letter cannot distinguish an endorsement the member solicited from one the interest group solicited from a sponsor. P. 171: endorsers listed together on a letter may not have any interaction, and endorsements were likely pulled together by a member's office.",
+    "paper_location": "Footnote 11 on p. 170; interaction passage on p. 171 (analyst cited p. 171 and p. 172; corrected here)",
+    "system_side": "bill_lobbying_sidecar.py docstring (lines 10-20) confirmed: LDA filings never name the members lobbied, and the sidecar ships only a bill-level interaction total. The stronger claim that P(joined given lobbied) = 1 by construction, so the link was refuted, was NOT found in the cited code or sidecar.",
+    "code_ref": "fec/lobbying/bill_lobbying_sidecar.py:10-20 (docstring verified; by-construction refutation not located)",
+    "transfer_conditions": "The paper's endorsement channel is observed by members, which is a stronger channel than an LDA bill mention. Its authors leave solicitation direction unresolved, which supports caution about reading bill co-occurrence as influence. The paper does not discuss LDA filings.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper claim verified with corrected page numbers. The system-side refutation claim could not be found in the cited code; the docstring supports only the narrower point that LDA filings never name members.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#Lobbying member-year network and circular lobbied-member link|Lobbying member-year network and circular lobbied-member link]]",
+    "system": "melange-lobbying"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary says majority-party sponsorship (1.353) and hot-bill status (2.428) are the largest passage predictors. Wrong: commemorative (1.386) exceeds majority (1.353) in Table 4 Passed House. Hot bills (2.428) is the largest.",
+   "Summary says the cosponsor forecaster has only member-dyad features. The code also uses bill_type, policy_area, bill_committee_referrals and sponsor_majority_party.",
+   "gaps_exposed repeats the largest-predictor claim (1.353 and 2.428) and needs the same correction.",
+   "Summary says 61 average-centrality endorsers match 51. The paper says 61 endorsements from groups with no more than average centrality. Minor wording fix.",
+   "Page cites: footnote 11 is on p. 170 (rel and flags say p. 171). The endorsers-may-not-interact passage is on p. 171 (rel says p. 172).",
+   "The lobbied-member link claim that P(joined given lobbied) = 1 by construction, so the link was refuted, is not found in the cited code. Unverified.",
+   "The 265,396-row frozen forecast and its unscored status are not verifiable in the repo (no forecast artifact found). Unverified.",
+   "paul_alignment says the 78 annotations carry no notes. This matches the ext coverage note, but the raw annotation file was not opened and ext keeps only 40 of 78 entries. Partly verified."
+  ],
+  "gaps_exposed": [
+   "No component ingests outside-group support signals on bills (endorsements, coalition letters, Dear Colleague letters). The only bill-level organization data are LDA interaction totals, which are display-only and, under D-021, cannot serve as a weight.",
+   "The legislative pillar's efficiency rate has no control for majority-party sponsorship or bill salience, which this paper finds are the largest passage predictors (1.353 and 2.428, House 1999-2010).",
+   "The cosponsor forecaster has no bill-level covariates beyond type, policy area and referrals. Bill attractiveness to cosponsors is left to dyad features. The forecast is still unscored against a history baseline.",
+   "No component uses a network of organizations (as opposed to members) to rank the standing of groups. Building one would need an identity-resolved organization graph and D-025-compliant wording."
+  ],
+  "flags": [
+   "Eigenvector centrality in the amicus network is called social power and influence by the authors. If reused in Melange, it is a heuristic model output, never closeness, access or influence (D-025).",
+   "All coefficients are pooled across the 106th-111th Congresses (Congress FE) and both parties. No strata by party or majority status are reported for the social-power or count effects, although majority status is a strong passage predictor. Quote them as UNSTRATIFIED.",
+   "Transferring endorser count as a count of LDA clients lobbying a bill would use LDA as a weight or feature source, which conflicts with D-021. LDA bill mentions carry no position and are not endorsements.",
+   "Solicited versus group-initiated endorsements cannot be distinguished (footnote 11). The direction of association is unresolved, as with the system's circular lobbied-member link.",
+   "Metadata hint says 2018; the article is AJPS 63(1), January 2019, published online in 2018.",
+   "The paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization, so neither rejected SNA proposal is raised."
+  ],
+  "paul_alignment": "Paul has no bibliography entry for this work; its 78 annotations carry no notes. The highlights track the core argument: members cue-take under scarce information, one well-connected endorser builds cosponsors, breadth matters at passage. The evidence agrees with those highlights. component_literature cites the paper under 4 components. Only the forecaster and legislative-pillar links hold against the code. The centrality citation is a mismatch: the paper ranks groups in an amicus network, not members. Nothing built uses endorsement signals, so this is an unbuilt feature, not a stale note.",
+  "related": [
+   {
+    "slug": "sotoudeh-2024-network-based-measure",
+    "relation": "complements",
+    "why": "Real item (verified). Models House cosponsorship network influence on bill passage at member level, so it is a topical complement."
+   },
+   {
+    "slug": "kim-2025-measuring-interest-group",
+    "relation": "complements",
+    "why": "Real item (verified). Infers group bill positions from LDA reports, an alternative source of group support, as the analyst said."
+   },
+   {
+    "slug": "kim-2018-lobbyview-firm-level",
+    "relation": "complements",
+    "why": "Real item (verified). LobbyView links firms to bills through lobbying reports, as the analyst said."
+   },
+   {
+    "slug": "pritoni-2025-lobbying-coalitions-determinants",
+    "relation": "complements",
+    "why": "Real item (verified). Systematic review of coalition formation. Topical only: it provides no empirical evidence for the endorser-count result."
+   },
+   {
+    "slug": "kim-nd-mapping-political-communities",
+    "relation": "complements",
+    "why": "Real item (verified). Latent community model of lobbying networks, a topical complement to the amicus-network centrality measure."
+   },
+   {
+    "slug": "bakker-nd-understanding-partisan-receptivity",
+    "relation": "complements",
+    "why": "Real item (verified). Studies partisan cue receptivity under bounded rationality, a parallel cue-taking literature."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "holyoke-2015-learnable-skills-unteachable",
+    "relation": "complements",
+    "why": "Both cover how interest-group signals reach overloaded congressional offices. The paper gives the messaging advice and Box-Steffensmeier measures cue-taking from Dear Colleague letters."
+   },
+   {
+    "slug": "furnas-2019-moneyed-interests-information",
+    "relation": "complements",
+    "why": "Both study interest-group signals as cues inside Congress: Dear Colleague endorsements there, think-tank evidence here."
+   },
+   {
+    "slug": "haythornthwaite-1996-social-network-analysis",
+    "relation": "complements",
+    "why": "The article cites Coleman, Katz and Menzel for the inform versus legitimate split (printed p. 337). Box-Steffensmeier offers congressional evidence on cue-taking. Its content was not checked here."
+   },
+   {
+    "slug": "jennifer-nd",
+    "relation": "complements",
+    "why": "Item title confirmed (cue-taking in Congress, interest-group letters, 2018). Shared cue-taking framing is supported by titles only."
+   },
+   {
+    "slug": "ringe-nd-pinpointing-powerful-voting",
+    "relation": "complements",
+    "why": "Both ground cue-taking in legislatures. Box-Steffensmeier measures cues from Dear Colleague letters, while Ringe and Wilson infer the cue-provider from voting correlations."
+   },
+   {
+    "slug": "merkley-nd-party-cues-news",
+    "relation": "complements",
+    "why": "Box-Steffensmeier et al. study legislators taking cues from interest-group Dear Colleague letters; Merkley and Stecula study the mass public taking cues from party elites in news. Together they mark the legislator versus voter boundary for cue parameters."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "pennebaker-2003-psychological-aspects-natural",
+  "note": false,
+  "meta": {
+   "title": "Psychological Aspects of Natural Language Use: Our Words, Our Selves",
+   "authors": [
+    "James W. Pennebaker",
+    "Matthias R. Mehl",
+    "Kate G. Niederhoffer"
+   ],
+   "year": "2003",
+   "venue": "Annual Review of Psychology, 54:547-77 (first published online as a Review in Advance, August 14, 2002)",
+   "doi": "10.1146/annurev.psych.54.101601.145041",
+   "sha12s": [
+    "c3245983b40b"
+   ],
+   "category": "Personality & Psychometrics",
+   "category_slug": "personality-psychometrics"
+  },
+  "extraction": {
+   "title": "Psychological Aspects of Natural Language Use: Our Words, Our Selves",
+   "authors": [
+    "James W. Pennebaker",
+    "Matthias R. Mehl",
+    "Kate G. Niederhoffer"
+   ],
+   "year": "2003",
+   "venue": "Annual Review of Psychology, 54:547-77 (first published online as a Review in Advance, August 14, 2002)",
+   "doi": "10.1146/annurev.psych.54.101601.145041",
+   "document_type": "Narrative review article (Annual Review chapter); no primary data collected",
+   "coverage": "Full text read: all 1,681 numbered lines of the extracted text, covering article pp. 547-572 and the reference list pp. 573-577. The text file on disk is 99,003 bytes, not the 97,932 characters stated in the task hint; the metadata hint was correct. Paul's markup: none exists for this item (the task listed no markup files), so paul_markup is empty and no highlights, underlines or notes were reviewed. Studies summarized in the review were not read separately; their numbers are as reported by the authors.",
+   "research_question": "Can natural word use (open-ended speech and writing, read as style rather than content) serve as a reliable individual-difference marker and as a window onto social, situational, psychological and health processes; and which methods of counting words are available and useful (stated at p. 548)?",
+   "theory": "Word use is treated as a psychological marker, with the strongest emphasis on function words (\"particles\": pronouns, articles, prepositions, conjunctions, auxiliary verbs). The authors argue particles encode shared reference, social identity and self-focus, and cognitive style. Background traditions cited include psychoanalysis (Freud 1901; Lacan 1968), Ricoeur's account of how descriptions define meaning, Goffman's dramaturgy, politeness theory (Brown & Levinson 1987), communication accommodation theory, and verbal immediacy (Wiener & Mehrabian 1968). The review says no compelling psychological theory of word usage yet exists (p. 572). Narrative-writing and disclosure theory (Pennebaker & Francis 1996) is used to explain health effects through coherent narrative construction and shifts in perspective.",
+   "data": "None collected by the authors. The review summarizes evidence from many sources: General Inquirer and LIWC studies; Biber's corpus of 481 texts (about 1,000,000 words) across 23 genres (p. 554); Pennebaker & King (1999) writing samples from diaries, college essays and journal abstracts (p. 555); Mehl & Pennebaker (2002a) electronically activated recorder (EAR) samples of everyday conversation from 52 college students (p. 557); a cross-sectional age analysis of more than 3,000 participants from 45 studies, 21 labs and 3 countries, plus 10 authors (p. 556); Mulac et al. (2001) review of more than 30 gender studies (p. 557); Pennebaker & King (1999) Big Five correlations; Newman et al. (2002) five laboratory deception studies (p. 564); Giuliani's 14 press conferences during his first 5 years in office (p. 565); about 15 students wearing EARs after September 11, 2001 (p. 566); Princess Diana online chat groups (p. 566). Sample sizes for most cited health and clinical studies are not reported in the review. Periods covered span roughly 1941 to 2002, with many citations marked \"submitted\", \"in press\" or unpublished.",
+   "method": "Narrative review organized in sections: (1) six word-count and pattern-analysis methods (General Inquirer, TAS/C, Weintraub's verbal analysis, DICTION, LIWC, Biber factor analysis; LSA as a pattern approach), pp. 549-555; (2) psychometric reliability of word use, pp. 555-556; (3) demographic, personality, mood, need-state, self-esteem and psychopathology links, pp. 556-562; (4) situational, social, deception, upheaval and marital links, pp. 562-567; (5) word use and psychological and health change, including LIWC-based writing-intervention analyses and LSA pronoun-shift analyses, pp. 567-570; (6) discussion of which word classes to study and limitations, pp. 570-572. The review does not pool effects statistically and reports most effects as correlations, percentages or qualitative patterns.",
+   "identification": "Not applicable. The review contains no causal identification strategy of its own. Causal language is used loosely in places (e.g., pronoun use \"predicting\" health changes, p. 569), and the authors note bidirectional effects, particularly in social accommodation (p. 558).",
+   "scope": "Psychology, primarily English-language and largely US-based work, with some European and cross-cultural studies cited. Participants are mostly college students, clinical or patient samples, disclosure-study volunteers, public figures (Giuliani, Watergate transcripts, US presidents), novelists and poets, and online chat or everyday-conversation samples. The authors explicitly say they do not cover non-English languages, spoken versus written differences in depth, second-language learners or intelligence (p. 573). Political and campaign speech is discussed only briefly (Hart's DICTION, presidential speeches, Winter 1973, Zullow et al. 1988; pp. 552-553). Nothing on lobbying, legislators, elections, networks or allocation is presented as a finding.",
+   "key_findings": [
+    {
+     "finding": "Word-use measures show temporal stability. Across 21 language categories in 5-minute talks, successive 2-minute intervals correlated on average at 0.51 (Gleser et al. 1959). Students' everyday conversation was re-sampled four weeks apart with test-retest r of 0.41 for standard linguistic variables and 0.24 for psychological-process variables.",
+     "location": "Psychometric Properties of Word Use, pp. 555-556",
+     "numbers": "r = 0.51 (21 categories, 2-min intervals); r = 0.41 standard variables, r = 0.24 psychological processes (EAR, Mehl & Pennebaker 2002a)"
+    },
+    {
+     "finding": "Word use is consistent across topic and social context, so it can be treated as an individual-difference measure. Pennebaker & King (1999) found good internal consistency across text types for 36 LIWC dimensions, and word use was stable across home versus public and work versus amusement settings.",
+     "location": "Psychometric Properties of Word Use, pp. 555-556",
+     "numbers": "36 LIWC dimensions; text samples from diaries, essays and abstracts written across days and years"
+    },
+    {
+     "finding": "Language changes with age. Older participants used more positive and fewer negative emotion words, fewer first-person singular references, more future tense and fewer past-tense verbs, and more cognitive-complexity words. Both the cross-sectional study and the novelist/poet longitudinal study converged.",
+     "location": "Demographic Variables, Age, p. 556",
+     "numbers": "More than 3,000 participants, 45 studies, 21 labs, 3 countries; 60 text dimensions; 10 authors"
+    },
+    {
+     "finding": "Gender differences in word use are reported across studies, but the evidence is uneven. Mulac et al. (2001) found relatively unambiguous effects for 16 features; men used more quantity references, judgmental adjectives, directives and I-references, while women used more intensifiers, emotion references, uncertainty verbs, negations and hedges. Tag questions showed no consistent difference. In everyday conversations of 52 students, men used nearly four times as many swear words, and women used more filler words and positive-emotion references.",
+     "location": "Demographic Variables, Gender, pp. 557-558",
+     "numbers": "More than 30 studies, 16 features; 52 college students (EAR); men about 4x swear words"
+    },
+    {
+     "finding": "Big Five self-reports correlate only modestly with word use. Pennebaker & King (1999) reported correlations of 0.10 to 0.16. Neuroticism related to more negative and fewer positive emotion words and more first-person singular; extraversion to positive emotion and social-process words; agreeableness to more positive and fewer negative emotion words.",
+     "location": "Traditional Personality Measures, The Big Five, p. 559",
+     "numbers": "r = 0.10 to 0.16 (Pennebaker & King 1999, multiple writing samples from several hundred college students)"
+    },
+    {
+     "finding": "Judges' ratings of text emotionality correlated more strongly with language than writers' or speakers' self-reported emotionality did, which raises the question of which personality 'gold standard' to rely on.",
+     "location": "Traditional Personality Measures, Summary, p. 560",
+     "numbers": "Two studies cited (Pennebaker & Francis 1996; Berry et al. 1997); no coefficients given in the review"
+    },
+    {
+     "finding": "Depression and mania are linked to elevated first-person singular use. Currently depressed students used more I (not me/my/mine) in personal essays. Suicidal poets used fewer first-person plural and more first-person singular pronouns and more death words than nonsuicidal poets. Manic patients used first-person singular more often. The review reads this as self-preoccupation.",
+     "location": "Mental Health and Psychopathology, Depression and Suicidality, pp. 560-561",
+     "numbers": "18 suicidal and nonsuicidal poets (Stirman & Pennebaker 2001); 10 manic patients (Lorenz & Cobb 1952); sample for Rude et al. (2002) not given in review"
+    },
+    {
+     "finding": "Physical health links are sparse but suggestive. First-person singular use in structured Type A interviews (self-involvement) related to coronary outcomes and remained significant after controlling for age, cholesterol, smoking and Type A behavior. Positive emotion words in autobiographical sketches from nuns predicted longer life expectancy.",
+     "location": "Physical Health and Health Behavior, pp. 561-562",
+     "numbers": "Scherwitz and colleagues (no effect sizes given); 80 nuns (Danner et al. 2001; no effect sizes given)"
+    },
+    {
+     "finding": "Deception shows word-level signatures. Across five laboratory studies, truth-tellers used more first-person singular pronouns and more exclusive words (but, except, without) than liars, and liars showed slight but consistent elevations in negative emotion words.",
+     "location": "Deception and Honesty, p. 564",
+     "numbers": "Five laboratory studies (Newman et al. 2002); effect sizes not reported in review"
+    },
+    {
+     "finding": "Shared and personal upheavals shift pronoun use. After Princess Diana's death, first-person plural in chat groups rose 135% and I fell 12% for about a week, returning to normal by 10 days. In the weeks after September 11, students' first-person plural rose and first-person singular fell for at least 5 days. Texas A&M bonfire coverage doubled first-person plural and negative emotion words and cut big words by more than 10%. During personal crises, Giuliani's first-person singular almost tripled in the period after his diagnosis and related events.",
+     "location": "Emotional Upheavals, Personal and Shared Upheavals, pp. 565-566",
+     "numbers": "+135% first-person plural, -12% I (Diana chat groups); about 15 students (EAR, 9/11); doubling of first-person plural (Texas A&M); 14 press conferences (Giuliani, first 5 years)"
+    },
+    {
+     "finding": "Social interaction and marriage show word-level coordination and relational markers. Highly involved strangers used more certainty expressions, verbal immediacy and relational pronouns. Chat-room dyads matched each other's function-word and affect-word use turn by turn. Satisfied, traditional married couples used more we and less I.",
+     "location": "Social Interactions, pp. 566-567",
+     "numbers": "120 participants (Cegala 1989); Sillars et al. (1997) large married-couple sample, numbers not given in review"
+    },
+    {
+     "finding": "Expressive writing about emotional upheavals improves health, and the best predictor is a rise in cognitive words over the writing days. Positive emotion words were linearly related to health gains, while negative emotion words showed an inverted-U relation. Changes in cognitive words explained more variance in health improvement than emotion words. Three independent labs reported related effects, including lymphocyte counts and working memory up to 12 weeks.",
+     "location": "Word Use as a Reflection of Psychological and Health Change, pp. 567-569",
+     "numbers": "Writing typically 3-5 days, 15-30 min/day; six writing studies (Pennebaker et al. 1997); Petrie et al. (1999) medical students; Klein & Boals (2001) working memory"
+    },
+    {
+     "finding": "Pronoun style, not content, tracks health. Day-to-day pronoun shifts among trauma writers correlated 0.3 to 0.5 with changes in physician visits across three studies. LSA content similarity between days showed no relation to health in three writing studies.",
+     "location": "References to Self and Others, pp. 569-570",
+     "numbers": "r = 0.3 to 0.5 (three studies, Campbell & Pennebaker 2002); LSA: no relation (three studies)"
+    },
+    {
+     "finding": "Particles dominate word use and are the most psychologically informative. Fewer than 200 common particles account for over half of the words people use, and emotion words are under 5% of words in speech and writing, so emotion-word counts predict emotional state weakly.",
+     "location": "Which Words Should We Be Studying?, pp. 570-571",
+     "numbers": "Under 200 particles = over 50% of words; emotion words under 5% of words"
+    },
+    {
+     "finding": "Word-count methods differ in scope: Biber's factor analysis of 481 texts (about 1,000,000 words) from 23 genres yielded 6 factors; LIWC searches over 2,300 words in more than 70 dimensions; DICTION uses 10,000 search words with 5 master variables and 35 subfeatures, normed on 20,000 samples; TAS/C uses about 2,000 emotion words and 3,900 abstraction entries. Word-count methods are reliable and efficient but ignore context, irony and sarcasm.",
+     "location": "Methods, pp. 549-555 and Summary, pp. 554-555",
+     "numbers": "Biber 481 texts / ~1,000,000 words / 23 genres / 67 variables / 6 factors; LIWC 2,300+ words / 70+ dimensions; DICTION 10,000 words / 5 master variables / 35 subfeatures / 20,000 norm samples; TAS/C 2,000+ / 3,900"
+    }
+   ],
+   "limitations": [
+    "Word counts cannot capture context, irony, sarcasm or multiple word meanings, and many communication constructs (ingroup-outgroup status, formality, requests) are not easily detected (pp. 572-573).",
+    "No compelling psychological theory of word usage yet exists (p. 572); Zeldow & McAdams (1993) questioned whether lower-level word counts have psychological meaning.",
+    "Gender findings rest on a few studies with small samples and one text source; several key claims come from exclusively nonpersonal writings (pp. 557-558).",
+    "Gender effects may reflect social engagement or power rather than sex, and language use may show bidirectional effects, e.g., accommodation to partners (pp. 558, 555-558).",
+    "Personality self-report correlations are small (r about 0.10-0.16) and are not clearly superior to judge ratings (pp. 559-560).",
+    "Clinical studies are often small, use inconsistent inclusion criteria, and lack proper control groups (pp. 560-561).",
+    "Health-linked evidence is sparse, often unpublished or submitted, and effect sizes are not reported for several key studies (pp. 561-562).",
+    "Unclear whether a sample predicting one outcome (e.g., positive words in an essay) generalizes to psychological or physical phenomena more broadly (p. 562).",
+    "Content-based dictionaries have performed poorly because topics are almost infinite and categories are culture-bound (p. 571).",
+    "Review omits cross-language comparison, written versus spoken differences in depth, second-language learning, intelligence and stereotype communication (p. 573).",
+    "Several cited studies are 'submitted', 'in press' or unpublished, so their results could not be checked against final publications from this text alone."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Stone PJ et al. 1966. The General Inquirer (computerized content analysis; p. 550). The 'mother' of computerized text analysis.",
+    "Hart RP. 1984. Verbal Style and the Presidency: A Computer-Based Analysis; Hart RP. 2001. Redeveloping DICTION: theoretical considerations, in West MD ed. 2001 Theory, Method, and Practice in Computer Content Analysis (pp. 552-553). Political speech and DICTION (5 master variables; 10,000 search words).",
+    "Winter DG. 1973. The Power Motive; Zullow H et al. 1988. Explanatory style and pessimism in the historical record (political speech content; p. 552).",
+    "Biber D. 1988. Variation Across Speech and Writing (factor analysis of 67 linguistic features across 23 genres; p. 554). Informality factor.",
+    "Landauer TK, Dumais ST. 1997. A solution to Plato's problem: latent semantic analysis (p. 550, 569). Content-similarity approach that failed to predict health here.",
+    "Popping R. 2000. Computer-Assisted Text Analysis (p. 549-550); Smith CP ed. 1992. Motivation and Personality: Handbook of Thematic Content Analysis.",
+    "Pennebaker JW, Francis ME, Booth RJ. 2001. Linguistic Inquiry and Word Count (LIWC) 2001 (p. 553). Over 2,300 words, 70+ dimensions.",
+    "Pennebaker JW, King LA. 1999. Linguistic styles: language use as an individual difference (p. 555, 559). Reliability of 36 dimensions and Big Five correlations 0.10-0.16.",
+    "Mehl MR, Pennebaker JW, Crow MD, Dabbs J, Price JH. 2001. The electronically activated recorder (EAR) (p. 556-557). Naturalistic sampling of everyday conversation.",
+    "Niederhoffer KG, Pennebaker JW. 2002. Linguistic synchrony in social interaction (p. 566). Linguistic style matching in chat dyads.",
+    "Sillars A et al. 1997. Relational characteristics of language: elaboration and differentiation in marital conversations (p. 567). Use of we versus I by couple type.",
+    "Mulac A, Bradac JJ, Gibbons P. 2001. Empirical support for the gender-as-culture hypothesis (p. 557). Review of 16 gender-linked language features.",
+    "Morand DA. 2000. Language and power: linguistic strategies in superior-subordinate communication (p. 553). Hedges, past tense and honorifics as power markers.",
+    "Hogenraad R et al. 1995. Paper trails of psychology: the words that made applied behavioral sciences (p. 571). Words in the media and their power.",
+    "Newman ML, Pennebaker JW, Berry DS, Richards JM. 2002. Lying words: predicting deception from linguistic styles (p. 564-565). Pronoun, exclusive-word and negative-emotion markers of deception.",
+    "Campbell RS, Pennebaker JW. 2002. The secret life of pronouns (p. 570). Pronoun shifts and physician visits."
+   ],
+   "short_quotes": [
+    {
+     "quote": "Particles serve as the glue that holds content words together.",
+     "location": "Which Words Should We be Studying?, Particles or Function Words, p. 570"
+    }
+   ]
+  },
+  "summary_md": "Pennebaker, Mehl and Niederhoffer (2003) is a narrative review with no new data. It argues that the way people use words, especially function words such as pronouns, articles and negations, works as a stable individual-difference marker. Their reliability evidence is moderate. Successive 2-minute speech segments correlate at r = 0.51 across 21 categories. Four-week test-retest correlations of everyday speech are 0.41 for standard linguistic categories and only 0.24 for psychological-process categories. The link to personality is weak. Big Five self-reports correlate with word use at r = 0.10 to 0.16 in a few hundred students. Neuroticism goes with more negative-emotion words, fewer positive-emotion words and more first-person singular. Depression is tied to \"I\" specifically, not me, my or mine. Emotion words make up under 5% of all words, so emotion counts are a weak readout of emotional state. Raters who judge a text's emotionality agree with its language more closely than the writers' own self-reports do. The authors also note that word counts ignore context and irony.\n\nFor Paul's systems, this is the stated source for the Pennebaker LIWC base in the affective-N slot, and through Pennebaker and King (1999) for the fallback trait weights in the lexical Big Five. As built, both of those direct uses are now dormant or have moved. Since round 7b, the LIWC base in affective N is only a convergent-validity anchor (r = +.24) and is no longer part of the score. The Pennebaker–King weights in big5_traits.py are overridden whenever mairesse_smoreg.json is present, and it is present. The review's main value here is calibration. With word-trait correlations of r = 0.10 to 0.16, a mean held-out r of .350 against RKH is more than this literature supports, which is consistent with the method-shared inflation the system already records. The low reliability of psychological-process categories also makes the system's failed cross-genre transfers unsurprising. The evidence comes from US college students writing spontaneously. It does not cover staff-written press or floor ritual.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "method-source",
+    "paper_claim": "Neuroticism goes with more negative-emotion words, fewer positive-emotion words and more first-person singular. Big Five self-report correlations with word use are r = 0.10 to 0.16 in several hundred college students (Pennebaker and King 1999). Depressed students (Rude et al. 2002) used more I, with me, my and mine comparable. Emotion words are under 5 percent of words in speech, writing and poetry.",
+    "paper_location": "Big Five p. 558 (analyst cited p. 559); Depression and Suicidality pp. 560-561; Which Words Should We Be Studying? pp. 570-571.",
+    "system_side": "Emitted affective_n in fec/members/emit_affective_n.py is the E-residualized, party-controlled LLM facet score only. The LIWC base (FPS + negemo - posemo) is computed but kept as a convergent anchor (r = +.24 per code comments). The FPS regex pools i, me, my, mine, myself; the paper reports the I-only effect and does not say pooling dilutes it.",
+    "code_ref": "fec/members/emit_affective_n.py:15-17 (regexes), 25-29 (LIWC base), 33-34 (anchor comment), 47-48 (emitted score). Analyst ranges 36-43 and 56 are close; content matches.",
+    "transfer_conditions": "Paper evidence is student self-reports, student essays and student conversation, not media-trained legislators speaking on the floor or in interviews. The Rude et al. sample is currently versus never depressed students writing personal essays, not a clinical sample as the analyst wrote. Untested for N in politicians.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Confirmed: r = 0.10 to 0.16, the directions, the I-only depression effect, under-5-percent emotion words, and that the live code emits the LLM-only score. Corrected: page 558, student sample, and the pooling-dilutes claim, which is the analyst's inference.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "qualifies",
+    "paper_claim": "Self-reported Big Five correlates with closed-vocabulary word use at r = 0.10 to 0.16 across several hundred college students with multiple writing samples (Pennebaker and King 1999). Neuroticism goes with negative emotion and I; extraversion with positive emotion and social words; agreeableness with positive and low negative emotion.",
+    "paper_location": "Traditional Personality Measures, The Big Five, p. 558 (analyst cited p. 559).",
+    "system_side": "Hand weights W (big5_traits.py lines 179-185) cite Pennebaker-King, Yarkoni and Mairesse; ES anx -.30, negemo -.25, i -.20 at line 181 confirmed. Dormant when fec/liwc/mairesse_smoreg.json exists (lines 186-189; file present). Reported held-out CV mean .350 (E .510) was not located in fec/members py, md or json files searched; unverified.",
+    "code_ref": "fec/members/big5_traits.py:177-189 confirmed.",
+    "transfer_conditions": "The paper ceiling applies to text matched to self-report in students. RKH targets are derived from text, so .35 against RKH is not comparable evidence of validity. Hand-weight signs carry over only if the fallback is reactivated. The review does not cite Yarkoni or Mairesse.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Every paper number and direction reproduced. Softened: Yarkoni and Mairesse are not in the review, so the W label cannot credit the review for those weights; the .350 and .510 figures are unlocated.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "qualifies",
+    "paper_claim": "Word use is consistent across text types for 36 LIWC dimensions (Pennebaker and King 1999). Four-week retest of student everyday conversation (EAR, 52 college students, Mehl and Pennebaker 2002a) was r = 0.41 for standard linguistic variables and 0.24 for psychological-process variables. Successive 2-minute speech intervals correlated 0.51 across 21 categories, a result the review attributes to Gleser et al. 1959 on 5-minute talks.",
+    "paper_location": "Psychometric Properties of Word Use pp. 555-556; 52 college students p. 557.",
+    "system_side": "Genre-residualized refit with MTMM bar (b5_residual_eval.py docstring lines 9-10), and the parent family failing it, are stated in the docstring. The interview affective N transfer figures (rho .050, .161) were not located in the cited lines or elsewhere searched. RITUAL stripping exists in big5_traits.py lines 22-24.",
+    "code_ref": "fec/members/b5_residual_eval.py:3-11; fec/members/big5_traits.py:22-24.",
+    "transfer_conditions": "The paper consistency evidence comes from diaries, college writing assignments, journal abstracts and recorded student conversation, not all self-authored. Floor, press and social text is outside its scope. The inference that 0.24 retest reliability predicts weak genre transfer is the analyst's, not the paper's.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Numbers reproduce. Attribution of 0.51 corrected to Gleser et al. 1959. Transfer figures unverified in cited code. The reliability-predicts-transfer link is an inference, not a paper claim.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-stance.lsd-tone",
+    "relation": "qualifies",
+    "paper_claim": "Emotion words are under 5 percent of words in daily speech, emotional writing and affect-laden poetry, so emotion-word counts predict emotional state weakly. Word-count programs cannot consider context, irony or sarcasm. In at least two studies, judges' ratings of emotionality correlated more highly with language use than with self-reports.",
+    "paper_location": "Emotion Words p. 571; Some Final Words pp. 571-572; judges finding p. 559 (in Traditional Personality Measures); Summary and Evaluation pp. 554-555.",
+    "system_side": "Per-release intensity is abs(lsd_net_norm) or lsd_charge = (pos + neg) / words, multiplied by the stance sign to give press_value, so intensity scales every press cell.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:48-59 (lsd_tone); C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:141-143 (heat, intensity, press_value). Both files are outside the Melange repo.",
+    "transfer_conditions": "The paper claim concerns personal emotional state, not how heated a policy release is. LSD2015 is a sentiment dictionary (Young and Soroka 2012 per file header), not LIWC. The sparsity point carries over: in short releases a few hits set the multiplier. The judge finding supports validating intensity against human coding.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper sentences reproduced with wording fixes: the judge finding comes from at least two studies, is on p. 559, and says correlated more highly, not agree. Code lines confirmed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Lexicoder LSD2015 tone intensity|Lexicoder LSD2015 tone intensity]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-psychometrics.gold-panel-validation",
+    "relation": "qualifies",
+    "paper_claim": "In at least two studies (Pennebaker and Francis 1996; Berry et al. 1997), judges' ratings of emotionality correlated more highly with the language of texts and speech than with the writers' or speakers' self-reports. No coefficients are given, and the review raises the gold-standard question.",
+    "paper_location": "Traditional Personality Measures p. 559 (analyst wrote Summary p. 560).",
+    "system_side": "Validity is judged against observer panels and RKH. Halo removal (ct_p2 in big5_improvements_eval.py lines 218-227) and the A-ES and discriminant bars (line 434) exist. The .44 figure is the RKH anchor (.443) used as a reference, not a recorded system A-ES correlation. The .21 text-tone halo attribution was not located.",
+    "code_ref": "fec/members/big5_improvements_eval.py:218-227, 434; fec/members/big5_ctcm.py:10 for the RKH .443 anchor.",
+    "transfer_conditions": "Observer panels rate senators partly from the same public speech the readers score, so convergence can reflect shared observable cues. That halo mechanism is the analyst's inference, not stated in the review. The evidence is two studies in emotion, not Big Five panels.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper claim reproduced after softening two studies to at least two and fixing the page. Halo removal and the bars are confirmed; the .44 is a reference anchor; the .21 halo share is unverified.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Big Five validation against Senate gold panels and criteria|Big Five validation against Senate gold panels and criteria]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "The successive 2-minute r = 0.51 is from Gleser et al. 1959 on 5-minute talks, not the review own data. The summary should attribute it.",
+   "The 0.41 and 0.24 retest figures are Mehl and Pennebaker 2002a EAR data from 52 college students. The summary should attribute them.",
+   "Judge sentence: the summary says judges agree with its language more closely. The paper says ratings correlated more highly with language than with self-reports, in at least two studies.",
+   "Evidence source: the summary says US college students. The review mixes student self-reports, diaries, journal abstracts, poets, elderly depressed speakers and chat-room dyads, and states no country for these samples.",
+   "Depression: the I-only effect comes from student personal essays (Rude et al. 2002), not a clinical sample. The summary omits the sample.",
+   "The mean held-out r of .350 against RKH, and the claim the literature cannot support it, are analyst comparisons across different measures, not paper findings. The .350 figure was not located in the fec/members code or docs searched.",
+   "The claim that low reliability of psychological-process categories makes failed cross-genre transfers unsurprising is an inference. The review does not discuss genre transfer.",
+   "Function-word gap: the review names particles as a research priority and I-to-we as a shared-upheaval signal. It does not call them the most informative signal.",
+   "Shared-upheaval figures (135 percent, 12 percent, back to normal by day 10) come from one online chat-room study after Princess Diana death (Stone and Pennebaker 2002), not a general pattern.",
+   "Ghost-writing and authorship are not discussed in the review. That gap is the analyst's, not paper content.",
+   "Page errors: the Big Five passage is p. 558, not 559; the judges passage is p. 559 under Traditional Personality Measures, not Summary p. 560.",
+   "Flags: the brain note emitter path fec/emit_affective_n.py does not exist; the live file is fec/members/emit_affective_n.py. The brain note itself was not inspected by this verifier.",
+   "Paul alignment (Ramey dated but foundational; Birkenmaier criticism) cannot be verified: paul_entries is empty and no Paul markup exists for this item.",
+   "Coverage: full 1,680-line text read (99,003 bytes; the 97,932 hint was wrong). No ext or rel override files existed. All 5 bearings and 6 related links checked. Code checked by reading only; nothing in the Melange repo was modified."
+  ],
+  "gaps_exposed": [
+   "Function-word style is a gap. The paper treats pronoun and particle shifts (I to we, exclusive words, articles) as the most informative signal, but the stance and press layers use only content dictionaries (LSD) and NLI. No style-based signal exists, and none has been validated. This is listed as a gap only and is not a recommendation.",
+   "Transient event windows are not handled. Shared upheavals raised first-person plural by 135% and cut 'I' by 12% for about a week, returning to baseline by day 10. The trait readers pool text across time with no exclusion window around shocks, so crisis-period speech could move member-level N or E scores.",
+   "There is no linguistic-synchrony measure. The paper shows turn-by-turn function-word matching in dyads (Niederhoffer & Pennebaker 2002). The co-appearance layer records only that two members appeared together, not whether their speech converged. Any such measure would be UNVERIFIED new analysis until a second path reproduces it (DE-062).",
+   "Ghost-writing and genre authorship are not modelled. The paper's individual-difference claims rest on self-authored spontaneous text, and the system has no per-genre authorship weight beyond C_INT_W and RITUAL stripping."
+  ],
+  "flags": [
+   "Brain note concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md describes affective_n as z(Pennebaker LIWC base) + z(LLM facets), and it gives the emitter path as fec/emit_affective_n.py. The live code at fec/members/emit_affective_n.py:39-43,56 emits the E-residualized, party-controlled LLM score only, with LIWC as an anchor. The note is stale on both points and the component description repeats the error.",
+   "The component assumption 'Negative-emotion and first-person-singular words track N (Pennebaker)' overstates the source. The paper reports r = 0.10 to 0.16 against student self-reports, and its depression evidence is specific to 'I', while the system's FPS regex pools me/my/mine/myself.",
+   "big5_traits.py:177-178 labels W as 'Pennebaker–King / Yarkoni / Mairesse correlates', but those weights are dormant because mairesse_smoreg.json overrides them. Citations of Pennebaker for the live lexical weights would be inaccurate."
+  ],
+  "paul_alignment": "Paul left no annotations on this paper. His positions on affective-n ('No annotation addresses it directly', citing Ramey) and lexical-big5 (Ramey 'dated but foundational'; Birkenmaier's criticism of unvalidated SVM) are consistent with what this review shows. The review supplies the modest effect-size ceiling (r = 0.10 to 0.16) that Paul's notes lack, and it supports his preference for venue-specific frameworks, since its reliability evidence comes from self-authored student text. Paul is not stale here, but the brain's description of the affective-N measure is stale (see flags).",
+  "related": [
+   {
+    "slug": "koutsoumpis-2024-kernel-truth-text",
+    "relation": "extends",
+    "why": "Real item: Koutsoumpis et al. meta-analysis of Big Five and LIWC correlations (31 samples per rel summary). Plausibly updates the 0.10-0.16 figures. Year unresolved: slug and item say 2024, rel summary says 2022 per PDF; not checked here."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "builds-on",
+    "why": "Real item: Ramey, Klingler and Hollibaugh (PSRM 2016) apply LIWC and MRC features with Mairesse SMOreg models to House floor speech. Matches the system lexical Big Five lineage. Relation holds."
+   },
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "complements",
+    "why": "Real item but an unpublished revise-and-resubmit draft (2018). It addresses dictionaries failing on specialized vocabulary, not the review limitation about context and irony. Link is loose; keep as complements only."
+   },
+   {
+    "slug": "haselmayer-2017-sentiment-analysis-political",
+    "relation": "complements",
+    "why": "Real item (2017, German-language Austrian political text; dictionary plus crowd-coded negativity). It pairs a dictionary with crowd judgments but does not test the review judge-versus-self-report finding. Link is loose."
+   },
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Real item (Birkenmaier and Lechner 2025; agency and communion in politicians public text). Supplies the elite-population validation the student-based review lacks. Confirmed from item summary."
+   },
+   {
+    "slug": "dietrich-2019-pitch-perfect-vocal",
+    "relation": "complements",
+    "why": "Real item (2019; vocal pitch and emotional intensity of 74,158 House floor speeches). Measures intensity without emotion-word counts, consistent with the review sparsity point."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "marrero-2022-evaluating-voice-samples",
+    "relation": "cited-by",
+    "why": "Cited by the paper as the basis for language-personality links (p.1-2)."
+   },
+   {
+    "slug": "celli-nd-twenty-years-personality",
+    "relation": "cited-by",
+    "why": "Existence confirmed. The survey's founding benchmark is Pennebaker and King 1999 (Essays and LIWC), so the cites relation is to that lineage."
+   },
+   {
+    "slug": "celli-2012-role-emotional-stability",
+    "relation": "same-method",
+    "why": "LIWC word-category foundations (negemo, first-person singular) behind both Celli's cues and the system's affective-N anchor."
+   },
+   {
+    "slug": "yang-2023-getting-personal-deep",
+    "relation": "built-on-by",
+    "why": "Yang cites Pennebaker and King 1999 for the link between word use and psychological state (text lines 827, 1046), which supports the premise of the concept encoder. The 2003 item itself is not cited in the text. Item existence checked; content not read."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "azucar-2017-predicting-personality-traits",
+  "note": false,
+  "meta": {
+   "title": "Azucar, Marengo, Settanni: Big 5 from social media footprints (meta-analysis)",
+   "authors": [
+    "Danny Azucar",
+    "Davide Marengo",
+    "Michele Settanni"
+   ],
+   "year": "2018",
+   "venue": "Personality and Individual Differences, vol. 124, pp. 150-159 (online 22 Dec 2017)",
+   "doi": "10.1016/j.paid.2017.12.018",
+   "sha12s": [
+    "1a3fd010662f"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "Azucar, Marengo, Settanni: Big 5 from social media footprints (meta-analysis)",
+   "authors": [
+    "Danny Azucar",
+    "Davide Marengo",
+    "Michele Settanni"
+   ],
+   "year": "2018",
+   "venue": "Personality and Individual Differences, vol. 124, pp. 150-159 (online 22 Dec 2017)",
+   "doi": "10.1016/j.paid.2017.12.018",
+   "document_type": "Meta-analysis (journal category \"Review\"; 5 separate random-effects meta-analyses plus moderator meta-regressions)",
+   "coverage": "Read the full text in full: all 1,245 lines of C:\\Users\\pgoff\\Documents\\research\\_text\\1a3fd010662f.txt (front matter, abstract, Introduction, Methods, Results, Discussion, Limitations, Conclusions, Table 1 study list, Table 2 heterogeneity table, and references). Figures 1 and 2 (flowchart and forest plot) are images; only their captions appear in the extracted text, so forest-plot study-level values are not available. Paul markup: none. Per the task, no markup files were listed; a check of C:\\Users\\pgoff\\Documents\\research\\_annots and \\annotations found no files matching this document ID. Metadata hint corrected: title, authors, venue and \"Review\" category confirmed; year is 2018 (volume 124 print), with online publication 22 Dec 2017. Lobbying, legislators, path-finding, resource allocation, turnout and persuasion experiments are not in the text. Elections appear only in the ethics paragraph (political-targeting press reports) and in the Introduction's health and commercial applications. Network-related content is limited to activity measures (friends, network density) and one moderator; there is no network-analytic model.",
+   "research_question": "Estimate the mean predictive validity (Pearson r) of social-media digital footprints for each Big 5 trait; test whether the types of footprint used, the platform's default privacy setting (public vs. private), and study quality moderate prediction accuracy; check for publication bias; and assess whether accuracy is consistent across traits (Abstract; Sec. 1.3, p.151).",
+   "theory": "Social-media content is an extension of \"one's self\" and reflects actual personality rather than idealized self-presentation (Back et al., 2010; Seidman, 2013), so digital footprints should carry personality signal (Sec. 1.1, p.150). Benchmark: the typical behavior-personality correlation of about 0.30-0.40, the \"personality coefficient\" (Meyer et al., 2001; Roberts et al., 2007), which the authors call the \"correlational upper-limit\" (Abstract; Sec. 4, p.155). The Big 5 (McCrae & Costa, 1987; McCrae & John, 1992) is the target framework (Sec. 1.2, p.151). No formal theory of why particular footprints predict particular traits is developed; the moderator hypotheses come from survey literature on demographics and from the extraversion-activity link.",
+   "data": "Unit: independent study-level effect size. Literature (Scopus, ISI Web of Science, PubMed, ProQuest, plus Google/Google Scholar and citation chasing), search finalized May 2017 (Sec. 2.1, p.151-152). 24 papers and 28 studies identified (Sec. 3.1, p.154). Removed 12 studies for non-independence: 11 used MyPersonality (Facebook) data, plus Golbeck (2016) Study 3 (shared data with Golbeck et al., 2011). Final set: 14 papers, 16 independent studies, 80 effect sizes (16 per trait). Platforms in the 16: Facebook 7, Twitter 5, Sina Weibo 3, Instagram+Twitter 1. Footprints: 9 single-type studies, 7 multiple-type. Five papers lacked usable effect sizes; author contact recovered one; four were excluded (Sec. 2.4, p.153). Participant N and study years are not reported in the extracted text; the pooled N is not stated. Coders: the authors, with full agreement reported (Sec. 2.4, p.154).",
+   "method": "Five separate random-effects meta-analyses, one per Big 5 trait, using untransformed Pearson r (Fisher z explicitly rejected, citing Schmidt & Hunter, 2014; Sec. 2.4, p.153). Conversions: R^2 to r by square root (n=2); AUROC to Cohen's d to r (n=1); sensitivity/specificity or PPV/NPV to odds ratio to d to r (n=1); non-r reports converted (n=4). Where a study had several models or features, the best model or highest feature effect was used (Sec. 2.4, p.152-153). Outliers: Grubbs test (none found). Heterogeneity: Q, tau^2, I^2. Publication bias: funnel plot, Begg-Mazumdar and Egger tests, trim-and-fill, classic fail-safe N. Moderators: univariate random-effects meta-regression, REML, alpha 0.05, p<0.10 discussed; a moderator was tested only if at least 4 studies per group (Fu et al., 2014). Quality groups were pooled as low+medium (2+2) vs high (12) to reach the minimum. Software: Comprehensive Meta-analysis v3.3.070 (Sec. 2.4, p.153-154; Sec. 3.2.3, p.154).</method>\n<parameter name=\"identification\">None causal. Observational meta-analysis. Moderators are coded study characteristics entered one at a time (univariate), so no moderator is adjusted for another. Coefficients reflect between-study associations, not within-study or individual-level effects.",
+   "scope": "Population: social-media users in the 16 included studies, mostly English-speaking users or Sina Weibo (Chinese) users; the authors state that cultural comparison was not possible (Sec. 5, p.157). Platforms: Facebook, Twitter, Sina Weibo, Instagram (combined with Twitter). Era: literature up to May 2017. Institutions: not applicable (no institutional sampling). Measures are from 2012-2017-era studies.",
+   "key_findings": [
+    {
+     "finding": "Mean meta-analytic correlations between digital footprints and each Big 5 trait (random effects, 16 effect sizes per trait). Extraversion highest, agreeableness lowest; the authors report no significant differences across traits, though no formal cross-trait test is named.",
+     "location": "Sec. 3.2.1, p.154; Abstract p.150; Table 2 p.157; cross-trait claim Sec. 4, p.155",
+     "numbers": "O r=0.39 [0.30, 0.48]; C r=0.35 [0.29, 0.42]; E r=0.40 [0.33, 0.46]; A r=0.29 [0.21, 0.36]; N r=0.33 [0.27, 0.39]. Table 2 Z: 7.81, 9.63, 10.32, 7.07, 9.96 (all p<0.001)."
+    },
+    {
+     "finding": "Heterogeneity is large and mostly true between-study variance. Q is significant for every trait, but tau^2 is small.",
+     "location": "Sec. 3.2.1, p.154; Table 2, p.157",
+     "numbers": "Q(15): O 590.00, C 281.91, E 320.91, A 350.77, N 219.01 (all p<0.001). I^2: O 97.46, C 94.68, E 95.33, A 95.72, N 93.15 (text: I^2 >= 93.15). tau^2: O 0.04, C 0.02, E 0.02, A 0.02, N 0.01."
+    },
+    {
+     "finding": "No evidence of publication bias. Funnel plots symmetric; trim-and-fill added no studies; fail-safe N exceeds the 5k+10 rule of thumb for all traits.",
+     "location": "Sec. 3.2.2, p.154",
+     "numbers": "Begg-Mazumdar p: O .39, C .21, E .50, A .24, N .26. Egger p: O .31, C .14, E .49, A .44, N .29. Fail-safe N: O 12,210; C 7,688; E 11,933; A 6,053; N 7,197 (threshold 90)."
+    },
+    {
+     "finding": "Grubbs outlier test flagged no studies.",
+     "location": "Sec. 3.1, p.154",
+     "numbers": "0 studies removed."
+    },
+    {
+     "finding": "Multiple types of footprints are associated with higher accuracy for O, C and N (significant). E shows a non-significant trend. A shows no increase (the text says 'except agreeableness' but gives no coefficient). The Abstract's 'accuracy improves' claim rests on these trait-level results.",
+     "location": "Sec. 3.2.3, p.154; Discussion Sec. 4, p.155",
+     "numbers": "O beta=0.27, R^2=0.16 (sig.); C beta=0.25, R^2=0.20 (sig.); N beta=0.21, R^2=0.14 (sig.); E beta=0.18, R^2=0.12, p=0.08 (n.s.)."
+    },
+    {
+     "finding": "Demographics (age, gender) are associated with higher accuracy for agreeableness and neuroticism, and a marginal increase for openness.",
+     "location": "Sec. 3.2.3, p.154-155; Discussion p.155",
+     "numbers": "A beta=0.25, R^2=0.19; N beta=0.25, p<0.05, R^2=0.19; O beta=0.26, R^2=0.12, p=0.09."
+    },
+    {
+     "finding": "Activity statistics (friends, posts, network density) are associated with higher accuracy for extraversion only at a marginal level.",
+     "location": "Sec. 3.2.3, p.155; Discussion p.155",
+     "numbers": "E beta=0.19, R^2=0.18, p=0.06."
+    },
+    {
+     "finding": "Language/text features and pictures did not improve accuracy over other footprint types. Public vs. private default platform setting had no significant effect. Study quality had no significant effect.",
+     "location": "Discussion, Sec. 4, p.155",
+     "numbers": "Platform: private (Facebook) vs public (Twitter, Weibo, Reddit, Instagram): no significant effect. Quality: high n=12 vs low+medium n=4 (2+2): no significant effect."
+    },
+    {
+     "finding": "Likes were not testable as a moderator, since only one study used them. The one Likes study in the pool is coded but not moderator-tested.",
+     "location": "Sec. 3.2.3, p.154",
+     "numbers": "Likes moderator: 1 study."
+    },
+    {
+     "finding": "Non-independence screening removed about 43% of identified studies, mostly MyPersonality Facebook studies. Facebook dominates the remaining evidence base only partly: 7 of 16 included studies.",
+     "location": "Sec. 3.1, p.154; Table 1 p.155",
+     "numbers": "12 of 28 studies excluded (11 MyPersonality + 1 Golbeck 2016 Study 3). Included: Facebook 7, Twitter 5, Sina Weibo 3, Instagram+Twitter 1."
+    }
+   ],
+   "limitations": [
+    "Few studies per platform: no thorough cross-platform comparison of accuracy (Sec. 5, p.157).",
+    "Heterogeneity in features and analytic approaches prevented estimating the contribution of individual features to accuracy (Sec. 5, p.157).",
+    "Cultural differences could not be tested; samples are mostly English-speaking or Sina Weibo (Chinese) users (Sec. 5, p.157).",
+    "Visual footprints: only a minority of studies used pictures, none used video, and only one (Skowron et al., 2016) used Instagram or Snapchat, so visual results are preliminary (Sec. 5, p.157).",
+    "Privacy: only default platform settings were coded; the users' actual privacy settings were not collected, so the null platform result should be treated with caution (Sec. 4, p.155).",
+    "Study quality is an approximation from source rank (Scopus CiteScore quartile; CORE 2017 and Microsoft Academic conference ranks), because no standard quality guidelines exist for this field (Sec. 2.3.3, p.152).",
+    "Moderator tests are underpowered: groups need at least 4 studies, and effects with p<0.10 are discussed (Sec. 2.4, p.154; Sec. 3.2.3, p.154).",
+    "Five papers lacked usable effect sizes; one author supplied data and four were excluded. The text does not say whether those four were among the 16 included studies (Sec. 2.4, p.153).",
+    "Only 16 independent studies were included, and 11 of the 12 non-independent studies were excluded for overlap with MyPersonality data (Sec. 3.1, p.154).",
+    "Coverage and era: search finalized May 2017; default privacy settings are expected to change over time (Sec. 4, p.155)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "Overall, the present meta-analysis demonstrates that Big 5 personality traits can be inferred using digital footprints extracted from social media with remarkable accuracy.",
+     "location": "Sec. 6 Conclusions, p.157"
+    },
+    {
+     "quote": "digital records of behaviors on social media may represent a quite reliable source of information for the prediction",
+     "location": "Sec. 4 Discussion, p.155"
+    },
+    {
+     "quote": "accuracy improves when analyses include demographics and multiple types of digital footprints.",
+     "location": "Abstract, p.150"
+    }
+   ],
+   "measures": [
+    "Self-report Big 5 criteria: Big Five Inventory (John & Srivastava, 1999; John, Naumann & Soto, 2008), 10-item BFI (Gosling, Rentfrow & Swann, 2003), TIPI (Table 1), and IPIP (Goldberg et al., 2006).",
+    "Effect size: Pearson r, converted from R^2, AUROC (via Cohen's d), sensitivity/specificity or PPV/NPV (via odds ratio), and other reported statistics.",
+    "Digital-footprint codes (yes/no per study): demographics; Facebook Likes; user activity statistics (posts, friends, network density, received Likes, comments, tags); language/text features; pictures; multiple vs. single type.",
+    "Platform: public default (Twitter, Sina Weibo, Reddit, Instagram) vs. private default (Facebook).",
+    "Study quality: high/medium/low from Scopus CiteScore 2016 quartile (journals) or CORE 2017 / Microsoft Academic ranking (conference proceedings).",
+    "Heterogeneity and bias statistics: Q, tau^2, tau, I^2; Begg-Mazumdar; Egger; trim-and-fill; fail-safe N."
+   ],
+   "references_of_note": [
+    "Kosinski, Stillwell & Graepel (2013), PNAS: Private traits predictable from digital records (text Sec. 1.2, p.151: Likes predict Big 5; openness easiest).",
+    "Kosinski, Bachrach, Kohli, Stillwell & Graepel (2014), Machine Learning: user personality in website choice and online social network behaviour (Sec. 1.2, p.151: extraverts have more friends; conscientious users post less).",
+    "Quercia, Lambiotte, Stillwell, Kosinski & Crowcroft (2012), CSCW: personality of popular Facebook users (Sec. 1.2, p.151: openness linked to larger networks).",
+    "Bachrach, Kosinski, Graepel, Kohli & Stillwell (2012), WebSci: personality and patterns of Facebook usage (Sec. 1.2, p.151; Sec. 1.2 p.151 on ad targeting, p.156).",
+    "Kosinski, Matz, Gosling, Popov & Stillwell (2015), American Psychologist: Facebook as research tool, ethics and guidelines (Sec. 1.1, p.150).",
+    "Schwartz & Ungar (2015), Annals AAPSS: data-driven content analysis of social media (Sec. 1.1, p.150).",
+    "Golbeck, Robles & Turner (2011), CHI EA: predicting personality with social media; recommender relevance (Sec. 1.2 p.151; Sec. 4 p.157).",
+    "Farnadi et al. (2016), UMUAI: computational personality recognition in social media; HCI relevance (Sec. 1.2 p.151; Study 1 and 3 in Sec. 2.4 p.152).",
+    "Cadwalladr (2017) and Confessore & Hakim (2017): press reports of political-propaganda targeting from undisclosed data (Sec. 4 p.157). Only election-related citation in the paper.",
+    "Back et al. (2010), Psychological Science: Facebook profiles reflect actual personality (Sec. 1.1 p.150).",
+    "Meyer et al. (2001) and Roberts et al. (2007): personality coefficient 0.30-0.40 used as the benchmark (Sec. 4 p.155).",
+    "Schmidt & Hunter (2014): untransformed r in random-effects meta-analysis (Sec. 2.4 p.153).",
+    "Settanni & Marengo (2015), Frontiers in Psychology: automated text analysis of Facebook posts (Sec. 1.1 p.150; co-author's prior work)."
+   ]
+  },
+  "summary_md": "Azucar, Marengo and Settanni (Personality and Individual Differences 124, 2018; online December 2017) pooled 16 independent studies from 14 papers. They ran one random-effects meta-analysis per trait on untransformed Pearson r. The criterion in every study was a self-report Big Five inventory (BFI, TIPI or IPIP) from ordinary users of Facebook, Twitter, Sina Weibo or Instagram, with literature searched up to May 2017. The pooled correlations were: Openness .39, Conscientiousness .35, Extraversion .40, Agreeableness .29 (the lowest) and Neuroticism .33. The authors found no publication bias. Heterogeneity was very large (I² ≥ 93.15, every Q(15) significant). In univariate meta-regressions, using several types of footprint raised accuracy for O, C and N. Adding demographics raised it for A and N. Activity statistics (friends, posts, network density) raised it for E only marginally (β .19, p .06). Text and pictures alone added nothing. The pooled numbers are optimistic, because each study contributed its best model or strongest feature.\n\nFor Paul's systems this is a calibration paper, not a validation of them. Melange scores members of Congress, whose posts and press output are written by staff, against RKH estimates, which are themselves derived from text, and against Senate expert and insider panels. Neither of those is self-report from the members. The lexical reader's held-out CV against RKH has a mean of .350. That sits inside Azucar's range by coincidence of scale, not by comparable design, so it should never be presented as matching the meta-analytic benchmark. The paper offers three sharper lessons:\n- Agreeableness is the least recoverable trait from digital footprints, which supports the system's move from lexical A to behavioural cooperation.\n- Activity counts are at best a marginal Extraversion signal.\n- Demographics improve \"accuracy\" only because group membership correlates with self-reported traits. The system's affective-N gate removes exactly that signal on purpose.\n\nThese pooled figures cover 16 studies of lay users and are UNSTRATIFIED across platforms. The authors could not test differences between platforms.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "qualifies",
+    "paper_claim": "Pooled random-effects r per trait: O .39 [.30,.48], C .35 [.29,.42], E .40 [.33,.46], A .29 [.21,.36], N .33 [.27,.39], 16 effect sizes each. Heterogeneity I2 93.15-97.46. Each study contributed its best model or highest single-feature effect. Paper-side numbers reproduced exactly from Table 2 (Z, Q, I2, tau2).",
+    "paper_location": "Sec. 3.2.1 p.154; Table 2 p.157; Sec. 2.4 p.152-153; Abstract p.150",
+    "system_side": "Code matches the description: closed-vocabulary standardized linear model with corpus z-scoring over member posts plus CREC and INTERVIEW speech (big5_traits.py docstring and source setup). The Birkenmaier citation is in the docstring. NOT FOUND: the held-out CV against RKH (E .510, A .406, C .363, ES .258, O .214, mean .350). data/members/big5_v2.json holds held-out r against behavioral targets: A .059 (cooperation_z), C .281 (diligence_z), E .563 (visibility_z), O .135 (breadth_z); ES has no held-out r (v1 fallback).",
+    "code_ref": "fec/members/big5_traits.py:8-10, fec/members/big5_traits.py:178-184, fec/members/big5_traits.py:240-253",
+    "transfer_conditions": "Azucar's pooled r is not a benchmark for this system. Its criterion is self-report from lay users; the system's held-out targets are behavioral dispositions, and no RKH held-out figure exists in the repo. Heterogeneity is over 93 percent and best-model selection probably inflates the pooled values. Any citation must carry the label UNSTRATIFIED (16 studies, 4 platforms, 2012-2017; two included studies, Farnadi 2016 Study 1 and Kosinski 2013, used MyPersonality data). The ordering claim as first written is wrong: in Azucar E (.40) is highest and O (.39) second; A (.29) is lowest. In this system O is the weakest trait on the breadth target (.135), which is not an inversion of a best-predicted trait.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers reproduced. Corrected: E, not O, is the best-predicted trait in Azucar. The RKH CV figures and the mean of .350 appear in no repo artifact and were removed. The claim that O was reversed on the party check: big5_traits.py defines the check (EXP O = -1, lines 276 and 284), but no run output is in the repo, so it is unverified.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-influence-engine.receptivity-layer",
+    "relation": "qualifies",
+    "paper_claim": "Agreeableness is the least recoverable trait from footprints (r .29 [.21,.36]). A gained no accuracy from multiple footprint types. Among the moderators tested, demographics was the only significant gain for A (beta .25, R2 .19).",
+    "paper_location": "Sec. 3.2.1 p.154; Sec. 3.2.3 p.154-155; Discussion Sec. 4 p.155",
+    "system_side": "Lexical susceptibility formula is susc = .40A + .30N - .20C - .10E (receptivity_layer.py line 189). The default behavioral basis uses .40*coop + .30*reactivity N - .20*dil - .10*dom (line 186). The BASIS comment (lines 58-65) documents that RECEPT_TRAITS=lexical reverts the basis; the default is behavioral.",
+    "code_ref": "fec/members/receptivity_layer.py:59-65, fec/members/receptivity_layer.py:186, fec/members/receptivity_layer.py:189",
+    "transfer_conditions": "The paper is about predicting self-report among lay users. It does not test susceptibility to pressure or any choking composite, so it cannot support the susceptibility weights. Its only bearing is that lexical A is the weakest footprint trait. The analyst's statement that the paper supports the system's move from lexical A to behavioral cooperation is the analyst's inference, not the paper's finding.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Paper claims and both code formulas verified at the cited lines. The verdict covers the paper and code citations only; the paper does not speak to the susceptibility model.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Receptivity layer (susceptibility, incentive, prospect domain, seed probability)|Receptivity layer (susceptibility, incentive, prospect domain, seed probability)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "qualifies",
+    "paper_claim": "Demographics (age, gender) as a moderator raised accuracy for N (beta .25, p<.05, R2 .19) and A (beta .25, R2 .19). O showed a marginal gain (beta .26, R2 .12, p=.09).",
+    "paper_location": "Sec. 3.2.3 p.154-155; Abstract p.150",
+    "system_side": "affective_n is the LLM affective facets residualized on E, then on party, then z-scored (emit_affective_n.py lines 52-56). The gate comment at line 43 reads party .00. The residualization controls for party and E only; age and gender are not controlled in these lines.",
+    "code_ref": "fec/members/emit_affective_n.py:39-43, fec/members/emit_affective_n.py:52-56",
+    "transfer_conditions": "The paper's demographic moderator is between-study and univariate: whether a study used demographic features, with no adjustment. It does not show an individual-level mechanism. The paper says its demographic finding is consistent with survey literature on demographic differences in self-reported traits (Goldberg 1998; Soto 2011). The analyst's claim that the gain comes from group membership correlating with self-reported traits, a predictive shortcut, goes beyond the paper. Do not adopt demographic predictors on the strength of this paper.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers match. Gate and residualization verified in code. The mechanism claim was the analyst's inference and has been rewritten as a hypothesis. The gate controls party, not age or gender.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.behavioral-dispositions",
+    "relation": "context",
+    "paper_claim": "Social-media activity statistics (posts, friends, network density, likes received, comments, tags) gave a marginal increase in E accuracy (beta .19, R2 .18, p=.06). The paper reports no other significant moderator effects; it does not report a tested null for each trait.",
+    "paper_location": "Sec. 3.2.3 p.155; Discussion Sec. 4 p.155",
+    "system_side": "visibility_z is broadcast engagement: log counts of attributed interviews and interview programs, for members with at least 3 interviews (behavioral_dispositions.py line 18; visibility block near lines 111-113). Dominance uses floor turn statistics plus committee leadership. The visibility measure is press-interview engagement, not social-media activity.",
+    "code_ref": "fec/members/behavioral_dispositions.py:18, fec/members/behavioral_dispositions.py:111-113",
+    "transfer_conditions": "The constructs differ. The paper's activity variables are social-media posting, friend counts and network density; the system's variable counts press or broadcast interviews. Any link is an analogy, not support, and it bears on E only, not on the lexical E it was meant to contrast with. The analyst's point that interview counts track press-office scheduling and seniority is their inference and was not checked against the repo.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers verified. The relation 'supports' was not warranted because the measures differ; relation changed to context. The 'no other trait improved' wording was rewritten to match what the paper reports.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Behavioural dispositions|Behavioural dispositions]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+    "relation": "context",
+    "paper_claim": "Combining several footprint types gave significant gains for O (beta .27, R2 .16), C (beta .25, R2 .20) and N (beta .21, R2 .14). E showed a trend (beta .18, R2 .12, p=.08). A showed no gain. Text or pictures alone added nothing over other types.",
+    "paper_location": "Sec. 3.2.3 p.154; Discussion Sec. 4 p.155",
+    "system_side": "The v3 hybrid ridge combines lexical features, 8 interaction-channel features and agency/communion persona cues, with nested 5-fold CV and honest held-out r (big5_hybrid.py docstring lines 3-12; heldout_r lines 46-62). The committed artifact data/members/big5_v3_hybrid.json shows no gain over lexical-only: A hybrid .056 vs lexonly .059; C .273 vs .281; E .564 vs .563; O .130 vs .135. The hybrid docstring says interaction features are nickname-degraded until re-ingest, so these numbers are a floor.",
+    "code_ref": "fec/members/big5_hybrid.py:3-12",
+    "transfer_conditions": "The paper concerns social-media footprint types measured against self-report among lay users. The hybrid adds interaction-channel features that are not footprint types, and its targets are behavioral. The paper gives no basis for expecting a gain from interaction features. In the system's own output the added features gave no held-out gain on any target, so the paper does not support the current hybrid. Any future claim needs a pre-registered look and second-path reproduction (DE-062).",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers verified. The honest held-out method is verified in code. The 'supports' relation was overstated: the artifact's held-out r equals lexical-only within .01 on every target, so the relation was changed to context.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#LLM item-level reader (Pink), ridge hybrid and CT-CM latent model|LLM item-level reader (Pink), ridge hybrid and CT-CM latent model]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Held-out CV figures are not in the repo: the summary's 'held-out CV against RKH mean .350' and the claim that it sits inside Azucar's range by coincidence should be removed. Repo held-out r in data/members/big5_v2.json are against behavioral targets: A .059, C .281, E .563, O .135; ES has none.",
+   "The summary says the pooled numbers are optimistic. The paper does not say that. It says each study contributed its best model or strongest feature, which may inflate the pooled r; rewrite as a possibility.",
+   "The summary says demographics improve accuracy only because group membership correlates with self-reported traits. The paper does not establish that mechanism; it cites survey literature on demographic differences in self-report. Rewrite as a hypothesis.",
+   "The summary says the affective-N gate removes exactly the demographic signal. The residualization in emit_affective_n.py controls for party and E only; age and gender are not controlled.",
+   "The summary says Agreeableness supports the system's move from lexical A to behavioral cooperation. The paper tests no system; at most it is consistent with the move. Reword accordingly.",
+   "The summary says Melange's Congress data is staff-written and that the system is validated against Senate expert and insider panels. Neither is in the paper, and neither was checked in the code read here. Mark as unverified.",
+   "Bearing 1 says O is the best-predicted trait in Azucar. This is false: E (.40) is highest and O (.39) second. Corrected in the bearing.",
+   "The paper's Table 1 asterisks do not match its exclusion text: Farnadi 2016 Study 3 is asterisked but its Twitter data is needed for the 7/5/3/1 platform split, and Golbeck 2016 Study 3 is excluded in the text but not asterisked. The platform split reconciles with the text's inclusion list, so the asterisks should not be used.",
+   "The paper's own text says 11 MyPersonality studies plus Golbeck 2016 Study 3 were excluded, and that two MyPersonality-based studies (Farnadi 2016 Study 1; Kosinski 2013) were included. The summary's 'ordinary users' description should note the two included MyPersonality studies.",
+   "Paul alignment section: the item has no Paul annotations (paul_entries is empty and the ext coverage notes none found), so attributions to Paul's views and to his receptivity-layer notes cannot be verified. Remove or mark unverified.",
+   "Ext note: the Bachrach 2012 ad-targeting claim sits on p.157 (Conclusions), not p.156. The Kosinski 2014 conscientiousness finding is fewer pictures, fewer Likes and less group activity, not a general 'post less'.",
+   "Bearing 5 and the flags: the summary's suggestion that the hybrid gives directional support for footprint combination conflicts with the artifact's held-out numbers, which show no gain over lexical-only on any target."
+  ],
+  "gaps_exposed": [
+   "No self-report criterion exists for legislators. The system's references (RKH text estimates, Senate expert and insider panels) are not the criterion the footprint literature validates against, so the paper's accuracy figures cannot be imported as a benchmark.",
+   "Authorship: the system does not model staff or ghost-writing in social posts and press output, although the meta-analysis's theoretical warrant (content as an extension of the self) assumes the person wrote it.",
+   "Per-platform and per-genre accuracy: the paper could not stratify by platform, and the system pools tweets, floor speech and interviews into one corpus (BIG5_SOURCES restricts genres for validation only). No stratified accuracy by genre is reported against an external criterion.",
+   "Upward bias from model selection: the paper's best-model-per-study rule inflates pooled r. The system's own improvement rounds guard against this with single looks, but no comparison to a lay-user benchmark accounts for it."
+  ],
+  "flags": [
+   "Do not quote 'remarkable accuracy' or pooled r ≈ .35 as evidence that Melange's lexical Big Five (CV vs RKH mean .350) is valid. The criteria differ, RKH shares the reader's method, and the pooled figure spans I² ≥ 93% heterogeneity. Any citation must carry the label UNSTRATIFIED (16 studies, 4 platforms, lay users, 2012-2017).",
+   "The demographics-moderator finding must not be used to justify adding party or gender as trait predictors. That conflicts with the affective-N gate (party-controlled, party r = .000) and would make a group proxy look like a personality measure.",
+   "The big5_traits.py docstring treats social posts as validated personality-cue carriers (citing Birkenmaier). Azucar's evidence concerns self-authored lay-user content, so it does not extend that claim to staff-managed congressional accounts.",
+   "No conflict with the rejected SNA proposals, D-021 or D-025: the paper makes no network-edge or influence claims."
+  ],
+  "paul_alignment": "Paul has not annotated this paper. It agrees with his call for frameworks specific to each venue: the paper's platform heterogeneity is large and it could not test differences across platforms. It also fits his view that A collapses into a smaller set of observable dispositions. It does not support his more optimistic plan to use psychological traits as edge parameters in the receptivity layer. Even among lay users with authentic self-report, A is the least recoverable trait (r = .29), and the paper says nothing about whether traits predict yielding to pressure. His notes about the receptivity layer and lexical Big Five predate the nomological indictment and the behavioural basis now running in receptivity_layer.py. The paper agrees with the system as currently built more than with those older notes.",
+  "related": [
+   {
+    "slug": "koutsoumpis-2024-kernel-truth-text",
+    "relation": "complements",
+    "why": "Meta-analysis of Big Five against LIWC categories (title and research question verified). Relevant to the closed-vocabulary feature family used in big5_traits.py."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Legislator speech scoring (title verified). The item confirms there is no ground-truth personality inventory for legislators, which is the gap Azucar's lay-user evidence does not fill."
+   },
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Text measures of politicians' agency and communion from speeches, interviews and social posts (title verified). This is the source the system cites for social posts, and it uses a different construct from Azucar's self-report criterion."
+   },
+   {
+    "slug": "kumari-nd-five-personality-predictions",
+    "relation": "same-method",
+    "why": "Big Five regression from Twitter text (title verified). Same single-platform design that Azucar pools."
+   },
+   {
+    "slug": "hargittai-2015-bigger-always-better",
+    "relation": "complements",
+    "why": "Sampling biases in social network site data (title verified). Bears on Azucar's limitation that samples were mostly English-speaking or Sina Weibo users."
+   },
+   {
+    "slug": "celli-nd-twenty-years-personality",
+    "relation": "complements",
+    "why": "Review of threats, challenges and ethics in personality computing (title verified). Overlaps Azucar's ethics discussion."
+   },
+   {
+    "slug": "naz-2025-machine-deep-learning",
+    "relation": "extends",
+    "why": "2025 survey of machine and deep learning for trait detection (title verified). Covers methods after Azucar's May 2017 search cutoff."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "simchon-2024-persuasive-effects-political",
+    "relation": "complements",
+    "why": "A meta-analysis of inferring Big Five traits from digital footprints, the inference step this paper's manipulation machine assumes on the recipient side."
+   },
+   {
+    "slug": "celli-2012-role-emotional-stability",
+    "relation": "complements",
+    "why": "Meta-analysis of predicting the Big Five from social media footprints. It benchmarks how weak Celli's 0.625 accuracy and 0.578 F1 are."
+   },
+   {
+    "slug": "yang-2023-getting-personal-deep",
+    "relation": "complements",
+    "why": "Thematic link only: Yang does not cite Azucar in the text file, so it cannot serve as a population benchmark from the paper's own citations. Item existence checked; content not read."
+   }
+  ],
+  "evidence_status": "verified"
+ }
+]

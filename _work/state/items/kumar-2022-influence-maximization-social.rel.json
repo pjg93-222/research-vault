@@ -1,0 +1,83 @@
+{
+ "summary_md": "Kumar, Mallik, Khetarpal and Panda (Information Sciences 607, 2022) propose SGNN, which treats influence maximization as a pseudo-regression task. Each node gets a struc2vec structural-identity embedding. A GNN regressor with LSTM neighbourhood aggregation is trained on labels made by simulating every node's individual spread under SIR and IC diffusion. The training network is chosen by a parametric sweep over synthetic graphs. The trained model then predicts node influence on an unseen target network, and the top-k predicted nodes become the seed set. The authors report that SGNN beats classical and recent IM baselines on several real networks under SIR and IC. The local text is only a ScienceDirect preview, so datasets, network sizes, metrics, effect sizes and limitations cannot be checked. Every performance claim here is the authors' own and is UNVERIFIED. The paper's stated motivation is cost: greedy IM is accurate and has a guarantee but is expensive, while centrality heuristics are cheap but network-specific. For Melange the cost argument mostly does not apply. The budget frontier already runs lazy (CELF-style) greedy with common random numbers on a single 533-member chamber graph and caps at 60 seeds, so the expensive side of the trade-off is affordable. Three features of SGNN also clash with choices Melange made on purpose. Seeds are ranked by each node's standalone spread, which ignores overlap between seeds. The embedding has no stance or direction, the same reason InfluenceScore was retired. And the labels come from single-colour diffusion, not the competitive two-colour race the engine models. The paper is best read as a scale-motivated alternative that Melange does not need, and as a caution against top-k standalone ranking.",
+ "category": "Adaptive Influence Maximization",
+ "bearings": [
+  {
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "qualifies",
+   "paper_claim": "Greedy IM approaches are generally more accurate, with a theoretical performance guarantee, but computationally intensive. SGNN replaces them with a learned per-node influence regressor plus top-k selection. No numbers are available in the accessible preview.",
+   "paper_location": "Introduction, paragraph 2; Proposed Work snippet",
+   "system_side": "The frontier runs lazy greedy with a heap of stale marginals. Each candidate's marginal is spread(S+c) minus spread(S), using MC=20 edge-keyed CRN cascades. It stops at MAXSEEDS=60 or at zero marginal and reports a knee. So it already sits on the accurate, guarantee-bearing side of the trade-off the paper describes.",
+   "code_ref": "fec/engine/budget_frontier.py:153-170",
+   "transfer_conditions": "SGNN's speed advantage matters at scales where per-candidate MC greedy is infeasible. On a 533-node chamber graph with at most 60 seeds the greedy is tractable. Swapping in a surrogate would give up the submodular guarantee and the marginal-gain accounting for little benefit.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-influence-engine.competitive-cascade-crn",
+   "relation": "contradicts",
+   "paper_claim": "SGNN's training labels are each node's individual influence under single-source SIR and IC simulations, and the seed set is the top-k by predicted individual influence.",
+   "paper_location": "Abstract; Introduction contribution list",
+   "system_side": "The engine's spread is a two-colour first-to-reach race. Pro-CU seeds compete with an anti set, and bystanders turn anti with a probability tied to money. Spread counts only A-coloured activations, so a node's value depends on the opposing seeds and on the other seeds already chosen.",
+   "code_ref": "fec/engine/budget_frontier.py:83-94",
+   "transfer_conditions": "Single-colour standalone-spread labels do not encode competition or seed overlap. An SGNN-style surrogate would have to be retrained on competitive-race marginal labels before it could stand in for this engine, and the paper never tests that.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "qualifies",
+   "paper_claim": "SGNN builds node features purely from structural identity (struc2vec) and treats predicted structural spreading power as influence.",
+   "paper_location": "Abstract; Introduction paragraph 3",
+   "system_side": "The cosponsor-network InfluenceScore (0.60 out-degree, 0.25 betweenness, 0.15 eigenvector) was set to weight 0 in Influence on 2026-06-25 because it is direction-blind. It survives only in the underdog lens. A structural embedding has the same blindness to stance direction.",
+   "code_ref": "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-lineage-and-june-audit.md:62",
+   "transfer_conditions": "This applies only if someone proposes learned structural embeddings as a replacement influence signal. Any such signal would need stance gating, like the frontier's stance_pool, and would still be a heuristic model output, never closeness or access (D-025).",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "Melange has no test of whether any structural or learned node ranking, such as KB centrality, InfluenceScore or an embedding regressor, recovers the greedy frontier's seed order. A rank comparison against the lazy-greedy path would show how much the greedy step adds over a cheap heuristic.",
+  "The frontier's seed-set stability at MC=20 is checked by mc_stability_check, but its accuracy gap against an exhaustive or higher-MC greedy is not reported."
+ ],
+ "flags": [
+  "Only a ScienceDirect preview is available locally. Datasets, N, metrics and effect sizes were not readable, so every SGNN performance claim is UNVERIFIED and the authors' own.",
+  "Influence language: SGNN's predicted influence is a diffusion-model output on a structural graph. If carried into Melange it must be framed as a heuristic model output, never as closeness, access or introduction probability (D-025).",
+  "The paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization, so neither rejected SNA proposal is triggered."
+ ],
+ "paul_alignment": "Paul's two bibliography entries list this work with no takeaways. It sits in the Path-Finding folder and is cross-referenced only by title to Zareie's link-prediction work. There is no annotation to agree or disagree with. The evidence suggests the work belongs with influence maximization rather than path-finding, since it has no routing content. It is not stale relative to the system, because no component was built on it. Its main use is as a foil: the system's lazy greedy on a 533-node graph already makes SGNN's cost motivation unnecessary.",
+ "related": [
+  {
+   "slug": "almazaydeh-2026-heuristic-centrality-methods",
+   "relation": "complements",
+   "why": "Both papers weigh cheap node rankings against greedy optimization in IM. Kumar builds a learned ranker; Almazaydeh tests whether centrality heuristics can match greedy."
+  },
+  {
+   "slug": "trivedi-2020-efficient-influence-maximization",
+   "relation": "same-method",
+   "why": "Both aim at efficient IM under the Independent Cascade model, the diffusion model Kumar uses for labels and evaluation."
+  },
+  {
+   "slug": "ma-2022-adversarial-attack-graph",
+   "relation": "complements",
+   "why": "Both join graph neural networks with influence maximization, from opposite directions: Ma frames a GNN attack as IM, while Kumar uses a GNN to solve IM."
+  },
+  {
+   "slug": "zareie-2023-influence-maximization-social",
+   "relation": "complements",
+   "why": "Survey of behaviour-aware IM methods. It places Kumar's structure-only learned ranker against methods that model user behaviour, which is closer to Melange's receptivity-aware kernel."
+  },
+  {
+   "slug": "bharathi-nd-competitive-influence-maximization",
+   "relation": "contradicts",
+   "why": "Bharathi's competitive IC underlies the Melange engine. Kumar's single-colour standalone-spread labels leave out the competition that model requires."
+  },
+  {
+   "slug": "kamarthi-2019-influence-maximization-unknown",
+   "relation": "complements",
+   "why": "Another learning-based IM approach. It learns sampling policies where Kumar learns a node-influence regressor, and both trade guarantees for generalization across networks."
+  },
+  {
+   "slug": "zareie-2020-similarity-based-link",
+   "relation": "complements",
+   "why": "Paul's annotation cross-references this social-graph learning work by title. It shares the representation-learning on social networks theme but solves link prediction, not seeding."
+  }
+ ]
+}

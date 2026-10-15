@@ -1,0 +1,94 @@
+{
+  "summary_md": "Borodin, Filmus and Oren (University of Toronto; no year or venue in the text, references run to 2010) ask whether the Kempe-Kleinberg-Tardos linear threshold model can be extended to two competing technologies while keeping the greedy (1-1/e) seed-selection guarantee. Mostly it cannot. A weight-proportional model, where an activated node adopts A with probability equal to A's share of active incoming weight, is not even monotone: adding an A seed moves a root's A-probability from 11/40 to 103/400. A separated-threshold model with per-technology weights and thresholds is monotone but not submodular, and adding a forcing step does not fix this under any tie-breaking rule. With technology-specific weights, the follower problem is NP-hard to approximate within Omega(N^(1/2-eps)). The same reduction refutes a Carnes et al. conjecture. Only the OR model, where each technology spreads independently and a monotone submodular decision function picks the winner at the end, keeps the greedy guarantee, including repeated rounds. For the system as built, the paper is already cited (scenario.py, write_im_sheet.py) as the reason the FLIP side carries no guarantee. That citation is broadly right but loosely mapped. FLIP's pflip = a/(a+b) has the same form as Borodin's weight-proportional adoption split, but it has no random thresholds and no propagation. In a fixed stance state it is separable and concave, so the optimizer's exact certificate holds. The paper bites in two places: modeled-conversion replanning, where the max-normalized neighbour term can make adding pro mass lower other members' pflip, and the coalition frontier's lazy greedy. The frontier keeps one shared kernel for both colours, which stays clear of the Theorem 8 hardness, but its objective includes contest seeds, the seed gate and the leverage factor, and nothing proves those submodular. All bearings below are UNVERIFIED agent analysis (DE-062).",
+  "category": "Adaptive Influence Maximization",
+  "bearings": [
+    {
+      "component_id": "melange-allocation.joint-optimizer",
+      "relation": "qualifies",
+      "paper_claim": "In the weight-proportional competitive LT model (adopt A with probability sum of A-active weight over sum of all active weight), the A-spread is neither monotone (root A-probability 11/40 falls to 103/400 after adding an A seed, Theorem 1) nor submodular (Theorem 2), so the Nemhauser-Wolsey-Fisher greedy bound does not apply.",
+      "paper_location": "Section 2, Eq. 1, Theorems 1-2; Appendix A, Theorems 12-13, Figure 1",
+      "system_side": "pflip = a/(a+b) has Borodin's Eq. 1 weight-proportional form, with pro and anti mass from static neighbour camps plus money. With stance fixed, the objective is separable and concave, and the optimizer certifies an exact optimum. A modeled conversion changes stance, topic_setup recomputes nA and mAt = max(nA), the queue is rebuilt and the run is labeled modeled_threshold_replanning with no certificate. One conversion can lower every other member's WP*nA/mAt term, which is a non-monotone channel like Theorem 1.",
+      "code_ref": "fec/engine/flip_model.py:92-97, fec/engine/flip_model.py:138-140, fec/engine/optimize.py:3-11, fec/engine/optimize.py:121-123, fec/engine/optimize.py:142-144, fec/engine/optimize.py:190",
+      "transfer_conditions": "The analogy is about structure only. Borodin's non-monotonicity comes from propagation through intermediate nodes under random thresholds, and FLIP has neither. The concern applies only to the conversion-replanning path (conversion_reachable true), not to the fixed-state certificate. Whether the mAt renormalization actually lowers total winnability after a conversion has not been measured.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-influence-engine.competitive-cascade-crn",
+      "relation": "supports",
+      "paper_claim": "When each technology has its own edge weights, the separated-threshold follower problem and the wave-propagation (cascade) variant are both NP-hard to approximate within Omega(N^(1/2-eps)) via a Vertex Cover reduction. This refutes the Carnes et al. conjecture that per-technology edge probabilities keep the process monotone and submodular.",
+      "paper_location": "Section 5, Theorems 7-8; Appendix D, Theorem 16, Figure 3",
+      "system_side": "The competitive cascade uses one kernel P = build_P(adj) for both colours. A pro and an anti frontier race over the same edge probabilities with the same keyed splitmix draw per (iteration, edge), and the first colour to reach a node takes it. This is the shared-weight Bharathi-Kempe-Salek family, not the per-technology-weight family that Theorems 7-8 make hard. The scenario.py docstring leans on that scope.",
+      "code_ref": "fec/moneyball_core.py:555-562, fec/engine/budget_frontier.py:83-94, fec/engine/per_topic_coalition.py:44-55, fec/engine/scenario.py:3-12",
+      "transfer_conditions": "The support holds only while the kernel stays shared. Giving anti-CU (industry) diffusion its own edge weights or physics, for example cpf_pressure on the B side only, would move the engine into the Theorem 8 hardness class. The frontier breaks ties by processing order: A seeds are listed first, and later rounds follow frontier order. Neither Borodin nor Bharathi analyses that tie rule.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-allocation.budget-frontier",
+      "relation": "qualifies",
+      "paper_claim": "Most natural competitive extensions lose submodularity. Monotonicity can survive while submodularity fails (Theorems 3-6), and the greedy (1-1/e) guarantee is shown only for the OR model with monotone submodular decision functions (Theorems 9-11).",
+      "paper_location": "Sections 3-4 and 6, Theorems 3-6 and 9-11; Section 7, Conclusions",
+      "system_side": "The frontier runs CELF-style lazy greedy, which is exact only if marginals never rise. Its marginal is not a plain follower spread. It applies the seed gate, multiplies by fac (REPFAC times leverage for contest seeds, which also remove an anti seed from the B set), adds defend draws and floors at zero. Bharathi's fixed-opponent proof does not cover contest seeds that shrink the opponent set. audit_frontier reads clamped marginals and passes up to 35 percent inversions as MC noise, so it cannot tell structure from noise.",
+      "code_ref": "fec/engine/budget_frontier.py:118-134, fec/engine/budget_frontier.py:153-167, fec/audit/audit_frontier.py:27-35",
+      "transfer_conditions": "This applies to electoral mode (contest and defend seeds). Coalition-only mode with a fixed B set and gated seeds is closer to Bharathi's provable case. Separating MC noise from structure would take a check of raw marginals under common random numbers at higher MC, which is a read-only diagnostic, not a production change.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-influence-engine.lt-priming",
+      "relation": "suggests-extension",
+      "paper_claim": "In the separated-threshold competitive LT model, a node is activated by whichever technology's weighted active neighbours first exceed that technology's own threshold. Adding A seeds never raises the probability of B (Theorem 3, Lemma 3), but the process is not submodular (Theorem 4).",
+      "paper_location": "Section 3, Theorems 3-4; Appendix B, Lemma 3, Theorem 14",
+      "system_side": "LT priming is single-technology and deterministic. Each target gets a fixed theta from the tier ladder plus lean and Opponent-cell terms, and pressure sums pro neighbours only (P times Bakker cross-cue). Anti neighbours exert no competing threshold pressure, and the cheapest-tip solve is per target, not a seed-set optimization, so submodularity is not invoked. Borodin's separated-threshold model is the natural competitive version of this solve.",
+      "code_ref": "fec/engine/lt_priming.py:96-103, fec/engine/lt_priming.py:131-140",
+      "transfer_conditions": "Thresholds here are not normalized: theta runs 0.6 to 3.0 in pressure units, against Borodin's thresholds drawn uniformly from 0 to 1. Adding an anti threshold would be a model change for Paul to decide. Per Theorem 3 it would keep monotonicity, but greedy recruit lists would carry no guarantee.",
+      "strength": "weak"
+    }
+  ],
+  "gaps_exposed": [
+    "write_im_sheet.py:26 and scenario.py:11-12 call FLIP competitive Linear Threshold (Borodin), but flip_model.pflip is a one-step weight-proportional ratio with no random thresholds and no propagation. The citation names the right failure (no guarantee) but the wrong model. Only the conversion-replanning path is threshold-like.",
+    "There is no test of whether a modeled conversion lowers total winnability through the mAt = max(nA) renormalization in flip_model.py:140, which is the Borodin-Theorem-1-style non-monotone channel.",
+    "audit_frontier.py:27-35 tolerates up to 35 percent marginal inversions as MC noise and reads clamped marginals. Nothing tests submodularity of the electoral-mode objective (contest seeds shrink the opponent set; fac multipliers), which no cited proof covers.",
+    "The frontier's same-round tie between colours is resolved by list-processing order, not at random. No cited paper establishes submodularity under this rule.",
+    "LT priming ignores anti-neighbour competition entirely. A separated-threshold (Borodin Section 3) or OR-model (Section 6) treatment of opposing pressure is not built.",
+    "Borodin's OR model with a final decision step (Section 6, Theorem 11 for repeated rounds) is the one competitive LT variant with a greedy guarantee, and the system has no counterpart to it."
+  ],
+  "flags": [
+    "Citation-accuracy flag: the repo cites Borodin et al. for FLIP being competitive LT (fec/surfaces/write_im_sheet.py:26; fec/engine/scenario.py:11-12). The built FLIP is not any of Borodin's four models. Borodin's results support the no-guarantee label by analogy, not by direct application.",
+    "Paper is pure theory with no data. Its election examples (forcing as no-abstention voting, Section 4; daily spread in an election race, Section 6.1) are motivation only and give no evidence about legislators or cosponsorship.",
+    "No conflict with the rejected SNA proposals: the paper does not argue for dropping cosponsorship edges or per-edge volume normalization. Its influence language concerns abstract diffusion, not revolving-door edges.",
+    "Theorem 4 and Lemma 3 proofs are deferred to a full version that is not in this text, so the separated-threshold non-submodularity counterexample is unseen here.",
+    "All bearings are new agent analysis, UNVERIFIED until a second path reproduces them (DE-062)."
+  ],
+  "paul_alignment": "Paul has no annotations on this work (n_annots 0), so there is no takeaway to check. It fits his stated positions. On lt-priming he treats coalition formation as complex contagion ('not diminishing'), and Borodin proves competitive threshold models are generally not submodular. On the joint optimizer he treats greedy plus CELF as the operational layer, and optimize.py already limits its certificate to the fixed-state case, which matches the paper. The repo's one-line gloss of Borodin is slightly stale: flip_model is now a ratio model.",
+  "related": [
+    {
+      "slug": "bharathi-nd-competitive-influence-maximization",
+      "relation": "cites",
+      "why": "Borodin cites Bharathi-Kempe-Salek [1] as the competitive IC extension whose follower problem keeps the greedy guarantee. The system's competitive cascade is built on that model, and Borodin's results mark where the guarantee stops for LT variants."
+    },
+    {
+      "slug": "golovin-2011-adaptive-submodularity-theory",
+      "relation": "complements",
+      "why": "Golovin-Krause supplies the diagnostic bound used in optimize.py. Borodin shows which competitive diffusion objectives fail the submodularity those bounds need."
+    },
+    {
+      "slug": "cai-2025-competitive-influence-maximization",
+      "relation": "extends",
+      "why": "This later study of competitive influence maximization in voter dynamics takes up Borodin's open question about other natural competitive models. It brings in timing and network heterogeneity rather than threshold adoption."
+    },
+    {
+      "slug": "moreno-2021-shadowing-shielding-effective",
+      "relation": "complements",
+      "why": "Uses heuristics for competitive continuous influence under voting dynamics, which is the practical answer when Borodin-style results remove greedy guarantees."
+    },
+    {
+      "slug": "chen-nd-complex-contagion-influence",
+      "relation": "complements",
+      "why": "Uses learned policies for non-submodular threshold (complex contagion) seeding, which fits Borodin's finding that threshold competition breaks submodularity and maps to Paul's complex-contagion position on lt-priming."
+    },
+    {
+      "slug": "almazaydeh-2026-heuristic-centrality-methods",
+      "relation": "complements",
+      "why": "Questions whether greedy optimization is worth its cost against centrality heuristics, which matters more once Borodin shows greedy carries no guarantee in most competitive LT variants."
+    }
+  ]
+}

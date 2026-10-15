@@ -1,0 +1,81 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "method-source",
+   "paper_claim": "Algorithm 1 (from [5], Hangal et al.) enumerates all paths, multiplies edge influences along each, and returns the path minimizing Total_influence = log(1/D) + log(1/product of edge influences), with D = 0.95. As printed, log(1/D) is added once per path, not per hop, so it is a constant that cannot change which path wins. Table 2: average strongest vs shortest path length 6.8 vs 4.9 hops (Twitter) and 4.7 vs 3.3 (DBLP), over 500 random pairs per dataset. No path-quality metric is reported.",
+   "paper_location": "Sec. 4, p.5 (Algorithm 1); Sec. 5.3 and Table 2, p.7",
+   "system_side": "Hop cost = -ln(HOP_FACTOR x strength) + w x uncertainty_cost, with HOP_FACTOR = 0.8, i.e. ln(1/0.8) + ln(1/strength) per hop. The ln(1/strength) sum matches the paper's log(1/product) term. The per-hop ln(1/0.8) is a hop-length penalty with no counterpart in Algorithm 1 as printed, where log(1/D) is a per-path constant. Solved by bidirectional Dijkstra with heuristic 0, not by enumerating paths. Edges are undirected.",
+   "code_ref": "fec/surfaces/staffer_closeness_routes.py:115-116; fec/staffer_network/closeness_math.py:20; fec/surfaces/staffer_closeness_routes.py:3-21",
+   "transfer_conditions": "Only the log-inverse-product part of the objective carries over. The router's per-hop decay is its own design (possibly closer to Hangal's original paper, not checked here), not something Ahmad et al. print. The paper does not validate the objective: it never measures whether strongest paths succeed more often. Its influence is directed and normalized by investment; staffer strength is symmetric exposure. Route cost is a heuristic model output, not an introduction probability (D-025).",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper text checked: D = 0.95, the Total_influence formula and the Table 2 numbers all match. But Algorithm 1 computes log(1/D) once per path, so calling the router's per-hop ln(1/0.8) 'the same per-hop decay' form is wrong for this paper. Code confirmed: lines 115-116 (_hop_cost), closeness_math.py:20 (HOP_FACTOR = .8), and the docstring at 3-21 (undirected edges, bidirectional Dijkstra, heuristic 0)."
+  },
+  {
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "qualifies",
+   "paper_claim": "Influence is asymmetric: if Y is highly influenced by X, the reverse is not guaranteed, even for undirected interactions such as co-authorship (Sec. 3.2; Sec. 1.1). Asymmetry 'has to be considered' in social search; the paper does not say in so many words that edges must be directed. Average node influence is 0.67 (Twitter) and 0.60 (DBLP), and most node influence values lie below one (Sec. 5.3, Table 2).",
+   "paper_location": "Sec. 1.1, p.2; Sec. 3.2, p.3; Sec. 5.3 and Table 2, p.6-7",
+   "system_side": "ADJ is symmetric, but PEBASE[u][v] multiplies by the receiver's EMU[v], and configureIssueNetwork scales PE[u][v] by source_shock(u)/target_resistance(v), so PE is directed. distToTarget(t) relaxes d[v] = d[u] x PE[u][v] outward from t, so dT[v] is the best product along t -> ... -> v in the forward edge direction. tracePath scores sponsor -> target moves with PE[cur][v] x dT[v]. When PE is asymmetric, the chain the comment calls 'PROVABLY-OPTIMAL' is therefore not guaranteed to be the max-product sponsor-to-target chain. tracePath also skips 'dropped' nodes that distToTarget does not exclude, which is a second way the trace can depart from the optimum. UNVERIFIED single-path reading (DE-062).",
+   "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:547,586,594-597,734,735,740",
+   "transfer_conditions": "The paper's asymmetry point is enough to say edge direction matters for path search. The defect comes from reading the code, not from the paper. Its size depends on how far EMU (0.80-1.20) and the role priors push PE[u][v] away from PE[v][u], and on whether dropped nodes lie on the best chain. It may be small. A second path should confirm it (DE-062), for example by comparing Dijkstra on -log of the transposed PE with the traced chain.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "The asymmetry statement is in Sec. 3.2 (and 1.1), not Sec. 3.3, and the paper does not say edges 'must be directed'. Wording corrected. 0.67/0.60 and 'below one' confirmed. Code confirmed at the cited lines: 547 symmetric ADJ, 586 EMU[v] in PEBASE, 594-597 source/target role priors, 734 forward-direction relaxation from the target, 740 tracePath with the dropped-node skip. The asymmetry argument holds on reading. Added the dropped-node caveat."
+  },
+  {
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "qualifies",
+   "paper_claim": "Twitter influence(X,Y) = Retweets(Y,X) / sum_Z Retweets(Y,Z): the share of Y's retweets that go to X. This is a directed weight normalized by the retweeter's total retweet volume (Eq. 3). The paper's reason for directed weights is that influence is asymmetric (Sec. 3.2).",
+   "paper_location": "Sec. 5.2 Eq. 3, p.6; Sec. 3.2, p.3",
+   "system_side": "p(a->b) = weighted events(a->b) / max(25, posts(a)), capped at 0.25 per direction. Events are reposts (1.0) and mentions (0.4); posts(a) counts all of a's Quorum posts, not only reposts, and excludes Bluesky. This is a per-author volume normalization like Eq. 3, but the denominator is total posts rather than total retweets. The pair weight is then the mean of the two directions, and only a 'symmetric' edge list is written, so direction is discarded.",
+   "code_ref": "fec/network/social_interaction_layer.py:14-18,54-58,60-61,67-69",
+   "transfer_conditions": "The paper's evidence is descriptive: a 15-day undated Twitter crawl in which strongest paths are longer, with no outcome. It does not show that directed retweet edges predict anything legislative. At most it gives weak support for keeping a directed variant of this layer alongside the symmetric one before path or recruitment use. Per-edge volume normalization was measured and REJECTED in this project's SNA tests: do not read this as support for wider volume normalization.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The form of Eq. 3 is confirmed. 'The same per-author volume normalization as Eq. 3' was overstated: the layer divides by all posts (floor 25) and mixes in 0.4-weighted mentions, while Eq. 3 divides by total retweets. The cap applies per direction before averaging (line 56). Mean of directions (line 61) and symmetric-only output (67-69) confirmed. Asymmetry is Sec. 3.2, not 3.3."
+  },
+  {
+   "component_id": "melange-pathfinding.staffer-overlap-routes",
+   "relation": "context",
+   "paper_claim": "Hop-count shortest paths ignore tie strength and asymmetry (Abstract). Tie strength matters for social search (Granovetter motivation, Sec. 1.1). The strongest path uses the product of normalized influences (Sec. 4).",
+   "paper_location": "Abstract, p.1; Sec. 1.1, p.2; Sec. 4, p.5",
+   "system_side": "Overlap routes minimize summed integer distances plus one balanced unit (DISTANCE_SCALE) per introduction. There are two cost forms. Shared-background mode uses ceil(1e6 x 128 / strength), with strength = sum(weight x log2(1 + shared facts)). Work-time mode uses ceil(1e6 / strength), with strength = proximity x log2(1 + overlap days / 30). Both are additive inverse strengths, not -log of a bounded weight, so neither can be read as a product of per-hop reliabilities.",
+   "code_ref": "fec/surfaces/staffer_overlap_routes.py:27-34,37-39,211,303,331",
+   "transfer_conditions": "Context only. The paper does not compare inverse-strength costs with log-product costs, and the overlap router is a deliberate design choice. Shared work days and shared background are heuristic tie scores, not measures of closeness, access or introduction probability (D-025). Influence language is barred on revolving-door edges.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper side holds. The code side conflated two modes. The 128-scaled cost (line 34) goes with the shared-facts strength (line 331 provenance). The log2(1 + days/30) work-time strength (line 39) goes with ceil(1e6 / strength) at line 211. The conclusion (additive inverse strengths, not log-product) holds for both."
+  }
+ ],
+ "related": [
+  {
+   "slug": "chen-2016-most-reliable-path",
+   "relation": "complements",
+   "why": "The dashboard recruitment path cites Chen et al. 2016 for its max-product ('most reliable') chain, the same objective Ahmad et al. call the strongest path. Chen's own objective is different: it maximizes on-time arrival probability under stochastic link travel times, not a product of edge probabilities."
+  },
+  {
+   "slug": "haythornthwaite-1996-social-network-analysis",
+   "relation": "complements",
+   "why": "Both treat tie strength (Granovetter) and direction as core tie properties. Paul cites Haythornthwaite for directionality, and in the staffer-closeness-routes and SNA components."
+  },
+  {
+   "slug": "duan-2025-breaking-sorting-barrier",
+   "relation": "same-method",
+   "why": "Directed single-source shortest paths with non-negative weights. An exact strongest-path search (Dijkstra on -log influence) could use this in place of Ahmad's exhaustive path enumeration. Both are cited for member-recruitment-path."
+  },
+  {
+   "slug": "lawande-2022-systematic-review-analysis",
+   "relation": "complements",
+   "why": "Compares Dijkstra with A*, BFS and greedy best-first on grids, which includes the Dijkstra baseline used here. Both are cited for member-recruitment-path."
+  }
+ ],
+ "summary_issues": [
+  "The summary says the closeness router's hop cost -ln(0.8 x strength) 'has the same form as Hangal's per-hop log(1/D) + log(1/influence)'. In the paper's Algorithm 1, log(1/D) is added once per path, not per hop, so it cannot change which path wins. Only the log(1/product of influences) part is shared. The router's per-hop ln(1/0.8) is a length penalty the paper does not print.",
+  "The summary says the social layer's edge probability is 'essentially the paper's Eq. 3'. Eq. 3 divides by the retweeter's total retweets. The layer divides by the author's total Quorum posts (floor 25), adds 0.4-weighted mentions, and caps each direction at 0.25. It is a similar per-author volume normalization, not the same one.",
+  "The summary says the recruitment chain is exactly max-product 'only when PE is symmetric'. Symmetry is necessary but not sufficient: tracePath also skips 'dropped' nodes that distToTarget does not exclude. The finding stays UNVERIFIED (DE-062).",
+  "The related link to steinertthrelkeld-2018-twitter-data was removed. That item's own extraction says the book never discusses reposts, mentions, edge probabilities or normalization, so it does not cover the retweet-influence definition used here.",
+  "The related link to chen-2016-most-reliable-path claimed the same objective. Chen maximizes on-time arrival probability under stochastic travel times, not a product of edge probabilities. The link holds only through the dashboard's citation."
+ ]
+}

@@ -1,0 +1,119 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-influence-engine.seed-gate",
+   "relation": "qualifies",
+   "paper_claim": "Behaviour-aware IM adds user features (BV), relationship features (BE) and message features (AM) to the structural IM problem (Eq. 1). The survey reports no take-up rate, no effect size and no benchmark, and it classifies methods without comparing their accuracy. It warns that numeric encodings of attitude may not capture personality and that many users are silent.",
+   "paper_location": "Sec. 2.3 p. 4 (Eq. 1); Sec. 3 pp. 3-5 (Fig. 2); Sec. 4 p. 17 (data availability and data modelling challenges)",
+   "system_side": "gate(n) = max(0.15, seed_prob(n) x SGATE[tier]). seed_prob = clip(0.60 + .10 coop + .06 breadth + .04 visibility, 0.30, 0.90) on the behavioural basis, and clip(0.60 + .10 A + .06 O + .04 E, 0.30, 0.90) on the lexical basis. The docstring cites Chen (UAI 2021) and this survey as its basis.",
+   "code_ref": "fec/members/receptivity_layer.py:29-31 (docstring), :210-216 (seed_prob); fec/moneyball_core.py:626-630 (SGATE, gate); fec/engine/budget_frontier.py:72-74 (comment); fec/engine/outcome_contract.py:17 (H1 label Chen/SNAM)",
+   "transfer_conditions": "Supports only the framing that member attributes may enter seed activation. The survey does not discuss contingency-aware seeding, does not cover legislators, and does not justify the 0.60 baseline, the coefficients or the 0.30-0.90 clip, which remain design priors. Evidence route is H1: outcome_contract.py requires at least 150 members with cosponsorship deltas. The F5 count of 72 was not checked.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Core facts reproduce: the taxonomy, Eq. 1, the no-benchmark point, the silent-user point and the numeric-encoding caveat. Softened because 'classifies methods and does not benchmark' is the analyst's paraphrase, not survey text, and the survey does not discuss seeding activation. Code lines and the seed_prob formula reproduce as cited."
+  },
+  {
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "suggests-extension",
+   "paper_claim": "Topic-aware IM (Barbieri, Bonchi and Manco 2013) represents each user's interest as a continuous topic vector. The survey says this captures preferences more realistically than binary target or label methods, but determining topic vectors needs a good record of historical activity, which may not always be available. The survey reports no accuracy comparison of any kind.",
+   "paper_location": "Sec. 3.1.3-3.1.4 pp. 6-8; interest-aware summary p. 8 (Table 1)",
+   "system_side": "per_topic_coalition.py:37 builds one topic-independent kernel with MBC.build_P from the CU cosponsor graph. Topics differ in target weights and industry money, not in edge probabilities. Kernel sharing was verified for per_topic_coalition only; the per_topic_flip and flip_model paths were not checked.",
+   "code_ref": "fec/engine/per_topic_coalition.py:34-37; fec/moneyball_core.py:555-561 (build_P); fec/engine/per_topic_flip.py:39",
+   "transfer_conditions": "Transfers only if per-category cosponsorship history is dense enough to estimate topic-specific edge weights. A topic-conditioned kernel would change ranks and engine outputs, so change-control applies. The survey gives no evidence that topic conditioning beats topic-blind IM, so any benefit is conjectural. The recorded crypto p_max of 0.23 was not checked.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The paper says topic-aware methods capture preferences more realistically, which is comparative, not 'most realistically'. It also says historical data may not always be available. The survey contains no accuracy numbers at all, so 'no accuracy gain' should read as 'no accuracy comparison'. Kernel sharing holds for per_topic_coalition only."
+  },
+  {
+   "component_id": "melange-influence-engine.cascade-kernel",
+   "relation": "suggests-extension",
+   "paper_claim": "Trust-agnostic opinion-aware methods consider that all network relationships are positive (friend), whereas in reality networks may also include negative (foe) relationships. Trust-aware work uses signed graphs on the premise that opinion change depends on trust between users. The survey also warns that numeric friend-or-foe encodings may not capture attitude.",
+   "paper_location": "Sec. 3.2 p. 9 (signed-graph premise); Sec. 3.2.3 p. 11 (trust-agnostic summary); Sec. 4 pp. 17-18",
+   "system_side": "p(u to v) = x/(x+6) with x = w x cpf x edge_mult(v). cpf_diffusion (0.4 to 1.0) and cpf_pressure (1.7 or 0.5) change edge magnitude by party, never sign, so the kernel is trust-agnostic in the survey sense. The signed member-reference (LLM valence) layer is stated to be display-only; that was not checked.",
+   "code_ref": "fec/moneyball_core.py:543-548 (cpf_diffusion, cpf_pressure); fec/moneyball_core.py:555-561 (build_P)",
+   "transfer_conditions": "A design taxonomy only, not evidence that signed edges improve prediction of Congressional cosponsorship. Adopting foe edges would need a second path showing that negative references predict lower future cosponsorship (DE-062). The survey's warning on numeric attitude encodings applies to the LLM valence scores. Signed edges would also change the two-physics architecture, so the owner decides.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Code reproduces: x/(x+6), the cpf ranges and the party-based multipliers. The survey does not call trust-agnostic models unrealistic; it says reality may include negative ties. 'Unrealistic' is the analyst's word. The display-only status of the signed layer was not checked."
+  },
+  {
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "paper_claim": "Cost-aware (budgeted) IM assumes every influenced user brings the same benefit. Profit-aware IM models per-user benefit, but data on users' monetary concerns and valuations may not always be readily available, so cost-aware methods may be more relevant in practice. Nguyen and Zheng (2013) first introduced budgeted IM.",
+   "paper_location": "Sec. 3.3.1-3.3.3 pp. 11-14 (summary p. 13, caveat p. 14); Table 3 on p. 14",
+   "system_side": "optimize.py runs lazy greedy over a $2.5M pot in $500 increments with a $10k per-member cap (BUDGET, INC, PMAX defaults). Member targets are weighted by the PERS and IMP tables and by engagement, direction and delivery terms. The objective is Linear-Threshold winnability on per-member flip odds, not spread from cascade seeds, so the analogy is structural only.",
+   "code_ref": "fec/engine/optimize.py:3-8 (docstring), :26-27 (BUDGET, INC, PMAX); fec/moneyball_core.py:565-569 (PERS, IMP tables); fec/engine/flip_model.py:142 (tgt formula)",
+   "transfer_conditions": "Partial analogy. The optimizer allocates money that shifts per-member flip odds and does not pick cascade seeds, so the survey's spread objective does not apply. The survey's point carries over: results depend on the PERS and IMP tables, which the code labels calibrated constants. A uniform-benefit variant would be a sensitivity check, not a replacement.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The uniform-benefit point and the valuation caveat are in the paper, but 'often unavailable' and 'rarely available' overstate 'may not always be readily available'. Table 3 is on p. 14, not p. 13. The docstring names lazy greedy, not CELF, and states Linear-Threshold winnability. The tgt formula is at flip_model.py:142, not moneyball_core.py:564-568."
+  },
+  {
+   "component_id": "melange-influence-engine.competitive-cascade-crn",
+   "relation": "qualifies",
+   "paper_claim": "Influence detection by simulation is the most expensive family, ranked simulation, then MIA, then RIS, then centrality (Sec. 2.2). Almost all methods model spreading with a conventional diffusion model, and changing that model may change accuracy significantly (Sec. 4). The survey gives no numbers for either point.",
+   "paper_location": "Sec. 2.2 p. 4 (time-complexity ranking); Sec. 4 p. 18 (diffusion model paragraph)",
+   "system_side": "Competitive IC with common random numbers, MC=20 (budget_frontier.py:7; per_topic_coalition.py:6). Bystander anti-probability min(0.9, industry money / 400000) (per_topic_coalition.py:101). Kernel saturation constant 6 (build_P). The joint optimizer uses a Linear-Threshold flip model instead (optimize.py:4; flip_model.py:3), which this bearing omitted.",
+   "code_ref": "fec/engine/budget_frontier.py:7, 83-94; fec/engine/per_topic_coalition.py:6, 101; fec/moneyball_core.py:555-561; fec/engine/optimize.py:3-4; fec/engine/flip_model.py:3",
+   "transfer_conditions": "The survey gives no numbers, so it supports only a caution that outputs are model-conditional. The claim that RIS for two-colour competitive IC is not standard does not come from the survey and was not checked. The scenario count of 40 was not verified. The binding issue is diffusion-model validation, not speed.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The complexity ranking and the diffusion-model caution are in the paper. 'Most behaviour-aware methods' paraphrases 'almost all methods'. MC=20, the 400000 scale and the constant 6 reproduce. The bearing should note that the joint optimizer is Linear-Threshold, not competitive IC."
+  }
+ ],
+ "related": [
+  {
+   "slug": "chen-2021-contingency-aware-influence",
+   "relation": "complements",
+   "why": "Real item, but its stored author list (Chen, Qiu, Ou, An, Tambe; arXiv v1, Contingency-Aware IM RL approach) differs from the hub citation (Chen, Kamarthi, Wilder, Tambe, UAI 2021). The code pairs it with this survey as 'Chen/SNAM' framing for seed_prob; the survey itself does not cite it."
+  },
+  {
+   "slug": "zareie-2020-similarity-based-link",
+   "relation": "complements",
+   "why": "Real item (Sci Rep 10:20137, similarity-based link prediction, same authors). The hub cites the 2020 paper for the co-appearance and signed-layer components, so it must be kept distinct from this 2023 IM survey."
+  },
+  {
+   "slug": "leskovec-2010-predicting-positive-negative",
+   "relation": "complements",
+   "why": "Real item (WWW 2010, predicting positive and negative links). It supplies a method for signed-edge inference, the data prerequisite for the friend-or-foe family the survey reviews."
+  },
+  {
+   "slug": "tang-2015-negative-link-prediction",
+   "relation": "complements",
+   "why": "Real item (WSDM 2015, negative link prediction in social media). It is relevant to the same negative-tie data prerequisite for trust-aware IM."
+  },
+  {
+   "slug": "bharathi-nd-competitive-influence-maximization",
+   "relation": "complements",
+   "why": "Real item (competitive influence maximization in social networks). The survey does not cover competitive IC, so Bharathi is a complement on the two-colour cascade side."
+  },
+  {
+   "slug": "moreno-2021-shadowing-shielding-effective",
+   "relation": "complements",
+   "why": "Real item (PLOS ONE 2021, shadowing and shielding heuristics for continuous IM in voting dynamics), an opinion-dynamics formulation. Its use as the contested-bills counterparty term was not checked."
+  },
+  {
+   "slug": "kumar-2022-influence-maximization-social",
+   "relation": "complements",
+   "why": "Real item (Information Sciences 2022, graph embedding and GNN for IM). It is a behaviour-agnostic method from the family the survey explicitly excludes and defers to earlier surveys."
+  },
+  {
+   "slug": "chen-nd-complex-contagion-influence",
+   "relation": "complements",
+   "why": "Real item (complex contagion IM, RL approach). The survey's tables separate simple from complex spreading, so this is the complex-spreading counterpart. The link to Melange LT priming was not checked."
+  }
+ ],
+ "summary_issues": [
+  "Trust-agnostic models are called unrealistic in summary_md and bearing 3. The paper only says reality may also include negative relationships (Sec. 3.2.3 p. 11).",
+  "Profit-aware valuations are described as often or rarely unavailable. The paper says data may not always be readily available (Sec. 3.3.3 p. 14).",
+  "Topic-aware methods are described as most realistic. The paper says more realistically than binary target or label methods (Sec. 3.1.4 p. 8).",
+  "Table 3 is on p. 14, not p. 13, in ext key_findings and bearing 4. Tables 1, 2 and 4 on pp. 8, 12 and 16 are correct.",
+  "The phrase 'classifies methods and does not benchmark' is in quotation marks in bearing 1 but is analyst paraphrase, not survey text.",
+  "ext references_of_note lists 'Li, Wang et al. (2011)' for labelled IM. The reference list gives Li F.H., Li C.T. and Shan M.K. (2011).",
+  "Related item chen-2021 has a different author list from the hub citation (Chen, Kamarthi, Wilder, Tambe, UAI 2021). Fix the vault metadata before citing it.",
+  "The joint optimizer's docstring says Linear-Threshold winnability and lazy greedy, not competitive IC or CELF. Bearings 4 and 5 should say so.",
+  "The tgt formula is at fec/engine/flip_model.py:142; moneyball_core.py:564-568 holds the PERS and IMP tables.",
+  "Unverified project claims: F5 found 72 members; crypto p_max 0.23; scenario count 40; signed layer display-only; Moreno cited for contested-bills counterparty term; RIS not standard for two-colour competitive IC.",
+  "paul_entries is empty and no Paul markup exists for this work, so none was checked. Paper text checked: /Documents/research/_text/0bc326441250.txt (2,484 lines, all pages). Page images were not available."
+ ]
+}

@@ -1,0 +1,66 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-lobbying.finance-client-classification",
+      "relation": "qualifies",
+      "paper_claim": "The LDA XML amount fields do not separate lobbying expenditures from income, and no identifier lets a researcher split them. Expenses under $5,000 are a checkbox with no amount, and client income over $5,000 is rounded to the nearest $10,000.",
+      "paper_location": "Sec. 3, pp.3-4",
+      "system_side": "The LobbyView collector parses is_self_filer per report (line 847) and parses a blank amount as 0.0 (line 844). Its per-side, per-year amount_sum (905) and finance_amount_sum (909), and its top-spender total_amount (932), add every report's amount whether self-filer expense or hired-firm income; self-filer dollars are kept only as a sub-sum (912). The auto-memory note lobbyview-integration-2026-07-31.md (not the brain) records 'ABA $228M vs CUNA $93M' and 'self-filer = expense, hired firm = gross income'. The claim that an in-house expense figure already includes payments to outside firms comes from LDA guidance as cited in commit 914623152, not from this paper.",
+      "code_ref": "fec/lobbying/collect_lobbyview.py:20-22, fec/lobbying/collect_lobbyview.py:844, fec/lobbying/collect_lobbyview.py:847, fec/lobbying/collect_lobbyview.py:905-912, fec/lobbying/collect_lobbyview.py:932; contrast fec/lobbying/sector_spend.py:4-7, fec/lobbying/sector_spend.py:367-377",
+      "transfer_conditions": "The hazard carries over: the LD-2 amount semantics the paper describes still apply. The paper's claim that the two series cannot be separated does not carry over to LobbyView, which exposes is_self_filer; the collector could split them and does not in these aggregates. The LobbyView window and the 2024-10-25 vintage were not re-checked here. Whether the $228M ABA figure is the mixed total_amount, and how large the overlap is, stay UNVERIFIED until a second path reproduces them (DE-062).",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper text at Sec. 3 confirmed, including $5,000 and $10,000. Code lines confirmed. Corrected: the ABA/CUNA figure lives in Paul's auto-memory note, not the brain (rg over the brain folder found no '228M'); the 'expense already includes outside-firm payments' point is sourced from the commit message, not the paper."
+    },
+    {
+      "component_id": "melange-lobbying.finance-client-classification",
+      "relation": "supports",
+      "paper_claim": "Pediatric items sit in single filings alongside unrelated issues (Medicare Part B vaccine coverage, Medicaid pediatric vaccines, FDA biologics, pandemic preparedness), so dollars spent on pediatric lobbying cannot be isolated. The paper nonetheless reports dollar sums by umbrella code from a Filing x Issue merge: Taxation/Internal Revenue Code $527,147,333 and Health Issues $436,651,121 for Q4 2009, with no filing-count denominator.",
+      "paper_location": "Sec. 2.3 (merge), Sec. 3 p.3 (totals and bundling)",
+      "system_side": "For finance-joined reports the collector increments a per-code report count (per_code[code] += 1) and does not spread or repeat dollars across codes. The auto-memory receipt '322,473 finance-coded reports' is a report count.",
+      "code_ref": "fec/lobbying/collect_lobbyview.py:913-918",
+      "transfer_conditions": "Applies to any LDA source where one report carries several issue codes. That the paper's per-code totals count a multi-code filing under each code is an inference from the merge description, not stated by the authors; treat the totals as non-benchmarks either way.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Numbers, bundled-issue example and the merge-then-group step confirmed in the text; per_code += 1 confirmed at lines 913-918."
+    },
+    {
+      "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+      "relation": "supports",
+      "paper_claim": "The XML amounts do not differentiate lobbying expenditures from income, and greater statistical analysis of the currency values is limited until the forms and procedures used to collect lobbying data are adjusted.",
+      "paper_location": "Sec. 3, p.3; Sec. 4, p.4",
+      "system_side": "Mentat's giving_forecast declares LOBBY_SERIES as income_total (outside-firm fees) and expenses_total (in-house expenses), and _lda_history maps hired_firms = income_total and in_house = expenses_total, never added. sector_spend.py declares FORBIDDEN_COMBINED_KEYS (combined_total, income_plus_expenses, lobbying_spend_total, spend_total, total_spend). The removal of the summed telecom 2025 $139.4M (now $102.4M in-house, $37.0M outside-firm fees) was Melange commit 914623152 on the industry page (make_lobby_network_html.py and industry-ui), not a change to Mentat's card.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:379, C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:553-562, fec/lobbying/sector_spend.py:4-7, fec/lobbying/sector_spend.py:367-377",
+      "transfer_conditions": "The paper describes the federal LD-2 form, not an empirical estimate, so it carries over to 2021-2026 Senate LDA data. It supports the D-064 rule; it does not measure the overlap.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Paper and code confirmed. Corrected the attribution of the $139.4M removal: commit 914623152 is in the Melange repo and changed the industry page, per its own message."
+    },
+    {
+      "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+      "relation": "supports",
+      "paper_claim": "LDA records are grouped by time of filing, not time of activity: Q4 2009 files include records from 2002-2008 filed after the fact, and the authors add a filter to keep 2009 events only. The paper describes no amendment handling.",
+      "paper_location": "Sec. 2.3, p.2",
+      "system_side": "sector_spend groups filings by (registrant, client, filing_year, filing_period) and keeps the latest parseable dt_posted per group, with filing_uuid breaking ties, so an amendment supersedes the original. make_lobby_network_html.py holds the LD-2 deadlines (Apr 20, Jul 20, Oct 20, Jan 20) used for the quarter-coverage rule (D-130).",
+      "code_ref": "fec/lobbying/sector_spend.py:793-831, fec/surfaces/make_lobby_network_html.py:30-31",
+      "transfer_conditions": "Carries over: same federal LDA filing structure. The system is stricter than the paper, which only year-filters and does not deduplicate amendments.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Paper text and code lines confirmed (QUARTER_DEADLINES at make_lobby_network_html.py:30-31; group key and latest-dt_posted selection in sector_spend.py)."
+    }
+  ],
+  "related": [
+    {"slug": "kim-2018-lobbyview-firm-level", "relation": "complements", "why": "LobbyView cleans and links the same LDA reports at full scale, the database Paul says supersedes Harrison. The is_self_filer field that allows the expense-vs-income split is in the LobbyView data the collector reads; it is not described in the LobbyView paper extract."},
+    {"slug": "kim-2025-measuring-interest-group", "relation": "extends", "why": "It does the text analysis Harrison proposes as future work (Sec. 4), labelling bill positions from LDA report text for 2009-2022."},
+    {"slug": "bacik-2025-measuring-dynamical-evolution", "relation": "same-data", "why": "Both use LDA LD-2 filings; Bacik builds yearly multilayer networks over 1999-2023 from LobbyView, which Harrison's one-quarter parse never reaches."},
+    {"slug": "furnas-nd-conflating-lobbying-pacs", "relation": "same-data", "why": "Furnas uses CRP-curated LDA lobbying expenditures, so the expense-vs-income semantics Harrison flags bear on its lobbying totals."},
+    {"slug": "goff-nd-cross-industry-finance", "relation": "same-data", "why": "Paul's report draws on LDA disclosures, so the same caution about mixing the two series and about rounding applies."}
+  ],
+  "summary_issues": [
+    "Commit 914623152 (which removed the summed $139.4M telecom figure) is a Melange commit to the industry page (make_lobby_network_html.py, industry-ui), not a change to Mentat's lobbying card; the summary attributes it to Mentat and sector_spend.py together.",
+    "The 'ABA $228M vs CUNA $93M' figure is in Paul's auto-memory note lobbyview-integration-2026-07-31.md, not in the brain; the summary calls it the brain's figure.",
+    "Rounding: the paper says client income over $5,000 is rounded to the nearest $10,000; the summary drops the over-$5,000 condition.",
+    "'the bundling trap that inflates the paper's own per-code dollar totals' is stated as fact; the paper does not say its totals repeat a filing across codes, so this is an inference and should be marked as such.",
+    "The mapping expenditures = in-house and income = outside-firm fees is the analyst's gloss; the paper says only 'expenditures' and 'income'."
+  ]
+}

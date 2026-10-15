@@ -1,0 +1,98 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-influence-engine.flip-model",
+   "relation": "qualifies",
+   "paper_claim": "Vote share at a finite horizon depends on when each controller starts and on degree heterogeneity. At T=16 (dimensionless model time, unit-weight graphs) the degree of equilibrium l never exceeds 0.82 and high-degree nodes relax more slowly. An optimized start beats t_a=0 in all 30 rows of Table 2 (5 real networks, T in {16, 256}, budget ratio in {0.1, 1, 10}). Congress votes network, T=16, budget ratio 1: S_A 0.705 vs 0.500 (model output, not observed votes).",
+   "paper_location": "Sec 4.2 p.11-16 (text around Fig 4e); Sec 4.3.1 Table 2 p.18",
+   "system_side": "pflip = a/(a+b), where a and b are each a saturating money pull plus a party-weighted proximity term. It is a static, time-free share with no horizon, no start time and no relaxation lag.",
+   "code_ref": "fec/engine/flip_model.py:3-8,92-97",
+   "transfer_conditions": "Structural parallel only: both are ratios of competing pulls. Magnitudes do not transfer, since paper time is dimensionless, edges have unit weight and opinions are binary simple contagion. The paper shows that an equilibrium-share form omits timing, not that pflip is miscalibrated.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Table 2 (30 rows) and text lines 1385-1410 checked; every optimized vote share exceeds its t_a=0 baseline. The pflip formula and docstring match the code. Claim holds. Any quoted figure should name the window (T, dimensionless) and denominator (N=10^4 synthetic; N for Table 1 real networks)."
+  },
+  {
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "suggests-extension",
+   "paper_claim": "With the budget fixed, choosing a start time raises final vote share over spending from t=0 (Table 2, constant-opponent setting). For N=100 networks, per-node start times and budgets raise vote share further: the relative gain is large at small budget ratios but small in absolute terms (Fig 6a relative axis 1.00 to 1.25). A resource-limited controller starts later and a resource-rich one starts earlier (abstract; Sec 4.3.1). Under the uniform-start formula (Eq 3-5) the controller spends its budget over a short late window; the paper does not prescribe this as a rule.",
+   "paper_location": "Abstract p.1; Sec 2.1 Eq 3-5 p.4-5; Sec 4.3.1 Table 2 p.18; Sec 4.3.2 Fig 6 p.17-18",
+   "system_side": "optimize.py docstring describes a lazy greedy allocator with a Golovin-Krause bound kept as a diagnostic. Defaults are a 2.5M pot in 500 increments with a 10k per-candidate cap (PMAX). It allocates amounts per member with no start time or spending schedule; the objective is time-free winnability.",
+   "code_ref": "fec/engine/optimize.py:3-12,26-27",
+   "transfer_conditions": "Only as a hypothesis. PAC dollars cannot be withdrawn, FEC per-cycle limits bind, and the paper's continuous gain a_i(t) has no clear counterpart in lump-sum contributions. The paper's large relative gain at small budgets means the per-node result should not be read as uniformly small. Untested on legislators.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Core claims hold (Table 2, Fig 6 axis labels, abstract). The rewrite adds the large relative gain at small budget ratios, which the bearing omitted. The spend-near-deadline wording is a reading of Eq 3-5, not a paper statement. The name CELF does not appear in the docstring; the code is described as lazy greedy. Appendix A Eq 30 was not re-derived."
+  },
+  {
+   "component_id": "melange-allocation.break-even-and-roi",
+   "relation": "qualifies",
+   "paper_claim": "Two settings are mixed here. The optimal start for Congress votes at T=16 falls from 14.730 at budget ratio 0.1 to 10.476 at ratio 10 (Table 2, constant-opponent setting, fixed opponent starting at 0). In the two-controller Nash game the controller with the larger budget moves first, and the second mover can only buffer the first mover's gain, never exceed its vote share (Sec 4.3.4, stage 3, p.21-22). Fig 9b shows per-node resource per unit time rising with the budget advantage.",
+   "paper_location": "Sec 4.3.1 Table 2 p.18; Sec 4.3.4 Fig 8-9 p.19-22",
+   "system_side": "The head-to-head panel solves CU share against competitor share in closed form for the baseline odds. It reports that CU money alone cannot fully offset when the required money ratio q is at least 1. The solve uses the CU-to-competitor money ratio at one instant, with no sequencing.",
+   "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:1096-1104",
+   "transfer_conditions": "The paper's statement that a disadvantaged controller can offset but not overtake agrees in spirit with the cannot-offset message. The claim that a disadvantaged side does better by delaying has no counterpart in a static break-even, and it rests on the paper's abstract and simulations only. Transfer would need a model of within-cycle spending order, which the system lacks.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The 14.730, 10.476, 0.705 and 0.500 values match Table 2, but Table 2 is the constant-opponent setting, not the game; the original bearing attributed them to the game. The game statement is qualitative. The code description checks out. Fig 9b per-node axis values were not verified against the figure image."
+  },
+  {
+   "component_id": "melange-influence-engine.competitive-cascade-crn",
+   "relation": "qualifies",
+   "paper_claim": "Competitive influence is analysed in a non-progressive voter model with reversible opinions, where the opponent is a strategic controller choosing its own start time at a Nash equilibrium (Eq 9, Algorithm 2 p.8; Fig 8 p.19-20). The paper does not state that the second mover concentrates its budget in the final stage. Its text says the second mover starts later and can only buffer the first mover's gain (p.21). End-loaded budgets appear for the budget-advantaged controller when the degree exponent is below about 2.2 (Sec 4.3.4, p.21-22).",
+   "paper_location": "Sec 2.3 Eq 9 Algorithm 2 p.8; Sec 4.3.4 Fig 8-9 p.19-22",
+   "system_side": "A two-colour first-to-reach independent cascade: a reached member keeps its colour for the rest of the run. Industry money enters only as non-strategic bystander activation, min(0.9, ind/400000). Nothing represents an opponent that responds in time.",
+   "code_ref": "fec/engine/budget_frontier.py:79-94,133; fec/engine/per_topic_coalition.py:40-53,101-108",
+   "transfer_conditions": "This is a difference in model class, not evidence that the independent cascade choice is wrong. The original claims that cosponsorship is close to progressive with rare withdrawals, and that stance and votes are not, have no source in the paper or the code. Those claims are UNVERIFIED here and should not be relied on.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The model description and the bystander activation formula match the code (BSCALE=400000 in budget_frontier; PB uses the same min with 0.9). The late-countermove claim is not in the paper, so the bearing was rewritten to the paper's actual statements. The cosponsorship assertion is analyst opinion with no citation."
+  },
+  {
+   "component_id": "melange-influence-engine.persuadability-table",
+   "relation": "supports",
+   "paper_claim": "In the individual-optimization runs with 20 percent of agents as partial zealots (Sec 4.3.3, N=100 per the Sec 4.3.2 reduction; N not restated in 4.3.3), normal agents receive more budget than zealots at every zealotry level q tested. At q=0.1 the maximum zealot allocation is under 20 and the normal-agent maximum is near 25 (allocation units as plotted in Fig 7). At medium and large q zealots get fewer resources and start later as degree rises.",
+   "paper_location": "Sec 4.3.3 Fig 7 p.19-20; Appendix E Fig 11 p.26-27",
+   "system_side": "PERS in moneyball_core.py gives Opponent 0.08, Highly Skeptical 0.15 and Champion 0.10, with middle tiers between 0.50 and 0.65. The F1 gate in optimize.py gives zero allocation to members whose overall tier is Skeptic, Highly Skeptical or Opponent.",
+   "code_ref": "fec/moneyball_core.py:564-568,717; fec/engine/optimize.py:44-52",
+   "transfer_conditions": "The direction matches for resistant tiers (Opponent and Highly Skeptical). Champion is a committed pro tier, so its low multiplier reflects being already won, not zealot resistance, and it does not support the paper's result. The paper never sets zealot allocation to zero, so it does not support the hard zero gate on its own. Simulated agents only.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper direction and the PERS values match the code. The Champion example is mismatched to the paper's one-sided zealotry. The denominator (N, zealot share 20 percent, allocation units) was added. The F1 gate matches the STANCE_GATE_BLOCKED set."
+  },
+  {
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "qualifies",
+   "paper_claim": "Under node-specific optimization on N=100 networks with mean degree 6 (Sec 4.3.2), the budget ratio sets the degree pattern. With small budget ratios, control gains fall and start times rise with degree, so low-degree nodes are targeted. With large ratios the pattern reverses (Fig 6b-c p.18; Appendix D Fig 10 p.26).",
+   "paper_location": "Sec 4.3.2 Fig 6(b)-(c) p.18; Appendix D Fig 10 p.26",
+   "system_side": "The coalition water-fill boosts each candidate's marginal spread by (1 + 0.8 bpf), where bpf is a bipartisan share read from bipartisan.json divided by 100, so it favours bipartisan bridges. The ranking does not depend on budget size, although the CAP-clipped water-fill decides how far down the list money goes.",
+   "code_ref": "fec/engine/per_topic_coalition.py:30,68,117; fec/moneyball_core.py:68-72",
+   "transfer_conditions": "bpf is a cross-party share, not degree, so the paper's degree result maps only indirectly. The paper's result rests on N=100 graphs with mean degree 6. Measuring the Melange cosponsor graph's degree exponent and testing whether greedy seeds move toward low-degree members at small budgets would be new analysis and stays UNVERIFIED.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Paper pattern (Sec 4.3.2 text) and the code's BETA_C=0.8 boost and bpf definition match. The bipartisan share is cross-party, not degree. The bearing is an analogy, so the weak strength is right."
+  }
+ ],
+ "related": [
+  {
+   "slug": "moreno-2021-shadowing-shielding-effective",
+   "relation": "complements",
+   "why": "Same Brede group and voter-model continuous influence-maximization line. The paper cites a different work for zealotry, Moreno, Manino, Tran-Thanh and Brede 2020 (ref 41, Zealotry and influence maximization in the voter model), not this 2021 item. The original builds-on relation was not supported by the text."
+  },
+  {
+   "slug": "bharathi-nd-competitive-influence-maximization",
+   "relation": "complements",
+   "why": "Bharathi, Kempe and Salek 2007 is cited by Cai only for budget constraints (ref 6, with ref 28). The progressive-model claim cites refs 11, 13 and 24, not Bharathi. Bharathi's progressive competitive IC is an alternative formalization, not a contradiction, so contradicts was wrong."
+  }
+ ],
+ "summary_issues": [
+  "Several related links are not in the paper and were dropped: Borodin (no citation, and the paper has no submodularity or greedy-guarantee discussion, so the claim that Cai's timing game shows competition breaks greedy guarantees is false for this paper), Golovin-Krause, Chen 2021 contingency-aware IM and Noble 2024. These are analyst analogies, not paper claims.",
+  "Brede, Restocchi and Stein 2019 (ref 10, Effects of time horizons on influence maximization in the voter dynamics) is described by the paper as the most directly relevant prior work, but no item for it exists in the items folder. It should be added as a related link once an item exists.",
+  "paul_alignment cites a Kim J. 2025 margin note and Paul's positions on joint-optimizer and competitive-cascade-crn, yet the same paragraph says Paul has not annotated the paper, and the item file has paul_entries empty with no markup supplied. Those statements are unsourced and should be removed or sourced.",
+  "Summary findings give 14.73 to 10.48 and 0.705 vs 0.500 without naming the setting; they are constant-opponent Table 2 values, not Nash-game values. The bearing on break-even had this error.",
+  "The 0.705 vs 0.500 example and the zealot allocation figures (under 20, near 25) are given without N or time window in the summary, which breaks the rule that every figure names its window and denominator.",
+  "The summary's claim that this is the clearest formal case in the vault for timing and reversibility is a vault-level comparison that was not verified here.",
+  "The gap about the optimizer uses the name CELF in the bearing, but optimize.py describes lazy greedy; the name should match the code.",
+  "Figure-axis values (Fig 6a 1.00 to 1.25; Fig 9b 1 to 3.5) were checked only against text extraction of axis labels, not against the figure images, which cannot be rendered on this machine."
+ ]
+}

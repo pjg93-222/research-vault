@@ -1,0 +1,96 @@
+{
+  "bearings": [
+    {
+      "component_id": "mentat-fec-attribution.dedup-and-versions",
+      "relation": "qualifies",
+      "paper_claim": "A recipient committee must itemize an earmarked contribution when the donor's cycle aggregate to it exceeds 200 dollars, so the same gift appears in both the conduit report and the committee report. The authors coupled 87 percent of earmarked committee-itemized donations to their conduit twin and dropped the committee leg. The remaining committee-itemized donations are 3 percent of all contributions.",
+      "paper_location": "Appendix A.3.1 Earmarked contributions (Processing), appendix pp. 5-6",
+      "system_side": "Code comment at export_guards.R:110-113 says a conduit leg is a real row that counts, and that guard G3 against conduit double counting was removed 2026-07-27 under the R5/R8 recipient-as-shown ruling. report.R:1566-1568 keeps the downstream-earmark mask as an analytical flag only. report.R:1601-1606 is a sub_id duplicate guard. Not shown in code: that the two legs carry different sub_ids, and that the committee leg is counted. A report.R:2775-2786 comment says the receipt counts once, to the row's recipient.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/R/export_guards.R:110-113; C:/Users/pgoff/Mentat/mentat/R/report.R:1566-1568,1601-1606,2775-2786",
+      "transfer_conditions": "Paper population is employees whose cycle aggregate to the recipient exceeds 200 dollars. Sub-200 gifts are visible only through the conduit (paper Appendix A.4.3). The size of the double count in Mentat books is unmeasured. Money collection is frozen; any change needs Paul's per-change OK.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper figures reproduced: 87 percent coupled, 3 percent remainder, Appendix A.3.1. Code side softened to what the comments state: G3 removal and the analytical-only mask are confirmed. The sub_id claim and the 'counts both legs' reading are not shown in code."
+    },
+    {
+      "component_id": "mentat-fec-attribution.identity-ladder",
+      "relation": "method-source",
+      "paper_claim": "Donor grouping uses explicit rules. Two records are one person if they match exactly on three of first name, surname, full street and ZIP and fuzzily on the fourth (first-name variant index, fuzzy surname, fuzzy street, or city-state in place of ZIP). Occupation and employer are too inconsistent to use as grouping variables. The authors expect a very small false-positive rate but do not measure it.",
+      "paper_location": "Appendix A.4.1 Grouping, Steps 1-2 and footnote 4",
+      "system_side": "collect.R:2087-2157 (identity_match_ladder) returns AUTO on exact name plus same ZIP with no street check, and HIGH on exact name plus same city or nickname plus same ZIP. Employer contradiction only changes the grade (collect.R:2120-2134). AUTO and HIGH are kept (collect.R:2896). Street fields are collected (collect.R:1415-1416) but this ladder does not read them.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:2087-2157,2120-2134,2896; C:/Users/pgoff/Mentat/mentat/R/collect.R:7,1415-1416",
+      "transfer_conditions": "The paper groups across all committees; Mentat links same-name rows to a seed within a company run (seed logic not traced in this check). A false merge adds a stranger's money to a company total, so the cost is higher. The paper's rules have no measured precision, so they are a design benchmark, not a validated standard.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Paper rules and footnote 4 match the text. Code grades match the analyst's description exactly for the ladder function. The seed-linkage sentence was not traced."
+    },
+    {
+      "component_id": "mentat-fec-attribution.collection-completeness",
+      "relation": "measurement-source",
+      "paper_claim": "Conduits must report every contribution they collect, whatever its amount. Conduit contributions were 76.4 percent of individual contributions 2006-2020 and 91.1 percent in 2020, and processing them more than doubles observed contributions. WinRed launched in 2019. Committee-reported unitemized totals overstate small-donor contributions by a factor of 1.8 to 3.1.",
+      "paper_location": "Introduction, Section 2.1 (rise of conduit contributions), Section 2.2 (unitemized totals), Appendix Figure E.1a",
+      "system_side": "collect.R:1452-1454 sets is_conduit_leg for the two conduit committee IDs. export_guards.R:447-449 treats an empty Conduit category as a real zero for industries or cycles with no earmark-platform giving. No cycle- or party-varying coverage adjustment was found in the cited lines.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:1452-1454; C:/Users/pgoff/Mentat/mentat/R/export_guards.R:447-449",
+      "transfer_conditions": "Matters for cross-cycle or partisan splits of individual employee giving that span the 2019 WinRed launch. The paper limits its Republican analysis to 2020. It does not affect PAC-to-candidate totals. Direct gifts under 200 dollars stay invisible in itemized data (paper footnote 12).",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper figures and code lines confirmed. Removed the WinRed petition (REG 2022-05) reference: the paper does not contain it and the online-scan status was unconfirmed. The no-adjustment statement is an absence claim limited to the cited lines."
+    },
+    {
+      "component_id": "mentat-sector-growth-study.seats-weekly-test",
+      "relation": "suggests-extension",
+      "paper_claim": "Weekly giving is dominated by calendar and event shocks. 30 of 31 abnormal weeks for large donors coincide with quarterly deadlines, against 27 of 43 for small donors. The week of Justice Ginsburg's death carried 13.0 percent of 2020 small-donor contributions versus 5.9 percent for large donors.",
+      "paper_location": "Section 5.1 Timing (Figure 6)",
+      "system_side": "sgs_seats.R:511-515 builds a formula of the form y on a focal term plus a base term. For multi-cycle level models the base is cycle fixed effects plus cycle-specific linear week-of-cycle trends. Single-cycle models use one common week trend. Change and lag variants exist. No quarter-end or salient-event term appears in these lines. The outcome definition (D share of giving) was not traced.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:511-515",
+      "transfer_conditions": "Relevant only if the weekly series includes individual employee receipts and if deadline or event surges differ by party. Dobbs in 2022 is an example event. A quarter-end and event-week sensitivity is a candidate check, not a demonstrated bias. Unverified agent analysis (DE-062).",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper figures match. Model description corrected: cycle-specific week trends in multi-cycle level models, plus change and lag variants. The absence of deadline or event terms is confirmed in these lines."
+    },
+    {
+      "component_id": "melange-influence-engine.competitiveness-multiplier",
+      "relation": "context",
+      "paper_claim": "Relative to safe Democratic seats, close races (mean Democratic winning margin between -10 and 10 percent over the last two elections) receive 0.11 pp more of a small donor's giving (48 percent of mean, not significant) and 0.18 pp more of a large donor's (75 percent of mean, significant at the 5 percent level). Sample is Democratic congressional candidates 2012-2020 with donor fixed effects.",
+      "paper_location": "Section 4.3, pp. 16-18; Table 3",
+      "system_side": "moneyball_core.py:74-93 implements c = 1 + AMPLITUDE times exp(minus max(lean,0) over SCALE), with AMPLITUDE 1.0 and SCALE 5.0. The header calls these Paul's uncalibrated judgment constants and says the reciprocity they encode is not validated. c scales effective dollars on both money legs (cu and ind).",
+      "code_ref": "fec/moneyball_core.py:74-93",
+      "transfer_conditions": "The paper measures where individual donors send money, not what a dollar buys from a legislator, so it neither supports nor refutes c. Quote the close-seat figures only as Democratic candidates only, UNSTRATIFIED by party.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper figures and the code formula match. The analyst's phrase 'competitor dollars' does not match the code comment (cu and ind legs), so it was rewritten."
+    }
+  ],
+  "related": [
+    {
+      "slug": "bonica-2013-mapping-ideological-marketplace",
+      "relation": "same-data",
+      "why": "Bouton et al. use Bonica's CFscores for candidate ideology terciles and describe them as built from contribution records. The paper cites Bonica 2014 (AJPS); the vault note dates the work 2013 (SSRN draft), so the year label differs. Their close-race result is Democratic-only, so it bears on Bonica's donor-steering account only for Democratic individual donors 2012-2020."
+    },
+    {
+      "slug": "kalla-nd-campaign-contributions-facilitate",
+      "relation": "complements",
+      "why": "Bouton et al. cite Kalla and Broockman (2016), a randomized field experiment titled Campaign Contributions Facilitate Access to Congressional Officials, in their introduction on elite responsiveness. Bouton et al. study where donor money goes, not whether it buys access."
+    },
+    {
+      "slug": "cagala-2021-optimal-targeting-fundraising",
+      "relation": "complements",
+      "why": "Bouton et al. describe small donors as responding to candidate fundraising requests and external events. Cagala et al. (2021, arXiv, Optimal Targeting in Fundraising) study the supply side of solicitation. Bouton et al. do not cite this work, so the link is a vault-level complement."
+    }
+  ],
+  "summary_issues": [
+    "Summary says small donors 'tripled' to 21.8 million. The paper gives 5.0 million (2006 cycle) to 21.8 million (2020 cycle), a rise of about 4.4 times. Correct to more than four-fold.",
+    "Author name misspelled: 'Cage' should be Cagé (Julia Cagé).",
+    "'The paper says nothing about whether dollars buy access or alignment' is too strong. The paper discusses access as theory (intro, citing Grossman and Helpman and Kalla and Broockman) and tests no access or alignment outcome. Reword to 'does not estimate access or alignment'.",
+    "TV-ad figure lacks its window and units. The 6.3 percent of mean is for general elections only (primaries 3.7 percent), per 1,000 additional Democratic ads, with dollars expressed per 10,000 adults (10.86 dollars). Add the general-election qualifier.",
+    "'Send about 88 percent of their money out of district' should read 88 percent of their contributions, a count share from the paper's introduction and Section 4 (paper p. 17).",
+    "'Mentat counts both legs under ruling R8' is stronger than the code shows. Code comments say the conduit leg counts and that G3 was removed, and the committee leg is expected to appear. A report.R comment says the receipt counts once to the recipient. Reword as expected, not verified end to end.",
+    "'Re-ratified 2026-07-27' attaches that date to R8. The code gives 2026-07-27 only for removal of G3 (export_guards.R:110-113). The ratification date was not verified here.",
+    "Meta-ad summary should add that the paper finds the small-donor and large-donor primary effects both significant (1.3 and 0.5 times mean) and the difference between them not significant.",
+    "The 'passive force' framing is the authors' theory and metaphor (passenger seat), not a measured finding. Attribute it as such.",
+    "Bearing transfer_conditions named a pending WinRed petition (REG 2022-05). The paper does not mention it and the status was unconfirmed. Removed.",
+    "Related link bonica-2025-money-campaign-finance removed. That work (Bonica and Grumbach, Old money, Journal of Public Economics 2025) is not cited by Bouton et al., and the shared-data claim is not shown in the Bouton text.",
+    "Related link cagala-2021 kept as a vault-level complement only; it is not cited by Bouton et al.",
+    "Coverage note: the ext file reports the paper as fully read; this verifier read the claimed sections and tables by search and excerpt, and did not transcribe Appendix F tables."
+  ]
+}

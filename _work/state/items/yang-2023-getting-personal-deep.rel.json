@@ -1,0 +1,100 @@
+{
+ "summary_md": "Yang, Lau and Abbasi (ISR 2023) build DeepPerson, a design-science artifact for Big Five detection from text. It stacks an ELMo-style CNN-LSTM encoder (one Bi-LSTM for syntax and semantics, one for LIWC/MRC/SPLICE concept embeddings), a word-layer-person hierarchical attention network (wlpHAN), and SPDFiT, a Bayesian pseudo-labeling fine-tuner whose entropy quality score both filters pseudo-labels and scales the learning rate. Labels are self-report Big Five median-split to binary. On PANDORA (Reddit, 1,568 users) DeepPerson reaches AUC 75.0 vs 64.6 for the best comparator (AttRCNN), 63.4 PersonaBERT, 61.5 BERT-Base, and roughly 56 for the IBM feature-based baseline; on myPersonality (Facebook, 250 users) AUC 70.7 vs 63.3. Essays-corpus results sit in an appendix not in the text file. Ablations credit SPDFiT most, wlpHAN about 5 pp, and the LIWC-type concept encoder about 2 pp. Downstream, adding DeepPerson scores to GBDT forecasts of eight Compustat outcomes for 352 S&P 1500 executives with Twitter accounts cuts MSE by 14.29% on average (RFR 6.67%); this is framed as prediction, not causation, and executive-level scores are never validated against surveys. For Melange the paper is a benchmark showing that closed-vocabulary linear scoring, which the lexical Big Five uses, is the weakest family on self-report criteria, while LIWC concepts still add signal inside a deep model. It does not touch legislators, elite speech genres, observer or gold-panel criteria, or lobbying responsiveness, so its accuracy numbers are UNSTRATIFIED by genre and population relative to the system, and nothing here is reproduced (UNVERIFIED per DE-062).",
+ "category": "Machine Learning & Sentiment Analysis",
+ "bearings": [
+  {
+   "component_id": "melange-psychometrics.lexical-big5",
+   "relation": "qualifies",
+   "paper_claim": "Feature-based closed-vocabulary scoring is the weakest family: on PANDORA the IBM feature-based baseline sits near AUC 56 while DeepPerson reaches 75.0 (+33.7% relative to IBM) and the best deep comparator 64.6; the paper quotes IBM abandoning LIWC because open vocabulary outperformed it. Yet the LIWC/MRC concept encoder still adds about 2 pp AUC inside wlpHAN (68.0 with it vs 66.2 synsem+word).",
+   "paper_location": "Table 4 p. 209; Section 2 p. 197 (IBM quote); Table 7 and Section 4.4 pp. 211-212",
+   "system_side": "Lexical Big Five scores members by per-1000-word LIWC-analog/Empath category rates, corpus-standardized and combined linearly with published-correlate weights or a LinearSVR (SMOreg analog) fit on the Pennebaker-King essays corpus, then refit to RKH; held-out CV vs RKH mean .350.",
+   "code_ref": "fec/members/big5_traits.py:3-22; fec/members/big5_traits.py:177-189; fec/members/fit_smoreg_essays.py:3-12",
+   "transfer_conditions": "Holds only for self-report-labelled, median-split binary classification on Reddit, Facebook and student essays; the system's criterion is RKH and Senate gold panels on congressional speech, which the paper never tests. Essays results (the corpus the system fits on) are appendix-only. Any gain from a deep model needs a second-path check against gold panels before it means anything for members.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+   "relation": "qualifies",
+   "paper_claim": "Bigger generic language models are not enough: BERT-Base AUC 61.5, RoBERTa 63.2, PersonaBERT 63.4 vs DeepPerson 75.0 on PANDORA, with DeepPerson pretrained on 800M tokens vs 3.3B (BERT-Base) and 4.1B (PersonaBERT); domain adaptation and pseudo-labeling drive the gap.",
+   "paper_location": "Table 4 p. 209; Table 6 p. 210; Section 6 point 1 p. 218",
+   "system_side": "The Pink reader is an instruction-tuned LLM rating 20 IPIP-style items per de-identified 1,200-word chunk, display-only; its behavioural-diagonal mean +0.064 fails the .12 bar.",
+   "code_ref": "fec/members/big5_llm.py:3-19",
+   "transfer_conditions": "The paper compares fine-tuned encoder LMs (BERT family), not zero-shot instruction-tuned LLM item readers, and predates them; its result says size alone does not buy accuracy, which is consistent with the Pink miss but is not evidence about it.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-psychometrics.behavioral-dispositions",
+   "relation": "suggests-extension",
+   "paper_claim": "Incremental predictive value is tested by running the same GBDT and RFR models with and without personality features: GBDT MSE improves 14.29% on average across eight firm outcomes (CH 20.91, SG&A 31.74, ROA 12.52), RFR 6.67%, all p<0.05 by Wilcoxon; CNN-1 features add 3.38%, BERT 8.62%, CNN-2 -1.80%. N is 405-519 firm-executive-biennial observations; a chronological split is in an appendix.",
+   "paper_location": "Tables 10-12 and Section 5 pp. 214-218",
+   "system_side": "The prereg label-free validation indicted lexical Big Five for behavioural prediction (C reversed on participation, r_alerting -0.76), so the receptivity layer runs on behavioural dispositions by default; whether dispositions beat text traits on lobbying responsiveness (H1/H2) is open.",
+   "code_ref": "fec/members/behavioral_dispositions.py:3-20; fec/members/receptivity_layer.py:58-64",
+   "transfer_conditions": "Borrow only the design (same learner, with vs without trait block, held-out chronological split, MSE lift with paired tests) to compare text traits against dispositions on a pre-registered responsiveness outcome. The lift magnitudes come from executives and firm accounting outcomes, carry reverse-causality caveats the authors leave unresolved, and must not be quoted as evidence that text traits predict member behaviour.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-psychometrics.affective-n",
+   "relation": "supports",
+   "paper_claim": "Authors limit their evaluation to social posts, forum messages and essays and state that speech transcripts and written articles still need testing; the downstream case applies a model trained on Facebook labels to executives' tweets with no executive-level survey validation.",
+   "paper_location": "Section 6 limitations p. 219; Section 5 p. 214",
+   "system_side": "Interview-derived affective N failed genre transfer to floor and hearing text (rho .050, .161), and the receptivity layer uses affective or behavioural N rather than lexical N by default.",
+   "code_ref": "fec/members/receptivity_layer.py:65-73; fec/members/affective_n_validate.py:54-55",
+   "transfer_conditions": "Support is for caution only: the paper runs no transfer test of its own, so it neither confirms nor explains the system's genre-transfer MISS.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-psychometrics.gold-panel-validation",
+   "relation": "context",
+   "paper_claim": "Validity evidence is agreement with self-report surveys on non-elite authors (user-level Pearson r reported 10-18 points above the best comparator, appendix only); no observer, expert or criterion validation is given, and executive scores are used unvalidated.",
+   "paper_location": "Section 4.2 p. 209; Section 5 p. 214",
+   "system_side": "Trait claims require pre-registered single-look passes against Senate gold panels and behavioural criteria; E and A pass both panels, O and N one each, C insider only.",
+   "code_ref": "fec/big5_improvements_eval.py; fec/b5_residual_eval.py",
+   "transfer_conditions": "The paper's validation standard is weaker than the system's and of a different kind (self-report vs observer); its accuracy figures cannot substitute for a gold-panel look.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "No deep or open-vocabulary trait model has been tested against the Senate gold panels; the lexical scorer is the family this paper ranks lowest on self-report criteria, so whether a stronger learner lifts convergence above the lexical held-out CV mean of .350 vs RKH is untested.",
+  "The system has no with-vs-without incremental-lift test of trait features on a behavioural outcome of interest (H1/H2 lobbying responsiveness); the paper's Section 5 design is a ready template.",
+  "The essays fit (fit_smoreg_essays.py) trains on student stream-of-consciousness text with binary labels; the paper's Essays comparison is appendix-only, so how far the system's LinearSVR sits below current methods on its own training corpus is unknown."
+ ],
+ "flags": [
+  "Paper accuracy figures are UNSTRATIFIED by genre and population relative to the system (self-report labels; Reddit, Facebook, students, executive tweets); quote them only with that label and window.",
+  "Internal inconsistencies: abstract claims 10-20 pp detection gain while the body reports 5-15 pp vs best comparators; executive title counts sum to 541 against 352 executives; corpus counts differ between text and Table 3.",
+  "Downstream lift is prediction with acknowledged reverse causality; it is not evidence that traits influence outcomes and must not be carried into member influence or receptivity language.",
+  "Any adoption of DeepPerson-style scoring stays UNVERIFIED until a second path reproduces gains on congressional text against gold panels (DE-062)."
+ ],
+ "paul_alignment": "Paul has no annotated-bibliography entry for this work, so there is no takeaway to check. Against his recorded psychometrics positions, the paper sharpens his Ramey note ('dated but foundational'): it ranks closed-vocabulary linear scoring lowest on self-report criteria, which supports his call for stronger, venue-specific frameworks, while its own concept-encoder ablation shows category rates still add signal. It is silent on LLM readers and on elite text, so it changes neither the single-look MISS record nor the behavioural-basis receptivity default.",
+ "related": [
+  {
+   "slug": "ramey-2016-measuring-elite-personality",
+   "relation": "contradicts",
+   "why": "Ramey's closed-vocabulary LIWC plus SMOreg pipeline is the template for the system's lexical Big Five; Yang ranks that feature-based family lowest on self-report criteria, though on non-elite text."
+  },
+  {
+   "slug": "koutsoumpis-2024-kernel-truth-text",
+   "relation": "complements",
+   "why": "Meta-analysis of small LIWC-Big Five correlations explains why closed-vocabulary baselines sit near AUC 56 in Yang's tables and why LIWC concepts help only as one input."
+  },
+  {
+   "slug": "naz-2025-machine-deep-learning",
+   "relation": "complements",
+   "why": "Survey of machine and deep learning personality detection that places DeepPerson-style hierarchical attention and transfer learning among later methods."
+  },
+  {
+   "slug": "birkenmaier-2025-measuring-politicians-public",
+   "relation": "complements",
+   "why": "Supplies the politician-specific validation framework (codebook, Krippendorff alpha, macro-F1) that Yang lacks; Yang supplies a stronger learner that Birkenmaier does not test."
+  },
+  {
+   "slug": "pennebaker-2003-psychological-aspects-natural",
+   "relation": "builds-on",
+   "why": "Yang's concept encoder rests on the psycholinguistic premise that word-category use tracks psychological states, from Pennebaker's line of work."
+  },
+  {
+   "slug": "azucar-2017-predicting-personality-traits",
+   "relation": "complements",
+   "why": "Meta-analytic accuracy of Big Five prediction from social-media footprints is the population benchmark against which Yang's Reddit and Facebook AUCs sit."
+  }
+ ]
+}

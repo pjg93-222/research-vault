@@ -1,0 +1,83 @@
+{
+  "summary_md": "Chen, Wilder, Qiu, An, Rice and Tambe (IJCAI-23) study seed selection when adoption follows complex contagion: under their K-complex model a node activates with probability p0 once at least K neighbours are active and p1 otherwise. They prove the objective is non-submodular and NP-hard, then frame seeding as an MDP solved by Double-DQN (RL4CCIM). Four additions address sparse rewards: solution filtering to nodes near a degree-K hub, reward-prioritised replay, a global marginal-contribution reward and a GAT encoder. On nine small networks with deterministic cascades (p0=1, p1=0, budget T=8 or 12), RL4CCIM has the best normalised influence everywhere, sometimes tied. Greedy collapses on India (0.0396 vs 0.5347). RL4CCIM matches the MIP optimum on DC and DOSIM and comes within about 6 to 8 percent elsewhere. In the India ablation, the drops are 10.2 to 35.2 percent. There are no field data: cascades are simulated, and scale is the stated limit. For Paul's system the paper does not supply an estimate. It is a warning about an assumption. The coalition engines (budget frontier, per-topic coalition, dashboard budget recruit) run a simple-contagion independent-cascade kernel and greedy or knee logic justified by diminishing returns. If real cosponsor joining is threshold-like, as the LT priming module already assumes one target at a time, those greedy paths can miss jointly valuable seed sets. They would also drop candidates whose solo marginal is zero. The useful takeaway is a test, not a method swap: measure whether CU-bill join hazards jump with the count of already-joined close partners. Until that is checked, read greedy guarantees as properties of the model kernel only. This bearing analysis is UNVERIFIED per DE-062.",
+  "category": "Adaptive Influence Maximization",
+  "bearings": [
+    {
+      "component_id": "melange-allocation.budget-frontier",
+      "relation": "qualifies",
+      "paper_claim": "Complex-contagion IM is non-submodular (Thm 1) and NP-hard (Thm 2); greedy seeding can be arbitrarily bad, scoring 0.0396 normalised influence on India (202 nodes) vs 0.5347 for RL4CCIM and 0.0293 vs 0.5585 on Exhibition, deterministic setting p0=1, p1=0, T=8 or 12.",
+      "paper_location": "Sec. 3 PDF p3; Table 1 and Sec. 6.1 PDF p7",
+      "system_side": "The frontier runs lazy greedy over up to 60 seeds on an independent-cascade kernel, stops as soon as the best marginal is zero, and reads a diminishing-returns knee (last seed with 4 x gain at least peak). Both the stop rule and the knee presume submodular spread; under threshold adoption, zero early marginals would end the path before complementary seeds pay off.",
+      "code_ref": "fec/engine/budget_frontier.py:83-94,161-172",
+      "transfer_conditions": "Bites only if real cosponsorship joining is threshold-like (join probability jumps with count of already-joined partners). Under the system's own per-edge IC kernel the greedy logic is internally coherent; the paper tests simulated cascades on non-legislative networks only.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-allocation.per-topic-allocators",
+      "relation": "suggests-extension",
+      "paper_claim": "Credit sparseness: in the 8-node toy (K=3, T=4) only 17 of 70 four-seed sets (24.3 percent) activate anyone, and seed sequence {1,2,3,5} earns per-step rewards 1,1,1,2, so a seed's value shows only alongside specific other seeds.",
+      "paper_location": "Sec. 1 PDF p2; Sec. 5.1 PDF p4",
+      "system_side": "The coalition allocator scores each of the top-45 neutral candidates by solo marginal spread, keeps only those with marginal above zero, water-fills money by marginal x (1 + 0.8 bpf), and justifies the joint report by asserting spread is submodular. It already prints joint gain beside naive-additive gain per topic.",
+      "code_ref": "fec/engine/per_topic_coalition.py:115-127",
+      "transfer_conditions": "The existing joint vs naive-additive printout is a free superadditivity detector: joint above naive-additive on any topic would signal complementarity the solo-marginal ranking cannot see. Meaningful only if the kernel or data admit threshold effects; under pure IC joint stays at or below naive-additive.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-influence-engine.lt-priming",
+      "relation": "qualifies",
+      "paper_claim": "K-complex model (Eq. 1): activation probability p0 when at least K neighbours are active, p1 much smaller otherwise; motivated by Centola-Macy 2007 and Centola 2010 social-reinforcement evidence, but not validated on field adoption data in this paper.",
+      "paper_location": "Sec. 3 Eq. 1 PDF p3; Sec. 1 PDF p1",
+      "system_side": "LT priming is already a deterministic threshold model: tier theta 0.6 to 3.0 plus lean and Opponent-cell terms, closed by summed pro-neighbour pressure P[u][v] x cross-cue factor plus money. It solves each target alone and one hop deep, so it never exploits the multi-target complementarity the paper optimises, and its thresholds are fixed design constants.",
+      "code_ref": "fec/engine/lt_priming.py:19-21,96-145",
+      "transfer_conditions": "Paper adds support only for the modelling choice that adoption can be threshold-like; it gives no estimate of K or thresholds for legislators. Joint priming across targets would be a new model needing owner authorisation and a holdout look.",
+      "strength": "weak"
+    },
+    {
+      "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+      "relation": "qualifies",
+      "paper_claim": "The (1-1/e) greedy guarantee of Kempe et al. 2003 holds only for submodular IC/LT; under complex contagion no such guarantee exists and approximation is NP-hard even on simplified networks (citing Schoenebeck-Tao 2019).",
+      "paper_location": "Sec. 1-2 PDF pp. 1-2; Sec. 3 PDF p3",
+      "system_side": "The dashboard budget-recruit mode states it keeps the (1-1/e) guarantee because its coverage objective 1 - prod(1 - p) is monotone submodular; the closed-cascade route beside it is already labelled a non-submodular heuristic with no (1-1/e) claim.",
+      "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:773-779,831",
+      "transfer_conditions": "The guarantee is true of the coverage proxy, not of real recruitment; dashboard wording should say so if threshold joining is plausible. No change to code is implied.",
+      "strength": "weak"
+    },
+    {
+      "component_id": "melange-influence-engine.cascade-kernel",
+      "relation": "context",
+      "paper_claim": "Standard IC and LT make activation probability independent of how many neighbours are active, which is what keeps them submodular; complex contagion breaks this.",
+      "paper_location": "Sec. 3 PDF p3",
+      "system_side": "build_P sets each edge probability as x/(x+6) with x = w x cpf x receiver edge_mult, independent of how many in-neighbours are already active; there is no seniority or leadership term in the kernel.",
+      "code_ref": "fec/moneyball_core.py:555-562",
+      "transfer_conditions": "Context only: the paper offers no legislative estimate. Any count-dependent kernel would be a new model and must not merge the two cpf physics.",
+      "strength": "weak"
+    }
+  ],
+  "gaps_exposed": [
+    "No test of simple vs complex contagion in cosponsorship: join hazard on CU bills as a function of the number of already-joined close partners (exposure curve) has not been measured.",
+    "Greedy paths in the budget frontier and per-topic coalition have no exact or exhaustive baseline on a small topic to bound their optimality gap if spread were non-submodular.",
+    "Candidates with zero solo marginal are dropped before allocation (per_topic_coalition.py:116); seeds valuable only in combination are invisible by construction.",
+    "The frontier knee is read as diminishing returns; a flat-then-jump curve, which threshold adoption produces, would be misread as an early knee or stop.",
+    "No source-status (leadership or rank) term in the cascade kernel, the gap Paul's margin note raises; the paper's homogeneous K does not fill it."
+  ],
+  "flags": [
+    "No conflict with D-025, D-021 or the rejected SNA proposals: the paper argues for neither dropping regular cosponsorship edges nor per-edge volume normalisation, and uses no LDA data.",
+    "All bearings above are agent analysis and stay UNVERIFIED until a second path reproduces them (DE-062).",
+    "Any count-dependent cascade variant must keep the two cpf physics separate (architecture rule); this paper does not justify merging them.",
+    "Paper-internal issues: SPY OPT 0.5522 is reported although the MIP is said to exceed 12 hours from SPY onward; 24.3 vs 24.2 percent effective-solution figures; ablation text says three components while listing four.",
+    "Paul's only note is truncated mid-word (as varia), so its full intent cannot be confirmed."
+  ],
+  "paul_alignment": "Paul's entry has no takeaways or system links; his one margin note questions diminishing returns for high-ranking members and ties pressure susceptibility to some variable. That instinct agrees with the paper's central point that seed value need not diminish, though the paper models it through neighbour-count thresholds with homogeneous K, not node status. The note is not stale: the system as built still assumes diminishing returns in the budget frontier knee and coalition ranking, and its kernel has no leadership term.",
+  "related": [
+    {"slug": "chen-2021-contingency-aware-influence", "relation": "builds-on", "why": "RL4IM from that paper is the base architecture and a baseline here; the system's seed gate cites the contingency-aware idea from the same group."},
+    {"slug": "kamarthi-2019-influence-maximization-unknown", "relation": "cites", "why": "Cited as related RL work on influence maximization with learned graph sampling (Kamarthi et al.)."},
+    {"slug": "arya-2025-relink-edge-activation", "relation": "same-method", "why": "Deep RL for influence maximization; the dashboard closed-cascade route follows RELINK and is labelled non-submodular, the same regime this paper treats."},
+    {"slug": "kumar-2022-influence-maximization-social", "relation": "same-method", "why": "Graph neural encoders for influence maximization, parallel to the GAT encoder here."},
+    {"slug": "bharathi-nd-competitive-influence-maximization", "relation": "complements", "why": "The system's competitive IC cascade follows Bharathi et al.; this paper shows what greedy loses once cascades are threshold-based rather than IC."},
+    {"slug": "borodin-nd-threshold-models-competitive", "relation": "complements", "why": "Threshold models for competitive influence, the competitive counterpart to the K-complex threshold model here."},
+    {"slug": "golovin-2011-adaptive-submodularity-theory", "relation": "complements", "why": "The joint optimizer reports a Golovin-Krause bound that presumes (adaptive) submodularity; this paper marks the regime where that premise fails."},
+    {"slug": "almazaydeh-2026-heuristic-centrality-methods", "relation": "complements", "why": "Also challenges greedy influence maximization, from the heuristic-centrality side rather than RL."},
+    {"slug": "trivedi-2020-efficient-influence-maximization", "relation": "complements", "why": "Efficient IM under submodular IC, the setting whose guarantees this paper shows do not carry to complex contagion."},
+    {"slug": "zareie-2023-influence-maximization-social", "relation": "complements", "why": "Survey of behaviour-aware IM methods that situates threshold and contingency-aware seeding."}
+  ]
+}

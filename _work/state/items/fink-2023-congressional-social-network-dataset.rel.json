@@ -1,0 +1,67 @@
+{
+ "summary_md": "Fink, Omodt, Zinnecker and Sprint (Data in Brief 50, 2023) publish a directed, weighted Twitter network for the 117th Congress. Tweets were pulled on June 9 2022 (3,200-tweet API cap) for 530 active accounts. The common window is Feb 9 to June 9 2022: 179,974 tweets from 525 accounts, though Sec 2 lists 117,974 tweet IDs. After a 100-tweet floor, 475 members remain as nodes. The edge weight from i to j counts the retweets, quotes, replies and mentions that j makes of i's tweets, all weighted equally, and divides by the number of tweets i issued. The authors call this an empirical probability of influence. They pitch it as heterogeneous transmission probabilities for Independent Cascade or SIR simulations, in place of one arbitrary uniform rate. They also say their Viral Centrality approximates ICM Monte Carlo results, but only the companion Physica A paper shows this; this article does not test it. Limitations: one snapshot, possibly non-stationary rates, and no uncertainty on any edge. For Paul's system the article is a direct method source. press_engagement_layer.py implements Fink's normalization with the source-volume denominator. social_interaction_layer.py cites Fink but divides by the engaging member's own post volume, which is the opposite end of the dyad. It also uses a 25-post floor instead of 100, weights mentions 0.4 and skips quotes and replies. Both layers are mean-symmetrized, which discards Fink's direction. They are then mapped through w = 6p/(1-p) so that the cascade kernel reproduces p before party and receptivity factors. The denominator finding comes from reading the code only and stays UNVERIFIED (DE-062).",
+ "category": "Social Network Analysis",
+ "bearings": [
+  {
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "contradicts",
+   "paper_claim": "Influence of i on j = (retweets+quotes+replies+mentions by j of i's tweets) / tweets issued by i; members under 100 window tweets are excluded, leaving 475 of 530.",
+   "paper_location": "Sec 3, p.4",
+   "system_side": "The social layer divides weighted events by the posts of the ENGAGING member a (the reposter or mentioner), not by the source b. It floors that denominator at 25 instead of excluding members under 100, skips quotes and replies, and weights mentions 0.4. The docstring nonetheless claims the same Fink discipline as press_engagement_layer.",
+   "code_ref": "fec/network/social_interaction_layer.py:15-19,52-56",
+   "transfer_conditions": "After mean symmetrization the pair weight is (ev(a,b)/vol(a) + ev(b,a)/vol(b))/2. Under Fink it would be (ev(a,b)/vol(b) + ev(b,a)/vol(a))/2. The two differ whenever the pair's posting volumes differ. This is a code-read only and stays UNVERIFIED until a second path recomputes social_interactions.json both ways.",
+   "strength": "strong"
+  },
+  {
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "method-source",
+   "paper_claim": "Edge weight is an empirical transmission probability, normalized by the source's tweet count. A minimum-volume floor of 100 tweets is what makes the probabilities meaningful.",
+   "paper_location": "Sec 3, p.4; Value of the Data, p.2",
+   "system_side": "The press-title engagement layer applies Fink's normalization with the source denominator: P(i->j) = items by j naming i / items issued by i. It sets MIN_ITEMS = 5 on the source and labels this the analog of Fink's 100-tweet rule.",
+   "code_ref": "fec/network/press_engagement_layer.py:3-11,56-61",
+   "transfer_conditions": "The move from tweets to press titles is only an analogy: naming someone in a title is not a reply or retweet, and a 5-item floor on a much smaller corpus gives far noisier rates than Fink's 100-tweet floor. The docstring claim that the layer validates cosponsor-edge probabilities has no support in Fink.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-influence-engine.cascade-kernel",
+   "relation": "method-source",
+   "paper_claim": "The empirical pairwise probabilities are offered as heterogeneous ICM transmission probabilities, replacing the arbitrary uniform rate that SIR and ICM ground-truth simulations usually assume.",
+   "paper_location": "Value of the Data, p.2; Sec 3, p.4",
+   "system_side": "For untied pairs, engagement and social probabilities enter the shared cascade graph through the kernel inverse w = 6p/(1-p), capped at 2.0, so that build_P's x/(x+6) returns p before the cpf and edge_mult factors. Pairs that are already tied instead get their weight multiplied by (1 + 0.3 min(1, p/0.10)).",
+   "code_ref": "fec/network/build_multilayer_network.py:118-122,146-166; fec/moneyball_core.py:556-562",
+   "transfer_conditions": "The mapping holds only for untied pairs. Fink's rates are directed and per tweet; the system symmetrizes them and reads them as per-campaign activation odds on a legislative cascade, changing both unit and meaning. The 2.0 cap means p_max is 0.25. Fink gives one 2022 window with no stationarity check.",
+   "strength": "moderate"
+  }
+ ],
+ "gaps_exposed": [
+  "Engagement rates carry no uncertainty or shrinkage. Fink reports none, and the system's floors (25 posts for social, 5 items for press) sit far below Fink's 100-tweet bar. Nobody has counted how many admitted edges rest on fewer than 3 events.",
+  "Both layers mean-symmetrize and so throw away direction, although Fink's network and the ICM it targets are directed. The cascade engine's directed loader covers cosponsorship only.",
+  "The component's own question, whether Twitter interaction ties predict cosponsorship beyond party and state, is still untested; Fink supplies data, not that test.",
+  "Fink's Viral Centrality, an analytic approximation of ICM spread, has not been compared with the Katz-Bonacich diagnostic or with Monte Carlo cascade output on the live kernel."
+ ],
+ "flags": [
+  "The social layer cites Fink's normalization but divides by the engaging member's own volume, the reverse of Fink and of press_engagement_layer (social_interaction_layer.py:56 vs press_engagement_layer.py:60-61). UNVERIFIED code-read (DE-062).",
+  "The paper calls its edge weights probabilities of influence. On Melange surfaces they must read as engagement rates or heuristic model weights, never as influence, closeness or access probabilities (D-025).",
+  "Fink divides interaction counts by the source's volume, a per-source, row-stochastic-like normalization. Per-edge volume normalization, row-stochastic included, was MEASURED AND REJECTED for the cosponsor degree artifact (Spearman Katz vs raw volume +0.477). Do not cite this paper as support for extending it to the cosponsor layer.",
+  "The press_engagement_layer.py docstring says the layer empirically validates cosponsor-edge probabilities. Fink validates nothing, and an overlap count is not a validation test.",
+  "The article contradicts itself: 117,974 tweet IDs in Sec 2 vs 179,974 tweets in Sec 3 and Ethics. Any figure quoted must say which one it uses."
+ ],
+ "paul_alignment": "Paul has no written takeaway: 23 highlights, no notes. The highlights cover method: source-volume normalization, the 100-tweet floor, 475 nodes, and the homogeneous-rate critique. The press layer follows that method. The social layer (2026-07-02) cites it but reverses the denominator and lowers the floor to 25. The component's assumption that reposts and mentions are relational ties (Fink 2023) goes beyond the paper, which defines the measure but never tests it.",
+ "related": [
+  {
+   "slug": "trivedi-2020-efficient-influence-maximization",
+   "relation": "complements",
+   "why": "Influence maximization under the Independent Cascade Model, the diffusion model whose per-edge transmission probabilities Fink supplies empirically."
+  },
+  {
+   "slug": "almazaydeh-2026-heuristic-centrality-methods",
+   "relation": "same-method",
+   "why": "Both test whether a cheap centrality heuristic can stand in for Monte Carlo cascade spread, the claim behind Fink's Viral Centrality."
+  },
+  {
+   "slug": "steinertthrelkeld-2018-twitter-data",
+   "relation": "complements",
+   "why": "A methods guide to Twitter API collection and its limits (rate caps, deletion, rehydration), the same constraints Fink lists for this dataset."
+  }
+ ]
+}

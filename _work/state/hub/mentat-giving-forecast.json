@@ -1,0 +1,992 @@
+{
+ "system": {
+  "slug": "mentat-giving-forecast",
+  "name": "Mentat giving and PAC forecast",
+  "description": "Forecasts of industry and PAC political giving by election cycle. Covers the R refit (cycle-phase log models, 50/50 growth rule, slope and anchor auto-pick, G0-G9 gates), the console calculator's application rules, the company-PAC nowcast and BLEND, the PAC-to-candidate accuracy attempts under a rolling three-cycle cap, the remainder fix, and the Insights seasonal-naive baseline.",
+  "brain_notes": [
+   "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+   "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md",
+   "C:/Users/pgoff/Documents/brain/topics/2026-10-feature-forecast-giving-redesign-giving-by-cycle-live-model.md",
+   "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-forecast-giving-redesign-six-year-lookback-lane.md"
+  ]
+ },
+ "components": [
+  {
+   "id": "mentat-giving-forecast.cycle-model",
+   "system": "mentat-giving-forecast",
+   "name": "Cycle-aware giving refit (phase and drift log models, 50/50 growth)",
+   "computes": "Projected measures as log models of presidential vs midterm phase, trajectory and inflation. Growth = 50% prior cycle + 50% IBISWorld budget with a one-year lag.",
+   "method": "Live bundle refit-20261007. Presidential uplift +9% (D-119). Lobbying uses a log refit.",
+   "assumptions": [
+    "Giving depends on election-cycle phase (D-092)",
+    "Industry budget is a growth reference (D-113)"
+   ],
+   "empirical_questions": [
+    "Is industry PAC giving systematically higher in presidential cycles than in the preceding midterm, net of inflation?",
+    "Does industry revenue growth improve giving forecasts over a seasonal-naive baseline?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Mentat/mentat/forecast/refit (run_refit.R)",
+    "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md"
+   ],
+   "heading": "Cycle-aware giving refit (phase and drift log models, 50-50 growth)"
+  },
+  {
+   "id": "mentat-giving-forecast.slope-anchor-selection",
+   "system": "mentat-giving-forecast",
+   "name": "Slope (R0/R1/R2) and anchor auto-pick",
+   "computes": "Pooled, own or DerSimonian-Laird partially pooled slopes per industry. The same-phase anchor is used only when it wins by 5% in both backtests.",
+   "method": "Own slopes beat the blend (LOEO 10.8 vs 14.3).",
+   "assumptions": [
+    "The rule that wins both backtest designs generalizes"
+   ],
+   "empirical_questions": [
+    "Does partial pooling of industry slopes reduce forecast error in small-sample sectors?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Mentat/mentat/forecast/refit"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "heading": "Slope (R0-R1-R2) and anchor auto-pick"
+  },
+  {
+   "id": "mentat-giving-forecast.calculator-and-nowcast",
+   "system": "mentat-giving-forecast",
+   "name": "Calculator rules, company-PAC nowcast and BLEND",
+   "computes": "Relative change on previous-cycle anchors. Company-PAC nowcast = O + (1-s) B, with s = geometric mean of pace shares. The BLEND (D-099) is overridden by the panel nowcast (D-116). CU cohort of 16 PACs.",
+   "method": "Anchors exclude non-giving receipts. Lobbying is shown in-house vs outside, never summed.",
+   "assumptions": [
+    "Within-cycle pace is informative"
+   ],
+   "empirical_questions": [
+    "At what month in the cycle does a pace nowcast beat the model forecast?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py",
+    "C:/Users/pgoff/Mentat/mentat/forecast/anchors/build_giving_anchors.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-10-feature-forecast-giving-redesign-giving-by-cycle-live-model.md"
+   ],
+   "heading": "Calculator rules, company-PAC nowcast and BLEND"
+  },
+  {
+   "id": "mentat-giving-forecast.refit-gates",
+   "system": "mentat-giving-forecast",
+   "name": "Refit gates G0-G9",
+   "computes": "FAIL, HOLD or PUBLISH. G6: no industry's leave-one-election-out MAE may exceed the calculator's. G9 warns when the refit fails to beat naive.",
+   "method": "Waivers applied. Log lobbying MAE 4.050 vs naive 3.936.",
+   "assumptions": [
+    "LOEO MAE is an acceptable criterion"
+   ],
+   "empirical_questions": [
+    "Do refits that pass G6 forecast the next cycle better than the published calculator?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Mentat/mentat/forecast/refit/run_refit.R"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md"
+   ],
+   "heading": "Refit gates G0-G9"
+  },
+  {
+   "id": "mentat-giving-forecast.pac-accuracy-attempts",
+   "system": "mentat-giving-forecast",
+   "name": "PAC-to-candidate accuracy attempts (rolling three-cycle cap)",
+   "computes": "Scored ORIGIN and nowcast forecasts, 2018-2024. Bar: A >= 90 overall and >= 75 per phase.",
+   "method": "v6: ORIGIN B1 plus N/(N+1) cross-sector pace shrinkage. Only telecom passes. A common 2022 drop defeats window rules (DE-066/067).",
+   "assumptions": [
+    "Gains must come from method, not more history"
+   ],
+   "empirical_questions": [
+    "Was the 2022 drop in industry PAC-to-candidate giving a common shock across sectors?"
+   ],
+   "code_refs": [
+    "C:/melange-data/forecast-redesign-20261001-review (scratch)"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-4-5-luna-and-pac.md"
+   ],
+   "heading": "PAC-to-candidate accuracy attempts (rolling three-cycle cap)"
+  },
+  {
+   "id": "mentat-giving-forecast.seasonal-naive-baseline",
+   "system": "mentat-giving-forecast",
+   "name": "Insights seasonal-naive baseline and remainder fix",
+   "computes": "Repeat the same-phase prior cycle; withhold without 4 complete cycles. Conditional additive remainder replaces subtraction (7 of 19 shares had gone negative).",
+   "method": "Seasonal naive.",
+   "assumptions": [
+    "Four-year electoral periodicity"
+   ],
+   "empirical_questions": [
+    "Does seasonal naive beat growth-augmented models out of sample (3.63 vs 3.99 MAE reported)?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Mentat/mentat/app/analysis_metrics.py:690-794",
+    "apply_f2.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "heading": "Insights seasonal-naive baseline and remainder fix"
+  }
+ ],
+ "positions": [
+  {
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "citations": [
+    "Bacik et al. 2026",
+    "Furnas, LaPira & Brock 2025",
+    "Huneeus & Kim 2018"
+   ],
+   "paul_position": "Paul highlighted that lobbying synchronizes with the election cycle and that more money is given in election years."
+  },
+  {
+   "component_id": "mentat-giving-forecast.slope-anchor-selection",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "mentat-giving-forecast.refit-gates",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "mentat-giving-forecast.pac-accuracy-attempts",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "mentat-giving-forecast.seasonal-naive-baseline",
+   "citations": [
+    "Bacik et al. 2026"
+   ],
+   "paul_position": "Election-cycle periodicity is highlighted in Bacik."
+  }
+ ],
+ "citations_in_system": [
+  {
+   "citation": "Ramey, Klingler & Hollibaugh, 'Measuring Elite Personality Using Speech', Political Science Research and Methods (year conflict in repo: 2016 in PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32 and code; 2019 in big5_methods.md:12). Replication data doi:10.7910/DVN/JDH6KR",
+   "where": [
+    "fec/members/big5_traits.py:1-25",
+    "fec/members/fit_smoreg_rkh.py:5",
+    "fec/members/lep_criterion.py:5-6",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32",
+    "big5_methods.md:12",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Lexical Big Five pipeline, token shrinkage, RKH reference targets (melange-psychometrics); ceremonial-share C criterion (melange-legislative-data)"
+  },
+  {
+   "citation": "Mairesse et al. (2007), JAIR, personality from text (SMOreg on LIWC/MRC; 53-58% band)",
+   "where": [
+    "fec/members/fit_smoreg_essays.py:4",
+    "fec/members/big5_traits.py:13-16",
+    "fec/members/interaction_features.py:5-6",
+    "big5_methods.md:31",
+    "big5_audio_prereg.md:15"
+   ],
+   "used_for": "SMOreg feature weights and word-count features (melange-psychometrics); audio cues"
+  },
+  {
+   "citation": "Pennebaker & King (1999); Yarkoni (2010); Pennebaker (2003, Annual Review)",
+   "where": [
+    "fec/members/big5_traits.py:14-15",
+    "fec/members/affective_n_validate.py:10",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Published-correlate lexical weights; essays corpus; negative-emotion basis for affective N"
+  },
+  {
+   "citation": "Birkenmaier & Lechner (2025), 'Measuring Politicians' Public Personality', Political Analysis; Birkenmaier, Lechner & Wagner (2024)",
+   "where": [
+    "fec/members/agency_communion_llm.py:3,33",
+    "fec/members/big5_llm.py:10",
+    "fec/members/big5_traits.py:9",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:33",
+    "big5_behavioral_extraversion_prereg.md:239"
+   ],
+   "used_for": "Agency/communion persona cue classifier and PERSONA_W; cannot-tell coding"
+  },
+  {
+   "citation": "Lechner, Aichholzer, Birkenmaier & Bluemke (2025), 'Mapping the Political Personality' (Polipers v0.1, GESIS)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Review of politician-personality studies; external criterion search"
+  },
+  {
+   "citation": "'Personality on the Hill' Senate insider and academic gold panels (online_appendix.pdf, SHA-256 43c98926...; author/year not recorded)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "External gold for Big Five validation"
+  },
+  {
+   "citation": "Amsalem et al. (2018), media visibility of Belgian, Canadian and Israeli MPs (Eran.pdf) - provenance warning only, NOT the gold source",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Hash-mismatch provenance check"
+  },
+  {
+   "citation": "Norgaard & Klemmensen (2019), J. Personality 87(2):267-275; Schumacher & Zettler (2019), PAID 141:173-181",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Elite self-report personality benchmarks and desirability caveat"
+  },
+  {
+   "citation": "Cao & Kosinski (PNAS Nexus 2024); Peters & Matz (PNAS Nexus 2024, doi:10.1093/pnasnexus/pgae231)",
+   "where": [
+    "fec/members/big5_llm.py:12",
+    "big5_methods.md:46-49",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "De-identification before LLM trait scoring; LLM zero-shot personality benchmark"
+  },
+  {
+   "citation": "Valente (Interspeech 2012); Yu (Interspeech 2019); Rienks & Heylen (2005)",
+   "where": [
+    "fec/members/interaction_features.py:5-8",
+    "fec/members/behavioral_dispositions.py:17",
+    "big5_methods.md:30"
+   ],
+   "used_for": "Turn-statistic dominance and reactivity features"
+  },
+  {
+   "citation": "Koutsoumpis (meta-analysis, language and personality); Yang, Lau & Abbasi (ISR 2023)",
+   "where": [
+    "big5_methods.md:114",
+    "AUDIT_FINDINGS_2026-07-04.md:332",
+    "big5_behavioral_extraversion_prereg.md:221"
+   ],
+   "used_for": "Text tracks observer more than self-report; response-selection bias; PERSONA_W scope argument"
+  },
+  {
+   "citation": "Soto & John (2017) BFI-2-XS; Connelly & Ones (2010); Judge et al. (2002); Funder & Ozer (2019); Dietrich (2012); Dynes (2019); Wagner (2024); Steiger (1980); Stern et al. (2021); Harari (2022); Rubio et al. (2024); Marrero et al. (2022); Marengo et al. (2018, doi:10.1016/j.paid.2017.12.018); Hargittai (2015, doi:10.1177/0002716215570866); Hinds & Joinson (2024, doi:10.1037/bul0000430); Marengo, Montag & Settanni (2025, doi:10.1111/jopy.70019); Lau & Abbasi (2023)",
+   "where": [
+    "big5_expert_panel_prereg.md",
+    "big5_nomological_prereg.md",
+    "big5_n_matrix_prereg.md",
+    "big5_audio_prereg.md",
+    "big5_es_crossmodal_prereg.md",
+    "big5_a_coverage_prereg.md",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "Prereg designs for Big Five expert panel, nomological, audio and coverage looks (melange-psychometrics)"
+  },
+  {
+   "citation": "Salam et al. (2022), PMLR 173, personalised NAS Big Five on UDIVA",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md:132"
+   ],
+   "used_for": "Audio trait benchmark and sex-conditioning check"
+  },
+  {
+   "citation": "Mestre & Ryan (2026), validated aeneas forced alignment; Dietrich (2019)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Audio identity design (forced alignment, within-speaker F0)"
+  },
+  {
+   "citation": "ECAPA-TDNN speaker embedding (name only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Proposed speaker verification"
+  },
+  {
+   "citation": "Byrne, Silasi-Mansat & Worthy (2015), 'Who chokes under pressure?', PAID",
+   "where": [
+    "fec/members/receptivity_layer.py:6-7,189,233",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:34",
+    "AUDIT_FINDINGS_2026-07-04.md:548",
+    "fec/engine/outcome_contract.py:18"
+   ],
+   "used_for": "Susceptibility composite (only N and A supported; C and E are design priors); H2 predictor"
+  },
+  {
+   "citation": "Fouirnaies & Hall, 'How Do Electoral Incentives Affect Legislator Behavior?' (APSR)",
+   "where": [
+    "fec/members/receptivity_layer.py:15-20",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:35",
+    "fec/engine/money_response.py:27"
+   ],
+   "used_for": "Retiring-member incentive multiplier and competitiveness term"
+  },
+  {
+   "citation": "Linde & Vis (2016), 'Do Politicians Take Risks Like the Rest of Us?', Political Psychology",
+   "where": [
+    "fec/members/receptivity_layer.py:22-28",
+    "fec/engine/money_response.py:27-29",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:36"
+   ],
+   "used_for": "Prospect-theory domain multiplier and attenuated loss frame"
+  },
+  {
+   "citation": "Kahneman & Tversky (loss aversion)",
+   "where": [
+    "fec/engine/money_response.py:29",
+    "fec/members/receptivity_layer.py:27"
+   ],
+   "used_for": "LOSSFRAME 1.10"
+  },
+  {
+   "citation": "Chen, Kamarthi, Wilder & Tambe, contingency-aware influence maximization (UAI 2021, arXiv 2106.07039; venue corrected from ICML); Zareie & Sakellariou (SNAM 2023)",
+   "where": [
+    "fec/members/receptivity_layer.py:28-34",
+    "fec/engine/budget_frontier.py:72-74",
+    "fec/engine/outcome_contract.py:17",
+    "AUDIT_FINDINGS_2026-07-04.md:564-565"
+   ],
+   "used_for": "Seed take-up probability and seed gate; H1 predictor"
+  },
+  {
+   "citation": "Bharathi, Kempe & Salek, Competitive Influence Maximization",
+   "where": [
+    "fec/engine/scenario.py:6-11",
+    "fec/engine/budget_frontier.py",
+    "fec/engine/per_topic_coalition.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Competitive IC cascade and coalition submodularity"
+  },
+  {
+   "citation": "Borodin et al. (submodularity can fail in competitive LT)",
+   "where": [
+    "fec/engine/scenario.py:11-12"
+   ],
+   "used_for": "Flip side treated as heuristic"
+  },
+  {
+   "citation": "Kempe, Kleinberg & Tardos (2003, KDD) influence maximization",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:157",
+    "quant skill references"
+   ],
+   "used_for": "Cascade and threshold model assumptions"
+  },
+  {
+   "citation": "Golovin & Krause (2011), Adaptive Submodularity, JAIR (Lemma 5.3/A.9)",
+   "where": [
+    "fec/engine/optimize.py:8,108-113",
+    "fec/engine/scenario.py:8-10",
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md"
+   ],
+   "used_for": "Joint optimizer bound and framing (melange-allocation)"
+  },
+  {
+   "citation": "Leskovec et al. (KDD 2007) CELF lazy greedy; Nemhauser (1-1/e)",
+   "where": [
+    "fec/engine/optimize.py:74-96",
+    "fec/engine/budget_frontier.py:96-106",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Lazy greedy seed and budget selection"
+  },
+  {
+   "citation": "Almazaydeh et al. (2026), Scientific Reports, s41598-026-47299-8",
+   "where": [
+    "fec/engine/mc_stability_check.py:3-10",
+    "influence-modeling-reference SKILL.md"
+   ],
+   "used_for": "Noisy MC corrupts CELF; motivates CRN and stability check"
+  },
+  {
+   "citation": "Manchanda et al., GCOMB, NeurIPS 2020, arXiv:1903.03332",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Budget mode: locality, degree pruning, CELF (melange-pathfinding)"
+  },
+  {
+   "citation": "Chen & Lam, most-reliable path; Ren et al., Multi-Objective Path-Based D* Lite (MOPBD*) and RELINK",
+   "where": [
+    "fec/engine/cosponsor_route.py:3-5",
+    "fec/engine/scenario.py:13",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Pathfinder and route-finder concepts (melange-pathfinding)"
+  },
+  {
+   "citation": "Sotoudeh, Porter & Krishnagopal (2024), arXiv 2406.19554, network measure of cosponsorship influence on bill passage",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Cosponsor edge weights and path grounding"
+  },
+  {
+   "citation": "Aref & Neal (2020, 2021), signed-network optimal partitioning / generalized balance; Neal signed backbone (R backbone sdsm)",
+   "where": [
+    "fec/network/signed_coalitions.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Signed coalition partition and multi-target coalition mode"
+  },
+  {
+   "citation": "Porter, Mucha, Newman et al. (PNAS 2005), committee network community structure / normalized interlock",
+   "where": [
+    "fec/surfaces/make_member_desk.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-model-facts.md",
+    "HOLISTIC_NETWORK_DESIGN_2026-08-17.md:78"
+   ],
+   "used_for": "Committee-cluster layout; community structure in pathfinder"
+  },
+  {
+   "citation": "Fink et al. (2023), Congressional Twitter influence network, Data in Brief",
+   "where": [
+    "fec/network/social_interaction_layer.py:15-19",
+    "MATHEMATICAL_SPECIFICATION.md:44",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Author-volume normalized social and press edges"
+  },
+  {
+   "citation": "Malaterre & Lareau (2024), HCoI communities",
+   "where": [
+    "fec/press_hcoi.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Press-attention communities"
+  },
+  {
+   "citation": "Zhou & Elejalde (2026), Information Processing & Management, TWLGCN",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Stance dynamics port"
+  },
+  {
+   "citation": "Joo & Steinert-Threlkeld (2022), Computational Communication Research; Steinert-Threlkeld, Twitter as Data",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Frame alignment"
+  },
+  {
+   "citation": "Ringe, Victor & Gross (BJPS 2013), Friends and Enemies",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:599"
+   ],
+   "used_for": "Signed mention layer concept"
+  },
+  {
+   "citation": "Battaglini & Patacchini, 'Influencing Connected Legislators', NBER w22739",
+   "where": [
+    "fec/engine/kb_benchmark.py:2-18"
+   ],
+   "used_for": "Katz-Bonacich benchmark"
+  },
+  {
+   "citation": "Kim & Kunisky, lobbying networks / latent communities (local PDF)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Community structure exploited by pathfinder"
+  },
+  {
+   "citation": "Noble & Turner (2024), 'Presidential Leadership and Legislative Polarization'; Lee (2009)",
+   "where": [
+    "fec/engine/salience_shock.py:4-38",
+    "fec/surfaces/build_dashboard_bundle.py:663",
+    "fec/moneyball_core.py:731"
+   ],
+   "used_for": "Salience shock regimes; retreat regime"
+  },
+  {
+   "citation": "Furnas, LaPira, Hertel-Fernandez, Drutman & Kosar (congressional staff survey experiment); Bakker (partisan cues); Bakker, Lelkes & Malka (JOP)",
+   "where": [
+    "fec/moneyball_core.py:11",
+    "fec/engine/lt_priming.py:56-58",
+    "fec/surfaces/templates/make_dashboard_html_00.tpl:742",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "cpf_pressure 1.7/0.5; out-party cue clamp; executive cue factor; money capped, information is the lever"
+  },
+  {
+   "citation": "Ansolabehere, de Figueiredo & Snyder (2003); Fowler, Garro & Spenkuch (2020); Hall & Wayman (1990); Kalla & Broockman (2016), 'Campaign Contributions Facilitate Access'; Kalla & Broockman (general-election persuasion about zero); Coppock (persuasion about 5 pp / 0.1 SD)",
+   "where": [
+    "fec/engine/flip_model.py:21",
+    "fec/engine/money_response.py:15,20",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Money buys access not votes; WM/WP weights; MAXSHIFT calibration; access multiplier"
+  },
+  {
+   "citation": "Huneeus & Kim (lobbying distorts policy); Bombardini & Trebbi (annual review of empirical lobbying); Pritoni (lobbying coalitions); Bacik et al. / Kim, lobbying-network dynamics (arXiv 2503.11745); Azaiez & Mandel (EC lobby hypergraph); Harrison et al. (lobbying record mining)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-scenario-model-build.md"
+   ],
+   "used_for": "Calibration context for small, capped lobbying returns; pathfinder background"
+  },
+  {
+   "citation": "Trivedi & Singh (Procedia 2020) coalition modeling; Scientific Reports 2026 IM algorithm comparison (CELF++/RIS/IMM)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md"
+   ],
+   "used_for": "Coalition and IM algorithm references"
+  },
+  {
+   "citation": "Gaynor (LSQ 2022); Kim, Stuckatz & Wolters (JOP 2026); Furnas, LaPira & Brock (PS 2025)",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:706-711"
+   ],
+   "used_for": "Leadership PAC edges and donation/lobbying sequencing (identified, not implemented)"
+  },
+  {
+   "citation": "Volden & Wiseman, legislative effectiveness (five-stage LES; Center for Effective Lawmaking LES 93-118); Bucchianeri/Volden/Wiseman-style",
+   "where": [
+    "fec/members/lep_criterion.py:1-15",
+    "fec/engine/flip_model.py:142 (comment only)",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md",
+    "C:/Users/pgoff/Documents/brain/actors/codex-executor-incidents.md"
+   ],
+   "used_for": "Effectiveness shadow score and convergence criterion; uncoded passage-bonus comment"
+  },
+  {
+   "citation": "Nokken & Poole dynamic ideal points; DW-NOMINATE (Poole-Rosenthal)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Drift criterion for N (MISS); NOMINATE rejected for vote edges"
+  },
+  {
+   "citation": "Matz et al. (PNAS 2017); Simchon (2024, PNAS Nexus); Hackenburg & Margetts (2024)",
+   "where": [
+    "fec/surfaces/make_member_desk.py:846",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Persona-matched appeals (design-only) and aggregate null caution"
+  },
+  {
+   "citation": "Brysbaert concreteness norms; Guiraud index; Empath lexicon; Valente (N overlap stat 68.7%)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-record-1-big5-campaign.md"
+   ],
+   "used_for": "Big Five lexical features"
+  },
+  {
+   "citation": "Miller & Sutherland, APSR (hearing conduct; doctrine WITHDRAWN 2026-07-10)",
+   "where": [
+    "big5_methods.md:36",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics.md"
+   ],
+   "used_for": "Withdrawn hearing-antagonism doctrine"
+  },
+  {
+   "citation": "Burnham, 'Stance detection: a practical guide' (PSRM 2024.35); mlburnham/Political_DEBATE_base_v1.0 (Hugging Face)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39",
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md"
+   ],
+   "used_for": "NLI stance templates and the DEBATE base model (melange-stance)"
+  },
+  {
+   "citation": "Stanceformer, arXiv 2410.07083; ACL 2023.acl-long.560 (TSE); MDPI 2076-3417/15/21/11784",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39,63",
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md"
+   ],
+   "used_for": "Target-aware stance (planned); two-stage decoupling; neutral-class difficulty"
+  },
+  {
+   "citation": "Khan et al. (2025), IECE TACS, Roman Urdu agree/disagree/unrelated stance",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md:45"
+   ],
+   "used_for": "Multi-view augmentation (hurt classical readers)"
+  },
+  {
+   "citation": "Park, Lee & Cho (2025), 'Automatic construction of direction-aware sentiment lexicon using direction-dependent words', Language Resources & Evaluation 59:843-869",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:65"
+   ],
+   "used_for": "Direction-aware valence lexicon idea (rejected on dry run)"
+  },
+  {
+   "citation": "Soroka et al., Lexicoder Sentiment Dictionary LSD2015 (snsoroka.com LSDaug2015.zip); Haselmayer & Jenny (2017); Rice & Zorn (2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-congress-r-scrapers-graded-scoring-and-audits.md:26-28"
+   ],
+   "used_for": "Stage 5b tone intensity; graded tone and polarity normalization"
+  },
+  {
+   "citation": "Dai, Liao, Zhao et al. (2025), LLM-enhanced Logic Tensor Network for stance detection, Neural Networks 183:106956, doi:10.1016/j.neunet.2024.106956",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md:198",
+    "stance_valence_folcot_prereg.md:13"
+   ],
+   "used_for": "FOL-CoT valence proposals (not adopted)"
+  },
+  {
+   "citation": "Kim, Kim, Jeong, Oh & In Song Kim (2025), 'Measuring Interest Group Positions on Legislation' (PNAS draft); LobbyView positions dataset doi:10.7910/DVN/D0QWM2; In Song Kim LobbyView (Song 2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md",
+    "fec/lobbying/lobby_position_benchmark.py:9",
+    "fec/lobbying/collect_lobbyview.py:35"
+   ],
+   "used_for": "LDA data and interest-group positions (melange-lobbying)"
+  },
+  {
+   "citation": "Romero Moreno (2021)",
+   "where": [
+    "CONTESTED_BILLS_DESIGN.md:29-30"
+   ],
+   "used_for": "Contested-bills counterparty term"
+  },
+  {
+   "citation": "Delano, Rudkin & Kim (2025), BICAM, Scientific Data 12:1567, doi:10.1038/s41597-025-05737-8; Porter, Case & Treul (2025), CampaignView, Scientific Data 12:1237, doi:10.1038/s41597-025-05491-x; Zhan & Cai (2025), ESWA 263:125705, doi:10.1016/j.eswa.2024.125705; Cao, Gai, Wu et al. (2025), Information Fusion 120:103107, doi:10.1016/j.inffus.2025.103107",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md",
+    "CAMPAIGN_SITE_COLLECTION_2026_RUNBOOK.md:10"
+   ],
+   "used_for": "Research-integration proposals (bill-LDA linkage, campaign corpus, trust-KNN imputation, signed trust propagation)"
+  },
+  {
+   "citation": "Russo et al. (ACL 2023), 'Helping a Friend or Supporting a Cause?'; Brandenberger (2018), 'Trading Favors', Social Networks 54:238-253, doi:10.1016/j.socnet.2018.02.001; Montgomery & Nyhan (2017), doi:10.1086/690301; Shalizi & Thomas (2011); Nay (2017), PLOS ONE doi:10.1371/journal.pone.0176999",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:153-158",
+    "fec/research/cosponsor_challengers/PROTOCOL.md:44-47"
+   ],
+   "used_for": "Cosponsorship prediction and reciprocity baselines; homophily vs contagion confounding; staff exchange and policy similarity"
+  },
+  {
+   "citation": "Tiedens & Fragale (2003), doi:10.1037/0022-3514.84.3.558; Santoro & Broockman (2022), Science Advances, doi:10.1126/sciadv.abn5515",
+   "where": [
+    "fec/research/member_personal_relationships/PERSONALITY_CONTEXT_EXPLORATION.md:46"
+   ],
+   "used_for": "Context only for member personal-relationship research"
+  },
+  {
+   "citation": "DerSimonian-Laird random-effects estimator",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "used_for": "R2 partially pooled industry slope (mentat-giving-forecast)"
+  },
+  {
+   "citation": "Cameron, Gelbach & Miller (2011), two-way cluster-robust variance; Holm step-down; Newey-West HAC; Driscoll-Kraay (requested); Ball (2024)",
+   "where": [
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-8,168,210",
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:71-76,389,588",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Inference in the sector growth regressions and SEATS-W"
+  },
+  {
+   "citation": "Bross (1958) ridit; Spearman-Brown; Kendall tau-b; pool-adjacent-violators (PAV)",
+   "where": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/design/spec_rigor.md",
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "used_for": "Ridit transforms, internal consistency and sensitivity tests (terrier-row-scoring); turnout calibration (terrier-canvass)"
+  },
+  {
+   "citation": "MAST multi-agent failure taxonomy (named only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/metaloop.md"
+   ],
+   "used_for": "Failure-attribution tags (metaloop-orchestration)"
+  },
+  {
+   "citation": "SR 11-7 model risk management (superseded 2026-04-17 by SR 26-2); quant-model-evaluation skill bibliography (Cinelli & Hazlett 2020; Politis & Romano 1994; Simar & Wilson 1998; Grubesic & Matisziw 2006; Fouirnaies & Hall 2018; Powell & Grimmer 2016; others)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md",
+    ".claude/skills/quant-model-evaluation/references/sources.md"
+   ],
+   "used_for": "Audit tooling references applied to Melange (melange-validation)"
+  },
+  {
+   "citation": "Data sources (not literature): MEDSL Dataverse election returns; Cook Political Report PVI; Voteview; congress-legislators; govinfo BILLSTATUS; Ballotpedia; openFEC and FEC bulk; OpenSecrets; IBISWorld; Census ACS/CBP/LODES/cb_2024 and cb_2020; FDIC SOD; NCUA Call Reports; HMDA; Polymarket/Kalshi/IEM; Crystal Ball/538",
+   "where": [
+    "fec/engine/build_competitiveness.py",
+    "fec/district/demographic_potential.py",
+    "DEMOGRAPHIC_POTENTIAL_METHOD.md:185-191",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Model inputs across systems"
+  }
+ ],
+ "evidence": [
+  {
+   "slug": "bacik-2025-measuring-dynamical-evolution",
+   "title": "Measuring the dynamical evolution of the United States lobbying network",
+   "year": "2025",
+   "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+   "relation": "supports",
+   "claim": "Registrants split into K-Street firms that file for others and in-house self-filers. The monetary field differs between them (income for firms, expenses for self-filers), and self-filers have a higher reporting threshold.",
+   "system_side": "The lobbying card shows hired_firms (income_total) and in_house (expenses_total) side by side and never adds them.",
+   "transfer": "This is the same LD-2 accounting, so the evidence carries over fully. The paper also assigns low-cost reports a threshold value as an upper bound. If Mentat's sector_spend rows ever take values from LobbyView, check whether they include that imputation.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "bacik-2025-measuring-dynamical-evolution",
+   "title": "Measuring the dynamical evolution of the United States lobbying network",
+   "year": "2025",
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "qualifies",
+   "claim": "The paper's election-cycle 'synchronization' refers to target portfolios: agency-approach correlations form blocks by presidential administration, and some agencies such as the National Economic Council follow the presidential cycle. It reports no effect of election phase on lobbying dollars, and it aggregates data annually.",
+   "system_side": "Mentat's analysis baseline repeats the latest complete cycle from the same four-year election phase (seasonal-naive), and giving_forecast.py carries a presidential-cycle term and same-phase share anchors; the lobbying card shows hired-firm and in-house levels separately.",
+   "transfer": "The paper supports a four-year, administration-linked periodicity in whom lobbyists target, not in how much they spend. It cannot justify a phase coefficient on lobbying dollars, which has to rest on Mentat's own backtests. The PAC side (D-092) is not addressed at all, because the paper excludes PAC channels.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bombardini-2020-empirical-models-lobbying",
+   "title": "Empirical Models of Lobbying",
+   "year": "2020",
+   "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+   "relation": "supports",
+   "claim": "Lobbying is persistent: 92% of firms that lobby in a given year also lobby the next (Kerr et al. 2014), explained by large sunk costs. Conditional on lobbying, the elasticity of lobbying expenditure to firm sales is around one (Huneeus and Kim 2019).",
+   "system_side": "The lobbying projection is an in-year nowcast (amount filed so far plus (1-s) times the prior full year), carried forward unchanged. Its bands come from LobbyView persistence error. The earlier year-effect slope model never beat last-period naive (G9).",
+   "transfer": "The 92% figure is a firm-level extensive-margin rate (does a firm lobby at all), not dollar-level persistence for an industry. The review offers no evidence on how lobbying dollars move within a cycle.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "bombardini-2020-empirical-models-lobbying",
+   "title": "Empirical Models of Lobbying",
+   "year": "2020",
+   "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+   "relation": "supports",
+   "claim": "Bertrand et al. (2014), about 37,000 active lobbyists over 1999-2008: the share of in-house LOBBYISTS fell from nearly 60% to under 40%, and the roughly 30% growth in lobbying expenses was almost entirely due to external lobbying, which doubled.",
+   "system_side": "The lobbying card shows hired-firm income and in-house expenses side by side and never adds them. The sector-growth config records that the undifferentiated LobbyView sum double-counts self-filers' outside-firm fees (a median of 9-26% by sector).",
+   "transfer": "The 60%->40% figure is a share of lobbyists (headcount), not of lobbying dollars, over all federal LDA lobbying 1999-2008. No finance or CU sector breakdown is reported, so this supports showing the two channels separately but provides no sector-specific shares.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "harrison-2018-application-data-mining",
+   "title": "An Application of Data Mining Techniques to Explore Congressional Lobbying Records for Patterns in Pediatric Special Interest Expenditures Prior to the Affordable Care Act",
+   "year": "2018",
+   "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+   "relation": "supports",
+   "claim": "The XML amounts do not differentiate lobbying expenditures from income, and greater statistical analysis of the currency values is limited until the forms and procedures used to collect lobbying data are adjusted.",
+   "system_side": "Mentat's giving_forecast declares LOBBY_SERIES as income_total (outside-firm fees) and expenses_total (in-house expenses), and _lda_history maps hired_firms = income_total and in_house = expenses_total, never added. sector_spend.py declares FORBIDDEN_COMBINED_KEYS (combined_total, income_plus_expenses, lobbying_spend_total, spend_total, total_spend). The removal of the summed telecom 2025 $139.4M (now $102.4M in-house, $37.0M outside-firm fees) was Melange commit 914623152 on the industry page (make_lobby_network_html.py and industry-ui), not a change to Mentat's card.",
+   "transfer": "The paper describes the federal LD-2 form, not an empirical estimate, so it carries over to 2021-2026 Senate LDA data. It supports the D-064 rule; it does not measure the overlap.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "harrison-2018-application-data-mining",
+   "title": "An Application of Data Mining Techniques to Explore Congressional Lobbying Records for Patterns in Pediatric Special Interest Expenditures Prior to the Affordable Care Act",
+   "year": "2018",
+   "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+   "relation": "supports",
+   "claim": "LDA records are grouped by time of filing, not time of activity: Q4 2009 files include records from 2002-2008 filed after the fact, and the authors add a filter to keep 2009 events only. The paper describes no amendment handling.",
+   "system_side": "sector_spend groups filings by (registrant, client, filing_year, filing_period) and keeps the latest parseable dt_posted per group, with filing_uuid breaking ties, so an amendment supersedes the original. make_lobby_network_html.py holds the LD-2 deadlines (Apr 20, Jul 20, Oct 20, Jan 20) used for the quarter-coverage rule (D-130).",
+   "transfer": "Carries over: same federal LDA filing structure. The system is stricter than the paper, which only year-filters and does not deduplicate amendments.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "furnas-2019-partisan-ties-lobbying",
+   "title": "The partisan ties of lobbying firms",
+   "year": "2019",
+   "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+   "relation": "qualifies",
+   "claim": "A change in House control moves contract-lobbying revenue between partisan firms: in 2011 lobbyists at Republican-aligned firms gained just over $10,000 for the year and ousted Democratic-aligned firms lost more than $40,000 in annual revenue (firm-level difference-in-differences on revenue per lobbyist). In Figure 2 (90% threshold, time-fixed measure only) Republican and Democratic firms were roughly at parity, with a marginal advantage to Democratic firms in 2008-2010 and to Republican firms in 2011-2016; bipartisan firms consistently earned greater average revenue.",
+   "system_side": "The lobbying card carries outside-firm fees (LDA income_total) and in-house expenses (expenses_total) as separate series, never added. The lobbying refit is sector-aggregate with no partisan or control term: dy ~ dg + factor(year), anchor last_year, clustered by study_sector and year.",
+   "transfer": "The paper's population (federal contract registrants, registrant differs from client) corresponds to the outside-firm fees series, not in-house expenses. The effect is distributional across firm partisanship; the paper does not identify a sector-total change. A common control shock would be absorbed by factor(year) in the fit but cannot be projected forward. Before adding a control-flip term, test whether outside-firm totals step after the 2011, 2015 and 2019 flips.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "furnas-nd-conflating-lobbying-pacs",
+   "title": "Conflating Lobbying and PACs: The Surprisingly Low Overlap in Organizational Lobbying and Campaign Expenditures",
+   "year": "",
+   "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+   "relation": "supports",
+   "claim": "Lobbying and PAC spending have different distributions: lobbying spenders concentrate between $10,000 and $1 million and few disclose under $10,000, while PAC giving is more uneven, with many groups giving under $10,000. A PAC contribution can be one-off, while hiring a lobbyist stretches over months or years. The authors argue the umbrella term 'money in politics' is imperfect and that researchers should say which type they study.",
+   "system_side": "Mentat's giving forecast passes Melange LDA levels to the lobbying card separately from the giving model, with outside-firm income (hired_firms) and in-house expenses shown side by side and never added.",
+   "transfer": "The paper supports keeping giving and lobbying as separate measures with separate models. It does not speak to the in-house vs outside-firm no-sum rule, which is about LDA double counting; the paper says only that its lobbying totals include both in-house and contracted-firm spending and does not describe deduplication. Mentat's sector growth study config separately records a median 9-26% double count in undifferentiated LobbyView sums (C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:118-120). Descriptive evidence only.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "huneeus-2018-effects-firms-lobbying",
+   "title": "The Effects of Firms' Lobbying on Resource Misallocation",
+   "year": "2018",
+   "component_id": "mentat-giving-forecast.refit-gates",
+   "relation": "context",
+   "claim": "Firm lobbying is persistent. Fact 4 (printed p.10): more than 80 percent of firms that lobbied in 2016 also lobbied in 2017. Figure 3 (printed p.10): adjacent-year intensive-margin log-lobbying slope 0.922 (t = 157.88, conditional on lobbying in both years). The Figure 3 caption says over 70 percent of firms lobby in two consecutive years. Persistence dropped during the 2007-2009 financial crisis. The paper does not address forecasting.",
+   "system_side": "The lobbying console rule is last year's level plus slope times the change in growth, backtested on rolling origins with 2014-2023 targets. Gate G9 warns when a refit does not beat naive. The README records the log-lobbying MAE as 4.050 against naive 3.936, so the refit does not beat naive (warning only).",
+   "transfer": "The paper's persistence is firm-level on public firms in a 1999-2018 sample; the forecast works on sector aggregates. The claim that naive is a strong baseline is the analyst's inference from persistence, not the paper's. The 2007-2009 break lies outside the 2014-2023 target window but may fall in training data for later origins; the backtest start year was not checked, so 'regime shifts are not in the backtest' is not established. Persistence says nothing about whether growth adds signal.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "anon-2025-cross-industry-political",
+   "title": "Cross-Industry Political Spending - Analysis Overview (memo)",
+   "year": "2025",
+   "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+   "relation": "context",
+   "claim": "Credit unions have the lowest CEO and executive averages of the four industries (CEO $5,147, executive $3,009). Their giving is coordinated through the ACU trade association, with a near-perfect bipartisan balance (memo gives no figure), emphasis on open seats and special elections, and hedging across opposing candidates.",
+   "system_side": "giving_forecast.py lines 1741-1757 state that the credit-union company-PAC measure uses the published PAC panel's 16-PAC cohort (D-117), with the D/R split pinned to the same cohort. The comment contrasts this with the anchors' single committee and does not discuss executive giving.",
+   "transfer": "Supports treating credit-union political money as PAC- and association-led, so the panel cohort is the right unit. The near-perfect ratio and the volatility claims have no figures, so they cannot check the pinned split.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "chohan-2025-crypto-oligarchy-cryptocurrency",
+   "title": "Crypto-Oligarchy: The Cryptocurrency Lobby in American Politics",
+   "year": "2025",
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "supports",
+   "claim": "Fairshake raised a record $203 million for the 2024 cycle, reported as more than MAGA Inc. and Senate Majority PAC. These are receipts. The paper also reports $78 million raised toward the 2026 midterms 'to date' as of its January 2025 date. The text gives no FEC source for either figure and cites press items.",
+   "system_side": "Refit registry declines crypto for the pac, control and lobbying models. Reason given: no growth series and no OpenSecrets code today. Verified: all three model flags are false and the reason text matches.",
+   "transfer": "The figures show a large money series appearing for 2024 and early 2026. They do not establish a level break, a first cycle, or any per-cycle history before 2024, so they cannot by themselves justify a break term. Any admission would still need FEC-sourced totals.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "goff-nd-cross-industry-finance",
+   "title": "Cross Industry Finance and Lobbying Disclosure Report: Analysis and Recommendations",
+   "year": "",
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "qualifies",
+   "claim": "Crypto industry giving is projected north of 175 million dollars for 2025-2026, versus 145.5 million in 2023-2024, an off-year rise the report calls an outlier and attributes to the CLARITY Act push.",
+   "system_side": "Code applies one presidential factor u = 1.8635 to the general_giving measure on both cycle steps (UPLIFT_BOTH_STEPS at giving_forecast.py line 1425; gate at line 1888), so the 2025-26 midterm step is scaled by 1/1.8635, about minus 46 percent. Company PACs keep the fitted phi on the midterm step.",
+   "transfer": "Only applies if crypto giving is run through the general_giving measure, which was not checked. The report's 175 million is a projection with no stated method, window or source, so it is a counterexample to test, not evidence.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "zeileis-nd-econometric-computing-with",
+   "title": "Econometric Computing with HC and HAC Covariance Matrix Estimators",
+   "year": "",
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "qualifies",
+   "claim": "On the public schools data (51 states, Wisconsin NA dropped, N=50), the quadratic income term has SE 830, z 1.91, p 0.056 under HC0 and SE 5489, z 0.29, p 0.77 under HC4. Paper attributes the gap to one high-leverage outlier (Alaska) and HC4's leverage correction. It cites Long and Ervin (2000) for HC3 as best in small samples and makes HC3 the vcovHC default.",
+   "system_side": "Refit robustness block prints an HC1 row via sandwich::vcovHC type HC1, beside CR1, CR2 (clubSandwich) and a wild cluster restricted bootstrap. Fixture row: HC1 SE 0.0395 on 11 df for the pac G_current model.",
+   "transfer": "The paper's HC0 vs HC4 contrast is an estimator-choice comparison on one 50-state cross-section with one outlier. It does not show HC1 understates SEs in the refit's ~11 df regressions. The HC1 understatement point is the analyst's inference from cited small-sample literature, not a result in this paper. The paper has no simulation.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ansolabehere-2002-little-money-politics",
+   "title": "Why Is There So Little Money in U.S. Politics?",
+   "year": 2002,
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "qualifies",
+   "claim": "In the gubernatorial panel, campaign spending scales with per-capita income at an elasticity of 1.07 to 1.17, and government spending adds nothing once income and state FE are included. In aggregate, campaign spending shows no trend relative to national income over 1976-2000, and presidential spending as a share of GDP was flat over 1912-2000.",
+   "system_side": "giving_forecast.py lines 1393-1397 hold the cycle formula M = B exp(phi dP + d_h)(1 + x/2), where x is the one-year-lagged IBISWorld real industry growth path. The D-116 exemption (company PACs take x = 0) was not checked in this pass.",
+   "transfer": "The paper's evidence is aggregate and state-level spending, not industry-attributed giving. Industry revenue proxies firm size and stakes, not donor income, so the bearing is weak. The elasticity should be attributed to the gubernatorial panel, not to campaign spending in general.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kerr-2014-dynamics-firm-lobbying",
+   "title": "The Dynamics of Firm Lobbying",
+   "year": 2014,
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "supports",
+   "claim": "Participation persistence: P(lobby this year given lobbied last year) = 92 percent in a balanced 3,260-firm Compustat panel, 1998-2006 (6.2 percent lobby in a given year; 10.0 percent ever lobby). Above 80 percent in almost all two-digit NAICS industries. 96 percent of expenditures in a typical year come from prior-year lobbyists. Entry clusters in the year before an election, not the election year; exit is unrelated to the cycle.",
+   "system_side": "Mentat lobbying projection is the one quantity exempt from the midterm/presidential phase adjustment (Phase 6 owner rulings of 2026-10-01, README paragraph near line 152). Calculator rule: last year plus slope times predicted-growth change, with no year effect (rf_v2model.R line 132).",
+   "transfer": "Evidence is participation for 1998-2006 public firms, not sector dollars. The 96 percent is one sample's expenditure share. Election timing in the paper concerns entry, a small share of dollars, so it does not show phase has zero effect on spend; that stays untested here.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "kerr-2014-dynamics-firm-lobbying",
+   "title": "The Dynamics of Firm Lobbying",
+   "year": 2014,
+   "component_id": "mentat-giving-forecast.refit-gates",
+   "relation": "supports",
+   "claim": "Lagged lobbying status raises current-year lobbying probability by 0.84 to 0.88 in Blundell-Bond columns 2-6 (baseline column 2 = 0.8848; column 6 = 0.8810), 26,080 firm-years, 1998-2006 public firms (Table 2 and note). Table 7 Panel E: 0.00 entry 2004-2006 among the most dependent firms not lobbying in 2001-2003, on both LCA and patenting measures. Entry is not zero elsewhere: 4th-quintile LCA non-lobbyists show 0.08, and Nike entered without prior lobbying (fn 26).",
+   "system_side": "Mentat G9: log-lobbying refit MAE 4.050 vs naive 3.936 (README line 142; test-08-backtest.R line 61 pins 3.936); confirmed. Sector-study backtest triple (MAE 3.63 vs 3.99 with growth and 6.55 with control terms, LobbyView 2014-2023) was NOT found in any file under the sector_growth_study folder; unverified. Bands as split-conformal persistence errors, targets 2014-2023, horizons 1-3: confirmed in rf_lobbying.R persistence function.",
+   "transfer": "Persistence evidence is for binary participation, not dollars. The naive-anchor result for dollars holds only while incumbents dominate sector totals; entrant-heavy sectors (crypto before 2015, fintech) break that. The no-entry result holds only for the top dependency quintile, not all dependent firms.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "note-request-for-review-industry-economic-performance",
+   "title": "Request for Review: Industry Economic Performance and Political Spending",
+   "year": "2026",
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "supports",
+   "claim": "Election-cycle controls use Pres and Midterm dummies with odd years as the baseline. Industry forecasts (IBISWorld, trade outlooks) are used only to predict 2026 spending after estimation and are never mixed into the estimated growth variable.",
+   "system_side": "The cycle model projects with M = B exp(phi dP + d_h) (1 + x/2), where dP = Pres(c) minus Pres(c-2) is a presidential-cycle difference, not a Midterm dummy with odd-year baseline. The IBISWorld real growth path, lagged one year, enters only through the projection term x. Forecast growth is kept out of estimation in this model. The sector study does put predicted_growth_pct on the right-hand side in C3 and L3 (sgs_registry.R:30), which the memo prohibits; that departure is outside this bearing.",
+   "transfer": "Supports only the forecast product split between estimation and projection. Does not cover the sector study C3 and L3 tests, and the presidential-difference term is not the memo Midterm and Pres dummy set.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "note-industry-growth-and-political-spending-research",
+   "title": "Industry Growth and Political Spending: Research Plan",
+   "year": "2026",
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "qualifies",
+   "claim": "Predicted industry growth is the variable of direct interest, and the sign of the growth-spending relation is to be estimated, not assumed; IBISWorld forecasts proxy public expectations only and do not establish any company's private forecast or whether a donor read the report.",
+   "system_side": "Live cycle model: M = B exp(phi dP + d_h) (1 + x/2), with x the IBISWorld real-growth budget change with a one-year lag. Company PACs (pac_to_candidates) are on the panel nowcast with x = 0 under D-116 (PANEL_NOWCAST); general giving keeps the x term. The 50/50 weight is taken from the 2026-10-07 owner ruling named in the code header.",
+   "transfer": "The plan supplies a design principle, not evidence for the 50/50 term. The rel's claim that Paul ruled roster mismatch a stated limitation does not appear in the plan and is unverified. The build's no-stable-effect reading is single path and UNVERIFIED under DE-062. No backtest of the 50/50 term was checked here.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "note-review-industry-growth-and-political-spending",
+   "title": "Review: industry growth and political spending",
+   "year": "2026",
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "qualifies",
+   "claim": "Value added, gross output, profits and assets are different quantities; output growth is not spare cash; corporate PAC budgets come from voluntary SSF contributions, so a capacity mechanism fits lobbying more than PAC giving.",
+   "system_side": "The cycle model's 50/50 budget term uses IBISWorld REAL annual revenue growth with a one-year lag (_ibis_path). D-116 (2026-10-08) sets x = 0 for company PACs and documents the drop; the term remains for other measures. The sector-study backtest (last-year naive MAE 3.63 vs +growth 3.99, LobbyView targets 2014-2023, brain note) tests the study growth term, not the IBIS budget rule.",
+   "transfer": "The backtest does not isolate any revenue-to-spending link, so it cannot be cited as evidence that the IBIS budget rule is weak. Use only as a fact about the growth term's forecast error in that window.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "note-review-industry-growth-and-political-spending",
+   "title": "Review: industry growth and political spending",
+   "year": "2026",
+   "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+   "relation": "supports",
+   "claim": "LDA in-house expenses include retained-firm payments and lobbying-related association dues, so adding client expenses, firm revenues and association expenses double-counts; keep the series separate or deduplicate.",
+   "system_side": "The Mentat notice states that PAC, candidate-share and lobbying amounts are separate accounts and that the two lobbying series are never summed (giving_forecast.py:2074). The sector study keeps lobby_income (outside-firm) and lobby_expenses (self-filer) as separate DVs (sgs_config.R:80-81). Trade-association overlap is not handled separately in the config read. The side-by-side display claim comes from a Melange commit message and was not read in code.",
+   "transfer": "Direct for any sector total. Trade-association overlap is not yet handled separately, per the bearing; not confirmed by code read here.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "note-sector-growth-and-political-spending-source",
+   "title": "Sector growth and political spending: source check (START HERE)",
+   "year": "2026",
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "measurement-source",
+   "claim": "IBISWorld U.S. Key Statistics revenue is in constant prices, so growth ratios need no CPI adjustment. Previous-year growth (k = 1) is one of two actual-growth timings. Predicted growth uses the prior-year forecast for year t; 55 sector-year values, 53 passing the main checks.",
+   "system_side": "giving_forecast.py lines 1393-1398 comments describe M = B exp(phi dP + d_h)(1 + x/2), with x taken from the IBISWorld real growth path over the lag window c-3 to c-1, and company PACs exempt (x = 0, D-116). These comments confirm the lagged real-growth input but do not show how the 50/50 weight is derived.",
+   "transfer": "The note supplies only the measurement and lag convention. It says nothing about forecasting giving. The analyst's backtest figures (MAE 3.63 vs 3.99; growth beats naive in 45 percent of targets; LobbyView 2014-2023) were not found in the sector_growth_study folder and are removed. The D-113 attribution for the 50/50 weight is unverified.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  }
+ ]
+}

@@ -1,0 +1,59 @@
+{
+ "summary_md": "Decter-Frain and Frimer (Frontiers in Psychology 2016) ask whether the language spoken on the House floor tracks public approval of Congress. They built a monthly series from January 1996 to November 2014 (N = 206 months, about 124 million words) and scored it with LIWC 2007. Agency and communion indexes come from five coders who weighted each category (ICC 0.82 and 0.90). A separate 127-word prosocial (helping) dictionary is scored alongside them. The outcome is monthly Gallup approval. Both broad indexes correlate negatively with approval: agency r = -0.16 and communion r = -0.36. With controls, agency stays negative (beta -0.11) and communion is null. Prosocial language correlates r = +0.55 and survives the controls (beta +0.14). Media tone partly mediates all three. An exploratory stepwise pass keeps 8 of 63 categories, and the authors call these only suggestive. Moderation by the gender and party make-up of the chamber flips some signs. The design is correlational, aggregate and chamber-level, and the authors rule out causal claims. For Paul's systems the sharpest point is about construct definition. Communion is not one thing. The helping facet and the broader communion or belonging facet behave in opposite directions against an audience-perception outcome. Melange's persona channel uses one communion share from an LLM cue codebook (empathy and compassion), and that share feeds receptivity at PERSONA_W 0.30. That codebook already sits close to the helping facet, which is reassuring. But the paper's outcome is public approval of the institution, not a member's openness to lobbying, so it neither validates nor undercuts the susceptibility mapping. It also offers a cheap dictionary-based second path for checking the LLM cue shares.",
+ "category": "Machine Learning & Sentiment Analysis",
+ "bearings": [
+  {
+   "component_id": "melange-psychometrics.persona-agency-communion",
+   "relation": "qualifies",
+   "paper_claim": "Broad communion correlates r = -0.36 with monthly Gallup approval (Model 3 beta +0.04, n.s.), while the prosocial helping facet correlates r = +0.55 (Model 3 beta +0.14, p < 0.05). Agency is r = -0.16 and Model 3 beta -0.11. Window: Jan 1996 to Nov 2014, N = 206 House months.",
+   "paper_location": "Tables 2-3, pp.7-8; Discussion pp.9-10",
+   "system_side": "The persona channel scores one communion share defined as Empathy and Compassion toward concrete or disadvantaged people. Strong cues name affected people and their needs. That is close to the prosocial facet, and belonging or group-intimacy talk is not a coded cue. persona_z = 0.60 z(communion) - 0.40 z(agency), blended into susceptibility at PERSONA_W 0.30 for members with at least 15 cue sentences (526 members in agency_communion.json).",
+   "code_ref": "fec/members/agency_communion_llm.py:35-60; fec/members/receptivity_layer.py:139-156",
+   "transfer_conditions": "The paper is about an aggregate chamber-month audience outcome (approval of Congress), not member-level susceptibility to lobbyists. The facet lesson transfers as a construct-definition check: a pooled communion score can mix facets with opposite signs. Ecological inference from chamber months to individual members is not licensed.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-psychometrics.persona-agency-communion",
+   "relation": "suggests-extension",
+   "paper_claim": "Agency and communion indexes built from coder-weighted LIWC category densities (five coders; ICC agency 0.82, communion 0.90), plus a 127-word prosocial dictionary, give stable chamber-level series with plausible correlates.",
+   "paper_location": "Method, pp.2-4; Table 1",
+   "system_side": "The persona shares come from a single instrument: Claude few-shot cue classification of self-referential floor and hearing sentences, cached per model. The brain records functional-gate and party-signature validations, but no independent second instrument for the same shares.",
+   "code_ref": "fec/members/agency_communion_llm.py:3-12,123-140,239",
+   "transfer_conditions": "A dictionary path would be a convergence check (DE-062 second path), not a validity test of the kind the PERSONA_W ruling names. A null convergence would not reopen PERSONA_W, because only a failed panel of 3 or more raters to B&L standards does. Member-level dictionary densities on short self-referential samples will be noisy, and the coder weights were set for chamber aggregates.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-psychometrics.lexical-big5",
+   "relation": "qualifies",
+   "paper_claim": "Chamber-level LIWC densities in House floor speech move enough over time to track monthly approval. Stepwise betas, UNSTRATIFIED and exploratory, are tentativeness +0.46, positive emotion +0.24, anxiety +0.24 and conjunctions -0.26 (8 of 63 categories kept).",
+   "paper_location": "Table 5, p.8; p.10-11",
+   "system_side": "big5_traits.py scores corpus-relative z from per-1000-word category rates, including posemo and tentat, pooled over each member's full speech corpus. Date slicing exists only as a validation hook (BIG5_BEFORE/AFTER), and the default is the full corpus with no period de-trending.",
+   "code_ref": "fec/members/big5_traits.py:33-35,64,84,94",
+   "transfer_conditions": "This is an inference: if category rates drift by period at the chamber level, members whose speech is concentrated in different years pick up period variance in their trait z. The paper shows co-movement with approval, not the size of the drift; checking this would need a per-year de-meaning test on Paul's corpus.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "The persona channel has no facet split. Communion is one share, so helping or compassion talk and belonging or we-language cannot be separated, although the paper shows they can carry opposite signs against an audience outcome.",
+  "There is no second instrument for the agency and communion shares. A coder-weighted LIWC index or prosocial dictionary path would supply a DE-062 reproduction route.",
+  "Lexical Big Five rates are pooled across years with no period de-meaning by default. Whether chamber-level drift in categories like tentat and posemo leaks into member z is untested."
+ ],
+ "flags": [
+  "Pooled-over-fault-line: the paper's own moderation (Supplement) shows communal language helps approval when the chamber is male-dominated and hurts otherwise, and the prosocial effect varies with party share. The pooled communion and prosocial coefficients must be quoted as UNSTRATIFIED.",
+  "Do not read the negative agency and communion correlations as grounds to drop or reweight the persona channel. PERSONA_W 0.30 is an owner-ratified keep that reopens only on a failed panel of 3 or more raters to B&L standards. The paper's outcome (aggregate institutional approval) is also scope-mismatched to member susceptibility.",
+  "The headline claim that warmth beats competence rests on comparing two negative correlations, which the authors concede complicates the reading. The design is correlational, with possible reverse causation.",
+  "Count inconsistency in the source: 22 excluded plus 206 kept is 228 transcripts, against the 227 months stated.",
+  "Any new analysis that applies this dictionary path to Paul's corpus stays UNVERIFIED until a second path reproduces it (DE-062)."
+ ],
+ "paul_alignment": "Paul has no annotated-bibliography entry and no markup for this work, so there is no takeaway to check. His stated component position (from Birkenmaier and Lechner) stresses codebook-based cue design and worries about the step from trait to node. This paper supports that worry from another angle: how communion is defined, as helping versus belonging, changes the sign of its audience effect. Nothing here makes the current system stale, and the B&L communion codebook already leans toward the helping facet.",
+ "related": [
+  {"slug": "birkenmaier-2025-measuring-politicians-public", "relation": "complements", "why": "Same agency and communion constructs for politicians. B&L use LLM cue prompting, which is the instrument Melange runs, while this paper uses coder-weighted LIWC dictionaries, so the two together give two measurement paths."},
+  {"slug": "ramey-2016-measuring-elite-personality", "relation": "same-data", "why": "Both score Congressional Record floor speech over roughly the same 1996 to 2014 window with closed-vocabulary categories. Ramey does it at member level for traits, and this paper does it at chamber-month level for approval."},
+  {"slug": "pennebaker-2003-psychological-aspects-natural", "relation": "same-method", "why": "LIWC word-category densities as psychological indicators are the measurement basis of this paper."},
+  {"slug": "koutsoumpis-2024-kernel-truth-text", "relation": "complements", "why": "A meta-analysis of how far LIWC categories carry trait signal. It bounds how much the coder-weighted LIWC agency and communion indexes can mean."},
+  {"slug": "lechner-2025-mapping-political-personality", "relation": "complements", "why": "The PoliPers framework for politicians' agency and communion profiles is the source of the codebook Melange uses. This paper adds the belonging versus helping facet split."},
+  {"slug": "osnabrugge-2021-playing-gallery-emotive", "relation": "complements", "why": "Also treats parliamentary rhetoric as aimed at an outside audience. It works on emotive language, where this paper works on agentic and communal language."},
+  {"slug": "aroyehun-2026-politics-of-feelings", "relation": "complements", "why": "Emotional expression in congressional speech linked to an outcome. That paper looks at legislative effectiveness at member level, and this one at chamber approval."},
+  {"slug": "amsalem-2018-effect-politicians-personality", "relation": "complements", "why": "Politician personality and media visibility relate to this paper's finding that media tone mediates the link between language and approval."}
+ ]
+}

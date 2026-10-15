@@ -1,0 +1,47 @@
+{
+ "title": "Object-Oriented Computation of Sandwich Estimators",
+ "authors": [
+  "Achim Zeileis"
+ ],
+ "year": "2006",
+ "venue": "Journal of Statistical Software 16(9), 1-16 (text is a slightly modified reprint, in sandwich package vignette form, of Zeileis 2006)",
+ "doi": "10.18637/jss.v016.i09",
+ "document_type": "journal-article (software paper, reprinted as package introduction)",
+ "coverage": "Full text read in one pass (36077 chars, text file 2c2eeae381ad.txt, pp. 1-16 incl. references and affiliation). Sections 1-6 read in full, including the 5.1 count-data and 5.2 probit/tobit tables. Paul markup: none; the item lists n_annots 0 and annot_sha12s is empty, so no _annots files were read and paul_markup is empty. Note: p.note is not set; this is not a Paul research note. Metadata hints corrected: year (empty) set to 2006 and venue/doi filled from the paper's own self-citation in the references (p.16). Page images not available; text-only extraction.",
+ "research_question": "How can sandwich (robust) covariance matrix estimators be computed in general parametric models fitted by estimating functions, not only in lm(), so that inference such as partial z or t tests is robust to some model misspecification.",
+ "theory": "M-estimation and estimating-function theory (White 1994; Stefanski and Boos 2002). Sandwich form S = B M B with B the inverse expected negative derivative of the estimating function and M the variance of the estimating function (Eq. 4-6, p.2-3). For models where the objective depends on x and theta only through the linear predictor, the estimating function is r(y, eta) times x (Eq. 7-8, p.4), which justifies HC-type meat estimators. Consistency of theta-hat still requires correctly specified estimating functions (p.3, p.13).",
+ "data": "No empirical sample in the theory sections. Illustration 1 (Sec 5.1, p.9-11): simulated count data, n = 250, one regressor x ~ N(0,1), y negative binomial with log-mean 1 + x and size 1, seed 123, R 3.5.0 RNG. Illustration 2 (Sec 5.2, p.11-13): Fair's affairs data from the AER package, n = 601 individuals, response number of affairs (tobit) and binary affairs > 0 (probit); covariates age, yearsmarried, religiousness, occupation, rating. Benchmarks are Greene (2003) Table 22.3 values.",
+ "method": "Object-oriented R infrastructure in the sandwich package: generics bread() (default Hessian-based bread, Eq. 9, p.5), estfun() (n x k matrix of empirical estimating functions, p.6), meat() outer-product estimator (Eq. 10, with optional n/(n-k) adjustment, p.6), meatHAC() with weights over lags (Eq. 11, p.7), meatHC() with diagonal omega(r, hat, df) (Eq. 12, p.8), and sandwich() = (1/n) B M B (p.8-9). Wrappers vcovHAC(), vcovHC(), kernHAC(), NeweyWest(), weave(). Inference via lmtest coeftest() and waldtest(), car linear.hypothesis(). Methods are demonstrated for glm (poisson, quasipoisson, glm.nb), survreg via tobit(), and glm probit.",
+ "identification": "Robustness comes from the sandwich variance, not from a new estimator. Validity needs consistency of theta-hat under the assumed estimating function (p.3, p.13). HC extension beyond HC0/HC1 additionally needs a linear-predictor structure, a model.matrix method, and hatvalues method for HC2-HC4 (p.8). No formal asymptotic theorem is proven in this paper; it refers to White (1994) Theorem 6.10 and Lumley and Heagerty (1999).",
+ "scope": "Parametric regression models fitted by estimating functions in R: linear models, GLMs (Poisson, negative binomial, quasi-Poisson, probit), nls, survreg (tobit via AER), coxph, rlm. Cross-section (HC) and time-series (HAC) settings. Era: 2006 software paper; R 2.x-era package sandwich. Not an inference package itself.",
+ "key_findings": [
+  "Sandwich form S = B M B with M = VAR[psi] and B = inverse expected Hessian (Eq. 4-6, p.2-3); estimator is S-hat = (1/n) B-hat M-hat B-hat (p.8-9).",
+  "Poisson fit on overdispersed NB data: naive z-test of I(x^2) is -2.12, p = 0.034; sandwich SE 0.0363 gives z = -1.35, p = 0.18 (Sec 5.1, p.10-11).",
+  "Quasi-Poisson gives the same conclusion: I(x^2) SE 0.0506, z = -0.97, p = 0.33; glm.nb gives coefficient -0.0527, SE 0.0649, z = -0.81, p = 0.42 (p.11).",
+  "Poisson coefficients track the true conditional mean (intercept 1.0633, x 0.9961, true values 1 and 1); only dispersion is misspecified (p.10).",
+  "Tobit on Fair's affairs (n = 601): HC SEs only slightly differ from model SEs; religiousness SE 0.4038 vs sandwich 0.3999; rating -2.2850 with SE 0.4078 vs sandwich 0.3935; age SE 0.0791 vs sandwich 0.0889 (p.12).",
+  "Tobit: age p-value moves from 0.0234 to 0.0437 with sandwich, still significant at 5 percent; occupation remains insignificant (0.200 vs 0.185) (p.11-12).",
+  "Probit on Fair's affairs: age z = -2.13, p = 0.0328 (model) becomes z = -1.95, p = 0.0508 (sandwich), a change in significance at 5 percent; rating z = -5.19 to -5.12 (p.12-13).",
+  "Author's caveat: sandwich errors lose power when the model is correctly specified, and are useful only if the estimates remain consistent, i.e. misspecification causes no bias (p.14).",
+  "The paper claims the same qualitative interpretations for tobit and probit under HC and model-based SEs, so HC is not a power-free default (p.12-13)."
+ ],
+ "limitations": "Author states the sandwich package contains no inference functions (p.14). Consistency under misspecification is only partly understood outside linear models (p.14). HC2-HC4 and HAC weights are described only by reference to Zeileis (2004) and Andrews (1991) (p.7-8). Examples use one simulated dataset and one real dataset; no simulation coverage, no coverage-rate study. Finite-sample n/(n-k) adjustment has no theoretical support for non-linear models (p.6). Restriction testing via sandwich is one of several strategies; Godfrey (2006) and Kiefer and Vogelsang (2002) are mentioned as alternatives (p.14).",
+ "measures": "Covariance matrices S-hat, bread B-hat from Hessian, meat M-hat as outer product, HAC weighted autocorrelation sums, HC diagonal weight omega. Test statistics: z for coefficients (coeftest), Wald tests. Outputs: estimates, standard errors, z values, p-values per coefficient (Tables p.10-13).",
+ "paul_markup": [],
+ "short_quotes": [
+  "Sandwich covariance matrix estimators are a popular tool in applied regression modeling",
+  "the sandwich estimators are only useful if the parameters estimates are still consistent",
+  "Object orientation can be achieved by providing a few extractor functions"
+ ],
+ "references_of_note": [
+  "Zeileis A (2004). Econometric Computing with HC and HAC Covariance Matrix Estimators. J Stat Softw 11(10). doi 10.18637/jss.v011.i10 (linear-model predecessor, p.16)",
+  "White H (1994). Estimation, Inference and Specification Analysis. Cambridge University Press (asymptotic theorem, p.3)",
+  "Lumley T, Heagerty P (1999). Weighted Empirical Adaptive Variance Estimators for Correlated Data Regression. JRSS B 61 (p.15)",
+  "Freedman DA (2006). On the So-Called Huber Sandwich Estimator and Robust Standard Errors. Am Statistician 60(4) (p.14)",
+  "Koenker R (2006). Maximum Likelihood Asymptotics Under Non-Standard Conditions: A Heuristic Introduction to Sandwiches. Lecture notes (p.14)",
+  "Godfrey LG (2006). Tests for Regression Models with Heteroskedasticity of Unknown Form. CSDA 50 (p.14)",
+  "Kiefer NM, Vogelsang TJ (2002). Heteroskedasticity-Autocorrelation Robust Testing Using Bandwidth Equal to Sample Size. Econometric Theory 18 (p.14)",
+  "Zeileis A, Kleiber C, Jackman S (2008). Regression Models for Count Data in R. J Stat Softw 27(8) (p.10)",
+  "Kleiber C, Zeileis A (2008). Applied Econometrics with R. Springer (p.15)"
+ ]
+}

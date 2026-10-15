@@ -1,0 +1,87 @@
+{
+ "bearings": [
+  {
+   "component_id": "terrier-row-scoring.sphere-of-influence",
+   "relation": "qualifies",
+   "paper_claim": "Political contribution dollars to congressional candidates are concentrated among older people. In the 2020 cycle the median dollar comes from a 66-year-old and the mean dollar from a 64-year-old (63.9), and only 9% of dollars come from donors aged 40 or younger. People who have ever given the $2,900 individual limit average 63 years old. Cohorts aged 70-80 donate about 200-300x more per capita than 18-year-olds (Fig. 4, 2020). Denominator: itemized individual contributions to congressional candidates in DIME, linked to L2 (the linked set is 17M donors over 2012-2020, not 2020 alone).",
+   "paper_location": "Abstract p. 1; Sec. 4.1 pp. 5-6 (Fig. 3, Fig. 4); Sec. 6 p. 11",
+   "system_side": "Sphere = 0.45 Giving + 0.45 Volunteer + 0.10 Household. Inside Giving, the vendor high-political-contribution flag sci_ct_dnr_contribamt_high carries 1/2 of the weight, and charitable and cpi_donor carry 1/4 each. Standings are midrank percentiles, and a within-registration standing is stored. There is no within-age standing and no age control.",
+   "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json:2556 (soi formula), :1566-1580 (contribamt_high, within weight 1/2); rowfw/engine.py:564-571 (within-registration standing only)",
+   "transfer_conditions": "The paper's age gradient is for federal itemized contributions in 2020. Terrier's field is a vendor's modelled flag for high political contribution amount in a district voter file (CO, OR-05, CT-01). The direction should carry over because both index political-donor wealth. The size will differ by vendor model and by district age structure. The paper says nothing about whether donors contact members more. Its access link rests on the cited Kalla and Broockman experiment, which is about announced donor status, not about individual donors' outreach.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Every number is confirmed at lines 571-578, 618-622 and 1272-1276 of the text. Two fixes. The paper says donors here are people who give to congressional candidates (p. 5), not all federal donors. The 17M figure is linked donors for 2012-2020, not for 2020. The code side holds: the soi formula is at framework_config.json:2559, contribamt_high has a within-part weight of 1/2 at :1566-1580, and engine.py:564-571 stores only within-registration standings. No age term appears in engine.py."
+  },
+  {
+   "component_id": "terrier-row-scoring.overall-standing",
+   "relation": "qualifies",
+   "paper_claim": "Participation is age-graded at every stage. The median non-voter is 39, the median voter 52, and the median primary voter and median donor are both 59. The authors call these gaps larger than the gap between candidates and donors. Figures are for 2020, from the L2 national file of about 208M registrants.",
+   "paper_location": "Sec. 4.1 p. 5 (Fig. 3)",
+   "system_side": "Overall = 0.40 CUA + 0.35 Participation + 0.25 Sphere (framework_config.json overall.W40_35_25), a weighted mean of midrank standings. Participation is the mean of four themes: Turnout, Early/mail, Activism and Digital. Sphere includes political giving. Both components therefore contain inputs that the paper shows are age-graded (turnout and political giving). The paper gives no evidence on the other inputs (Digital, Activism, Volunteer, Household), so calling the whole 60% 'age-loaded' goes beyond it. The only stored stratified view is by registration group.",
+   "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/engine.py:675-680 (overall_scores), :564-571 (within_reg only)",
+   "transfer_conditions": "Federal-level age medians from L2 transfer directionally to any US voter file. The size within OR-05 or CT-01 is unknown until it is measured on Terrier's own file. This bearing is a confound warning, not evidence that age-tilted standings are wrong for advocacy. Paul's ruling is that volunteers and givers are the people who engage members.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "The paper side is confirmed at lines 563-584: the non-voter median is 39, the voter median is 52, and the primary-voter and donor medians are both 59. The paper says the candidate, member and donor distributions are close to one another and far from voters and non-voters. Code confirmed: engine.py:675-680 and the config weights 0.40/0.35/0.25. The analyst said 'age-loaded by construction' for 60% of the weight; I narrowed that to the turnout and giving inputs."
+  },
+  {
+   "component_id": "mentat-fec-attribution.identity-ladder",
+   "relation": "method-source",
+   "paper_claim": "The DIME-to-L2 donor linkage is built to limit false positives. It links 75% of DIME individual contributors from 2012-2020, about 17M donors. Misses come from address differences (most common), donors who are not registered, and name differences. Unlinked donors have slightly more conservative CFscores and larger average gifts. The authors judge these imbalances small and not theoretically important. The r = 0.95 validation against Project Vote Smart (fn. 11) is for the CANDIDATE birth-year linkage, not the donor linkage.",
+   "paper_location": "Sec. 3.2 pp. 4-5; fn. 11; App. Table A4 (not extracted)",
+   "system_side": "A rule ladder with no name-frequency weighting. Exact name and same zip gives AUTO, or HIGH when the employer contradicts. Exact name and same city, or nickname and same zip, gives HIGH. Suffix mismatches and weaker combinations go to REVIEW, and everything else is DISCARD (below_identity_threshold). Only AUTO and HIGH are kept (collect.R:2896).",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:2117-2156 (ladder), :2896 (keep AUTO/HIGH)",
+   "transfer_conditions": "Both pipelines prefer precision to recall, which is consistent with Mentat's fail-closed posture. The paper reports that unlinked donors give slightly larger amounts, and the authors call this unimportant. It is weak evidence at most that precision-first matching under-recovers larger donors, and it does not establish a downward dollar bias in Mentat. Mentat matches contributor rows to one another within an employer roster, which is a different task from voter-file linkage. Neither 75% nor r = 0.95 is a benchmark for Mentat.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The analyst attached r = 0.95 to the donor linkage. Footnote 11 (lines 588-591) validates the candidate birth-year algorithm. The 75% figure and the reasons for misses are confirmed at lines 512-544, and the paper calls the imbalances small. Code confirmed at collect.R:2117-2156 and :2896. The analyst's 'biases totals downward, not just noise' went beyond the paper and has been removed."
+  },
+  {
+   "component_id": "mentat-fec-attribution.dedup-and-versions",
+   "relation": "measurement-source",
+   "paper_claim": "Small-donor coverage is near-complete only from 2020. ActBlue and WinRed itemize sub-$200 gifts, and WinRed launched during the 2020 cycle, so earlier cycles lack most small Republican donors. Pre-2020 Republican |Age Gap| coefficients come out unexpectedly positive. The authors attribute this to lower age variance among Republican donors, made more extreme by the missing small donors, and to possible partisan differences in age-related preferences. The coverage hole is not the sole cause.",
+   "paper_location": "Sec. 3 p. 4; fn. 3 pp. 2-3; Sec. 5.3 p. 9",
+   "system_side": "Conduit legs are kept and counted to their named recipients. Only same-recipient memo redisclosures with an eligible counterpart are removed. Employee candidate giving feeds the employee_candidate share basis in the giving forecast.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/R/schema.R:1090-1091; C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:378,1199-1203",
+   "transfer_conditions": "This applies to any Mentat cross-cycle comparison of employee (individual) giving or its partisan share that spans 2018 to 2020. The 2020 jump in itemized Republican small-dollar conduit rows is a reporting artifact, not a behavioural change. It does not affect PAC-to-candidate measures, which are committee transfers, or the current anchor cycle (2024), which falls after the break.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Coverage confirmed at lines 438-446 and 794-798, and the coefficients at fn. 3 and lines 889-903. The analyst attributed the sign flip to the coverage hole alone. The paper gives two reasons. Code confirmed: schema.R:1090-1091 keeps conduit legs, giving_forecast.py:378 defines the employee_candidate share basis, and :1199-1203 computes it. The claim that the anchor is 2024 was not checked."
+  }
+ ],
+ "related": [
+  {
+   "slug": "bonica-2013-mapping-ideological-marketplace",
+   "relation": "same-data",
+   "why": "Both rest on DIME contribution records and CFscores. This paper uses DIME v4.0 and cites the database but not this paper by name."
+  },
+  {
+   "slug": "kalla-nd-campaign-contributions-facilitate",
+   "relation": "cites",
+   "why": "Cited at p. 3 as field-experiment evidence that donors get meetings with legislators more often than non-donor constituents. The paper relies on it for its link from donating to access."
+  },
+  {
+   "slug": "imai-2021-fixed-effects-regression",
+   "relation": "complements",
+   "why": "The donor-level models are two-way fixed-effects regressions. Imai and Kim's cautions about reading 2FE as causal apply. Not cited."
+  },
+  {
+   "slug": "kim-2020-strategic-sequential-links",
+   "relation": "complements",
+   "why": "Both have to resolve individual identities in FEC data. Kim et al. use constrained graph clustering, and Bonica and Grumbach use precision-first name and address linkage to L2. Not cited."
+  },
+  {
+   "slug": "furnas-nd-conflating-lobbying-pacs",
+   "relation": "complements",
+   "why": "Bonica and Grumbach study individual contributions only and exclude PACs. Furnas et al. separate PAC money from lobbying money, which shows which money stream each claim covers. Not cited."
+  }
+ ],
+ "summary_issues": [
+  "The 0.21 years of donor age per year of candidate age (Table 1, N = 6,098, 2012-2020, cycle and district FEs) is the main effect. The model also has an interaction, Candidate age x Incumbent = -0.11, so the slope for incumbents is about 0.10. The summary quotes 0.21 as the effect for all candidates.",
+  "Table 1 calls N = 6,098 'average donor age by candidate (2012-2020)'. 'Candidate-cycles' is the analyst's label, not the paper's.",
+  "The summary says the paper 'identifies no causal effect of wealth or of policy'. That is accurate for wealth (p. 2) and for policy (left to future work). But the abstract and Sec. 5 use causal wording ('age proximity ... increases contributions'), even though the design is within-donor 2FE. Keep the summary's descriptive framing and note that the authors' own wording is stronger.",
+  "The 2020 donor-age medians cover contributions to congressional candidates (p. 5), not all federal contributions. The paper's own highlights say the median donor is 66, which conflicts with the body (median donor 59, median dollar 66). The summary correctly uses the body figures.",
+  "The rel output (outside summary_md) states that r = 0.95 validates the donor linkage. It validates the candidate birth-year linkage (fn. 11). The gap note saying precision-first matching 'drops larger-gift donors disproportionately' overstates a difference the authors call slight and unimportant.",
+  "Mapping only. All bearings stay UNVERIFIED (DE-062) until a second path reproduces them."
+ ]
+}

@@ -1,0 +1,86 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-stance.frame-alignment",
+      "relation": "method-source",
+      "paper_claim": "Framing = share of duplicate images within each event-label; two images are duplicates when the normalized distance between their 1,000-dim last fully connected layer vectors is below .2. Table 3: Venezuela state violence .308 vs Hong Kong contains-child .003 (paper: almost 103 times). The paper frames this as measuring which frames protesters choose to share.",
+      "paper_location": "Section 6.2 and Table 3, printed p.32-34 (PDF p.22-24)",
+      "system_side": "Ports the duplication rate to press titles: an item counts as aligned if another member's title in the same category has 3-word-shingle Jaccard >= 0.5. SRC is the full cu_press_stance_tone.csv (2,388 rows) with no domain filter. 816 rows are americascreditunions.org articles; they carry 816 distinct URLs but only 349 distinct titles, with up to 19 members on one title, so one ACU headline attributed to many members scores as cross-member duplication. Recompute (reproduced on a second path with identical numbers; window = whole CSV, file dated 2026-06-30): General Credit Union 60.2% of 442 items -> 5.2% of 116 own-domain (*.senate.gov/*.house.gov) items; Credit Union Tax Status 64.7% of 190 -> 38.1% of 42; Defense 12.2% of 41 -> 13.9% of 36; ACU-only rows 79.8% of 326 (General) and 72.3% of 148 (Tax).",
+      "code_ref": "fec/network/frame_alignment.py:3-13 (Joo mapping docstring), :22-23 (SRC = full press CSV, no domain filter), :38-55 (cross-member duplication rate)",
+      "transfer_conditions": "Carries over only when the duplicated unit was chosen by the actor being scored, as Joo's sharers chose their images; here that means own-domain releases. Third-party ACU syndication measures the author's reach, not member coordination. Joo's frame labels come from a trained classifier; here they are press categories, and short titles under 3-gram Jaccard >= 0.5 are not comparable to a CNN-feature distance threshold.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Paper side checked at text lines 1163-1170 and Table 3 (.308, .003; 103x at line 1275). Code lines 3-13, 22-23, 38-55 confirmed. Recompute reproduced exactly (442/60.2, 190/64.7, 116/5.2, 42/38.1, 326/79.8, 148/72.3). Softened: ACU URLs are all distinct; the multi-member attribution is by repeated title (349 titles over 816 rows, max 19 members), not one row reused; page range is printed p.32-34, not 32-35."
+    },
+    {
+      "component_id": "melange-stance.frame-alignment",
+      "relation": "qualifies",
+      "paper_claim": "The .2 duplicate threshold was chosen from inspecting the distance histogram, with no sensitivity analysis reported. The authors call the results provisional and suggest other operationalizations such as number of tweets containing a label instead of percentage, and expanding the frames considered.",
+      "paper_location": "Printed p.32-34 (PDF p.22-24)",
+      "system_side": "The docstring calls Jaccard >= 0.5 the analog of Joo's .2 distance and inherits the same untested choice. There is no threshold sweep; the only audit check is that alignment rates fall in [0,1]. Echo clusters use the same 0.5 cut with a minimum group of 3 items.",
+      "code_ref": "fec/network/frame_alignment.py:12-13,51,64-65; fec/audit/audit_full.py:299-301",
+      "transfer_conditions": "Applies directly. Before any alignment figure is quoted, sweep the threshold (e.g. 0.3-0.7) on own-domain rows. The paper supplies no threshold validation the system could borrow.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Text lines 1169-1170, 1196-1197, 1262-1264 confirm; code lines 12-13, 51, 64-65 and audit_full.py 299-301 confirm."
+    },
+    {
+      "component_id": "melange-stance.frame-alignment",
+      "relation": "qualifies",
+      "paper_claim": "Chi-squared tests of label against party are run separately on male and female images because the two parties have different gender ratios. Labels are sorted by chi-square with per-label significance stars; no multiple-comparison correction is described across the 1,730 unique labels.",
+      "paper_location": "Section 6.1, printed p.26-28 (PDF p.16-18), Tables 1-2",
+      "system_side": "The party-framing block computes chi-squared of press category and title terms against party (D vs R), pooled across chamber and source domain, with no strata and no correction. The pooled input is 1,231 Senate and 1,157 House rows, 816 (34%) of them ACU-authored. The brain note quotes 'D to CU-Bank Dynamics (chi-square = 128)' with no stratum or window.",
+      "code_ref": "fec/network/frame_alignment.py:68-100",
+      "transfer_conditions": "Joo's design stratifies on a known compositional fault line. Here the fault lines are chamber and author domain. Until stratified, quote the chi-square figures as UNSTRATIFIED descriptive term lists, not party-framing findings.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper: lines 652 (1,730 labels) and 664-666 (gender-separate test) confirm; stars visible in Tables 1-2. Code 69-100 confirms pooled chi2. Brain note line 38 confirms the chi-square = 128 quote. Removed the analyst's coverage percentages (D 92.5% vs R 87%, Senate 83% vs House 96%) because no source for them was found; replaced with verified row counts. Page range corrected (the gender sentence falls on printed p.27)."
+    },
+    {
+      "component_id": "melange-influence-engine.salience-shock",
+      "relation": "qualifies",
+      "paper_claim": "The paper links consistent frames to policy response only by citing Wouters & Walgrave (2017) and Ketelaars et al. (2017), saying higher duplication may indicate greater frame alignment; Study 2 is descriptive and does not test whether higher duplication produces larger effects.",
+      "paper_location": "Printed p.32-33 (PDF p.22-23)",
+      "system_side": "Under `--intensity auto`, campaign intensity = 0.5 + alignment in [0.5, 1.5], read from frame_alignment.json; the docstring cites 'our CU Tax Status at 65%'. The chain runs `salience_shock.py --advise` with the default intensity '1.0', so the alignment input does not reach the chain's advisory. frame_alignment.py itself is not in run_pipeline.py; frame_alignment.json was last written 2026-07-01.",
+      "code_ref": "fec/engine/salience_shock.py:186,198-209; fec/run_pipeline.py:186",
+      "transfer_conditions": "The 0.5 + alignment mapping has no estimate behind it in Joo, and the 65% input is inflated by ACU syndication. If auto intensity is ever enabled it needs the own-domain recompute first and should be treated as uncalibrated owner judgment.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Text lines 1182-1188 confirm the cited-only basis (sentence starts on printed p.32). Code lines 186 (argparse default '1.0'), 198-209 (_intensity), 200 (65% docstring) and run_pipeline.py:186 confirm; no other caller passes --intensity auto."
+    }
+  ],
+  "related": [
+    {
+      "slug": "steinertthrelkeld-2018-twitter-data",
+      "relation": "complements",
+      "why": "Same author (Steinert-Threlkeld); both are in the brain's six-paper salience and press-SNA wave of 2026-07-01. Twitter-as-data is the text counterpart to this image tutorial."
+    },
+    {
+      "slug": "malaterre-2024-inferring-social-networks",
+      "relation": "complements",
+      "why": "Both papers were ingested in the same 2026-07-01 wave and both were ported to press text (Malaterre to HCoI shared-attention communities, Joo to duplication-rate frame alignment), so both share the source-author attribution exposure."
+    },
+    {
+      "slug": "noble-2024-presidential-leadership-legislative",
+      "relation": "complements",
+      "why": "salience_shock.py implements Noble & Turner's going-public model and takes its optional (non-default) campaign intensity from Joo-style frame alignment (salience_shock.py:198-209)."
+    },
+    {
+      "slug": "dietrich-2019-pitch-perfect-vocal",
+      "relation": "complements",
+      "why": "Joo cites Dietrich (2018) video aisle-crossing as a computer-vision polarization measure (printed p.17); Dietrich 2019 is the same author's audio-as-data counterpart."
+    },
+    {
+      "slug": "mestre-2026-potential-pitfalls-audio",
+      "relation": "complements",
+      "why": "Same 'X as data' methods-tutorial genre (audio as data for political research), parallel to this image-as-data tutorial."
+    }
+  ],
+  "summary_issues": [
+    "'fine-tunes a ResNet-50 (91.79% accuracy) on protest images from five protest episodes' conflates two datasets: 91.79% is best fine-tune accuracy in Appendix Table D1 on a separate protest training set (Steinert-Threlkeld, Chan and Joo, forthcoming); the five episodes are the application data. VGG-16 scored higher (92.33%).",
+    "'about 1,700 labels': the paper reports 1,730 unique labels.",
+    "H2 ('crowds shared more than individuals ... in 3 of 5 events') is the paper's own statement that images of groups are shared at higher rates in three events; Table 3 shows large group above small group in only 1 of 5 events (Hong Kong). The 3-of-5 holds only for large group vs faces. Quote it as the authors' reading, not a reproduced count.",
+    "'816 of its 2,388 rows are americascreditunions.org articles that are attributed to each member they mention': the 816 rows have 816 distinct URLs; the multi-member effect comes through repeated titles (349 distinct titles, up to 19 members per title). The recompute figures (60.2%/442 -> 5.2%/116; 64.7%/190 -> 38.1%/42) were reproduced exactly on a second path here.",
+    "'H1/H2' labels are the analyst's; the paper states them as two expectations, not numbered hypotheses."
+  ]
+}

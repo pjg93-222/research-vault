@@ -1,0 +1,104 @@
+{
+  "bearings": [
+    {
+      "component_id": "terrier-canvass.untapped-potential",
+      "relation": "qualifies",
+      "paper_claim": "Voters who are moderate on average reward a candidate's move to the elite middle only on issues where they disagree with the party. Among general moderates holding the Republican position, the Republican-candidate effect is -0.0524 (SE 0.0112), against +0.0381 (SE 0.0072) among moderates holding the Democratic position (Table A9). Fewer than 10% of respondents gave consistently Democratic, Republican or elite-middle answers across five issues. Persuadability is therefore issue-specific and two-signed, not a property of sitting at the partisan midpoint.",
+      "paper_location": "pp. 14 (fn 14), 19-21; Figures 6-7; Tables A8-A9",
+      "system_side": "The code computes undecided = (1 - |2s - 1|) x t, which peaks at s = 0.5. Here s is the support score, a composite of partisan, presidential, registration and primary-ballot signals, and the persuasion weight wp defaults to 0.5 (DEFAULT_WEIGHTS and the district entries). Persuadability is assumed to be highest at the partisan midpoint, scaled by turnout. The term has no issue or message dimension.",
+      "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:118 (formula documented at lines 1-11; wp default line 53)",
+      "transfer_conditions": "The paper measures response to candidate issue positions in a survey conjoint: a hypothetical 2028 presidential race, a national sample of 2024 voters, and partial equilibrium. It does not measure the effect of a canvass contact, and it does not cover the OR-05 or CT-01 House electorates. It shows that a mid-scale partisan score mixes voters who move in opposite directions on any given issue. That implies a midpoint score ranks people by how cross-pressured they are, not by how persuadable they are by an arbitrary message. It does not show that the midpoint is the wrong target overall. The 1-2 pp pooled magnitudes are labeled UNSTRATIFIED and are not a canvass effect size.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Table A9 column order (Rep: Own=D 0.0381/0.0072, Own=R -0.0524/0.0112) and the <10% consistency line (text line ~441) confirmed. untapped.py line 118 holds self.undecided = (1 - |2s-1|) * t; DEFAULT_WEIGHTS = (0.5, 0.5) at line 53 and districts.py sets wp 0.5."
+    },
+    {
+      "component_id": "terrier-canvass.candidate-support",
+      "relation": "qualifies",
+      "paper_claim": "Vote choice responds to a candidate's specific issue positions, and the response depends on where the voter stands on each issue. Effects range from -4.2 pp (transgender sports) to +7.3 pp (gay and lesbian rights) by issue for Republican candidates and from -1.7 pp (Social Security) to +4.5 pp (affirmative action) for Democratic candidates. On majority-supported issues, moderating hurts Republicans (-0.0237, SE 0.0048); the Democratic estimate is negative but not significant (-0.0042, SE 0.0041).",
+      "paper_location": "pp. 14-19; Figures 3-5; Tables A4, A6, A7",
+      "system_side": "Support s is an equal-weight (all weights 1 in districts.py _SUPPORT) average of direction signals oriented toward the candidate's party: partisan score, presidential (Harris/Trump) support, party registration and primary ballot. It has no input for the candidate's own positions, so every same-party candidate in a district gets the same s.",
+      "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/tools/support.py:33-48,64-78; tools/districts.py:55",
+      "transfer_conditions": "The paper partly supports a party-only baseline: issue effects are modest next to partisanship, and the authors themselves say not to over-read the point estimates. It also shows that a moderate or out-of-step candidate's support is not well proxied by party lean among cross-pressured voters. The evidence comes from the presidential level and a national sample, and candidates were shown without records. Carrying it over to a specific House candidate requires knowing that candidate's issue profile, which Terrier does not hold.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Issue ranges at text lines 551-555 and Table A7 values confirmed. Added the Democratic majority-issue estimate so the stratum is not quoted one-sided. support.py signals() and compute() confirmed; signal weights all 1 at districts.py:55."
+    },
+    {
+      "component_id": "terrier-row-scoring.partisan-lean",
+      "relation": "qualifies",
+      "paper_claim": "Public opinion is multidimensional, and voters are often liberal on some issues and conservative on others. Fewer than 10% are consistent across five issues. The authors note an alternative reading: preferences could be one-dimensional with a mapping from that dimension to specific issues that differs between voters and elites.",
+      "paper_location": "pp. 7-9 (Figure 1b-1c), p. 14 fn 14",
+      "system_side": "Lean is built as 100 x (w_reg x registration + w_vendor x mean(P, O, C)), which assumes that registration and vendor codes lie on one axis. Band cuts sit at 25 and 75. Undetermined is displayed only for people whose registration is neither D nor R and whose same-band probability is below 0.80. Lean does not enter the overall score (ovr_score uses only the CUA, participation and sphere-of-influence percentiles).",
+      "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/engine.py:420-432 (lean), 441 (lean_band), 669-672 (lean_undetermined), 675-680 (overall_scores)",
+      "transfer_conditions": "The stakes are low because lean never enters a weighted score. The paper implies that a mid-band or Undetermined lean often marks cross-pressure on issues rather than a centrist or noisy measurement. That reading applies only if the vendor fields embed issue content; registration does not.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Undetermined rule corrected: engine.lean_undetermined also requires registration not D/R, not just confidence < 0.80. Cuts 25/75 and threshold 0.8 confirmed in docs/data_dictionary.json. The p. 23 location was dropped; the alternative one-dimensional reading is in fn 14."
+    },
+    {
+      "component_id": "melange-influence-engine.persuadability-table",
+      "relation": "qualifies",
+      "paper_claim": "Moving on an issue is rewarded only where the audience disagrees with the current position, and it is penalized where the audience holds that position (Republican candidate, own=R -0.0364 vs own=D +0.0404, Table A8).",
+      "paper_location": "pp. 18-20; Figure 6; Table A8",
+      "system_side": "PERS is a fixed multiplier keyed to a member's stance tier: Champion 0.10, Highly Persuadable 0.65, Persuadable 0.60, Opponent 0.08, and PERS_NONE 0.45 for silence. Callers such as flip_model.py and per_topic_flip.py apply it per topic/scenario stance cell, so persuadability is already issue-specific, which matches the paper's issue-level logic.",
+      "code_ref": "fec/moneyball_core.py:564-568; fec/engine/per_topic_flip.py:76; fec/engine/flip_model.py:142",
+      "transfer_conditions": "This is an analogy only. The paper studies voters choosing between candidates, not legislators being lobbied. It gives no evidence on legislator persuadability or on the shape of the PERS curve, and it should not be read as calibrating PERS values. Its one structural point, that the target of an appeal is the issue-level disagreement and not the aggregate midpoint, is consistent with PERS being applied per topic.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Table A8 Rep Own=D 0.0404 / Own=R -0.0364 confirmed. PERS table at moneyball_core.py:564-568 confirmed; per-topic application seen in per_topic_flip.py:76 and flip_model.py:142 (added to code_ref)."
+    },
+    {
+      "component_id": "melange-labels-and-tiers.overall-tier",
+      "relation": "qualifies",
+      "paper_claim": "Gains and losses across issues and voters can net to modest aggregate effects, so a small average conceals larger, opposite-signed issue-level responses. In a stylized example (Figure A7), 50% more voters change their votes than the average net effect implies.",
+      "paper_location": "pp. 21-24 (Conclusion); Figure A7, Appendix G",
+      "system_side": "The overall label is a band of the IMP-weighted mean of tier prototypes (TORD: Champion 4 ... Opponent -4) plus a bounded +/-0.05 rounding nudge. A member who is Champion on one topic and Opponent on another can therefore average into a middle band. The money layer (fec/engine/money_response.py) reads this overall tier.",
+      "code_ref": "fec/moneyball_core.py:631-660 (TORD and OVERALL_BANDS), 673-694 (overall_rounding, _overall_value, overall_tier_from_value)",
+      "transfer_conditions": "This is an analogy on how aggregation behaves, with a different population: legislators' issue positions are far more one-dimensional than voters'. The point is a reading caution. A middle overall tier should not be read as 'persuadable everywhere'. Before acting on the overall label, check the dispersion of the per-topic cells. The paper provides no legislator evidence.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Figure A7 50% example confirmed (text line ~1652); it is a stylized illustration, not an estimate. Lines 631-660 hold only the constants; the weighted mean is computed at 679-683, so code_ref was extended. The 'F1 money gate and scenario runner' claim was not traced and is replaced by the confirmed money_response.py caller."
+    }
+  ],
+  "related": [
+    {
+      "slug": "kalla-2020-which-narrative-strategies",
+      "relation": "complements",
+      "why": "Same authors (Kalla and Broockman). That paper tests perspective-getting door-canvass and survey persuasion protocols, which Paul's untapped-potential notes attribute alongside this paper. This paper supplies the issue-position heterogeneity that a canvass would need to target."
+    },
+    {
+      "slug": "tappin-2023-quantifying-potential-persuasive",
+      "relation": "complements",
+      "why": "It quantifies returns to political microtargeting by subgroup, the operational counterpart to this paper's finding that persuasion response differs by issue and by voter position."
+    },
+    {
+      "slug": "simchon-2024-persuasive-effects-political",
+      "relation": "complements",
+      "why": "It tests microtargeted persuasion with generative AI. This paper explains why tailoring by issue should matter: cross-pressured voters respond with opposite signs on different issues."
+    },
+    {
+      "slug": "poole-1999-nominate-after-years",
+      "relation": "complements",
+      "why": "D-NOMINATE gives the low-dimensional account of elite roll-call ideology. This paper argues mass opinion is multidimensional relative to the elite axis, which is why elite-middle moves do not map onto a single median voter."
+    },
+    {
+      "slug": "bonica-2013-mapping-ideological-marketplace",
+      "relation": "complements",
+      "why": "CFscores place donors and candidates on one ideological dimension. This paper's cross-pressure finding cautions against reading a single-axis position as a position on any particular issue."
+    },
+    {
+      "slug": "madsen-2017-strategic-advantages-micro",
+      "relation": "complements",
+      "why": "An agent-based model of micro-targeted campaigning. Issue-specific, voter-position-dependent responses of the kind measured here are the empirical input such a model would need."
+    }
+  ],
+  "summary_issues": [
+    "Sample wording: the text says 6,000 L2-voter-file-matched registered voters who voted in the 2024 general election, not 'verified 2024 voters'. Close, but the voter-file match is the verification method and should be named.",
+    "'Republicans +3.2 pp in the most liberal-opinion tercile' matches Table A6 Tercile 3 (0.0319); the tercile ordering (3 = most liberal) is inferred from the pattern of results, not stated next to the table. The majority-issue -2.4 pp is for Republicans only; the Democratic estimate is negative but not significant, which the summary's 'null or negative' wording covers.",
+    "The pooled +1.1 / +1.8 pp are quoted with their strata in the summary, as required; outside the summary they must keep the UNSTRATIFIED label.",
+    "'Even moderate respondents reward the move only on issues where they disagree with the party' is supported by Figure 7 / Table A9, but the moderate definition is the paper's own (liberal on fewer than 75% of issues for the Democratic analysis, more than 25% for the Republican one) and should be named if the claim is reused.",
+    "The overall-tier bearing originally said the F1 money gate and the scenario runner read the overall label; only the money_response.py caller was confirmed. That claim is corrected in the bearing.",
+    "All system applications remain new agent analysis, UNVERIFIED until a second path reproduces them (DE-062)."
+  ]
+}

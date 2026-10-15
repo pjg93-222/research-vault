@@ -1,0 +1,119 @@
+{
+ "summary_md": "Paul's own research plan (dated 2026-09-25) for testing whether industries spend more or less on federal politics when they have grown, are growing, or expect to grow. It specifies OLS with a separate intercept per sector, six core tests (C1-C3 contributions, L1-L3 lobbying, each with prior actual, same-year actual, or IBISWorld predicted growth), election-cycle dummies and IEM expected-control covariates, plus job-tier and per-chamber Democratic-share extensions. Its strongest contributions are discipline rules: predicted growth must come from a report vintage published before the spending year, missing forecasts stay missing, null results are kept, and independent-row OLS errors are ruled insufficient with nine or fewer sector clusters. It reports no estimates, and its own readiness check says contributions overlap the IEM forecasts only in 2021-2022. The document is the north star of the built sector growth study (Mentat sector_growth_study, in R). The build honours the inference caution with a wild cluster restricted bootstrap by sector and Holm adjustment, but departs from the plan in three places: log outcomes rather than dollar levels, a retrospective 2023-2026 expected-control series plus 538 robustness filling the IEM gap, and added Tossup and trend terms. Results recorded in the brain (UNVERIFIED, single path): L3 on LobbyView lobbying b 0.242 million 2025 USD per pp (p 0.033, Holm 0.1125) flips to -0.477 under year FE, growth adds no adjusted R2, and the annual partisan SHIFT is -0.04 (p 0.76). So far the plan's question is answered as no stable growth signal, which bears directly on the live giving forecast that still feeds IBISWorld growth into general giving at 50/50.",
+ "category": "Paul's Research Notes",
+ "bearings": [
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "method-source",
+   "paper_claim": "Six core tests C1-C3 and L1-L3: Y_it = a_i + b X_it + Pres + Midterm + ExpectedDemHouse + ExpectedDemSenate (+ current control for lobbying), Y in millions of 2025 USD, X one growth measure at a time in pp; keep all six results including nulls; nine planned sectors give few clusters so independent-row OLS errors are not sufficient.",
+   "paper_location": "Sections 2, 3 and 5 (final paragraph)",
+   "system_side": "The built study implements the plan in R with sector baselines, one growth regressor per test, and a wild cluster restricted bootstrap-t by sector with Webb six-point weights (all 6^G vectors when feasible) plus Holm over L1-L3; it departs by modelling log giving with Tossup and Trend terms rather than dollar levels.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:1-12,133-169,194-212",
+   "transfer_conditions": "Direct: the plan is the declared north star of this lane. The level-vs-log departure changes coefficient units (effect on log dollars vs millions) and should be labelled amended, not original, under the brain's contract-row rule.",
+   "strength": "strong"
+  },
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "qualifies",
+   "paper_claim": "Readiness check: verified contribution years overlap IEM congressional forecasts only in 2021-2022; IEM covers 2008-2022 with 2023-2025 missing, and the later election result must never substitute for a missing forecast.",
+   "paper_location": "Section 8 (readiness check); Section 6D (forecast meaning)",
+   "system_side": "The build fills 2023-2026 from a separate expected_control_2023_2026 series with method and flag carried, adds the 538 generic ballot as robustness family H4-538, and flags values measured after the spending year (exp_dem_*_after_year); the component record calls 2023/2025 expectations retrospective.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:182-191,259-264; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_panel.R:211-232",
+   "transfer_conditions": "Holds only if the 2023-2026 series is a dated pre-election expectation; if it was built with knowledge of outcomes it breaks the plan's own timing rule and H4 exp_dem estimates must carry that label.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "qualifies",
+   "paper_claim": "Do not add full year indicators while keeping national annual controls (year effects absorb them); a separate check may swap the controls for year indicators to see whether the growth relationship survives common yearly shocks.",
+   "paper_location": "Section 3, paragraph after the control table",
+   "system_side": "The build runs the year-FE variant as that separate check; the recorded result is that L3-LV b +0.352 flips to -0.477 with sector and year FE, log-FE -0.006, and growth adds no adjusted R2 (0.884717 vs 0.884690). The check the plan prescribed is what defeated the headline estimate.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:385-392",
+   "transfer_conditions": "Results come from a single analysis path and stay UNVERIFIED until a second path reproduces them (DE-062); a pooled slope is UNSTRATIFIED unless the SLOPES per-sector strata are quoted alongside.",
+   "strength": "strong"
+  },
+  {
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "qualifies",
+   "paper_claim": "Predicted industry growth (C3) is the variable of direct interest; the sign of the growth-spending relation is to be estimated, not assumed, and IBISWorld forecasts proxy public expectations only.",
+   "paper_location": "Section 1; Section 4 (predicted growth)",
+   "system_side": "The live giving forecast multiplies the anchor by (1 + x/2), where x is the industry budget change implied by the IBISWorld real growth path with a one-year lag (the 50/50); company PACs were moved off it (D-116), but general giving still carries it.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:1391-1408",
+   "transfer_conditions": "The plan's own study has so far found no stable growth effect (sign flips under year FE; no adjusted R2 gain), so the 50/50 growth term rests on an owner ruling rather than on this plan's evidence; transfer also assumes the study population (company rosters) matches the forecast measures, which Paul ruled a stated limitation.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "mentat-sector-growth-study.seats-weekly-test",
+   "relation": "context",
+   "paper_claim": "Partisan direction is tested with a per-chamber Democratic share D/(D+R), zero denominators missing, using the matching chamber's expected and current control; party and presidential committee flows are not assigned to a chamber.",
+   "paper_location": "Section 5, Partisan direction",
+   "system_side": "The build's annual SHIFT test (RShare on Shift = P - RMajNow) found no stable shift (-0.04, p 0.76); the weekly SEATS-W extension, which the plan does not specify, found -3.47 pp D share per expected D seat in the 2022 House using dated 538 forecasts.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:201-216",
+   "transfer_conditions": "SEATS-W is one election and goes beyond the plan's annual design; the plan supplies only the outcome definition.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "The plan prescribes dollar-level outcomes; the build models log giving, so reported coefficients are not in the plan's millions-of-2025-USD units and the original-vs-amended label needs to be explicit per contract row.",
+  "Contribution history before 2021 is not established locally (plan Section 6B; the brain records no pre-2021 cycle beyond the 2020 extension), so C1-C3 rest on very few years per sector and the full control specification stays weakly identified.",
+  "The live giving forecast keeps an IBISWorld growth term at 50/50 for general giving although the growth study found no stable growth effect; no recorded backtest shows whether that term beats the cycle-only model.",
+  "Credit Arms, P and C, Telecom, life insurance and auto lack LDA sector totals; the four-sector LDA aggregate does not cover the nine-sector design, so L1-L3 run on LobbyView with fewer clusters.",
+  "The Chief tier uses a non-date-specific executive-name override and the Employee tier absorbs unrecognized titles; no dated-role sensitivity test is recorded in the build.",
+  "With G sectors the wild cluster bootstrap cannot reach p below 2/6^G; tests with few sectors return no inference by design, which the plan anticipated but did not size."
+ ],
+ "flags": [
+  "Possible conflict with the plan's own rule: 2023-2026 expected control in the build is described as retrospective, while the plan says the later election result must never substitute for a missing forecast; verify the series is dated pre-election before quoting H4 exp_dem results.",
+  "Recorded growth-study results (L3-LV 0.242, Holm 0.1125; year-FE flip to -0.477; SHIFT -0.04) come from a single analysis path and stay UNVERIFIED under DE-062.",
+  "Any pooled common growth slope across the nine sectors must be quoted with the SLOPES strata or labelled UNSTRATIFIED.",
+  "LDA expenditure is used here as a spending outcome, not as an SNA edge or weight, so D-021 is not breached; LDA totals from this lane should not flow into network weights.",
+  "No paul_entries and no annotations exist; the document itself is Paul's, so alignment is judged against the brain record."
+ ],
+ "paul_alignment": "Agrees: the plan says estimate the sign, keep nulls and distrust small-cluster OLS errors; the build did so and found no stable growth effect and no stable annual partisan shift. Partly stale: it names statsmodels and IEM only, while the study runs in R with log outcomes, 538 robustness, a 2023-2026 expected-control series and a 2020 extension; the 2021-2022 overlap warning is only partly resolved. The live 50/50 IBISWorld growth term in general giving (ruled 2026-10-07) is not supported by this plan's results.",
+ "related": [
+  {
+   "slug": "imai-2021-fixed-effects-regression",
+   "relation": "complements",
+   "why": "The plan's sector-FE design and its year-FE check are the two-way FE setting Imai and Kim caution about; Paul highlighted it for this lane."
+  },
+  {
+   "slug": "huneeus-2018-effects-firms-lobbying",
+   "relation": "complements",
+   "why": "Firm lobbying returns motivate the deep-pockets versus seek-relief hypotheses that the plan leaves sign-agnostic."
+  },
+  {
+   "slug": "bickmore-2025-corporate-lobbying-political",
+   "relation": "complements",
+   "why": "Links corporate lobbying and PAC spending to market concentration, an alternative industry-condition driver to revenue growth."
+  },
+  {
+   "slug": "alexander-nd-lobbying-analysis-under",
+   "relation": "complements",
+   "why": "Lobbying ROI evidence underlies the idea that weak forecasts could prompt lobbying for favourable policy."
+  },
+  {
+   "slug": "furnas-nd-conflating-lobbying-pacs",
+   "relation": "complements",
+   "why": "Low overlap between lobbying and PAC spenders supports the plan's rule to keep contributions and lobbying as separate outcomes."
+  },
+  {
+   "slug": "kim-2023-systemic-sequential-links",
+   "relation": "complements",
+   "why": "Sequential donation-lobbying links bear on the plan's separate C and L models and on lead-lag between them."
+  },
+  {
+   "slug": "bacik-2025-measuring-dynamical-evolution",
+   "relation": "complements",
+   "why": "Election-cycle synchronization of lobbying supports the plan's Pres and Midterm controls in the lobbying equations."
+  },
+  {
+   "slug": "anon-2025-cross-industry-political",
+   "relation": "same-data",
+   "why": "The cross-industry political spending memo draws on the same sector spending sources and rosters."
+  },
+  {
+   "slug": "goff-nd-cross-industry-finance",
+   "relation": "same-data",
+   "why": "Paul's cross-industry finance and LDA report uses the same Mentat and LDA sector spending data the plan joins."
+  }
+ ]
+}

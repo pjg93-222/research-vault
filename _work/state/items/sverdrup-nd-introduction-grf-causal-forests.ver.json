@@ -1,0 +1,74 @@
+{
+ "bearings": [
+  {
+   "component_id": "terrier-canvass.untapped-potential",
+   "relation": "suggests-extension",
+   "paper_claim": "RATE/TOC tests whether a ranking sorts units by treatment effect. In the Brazil RCT (n about 17,000 students, 850 schools), ranking by low financial autonomy gave AUTOC 0.69 (SE 0.22, t about 3.2). Ranking by out-of-bag forest CATE gave one-sided p = 0.65 (the text says this rejects, which the printed p-value does not). Qini curves for budgeted targeting and depth-1 policy trees from doubly robust scores are described (pp.7-10).",
+   "paper_location": "pp.7-10 (BLP, OOB AUTOC p=0.65, autonomy TOC 0.69, policy_tree split at 41); Qini in guided tour via maq (not run)",
+   "system_side": "Untapped potential (untapped.py docstring): undecided = (1 - |2s-1|) x t; supporter = s x (1-t); potential = (wp x undecided + (1-wp) x supporter) x (1 + wi x i), with s candidate support, t turnout, i sphere percentile. wp and wi come from the district settings (module default 0.5, 0.5). The score is a fixed formula with no effect-heterogeneity estimate and no RATE or Qini check.",
+   "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:8-9 (formula in module docstring; cited 9-10 in rel)",
+   "transfer_conditions": "Needs randomized or known-propensity knock vs no-knock assignment with logged outcomes (support ID or validated turnout), scored as RATE on held-out doors. Without randomized contacts, any test is an observational CATE that assumes unconfoundedness. Not transferable from this tutorial as evidence about the formula.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Numbers and method description verified against the text. Corrections: the p = 0.65 result does not reject (text wording is wrong); wp = 0.5 is only the module default, not the district value; line cite is 8-9. The claim that the formula presumes effects peak at s = 0.5 is an interpretation of the formula, not something the code states; reworded in paper_claim and system_side."
+  },
+  {
+   "component_id": "melange-validation.prospective-contract",
+   "relation": "qualifies",
+   "paper_claim": "Effect heterogeneity is tested by ranking on a score and computing the gain over the ATE in the top-ranked fraction (TOC/AUTOC), which requires treated and untreated units. The authors warn that out-of-bag TOC is a heuristic without finite-sample guarantees and that policy trees need a held-out set (pp.8-11).",
+   "paper_location": "pp.8-11 (OOB heuristic p.8; policy tree held-out note p.10; poverty example evaluated on held-out test sample p.11)",
+   "system_side": "H1 in the prospective-contract protocol: frozen seed_prob correlates positively with new cosponsorships adopted after the freeze (Spearman over members with panel coverage in both snapshots). This is an association with the outcome level, not a test of whether contact moves high-seed_prob members more.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/outcome_contract.py:17 (PROTOCOL_TEXT H1 line; read-only)",
+   "transfer_conditions": "Effect-modification reading applies only if CU outreach or money exposure is logged per member with plausibly known assignment. Otherwise H1 is a predictive-validity check. The held-out, single-look design is consistent with the authors' advice, but this is a judgment, not something the paper tests.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Paper claims about RATE needing treated and untreated units, the OOB heuristic caveat and held-out advice are in the text. The H1 description matches code line 17 (PROTOCOL_TEXT starts there). Rel's characterization of H1 as predictive rather than effect-modification is a fair reading of the code."
+  },
+  {
+   "component_id": "melange-influence-engine.persuadability-table",
+   "relation": "qualifies",
+   "paper_claim": "Best linear projection tests whether effects vary along a chosen covariate: financial.autonomy.index coefficient -0.0329 (SE 0.0128, p = 0.0099). Other terms: is.female p = 0.17, family cash transfer p = 0.066, is.unemployed p = 0.61. Heterogeneity can be hard to detect at moderate n (payday AUTOC t = 0.67, about 2,500 individuals; text says possibly underpowered).",
+   "paper_location": "p.7 (BLP table); pp.10-11 (payday sample size and AUTOC t = 0.67)",
+   "system_side": "PERS in moneyball_core.py: fixed table over stance tiers (Highly Persuadable 0.65, Persuadable 0.60, Ally 0.40, Champion 0.10, Opponent 0.08, no-position default 0.45 via PERS_NONE). Not estimated against observed stance movement after contact.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/moneyball_core.py:564-568 (PERS table at 565; PERS_NONE at 564; read-only)",
+   "transfer_conditions": "A BLP of contact effect on stance-tier ordinals needs logged contact and tier movement; the payday example suggests a sample of 533 members may be too small for tier-level heterogeneity. A null would not refute the table.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "BLP coefficients and p-values verified on p.7. Overstatements: cash-transfer term (p = 0.066) is not null at the 10 percent level; 'often undetectable' is the rel's inference, not the paper's claim. PERS values verified in code but the 'inverted-U' label is loose (Defender 0.12, Lean Skeptic 0.40, Neutral 0.50 break a clean U). The 533-member count and the claim that the 0.45 default covers about 60 percent of cells were not verified in this pass."
+  }
+ ],
+ "related": [
+  {
+   "slug": "cagala-2021-optimal-targeting-fundraising",
+   "relation": "same-method",
+   "why": "Vault item exists. Rel describes it as applying causal forests and policy learning to target fundraising appeals by estimated individual effect. Content was not re-read in this pass; kept on existence and title fit."
+  },
+  {
+   "slug": "tappin-2023-quantifying-potential-persuasive",
+   "relation": "complements",
+   "why": "Vault item exists with a tappin-2023 ext and rel file. Rel describes it as measuring how persuasion effects vary across audiences. Kept on existence; content not re-read here."
+  },
+  {
+   "slug": "kalla-2020-which-narrative-strategies",
+   "relation": "complements",
+   "why": "Vault item exists and its title (Which Narrative Strategies Durably Reduce Prejudice? Field and Survey Experiments) confirms it is a randomized field-experiment paper, which fits the 'randomized canvass design' role."
+  },
+  {
+   "slug": "imai-2021-fixed-effects-regression",
+   "relation": "complements",
+   "why": "Vault item exists. Rel uses it for observational panel identification assumptions; kept on existence, content not re-read here."
+  }
+ ],
+ "summary_issues": [
+  "Summary's whole-sample AUTOC p = 0.65 is the right number, but the vignette text says the one-sided test rejects the null. A pnorm upper-tail p of 0.65 does not reject, so the vignette's wording is wrong and should not be repeated.",
+  "Flags call the 0.69 autonomy AUTOC a same-sample out-of-bag heuristic. The text does not say that. The autonomy covariate was chosen after the BLP result (p = 0.0099) on the same data, with no held-out set or selection adjustment. It is post-selected in-sample evidence, and the summary should say so.",
+  "The poverty AUTOC is described as held-out (correct: text evaluates on the 40 percent test sample, p.11). The 0.0061 SE 0.0092 t 0.67 figures match.",
+  "Summary calls the BLP terms null. Cash-transfer p = 0.066 is nominally significant at 10 percent; say 'not significant at 5 percent' instead.",
+  "Untapped code_ref cites lines 9-10; the formula sits in the docstring at lines 8-9. wp = 0.5 is only DEFAULT_WEIGHTS for districts without a setting, not the district value.",
+  "Summary says PERS is an inverted-U table; the values do not form a clean U. The 533-member count and the 'about 60 percent of cells' for the 0.45 default were not verified.",
+  "Paul-alignment cites Aref and Neal as persuasion support for PERS. The vault item aref-2020 is signed-network coalition detection, not persuasion. Kalla 2020 and Broockman 2026 exist as items; their support for PERS and untapped was not checked.",
+  "Component label Terrier is not confirmed from the code path, which sits in a Codex cu-geography-v3 outputs folder.",
+  "Quarter-SD wording: the text says roughly a quarter SD, while the computed ratio is 0.3 SD. Quote 0.3 SD with a note that the text says roughly a quarter.",
+  "Ext and rel metadata fixes (five authors, year 2026, venue grf vignette) are correct per the title page."
+ ]
+}

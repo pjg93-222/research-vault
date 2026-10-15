@@ -1,0 +1,68 @@
+{
+  "summary_md": "Ng, Harada and Russell (ICML 1999) ask which additions to an MDP reward leave the optimal policy unchanged. Their answer is potential-based shaping, F(s,a,s') = gamma*Phi(s') - Phi(s). It is sufficient for any real Phi on states. It is also necessary when nothing is known about the transitions or the reward: for any other F there is some MDP in which the shaped optimum is wrong. The corollary is that shaped Q and V equal the originals minus Phi(s), so the argmax over actions is the same. When Phi = V*, the shaped value is zero and greedy one-step choice is already optimal. A robustness remark adds that near-optimal policies carry over too. The experiments are small Sarsa grid worlds (10x10, 50x50, and a 5x5 grid with five subgoals). The paper reports no statistical tests, and this extraction lost the run counts. None of Paul's systems is a reinforcement learner. The bearing is on path-finding, where the deterministic case with gamma = 1 is the same thing as A* reduced costs, c'(u,v) = c(u,v) - h(u) + h(v). The theorem gives the rule for the learned or landmark heuristic Paul wants (his staffer and recruitment routers use heuristic 0 today). The heuristic must enter as a potential and be consistent; any other additive bonus changes which route wins. The staffer router's terminal normalization is a constant shift and is safe. Its member-context modifier and balanced step penalty change routes, which is correct as long as they are described as objective changes. One finding: the cosponsor recruitment path follows a greedy rule over a distance-to-target table that ignores dropped members. The template still calls this path provably optimal. UNVERIFIED until reproduced.",
+  "category": "Optimization",
+  "bearings": [
+    {
+      "component_id": "melange-pathfinding.member-recruitment-path",
+      "relation": "qualifies",
+      "paper_claim": "Corollary: shaped Q'* = Q* - Phi and V'* = V* - Phi, so if Phi is the true V* of the same MDP, the greedy one-step choice is optimal. That guarantee holds only for the MDP whose V* was computed. Robustness remark: an approximate V* gives a policy whose loss depends on the approximation error, not an exact optimum.",
+      "paper_location": "Main results, Corollary and Remark (Robustness and learning); Discussion on Phi = V*",
+      "system_side": "buildPath gets dT = distToTarget(target), a full max-product Dijkstra table (in effect V*), then tracePath follows argmax PE[cur][v]*dT[v]. This is greedy against an exact potential, and it is optimal when no members are dropped. distToTarget does not exclude the dropped set, but tracePath skips dropped nodes and never backtracks (seen set). After a drop, dT is the V* of a different graph. The trace can then return a less reliable chain, or report reached=false when a path exists, while the comment at line 735 still says provably optimal.",
+      "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:734, fec/surfaces/templates/make_dashboard_html_00.tpl:740, fec/surfaces/templates/make_dashboard_html_00.tpl:753-756",
+      "transfer_conditions": "Deterministic shortest path with gamma = 1 and costs -log p, so no learning dynamics are involved. Applies only when the dropped set is non-empty (set from the URL or UI at line 1165). With no drops the greedy trace is exact, up to ties. This is new agent analysis and stays UNVERIFIED until a second path reproduces it, for example by tracing a known graph with one dropped bridge node.",
+      "strength": "strong"
+    },
+    {
+      "component_id": "melange-pathfinding.staffer-closeness-routes",
+      "relation": "method-source",
+      "paper_claim": "Sufficiency and necessity theorem: adding gamma*Phi(s') - Phi(s) for any Phi preserves the set of optimal policies, and absent knowledge of T and R no other additive form does. With gamma = 1 on a deterministic graph this is the A* reduced-cost transform. Every origin-to-goal path shifts by the same Phi(goal) - Phi(origin), so the route ranking is unchanged.",
+      "paper_location": "Main results, Theorem (sufficiency and necessity), Appendix A",
+      "system_side": "The staffer router is bidirectional Dijkstra with heuristic 0 (labelled A*) to a virtual sink, plus Yen alternatives and an exact-arithmetic tie pass within one part in 10^12. Paul wants learned or landmark heuristics here. The theorem says such a heuristic is route-safe only if it enters as a potential on every arc. It must also be consistent so that reduced costs stay nonnegative for Dijkstra settling. A learned score added as a per-edge bonus is not route-safe.",
+      "code_ref": "fec/surfaces/staffer_closeness_routes.py:12, fec/surfaces/staffer_closeness_routes.py:79-83, fec/surfaces/staffer_routing.py:386",
+      "transfer_conditions": "Holds for deterministic additive costs. The paper does not cover bidirectional A*, which needs averaged forward and backward potentials, so the stop rule and the 10^12 relative tie band must be checked in original cost units, not reduced ones. Consistency is the extra condition Dijkstra needs. Shaping itself only needs the telescoping.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-pathfinding.staffer-closeness-routes",
+      "relation": "qualifies",
+      "paper_claim": "Necessity: for any non-potential additive F there exist dynamics and rewards under which the shaped optimum is not optimal in the original problem. A constant shift on all goal arcs is a potential term (it telescopes to Phi(goal)) and leaves the ranking unchanged.",
+      "paper_location": "Main results, Theorem necessity part; Appendix A",
+      "system_side": "Dividing every terminal factor by (1 + MEMBER_BETA) is a constant shift, so the comment that normalization preserves ranking is correct. The per-staffer modifier 1 + 0.15*value on terminal arcs is not a potential, and neither is the balance_step_penalty that adds a constant per step. Both change which route wins. That is intended, and they should be described as objective changes (a prestige bonus or a step preference), not as tie-breaks or neutral normalization.",
+      "code_ref": "fec/surfaces/staffer_closeness_routes.py:913-919, fec/surfaces/staffer_routing.py:424",
+      "transfer_conditions": "Deterministic costs. The modifier is labelled a bonus, not access evidence, consistent with D-025. Route cost stays a heuristic model output, never an introduction probability.",
+      "strength": "moderate"
+    }
+  ],
+  "gaps_exposed": [
+    "Recruitment-path greedy trace uses a distance-to-target table computed without the dropped-member set (make_dashboard_html_00.tpl:734 vs 740). After a drop the chain may be suboptimal or falsely unreachable, yet it is labelled provably optimal. The lazy fix is to skip dropped nodes inside distToTarget. UNVERIFIED (DE-062).",
+    "No router in the system uses a heuristic yet (staffer routes heuristic 0, recruitment path plain Dijkstra). Paul's wanted learned or landmark heuristic has no spec stating that it must enter as a consistent potential, with ties and the stop rule checked in original cost units.",
+    "The staffer router's member-context modifier and balanced step penalty are objective changes. No test pins how often they change the winning route compared with the pure -log strength objective."
+  ],
+  "flags": [
+    "The recruitment-path comment 'PROVABLY-OPTIMAL' (make_dashboard_html_00.tpl:735) does not hold when members are dropped. This is new agent analysis, UNVERIFIED until a second path reproduces it (DE-062).",
+    "Route costs and chain hold are heuristic model outputs, not introduction or access probabilities (D-025). Nothing in this paper licenses reading them as such."
+  ],
+  "paul_alignment": "Paul has no annotations on this work. It fits his stated wish for A* or learned heuristics on the recruitment and staffer routers. The paper gives the correctness rule for that wish: a heuristic must act as a potential to leave route choice unchanged. His component positions are current, since both routers still run with heuristic 0. The paper also bears on his centerless or node-loss concern: when a node is removed, a precomputed V* potential is stale. That is exactly the dropped-member gap found in the recruitment path.",
+  "related": [
+    {
+      "slug": "sutton-2018-reinforcement-learning-introduction",
+      "relation": "complements",
+      "why": "Textbook home of the Sarsa methods and MDP regularity conditions the paper relies on. Later editions cover potential-based shaping."
+    },
+    {
+      "slug": "watkins-1992-q-learning",
+      "relation": "complements",
+      "why": "Q-learning is the learner whose Q* the corollary shifts by Phi. The shaping guarantee is stated in terms of these optimal Q values."
+    },
+    {
+      "slug": "chen-2021-contingency-aware-influence",
+      "relation": "complements",
+      "why": "An RL approach to influence maximization. Any reward shaping in such a learner needs the potential-based condition to keep the seeding policy unchanged."
+    },
+    {
+      "slug": "duan-2025-breaking-sorting-barrier",
+      "relation": "complements",
+      "why": "Shortest-path algorithm work. Potential reweighting (reduced costs) is the deterministic form of this paper's shaping and preserves which paths are shortest."
+    }
+  ]
+}

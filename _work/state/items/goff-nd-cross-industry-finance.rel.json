@@ -1,0 +1,104 @@
+{
+  "summary_md": "Paul's own unpublished client report (to Trey Hawkins and Hannah Benito; year not printed, 2026 inferred) surveys political money in financial services and makes three recommendations to Credit Unions: raise giving 41% over the 2023-2024 baseline to about $4.3M, push employee and middle-management giving to trade groups, and run campaigns that set CUs apart from banks. The extract only covers the Crypto and Community Banks sections. Crypto giving rose from $1.76M (2021-22) to $145.5M (2023-24). The text reports +8,162.6%, but the stated figures give about +8,167%. The C-suite share of that giving went from 69% to 98.8%, and super PACs took 71.9% of non-direct giving, which is itself 70% of the total. A 2025-26 projection of more than $175M would be a midterm-cycle rise, which the report attributes to the CLARITY Act. Crypto-backed candidates won 38 of 40 primaries, and opinion runs 31% oppose to 27% support (no source given). Community-bank member LDA activity rose by an average of 20 interactions. The method is descriptive throughout: no model, no uncertainty, no identification design. Against the system as built, the report matters in three places. (1) Mentat's cycle model applies a symmetric x1.8635 presidential factor to general giving on the midterm step. For a crypto-like industry that projects a large 2025-26 drop, the opposite of the report's projection. (2) The per-member LDA interaction counts look like the bill-roster join that the lobbying lane rejected as circular, and they use LDA as a weight source, which D-021 bars. (3) The super-PAC share and the C-suite share both point to gaps in what Mentat currently splits out. All new analysis here is UNVERIFIED (DE-062).",
+  "category": "Paul's Research Notes",
+  "bearings": [
+    {
+      "component_id": "mentat-giving-forecast.cycle-model",
+      "relation": "qualifies",
+      "paper_claim": "Crypto industry giving projected north of $175M for 2025-2026 versus $145.5M in 2023-2024: an off-year (midterm) increase the report calls an outlier, attributed to the CLARITY Act push; normally spending is higher in presidential and lower in midterm cycles.",
+      "paper_location": "Crypto section, line 9 of the text extract",
+      "system_side": "General giving takes a fixed presidential factor u = 1.8635 on BOTH steps (D-121), so the 2025-26 midterm step is scaled by about 1/1.8635 (roughly -46%); company PACs keep fitted phi on the midterm step. A bill-driven regime shift like crypto's would be forecast in the wrong direction.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:1410-1424",
+      "transfer_conditions": "Holds only if crypto (or any industry with a live legislative fight) is run through the general-giving measure; the report's $175M is itself a projection with no stated method, window or source, so it is a counterexample to check, not evidence.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-lobbying.lobbied-member-link",
+      "relation": "contradicts",
+      "paper_claim": "2026 LDA reports show members such as Zach Nunn, Andy Kim, Young Kim and Bill Huizenga with an average increase of 20 interactions within the year, read as the community-bank industry pushing harder.",
+      "paper_location": "Community Banks section, line 17",
+      "system_side": "LD-2 filings never name members; member attribution comes from crediting every sponsor and cosponsor of a lobbied bill, so P(joined given lobbied) = 1 by construction and the link is REFUTED as contact or influence evidence. The interaction ledger reproduces that join by design.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/lobbying/build_network_2021_rebuild.py:13",
+      "transfer_conditions": "Applies if the report's interactions are bill-roster counts (the term matches lobby_interactions.py, whose docstring says it reuses that join; inferred, not stated in the report). If they came from description-named contacts, only the window and denominator flags remain.",
+      "strength": "strong"
+    },
+    {
+      "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+      "relation": "suggests-extension",
+      "paper_claim": "Super PACs take 71.9% of crypto's non-direct-to-candidate giving, which is 70% of industry giving; Fairshake is called the 2nd largest super PAC and wholly crypto-funded; backed candidates won 38 of 40 primaries.",
+      "paper_location": "Crypto section, lines 7, 9 and 13",
+      "system_side": "Mentat seeds the PAC transfer traversal from each industry's funded committees and partitions downstream beneficiary dollars into support/oppose/party; 89% of beneficiary dollars were oppose and the attributed-estimate producer is unbuilt. The report counts super-PAC receipts as giving without that partition.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/R/fec_beneficiary.R:1041-1060",
+      "transfer_conditions": "The 38/40 win count has no window, no denominator of contested races and no baseline win rate; any reuse needs the support/oppose split by party and a stated cycle.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "mentat-fec-attribution.employer-match",
+      "relation": "suggests-extension",
+      "paper_claim": "C-suite share of crypto donations rose from 69% (2021-22) to 98.8% (2023-24); the CU shortfall is framed as missing employee and middle-management giving.",
+      "paper_location": "Abstract line 5; Crypto section line 7",
+      "system_side": "Mentat assigns Schedule A rows to roster companies by employer key; occupation text enters only as an optional scoped regex on override rules, not as a role taxonomy, so no C-suite vs employee share is produced.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:520-529",
+      "transfer_conditions": "An occupation-role split would need a hand-coded precision check (Paul's literature cites SOC executive codes); the report gives no coding rule for C-suite.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-allocation.break-even-and-roi",
+      "relation": "qualifies",
+      "paper_claim": "Crypto outspends key allies by factors of 100, so CUs would have no chance in a monetary fight with the industry (supporting graph missing).",
+      "paper_location": "Line 12 (graph placeholder line 11)",
+      "system_side": "The head-to-head money term is saturating, (x+1)/((x+1)+HALFF*rcp), weighted by WM alongside a coalition term WP; a 100x dollar gap yields a bounded pull gap, and the dashboard reports 'cannot fully offset' only when q >= 1.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/surfaces/templates/make_dashboard_html_00.tpl:1096-1105",
+      "transfer_conditions": "The system's functional form is an assumption (share-type ratio) not validated against outcomes; the report's factor of 100 has no denominator or window, so neither side establishes the size of the disadvantage.",
+      "strength": "weak"
+    }
+  ],
+  "gaps_exposed": [
+    "No industry-specific regime-shift term in the cycle model: a bill-driven midterm surge (crypto 2025-26) is forecast as a symmetric midterm drop under the general-giving factor.",
+    "Mentat produces no occupation-role (C-suite vs employee) split of individual giving, which the report's main CU recommendation depends on.",
+    "The support/oppose attributed-estimate producer for super-PAC money is unbuilt, so super-PAC share of industry giving cannot yet be read as support for candidates.",
+    "No primary-election outcome measure exists to test claims like 38 of 40 backed primaries won.",
+    "No independent member-level lobbying contact measure exists; per-member LDA counts can only come from the circular bill-roster join."
+  ],
+  "flags": [
+    "D-021 and refuted lobbied-member link: per-member LDA interaction counts (average +20) use LDA as a member weight and, if from the bill-roster join, are circular by construction; do not cite as lobbying contact.",
+    "Window and denominator missing: factor of 100 outspending, average of 20 interactions (which members, which baseline year), 38 of 40 primaries (which cycles), 31% vs 27% opinion (no source), Fairshake rank 2 (no date or metric).",
+    "Arithmetic: $1.76M to $145.5M is about +8,167%, not the reported +8,162.6% (likely rounding of unrounded totals; unstated).",
+    "Causal and influence language without a design: CLARITY Act as the impetus, money buys attention, self-destructive feedback loop; all asserted, untested.",
+    "Coverage: abstract promises five industries but the extract contains only Crypto and Community Banks; the CU baseline dollar figure is not stated ($4.3M / 1.41 implies about $3.05M, derived).",
+    "Any agent recomputation here is UNVERIFIED until a second path reproduces it (DE-062)."
+  ],
+  "paul_alignment": "No bibliography entries; this is Paul's own report. Its focus on employee giving and CU distinctiveness fits the built 16-PAC CU cohort. Two claims are stale against the system: the per-member LDA interaction counts rest on the bill-roster link the lobbying lane refuted as circular (and D-021 bars LDA as a weight), and the midterm crypto surge clashes with Mentat's symmetric general-giving midterm factor (D-121), which forecasts a decline. Money-buys-attention is untested here.",
+  "related": [
+    {
+      "slug": "chohan-2025-crypto-oligarchy-cryptocurrency",
+      "relation": "complements",
+      "why": "Same subject (crypto lobby and Fairshake-era spending); a published source the report's Crypto section could be checked against."
+    },
+    {
+      "slug": "furnas-nd-conflating-lobbying-pacs",
+      "relation": "contradicts",
+      "why": "Furnas finds low overlap between organizational lobbying and PAC spending, while the report reads LDA activity and campaign giving as one advocacy push."
+    },
+    {
+      "slug": "kalla-nd-campaign-contributions-facilitate",
+      "relation": "complements",
+      "why": "Experimental evidence on contributions and access is the nearest tested version of the report's money-buys-attention claim (access, not influence, per D-025 wording)."
+    },
+    {
+      "slug": "kim-2018-lobbyview-firm-level",
+      "relation": "same-data",
+      "why": "LobbyView bill-level LDA data underlies the bill-roster member join that the report's per-member interaction counts appear to rely on."
+    },
+    {
+      "slug": "bacik-2025-measuring-dynamical-evolution",
+      "relation": "complements",
+      "why": "Documents election-cycle synchronization of lobbying, the cycle-phase assumption the report's off-year crypto surge departs from."
+    },
+    {
+      "slug": "kim-2020-strategic-sequential-links",
+      "relation": "complements",
+      "why": "Tests the sequencing of donations and lobbying that the report assumes when combining FEC and LDA evidence."
+    }
+  ]
+}

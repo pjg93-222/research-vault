@@ -1,0 +1,110 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-lobbying.lobbied-member-link",
+   "relation": "supports",
+   "paper_claim": "Transaction (LDA) reports show lobbying intensity but not message content, and the US federal transaction data does not say which legislator is the target, so researchers cannot map lobbying efforts to individual legislators.",
+   "paper_location": "Sec IV.A.3 pp.34-35",
+   "system_side": "lobby_interactions.py docstring ON POSITION paragraph: LD-2 has no position field, so position ships as not_disclosed. Brain lobbyview-collector.md circular-link section: the member link is manufactured by joining lobbied bills to sponsor and cosponsor rosters, so P(joined given lobbied) = 1 by construction.",
+   "code_ref": "fec/lobbying/lobby_interactions.py docstring ON POSITION paragraph; C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md:139-146",
+   "transfer_conditions": "Holds for any federal LD-2 vintage because the form structure, not the sample, creates the gap. A member-level contact measure would need an independent source.",
+   "strength": "strong",
+   "verdict": "reproduced",
+   "verifier_note": "Paper text confirmed at lines 909-916 (pp.34-35). The circularity conclusion is the system's own inference from the join, not the essay's; the essay never uses the word circular. Brain line cites confirmed."
+  },
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "supports",
+   "paper_claim": "Kerr, Lincoln and Mishra as cited: a firm that lobbied last year lobbies this year with 92 percent probability (firm-level, federal). Within-group variation in lobbying is little, so fixed-effects designs need external shocks; omitted channels and endogenous selection into lobbying bias naive estimates.",
+   "paper_location": "Sec II.A p.7; Sec III.A pp.16-17",
+   "system_side": "Brain topic note: L3-LV coefficient +0.352 becomes -0.477 with sector and year fixed effects; growth adds no adjusted R2 (0.884717 vs 0.884690); first-difference with year effects -0.537 over 71 pairs.",
+   "code_ref": "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md:235,239; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_forecast.R:405 (LobbyView backtest call; the coefficient estimation code was not at this line)",
+   "transfer_conditions": "The 92 percent is a firm-level federal figure, not a sector-year figure. The essay gives no sign for any sector coefficient, so the sign reversal is a fixed-effects fragility the essay anticipates, not validation of either sign. Figures must name window and denominator.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Paper claims confirmed at p.7 and pp.16-17. Brain numbers confirmed at lines 235 and 239, but the first-difference figure was not re-derived. The brain regression formula has midterm, presidential and unified terms, so 'phase terms' is loose wording. Code cite points to the backtest call, not the estimation."
+  },
+  {
+   "component_id": "melange-influence-engine.flip-model",
+   "relation": "suggests-extension",
+   "paper_claim": "Lobbying spending was about 3.5 billion dollars in 2012, roughly five times the approximately 750 million a year in interest-group campaign contributions (pp.5-6). Kang (2012) finds expenditure effects on enactment are very small but the marginal policy return is about 140 percent (p.28), and the value of lobbying depends on timing and targets (p.28). Selection into lobbying (about 10 percent of firms) biases naive return estimates upward only if non-lobbying interests expect no return (p.17).",
+   "paper_location": "Sec II.A pp.5-7; Sec III.A p.17; Sec III.B.5 pp.27-28",
+   "system_side": "flip_model.py takes cu and banks plus finserv PAC money (cu0, ind0) through a saturating receipts-relative term. Lobbying spend does not enter the per-member legs: a case-insensitive grep of flip_model.py for lobby returns no hits.",
+   "code_ref": "fec/engine/flip_model.py:4-7,39; fec/engine/money_response.py:16-31,69-75",
+   "transfer_conditions": "Lobbying cannot enter a per-member leg directly, because LD-2 names no member and LDA is an identity source, not an edge or weight source (D-021). Pooled return figures must carry an UNSTRATIFIED label. Kang's 140 percent is a policy return in a structural model, not a dollar ROI.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Original selection-bias claim was unconditional; the essay conditions it on non-lobbying interests expecting no return, so the claim is rewritten. Code cites confirmed for cu0, ind0 and the saturating term. Lobbying-free legs confirmed by grep."
+  },
+  {
+   "component_id": "melange-lobbying.contested-bills",
+   "relation": "method-source",
+   "paper_claim": "Kang (2012) builds an all-pay contest model of counteractive lobbying, estimated on energy groups' support and opposition for policies in 110th Congress bills, and finds the expenditure effect on enactment is very small. Baumgartner et al. (98 issues) find both sides mobilize roughly equal resources and policy is usually stable.",
+   "paper_location": "Sec III.B.5 pp.27-28; Sec II.D p.13",
+   "system_side": "contested_bills.py docstring: per-bill registry ratified by Paul 2026-07-31; contested records supply a per-bill explicit counterparty set; standard mode is the default; advisory records are display-only; CONTESTED_V1 is a future dial and no consumer exists today.",
+   "code_ref": "fec/lobbying/contested_bills.py:2-15",
+   "transfer_conditions": "An all-pay contest needs bill-level spending by both sides. LDA issue codes and bill mentions may supply that at the bill level, not the member level. The equal-mobilization finding warns that relative spend may predict little. Admission must stay with Paul's ratification.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Paper claims confirmed at pp.13 and 27-28. Docstring confirmed. Not checked: whether LDA issue codes actually supply bill-level spend on both sides."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "supports",
+   "paper_claim": "De Figueiredo and Silverman (2006), academic earmarks 1997-1999: lobbying raises earmarks when the district legislator sits on an appropriations committee and has no statistically significant independent effect when not (pp.22-24). Powerful, allied and marginal legislators are the ones lobbied (pp.10-11).",
+   "paper_location": "Sec III.B.3 pp.22-24; Sec II.C pp.10-11",
+   "system_side": "committee_scores.py weights seats by CU-relevance tier (Highly 3.0, Moderately 1.8, Slightly 0.9) with Chair and Ranking multipliers and a subcommittee ratio of 1/6.",
+   "code_ref": "fec/engine/committee_scores.py:125-127 (BASE tiers); same file SUBF and KLEAD constants",
+   "transfer_conditions": "The evidence is from academic earmarks on appropriations and supports the conditioning logic only. It does not validate the tier weights or the 1/6 subcommittee ratio, which remain owner judgment.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Original 'only when' wording is stronger than the paper, which says no statistically significant independent effect otherwise; rewritten. Tier weights confirmed in code."
+  },
+  {
+   "component_id": "melange-pathfinding.staffer-overlap-routes",
+   "relation": "qualifies",
+   "paper_claim": "Blanes i Vidal, Draca and Fons-Rosen (2012): lobbyist revenue of former Senate staffers falls about 23 percent when the senator they served is defeated or retires, in a 22-period panel with lobbyist and party-chamber-time fixed effects (pp.18-20). The essay reads this as the value of who you know (p.20).",
+   "paper_location": "Sec II.C p.10; Sec III.B.1 pp.18-20",
+   "system_side": "Staffer route cost uses shared-work and recency terms with a member-context modifier MEMBER_BETA 0.15. employment_history.py derives a revolving-door sidecar. Route cost is a heuristic model output, not closeness or access (D-025).",
+   "code_ref": "fec/staffer_network/closeness_math.py:21; fec/staffer_network/employment_history.py:2083-2092 (sidecar derivation function)",
+   "transfer_conditions": "The essay's evidence is a revenue effect for lobbyists, not a route-cost or access measure. Influence language stays barred on revolving-door edges.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "The 23 percent figure and page locations confirmed at p.10 and p.20. Log scaling of the shared-work term was not checked. MEMBER_BETA confirmed at line 21."
+  },
+  {
+   "component_id": "melange-lobbying.fec-lda-bridge",
+   "relation": "qualifies",
+   "paper_claim": "Money is not transferred explicitly to politicians as campaign contributions are, so lobbying is a distinct channel (p.4). Lobbying expenditures are about five times interest-group campaign contributions (pp.5-6). The essay does not address whether campaign giving leads lobbying.",
+   "paper_location": "Sec I p.4 (channel definition); Sec II.A pp.5-6 (scale)",
+   "system_side": "Bridge round-3 look: raw rho +0.153 member-blocked p=.0146, but four-control partial -0.0002, tier UNCORROBORATED. The 42-month FEC lead is recorded as intact in the collector note and is a candidate heuristic only.",
+   "code_ref": "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md:137 (bridge result) and :124 (42-month lead); the original cite at :84 is a different bullet",
+   "transfer_conditions": "The paper gives no evidence that giving leads lobbying. A lead test would need an exogenous-shock design rather than more controls.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The claim that lobbying persistence makes cross-sectional associations dominated by unit size and selection does not appear in the essay and was removed. Brain numbers confirmed at line 137; the original line cite 84 was wrong."
+  }
+ ],
+ "related": [
+  {"slug": "bombardini-2020-empirical-models-lobbying", "relation": "extends", "why": "Bombardini and Trebbi (2020, Annual Review of Economics) reviews empirical lobbying models and post-dates the essay. The item exists; the extends relation is loose."},
+  {"slug": "kerr-2014-dynamics-firm-lobbying", "relation": "cites", "why": "Same title as the Kerr, Lincoln and Mishra paper the essay cites as a 2013 working paper. The item is NBER WP 17577; calling it the published version was not verified."},
+  {"slug": "kim-2018-lobbyview-firm-level", "relation": "complements", "why": "LobbyView firm-level lobbying and bill database. The essay calls for bill-level linkage of transaction data but does not name this source. The claim that the system uses it as its fundamental source is not from the essay."},
+  {"slug": "huneeus-2018-effects-firms-lobbying", "relation": "complements", "why": "Huneeus and Kim (2018 draft) on firms' lobbying and resource misallocation. The committee-assignment instrument described in the rel was not verified against the item."},
+  {"slug": "alexander-2009-lobbying-analysis-under", "relation": "complements", "why": "Lobbying ROI under the American Jobs Creation Act of 2004 (Alexander, Scholz, Mazza). A single-policy return estimate, to which the essay's selection and omitted-channel warnings apply."},
+  {"slug": "furnas-nd-conflating-lobbying-pacs", "relation": "complements", "why": "Furnas, LaPira and Brock on low organizational overlap between lobbying and PAC spending. Matches the essay's point that the channels are distinct, though the essay does not cite it."},
+  {"slug": "imai-2021-fixed-effects-regression", "relation": "complements", "why": "Imai and Kim (2021) on two-way fixed effects for causal inference with panels. Formalizes the essay's warning about fixed effects on persistent panels."},
+  {"slug": "furnas-2019-partisan-ties-lobbying", "relation": "complements", "why": "The partisan ties of lobbying firms (Research and Politics, 2019). Connection-based evidence; the loss-of-ties-when-party-loses-control claim was not verified against the item."},
+  {"slug": "holyoke-2015-learnable-skills-unteachable", "relation": "complements", "why": "Holyoke, Brown and LaPira (2015) on what can and cannot be taught in lobbying. Addresses the expertise side of the essay's expertise-versus-connections question."},
+  {"slug": "kim-2020-mapping-political-communities", "relation": "complements", "why": "Kim and Kunisky on lobbying networks built from bill-level LDA links. The essay's targeting gap in transaction data applies to member edges built this way; the item's content was not re-read."}
+ ],
+ "summary_issues": [
+  "Says the essay agrees the lobbied-member link is circular. The essay never argues or uses that idea; it only says disclosure rules do not require identifying targeted legislators (pp.11, 34-35). Circularity is the system's own finding in the brain.",
+  "Says the essay explains why the sector-growth lobbying coefficient flips under year fixed effects. The essay does not discuss that regression; it only says persistent panels need external shocks (pp.16-17).",
+  "Says the essay shows the influence engine's money legs cover only PAC contributions. The essay says nothing about the engine; that is a fact about the code, not an essay finding.",
+  "Says fixed effects alone cannot identify effects. The essay says they need exogenous shocks, a softer claim than cannot identify.",
+  "Says lobbyist revenue is lost when a former boss leaves office. The essay's design uses defeat or retirement of the senator served (pp.10, 18-19).",
+  "Says selection makes return estimates biased upward without condition. The essay conditions this on non-lobbying interests expecting no return (p.17).",
+  "Says the 1.07 point tax effect is per 1 percent more lobbying. The essay says per 1 percent over the firm's baseline, predicted in the next period (p.26).",
+  "Says the essay mostly confirms choices already made in Paul's systems. That is an analyst judgment beyond the text, not an essay finding."
+ ]
+}

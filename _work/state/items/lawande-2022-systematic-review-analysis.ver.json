@@ -1,0 +1,68 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-pathfinding.member-recruitment-path",
+      "relation": "qualifies",
+      "paper_claim": "Table 4 (with obstacles, single run): GBF is fastest from 8x8 up but its reported path is longer than the other three at 16x16 (37 vs 31 blocks) and 32x32 (81 vs 75). At 8x8 the table shows the reverse (GBF 13 vs 15 for the other three), an unexplained anomaly. Without obstacles all four report the same length (5/13/29/61, Table 3). The paper calls GBF 'not optimal'; it does not state the general rule that a greedy walk is optimal only when its estimate is exact (that is the analyst's inference).",
+      "paper_location": "Table 3 p.19-21; Table 4 p.21-23; Section 3.2.2 p.12; Section 6 p.23-26",
+      "system_side": "distToTarget (line 734) runs an exact max-product Dijkstra from the target over the full PE graph and does not consult the dropped set. tracePath (line 740) walks forward greedily by argmax PE[cur][v]*dT[v], skipping seen and dropped nodes. With drops, dT can still reflect routes through excluded members, so the walk can return a less reliable chain or stop short ('unreachable') when a route exists. buildPath (753-757) and bestSponsors (760-764) reuse the same dT. The comment at line 735 says 'PROVABLY-OPTIMAL'; dropped is set at line 1165. Single-path code reading, UNVERIFIED per DE-062.",
+      "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:734,735,740,753-757,760-764,1165",
+      "transfer_conditions": "Only the algorithmic point carries over (greedy choice on an inexact estimate loses optimality); grid timings and lengths do not. Cheap remedy is to exclude dropped members inside distToTarget. Needs a second-path reproduction (e.g. a test that drops a bridging member) before any claim.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Numbers 37/31, 81/75, 5/13/29/61 confirmed in the text. Corrected: the 'optimal only when estimate is exact' sentence is not in the paper; added the 8x8 anomaly (GBF 13 vs 15) that the analyst omitted; fixed table page ranges (Table 3 starts p.19, Table 4 starts p.21). Code reading confirmed at the cited lines."
+    },
+    {
+      "component_id": "terrier-canvass.street-presets-and-turf",
+      "relation": "supports",
+      "paper_claim": "With obstacles (Table 4, single run), A* expands fewer blocks than Dijkstra at 16x16 (140 vs 177) and 32x32 (587 vs 754) with the same path length (31, 75); at 8x8 A* expands more (32 vs 30). Execution times at 32x32 are 3975.34 vs 5678.25 ms. A* uses F(n)=G(n)+H(n).",
+      "paper_location": "Table 4 p.21-23; Section 3.2.1 p.11",
+      "system_side": "walk_route._astar searches the street graph with estimate max(0, straight-line distance to nearest goal - NODE_SLACK_M); when any goal lacks coordinates (or a node lacks a position) the estimate is 0, i.e. Dijkstra, so it stays admissible. A plain dijkstra() helper sits at lines 176-197.",
+      "code_ref": "C:/Users/pgoff/Documents/Terrier/outputs/cu-geography-v3/server/research/walk_route.py:45,176-197,200-234",
+      "transfer_conditions": "Closest match in the system (spatial graph, metric estimate). Road networks are not uniform grids; paper figures are single runs with unreported hardware; gains appear only from 16x16 up. Supports the design choice, gives no measured speedup for street networks.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "All numbers confirmed in Table 4. Code confirmed; minor: 'TIGER' does not appear in walk_route.py itself (it appears in sibling road_views.py), so the street-graph source is not shown at the cited ref."
+    },
+    {
+      "component_id": "melange-pathfinding.staffer-closeness-routes",
+      "relation": "qualifies",
+      "paper_claim": "Informed (A*) search cuts expansions via an estimate H(n); the paper's estimates are grid/geometric. Dijkstra is described as using no heuristic (H(n)=0, F(n)=G(n)) and as extended to A* by adding a heuristic.",
+      "paper_location": "Section 3.1.3 p.9-10 (Dijkstra, H(n)=0); Table 2 p.14; Section 3.2.1 p.11; Table 4 p.21-23",
+      "system_side": "The staffer router is bidirectional Dijkstra with terminal costs and heuristic 0, plus Yen loopless alternatives and exact-arithmetic tie resolution. A one-directional Dijkstra to a virtual sink (_search_reference) is kept only as a test oracle that no server path can select. Route metadata records 'heuristic': 0.",
+      "code_ref": "fec/surfaces/staffer_closeness_routes.py:12-21,79,264-298,511,861",
+      "transfer_conditions": "No spatial embedding, so the paper's Euclidean estimates do not apply. A* gains would need an admissible non-metric estimate (e.g. ALT landmarks, deferred), which the paper does not test. Supports keeping h=0, not adding A* by name.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Corrected two errors: the analyst said 'the default search is one-directional to a virtual sink' but the docstring at 264-271 says that search is a test oracle only and the live search is bidirectional (_search_bidirectional, line 511); and the Dijkstra section is 3.1.3, not 3.1.2. The paper does not literally derive Dijkstra from A*; it lists H(n)=0 for Dijkstra."
+    },
+    {
+      "component_id": "melange-pathfinding.cosponsor-route-pareto",
+      "relation": "context",
+      "paper_claim": "GBF 'will always try to pick the best track at that particular moment' (F(n)=H(n)); it is fastest of the four implemented but not optimal. D*/D* Lite is described with pseudocode in Section 3.2.3 but is not among the four algorithms implemented or benchmarked.",
+      "paper_location": "Section 3.2.2 p.12; Section 3.2.3 p.12-13; Tables 3-4 p.19-23",
+      "system_side": "build_route is a greedy construction: a heap orders candidate edges by (gain - lam*(1-p))/cost with an out-degree cap K (env default 5); the script keeps non-dominated points across lam in (0,0.5,1,2,4). The header names MOPBD* as a roadmap concept; there is no incremental replanning code.",
+      "code_ref": "fec/engine/cosponsor_route.py:3,9,40-63,70-76",
+      "transfer_conditions": "Analogy only: the route finder solves a budgeted coverage problem, not point-to-point shortest path. The paper has no D* Lite measurements, so it cannot justify building the replanning layer.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Quote confirmed verbatim at p.12. Code lines confirmed. Added K default and MOPBD* header line to the ref."
+    }
+  ],
+  "related": [
+    {"slug": "chen-2016-most-reliable-path", "relation": "complements", "why": "Chen 2016 is the most-reliable-path work cited in the dashboard comment (tpl:739) for the max-product objective; Lawande supplies the greedy-vs-exact search contrast relevant to where that walk can lose optimality."},
+    {"slug": "duan-2025-breaking-sorting-barrier", "relation": "complements", "why": "Both concern single-source shortest-path cost: Duan gives worst-case asymptotic improvements over Dijkstra on directed graphs; Lawande gives only single-run grid timings."},
+    {"slug": "ren-2022-multi-objective-path", "relation": "complements", "why": "Multi-Objective Path-Based D* Lite (MOPBD*), which cosponsor_route.py names as a roadmap concept; Lawande describes the D* family but tests none of it."},
+    {"slug": "luo-2020-path-planning-algorithm", "relation": "complements", "why": "An improved D* Lite evaluated in simulated 3D grid environments (UAV forest firefighting), supplying D* Lite results that Lawande leaves untested."},
+    {"slug": "xu-2024-improved-lite-based", "relation": "complements", "why": "A D* Lite variant with a dynamic route-planning simulation benchmark, filling the replanning-evidence gap that Lawande only discusses."},
+    {"slug": "abdelrahman-2025-conflict-based-search", "relation": "complements", "why": "Multi-agent CBS with D* Lite replanning (advantages largely qualitative), extending past Lawande's single-agent static-grid scope."},
+    {"slug": "ahmad-nd-shortest-path-algorithms", "relation": "complements", "why": "Applies shortest-path algorithms to social-network tie strengths, the non-spatial setting where Lawande's grid heuristics do not carry over."}
+  ],
+  "summary_issues": [
+    "The summary says that with obstacles GBF 'paths get longer', but Table 4 at 8x8 shows GBF reporting a SHORTER path than Dijkstra/A*/BFS (13 vs 15). This anomaly is unmentioned and undercuts the implicit claim that the other three always return the optimal length; the obstacle results are internally inconsistent at 8x8.",
+    "'A* ... still returns the optimal length' holds only relative to Dijkstra/BFS within this single run (equal lengths at 16x16 and 32x32); the paper never verifies optimality independently, and the 8x8 row casts doubt on it.",
+    "The recruitment-path drop finding is stated in the summary as fact ('The walk then becomes a greedy best-first search on an out-of-date estimate'); it is a single-path code reading and must carry the UNVERIFIED (DE-062) label in the summary too.",
+    "Bearing (not summary) error carried into the record: the staffer router's default search is bidirectional, not one-directional; the one-directional search is a test oracle only.",
+    "Other summary figures verified: Dijkstra/GBF time ratio without obstacles 39.7/14.38=2.76x to 7500.14/346.60=21.6x; 37 vs 31 and 81 vs 75; 587 vs 754; no protocol, no repeated trials, no hardware details (the paper itself says hardware performance is unknown), memory never measured."
+  ]
+}

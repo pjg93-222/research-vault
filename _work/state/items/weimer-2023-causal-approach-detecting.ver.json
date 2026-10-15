@@ -1,0 +1,81 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-validation.prospective-contract",
+      "relation": "qualifies",
+      "paper_claim": "The authors argue that comparing points before and after a coach-called timeout is fallacious because coaches often call timeouts to stop momentum. They use TV timeouts, which fall at predetermined times, and match runs interrupted by a TV timeout to uninterrupted runs on propensity scores (pairs; unmatched runs dropped). Result: -11.2% points over the next 3 minutes (b = -0.119, SE 0.012), n = 5,148 matched runs. Caveat from the same paper: Appendix E (as described in the main text) finds coaches' timeouts give largely similar, slightly larger effects, and the TV-vs-coach coefficient difference was not significant; Sec. 5.3 concedes TV timeouts may not be fully exogenous.",
+      "paper_location": "Sec. 1 p.118 (text lines 81-86); Sec. 2 p.119-120; Sec. 4 p.122-123 (propensity matching); Table 3 p.125; Sec. 5.2 p.129 (Appendix E summary); Sec. 5.3",
+      "system_side": "H2 scores frozen pressure_mult against |overall-tier movement| with an unadjusted cross-sectional Spearman. PROTOCOL_TEXT plans an engaged-only run among members the In-contact log marks engaged, but states it is unavailable until separately specified, receipted contact data exists; the result field is engaged_only = NOT_IMPLEMENTED_NO_CONTACT_CONTRACT. CLAIM_SCOPE = receptivity_forecast_only_not_spending_effects.",
+      "code_ref": "fec/engine/outcome_contract.py:17-22 (PROTOCOL_TEXT, CLAIM_SCOPE); fec/engine/outcome_contract.py:278 (h2 Spearman); fec/engine/outcome_contract.py:282 (engaged_only NOT_IMPLEMENTED); fec/members/receptivity_sensitivity.py:14-16",
+      "transfer_conditions": "Design logic only, not effect size. Lobbyist-chosen contact is endogenous like a coach's timeout, so an engaged-only rho would confound pressure_mult with targeting unless contact timing is exogenous or matched on targeting covariates. The engaged-only arm is a subgroup correlation, not a before/after-contact comparison, so the analogy is to the selection problem, not an identical design. The paper's own Appendix E finding (coach vs TV timeouts not significantly different) means it does not empirically show the endogenous design is badly biased in its setting. Single observational study with matching.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper text confirmed: 'fallacious' passage lines 81-86, Table 3 -0.119 (0.012) / n 5,148, e^-.119-1 = -.112. Added the Appendix E and limitations caveat the analyst left out. Code confirmed; line refs tightened (CLAIM_SCOPE 22, h2 278, NOT_IMPLEMENTED 282)."
+    },
+    {
+      "component_id": "melange-validation.single-look-discipline",
+      "relation": "supports",
+      "paper_claim": "A Monte Carlo with zero true momentum (130,000 independent 50/50 scoring plays, a TV timeout after one play in every 50, substitutions not simulated) yields a null treatment coefficient (b = 0.002, SE 0.022, n = 1,336). The Fig. 6 caption calls it a negative control showing the matched design does not find an effect where none exists.",
+      "paper_location": "Sec. 5.2 p.127-128; Table 5 p.128; Fig. 6 caption",
+      "system_side": "The discipline already used a simulated null to calibrate its protocol: a joint-null false-pass simulation (pass-both-panels about 1.5-2%, dual dominance under 1%) supported exactly one more look per trait.",
+      "code_ref": "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline.md:56",
+      "transfer_conditions": "Supports the general practice of simulating under a known null to check that a selection or gating rule cannot manufacture a pass. Says nothing about the 1.5-2% figure or pre-registration; the brain simulation concerns look false-pass rates, not engine outcome estimators.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Table 5 values and Fig. 6 negative-control wording confirmed in text; brain note line 56 confirmed."
+    },
+    {
+      "component_id": "melange-influence-engine.scenario-runner",
+      "relation": "qualifies",
+      "paper_claim": "The paper's Monte Carlo is a negative control for an estimator applied to observed data: simulate data with no effect, re-run the matching estimator, expect a null.",
+      "paper_location": "Sec. 5.2 p.127-128; Table 5; Fig. 6",
+      "system_side": "scenario.py uses Monte Carlo as a forward model: baseline vs scenario competitive-cascade spread under edge-keyed common random numbers (SEED=7, MC default 40), so an unperturbed scenario gives a zero delta by construction. That is an identity property of the simulator, not a negative control on an inferred effect.",
+      "code_ref": "fec/engine/scenario.py:27 (SEED=7, MC default 40); fec/engine/scenario.py:41-55 (CRN cascade and spread); fec/engine/scenario.py:102-106 (baseline vs scenario spread deltas)",
+      "transfer_conditions": "A Weimer-style placebo applies to empirical estimators that read observed outcomes (forecasters, the contract), not to the forward cascade's deltas, which are model outputs.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "CRN comment and SEED/MC constants confirmed; the original range 38-53 was slightly off (cascade/spread at about 41-55, constants at 27). Substance holds."
+    },
+    {
+      "component_id": "melange-validation.sensitivity-and-mc",
+      "relation": "suggests-extension",
+      "paper_claim": "Appendix D (described in the main text) re-tallies post-treatment points over windows from 60 s to 4 minutes in 10 s steps; the negative effect persists but the point estimate steadily decreases as the window lengthens, and there is no significant effect for points scored between minutes 3 and 4. The first-minute effect is about four times the 3-minute effect.",
+      "paper_location": "Sec. 5.1 p.124 (four times as large); Sec. 5.2 p.129 (Appendix D summary)",
+      "system_side": "mc_stability_check.py reruns one topic's budget frontier at MC=20/100 and SEED=7/1/13 and reports Jaccard set overlap; receptivity_sensitivity.py sweeps receptivity constants and labels ROBUST when top-20 overlap >= 18. The outcome contract has no window sweep: the window is whatever elapses between freeze and score, with a 60-day minimum and 150 movers before it stops returning UNDERPOWERED.",
+      "code_ref": "fec/engine/mc_stability_check.py:15-18 (MC/SEED runs); fec/members/receptivity_sensitivity.py:113 (ROBUST if o20 >= 18); fec/engine/outcome_contract.py:262 (days<60 or movers<150 => UNDERPOWERED)",
+      "transfer_conditions": "Suggests pre-registering a small set of outcome windows inside the contract lock rather than choosing one afterward (basis-shopping). Minute-scale decay says nothing about congressional time scales.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper side holds. Code side corrected: the ROBUST >= 18 rule is in receptivity_sensitivity.py:113, not mc_stability_check.py; the UNDERPOWERED gate is at outcome_contract.py:262 (not 258-259) and also requires 150 movers; the contract does not fix a window length, it sets a 60-day minimum."
+    }
+  ],
+  "related": [
+    {
+      "slug": "imai-2021-fixed-effects-regression",
+      "relation": "complements",
+      "why": "Imai & Kim recast two-way fixed effects as a matching estimator and show its causal limits; Weimer uses matching on a natural experiment. Both bear on reading observational looks causally."
+    },
+    {
+      "slug": "blackwell-2026-effect-political-advertising",
+      "relation": "complements",
+      "why": "Blackwell & Yamauchi adjust for unmeasured confounding of strategically placed interest-group ads; Weimer concedes unmeasured strategy changes during timeouts as a limitation. Same strategic-treatment confounding problem."
+    },
+    {
+      "slug": "kalla-nd-campaign-contributions-facilitate",
+      "relation": "complements",
+      "why": "Kalla & Broockman randomize which congressional offices receive a donor-identified meeting request: the randomized ideal of Weimer's Table 1, in the political-contact domain."
+    },
+    {
+      "slug": "harrison-2010-introduction-monte-carlo",
+      "relation": "complements",
+      "why": "Harrison is a general Monte Carlo tutorial that runs no simulation itself; Weimer applies Monte Carlo as a negative control. Background reference, not the same method application (relation changed from same-method)."
+    }
+  ],
+  "summary_issues": [
+    "'The effect is larger for longer runs (n = 576 and 48)' overstates: for runs >= 10 (n = 576) the effect is 11.57% vs 11.2% for runs >= 6, essentially the same; only runs >= 15 (n = 48) show a larger effect (30.79%), which the authors say to interpret cautiously given the small n.",
+    "The summary omits that Appendix E (per main text p.129) finds coaches' timeouts give largely similar, slightly larger effects and the TV-vs-coach difference was not significant, and that Sec. 5.3 concedes TV timeouts may not be fully exogenous. 'Coach timeouts bias the comparison' is the authors' design argument, not a bias they demonstrated in their data.",
+    "'The contact-conditioned arm it plans is exactly the coach-timeout design' overstates: the engaged-only arm is a subgroup Spearman among contacted members, not a before/after-contact comparison, and PROTOCOL_TEXT already says it is unavailable until separately specified contact data exists. The shared issue is selection on a chosen treatment, not an identical design.",
+    "Minor: '1:1 on propensity scores' is a fair paraphrase (each treated run matched to a maximally similar control, pairs kept), but the paper does not use the term 1:1.",
+    "The 'no negative control in fec/engine' claim holds for fec/engine (no placebo / negative control / null simulation hits); negative controls exist in fec/tests/run_tests.py but are code-test controls, not estimator placebos. Keep the claim scoped to fec/engine and UNVERIFIED under DE-062."
+  ]
+}

@@ -1,0 +1,73 @@
+{
+ "summary_md": "BICAM (Delano, Rudkin and Kim, Scientific Data 2025) is a data descriptor, not a research article. It merges the Congress.gov and GovInfo APIs into one PostgreSQL/CSV release covering 421,764 bills (6th-119th Congress), 123,061 amendments, 2,597 members keyed by bioguide_id and icpsr, 226 committees and 587 subcommittees, 74,918 hearings, reports, prints, nominations and treaties. Its two external linkages are a bill crosswalk to Voteview and a Bill-to-LDA linkage that matches bill numbers and titles extracted from LD-2 Section 16 text to the Bills table by distance scores, with low-confidence matches reviewed by hand. The authors say this finds significantly more bill lobbying than earlier sources (Kim and Kunisky 2021), including ex-post lobbying. The main text gives no match counts, precision, recall or threshold; that material is in the Supplementary Information, which was not available here. Validation checks integrity only (completeness, types, unique keys, cross-source agreement) and treats Congress itself as ground truth. For Paul's system the paper matters at one point: how bill mentions in LD-2 filings are resolved. Melange's lobbying network uses its own parser for those mentions in build_network_2021_rebuild.py, which has a known 0.5 percent slash-citation loss, and then credits every sponsor and cosponsor of each lobbied bill. BICAM could be a second, independent path for checking bill resolution. It does not fix the circularity: the LDA still names bills, never the members contacted, so a bill-to-member join made from BICAM would still be P(joined given lobbied) = 1 by construction. Second, BICAM's bulk bills and cosponsors could replace or cross-check the congress.gov scrapers behind the activity score. That is a sourcing option and is UNVERIFIED until it is run.",
+ "category": "Lobbying",
+ "bearings": [
+  {
+   "component_id": "melange-lobbying.lobbied-member-link",
+   "relation": "qualifies",
+   "paper_claim": "Bill numbers and titles from LD-2 Section 16 text are matched to 421,764 bills by distance measures, with low-confidence matches given extra scrutiny. The linkage is said to detect significantly more bill lobbying than Kim and Kunisky 2021, including ex-post lobbying. The main text reports no rate or threshold.",
+   "paper_location": "Introduction p.4-5 (text lines 177-188); Technical Validation p.8 (lines 408-417)",
+   "system_side": "The network resolves bill mentions with its own parser, then credits every sponsor and cosponsor of each lobbied bill. The known limitation is that slash-joined citations parse only the left side (2 of 376 distinct bills, 0.5 percent, 2023-24 association corpus). LD-2 has no member or position field, so the edge is a bill-roster join, not a contact.",
+   "code_ref": "fec/lobbying/build_network_2021_rebuild.py:13; fec/lobbying/build_network_2021_rebuild.py:19; fec/lobbying/lobby_interactions.py:18; fec/lobbying/collect_lobbyview.py:446",
+   "transfer_conditions": "BICAM fits only as a second path for bill-mention resolution (D-021: LDA stays an identity source). Joining BICAM bills to sponsors and cosponsors gives the same circular roster edge, and BICAM adds no contact or influence signal. Its precision and recall live in the SI and are unverified.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-lobbying.finance-client-classification",
+   "relation": "context",
+   "paper_claim": "BICAM provides only Bill-LDA linkages, not the LDA filings, and points to LobbyView and OpenSecrets as the compilations. Its member keys are bioguide_id and icpsr, and the 2,597 members from the 81st-119th Congress are resolved through a rules-based merge (including nickname bioguide gaps).",
+   "paper_location": "Background p.3-5; Members section p.6; Technical Validation p.8",
+   "system_side": "Finance-client classification runs on LobbyView and LDA filings, uses a 2024-10-25 vintage and is reliable through 2021. The collector documents n_bills as attention to legislation, not contact.",
+   "code_ref": "fec/lobbying/collect_lobbyview.py:446",
+   "transfer_conditions": "BICAM does not replace the client or filer source. It could add bill linkages after 2021 where the LobbyView vintage is thin, but only to resolve identities.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-legislative-data.congress-activity-score",
+   "relation": "measurement-source",
+   "paper_claim": "Bulk bills, amendments, committees and members from the official APIs, 6th-119th Congress, with rolling updates. Pulling the same data directly needs over 100 endpoints at 5,000 requests per hour and at least 10 requests per bill.",
+   "paper_location": "Methods p.4; Data Records p.6-7",
+   "system_side": "Activity counts come from congress.gov search-URL scraping (R) and the sentinel bill ledger, with a frozen 0.8 per-Congress decay (119 -> 1.0, 118 -> 0.8, 117 -> 0.64).",
+   "code_ref": "fec/legislation/sync_sentinel_bill_ledger.py:96",
+   "transfer_conditions": "This is a sourcing cross-check, not a method change. BICAM's sponsor and cosponsor tables could reconcile the scraped counts. It does not address whether the 0.8 decay is correct, and it stays UNVERIFIED until a reconciliation is run.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "The bill-mention parser in build_network_2021_rebuild.py has no independent second path. Its 0.5 percent slash-citation loss is measured on one corpus only, and BICAM's distance-scored linkage is an available comparator.",
+  "The Bill-LDA linkage quality figures are in the BICAM Supplementary Information, which is not in the vault text, so no precision or recall can be quoted.",
+  "BICAM's ex-post lobbying coverage (lobbying of enacted laws) is not separated out in Melange's network; whether the parser captures post-enactment citations is unmeasured."
+ ],
+ "flags": [
+  "The paper's claim of more bill lobbying detected must not be carried over as more lobbying influence or contact. LD-2 never names members (D-021), and any bill-to-member join stays circular.",
+  "No accuracy figures appear in the main text, so the claim of high-quality linkages is unquantified here."
+ ],
+ "paul_alignment": "Paul has no annotation entries for this work, so there is no takeaway to compare. The paper is consistent with the system's stance that LDA links bills, not members; it offers a data source, not a finding.",
+ "related": [
+  {
+   "slug": "kim-nd-mapping-political-communities",
+   "relation": "extends",
+   "why": "BICAM's Bill-LDA linkage is described as improving on the Kim and Kunisky bill-lobbying network linkage (ref 17)."
+  },
+  {
+   "slug": "kim-2018-lobbyview-firm-level",
+   "relation": "complements",
+   "why": "LobbyView supplies the firm-level LDA filings and bill links; BICAM supplies the congressional side and a newer Bill-LDA linkage from the same lab."
+  },
+  {
+   "slug": "kim-2025-measuring-interest-group",
+   "relation": "complements",
+   "why": "That paper adds inferred positions to LDA bill lobbying, which the LD-2 form lacks; BICAM gives the bill linkage those positions would attach to."
+  },
+  {
+   "slug": "poole-1999-nominate-after-years",
+   "relation": "complements",
+   "why": "BICAM provides a crosswalk from its bill identifiers to Voteview roll-call records, the NOMINATE data source."
+  },
+  {
+   "slug": "porter-2025-campaignview-campaign-platforms",
+   "relation": "complements",
+   "why": "A sister Scientific Data style database release on congressional candidates that covers campaign-side material BICAM explicitly excludes."
+  }
+ ]
+}

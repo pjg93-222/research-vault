@@ -1,0 +1,1516 @@
+{
+ "system": {
+  "slug": "melange-sna",
+  "name": "Melange member social-network analysis",
+  "description": "Construction and measurement of member-to-member networks: the cosponsorship network (R Stage 3 and scraper weights), multilayer layers (cosponsor, press engagement, HCoI, social reposts and mentions), centrality and bipartisanship, co-appearance and signed reference layers, signed coalition partitioning, press-cluster coalitions, sector network configs and the Katz-Bonacich benchmark.",
+  "brain_notes": [
+   "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+   "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md",
+   "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md",
+   "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+  ]
+ },
+ "components": [
+  {
+   "id": "melange-sna.cosponsor-network",
+   "system": "melange-sna",
+   "name": "Cosponsorship network construction",
+   "computes": "Member-to-member weighted cosponsor graph: symmetric (mean of reverse duplicates) for cascades and directed (sponsor -> cosponsor) for recruitment.",
+   "method": "R Stage 3: original cosponsor 1.0, regular 0.5, summed per sponsor's bills; igraph centralities with 1/weight distances. Scraper weights: role weight x SUCCESS x 0.8^(119 - congress) / sqrt(C), passed-origin x3 (Sotoudeh-Porter-Krishnagopal). Five NET_CONFIGs (cu published, holistic, holistic_norm, bank_reg, crypto).",
+   "assumptions": [
+    "Cosponsorship is an influence and alignment tie",
+    "Original cosponsorship is a stronger tie than plain cosponsorship",
+    "Big bills are weaker ties (1/sqrt(C))"
+   ],
+   "empirical_questions": [
+    "Do success-weighted cosponsorship ties predict future co-voting or joint sponsorship better than raw counts?",
+    "Is the 2:1 original-to-plain cosponsor weight supported by differences in later collaboration?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/congress_member_scraper.R (Stage 3)",
+    "fec/moneyball_core.py:371-542 (load_network, load_network_directed)",
+    "fec/network/build_multilayer_network.py:9-19"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline-architecture.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md"
+   ],
+   "heading": "Cosponsorship network construction"
+  },
+  {
+   "id": "melange-sna.bipartisanship-bpf",
+   "system": "melange-sna",
+   "name": "Bipartisanship (bpf)",
+   "computes": "Per-member cross-party tie share from cosponsorship only (bipartisan.json / 100, default 0.24).",
+   "method": "Restored to cosponsor-only by S2-01 (bf4a703); BP_SRC=aug gives the unratified augmented definition.",
+   "assumptions": [
+    "Cosponsorship alone measures cross-party bridging"
+   ],
+   "empirical_questions": [
+    "Does bpf predict cross-party cosponsor recruitment success?"
+   ],
+   "code_refs": [
+    "fec/moneyball_core.py:68-72",
+    "fec/build_dashboard_bundle.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-fec-pipeline-architecture.md"
+   ],
+   "heading": "Bipartisanship (bpf)"
+  },
+  {
+   "id": "melange-sna.multilayer-social-press-edges",
+   "system": "melange-sna",
+   "name": "Social and press-engagement layers",
+   "computes": "Directed edge probabilities from reposts (w 1.0) and mentions (0.4), Fink author-volume normalized (floor 25 posts, pair cap 0.25). Kernel-inverse weight w = 6p/(1-p), cap 2.0; reinforcement x(1 + 0.3 min(1, p/0.10)). Press-title engagement uses ENG_MIN_ITEMS 5.",
+   "method": "Precision-first name matching.",
+   "assumptions": [
+    "Reposts and mentions indicate relational ties (Fink et al. 2023)"
+   ],
+   "empirical_questions": [
+    "Do Twitter interaction ties predict cosponsorship ties beyond party and state?"
+   ],
+   "code_refs": [
+    "fec/network/social_interaction_layer.py:15-19",
+    "fec/network/press_engagement_layer.py:6-11",
+    "fec/network/build_multilayer_network.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "heading": "Social and press-engagement layers"
+  },
+  {
+   "id": "melange-sna.press-hcoi-communities",
+   "system": "melange-sna",
+   "name": "Press HCoI communities",
+   "computes": "Eight Louvain communities over recency-weighted press-category profiles (Pearson >= 0.6, seed 7); topic-affinity edges <= 0.12 for cosponsor-isolated members.",
+   "method": "Hellinger genealogy across time. Homophily replication at press resolution was null.",
+   "assumptions": [
+    "Shared issue attention indicates coalition (Malaterre & Lareau 2024)"
+   ],
+   "empirical_questions": [
+    "Do press-attention communities predict cosponsorship within community above chance?"
+   ],
+   "code_refs": [
+    "fec/press_hcoi.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "heading": "Press HCoI communities"
+  },
+  {
+   "id": "melange-sna.co-appearance-and-references",
+   "system": "melange-sna",
+   "name": "Co-appearance and signed member-reference layers (display only)",
+   "computes": "Pairs who both appeared substantively in the same interview episode (>= 4 turns or >= 200 words; 1,151 pairs). Signed directed references with LLM valence per context window (4,358 edges; green above +0.15, red below -0.15).",
+   "method": "Episodes with more than 8 members are skipped. Edges need at least 2 scored contexts. Name resolution never guesses.",
+   "assumptions": [
+    "Appearing in the same episode indicates a relation",
+    "LLM valence of references measures relation sign"
+   ],
+   "empirical_questions": [
+    "Do negatively signed references predict lower future cosponsorship between the pair?"
+   ],
+   "code_refs": [
+    "fec/co_appearance_layer.py",
+    "member_reference_layer.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "heading": "Co-appearance and signed member-reference layers (display only)"
+  },
+  {
+   "id": "melange-sna.signed-coalitions",
+   "system": "melange-sna",
+   "name": "Signed-network coalition partition",
+   "computes": "Coalitions from a signed backbone with frustration-minimizing local search seeded by positive Louvain.",
+   "method": "R backbone sdsm (alpha .05, signed). DW-NOMINATE vote edges were rejected in favour of the signed backbone.",
+   "assumptions": [
+    "Signed-network partitioning reveals hidden coalitions (Aref & Neal)"
+   ],
+   "empirical_questions": [
+    "Do signed-partition coalitions predict joint voting on CU roll calls better than party?"
+   ],
+   "code_refs": [
+    "fec/network/signed_coalitions.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "heading": "Signed-network coalition partition"
+  },
+  {
+   "id": "melange-sna.press-coalition-ward",
+   "system": "melange-sna",
+   "name": "Press-lean coalition detection (Ward) and bloc profiles",
+   "computes": "Ward.D2 clusters on member lean profiles (9 blocs) and a combined bloc index.",
+   "method": "COALITION_LEAN_WEIGHT 3.0, min 6 members. Static snapshot. All blocs are labelled pro-CU (a known mislabel).",
+   "assumptions": [
+    "Similar press lean profiles form coalitions"
+   ],
+   "empirical_questions": [
+    "Are press-lean clusters stable across time windows?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R (detect_coalitions)"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline-architecture.md",
+    "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-lineage-and-june-audit.md"
+   ],
+   "heading": "Press-lean coalition detection (Ward) and bloc profiles"
+  },
+  {
+   "id": "melange-sna.sector-networks",
+   "system": "melange-sna",
+   "name": "Sector network configurations",
+   "computes": "Bank-regulation and crypto cosponsor graphs alongside the CU graph.",
+   "method": "Hub concentration flag at hub degree >= 3x the second highest. Recorded: bank_reg 4,742 dyads, 76.1% novel vs CU; crypto p_max 0.23 vs CU 0.52 (below the engine floor).",
+   "assumptions": [
+    "Sector bill universes define sector-specific influence networks"
+   ],
+   "empirical_questions": [
+    "Do sector networks differ in centralization in ways that predict bill passage rates?"
+   ],
+   "code_refs": [
+    "fec/moneyball_core.py NETWORKS registry"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-sector-networks.md"
+   ],
+   "heading": "Sector network configurations"
+  },
+  {
+   "id": "melange-sna.katz-bonacich-benchmark",
+   "system": "melange-sna",
+   "name": "Katz-Bonacich benchmark (diagnostic)",
+   "computes": "Katz-Bonacich centrality on the live kernel (delta = 0.85 / lambda_max), Spearman-correlated with allocations, money and legislative score.",
+   "method": "Power iteration. Not consumed by the chain.",
+   "assumptions": [
+    "Equilibrium contributions are proportional to Katz-Bonacich centrality (Battaglini & Patacchini)"
+   ],
+   "empirical_questions": [
+    "Do observed PAC contributions to members correlate with Katz-Bonacich centrality in the cosponsor network?"
+   ],
+   "code_refs": [
+    "fec/engine/kb_benchmark.py:1-104"
+   ],
+   "brain_notes": [],
+   "heading": "Katz-Bonacich benchmark (diagnostic)"
+  }
+ ],
+ "positions": [
+  {
+   "component_id": "melange-sna.cosponsor-network",
+   "citations": [
+    "Sotoudeh et al. 2024",
+    "Aref & Neal 2021",
+    "Porter et al. 2005",
+    "Haythornthwaite 1996",
+    "Box-Steffensmeier et al. 2018"
+   ],
+   "paul_position": "Paul builds his SNA graph on cosponsorship, as his sources do, and wants weighted, directed, time-decayed edges."
+  },
+  {
+   "component_id": "melange-sna.bipartisanship-bpf",
+   "citations": [
+    "Bacik et al. 2026 (bipartisan index)",
+    "Aref & Neal 2021"
+   ],
+   "paul_position": "Paul highlighted Bacik's finding that legislators polarized while lobbyists did not, and that bipartisan teams earn more."
+  },
+  {
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "citations": [
+    "Fink et al. 2023",
+    "Baptista et al. 2022",
+    "Steinert-Threlkeld 2018"
+   ],
+   "paul_position": "Fink is the pre-built framework. Paul's critiques are sign, third-party sentiment and temporal weighting. Baptista's highlights note that more layers are not always better."
+  },
+  {
+   "component_id": "melange-sna.press-hcoi-communities",
+   "citations": [
+    "Malaterre & Lareau 2024",
+    "Ardekani et al. 2026"
+   ],
+   "paul_position": "Paul tags Malaterre Priority Very High and Foundational. He wants office closeness inferred from text with a temporal element, using Louvain. The built component has been null on homophily."
+  },
+  {
+   "component_id": "melange-sna.co-appearance-and-references",
+   "citations": [
+    "Fink et al. 2023",
+    "Zareie & Sakellariou 2020",
+    "Ringe, Victor & Gross 2013 (on disk, ink only)"
+   ],
+   "paul_position": "This answers Paul's question about negative ties with LLM valence per context window."
+  },
+  {
+   "component_id": "melange-sna.signed-coalitions",
+   "citations": [
+    "Aref & Neal 2021"
+   ],
+   "paul_position": "Paul values Aref & Neal as an alternative network layer that is computationally efficient. His gaps are no path-finding and no tracking over time."
+  },
+  {
+   "component_id": "melange-sna.press-coalition-ward",
+   "citations": [
+    "Pritoni et al. 2025",
+    "Malaterre & Lareau 2024"
+   ],
+   "paul_position": "Paul highlighted that SNA is underused in coalition studies, and that issue salience and third-party brokers drive coalitions. There is no annotation."
+  },
+  {
+   "component_id": "melange-sna.sector-networks",
+   "citations": [
+    "Kim & Kunisky 2020",
+    "Kim J. et al. 2025"
+   ],
+   "paul_position": "Paul wants rival-industry champions and conflict mapped across sectors."
+  },
+  {
+   "component_id": "melange-sna.katz-bonacich-benchmark",
+   "citations": [
+    "Battaglini & Patacchini 2016",
+    "Ardekani et al. 2026 (Katz prestige)"
+   ],
+   "paul_position": "Battaglini & Patacchini is listed without annotation. Paul highlighted Ardekani's choice of Katz centrality over PageRank and closeness."
+  }
+ ],
+ "citations_in_system": [
+  {
+   "citation": "Ramey, Klingler & Hollibaugh, 'Measuring Elite Personality Using Speech', Political Science Research and Methods (year conflict in repo: 2016 in PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32 and code; 2019 in big5_methods.md:12). Replication data doi:10.7910/DVN/JDH6KR",
+   "where": [
+    "fec/members/big5_traits.py:1-25",
+    "fec/members/fit_smoreg_rkh.py:5",
+    "fec/members/lep_criterion.py:5-6",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32",
+    "big5_methods.md:12",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Lexical Big Five pipeline, token shrinkage, RKH reference targets (melange-psychometrics); ceremonial-share C criterion (melange-legislative-data)"
+  },
+  {
+   "citation": "Mairesse et al. (2007), JAIR, personality from text (SMOreg on LIWC/MRC; 53-58% band)",
+   "where": [
+    "fec/members/fit_smoreg_essays.py:4",
+    "fec/members/big5_traits.py:13-16",
+    "fec/members/interaction_features.py:5-6",
+    "big5_methods.md:31",
+    "big5_audio_prereg.md:15"
+   ],
+   "used_for": "SMOreg feature weights and word-count features (melange-psychometrics); audio cues"
+  },
+  {
+   "citation": "Pennebaker & King (1999); Yarkoni (2010); Pennebaker (2003, Annual Review)",
+   "where": [
+    "fec/members/big5_traits.py:14-15",
+    "fec/members/affective_n_validate.py:10",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Published-correlate lexical weights; essays corpus; negative-emotion basis for affective N"
+  },
+  {
+   "citation": "Birkenmaier & Lechner (2025), 'Measuring Politicians' Public Personality', Political Analysis; Birkenmaier, Lechner & Wagner (2024)",
+   "where": [
+    "fec/members/agency_communion_llm.py:3,33",
+    "fec/members/big5_llm.py:10",
+    "fec/members/big5_traits.py:9",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:33",
+    "big5_behavioral_extraversion_prereg.md:239"
+   ],
+   "used_for": "Agency/communion persona cue classifier and PERSONA_W; cannot-tell coding"
+  },
+  {
+   "citation": "Lechner, Aichholzer, Birkenmaier & Bluemke (2025), 'Mapping the Political Personality' (Polipers v0.1, GESIS)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Review of politician-personality studies; external criterion search"
+  },
+  {
+   "citation": "'Personality on the Hill' Senate insider and academic gold panels (online_appendix.pdf, SHA-256 43c98926...; author/year not recorded)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "External gold for Big Five validation"
+  },
+  {
+   "citation": "Amsalem et al. (2018), media visibility of Belgian, Canadian and Israeli MPs (Eran.pdf) - provenance warning only, NOT the gold source",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Hash-mismatch provenance check"
+  },
+  {
+   "citation": "Norgaard & Klemmensen (2019), J. Personality 87(2):267-275; Schumacher & Zettler (2019), PAID 141:173-181",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Elite self-report personality benchmarks and desirability caveat"
+  },
+  {
+   "citation": "Cao & Kosinski (PNAS Nexus 2024); Peters & Matz (PNAS Nexus 2024, doi:10.1093/pnasnexus/pgae231)",
+   "where": [
+    "fec/members/big5_llm.py:12",
+    "big5_methods.md:46-49",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "De-identification before LLM trait scoring; LLM zero-shot personality benchmark"
+  },
+  {
+   "citation": "Valente (Interspeech 2012); Yu (Interspeech 2019); Rienks & Heylen (2005)",
+   "where": [
+    "fec/members/interaction_features.py:5-8",
+    "fec/members/behavioral_dispositions.py:17",
+    "big5_methods.md:30"
+   ],
+   "used_for": "Turn-statistic dominance and reactivity features"
+  },
+  {
+   "citation": "Koutsoumpis (meta-analysis, language and personality); Yang, Lau & Abbasi (ISR 2023)",
+   "where": [
+    "big5_methods.md:114",
+    "AUDIT_FINDINGS_2026-07-04.md:332",
+    "big5_behavioral_extraversion_prereg.md:221"
+   ],
+   "used_for": "Text tracks observer more than self-report; response-selection bias; PERSONA_W scope argument"
+  },
+  {
+   "citation": "Soto & John (2017) BFI-2-XS; Connelly & Ones (2010); Judge et al. (2002); Funder & Ozer (2019); Dietrich (2012); Dynes (2019); Wagner (2024); Steiger (1980); Stern et al. (2021); Harari (2022); Rubio et al. (2024); Marrero et al. (2022); Marengo et al. (2018, doi:10.1016/j.paid.2017.12.018); Hargittai (2015, doi:10.1177/0002716215570866); Hinds & Joinson (2024, doi:10.1037/bul0000430); Marengo, Montag & Settanni (2025, doi:10.1111/jopy.70019); Lau & Abbasi (2023)",
+   "where": [
+    "big5_expert_panel_prereg.md",
+    "big5_nomological_prereg.md",
+    "big5_n_matrix_prereg.md",
+    "big5_audio_prereg.md",
+    "big5_es_crossmodal_prereg.md",
+    "big5_a_coverage_prereg.md",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "Prereg designs for Big Five expert panel, nomological, audio and coverage looks (melange-psychometrics)"
+  },
+  {
+   "citation": "Salam et al. (2022), PMLR 173, personalised NAS Big Five on UDIVA",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md:132"
+   ],
+   "used_for": "Audio trait benchmark and sex-conditioning check"
+  },
+  {
+   "citation": "Mestre & Ryan (2026), validated aeneas forced alignment; Dietrich (2019)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Audio identity design (forced alignment, within-speaker F0)"
+  },
+  {
+   "citation": "ECAPA-TDNN speaker embedding (name only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Proposed speaker verification"
+  },
+  {
+   "citation": "Byrne, Silasi-Mansat & Worthy (2015), 'Who chokes under pressure?', PAID",
+   "where": [
+    "fec/members/receptivity_layer.py:6-7,189,233",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:34",
+    "AUDIT_FINDINGS_2026-07-04.md:548",
+    "fec/engine/outcome_contract.py:18"
+   ],
+   "used_for": "Susceptibility composite (only N and A supported; C and E are design priors); H2 predictor"
+  },
+  {
+   "citation": "Fouirnaies & Hall, 'How Do Electoral Incentives Affect Legislator Behavior?' (APSR)",
+   "where": [
+    "fec/members/receptivity_layer.py:15-20",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:35",
+    "fec/engine/money_response.py:27"
+   ],
+   "used_for": "Retiring-member incentive multiplier and competitiveness term"
+  },
+  {
+   "citation": "Linde & Vis (2016), 'Do Politicians Take Risks Like the Rest of Us?', Political Psychology",
+   "where": [
+    "fec/members/receptivity_layer.py:22-28",
+    "fec/engine/money_response.py:27-29",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:36"
+   ],
+   "used_for": "Prospect-theory domain multiplier and attenuated loss frame"
+  },
+  {
+   "citation": "Kahneman & Tversky (loss aversion)",
+   "where": [
+    "fec/engine/money_response.py:29",
+    "fec/members/receptivity_layer.py:27"
+   ],
+   "used_for": "LOSSFRAME 1.10"
+  },
+  {
+   "citation": "Chen, Kamarthi, Wilder & Tambe, contingency-aware influence maximization (UAI 2021, arXiv 2106.07039; venue corrected from ICML); Zareie & Sakellariou (SNAM 2023)",
+   "where": [
+    "fec/members/receptivity_layer.py:28-34",
+    "fec/engine/budget_frontier.py:72-74",
+    "fec/engine/outcome_contract.py:17",
+    "AUDIT_FINDINGS_2026-07-04.md:564-565"
+   ],
+   "used_for": "Seed take-up probability and seed gate; H1 predictor"
+  },
+  {
+   "citation": "Bharathi, Kempe & Salek, Competitive Influence Maximization",
+   "where": [
+    "fec/engine/scenario.py:6-11",
+    "fec/engine/budget_frontier.py",
+    "fec/engine/per_topic_coalition.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Competitive IC cascade and coalition submodularity"
+  },
+  {
+   "citation": "Borodin et al. (submodularity can fail in competitive LT)",
+   "where": [
+    "fec/engine/scenario.py:11-12"
+   ],
+   "used_for": "Flip side treated as heuristic"
+  },
+  {
+   "citation": "Kempe, Kleinberg & Tardos (2003, KDD) influence maximization",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:157",
+    "quant skill references"
+   ],
+   "used_for": "Cascade and threshold model assumptions"
+  },
+  {
+   "citation": "Golovin & Krause (2011), Adaptive Submodularity, JAIR (Lemma 5.3/A.9)",
+   "where": [
+    "fec/engine/optimize.py:8,108-113",
+    "fec/engine/scenario.py:8-10",
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md"
+   ],
+   "used_for": "Joint optimizer bound and framing (melange-allocation)"
+  },
+  {
+   "citation": "Leskovec et al. (KDD 2007) CELF lazy greedy; Nemhauser (1-1/e)",
+   "where": [
+    "fec/engine/optimize.py:74-96",
+    "fec/engine/budget_frontier.py:96-106",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Lazy greedy seed and budget selection"
+  },
+  {
+   "citation": "Almazaydeh et al. (2026), Scientific Reports, s41598-026-47299-8",
+   "where": [
+    "fec/engine/mc_stability_check.py:3-10",
+    "influence-modeling-reference SKILL.md"
+   ],
+   "used_for": "Noisy MC corrupts CELF; motivates CRN and stability check"
+  },
+  {
+   "citation": "Manchanda et al., GCOMB, NeurIPS 2020, arXiv:1903.03332",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Budget mode: locality, degree pruning, CELF (melange-pathfinding)"
+  },
+  {
+   "citation": "Chen & Lam, most-reliable path; Ren et al., Multi-Objective Path-Based D* Lite (MOPBD*) and RELINK",
+   "where": [
+    "fec/engine/cosponsor_route.py:3-5",
+    "fec/engine/scenario.py:13",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Pathfinder and route-finder concepts (melange-pathfinding)"
+  },
+  {
+   "citation": "Sotoudeh, Porter & Krishnagopal (2024), arXiv 2406.19554, network measure of cosponsorship influence on bill passage",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Cosponsor edge weights and path grounding"
+  },
+  {
+   "citation": "Aref & Neal (2020, 2021), signed-network optimal partitioning / generalized balance; Neal signed backbone (R backbone sdsm)",
+   "where": [
+    "fec/network/signed_coalitions.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Signed coalition partition and multi-target coalition mode"
+  },
+  {
+   "citation": "Porter, Mucha, Newman et al. (PNAS 2005), committee network community structure / normalized interlock",
+   "where": [
+    "fec/surfaces/make_member_desk.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-model-facts.md",
+    "HOLISTIC_NETWORK_DESIGN_2026-08-17.md:78"
+   ],
+   "used_for": "Committee-cluster layout; community structure in pathfinder"
+  },
+  {
+   "citation": "Fink et al. (2023), Congressional Twitter influence network, Data in Brief",
+   "where": [
+    "fec/network/social_interaction_layer.py:15-19",
+    "MATHEMATICAL_SPECIFICATION.md:44",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Author-volume normalized social and press edges"
+  },
+  {
+   "citation": "Malaterre & Lareau (2024), HCoI communities",
+   "where": [
+    "fec/press_hcoi.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Press-attention communities"
+  },
+  {
+   "citation": "Zhou & Elejalde (2026), Information Processing & Management, TWLGCN",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Stance dynamics port"
+  },
+  {
+   "citation": "Joo & Steinert-Threlkeld (2022), Computational Communication Research; Steinert-Threlkeld, Twitter as Data",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Frame alignment"
+  },
+  {
+   "citation": "Ringe, Victor & Gross (BJPS 2013), Friends and Enemies",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:599"
+   ],
+   "used_for": "Signed mention layer concept"
+  },
+  {
+   "citation": "Battaglini & Patacchini, 'Influencing Connected Legislators', NBER w22739",
+   "where": [
+    "fec/engine/kb_benchmark.py:2-18"
+   ],
+   "used_for": "Katz-Bonacich benchmark"
+  },
+  {
+   "citation": "Kim & Kunisky, lobbying networks / latent communities (local PDF)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Community structure exploited by pathfinder"
+  },
+  {
+   "citation": "Noble & Turner (2024), 'Presidential Leadership and Legislative Polarization'; Lee (2009)",
+   "where": [
+    "fec/engine/salience_shock.py:4-38",
+    "fec/surfaces/build_dashboard_bundle.py:663",
+    "fec/moneyball_core.py:731"
+   ],
+   "used_for": "Salience shock regimes; retreat regime"
+  },
+  {
+   "citation": "Furnas, LaPira, Hertel-Fernandez, Drutman & Kosar (congressional staff survey experiment); Bakker (partisan cues); Bakker, Lelkes & Malka (JOP)",
+   "where": [
+    "fec/moneyball_core.py:11",
+    "fec/engine/lt_priming.py:56-58",
+    "fec/surfaces/templates/make_dashboard_html_00.tpl:742",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "cpf_pressure 1.7/0.5; out-party cue clamp; executive cue factor; money capped, information is the lever"
+  },
+  {
+   "citation": "Ansolabehere, de Figueiredo & Snyder (2003); Fowler, Garro & Spenkuch (2020); Hall & Wayman (1990); Kalla & Broockman (2016), 'Campaign Contributions Facilitate Access'; Kalla & Broockman (general-election persuasion about zero); Coppock (persuasion about 5 pp / 0.1 SD)",
+   "where": [
+    "fec/engine/flip_model.py:21",
+    "fec/engine/money_response.py:15,20",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Money buys access not votes; WM/WP weights; MAXSHIFT calibration; access multiplier"
+  },
+  {
+   "citation": "Huneeus & Kim (lobbying distorts policy); Bombardini & Trebbi (annual review of empirical lobbying); Pritoni (lobbying coalitions); Bacik et al. / Kim, lobbying-network dynamics (arXiv 2503.11745); Azaiez & Mandel (EC lobby hypergraph); Harrison et al. (lobbying record mining)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-scenario-model-build.md"
+   ],
+   "used_for": "Calibration context for small, capped lobbying returns; pathfinder background"
+  },
+  {
+   "citation": "Trivedi & Singh (Procedia 2020) coalition modeling; Scientific Reports 2026 IM algorithm comparison (CELF++/RIS/IMM)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md"
+   ],
+   "used_for": "Coalition and IM algorithm references"
+  },
+  {
+   "citation": "Gaynor (LSQ 2022); Kim, Stuckatz & Wolters (JOP 2026); Furnas, LaPira & Brock (PS 2025)",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:706-711"
+   ],
+   "used_for": "Leadership PAC edges and donation/lobbying sequencing (identified, not implemented)"
+  },
+  {
+   "citation": "Volden & Wiseman, legislative effectiveness (five-stage LES; Center for Effective Lawmaking LES 93-118); Bucchianeri/Volden/Wiseman-style",
+   "where": [
+    "fec/members/lep_criterion.py:1-15",
+    "fec/engine/flip_model.py:142 (comment only)",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md",
+    "C:/Users/pgoff/Documents/brain/actors/codex-executor-incidents.md"
+   ],
+   "used_for": "Effectiveness shadow score and convergence criterion; uncoded passage-bonus comment"
+  },
+  {
+   "citation": "Nokken & Poole dynamic ideal points; DW-NOMINATE (Poole-Rosenthal)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Drift criterion for N (MISS); NOMINATE rejected for vote edges"
+  },
+  {
+   "citation": "Matz et al. (PNAS 2017); Simchon (2024, PNAS Nexus); Hackenburg & Margetts (2024)",
+   "where": [
+    "fec/surfaces/make_member_desk.py:846",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Persona-matched appeals (design-only) and aggregate null caution"
+  },
+  {
+   "citation": "Brysbaert concreteness norms; Guiraud index; Empath lexicon; Valente (N overlap stat 68.7%)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-record-1-big5-campaign.md"
+   ],
+   "used_for": "Big Five lexical features"
+  },
+  {
+   "citation": "Miller & Sutherland, APSR (hearing conduct; doctrine WITHDRAWN 2026-07-10)",
+   "where": [
+    "big5_methods.md:36",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics.md"
+   ],
+   "used_for": "Withdrawn hearing-antagonism doctrine"
+  },
+  {
+   "citation": "Burnham, 'Stance detection: a practical guide' (PSRM 2024.35); mlburnham/Political_DEBATE_base_v1.0 (Hugging Face)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39",
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md"
+   ],
+   "used_for": "NLI stance templates and the DEBATE base model (melange-stance)"
+  },
+  {
+   "citation": "Stanceformer, arXiv 2410.07083; ACL 2023.acl-long.560 (TSE); MDPI 2076-3417/15/21/11784",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39,63",
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md"
+   ],
+   "used_for": "Target-aware stance (planned); two-stage decoupling; neutral-class difficulty"
+  },
+  {
+   "citation": "Khan et al. (2025), IECE TACS, Roman Urdu agree/disagree/unrelated stance",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md:45"
+   ],
+   "used_for": "Multi-view augmentation (hurt classical readers)"
+  },
+  {
+   "citation": "Park, Lee & Cho (2025), 'Automatic construction of direction-aware sentiment lexicon using direction-dependent words', Language Resources & Evaluation 59:843-869",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:65"
+   ],
+   "used_for": "Direction-aware valence lexicon idea (rejected on dry run)"
+  },
+  {
+   "citation": "Soroka et al., Lexicoder Sentiment Dictionary LSD2015 (snsoroka.com LSDaug2015.zip); Haselmayer & Jenny (2017); Rice & Zorn (2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-congress-r-scrapers-graded-scoring-and-audits.md:26-28"
+   ],
+   "used_for": "Stage 5b tone intensity; graded tone and polarity normalization"
+  },
+  {
+   "citation": "Dai, Liao, Zhao et al. (2025), LLM-enhanced Logic Tensor Network for stance detection, Neural Networks 183:106956, doi:10.1016/j.neunet.2024.106956",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md:198",
+    "stance_valence_folcot_prereg.md:13"
+   ],
+   "used_for": "FOL-CoT valence proposals (not adopted)"
+  },
+  {
+   "citation": "Kim, Kim, Jeong, Oh & In Song Kim (2025), 'Measuring Interest Group Positions on Legislation' (PNAS draft); LobbyView positions dataset doi:10.7910/DVN/D0QWM2; In Song Kim LobbyView (Song 2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md",
+    "fec/lobbying/lobby_position_benchmark.py:9",
+    "fec/lobbying/collect_lobbyview.py:35"
+   ],
+   "used_for": "LDA data and interest-group positions (melange-lobbying)"
+  },
+  {
+   "citation": "Romero Moreno (2021)",
+   "where": [
+    "CONTESTED_BILLS_DESIGN.md:29-30"
+   ],
+   "used_for": "Contested-bills counterparty term"
+  },
+  {
+   "citation": "Delano, Rudkin & Kim (2025), BICAM, Scientific Data 12:1567, doi:10.1038/s41597-025-05737-8; Porter, Case & Treul (2025), CampaignView, Scientific Data 12:1237, doi:10.1038/s41597-025-05491-x; Zhan & Cai (2025), ESWA 263:125705, doi:10.1016/j.eswa.2024.125705; Cao, Gai, Wu et al. (2025), Information Fusion 120:103107, doi:10.1016/j.inffus.2025.103107",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md",
+    "CAMPAIGN_SITE_COLLECTION_2026_RUNBOOK.md:10"
+   ],
+   "used_for": "Research-integration proposals (bill-LDA linkage, campaign corpus, trust-KNN imputation, signed trust propagation)"
+  },
+  {
+   "citation": "Russo et al. (ACL 2023), 'Helping a Friend or Supporting a Cause?'; Brandenberger (2018), 'Trading Favors', Social Networks 54:238-253, doi:10.1016/j.socnet.2018.02.001; Montgomery & Nyhan (2017), doi:10.1086/690301; Shalizi & Thomas (2011); Nay (2017), PLOS ONE doi:10.1371/journal.pone.0176999",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:153-158",
+    "fec/research/cosponsor_challengers/PROTOCOL.md:44-47"
+   ],
+   "used_for": "Cosponsorship prediction and reciprocity baselines; homophily vs contagion confounding; staff exchange and policy similarity"
+  },
+  {
+   "citation": "Tiedens & Fragale (2003), doi:10.1037/0022-3514.84.3.558; Santoro & Broockman (2022), Science Advances, doi:10.1126/sciadv.abn5515",
+   "where": [
+    "fec/research/member_personal_relationships/PERSONALITY_CONTEXT_EXPLORATION.md:46"
+   ],
+   "used_for": "Context only for member personal-relationship research"
+  },
+  {
+   "citation": "DerSimonian-Laird random-effects estimator",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "used_for": "R2 partially pooled industry slope (mentat-giving-forecast)"
+  },
+  {
+   "citation": "Cameron, Gelbach & Miller (2011), two-way cluster-robust variance; Holm step-down; Newey-West HAC; Driscoll-Kraay (requested); Ball (2024)",
+   "where": [
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-8,168,210",
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:71-76,389,588",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Inference in the sector growth regressions and SEATS-W"
+  },
+  {
+   "citation": "Bross (1958) ridit; Spearman-Brown; Kendall tau-b; pool-adjacent-violators (PAV)",
+   "where": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/design/spec_rigor.md",
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "used_for": "Ridit transforms, internal consistency and sensitivity tests (terrier-row-scoring); turnout calibration (terrier-canvass)"
+  },
+  {
+   "citation": "MAST multi-agent failure taxonomy (named only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/metaloop.md"
+   ],
+   "used_for": "Failure-attribution tags (metaloop-orchestration)"
+  },
+  {
+   "citation": "SR 11-7 model risk management (superseded 2026-04-17 by SR 26-2); quant-model-evaluation skill bibliography (Cinelli & Hazlett 2020; Politis & Romano 1994; Simar & Wilson 1998; Grubesic & Matisziw 2006; Fouirnaies & Hall 2018; Powell & Grimmer 2016; others)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md",
+    ".claude/skills/quant-model-evaluation/references/sources.md"
+   ],
+   "used_for": "Audit tooling references applied to Melange (melange-validation)"
+  },
+  {
+   "citation": "Data sources (not literature): MEDSL Dataverse election returns; Cook Political Report PVI; Voteview; congress-legislators; govinfo BILLSTATUS; Ballotpedia; openFEC and FEC bulk; OpenSecrets; IBISWorld; Census ACS/CBP/LODES/cb_2024 and cb_2020; FDIC SOD; NCUA Call Reports; HMDA; Polymarket/Kalshi/IEM; Crystal Ball/538",
+   "where": [
+    "fec/engine/build_competitiveness.py",
+    "fec/district/demographic_potential.py",
+    "DEMOGRAPHIC_POTENTIAL_METHOD.md:185-191",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Model inputs across systems"
+  }
+ ],
+ "evidence": [
+  {
+   "slug": "azaiez-2025-hypergraph-analysis-european",
+   "title": "A hypergraph analysis of the European Commission lobby network",
+   "year": "2025",
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "supports",
+   "claim": "Large hyperedges inflate attendees' centrality when projected to cliques, yet those large hyperedges are what connects the network (edge betweenness correlates 0.74 with size).",
+   "system_side": "Stage 3 builds sponsor-to-cosponsor ties per bill and multiplies each by sizenorm_factor(C) with SIZE_NORM = 'sqrt' (1/sqrt(C)). That discounts big multi-cosponsor bills without removing them. The engine reads the resulting Edges sheet and mean-symmetrizes it.",
+   "transfer": "Supports discounting by hyperedge (bill) size, which is distinct from the REJECTED per-edge volume normalisation (sqrt(Out*In) or row-stochastic, STATE.md:895-896). It gives no basis for 1/sqrt(C) over log or 1/C. A bill roster is an asynchronous set of signatures with sponsor direction, not a simultaneous meeting. The data are EC lobbying meetings, not US House cosponsorship.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "azaiez-2025-hypergraph-analysis-european",
+   "title": "A hypergraph analysis of the European Commission lobby network",
+   "year": "2025",
+   "component_id": "melange-sna.sector-networks",
+   "relation": "suggests-extension",
+   "claim": "Core-periphery and rich-club claims are tested against hypergraph configuration null models (Chodrow 2020) that preserve degree and edge size, using rho(k) = phi(k)/phi_rand(k). Stakeholders show rho > 1 for all k. Large meetings drive connectivity.",
+   "system_side": "The sector diagnostic flags hub concentration with a fixed rule: 'dominated' if hub degree >= 3x the second-highest. Crypto is recorded as one 167-degree star (the CBDC cosponsor roster, which is a single large bill) against 25 for second place, with cascade reach 33 from the hub vs 7.",
+   "transfer": "A null-model rich-club or core test would show whether a sector's concentration exceeds what its degree and bill-size sequence already implies. The 3x rule cannot separate that. This only holds if sector bill rosters are treated as hyperedges. With the thin samples (crypto p_max 0.23), null-model variance will be large. Any result is UNVERIFIED until reproduced (DE-062).",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "poole-1999-nominate-after-years",
+   "title": "D-NOMINATE After 10 Years: A Comparative Update to Congress: A Political Economic History of Roll Call Voting",
+   "year": "1999",
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "suggests-extension",
+   "claim": "Parties in Congress are, for the most part, spatially adjacent ideological coalitions (p.17, citing Krehbiel 1993), and party overlap is near zero (p.15). The paper does not discuss partitions of networks or cutting-line members.",
+   "system_side": "signed_coalitions.py is a diagnostic Aref-Neal frustration partition of the signed mention layer (member_references.json), with a party-recovery check and cross-party hidden-coalition candidates; nothing in the chain consumes it.",
+   "transfer": "Benchmark only: checking hidden-coalition candidates against |dim1| would show whether the mention layer adds information beyond roll-call ideology. Does not reinstate DW-NOMINATE vote edges, which Paul rejected (brain cosponsor-and-sector-networks topic, line 93).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bacik-2025-measuring-dynamical-evolution",
+   "title": "Measuring the dynamical evolution of the United States lobbying network",
+   "year": "2025",
+   "component_id": "melange-sna.bipartisanship-bpf",
+   "relation": "qualifies",
+   "claim": "The Senate bipartisan cosponsorship index fell about 40% over the last 25 years (1999-2023), and legislator modularity is higher than lobbyists' and rising for senators. Lobbyist cross-party collaboration stayed relatively stable and lobbyist modularity is near zero.",
+   "system_side": "bpf is a static per-member cross-party cosponsorship share read from bipartisan.json with a default of 0.24 for missing members (moneyball_core.py:68-72).",
+   "transfer": "The paper's index is a chamber-level aggregate, not a member-level trait. It shows the cross-party baseline is strongly era-dependent, so a bpf or default fixed in one window should not be carried across Congresses without naming the window. It does not validate bpf as a measure of bridging.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "pritoni-2025-lobbying-coalitions-determinants",
+   "title": "Lobbying coalitions and their determinants: a systematic literature review",
+   "year": "2025",
+   "component_id": "melange-sna.press-coalition-ward",
+   "relation": "qualifies",
+   "claim": "Following Junk (2020b), the review separates three definitions of a lobbying coalition: policy camp (shared preferences only; 12/80 articles), behavioral coordination ('a non-trivial degree of coordinated activity over time'; 59/80) and formal organization (6/80). For the 16-article meta-analysis the authors keep only studies whose unit of analysis is the individual interest group or lobbyist, and they drop policy-camp studies (selection criteria i-ii).",
+   "system_side": "detect_coalitions runs Ward.D2 on standardized recency-weighted graded per-issue press leans of legislators, with the aggregate lean appended at weight x3 (COALITION_LEAN_WEIGHT = 3.0), and labels the resulting blocs 'coalitions'. It observes no coordination, so in Junk's terms it is at most a legislator policy camp. The current file labels each bloc pro-credit-union, hostile-to-credit-union or mixed / issue-specific by mean bloc lean (+/-0.1). The analyst's claim that the brain note says all blocs are labelled pro-CU was not re-checked here and stays UNVERIFIED.",
+   "transfer": "The paper supplies a definition only. The group-or-lobbyist unit is a selection rule for the meta-analysis subsample, not a finding about the whole literature, and its determinants (weakness, brokers) concern groups choosing allies. They should not be read onto legislator blocs. If the blocs keep the name 'coalition', the label should say they are shared-position clusters with no coordination evidence.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kim-2020-mapping-political-communities",
+   "title": "Mapping Political Communities: A Statistical Analysis of Lobbying Networks in Legislative Politics",
+   "year": "2020",
+   "component_id": "melange-sna.sector-networks",
+   "relation": "suggests-extension",
+   "claim": "Legislation communities (Healthcare, Veterans' Affairs, Technology & Telecommunications, Energy, Finance & Insurance, and others) are estimated from interest-group x politician lobbying counts and named ex post. A permutation test against random networks with similar actor activity distributions finds interest groups in the null have many more community memberships, indicating strong community structure.",
+   "system_side": "Sector networks (bank_reg defined by CRS subject terms, among others) are member-member cosponsor graphs over hand-defined sector bill universes, configured in the NETWORKS dict.",
+   "transfer": "A biLCM on the existing org x bioguide counts could only be a descriptive diagnostic of whether hand-drawn sector boundaries appear in lobbying. Under D-021 its outputs must not become edges or weights; UNVERIFIED until a second path reproduces it (DE-062).",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "title": "Identifying hidden coalitions in the US House of Representatives by optimally partitioning signed networks based on generalized balance",
+   "year": "2021",
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "method-source",
+   "claim": "The k-partition objective minimizes frustrated edges: negative edges inside a cluster plus positive edges between clusters (Eq. 1, giving C_k(G)). Eq. 2 finds the smallest k that reaches the minimum over all partitions (k*min). Both are solved to global optimality on 19 House networks (n ~445, 4,954 <= m <= 31,936 edges). Eq. 1 averages 3.3 h and Eq. 2 averages 14 h.",
+   "system_side": "Uses the same frustration objective, weighted by |net|. It runs a single-node best-move local search with a party seed plus 60 random restarts (SC_RESTARTS), only for k=1..3. The result is an upper bound with no optimality guarantee, and k*min is never searched. No engine or ranking step consumes the output. weekly_refresh.py:522 and refresh_table.py:260 run it as a diagnostic step. However, the member desk surface (make_member_desk.py:826, 1153) reads splinter_k2 and sets an 'antag' flag on members, so the output does reach a display surface. The module docstring's claim that the chain does not consume it is therefore only true for the engine.",
+   "transfer": "The objective transfers directly. The guarantee does not, because local search can stop in a local optimum. At 520 nodes and 7,153 edges the graph has fewer edges than the paper's largest network but slightly more nodes than the paper's n ~445, and the ILP's variable count grows as O(n^2). An exact Eq. 1 run is plausibly feasible but has not been demonstrated at this node count.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "title": "Identifying hidden coalitions in the US House of Representatives by optimally partitioning signed networks based on generalized balance",
+   "year": "2021",
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "qualifies",
+   "claim": "On signed co-sponsorship backbones, House-only and per session, C_party > C_2 > C_3 holds in every one of the 19 sessions. A distinct third coalition of 4 members (113th, 2013) to 69 members (111th, 2009) appears. Negative ties are plentiful: members of the traditional coalitions have 2.68 negative edges per positive edge.",
+   "system_side": "The signed graph is member_references.json: cross-media mentions, LLM-valenced, with House and Senate mixed (McConnell and Rand Paul appear in the splinter). It has 520 nodes and 7,153 edges (5,959 positive, 1,194 negative). The stored artifact (data/lobbying/signed_coalitions.json, file date 2026-07-19) shows weighted F(1)=1092.31, F(2)<=1040.79 (15.31% of total weight 6,799.18) and F(3)<=1039.79. The k=2 result is not bipolar (a 506-member bloc plus a 14-member splinter), so party_agreement_k2 is null. The k=3 clusters have 506, 13 and 1 members.",
+   "transfer": "The evidence does not carry over. Mention valence measures expressed sentiment, while SDSM signs measure collaboration and avoidance against a degree-preserving null. The system's graph also mixes chambers and pools across Congresses, where the paper is House-only and per session. The system's null third-coalition result says nothing for or against the paper. A test needs a House-only, per-Congress signed co-sponsorship backbone.",
+   "strength": "strong",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "title": "Identifying hidden coalitions in the US House of Representatives by optimally partitioning signed networks based on generalized balance",
+   "year": "2021",
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "qualifies",
+   "claim": "The third coalition has a distinctive signed-tie pattern: 21.18 negative edges per positive edge, against 2.68 for traditional-coalition members, and 25.6% of its negative edges go to co-partisans, against 8.44%. Its members are the most effective coalition in most sessions.",
+   "system_side": "The June vote backbone ran sdsm on member x (vote, side) with alpha .05 BH. The raw version was about 95% party. A later party-controlled null (Option C) was used, and its negative side was dropped because it 'conflates maverickness'. Only cross-party positive ties were kept, for Vote Affinity in the Signed Coalitions sheet.",
+   "transfer": "The paper's ties come from co-sponsorship, not roll-call votes, so this is not a like-for-like contradiction. The relation is 'qualifies', not 'contradicts'. The paper shows that same-party negative ties distinguish the effective third coalition in co-sponsorship backbones. Whether the dropped vote-backbone negatives carry the same structure is untested.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "title": "Identifying hidden coalitions in the US House of Representatives by optimally partitioning signed networks based on generalized balance",
+   "year": "2021",
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "suggests-extension",
+   "claim": "Builds a signed network from the legislator-bill bipartite projection using SDSM (backbone R package 1.5.0). The null preserves the expected values of both degree sequences. Positive and negative edges are significant deviations at FWER alpha = 0.01 (Holm-Bonferroni).",
+   "system_side": "The engine co-sponsor graph is unsigned: load_network reads a single numeric weight per edge, mean-symmetrizes it under most configs, and leaves it directed under holistic_norm, which divides by sqrt(Out_u*In_v). The edge weights are built upstream. For the holistic family, build_holistic_base.py sets f_bill = success x decay^age x 1/sqrt(C) with role dials original 1.0 / regular 0.2. The analyst's 'regular 0.5' is not what this builder uses.",
+   "transfer": "A signed SDSM backbone could be added as a separate diagnostic layer feeding signed_coalitions. It should NOT replace or reweight kernel edges. SDSM's degree-preserving null acts like per-edge volume normalization, a proposal that was measured and REJECTED in this project, so FLAG and do not recommend it. The paper uses all co-sponsorships and does not argue for dropping regular cosponsorship edges.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "steinertthrelkeld-2018-twitter-data",
+   "title": "Twitter as Data",
+   "year": "2018",
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "qualifies",
+   "claim": "Rebuilding an author's network takes the REST API: follower and friend lists, plus the 3,200 most recent tweets per account at 180 requests per 15 minutes and 200 tweets per request. The 1% streaming sample carries no information on the author's network. Network analysis itself is deferred to Steinert-Threlkeld (2016).",
+   "system_side": "The social layer does not use follower or friend graphs. Directed ties come from in-text reposts ('RT @handle', weight 1.0) and @mentions (weight 0.4) in Quorum-exported X posts, plus Bluesky mentions. Each direction's value is the weighted event count divided by max(25, the author's post count), and each pair is capped at 0.25. So the layer is an interaction network, not a follow network.",
+   "transfer": "The access limits in the paper (3,200 cap, 1% stream, rate limits) do not bind here, because the corpus comes from a licensed Quorum export and not from the API. Those limits also describe the 2016 API, which X has since restricted and made paid. The useful point is a distinction, not evidence: a mention or repost network is a different object from a follower network, so the layer's 'relational tie' reading rests on Fink et al., not on this excerpt. No figure in the paper speaks to edge weights or normalization.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "ahmad-nd-shortest-path-algorithms",
+   "title": "Shortest Path Algorithms for Social Network Strengths",
+   "year": "",
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "qualifies",
+   "claim": "Twitter influence(X,Y) = Retweets(Y,X) / sum_Z Retweets(Y,Z): the share of Y's retweets that go to X. This is a directed weight normalized by the retweeter's total retweet volume (Eq. 3). The paper's reason for directed weights is that influence is asymmetric (Sec. 3.2).",
+   "system_side": "p(a->b) = weighted events(a->b) / max(25, posts(a)), capped at 0.25 per direction. Events are reposts (1.0) and mentions (0.4); posts(a) counts all of a's Quorum posts, not only reposts, and excludes Bluesky. This is a per-author volume normalization like Eq. 3, but the denominator is total posts rather than total retweets. The pair weight is then the mean of the two directions, and only a 'symmetric' edge list is written, so direction is discarded.",
+   "transfer": "The paper's evidence is descriptive: a 15-day undated Twitter crawl in which strongest paths are longer, with no outcome. It does not show that directed retweet edges predict anything legislative. At most it gives weak support for keeping a directed variant of this layer alongside the symmetric one before path or recruitment use. Per-edge volume normalization was measured and REJECTED in this project's SNA tests: do not read this as support for wider volume normalization.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "zareie-2020-similarity-based-link",
+   "title": "Similarity-based link prediction in social networks using latent relationships between the users",
+   "year": "2020",
+   "component_id": "melange-sna.press-hcoi-communities",
+   "relation": "qualifies",
+   "claim": "Indirect similarity (Pearson correlation of neighbourhood vectors) is combined multiplicatively with direct common neighbours as (1 + CN)(1 + Corr), and the paper never evaluates the correlation term alone. In Exp. 4 (pairs with equal common-neighbour counts), DICN is clearly worst on UAL (0.5684 vs SHOPI 0.7921); the paper gives no structural reason. The authors say small training sets make the latent relationship harder to detect.",
+   "system_side": "HCoI builds member-member edges purely from Pearson correlation of recency-weighted 19-category press-attention profiles (threshold HCOI_CORR = 0.6, minimum weight 3.0). It then runs Louvain with seed 7 and reports how many cosponsor-isolated members (D4) land in a community. It does not combine the correlation with any direct cosponsor tie.",
+   "transfer": "The analogy is loose. HCoI correlates topic-attention profiles, not neighbourhood vectors. The transferable point is a design point: in DICN the profile correlation is one factor, anchored on direct shared ties. Placing cosponsor-isolated members (D4) by correlation alone is loosely analogous to Exp. 3 (no common neighbours), but that is still a heuristic placement, not evidence of a relationship (D-025).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "zareie-2020-similarity-based-link",
+   "title": "Similarity-based link prediction in social networks using latent relationships between the users",
+   "year": "2020",
+   "component_id": "melange-sna.co-appearance-and-references",
+   "relation": "context",
+   "claim": "The paper defines link prediction on plain unlabelled edges (E is a set of links, U = V x V) and has no treatment of negative, signed or valenced ties. It lists directed and weighted networks as future work.",
+   "system_side": "The member-reference layer scores directed (a->b) references with an LLM valence pass (positive, negative and neutral counts and a net value per edge). The co-appearance layer writes undirected pair counts, and the dashboard draws pairs with n >= 2. The component list cites Zareie & Sakellariou 2020 for this component.",
+   "transfer": "There is no transfer to the signed layer, because the paper offers nothing on negative ties or valence. At most it could score unsigned co-appearance pairs for missing-link candidates.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "baptista-2022-universal-multilayer-network",
+   "title": "Universal multilayer network exploration by random walk with restart",
+   "year": "2022",
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "qualifies",
+   "claim": "Adding a layer helped in the airport case where bipartite overlap was high (German layer) and did not help in the biological case where the drug layer had low overlap (23% of genes and 5% of diseases shared). The paper says overlap might explain this. Randomizing the boosted bipartite links pushed LOOCV back to the two-network baseline. The authors conclude that more network data is not always better.",
+   "system_side": "Confirmed: engagement, HCoI, social and co-appearance (holistic only) layers are merged into one edge weight in fec/network/build_multilayer_network.py. Under the CU config (MEDIA_ADMIT untied) media edges are admitted only for untied pairs and HCoI only for cosponsor-isolated members. Under the holistic config (dominance) a tied pair takes the max weight and its layer tag gains the channel. Social reinforcement of existing ties (factor 1 + 0.3 times min(1, p/0.10)) applies under both configs, not only CU. Layer tags are written to a Provenance sheet (build_multilayer_network.py:200). That sheet is read by fec/legislation/leg_evidence_recompute.py and fec/surfaces/build_dashboard_bundle.py, so the claim that the engine never reads it is wrong. A repo search of fec/network, fec/stance and fec/staffer_network found no LOOCV, link-prediction or held-out test of layer gain.",
+   "transfer": "The design principle transfers: test each layer's held-out gain and report its overlap with the base graph. The 23% and 5% figures are biology-specific. Melange's builder merges layers into one weight, so the paper's per-layer jump parameters have no counterpart in the code. Gains and losses remain UNVERIFIED until measured on congressional data (DE-062).",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "haythornthwaite-1996-social-network-analysis",
+   "title": "Social Network Analysis: An Approach and Technique for the Study of Information Exchange",
+   "year": "1996",
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "qualifies",
+   "claim": "Relationships carry three attributes: content, direction and strength. A pair is tied by all the relationships it maintains. Strength can be carried as the value of a link, or considered within a presence-absence dichotomy by requiring a minimum frequency. Reported directed ties can be asymmetric, with the two sides reporting different amounts. The article does not say that thresholding discards strength.",
+   "system_side": "Stage 3 builds sponsor-to-cosponsor edges summed per (From,To). Weight = role (1.0 original, 0.5 regular) times f_bill, where f_bill = success multiplier (3.0 if the bill passed its origin chamber, else 1) x bill decay weight x size norm (1/sqrt C under the default dial). moneyball_core NETWORKS cu config sets symmetrize True, so the cu cascade loader mean-symmetrizes each pair; holistic_norm keeps direction. The AUG workbook re-keys edges as (min,max); load_network_directed reads the BASE vintage.",
+   "transfer": "The article gives design principles and no estimate. It does not address 2:1 role weights, the success multiplier, the decay factor or the sqrt size norm, and it does not show that symmetrizing changes diffusion. It is not evidence for keeping or dropping regular-cosponsor edges, so the rejected drop must not be defended from this paper. Asymmetric reports are a survey feature, not a graph-construction rule.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "haythornthwaite-1996-social-network-analysis",
+   "title": "Social Network Analysis: An Approach and Technique for the Study of Information Exchange",
+   "year": "1996",
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "qualifies",
+   "claim": "Pairs are tied by all the relationships they maintain. The strength of a tie may depend on the number and types of relationships a pair maintains, and on the strength of each relationship.",
+   "system_side": "On the CU base a media edge is admitted only for pairs with no cosponsor tie (untied). Holistic configs default to dominance: a tied pair takes max(cosponsor, media). HCoI edges are admitted only for cosponsor-isolated members, at weight up to 0.12. A second channel can raise a tied pair to the larger of the two weights, but the layers are never summed.",
+   "transfer": "Multiplexity is conceptual and comes from survey-based ego networks. Here the layers are corpora of different quality. The untied and max rules are deliberate guards ruled by Paul, not recommendations to sum layers.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "haythornthwaite-1996-social-network-analysis",
+   "title": "Social Network Analysis: An Approach and Technique for the Study of Information Exchange",
+   "year": "1996",
+   "component_id": "melange-sna.press-hcoi-communities",
+   "relation": "qualifies",
+   "claim": "Block modelling finds structurally equivalent actors by correlating all pairs of cases and then clustering the correlations. Structural equivalence means identical ties to and from all other actors. Structure should come from observed relationships rather than attribute classes. The article does not name tie-matrix rows as the profile that is correlated.",
+   "system_side": "press_hcoi.py correlates members' press-category attention profiles across 19 categories, keeps r >= 0.6, and runs Louvain with seed 7. The multilayer builder admits HCoI only for cosponsor-isolated members, at weight 0.6*r*HCOI_W capped at 0.12, as an explicit non-collaboration claim. The code docstring cites Malaterre and Lareau 2024 as the method source.",
+   "transfer": "The procedure resembles block modelling but correlates attributes rather than relationships, so under the article's definitions HCoI is attribute similarity. That supports keeping it as a weak, surgical layer. The article says nothing on whether attention similarity predicts collaboration.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "sotoudeh-2024-network-based-measure",
+   "title": "A Network-Based Measure of Cosponsorship Influence on Bill Passing in the United States House of Representatives",
+   "year": "2024",
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "qualifies",
+   "claim": "Influence accrues per legislator pair as a decayed ratio C_pass / C_tot of mutually cosponsored bills that eventually pass the House. Sponsor and cosponsor are treated identically, edges are undirected, decay is monthly with half-life 6, 12 or 24 months, and scores are normalized by party size (Eq. 1-4). Passage means House passage. The authors call the result only a proxy (p. 17).",
+   "system_side": "Brain cites this paper for the CU cosponsor edge weights. Code (congress_member_scraper.R lines 1776-1788 and 1923-1936; fec/network/build_holistic_base.py) builds weight = role (original 1.0, regular 0.5; holistic regular 0.2) x 3.0 if the last action matches the passage regex x 0.8 per Congress of age x 1/sqrt(C), summed per directed sponsor-to-cosponsor pair. This is a volume-weighted success boost, not a pass/total ratio, with no party normalization. Last-action caveat (build_holistic_base.py, 2026-08-17): 2,652 of 37,076 tie-contributing bills carry 39,390 of 410,411 ties (about 9.6 percent); scoring them as passed would raise unrolled tie weight about 14.9 percent.",
+   "transfer": "The paper supports only the general idea of weighting ties by joint passage, for House bills 2009-2019 with House passage as outcome. It gives no evidence for the x3 multiplier, the 1/sqrt(C) discount, the 2:1 or 5:1 role ratio, the per-Congress decay, Senate ties or CU-topic bill universes. Read the citation as inspired by, not implements.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "zhang-2022-data-assisted-social",
+   "title": "Big data-assisted social media analytics for business model for business decision making system competitive analysis",
+   "year": "2022",
+   "component_id": "melange-sna.press-hcoi-communities",
+   "relation": "context",
+   "claim": "Builds a term co-occurrence graph from cross-correlation of burst vectors (edge threshold 0.1) and partitions it with Louvain to find event communities; no modularity, stability or external-validity figure is reported.",
+   "system_side": "HCoI builds member press-category profiles (recency-weighted), links pairs at Pearson >= 0.6 (Malaterre's threshold, env HCOI_CORR) and runs Louvain with seed 7, keeping communities of at least 3. Homophily replication at press resolution was null.",
+   "transfer": "The pipeline shape is the same (correlation, threshold, Louvain), but the nodes are terms, not legislators, and the threshold (0.1 vs 0.6) is unjustified and unvalidated. That gives no grounds to retune HCOI_CORR or to read the null homophily result differently. Malaterre remains the governing source.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "malaterre-2024-inferring-social-networks",
+   "title": "Inferring social networks from unstructured text data: A proof of concept detection of hidden communities of interest",
+   "year": "2024",
+   "component_id": "melange-sna.press-hcoi-communities",
+   "relation": "method-source",
+   "claim": "LDA k=25 on 16,917 articles; author topic profiles per roughly 21-year period, weighted by authorship share; keep authors with weighted publications above 2; Pearson r at least 0.6; Louvain (Gephi default); community profile = average of member profiles; genealogy by closest Hellinger pairing between adjacent periods; modularity 0.427 to 0.834 and communities 4 to 13.",
+   "system_side": "press_hcoi.py follows the same steps but uses 20 curated regex-tagged press categories, not 19, in place of LDA topics. Each item's weight is split evenly over its labels and weighted by recency. r cutoff 0.6 (HCOI_CORR); MIN_W 3.0 as the transient-author filter; Louvain seed 7; communities under 3 members dropped; one median-date split into two periods; Hellinger matching; PERSISTS / drifts / NOVEL cutoffs 0.25 and 0.45. Stored data/stance/press_hcoi.json: 155 members profiled, 6 communities, 1900 edges, 20 categories.",
+   "transfer": "Mechanics carry over. The evidence does not: the paper covers an 88-year academic corpus in four periods with over 80 percent new authors per period and only qualitative validation. Here the split is two half-periods of one press stream, so NOVEL and PERSISTS labels reflect the script's own thresholds. Quote member denominators as 155 profiled, not the 385 in the script docstring, which is stale.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "malaterre-2024-inferring-social-networks",
+   "title": "Inferring social networks from unstructured text data: A proof of concept detection of hidden communities of interest",
+   "year": "2024",
+   "component_id": "melange-sna.press-hcoi-communities",
+   "relation": "qualifies",
+   "claim": "HCoIs are about who-talks-about-the-same-things-as-who. Links are mediated by texts, are not social ties, and serve as a heuristic for possible real ties. (The analyst gloss that communities are not labelled from alignment is not stated in the paper.)",
+   "system_side": "profiles() in press_hcoi.py counts attention across categories only and never reads the stance column, so a community can in principle hold members on both sides of an issue. The coalition assumption text attributed to the paper sits in a component file that was not opened; the paper does not support reading HCoIs as coalitions. The 49 percent co-movement null is not reproduced (see the stance bearing).",
+   "transfer": "The attention-not-alignment limit is definitional and transfers fully. Reading an HCoI as a coalition needs a signed profile (attention times stance), which neither the paper nor press_hcoi.py builds.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "malaterre-2024-inferring-social-networks",
+   "title": "Inferring social networks from unstructured text data: A proof of concept detection of hidden communities of interest",
+   "year": "2024",
+   "component_id": "melange-sna.press-hcoi-communities",
+   "relation": "qualifies",
+   "claim": "The paper offers no evidence that text-similarity ties carry influence or transmission; it frames HCoI mapping as a heuristic for actual social connections that would still need confirmation.",
+   "system_side": "build_multilayer_network.py admits HCoI edges at weight 0.6 x r x HCOI_W. HCOI_W defaults to 0.2, so 0.12 is the ceiling at r = 1 (a maximum from the formula, not a clamp in code), about 0.02 kernel probability per step. The CU config admits only edges touching a cosponsor-isolated member; the holistic dominance rule admits HCoI edges generally. The 857-edge holistic count and the 4 of 41 reconnection count were not reproduced. The stored press_hcoi.json D4 block reads 14 isolated members and 0 placed in a community.",
+   "transfer": "Using HCoI edges as a low-weight reachability patch fits the paper's heuristic framing. Treating them as transmission edges in cascade, coalition or route outputs goes beyond what the paper tested, and any output depending on them must say it rests on a topical-similarity heuristic. The 2026-08-18 ruling is cited only in code comments and was not checked.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "malaterre-2024-inferring-social-networks",
+   "title": "Inferring social networks from unstructured text data: A proof of concept detection of hidden communities of interest",
+   "year": "2024",
+   "component_id": "melange-sna.press-coalition-ward",
+   "relation": "suggests-extension",
+   "claim": "Communities in adjacent periods are matched by closest Hellinger distance to trace persistence, splits and novel communities; four novel communities appear in 1974-95 with no clear filiation.",
+   "system_side": "Ward.D2 clustering on z-scored category profiles plus a lean feature weighted 3.0 (COALITION_LEAN_WEIGHT, line 3089); minimum 6 members (line 3085). When no k is passed, k = max(2, min(8, round(sqrt(n/2)))), and the call at line 3327 passes none, so the bloc count is at most 8, not 9. Bloc labels come from mean aggregate lean (pro-credit-union, hostile-to-credit-union, or mixed), so the claim that all blocs are mislabelled as pro-CU is not supported by the code.",
+   "transfer": "The genealogy step would answer the stability question only if blocs were re-run per period and matched by Hellinger distance. Unlike HCoIs these blocs include stance lean, so a genealogy here would track alignment. The paper's evidence for the step is qualitative, so this stays a weak bearing.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ardekani-2026-computational-graph-theoretic",
+   "title": "Computational and Graph-Theoretic Analysis of Legislative Networks: New Zealand's Mental Health Act as a Case Study",
+   "year": "2026",
+   "component_id": "melange-sna.katz-bonacich-benchmark",
+   "relation": "qualifies",
+   "claim": "Katz prestige counts incoming directed paths. On one seed the Mental Health Act ranks 2nd at 2 layers (2,159 Acts) and outside the top 50 at 3 layers (6,021 Acts). Corrections Act moves 7th to 35th; Health Practitioners Competence Assurance Act moves 8th to 37th. The attenuation factor alpha is not reported.",
+   "system_side": "kb_benchmark.py builds the kernel P with build_P on load_network(), which defaults to NET_CONFIG cu. It sums weighted OUT-walks, b = sum over k of (delta A)^k 1, with delta = 0.85 divided by the spectral radius, and writes kb_benchmark.json. The file calls itself a diagnostic not consumed by the chain, but make_member_desk.py reads it and shows a kb_pct percentile on the member desk.",
+   "transfer": "Only the radius-sensitivity lesson transfers: ranks computed on a bounded subgraph are local. The paper's Katz counts in-paths (prestige) on an Act-citation graph, while the system's KB counts out-walks on a legislator kernel, so the paper does not validate the benchmark's direction. The transferable check is KB rank stability across cu and holistic, UNVERIFIED until reproduced (DE-062). KB values are heuristic model outputs, never influence probabilities (D-025).",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ardekani-2026-computational-graph-theoretic",
+   "title": "Computational and Graph-Theoretic Analysis of Legislative Networks: New Zealand's Mental Health Act as a Case Study",
+   "year": "2026",
+   "component_id": "melange-sna.press-hcoi-communities",
+   "relation": "suggests-extension",
+   "claim": "Louvain on the LDA-based Act graph gives 14 communities at modularity 0.393 (two-layer) and 15 at 0.392 (three-layer). Modularity above 0.3 is treated as meaningful. Community-level Jaccard alignment with committee keyword sets runs 0.10 to 0.66. Agglomerative merging into 6 macro-communities raises the Maori Affairs match to 0.67.",
+   "system_side": "press_hcoi.py builds member profiles over 19 curated press categories, links pairs at Pearson 0.6, runs Louvain with seed 7 and keeps communities of size 3 or more. It writes communities, profiles, edges and genealogy. It computes no modularity and no committee alignment score.",
+   "transfer": "Adding a modularity Q and an external alignment check, such as Jaccard against committee rosters or cosponsor communities, is cheap and transferable. The paper's Q and Jaccard values come from Act citation graphs and are not benchmarks for member press graphs. The weak committee alignment is a caution that topical communities need not match institutions. The homophily null result is cited from project memory and was not checked here.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ardekani-2026-computational-graph-theoretic",
+   "title": "Computational and Graph-Theoretic Analysis of Legislative Networks: New Zealand's Mental Health Act as a Case Study",
+   "year": "2026",
+   "component_id": "melange-sna.sector-networks",
+   "relation": "qualifies",
+   "claim": "Where the network boundary is drawn changes who is central: the top-10 Katz ranks reshuffle between the 2-layer and 3-layer subgraphs. The authors attribute part of the seed's 2-layer prominence to construction bias, since the seed is the root of the subgraph.",
+   "system_side": "The NETWORKS registry defines separately bounded universes: cu (published), holistic, holistic_norm (directed), bank_reg (CRS subject terms) and crypto (title screen). build_sector_diagnostic.py reports pct_novel against published CU and flags a hub as dominated when the top degree is at least 3 times the second.",
+   "transfer": "The abstract point transfers: cross-universe centralization comparisons depend on how each bill universe was screened. The paper bounds by citation hops from one seed, not by topic screen, so its effect size does not transfer. Any cross-config comparison must name its window and denominator. The bank_reg 76.1 percent novelty figure is a run output not checked here.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "porter-2005-network-analysis-committees",
+   "title": "A network analysis of committees in the U.S. House of Representatives",
+   "year": "2005",
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "suggests-extension",
+   "claim": "Porter et al. project a two-mode representative-by-committee assignment network onto committees, weighting each committee pair by observed shared members over the count expected under random same-size assignment (1 = chance). The structure result uses assignment data only. The political-correlation result uses roll-call votes, so it is not free of political information.",
+   "system_side": "load_network reads the newest congress_cosponsor network (or holistic or sector cosponsor families) and mean-symmetrizes it. The multilayer builder adds press engagement, HCoI, social and co-appearance layers. grep over fec/network and fec/engine found no committee co-membership or interlock layer; the only committee hit in fec/network is a label in process_quorum.py.",
+   "transfer": "No committee co-membership layer exists, so any such layer would be new and unvalidated. Its observed/expected weighting must not be applied to cosponsor edges, which was measured and rejected (brain topic note, line 101, per-edge normalization REJECTED). The item's Paul-annotation entries link Porter to a committee layer, not to the cosponsor graph.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "battaglini-2016-influencing-connected-legislators",
+   "title": "Influencing Connected Legislators",
+   "year": "2016",
+   "component_id": "melange-sna.katz-bonacich-benchmark",
+   "relation": "method-source",
+   "claim": "Office-motivated legislators with log utility get transfers exactly proportional to their Bonacich centrality b = (I - beta*G)^-1 * 1 (Prop 1, eq 4, eq 17-18). With policy-motivated legislators the weights become modified Bonacich centralities depending on preferences and pivot probabilities (eq 15, Prop 2), which converge to the office-motivated allocation as the number of legislators grows (Prop 3). Reported network externality phi = 0.2088 (SE 0.0697) committee, 0.2165 (SE 0.0703) corrected, 0.0837 (SE 0.0262) alumni (Table 2).",
+   "system_side": "kb_benchmark.py computes KB centrality on build_P(load_network()) with an out-walk matvec and delta = KB_DELTA (0.85) / spectral radius; stored radius 1.5019 and delta 0.56595 match. Docstring lines 2-5 say groups allocate IN PROPORTION TO KB centrality. The member desk reads kb_pct from the stored file.",
+   "transfer": "Exact proportionality holds only under office motivation with log utility; the docstring overstates it for the general case. Under policy motivation the weights depend on preferences and pivot probabilities. The paper's empirical networks are undirected; the system kernel is directed. The delta-versus-phi comparison (0.85 of the bound versus phi 0.08-0.25) is not like-for-like: delta is a Katz decay on the kernel, phi is an SAR coefficient.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "battaglini-2016-influencing-connected-legislators",
+   "title": "Influencing Connected Legislators",
+   "year": "2016",
+   "component_id": "melange-sna.katz-bonacich-benchmark",
+   "relation": "qualifies",
+   "claim": "The paper deliberately does not use cosponsorship as the network, because cosponsorship is determined simultaneously with contributions (fn 30). Sample is U.S. House members in the 109th-113th Congresses (2004-2012 cycles); outcome is total PAC money in logs, trimmed at the 1st and 99th percentiles. Controls in Table 2: margin of victory -0.897, DW_ideology -1.077, chair +0.401.",
+   "system_side": "kb_benchmark.py builds KB on build_P(load_network()); load_network reads congress_cosponsor_network_*.xlsx. The benchmark pools 533 members of both chambers (chamber field in data/engine/congestion.json). Raw Spearman with no controls. Stored values in kb_benchmark.json: optimizer all members 0.2468, CU money 0.1347, bank plus finserv 0.2304, legislative score 0.6535, each n=533; these match the rel. The top-decile unallocated list has 15 names, of which 6 are senators (Warren, Merkley, Kennedy, Gillibrand, Cruz, Scott), not 7.",
+   "transfer": "A KB-versus-money correlation on the cosponsorship graph cannot test the equilibrium the paper derives, since cosponsorship is the endogenous network the paper excludes. The pooled two-chamber estimates need an UNSTRATIFIED label. Paper evidence is House-only, 2004-2012; the money window for the system file is not recorded.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "zhou-2026-measuring-stance-dynamics",
+   "title": "Measuring stance dynamics in political debate using temporal graph neural networks",
+   "year": "2026",
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "suggests-extension",
+   "claim": "Active per-period user-user edges (mentions, quotes and replies, given as examples) add about 3 percent macro-F1 on both datasets. Passive follower or friend edges add little, and combining both does not help. The paper's Act graph is directed from the initiating user to the target.",
+   "system_side": "The social interaction layer uses reposts (weight 1.0) and mentions (0.4), normalised by the author's post volume with a floor of 25, and capped at 0.25 per pair. Its output is symmetric (mean of both directions), not directed. Reposts, the layer's strongest edge, are not among the paper's Act edge types. stance_dynamics tests co-movement and imputation only on the cosponsor and HCoI layers, never on this layer.",
+   "transfer": "The paper's evidence is that interaction edges help stance inference, not that they carry influence. Member accounts post far less than the paper's users, so expect sparser edges. Any test belongs in the descriptive lane. The layer's author-volume normalisation is a separate choice that this paper does not validate, and it must not be cited as support for the rejected per-edge volume normalisation.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "cao-2025-social-network-group",
+   "title": "Social network group decision making: Characterization, taxonomy, challenges and future directions from an AI and LLMs perspective",
+   "year": "2025",
+   "component_id": "melange-sna.press-coalition-ward",
+   "relation": "qualifies",
+   "claim": "Pseudoconsensus: clustering raises homogeneity within subgroups but also heterogeneity between them, so high internal consensus need not mean the subgroups agree with one another.",
+   "system_side": "Ward.D2 clusters member press-lean profiles into 9 blocs, with COALITION_LEAN_WEIGHT 3.0 and a minimum of 6 members, as a static snapshot. The brain records that every bloc is labelled pro-CU, which is a known mislabel.",
+   "transfer": "The point is logical, not empirical, so it carries over to any clustering. Agreement within a bloc says nothing about alignment across blocs or with CU positions. A bloc label needs a between-bloc check of direction against an external criterion such as votes. No numbers transfer.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "trivedi-2020-efficient-influence-maximization",
+   "title": "Efficient Influence Maximization in Social-Networks Under Independent Cascade Model",
+   "year": "2020",
+   "component_id": "melange-sna.katz-bonacich-benchmark",
+   "relation": "qualifies",
+   "claim": "PrKatz (Katz-based, Alshahrani et al. ref [1]) does worse than plain degree under ICM and on NetHept falls below Random for some k. The authors partly blame pre-processing that splits the graph into components. Katz centrality alone matches degree at small k and declines as k grows.",
+   "system_side": "kb_benchmark computes Katz-Bonacich b = sum over k of (delta A)^k 1 on the live kernel P, with delta = 0.85 divided by the spectral radius (lines 33-53), and documents itself as a diagnostic. The optimizer does not read it. Verified.",
+   "transfer": "The paper concerns Katz as a seed-selection proxy for cascade spread and finds it weak. The system uses KB as an equilibrium-pricing benchmark, so the evidence only discourages promoting KB into seed choice. The rel's claim that nothing in the chain consumes KB is wrong: refresh_table.py:261 runs it as a DIAG step, surfaces/make_member_desk.py:825 reads kb_benchmark.json for display, legislation/run_legislation_shadow_recompute.py:403 holds an immutable-input contract on it, and audit/dashboard_integrity.py:625 checks it. KB values are heuristic model outputs, never access or closeness probabilities (D-025).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "leskovec-2010-predicting-positive-negative",
+   "title": "Predicting Positive and Negative Links in Online Social Networks",
+   "year": "2010",
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "qualifies",
+   "claim": "Global balance is not significant. Best two-set partitions satisfy 0.8344 / 0.8105 / 0.7809 of edges (Epinions / Slashdot / Wikipedia), near the trivial all-positive value (about 0.80) and below degree-preserving rewired networks (0.8993 / 0.8310 / 0.8316). Sign-permuted baselines: 0.8562 / 0.7779 / 0.7866.",
+   "system_side": "signed_coalitions.py partitions the member_references mention layer by frustration local search and prints F(1), F(2), F(3) against each other, with F(1) (all negatives frustrated) as the one-cluster baseline. It has no rewired or sign-permuted null, and edge direction is discarded (each edge is appended to both endpoints). Artifact 2026-07-19 signed_coalitions.json: 520 nodes, 7,153 signed edges, 5,959 positive (83.3 percent by count); F(1) 1092.31 of total |net| weight 6799.18 (16.1 percent); F(2) 15.31 percent; gap 0.76 points; 14-member splinter.",
+   "transfer": "Paper signs are actor-declared on web platforms; ours are LLM-valenced speech mentions weighted by |net|. Only the comparison logic transfers. Any null for the Melange layer must preserve weights as well as degrees.",
+   "strength": "strong",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "leskovec-2010-predicting-positive-negative",
+   "title": "Predicting Positive and Negative Links in Online Social Networks",
+   "year": "2010",
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "suggests-extension",
+   "claim": "Global status ordering: 0.7905 / 0.8221 / 0.8538 of edges respect the best ordering, versus 0.7241 / 0.7568 / 0.7767 under sign permutation and 0.6377 / 0.6644 / 0.6321 under rewiring (random 0.50). Directed triad: a positive v-to-w-to-u path is evidence for a negative u-to-v edge, BB coefficients -0.0692 / -0.0293 / -0.0259 in the all-positive subgraph model.",
+   "system_side": "member_reference_layer.py stores directed speaker-to-target edges with net = (pos - neg) / (pos + neg + neu). signed_coalitions.py appends each edge to both endpoints, so direction is discarded before partitioning, and no ordering or directed-triad test exists on the mention layer.",
+   "transfer": "Only meaningful if a negative public mention is an asymmetric judgement by the speaker about the target. Any ordering is a heuristic model output, never an influence, access or closeness claim (D-025). Dyads with edges in both directions are set aside by the paper and are not reciprocity evidence (D-104..D-108).",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "leskovec-2010-predicting-positive-negative",
+   "title": "Predicting Positive and Negative Links in Online Social Networks",
+   "year": "2010",
+   "component_id": "melange-sna.co-appearance-and-references",
+   "relation": "method-source",
+   "claim": "Epinions balanced-sample accuracy about 93.4 percent (6.58 percent error, All23 model, minimum embeddedness 25, 10-fold CV). Slashdot and Wikipedia accuracies appear only in plotted Figure 1, not in the text. Balanced AUC about 0.90 and full-data AUC about 0.95 (text). Wikipedia self-trained accuracy 0.8021 (Table 6). Triad features add little at low embeddedness.",
+   "system_side": "Reference-edge signs come from per-context LLM valence aggregated into net. The eyeball sheet is capped at 500 edges (member_reference_layer.py around line 392). A 2-context minimum was not confirmed in the lines read. A leave-one-out sign prediction on the mention layer would give a structural consistency check: if valence were noise, accuracy would sit near the positive base rate.",
+   "transfer": "Needs an embeddedness census first: about 7,153 signed edges over 520 nodes, and many dyads may have few common neighbours, where triad features carry little information. Predictability measures consistency, not validity of the labels, and does not replace gold-label review. State the base rate and denominator with any reported accuracy.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "leskovec-2010-predicting-positive-negative",
+   "title": "Predicting Positive and Negative Links in Online Social Networks",
+   "year": "2010",
+   "component_id": "melange-sna.co-appearance-and-references",
+   "relation": "qualifies",
+   "claim": "In the undirected 4-type model, learned coefficients match balance theory for the three non-mm triad types in all three datasets. The enemy-of-enemy (mm) coefficient is negative in all three (-0.0149 Epinions, -0.0262 Slashdot, -0.0465 Wikipedia), disagreeing with balance. The authors say this is consistent with Davis weak balance, which makes no prediction for mm.",
+   "system_side": "The member-relationships pilot uses shared negative targets (members whom both a and b referenced negatively) as a discovery stratum (signed_reference_proximity, sorted by shared-negative count, descending) and as a descriptive feature. A code comment states the pattern has no assumed affinity sign.",
+   "transfer": "The pilot pattern is directed (a and b both point negatively at c). The paper's evidence is for the undirected collapse only; the Table 2 directed rows are hard to read in the text extraction, so no directed-level sign is claimed. The paper shows the mm pattern is not balance-like; it does not show the pattern carries no sign.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "tang-2015-negative-link-prediction",
+   "title": "Negative Link Prediction in Social Media",
+   "year": "2015",
+   "component_id": "melange-sna.co-appearance-and-references",
+   "relation": "qualifies",
+   "claim": "Pairs with negative interactions hold negative links far above chance: t-test p = 5.72e-89 (Epinions) and 1.93e-109 (Slashdot). The rule negIn reaches precision 0.2097 and F1 0.2826 on Epinions, and precision 0.1483 and F1 0.1986 on Slashdot. The ratio of negative-link pairs tends to increase with the number of negative interactions K. Reliability weight f(Nij) = 1 - 1/log(1+Nij) applies to pairs with negative interactions; other pairs get a constant r.",
+   "system_side": "Code confirmed: net = (pos - neg) / (pos + neg + neu), so neutral-substantive contexts sit in the denominator, and one scored negative context gives net -1.0. Counts re-read from member_references.json on disk: 7,944 edges, 1,161 with net below 0, 6,028 above 0, 755 at 0. Of the 1,161 negative edges, 567 (about 49 percent) have n_scored equal to 1. The dashboard n_scored >= 2 filter is confirmed. These counts come from one read path and remain UNVERIFIED under DE-062.",
+   "transfer": "Tang checks interaction-derived signs against declared negative links, which Congress lacks, so the transfer concerns interpretation only, not a calibrated precision. Tang's interaction labels are thresholded helpfulness ratings and MPQA lexicon polarity, a cruder reader than an LLM. Whether LLM-valenced precision is higher or lower is untested. Tang's count-based reliability weighting is a per-edge volume weight of the kind this project rejected, so it is flagged here, not recommended.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "tang-2015-negative-link-prediction",
+   "title": "Negative Link Prediction in Social Media",
+   "year": "2015",
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "qualifies",
+   "claim": "Balanced triads are 92.31 percent (Epinions) and 93.01 percent (Slashdot) of undirected triads (Sec. 3.2 p. 89). Setting negative-sample reliability weights to 1 (cj = 1) cuts precision by 8.70 percent on Epinions (Table 4) and 11.08 percent on Slashdot (Table 5). The balance regularizer raises precision from Cb = 0 to 0.001 (+4.02 and +4.41 percent), is relatively stable from 0.001 to 0.1 on Epinions, and drops sharply after 0.05 on Slashdot (Sec. 5.4, Fig. 5). Large Cb hurts. The paper does not say the regularizer helps only at small weight.",
+   "system_side": "Code confirmed: signed_coalitions.py takes sign(net) and weight |net| with MINW default 0.0 (line 21) and no n_scored floor, so a one-context negative edge enters at full weight 1.0. Correction: the script says the output is not consumed by the chain, which holds for the pipeline. But signed_coalitions.json is read by run_legislation_dashboard_member_desk.py, run_legislation_shadow_recompute.py, make_member_desk.py (splinter_k2 antagonist list) and dashboard_integrity.py, so the output reaches member-desk and audit surfaces.",
+   "transfer": "Tang's balance figures come from declared trust networks. The system's signs are interaction-derived, which is the paper's noisy-label case, and the paper does not estimate how much frustration comes from noise. Tang's count-based reweighting is the rejected per-edge volume kind. The n_scored >= 2 floor the summary proposes is a count threshold of the same family, so it is flagged, not recommended on this paper's authority. Any sensitivity run needs its own project approval.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ringe-2013-pinpointing-powerful-voting",
+   "title": "",
+   "year": "2013",
+   "component_id": "melange-sna.co-appearance-and-references",
+   "relation": "qualifies",
+   "claim": "Unsigned contact is not alignment. Between adversaries more contact goes with less agreement (about -10 percent odds of co-voting per connectivity unit, opposed-bloc dyads, EP Environment Committee 2004-2008). Authors identify ally or adversary status from voting bloc and party membership, not from the contact itself (p. 617).",
+   "system_side": "The co-appearance layer records unsigned, undirected pairs with a bipartisan flag. data/network/co_appearance.json holds 2,481 pairs of which 1,182 are bipartisan. The member-reference layer keeps net = (pos - neg)/scored per dyad. Both layers are display-only.",
+   "transfer": "Supports keeping the reference layer signed and warns against reading cross-party co-appearance as closeness or alignment (D-025). A broadcast pairing of opponents may be adversarial. The settings differ (EP staff contact vs US media co-appearance), so the evidence is weak.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ringe-2013-pinpointing-powerful-voting",
+   "title": "",
+   "year": "2013",
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "qualifies",
+   "claim": "Authors use measured staff-reported contacts rather than proxies such as cosponsorship, and argue this raises confidence in their measures. Reported contact was sparse: 6.1 percent density (118 of 1,920 possible directed ties in the asymmetric all-respondent subnetwork), mean point connectivity 2.2 (median 2), and 12.4 percent of dyads at zero connectivity.",
+   "system_side": "The cosponsor graph is the default substrate for cascades, routes and imputation. load_network reads the newest augmented congress_cosponsor workbook and mean-symmetrizes it for the cu config. Original-cosponsor weight 1.0 appears in legislation workbook code. No regular-cosponsor weight of 0.5 was found for the cu base graph; the only regular dial found is 0.2 in the holistic base builder.",
+   "transfer": "The paper does not test cosponsorship, so it cannot show cosponsor edges are wrong. It shows measured contact and agreement can diverge for adversaries, which bears on the alignment assumption for cross-party cosponsor edges. It does not argue for dropping regular cosponsor edges or for per-edge volume normalization; both were measured and rejected in this project.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "hargittai-2015-bigger-always-better",
+   "title": "Is Bigger Always Better? Potential Biases of Big Data Derived from Social Network Sites",
+   "year": "2015",
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "qualifies",
+   "claim": "People do not select into SNS use at random, and selection differs by site and demographic group. Pew 2013 logistic coefficients (full sample, N 1,510 to 1,528, log-odds): female on Facebook 0.46 (p<.001), female on LinkedIn -0.39 (p<.01), Black on Twitter 0.63 (p<.01). Black on Facebook -0.31 is p<.10 only and -0.06 among Internet users, so it is not a reliable selection effect. Users of one platform are not the population.",
+   "system_side": "social_interaction_layer.py: X reposts 1.0, X mentions 0.4, Bluesky mentions 0.4; pair p = events / max(25, X-post count of author), cap 0.25, so Bluesky events enter the numerator only (confirmed). build_multilayer_network.py: new edge w = 6p/(1-p) cap 2.0, or up to +30 percent reinforcement on existing ties (confirmed). Read-only counts from social_media.db on 2026-10-09: 411 Bluesky mentions = 392 D to D, 8 D to I, 5 I to D, 6 R to R, 0 D to R; 135 posters = 117 D, 16 R, 2 I; roster 533 = 259 D, 271 R, 3 I; posts 2023-07-01 to 2026-09-19. JSON written 2026-09-19 holds 739 pairs, 275 reposts, 953 mentions (X and Bluesky). Unverified: rows present at JSON write time, since the DB was modified 2026-10-04.",
+   "transfer": "Her coefficients do not transfer; her frame logic may. Her data are US adults (2013) and one 2009-2012 student cohort, not legislators or Bluesky. That X adoption bias is mostly gone for legislators is the analyst's inference: the paper never discusses institutional accounts (502 of 515 member rows have an X handle, read-only). The Bluesky handle field is populated for all 515 rows, so 135 is posting, not account adoption. Party-skewed posting may carry a party-skewed edge pattern into the layer; untested, UNVERIFIED (DE-062).",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ornstein-2024-train-your-stochastic",
+   "title": "How to train your stochastic parrot: large language models for political texts",
+   "year": "2024",
+   "component_id": "melange-sna.co-appearance-and-references",
+   "relation": "supports",
+   "claim": "Results from closed, vendor-served models can become impossible to reproduce. The GPT-3 models behind the paper results were removed from the public-facing API in January 2024.",
+   "system_side": "member_reference_layer.py records which model scored each cached row (_cache_models, lines 258-265) and stores resp.model and resp.id with each classification (line 306). agency_communion_llm.py keeps a separate cache file per model (CACHE path, lines 24-28), so instruments do not mix.",
+   "transfer": "Caching keeps outputs auditable after a model is retired, but does not regenerate them; a re-score on a successor model is a new instrument. The warning applies because both layers call Anthropic-served models. The component label is a weak fit for LLM caching and should name the member-reference and persona LLM layers.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "moreno-2021-shadowing-shielding-effective",
+   "title": "Shadowing and shielding: Effective heuristics for continuous influence maximisation in the voting dynamics",
+   "year": "2021",
+   "component_id": "melange-sna.katz-bonacich-benchmark",
+   "relation": "qualifies",
+   "claim": "The degree correlation of optimal allocations is a by-product of shielding: Kendall tau is generally above 0.5 for K above 30 for both optimal and pure-shielding plans (Fig 5b). When the passive controller targets nodes whose neighbours have the lowest degree, |tau| for optimal allocations falls below 0.25 while shielding gives tau down to about -0.5 (Fig 5c). The authors conclude that optimal allocations can be explained almost perfectly by shielding without degree preference (p.11).",
+   "system_side": "kb_benchmark.py computes Katz-Bonacich centrality on build_P and reports Spearman rho against the optimizer allocation (two variants), observed CU money, observed industry money and the legislative score. The docstring says nothing in the chain consumes it. Output goes to data/network/kb_benchmark.json.",
+   "transfer": "An allocation-centrality correlation, high or low, can come from where the opponent places money rather than from a preference for centrality, so any reading of rho should be stratified by industry-money placement or labelled UNSTRATIFIED. Rho is a heuristic diagnostic, not closeness or influence evidence (D-025). The paper's evidence is one email network.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "ringe-nd-pinpointing-powerful-voting",
+   "title": "Pinpointing the Powerful: Co-voting Network Centrality as a Measure of Political Influence (online appendix)",
+   "year": "",
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "qualifies",
+   "claim": "Signed (traditional) co-voting centrality cannot separate the cue-provider from majoritarians; with a third group following at 35 percent it makes majoritarians systematically more central than the actual cue-provider. The absolute-value measure corrects this. In simulation, cue-provider centrality is lowest when both follow probabilities are 50 percent and highest as they approach 0 or 1.",
+   "system_side": "Vote backbone built with R backbone sdsm(signed=TRUE, alpha 0.05, BH) on a member by (vote,side) bipartite matrix, so the projection counts agreements. Brain vote-edges section (2026-06-25): the raw signed backbone is about 95 percent party-aligned (positive edges 93 percent same-party, negative edges 99 percent cross-party). Option C kept cross-party positive edges only and fed Vote Affinity into the Signed Coalitions sheet as a 30 percent booster. fec/network/signed_coalitions.py partitions the signed mention layer (member_references.json), not votes.",
+   "transfer": "Paper is single-party cue-taking with simulated independent follow probabilities plus European Parliament MEP data, not US House or party-aligned backbones. The paper gives no account of why signed backbone edges cluster on party, so the majoritarian explanation is the analyst hypothesis and stays UNVERIFIED for US data and the 117th-119th Congresses until a second path reproduces it (DE-062). That dropping negative ties loses cue-provider information is an inference from the paper's use of negative correlations, not a paper critique of Melange.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "aref-2020-detecting-coalitions-optimally",
+   "title": "Detecting coalitions by optimally partitioning signed networks of political collaboration",
+   "year": "2020",
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "method-source",
+   "claim": "The exact two-group frustration index comes from a binary program (Eq. 8: n+m binary variables, 2m+1 constraints) warm-started from party labels and bounded below by an LP relaxation with triangle constraints (Eq. 7). Heuristic partitioning is 'not guaranteed to provide the optimal solution'. Senate instances average 4 s (SD 6 s). The 113th House (m = 75,771) takes 48,823 s: 5,300 s for the LP (28,486,271 constraints) and 43,523 s for the binary solve.",
+   "system_side": "Single-node best-move local search from a party seed plus 60 random restarts for k=2, then k=3 from the k=2 answer plus 60 random restarts. Reports upper bounds only: F(1)=1,092.3, F(2)<=1,040.8 (15.31% of weight), F(3)<=1,039.8. Artifact data/lobbying/signed_coalitions.json has 520 nodes and 7,153 edges, matching the rel figures.",
+   "transfer": "The paper says the LP bound is not theoretically required, so Eq. 8 alone is exact. The LP is not the cost driver in the paper's own instance (5,300 s vs 43,523 s). The rel figure of about 23M triangle constraints at n=520 is C(520,3), the complete-graph triangle count. A read-only recount of the live mention graph on the 520-node set gives about 23.5k triangles, so Eq. 7 has about 100k rows (m+4T), not 23M. Solve times remain UNVERIFIED (DE-062).",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "aref-2020-detecting-coalitions-optimally",
+   "title": "Detecting coalitions by optimally partitioning signed networks of political collaboration",
+   "year": "2020",
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "qualifies",
+   "claim": "Edges come from a significance-tested SDSM cosponsorship backbone (two-tailed alpha 0.05), built per chamber and per Congress. The near-party partition and the coalition-partisanship effect hold for the House and not the Senate. The paper reports F(G)=1-2L/m so networks can be compared.",
+   "system_side": "Substrate is member_references.json mention valence: edge sign=sign(net), weight=|net|, about 84% of weight positive. House and Senate members go into one partition. k=2 gives a single bloc plus a 14-member splinter. Raw weighted frustration is reported as a percent of total weight; F(G) is not computed.",
+   "transfer": "The paper's findings rest on cosponsorship backbones within one chamber and session. A pooled mention partition crosses the House/Senate fault line, where the paper finds a House effect and none in the Senate, so any coalition reading needs an UNSTRATIFIED label. The splinter is a heuristic partition output, not measured antagonism.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "aref-2020-detecting-coalitions-optimally",
+   "title": "Detecting coalitions by optimally partitioning signed networks of political collaboration",
+   "year": "2020",
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "supports",
+   "claim": "Both chambers show high partial balance that rose over 1979-2016, which the paper reads as rising polarization that largely mirrors party lines. Triangle and normalized frustration indices correlate at 0.95 (House) and 0.91 (Senate).",
+   "system_side": "Workbook lane ran sdsm(alpha=.05, signed=TRUE, mtc='BH') on member by (vote, side) for 205 roll calls (117th-119th), reporting the backbone about 95% party (93% of positive edges same-party, 99% of negative edges cross-party) and calling it useless as-is. Those counts are not printed by the script.",
+   "transfer": "Different substrate (roll-call agreement, not cosponsorship) and different era (2021-2026, not 1979-2016). The paper gives no numeric party-alignment statistic for its optimal partition; the party link is qualitative. The paper does not discuss the project's vote backbone at all.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "aref-2020-detecting-coalitions-optimally",
+   "title": "Detecting coalitions by optimally partitioning signed networks of political collaboration",
+   "year": "2020",
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "qualifies",
+   "claim": "A tie is positive or negative according to whether joint cosponsorships are significantly many or few against an SDSM null that preserves each legislator's cosponsorship volume and each bill's cosponsor count. Raw co-cosponsorship counts are not used as tie strengths. The authors note inferred ties may reflect avoidance.",
+   "system_side": "Edge weight = role (1.0 original, 0.5 regular) x success factor (3.0 if the bill passed its origin chamber, else 1.0) x 0.8^(119 minus congress) x size factor (1/sqrt C by default), summed per directed pair. No significance test. The load path averages the two directions when symmetrized.",
+   "transfer": "SDSM answers whether a tie is significant, not how strong it is. Because it conditions on member volume it works as a degree-corrected filter. The project's rejected per-edge volume normalization is the nearest analogue, so the paper does not argue for re-weighting the cascade graph. Any significance-filtered signed overlay would need its own validation.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "almazaydeh-2026-heuristic-centrality-methods",
+   "title": "Heuristic centrality methods challenge greedy optimization in influence maximization",
+   "year": "2026",
+   "component_id": "melange-sna.katz-bonacich-benchmark",
+   "relation": "suggests-extension",
+   "claim": "Simple centrality seed rules come close to sampling-based IM under IC (PageRank 96.5 percent of IMM) at far lower runtime (2,304 vs 2.95 spread per second at 1000 nodes).",
+   "system_side": "kb_benchmark.py computes Katz-Bonacich centrality on build_P(adj) at line 29, deterministically. It reports Spearman correlations of KB against four targets: the G-K allocation, observed CU money, observed industry money (banks plus finserv), and the legislative score (docstring lines 9-13; comparison list around lines 85-92). The brain records MEA-6 holistic KB-vs-allocation +0.225 at STATE.md lines 744-746, n=533. The benchmark does not score KB-top-k as a seed set under the cascade.",
+   "transfer": "Adding a seed-spread column would test the paper's question on Melange's own kernel, as a diagnostic only, labelled UNSTRATIFIED, with window and denominator named. KB remains a model output, not a measure of access (D-025). Nothing in the chain consumes it.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kamarthi-2020-influence-maximization-unknown",
+   "title": "Influence maximization in unknown social networks: Learning Policies for Effective Graph Sampling",
+   "year": "2020",
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "qualifies",
+   "claim": "Geometric-DQN, trained per family and tested on held-out networks of that family, improves influence by 7.91 to 26.6 percent of the CHANGE-to-OPT gap (best variant per family, 13 test networks, IC p = 0.1, budget 10, T = 5 queries). Discovered graphs are almost always larger than CHANGE's, yet size does not correlate with influence across Geometric-DQN policies.",
+   "system_side": "load_network reads the newest augmented congress_cosponsor_network workbook, falling back to a base file only when no AUG file exists (select_network_file, line 371). It then mean-symmetrizes the edges into a name-keyed adjacency dict. All listed edges are treated as observed, with no model of missing ties.",
+   "transfer": "The paper discovery setting applies only if cosponsorship is an incomplete sample of a latent contact network. The paper numbers come from other networks under single-colour IC, so they cannot be carried over as system gains.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "fink-2023-congressional-social-network-dataset",
+   "title": "A Congressional Twitter network dataset quantifying pairwise probability of influence",
+   "year": "2023",
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "contradicts",
+   "claim": "Influence of i on j is the count of j's retweets, quote tweets, replies and mentions of i's tweets divided by the tweets i issued in the window. Members with fewer than 100 window tweets are excluded, leaving 475 of 530 active accounts (525 with window tweets).",
+   "system_side": "social_interaction_layer.py divides each weighted event count by max(25, posts of the ENGAGING member a), so the denominator is the reposter or mentioner volume, the reverse end of the dyad from Fink, which divides by the source i tweets. It uses a 25-post floor, not Fink's 100-tweet exclusion. Mentions are weighted 0.4. There is no separate quote or reply event type: RT-prefixed rows count as reposts, and any @handle in a non-RT post, including a reply or quote, counts as a 0.4 mention. The docstring claims the same Fink discipline as press_engagement_layer.",
+   "transfer": "The pair weight in code is (ev(a,b)/vol(a) + ev(b,a)/vol(b))/2 with vol floored at 25 and each direction capped at 0.25. A Fink-consistent version would divide by vol(b) and vol(a) respectively. This is a code-read finding and stays UNVERIFIED (DE-062) until social_interactions.json is recomputed both ways. The source data are X/Quorum post text and Bluesky interactions, not Fink's API fields, so the analogy is looser than the docstring implies.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "fink-2023-congressional-social-network-dataset",
+   "title": "A Congressional Twitter network dataset quantifying pairwise probability of influence",
+   "year": "2023",
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "method-source",
+   "claim": "Edge weight is an empirical probability of influence: summed interactions of j on i divided by tweets issued by i. A minimum of 100 tweets per member is required so that the probabilities are meaningful.",
+   "system_side": "press_engagement_layer.py sets P(i to j) = mentions of i by j divided by items issued by i, capped at 1.0 (line 61), with MIN_ITEMS = 5 on the source (line 58, env ENG_MIN_ITEMS). A code comment calls this the analog of Fink's 100-tweet rule. The docstring says the layer validates cosponsor-edge probabilities.",
+   "transfer": "Naming a co-actor in a press title is an analogy for engagement, not a reply or retweet. A 5-item floor on the source is far below Fink's 100-tweet floor, so the rates are much noisier. Fink validates nothing, so the docstring claim of validating cosponsor-edge probabilities has no basis in this paper.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "battaglini-2018-effectiveness-connected-legislators",
+   "title": "Effectiveness of Connected Legislators",
+   "year": 2018,
+   "component_id": "melange-sna.katz-bonacich-benchmark",
+   "relation": "method-source",
+   "claim": "Equilibrium effectiveness equals a characteristic-weighted Bonacich (Katz-Bonacich) centrality of the network (Prop 1; the rel wording proportional is looser than the paper's equal to). Corrected NLLS phi = 0.8324 (SE 0.0516) on row-share cosponsorship weights (Table 2 col 3). Horse race (Table 4 col 7): phi = 0.7095 (SE 0.0817), with betweenness, closeness and eigenvector not significant. N = 2,176 House member-Congresses, 109th-113th.",
+   "system_side": "kb_benchmark.py computes unweighted KB (unit vector, no characteristic weights) on the build_P saturated kernel p = w*cpf*sigma/(w*cpf*sigma+6), with delta = 0.85/lambda and lambda = 1.5019. Its legislative score label is MBC.scores(), the composite pillar score, not the legislative pillar. data/network/kb_benchmark.json (dated 2026-08-18) gives rho +0.6535 at n = 533.",
+   "transfer": "phi multiplies a row-stochastic W, so phi is a spectral-radius fraction, comparable in kind to the benchmark's 0.85 spectral fraction. Transfer to Melange still needs a KB-to-LES test on the same Congresses. The paper is House-only with row-share weights, while Paul's graph mixes chambers and uses a different weight normalization.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "battaglini-2018-effectiveness-connected-legislators",
+   "title": "Effectiveness of Connected Legislators",
+   "year": 2018,
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "qualifies",
+   "claim": "Cosponsorship links are endogenous. The control-function selection term xi = -0.4133 (SE 0.0741) is significant in the corrected NLLS, and correcting moves phi from 0.44 to 0.83. Alumni ties predict links with coefficient 0.0387 per dyad (Table 1 col 2, reported as 3.8658 multiplied by hundreds; 945,382 dyads), R-squared 0.079.",
+   "system_side": "load_network reads the newest cosponsor workbook and mean-symmetrizes weights. The per-sponsor 1.0 and 0.5 weights come from the R pipeline architecture doc, not the lines cited. No selection or endogeneity term was found in the engine and member files searched.",
+   "transfer": "The paper's estimand is effectiveness spillover, not stance diffusion, so the size of the bias does not transfer; the sign that naive cosponsor coefficients are biased does. The paper's row-share weight is a per-member volume normalization this project rejected, so it is a description only and not a recommendation.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "harbridge-yong-2023-bipartisan-path-effective",
+   "title": "The Bipartisan Path to Effective Lawmaking",
+   "year": 2023,
+   "component_id": "melange-sna.bipartisanship-bpf",
+   "relation": "qualifies",
+   "claim": "Within-member (legislator FE, one-tailed) coefficient on the attracted share, the per-bill mean of other-party cosponsor share: House 0.433 (SE 0.097) Model 1.2; Senate 0.330 (SE 0.147, p<0.05) Model 1.5. Offered share not significant with controls: House -0.234 (Model 1.3), Senate -0.420 (Model 1.6). Window 93rd-114th Congresses (1973-2016), about 9,000 House and 2,170 Senate legislator-Congress rows.",
+   "system_side": "bpf() in fec/moneyball_core.py reads bipartisan.json (default 0.24). The materialize script builds that file: each undirected pair takes the mean of its two directed rows when both directions exist, otherwise the single directed weight; member share = (cross + 6 x prior) / (same + cross + 6). Directed rows are kept only in audit fields, so bpf mixes offered and attracted ties. No attracted-direction share is computed in fec .py.",
+   "transfer": "Paper variable is a mean over a member's own bills of other-party cosponsor share; bpf is a roster-snapshot weighted tie share with prior shrinkage, so window and denominator differ. Paper coefficients are by chamber, 1973-2016, one-tailed; quote by chamber only. Transfer to the current roster is UNVERIFIED until reproduced (DE-062).",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  }
+ ]
+}

@@ -1,0 +1,82 @@
+{
+ "summary_md": "Ren, Rathinam, Likhachev and Choset (RA-L 2022) present MOPBD*, an incremental planner that keeps the full Pareto-optimal path set between a moving start and a fixed goal when edge cost vectors change. It merges D* Lite's reuse of earlier search (g and v values, local consistency) with NAMOA*'s path-based expansion, so each node stores a set of non-dominated cost vectors rather than one value. Theorem 1 claims the stored set equals the true Pareto front on termination. An epsilon-dominance variant trims those sets and trades accuracy for speed. The tests use simulated 4-connected grids from the Stern et al. MAPF benchmark, with random integer costs, 2 to 4 objectives, Python code, obstacles inserted every 7 moves, and 1 to 5 minute limits. Against the node-based incremental MOD*, MOPBD* is faster by up to an order of magnitude with two objectives. Against NAMOA* from scratch it needs fewer expansions but is not always faster: it is slower on the 16x16 empty map, and at four objectives from-scratch NAMOA* wins. The worst case can exceed from-scratch search when many states are invalidated. In Melange, cosponsor_route.py names MOPBD* in its docstring but does not implement it. It builds greedy recruitment sets under five fixed risk weights and then filters the points by dominance. That is a weighted-sum sweep over a set-selection problem, not a Pareto search over source-target paths, and it never replans incrementally. The paper's main use for Melange is as a yardstick that shows this gap. A second use is a possible two-objective view of the staffer route cost, which currently folds strength and uncertainty into one weighted sum. This analysis is UNVERIFIED (DE-062).",
+ "category": "Path-Finding Algorithms",
+ "bearings": [
+  {
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "relation": "qualifies",
+   "paper_claim": "MOPBD* returns the exact Pareto-optimal set of source-to-goal paths. Path-based expansion keeps every non-dominated cost vector per node (Theorem 1). Exact multi-objective shortest path is NP-hard even with 2 objectives, and the front can grow exponentially with the number of nodes.",
+   "paper_location": "Sec I p.1; Sec V-VI p.4-6, Theorem 1; Sec VI-B",
+   "system_side": "The docstring advertises RELINK + MOPBD*. The code instead runs a greedy heap selection of recruiter-to-colleague edges for each lambda in {0, 0.5, 1, 2, 4}, with value (gain - lambda(1-p))/cost, then removes dominated (cost, spread, risk) points after the fact. A weighted-sum sweep finds only supported points on the convex hull, with at most 5 lambdas, so unsupported Pareto points are missed. The objects are recruitment sets in an influence-maximisation tree, not paths.",
+   "code_ref": "fec/engine/cosponsor_route.py:3-5,40-63,64-76",
+   "transfer_conditions": "MOPBD* applies to source-target paths with additive vector costs. The route finder optimises a reach set with a product-form spread and a mean-p risk, which are not additive along one path, so the algorithm cannot be dropped in. The bearing is a claims check: the front shown is an approximate, scalarised front, not a MOPBD* Pareto set.",
+   "strength": "strong"
+  },
+  {
+   "component_id": "melange-pathfinding.cosponsor-route-pareto",
+   "relation": "qualifies",
+   "paper_claim": "Incremental reuse pays off when cost changes are few and local. MOPBD* beats from-scratch NAMOA* at M=2-3 on the maze map, but the advantage shrinks as objectives grow, and at M=4 from-scratch wins. The worst case exceeds from-scratch search when many states are invalidated.",
+   "paper_location": "Sec VI-B p.6; Sec VII-D p.8 (Table II); Conclusion",
+   "system_side": "The route finder reruns from scratch on every invocation, with no saved search state. Its edge probabilities come from MBC.build_P over the whole cosponsor network, which changes in batch at pipeline refresh rather than as local edge edits.",
+   "code_ref": "fec/engine/cosponsor_route.py:16-23,69-76",
+   "transfer_conditions": "Paul's addendum makes D* Lite and LPA* the operational layer. The paper's own evidence says incremental replanning helps only for sparse local edge changes with few objectives. A whole-network refresh, or a change to a global weight such as lambda or K, invalidates most states, so from-scratch search is the right default unless an interactive what-if editor is built that toggles single members or edges.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "suggests-extension",
+   "paper_claim": "Representing costs as vectors and keeping the non-dominated set exposes trade-offs that a single scalar sum hides. Epsilon-dominance with epsilon 0.01-0.05 bounds the set size and runtime. Two objectives is the regime where path-based multi-objective search performs best.",
+   "paper_location": "Sec III p.2; Sec VI-C p.6-7; Sec VII-B/C p.7, Fig. 3",
+   "system_side": "The hop cost is -ln(0.8 x strength) + w x uncertainty. This is a weighted-sum scalarisation of two objectives with a fixed w. Ties are broken lexicographically by steps and then cost. The search is bidirectional or one-way Dijkstra with heuristic 0, and Yen alternatives give k routes under the same scalar.",
+   "code_ref": "fec/surfaces/staffer_closeness_routes.py:79,115-123",
+   "transfer_conditions": "This holds only if Paul wants the strength-uncertainty trade-off shown instead of fixed by w. A 2-objective NAMOA*-style front with epsilon-dominance would replace the w knob and Yen alternatives as a way to show options. It would cost latency in a lane where ALT was deferred and route latency was already the issue. Front members remain heuristic model outputs, never closeness or introduction probabilities (D-025).",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "cosponsor_route.py's docstring claims MOPBD*, but the code is a 5-point weighted-sum greedy sweep with post-hoc dominance filtering, and no code in fec implements MOPBD*, NAMOA*, D* Lite or LPA*.",
+  "The route-finder front is unmeasured against an exact or epsilon-approximate multi-objective front, so how many non-supported trade-off points it misses is unknown.",
+  "No pathfinding component reuses search state across edge changes. Paul's addendum names D* Lite or LPA* as the operational layer, but nothing is built, and no use case (an interactive single-edge what-if) has been defined in which incremental reuse would pay.",
+  "The staffer router fixes the strength-uncertainty trade-off through w, with no Pareto view and no sensitivity report over w."
+ ],
+ "flags": [
+  "Item paul_entries are misfiled. They are Bouton et al. 2022 Small campaign donors (x2) and five Grand View Research crypto forecast entries, which belong to other documents and say nothing about this paper. Paul's view here comes only from his 49 highlights, with zero sticky notes.",
+  "The docstring overstates the method: fec/engine/cosponsor_route.py:3 labels the module RELINK + MOPBD*, but the algorithm is a greedy scalarised sweep. Melange-facing text should call it a lambda-sweep approximate front.",
+  "The paper's evidence argues against adopting incremental replanning by default: its advantage disappears at M=4 and under widespread state invalidation. This qualifies the addendum's D* Lite/LPA* operational-layer plan.",
+  "No conflict with the rejected SNA proposals, D-021 (LDA) or the reciprocity rule. Any multi-objective staffer front must keep the D-025 wording.",
+  "All bearings are UNVERIFIED until a second path reproduces them (DE-062)."
+ ],
+ "paul_alignment": "Paul's highlights, with no notes, cover incremental reuse, the Pareto set, the D* Lite plus NAMOA* fusion, and the claim that it outperforms both baselines. His addendum makes D* Lite and LPA* the operational layer. The paper backs the Pareto concept but qualifies replanning: the gains come on small grids with local changes and vanish at M=4. The outperforms claim omits the 16x16 and M=4 exceptions. His takeaway is aspirational rather than stale: no incremental planner exists, and the module that cites MOPBD* does not implement it.",
+ "related": [
+  {
+   "slug": "abdelrahman-2025-conflict-based-search",
+   "relation": "same-method",
+   "why": "This paper also uses D* Lite for dynamic replanning, in the multi-agent CBS setting. It is a second D* Lite citation for the same cosponsor-route component."
+  },
+  {
+   "slug": "luo-2020-path-planning-algorithm",
+   "relation": "same-method",
+   "why": "This work modifies single-objective D* Lite for UAV replanning. It contrasts with MOPBD*'s multi-objective set-valued extension of the same incremental core."
+  },
+  {
+   "slug": "xu-2024-improved-lite-based",
+   "relation": "same-method",
+   "why": "This is an improved D* Lite for dynamic ship routing. It is single-objective and applies incremental replanning to a changing cost field, the setting where MOPBD* claims its gains."
+  },
+  {
+   "slug": "lawande-2022-systematic-review-analysis",
+   "relation": "complements",
+   "why": "This survey of pathfinding algorithms is cited with Ren 2022 for the cosponsor-route-pareto component. It places D*-family search among A*-family alternatives."
+  },
+  {
+   "slug": "chen-2016-most-reliable-path",
+   "relation": "complements",
+   "why": "This paper covers most-reliable-path search, the -log p objective behind buildPath/chainHold. Combined with MOPBD*'s vector costs, it frames a cost-versus-reliability Pareto route."
+  },
+  {
+   "slug": "duan-2025-breaking-sorting-barrier",
+   "relation": "complements",
+   "why": "This is a faster single-objective, single-source shortest-path algorithm. It is the other lever, besides incremental reuse, for the route-latency concerns in the staffer router."
+  }
+ ]
+}

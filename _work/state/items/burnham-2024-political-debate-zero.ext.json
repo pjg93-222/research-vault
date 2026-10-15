@@ -1,0 +1,61 @@
+{
+ "title": "Political DEBATE: Efficient Zero-shot and Few-shot Classifiers for Political Text",
+ "authors": [
+  "Michael Burnham",
+  "Kayla Kahn",
+  "Ryan Yang Wang",
+  "Rachel X. Peng"
+ ],
+ "year": 2024,
+ "venue": "arXiv (arXiv:2409.02078v1, 3 Sep 2024; cs.CL)",
+ "doi": "",
+ "document_type": "working paper (arXiv preprint)",
+ "coverage": "Full text read in one pass (50,533 chars, 890 lines of extracted text, printed pages 1-26). No ext/rel override files existed. Read: front matter, abstract, intro (1-2), NLI framing (3-4), PolNLI dataset incl. Table 1 (4-8), training (8), zero-shot results (9-11), few-shot results (12-14), timing (14-15), limitations and model use (15-17), conclusion (17-18), references, Appendices A-C (19-26). Paul markup: none. annot_sha12s is empty and no _annots/3859f20b633a.json exists. Page images not rendered; locations are printed page numbers. Metadata hints checked: title, four authors, year 2024 and preprint status are correct; venue arXiv; no DOI in text. Topic check: the paper has no lobbying, network, path-finding, allocation, election, persuasion or turnout content. Legislators appear only as stance targets in the PolNLI sources (Polistance datasets, p.23). Text measurement is the whole paper. Reader observation, not an authors claim: GPT-4o relabeling and filtering (p.6-7) and GPT-4o hypothesis augmentation (p.7) mean the PolNLI labels share an LLM source; the authors exclude GPT-4o from the benchmark for that reason (p.10). Figure values (Figs 1-5) are not in the text, so per-model MCC and timing figures are not extracted.",
+ "research_question": "Can small, domain-adapted natural language inference (NLI) encoder models trained on political text match or beat zero-shot large language models and supervised classifiers for political text classification, and can they be few-shot trained from 10-25 labeled documents, while staying open and efficient? (p.1-2)",
+ "theory": "No formal theory. Argument: NLI framing turns any classification into a document-hypothesis entailment task, and narrowing a small pretrained encoder to one domain reduces the model size needed for high performance; transfer from general NLI models speeds adaptation (p.2-4, p.8).",
+ "data": "PolNLI: 201,691 political documents, 852 unique entailment hypotheses, 22 datasets in four tasks: stance 11 datasets, 361 hypotheses, 66,581 documents; topic 5, 278, 62,005; hate-speech/toxicity 2, 177, 41,871; event extraction 4, 36, 31,234 (Table 1, p.5). Sources include tweets, news, congressional newsletters, legislation, party platforms, State of the Union speeches, Supreme Court case summaries, ACLED and SCAD event records, and crowd-sourced arguments (Appendix A, p.23). Unit: document paired with a hypothesis, labeled entail or not entail. After augmentation there are 2,834 unique entailment phrasings (p.7). Split: test and validation sets of about 15,000 documents each, split by hypothesis so test hypotheses are unseen in training; validation is about 10,000 unseen-hypothesis and 5,000 seen-hypothesis documents (p.7-8). Few-shot test cases: Mood of the Nation open-text democracy answers (liberty and rights) and COVID-19 threat-minimization tweets, about 2,000 tweets in Block Jr. et al. (p.12-14). Timing: 5,000 PolNLI test documents (p.14).",
+ "method": "Fine-tunes DeBERTa V3 base (86M parameters) and large (304M) models that were already trained for general NLI (Laurer et al. 2023), using the Transformers library (p.2, p.8). Label cleaning removes source metadata; hypotheses are written per label (p.5-6). Labels are validated by GPT-4o; documents where human and LLM labels disagree are dropped (p.6-7). Hypotheses are augmented with GPT-4o synonyms and manual review (p.7). Checkpoints chosen by training loss, validation loss, MCC, F1, accuracy and per-task consistency, plus qualitative tests with punctuation, capitalization and wording edits (p.8). Zero-shot benchmark against DeBERTa base and large NLI (Laurer et al. 2023), Llama 3.1 8B and Claude 3.5 Sonnet; GPT-4o not benchmarked (p.9). Few-shot: simple random samples of 10, 25, 50 and 100 documents, 10 repetitions each, 95% confidence intervals, default learning rate, 5 epochs, no hyperparameter or hypothesis search (p.12). Timing: same 5,000 documents with hypothesis 'This text is about politics' on RTX 3090, Tesla T4, M3 Max and Ryzen 9 5900x (p.14).",
+ "identification": "Not causal. Generalization is judged by splitting test documents on unseen hypotheses (p.7-8) and by few-shot learning curves at sample sizes 10, 25, 50 and 100 (p.12).",
+ "measures": "Primary metric: Matthews correlation coefficient (MCC), chosen for robustness on binary tasks (p.9). Also accuracy and F1 (checkpoint selection, p.8; COVID accuracy, p.14; Llama accuracy, p.13). Bootstrapped standard errors for Fig. 1 (p.9-10); 95% confidence intervals across 10 few-shot repetitions (p.12). Timing: documents per second by hardware (Fig. 5, p.15; values not in text).",
+ "scope": "Population: English-language political text from social media, news, newsletters, legislation, party platforms, speeches, court summaries, event reports and crowd-sourced arguments (Appendix A, p.23). Language: English only (p.17). Era: sources span several years; references were accessed in June 2024 (p.19-22). Tasks: stance, topic, hate-speech and toxicity, and event classification (p.4).",
+ "key_findings": [
+  "PolNLI test set, all tasks combined: DEBATE models are more performative than DeBERTa base and large NLI, Llama 3.1 8B and Claude 3.5 Sonnet in zero-shot MCC; per-model values appear only in Fig. 1 (p.9-10).",
+  "Stance: DEBATE models and Claude 3.5 Sonnet are significantly better than the other models on stance detection; event extraction is comparable between DEBATE and the two LLMs (p.9).",
+  "Hate-speech: DEBATE models are significantly better than the other models; the authors attribute this to subjective definitions that the models were tuned to (p.9-10).",
+  "Polistance Quote Tweets (stance, hardest set): Claude 3.5 MCC 0.29; DEBATE base MCC 0.62 and large MCC 0.88; DeBERTa Large had negative correlation with the correct label on this dataset (p.10).",
+  "Few-shot, Mood of the Nation liberty and rights: Llama 3.1 is best zero-shot (reported MCC 0.74, accuracy 88%); after 10 samples both DEBATE models jump and do not differ significantly from Llama; at 25 the large model significantly beats Llama; at 50 the base model matches it (p.13).",
+  "Few-shot, COVID-19 threat minimization: base model largely fails zero-shot and does not match the supervised Electra classifier (MCC 0.66 on 2,000 tweets) at 100 samples; large model matches it at 10 samples (MCC 0.67, accuracy 87%) and exceeds it at 25 (MCC 0.69, accuracy 88%) (p.13-14).",
+  "Efficiency: DEBATE models give large speed advantages over Llama 3.1 8B on all four tested hardware types; a laptop GPU (M3 Max) or free cloud GPU (Tesla T4) classifies documents at a brisk pace; exact timings are in Fig. 5 only (p.14-15).",
+  "Training: base model learning rate 2e-5, batch 8, 20 epochs; large model learning rate 9e-6, batch 4 with gradient accumulation 4, 20 epochs; checkpoint per epoch (Appendix C, p.25-26).",
+  "Recommendation: use the large model for zero-shot and most few-shot work; the base model for simple few-shot or supervised work (p.15-16).",
+  "Recommendation: keep NLI hypotheses short and template-like; use few-shot training when a task needs long hypotheses with several conditions, or is far from the PolNLI sources (p.16-17).",
+  "Stated limitation with a finding: the authors do not expect DEBATE to beat proprietary LLMs on all tasks; LLMs are expected to generalize better to tasks far from PolNLI (p.17).",
+  "Validation: GPT-4o labels matched manual review on 92.5% of 400 sampled documents (Cohen's kappa 0.85); 14 of 400 (3.5%) were judged wrong LLM labels (p.7)."
+ ],
+ "limitations": [
+  "Trained and evaluated only on English documents; performance on other languages is unknown (p.17).",
+  "Not expected to outperform proprietary LLMs on every task; LLMs expected to generalize better to tasks far from PolNLI (p.17).",
+  "NLI hypotheses must be short; no clear measure of task simplicity exists, only qualitative judgments (p.16).",
+  "Labels for topic and event data were positive-only; negatives were created by random reassignment, and multi-topic documents are a known concern addressed only by validation (p.6-7).",
+  "Authors discourage benchmarking OpenAI models on PolNLI because GPT-4o was used in label validation (p.10).",
+  "Few-shot runs used no hyperparameter or hypothesis search, by design, so the results are not tuned (p.12)."
+ ],
+ "paul_markup": [],
+ "short_quotes": [
+  "A simple random sample of only 10-25 labeled documents is sufficient to teach the models complex labeling tasks when necessary.",
+  "Because of this, it is little wonder that LLMs have received widespread adoption within political and other social sciences.",
+  "because the Political DEBATE models were explicitly trained to parse such documents, the base and large models were able to achieve MCCs"
+ ],
+ "references_of_note": [
+  "Laurer, van Atteveldt, Casas, Welbers (2023) Building Efficient Universal Classifiers with NLI, arXiv:2312.17543 (starting checkpoints).",
+  "Laurer et al. (2022) Less annotating, more classifying, OSF preprint (transfer learning for NLI classification).",
+  "Burnham (2024) Stance detection: a practical guide, Political Science Research and Methods (cited for NLI best practice).",
+  "Palmer, Smith, Spirling (2024) Using proprietary language models in academic research requires explicit justification, Nature Computational Science.",
+  "Block Jr. et al. (2022) Perceived risk, political polarization, and COVID-19 mitigation, Social Science and Medicine (threat-minimization data).",
+  "Berkman and Plutzer (2024) Generational differences in the meaning of democracy, working paper (Mood of the Nation Llama case).",
+  "Chicco and Jurman (2020, 2023) on MCC versus F1 and ROC AUC (metric choice).",
+  "He, Gao, Chen (2021) DeBERTaV3 (base architecture).",
+  "Durmus et al. (2024) Measuring the persuasiveness of language models (source of Anthropic persuasion stance data).",
+  "Ziems et al. (2024) Can large language models transform computational social science? (LLM zero-shot context)."
+ ]
+}

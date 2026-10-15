@@ -1,0 +1,68 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-sna.press-coalition-ward",
+      "relation": "qualifies",
+      "paper_claim": "Following Junk (2020b), the review separates three definitions of a lobbying coalition: policy camp (shared preferences only; 12/80 articles), behavioral coordination ('a non-trivial degree of coordinated activity over time'; 59/80) and formal organization (6/80). For the 16-article meta-analysis the authors keep only studies whose unit of analysis is the individual interest group or lobbyist, and they drop policy-camp studies (selection criteria i-ii).",
+      "paper_location": "pp. 7-8 (typology and the 59/12/6 counts, just before the p. 8 page break); p. 9 selection criteria (i)-(iii); p. 13 conclusion ('about three-quarters')",
+      "system_side": "detect_coalitions runs Ward.D2 on standardized recency-weighted graded per-issue press leans of legislators, with the aggregate lean appended at weight x3 (COALITION_LEAN_WEIGHT = 3.0), and labels the resulting blocs 'coalitions'. It observes no coordination, so in Junk's terms it is at most a legislator policy camp. The current file labels each bloc pro-credit-union, hostile-to-credit-union or mixed / issue-specific by mean bloc lean (+/-0.1). The analyst's claim that the brain note says all blocs are labelled pro-CU was not re-checked here and stays UNVERIFIED.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R:3075-3089,3094,3173-3195",
+      "transfer_conditions": "The paper supplies a definition only. The group-or-lobbyist unit is a selection rule for the meta-analysis subsample, not a finding about the whole literature, and its determinants (weakness, brokers) concern groups choosing allies. They should not be read onto legislator blocs. If the blocs keep the name 'coalition', the label should say they are shared-position clusters with no coordination evidence.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "All counts hold (59/12/6 of 80; Table 3 and pp. 7-8 text). The analyst stated that the group or lobbyist is the coalition-forming unit 'in the reviewed literature'. The paper states this only as selection criterion (ii) for the 16-article subsample (p. 9), so the wording was corrected. The definitions sit on pp. 7-8, not p. 9. Code ranges confirmed: constants and comments at 3075-3089, the function starts at 3094, ward.D2 is at 3177 and the three-way label at 3193-3195. Recency weighting enters through wmean(score_graded, recency_weight) at 3112-3120."
+    },
+    {
+      "component_id": "melange-lobbying.contested-bills",
+      "relation": "supports",
+      "paper_claim": "Issue-context hypotheses are supported 6 of 7 (85.7%; 16-article subsample, unstratified by polity). The authors conclude that groups coalesce more in a highly salient and conflictual policy context (condition i). Similar groups are not the only ones to ally: 'strange bedfellows' coalitions form when the policy context makes them strategically useful (Junk 2019; Beyers and De Bruycker 2018). Prior work found that issue characteristics can matter more than organization-level factors.",
+      "paper_location": "Table 4 p. 10; p. 11 (strange bedfellows; conditions i-iii); p. 13 conclusion",
+      "system_side": "The registry stores an explicit per-bill counterparty set, never a global one (docstring lines 4-10). Standard mode is the default when no registry or record exists. Each record needs a non-empty ratified_by and a ratified_date. No consumer is wired yet: the CONTESTED_V1 dial is described as future.",
+      "code_ref": "fec/lobbying/contested_bills.py:4-10,166-179,230-241",
+      "transfer_conditions": "The evidence comes from interest-group studies, mostly US and EU, about whether groups form coalitions, not whether they win. It supports per-bill alignment as a structural choice. It says nothing about how large any counterparty term should be, which stays owner policy.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "The 6/7 and 85.7% figures and condition (i) are verbatim from Table 4 and p. 11. The paper does not say strange-bedfellow coalitions form 'issue by issue'. It says they form when the policy context makes them strategically useful (p. 11, not p. 13), so the wording was tightened. Code confirmed: docstring 4-10, the counterparty and ours-side checks at 172-176, and mode_for at 230."
+    },
+    {
+      "component_id": "melange-lobbying.contested-bills",
+      "relation": "suggests-extension",
+      "paper_claim": "Relative-weakness hypotheses are supported 11 of 12 (91.7%; Table 4, 16-article subsample, unstratified). The paper says weaker groups 'lobby in packs' to pool resources. A significant minority of studies (Beyers and Donas 2014; Gray and Lowery 1998) finds the opposite, which suggests a minimum resource threshold. The authors leave the question open.",
+      "paper_location": "Table 4 p. 10; p. 11; p. 13; pp. 13-14",
+      "system_side": "INDUSTRY_SIDE makes credit_union the only 'ours' industry. Community banks, fintech, crypto, telecom and credit_arms are all 'opposition'. The registry rejects any ours-side industry in counterparty_industries, so a record can hold only counterparties and has no field for an allied industry.",
+      "code_ref": "fec/lobbying/build_opposition_prior.py:68-75; fec/lobbying/contested_bills.py:172-176",
+      "transfer_conditions": "An ally field would be descriptive (who stood with CUs on bill X). LDA may identify allies, but under D-021 co-lobbying cannot become an edge or a weight. The coalition-to-influence link is contradictory (p. 8), so the field should not change any score without its own validation.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "11/12 and 91.7% confirmed in Table 4. Note that Table 5 merges weakness and strength into 16-3 (84.2%). The 'lobby in packs' wording, the threshold and the open question are all confirmed on pp. 11 and 13-14. Code confirmed at build_opposition_prior.py:68-75 and contested_bills.py:176."
+    },
+    {
+      "component_id": "melange-allocation.joint-optimizer",
+      "relation": "qualifies",
+      "paper_claim": "The literature finds both positive (Junk 2019; Nelson and Yackee 2012) and negative (Bunea 2013; Haider-Markel 2006; Heinz et al. 1993; Junk 2020a) links between forming a coalition and policy influence, and calls the results contradictory. The review leaves coalitions as an explanatory variable for influence to future research.",
+      "paper_location": "p. 8; p. 9; p. 15",
+      "system_side": "The pot is one PAC's budget (Paul's ruling of 2026-09-30). PMAX defaults to $10k per member above existing CU money, which is that PAC's per-candidate per-cycle limit. Allied industries' money is not represented, and CU money is treated as a single actor.",
+      "code_ref": "fec/engine/optimize.py:23-27",
+      "transfer_conditions": "The weapon-of-the-weak evidence might tempt someone to pool allied industries' dollars into the CU money leg. The review does not support that, because the effect of coalitions on outcomes is unresolved. The single-actor pot remains defensible on this evidence.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "The citations and the word 'contradictory' are confirmed on p. 8, and the future-research deferral on p. 9 and again in the closing paragraph (p. 15; the analyst wrote pp. 14-15). Code comments at optimize.py:23-27 confirm the one-PAC pot and PMAX=10000."
+    }
+  ],
+  "related": [
+    {"slug": "aref-2021-identifying-hidden-coalitions", "relation": "complements", "why": "Aref and Neal find k-cluster coalitions among House members from signed cosponsorship networks. That is the legislator sense of 'coalition'. Pritoni covers the interest-group sense."},
+    {"slug": "aref-2020-detecting-coalitions-optimally", "relation": "complements", "why": "This is the earlier two-group signed-partition method on legislator cosponsorship backbones. It works at the legislator level, so Pritoni's group-level determinants do not transfer to it."},
+    {"slug": "kim-2025-measuring-interest-group", "relation": "complements", "why": "Kim et al.'s per-bill Support/Oppose/Engage positions from LDA reports could show the issue-specific group alignments Pritoni describes. D-021 still limits LDA to identity, not edges or weights."},
+    {"slug": "moreno-2021-shadowing-shielding-effective", "relation": "complements", "why": "The component-literature map cites Romero Moreno 2021 for the contested-bills component (it models a controller against a fixed opponent). Pritoni supplies the empirical case for setting counterparties per issue rather than globally."},
+    {"slug": "azaiez-2025-hypergraph-analysis-european", "relation": "complements", "why": "Azaiez and Mandel apply hypergraph network methods to European Commission lobby meetings. It is an instance of the network analysis of lobbying that Pritoni finds rare (SNA as the main design in 4 of 80 articles)."},
+    {"slug": "kim-nd-mapping-political-communities", "relation": "complements", "why": "Kim and Kunisky fit a bipartite link-community model to interest-group-to-politician lobbying networks. It is a statistical network approach to lobbying communities, though it does not model coalitions between groups."},
+    {"slug": "malaterre-2024-inferring-social-networks", "relation": "complements", "why": "The component-literature map cites it alongside Pritoni for melange-sna.press-coalition-ward. It infers communities from shared text, which is a policy-camp-style definition, not coordination."}
+  ],
+  "summary_issues": [
+    "The scope sentence 'The review studies only why groups form coalitions' is too broad. The descriptive mapping (Tables 1-3, definitions) covers all 80 articles, including ones that treat coalitions as a cause of influence. Only the 16-article, 77-hypothesis meta-analysis is restricted to coalition formation as the dependent variable, and it also drops policy-camp studies and keeps only group- or lobbyist-level units.",
+    "The level breakdown (meso 11/14, micro 35/45, macro 10/16) omits the composite (micro x macro) level, 1/2. Without it the parts sum to 56, not the stated 57/77.",
+    "The UNSTRATIFIED label is right, but the flag that cites the US 41/80 and EU 25/80 split uses the polity counts of the full 80-article sample (Table 2). The polity mix of the 16-article hypothesis subsample is not reported in the text, so that split should not be attached to the 74% or 91.7% figures.",
+    "The SNA 5/9 (55.6%) figure is a single Table 5 row (2010s, SNA design). It is the lowest design row, but it is a 9-hypothesis cell and should be quoted with that denominator and window.",
+    "Wording: the paper does not say strange-bedfellow coalitions form 'issue by issue'. It says they form when the policy context makes them strategically useful."
+  ]
+}

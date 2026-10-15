@@ -1,0 +1,126 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-sna.signed-coalitions",
+      "relation": "method-source",
+      "paper_claim": "The k-partition objective minimizes frustrated edges: negative edges inside a cluster plus positive edges between clusters (Eq. 1, giving C_k(G)). Eq. 2 finds the smallest k that reaches the minimum over all partitions (k*min). Both are solved to global optimality on 19 House networks (n ~445, 4,954 <= m <= 31,936 edges). Eq. 1 averages 3.3 h and Eq. 2 averages 14 h.",
+      "paper_location": "p.2-4 (Eqs. 1-2, computational results: 'n ~445, 4954 <= m <= 31936'); p.7 Discussion (3.3 h / 14 h)",
+      "system_side": "Uses the same frustration objective, weighted by |net|. It runs a single-node best-move local search with a party seed plus 60 random restarts (SC_RESTARTS), only for k=1..3. The result is an upper bound with no optimality guarantee, and k*min is never searched. No engine or ranking step consumes the output. weekly_refresh.py:522 and refresh_table.py:260 run it as a diagnostic step. However, the member desk surface (make_member_desk.py:826, 1153) reads splinter_k2 and sets an 'antag' flag on members, so the output does reach a display surface. The module docstring's claim that the chain does not consume it is therefore only true for the engine.",
+      "code_ref": "fec/network/signed_coalitions.py:41-79; fec/surfaces/make_member_desk.py:826,1153; fec/weekly_refresh.py:522",
+      "transfer_conditions": "The objective transfers directly. The guarantee does not, because local search can stop in a local optimum. At 520 nodes and 7,153 edges the graph has fewer edges than the paper's largest network but slightly more nodes than the paper's n ~445, and the ILP's variable count grows as O(n^2). An exact Eq. 1 run is plausibly feasible but has not been demonstrated at this node count.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers confirmed at text lines 241 and 481-483. Code lines 41-79 match. Corrected the system side: the output is consumed by the member-desk 'antag' flag (make_member_desk.py:826), so 'the chain does not consume it' was too broad. Also corrected 'inside the paper's demonstrated scale', because 520 nodes is more than the paper's ~445."
+    },
+    {
+      "component_id": "melange-sna.signed-coalitions",
+      "relation": "qualifies",
+      "paper_claim": "On signed co-sponsorship backbones, House-only and per session, C_party > C_2 > C_3 holds in every one of the 19 sessions. A distinct third coalition of 4 members (113th, 2013) to 69 members (111th, 2009) appears. Negative ties are plentiful: members of the traditional coalitions have 2.68 negative edges per positive edge.",
+      "paper_location": "p.5 (Fig. 2 discussion); p.6 (third-coalition size); p.7 (Results, last paragraph); p.7 Methods (SDSM backbone)",
+      "system_side": "The signed graph is member_references.json: cross-media mentions, LLM-valenced, with House and Senate mixed (McConnell and Rand Paul appear in the splinter). It has 520 nodes and 7,153 edges (5,959 positive, 1,194 negative). The stored artifact (data/lobbying/signed_coalitions.json, file date 2026-07-19) shows weighted F(1)=1092.31, F(2)<=1040.79 (15.31% of total weight 6,799.18) and F(3)<=1039.79. The k=2 result is not bipolar (a 506-member bloc plus a 14-member splinter), so party_agreement_k2 is null. The k=3 clusters have 506, 13 and 1 members.",
+      "code_ref": "fec/network/signed_coalitions.py:24-31,94-110; data/lobbying/signed_coalitions.json",
+      "transfer_conditions": "The evidence does not carry over. Mention valence measures expressed sentiment, while SDSM signs measure collaboration and avoidance against a degree-preserving null. The system's graph also mixes chambers and pools across Congresses, where the paper is House-only and per session. The system's null third-coalition result says nothing for or against the paper. A test needs a House-only, per-Congress signed co-sponsorship backbone.",
+      "strength": "strong",
+      "verdict": "reproduced",
+      "verifier_note": "All artifact numbers were re-read with jq and match. The paper's C_party > C_2 > C_3, the 4-69 size range and the 2.68 ratio were confirmed at text lines 283-284, 384 and 471."
+    },
+    {
+      "component_id": "melange-sna.signed-coalitions",
+      "relation": "qualifies",
+      "paper_claim": "The third coalition has a distinctive signed-tie pattern: 21.18 negative edges per positive edge, against 2.68 for traditional-coalition members, and 25.6% of its negative edges go to co-partisans, against 8.44%. Its members are the most effective coalition in most sessions.",
+      "paper_location": "p.7 (Results, last paragraph; SI Fig. S3); p.6 (Fig. 4 discussion)",
+      "system_side": "The June vote backbone ran sdsm on member x (vote, side) with alpha .05 BH. The raw version was about 95% party. A later party-controlled null (Option C) was used, and its negative side was dropped because it 'conflates maverickness'. Only cross-party positive ties were kept, for Vote Affinity in the Signed Coalitions sheet.",
+      "code_ref": "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md:54-57",
+      "transfer_conditions": "The paper's ties come from co-sponsorship, not roll-call votes, so this is not a like-for-like contradiction. The relation is 'qualifies', not 'contradicts'. The paper shows that same-party negative ties distinguish the effective third coalition in co-sponsorship backbones. Whether the dropped vote-backbone negatives carry the same structure is untested.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "The paper numbers (text lines 471-474) and the brain lines 54-57 both hold. The relation was downgraded from 'contradicts' to 'qualifies' because the substrates differ (votes versus co-sponsorship), which the analyst's own transfer conditions concede."
+    },
+    {
+      "component_id": "melange-sna.cosponsor-network",
+      "relation": "suggests-extension",
+      "paper_claim": "Builds a signed network from the legislator-bill bipartite projection using SDSM (backbone R package 1.5.0). The null preserves the expected values of both degree sequences. Positive and negative edges are significant deviations at FWER alpha = 0.01 (Holm-Bonferroni).",
+      "paper_location": "p.7 (Methods)",
+      "system_side": "The engine co-sponsor graph is unsigned: load_network reads a single numeric weight per edge, mean-symmetrizes it under most configs, and leaves it directed under holistic_norm, which divides by sqrt(Out_u*In_v). The edge weights are built upstream. For the holistic family, build_holistic_base.py sets f_bill = success x decay^age x 1/sqrt(C) with role dials original 1.0 / regular 0.2. The analyst's 'regular 0.5' is not what this builder uses.",
+      "code_ref": "fec/moneyball_core.py:461-496 (load_network); fec/network/build_holistic_base.py:13-14,37-38,68-74",
+      "transfer_conditions": "A signed SDSM backbone could be added as a separate diagnostic layer feeding signed_coalitions. It should NOT replace or reweight kernel edges. SDSM's degree-preserving null acts like per-edge volume normalization, a proposal that was measured and REJECTED in this project, so FLAG and do not recommend it. The paper uses all co-sponsorships and does not argue for dropping regular cosponsorship edges.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "The paper side was confirmed at text lines 525-532. The cited moneyball_core lines cover symmetrization and holistic_norm, but not the edge-weight recipe. That recipe is in build_holistic_base.py, where regular=0.2, not 0.5."
+    },
+    {
+      "component_id": "melange-legislative-data.effectiveness-shadow",
+      "relation": "suggests-extension",
+      "paper_claim": "Effectiveness is the CEL LES: fifteen indicators, normalized to mean 1 per session. The paper compares coalition-mean LES with 95% CI bands across party, k=2 and k=3 partitions. The third coalition is the most effective in most sessions and is anchored by a few members (e.g. Christopher Smith, mean effectiveness 8.44, 106th-108th).",
+      "paper_location": "p.6 (Fig. 4 discussion); p.8 (Methods, LES)",
+      "system_side": "lep_criterion.py loads CEL House and Senate data (93rd-118th) from fec/lep/*.dta (CELHouse93to118Reduced.dta, CELSenate93to118Reduced.dta), including lesclassic and dwnom1, for a pre-registered convergence look against the blended score.",
+      "code_ref": "fec/members/lep_criterion.py:1-23",
+      "transfer_conditions": "The LES half of the comparison is already local. Reproducing it also needs a House-only, per-Congress signed co-sponsorship backbone and a k=3 partition, and neither is built. The result would be descriptive, with no controls for majority or chair status, which drive LES. It stays UNVERIFIED until a second path reproduces it (DE-062). Any pooled comparison across sessions must be stratified by majority party or labelled UNSTRATIFIED.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Paper confirmed at text lines 389-414 and 543-548. The docstring and the .dta files are present."
+    },
+    {
+      "component_id": "moneyball-rank-pillars.undervaluation-lens",
+      "relation": "qualifies",
+      "paper_claim": "Third-coalition members are usually ideologically aligned with the majority party. The paper attributes the majority party's effectiveness to agenda-setting power, and says a substantial portion of the apparent majority advantage comes from the third coalition. Third-coalition effectiveness drops temporarily during majority transitions and rests on a few ultra-effective members.",
+      "paper_location": "p.6 (Fig. 4 discussion); p.7 (Discussion)",
+      "system_side": "Underdog rank = Intrinsic (0.5 Leg% + 0.5 Centrality%) minus Visibility (0.5 Press% + 0.5 Committee%). No code file is recorded.",
+      "code_ref": "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md:137",
+      "transfer_conditions": "The paper defines its 'hidden' bloc by signed-tie structure, not by low press or committee visibility, and its effectiveness tracks majority alignment. That is closer to what the lens subtracts (committee position) than to what it rewards. The link is an analogy and is not evidence for the lens's formula.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "The paper ties agenda control to majority-party effectiveness and notes that the third coalition is majority-aligned. It does not directly credit the third coalition's own effectiveness to agenda control, so the claim was reworded. Brain line 137 confirmed."
+    },
+    {
+      "component_id": "melange-influence-engine.persuadability-table",
+      "relation": "qualifies",
+      "paper_claim": "The third coalition's median ideology shifts across sessions: very liberal (98th-102nd), center-left (103rd, 111th), center-right (105th-110th). Its members are effective. The paper does not measure persuadability, vote change or electoral vulnerability.",
+      "paper_location": "p.6 (Fig. 3 discussion); p.7 (Discussion)",
+      "system_side": "PERS is a fixed table over stance tiers (Highly Persuadable 0.65 ... Opponent 0.08; PERS_NONE 0.45).",
+      "code_ref": "fec/moneyball_core.py:564-568",
+      "transfer_conditions": "The paper gives no support for the PERS values or for treating third-coalition or Fitzpatrick-type members as more movable. Coalition-level ideological fluidity describes session-to-session composition, not the responsiveness of any individual member.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Paper confirmed at text lines 384-386. A text search found no persuadability or vulnerability measure. The PERS table is present at moneyball_core.py ~562-566."
+    }
+  ],
+  "related": [
+    {
+      "slug": "aref-2020-detecting-coalitions-optimally",
+      "relation": "builds-on",
+      "why": "The authors' earlier paper (cited as ref 20). It introduced optimal 2-partitions on signed political collaboration networks, which this paper extends to k clusters and k*min."
+    },
+    {
+      "slug": "sotoudeh-2024-network-based-measure",
+      "relation": "complements",
+      "why": "Also builds House co-sponsorship networks and relates them to bill passage, using unsigned, passage-weighted, decayed ties. The system cites it in the dashboard template (make_dashboard_html_00.tpl:738), not in the edge builder."
+    },
+    {
+      "slug": "leskovec-2010-predicting-positive-negative",
+      "relation": "complements",
+      "why": "Provides structural-balance and status evidence for signed networks, which bears on whether balance-based partitioning is a reasonable model of signed ties."
+    },
+    {
+      "slug": "porter-2005-network-analysis-committees",
+      "relation": "complements",
+      "why": "An alternative route to hidden House structure, through committee-network community detection rather than signed-tie partitioning."
+    },
+    {
+      "slug": "bucchianeri-2025-legislative-effectiveness-american",
+      "relation": "same-method",
+      "why": "Applies the Volden-Wiseman LES framework, the source of this paper's outcome measure, to state legislatures. It is not the same data, since this paper uses CEL US House scores."
+    },
+    {
+      "slug": "tang-2015-negative-link-prediction",
+      "relation": "complements",
+      "why": "Methods for inferring negative ties. Relevant because the system's signed layers either lack negative ties or dropped them, while this paper's third coalition is defined by them."
+    }
+  ],
+  "summary_issues": [
+    "'The June vote backbone threw away exactly the negative ties that define the third coalition' overstates the case. The paper's negative ties come from a co-sponsorship SDSM backbone. The dropped ties were roll-call-vote negatives, and whether they carry the same structure is untested.",
+    "'The CEL LES data is already on disk, so a House-only reproduction is cheap' omits that the reproduction also needs a signed co-sponsorship backbone and an exact or near-exact k=3 partition, neither of which is built. Only the LES join is cheap.",
+    "The summary implies the signed-coalitions output is purely diagnostic. In fact the member desk (make_member_desk.py:826, 1153) reads splinter_k2 and sets an 'antag' flag, so a heuristic mention-layer splinter reaches a display surface (D-025 wording applies).",
+    "The '83% positive' figure is a share of edge count (5,959/7,153 = 83.3%). The positive share of weight is 83.9%. State the denominator."
+  ]
+}

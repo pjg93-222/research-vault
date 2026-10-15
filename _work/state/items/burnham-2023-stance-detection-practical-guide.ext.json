@@ -1,0 +1,55 @@
+{
+ "slug": "burnham-2023-stance-detection-practical-guide",
+ "title": "Stance Detection: A Practical Guide to Classifying Political Beliefs in Text",
+ "authors": [
+  "Michael Burnham"
+ ],
+ "year": "2023",
+ "venue": "arXiv preprint arXiv:2305.01723v2 (Nov 2023), Penn State. The PSRM 2025 venue hint is not supported by the text",
+ "doi": "",
+ "document_type": "working paper (arXiv preprint; methods guide with replication)",
+ "coverage": "Full text read: front matter, Sections 1-6, Appendix A (method summaries), Appendix B (testing data and hypothesis lists) and the reference list, in 3 chunks of about 450 lines (1339 lines, 72,948 chars). Figures 1-4 are referenced but not rendered (no page images on this machine); figure content comes from surrounding text only. Paul annotation files: none (annot_sha12s is empty, n_annots is 0), so paul_markup is empty. p.note is not true, so this is not a Paul research note. Metadata check: title, author and year match the text; the venue hint PSRM 2025 does not appear in the text, which shows arXiv:2305.01723v2 dated November 2023.",
+ "research_question": "How should political scientists define and operationalize stance detection (the position a document expresses toward a proposition), and which classification approach (supervised, NLI zero-shot, or in-context generative LLM) should they choose given document context, compute, reproducibility and human labor constraints? A secondary aim is to show that NLI and in-context classifiers can replicate a supervised-classifier finding on COVID-19 mitigation stance (Block Jr et al. 2022).",
+ "theory": "Stance is an individual's attitudes, feelings, judgments or commitment toward a proposition (Biber and Finegan 1988), defined here as how an individual would answer a proposition (Definition 1). Sentiment is positive or negative emotional valence and is treated as a separate dimension (Definition 2). Stance detection is recast as textual entailment (Dagan et al. 2005; AlDayel and Magdy 2021): text T entails stance S when a human reading T with context C would infer that T supports S (Definition 4, pp.3-4). Context (information in the document plus the classifier's knowledge) governs ambiguity and therefore accuracy (Sections 2.2-2.3, pp.3-5).",
+ "data": "Trump-approval test set: public tweets (n = 1,135 per text on p.5; Table 6 Twitter sources sum to 1,134, a small internal mismatch) plus 1,000 random sentences containing 'Trump' from 117th Congress congressional e-newsletters (DC Inbox; Cormack 2017). Human coded twice with third-annotator adjudication. Total test set about 2,135 short documents (p.17). Table 6 (p.32): MTSD 398, ConStance 98, KE-MLM 380, SemEval2016 97, Titling 161, Newsletters 1,000. Replication data (Section 5, pp.21-23): 862,923 COVID-19 tweets from 23,476 users, 1 Sep 2020 to 28 Feb 2021; user ideology from tweetscores (Barbera 2015); 2,000 hand-labeled training tweets with coding rules for non-compliant tweets; 300 randomly sampled labeled tweets used as the NLI validation sample.",
+ "method": "Three classifier families compared. (1) Supervised: bag-of-words logistic regression, random forest and SVM (grid search) versus RoBERTa, BERTweet, PoliBERTweet and DeBERTaV3 base (Bayesian hyperparameter sweep, 10 runs each; MCC primary metric; pp.11-12). (2) NLI zero-shot: DeBERTaV3 Large NLI model; each tweet paired with hypothesis templates (single versus multi-hypothesis; keyword matching of hypotheses to documents; 9 synonymous hypotheses for sensitivity; pp.14-15). (3) In-context: GPT-4, GPT-3.5 Turbo and Zephyr 7B with system and user prompts, temperature 0, zero-shot, few-shot, chain-of-thought and logit bias variants (Table 5, pp.19-20). Replication: negative binomial regression of count of threat-minimizing tweets on ideology, county COVID death rate, their interaction, county demographics, political lean and state fixed effects, following Block Jr et al. (2022) (pp.21-22).",
+ "identification": "No causal identification strategy. The replication is an observational negative binomial regression with county and state controls and state fixed effects; the paper compares coefficient direction and size across three label sources (original supervised labels, two NLI hypothesis sets) rather than claiming causal effects.",
+ "measures": "Matthews correlation coefficient (MCC) is the primary metric (Chicco and Jurman 2023), with F1, accuracy, bootstrapped 95% confidence intervals (Figure 2), inference time on GPU and CPU, and API cost per run. Intercoder reliability between NLI and supervised labels is MCC = 0.84. Ambiguity is defined as conflicting human codes; relevance is the presence of the term Trump. Ideology is a uni-dimensional left-right score (tweetscores).",
+ "scope": "English-language US political text: Trump approval in tweets and congressional newsletters (117th Congress newsletters; tweets from several stance projects) and COVID-19 mitigation stance on Twitter (Sep 2020 to Feb 2021). Guidance is presented for political text in general, but the evidence rests on one target (Trump), one replication case, and models available as of 2023-2024.",
+ "key_findings": [
+  "Stance is distinct from sentiment and should be measured independently; sentiment can inform intensity but does not replace stance (Section 2.1, pp.2-3).",
+  "Ambiguity is higher when the document does not mention Trump: 34.0% of non-Trump documents versus 19.5% of Trump-mentioning documents had conflicting human codes (Section 3.3, p.10).",
+  "NLI classifiers degrade most when Trump is not mentioned; supervised and in-context classifiers adapt better to low-context documents (Figure 2, p.10).",
+  "Supervised results (Table 3, p.12, Twitter only): logistic regression MCC 0.51, random forest 0.49, SVM 0.49, RoBERTa 0.60, BERTweet 0.63, PoliBERTweet 0.68 (best); DeBERTaV3 base without domain adaptation 0.63.",
+  "Laurer et al. (2024), cited on p.12: 500 training examples let language models consistently beat other algorithms trained on several thousand.",
+  "NLI results (Table 4, p.14): DeBERTaV3 Small MCC 0.15, Base 0.40, Large 0.65 (83% accuracy); only the Large model is described as comparable to supervised classifiers and human-level.",
+  "Test-set cost and performance (Table 5, pp.19-20; cost text p.17): GPT-4 standard prompt MCC 0.78 at $12.52 for 2,135 documents; GPT-3.5 Turbo MCC 0.58 at $0.68; Zephyr 7B MCC 0.59 with no API cost but about 2.5 min on a consumer GPU.",
+  "Logit bias raised GPT-4 MCC to 0.80 and GPT-3.5 to 0.63 at no extra cost (Table 5). Chain-of-thought gave no perceptible accuracy benefit for GPT-4 and tripled its cost ($38.62 versus $12.52), and Zephyr 7B failed template compliance (p.19).",
+  "Scaling cost: classifying 1,000,000 tweets with the cheapest in-context approach would cost $6,260 (p.17), so in-context models are recommended mainly for small sets, training data expansion or validation.",
+  "Hypothesis sensitivity: nine synonymous NLI hypotheses gave average MCC 0.64, range 0.62 to 0.66 (p.15).",
+  "Replication (Section 5.2, pp.22-23): NLI hypothesis set 1 MCC 0.70 (89% accuracy), set 2 MCC 0.75 (91%), original supervised classifier MCC 0.66 (86%) on 300 labeled tweets; NLI and supervised labels agree at MCC 0.84, and regression direction and size are consistent across the three models (Figure 3, p.22).",
+  "Threat-minimizing tweets concentrate at the conservative pole in all three label sets (Figure 4, p.23); average author ideology -0.66 overall, and disagreement samples average -0.11 (set 1) and -0.07 (set 2).",
+  "Author's conclusion: when document information is sufficient, NLI classifiers reach performance comparable to supervised classifiers without training; when outside context is needed, supervised or in-context classifiers are better (Section 6, pp.23-24)."
+ ],
+ "limitations": "Author notes there are no NLI datasets or benchmarks for stance detection, and NLI models are trained on computer-science data (Section 6, p.24). In-context models are proprietary and cannot be archived for replication, and their cost grows with corpus size (Section 4.3.1, p.16). Few-shot prompts are unstable and can overfit (p.19). Open models such as Zephyr 7B are much slower than NLI classifiers. Evidence comes from one target (Trump) and one replication. Twitter test count is 1,135 in the text but 1,134 in Table 6, a minor inconsistency. The 300-tweet NLI validation sample is small (about 5% margin of error per the author). Some sources had labelers with no context (SemEval, newsletters). The paper states there is no best approach; choices depend on resources and context.",
+ "paul_markup": [],
+ "references_of_note": [
+  "Laurer, Van Atteveldt, Casas and Welbers (2024), Less annotating, more classifying, Political Analysis 32, 84-100 (500-example result; NLI transfer)",
+  "Block Jr, Burnham, Kahn, Peng, Seeman and Seto (2022), Perceived risk, political polarization, and COVID-19 mitigation, Social Science and Medicine (replicated here)",
+  "AlDayel and Magdy (2021), Stance detection on social media: state of the art and trends, Information Processing and Management 58 (entailment definition)",
+  "Bestvater and Monroe (2022), Sentiment is not stance: target-aware opinion classification, Political Analysis",
+  "Dagan, Glickman and Magnini (2005), PASCAL recognising textual entailment challenge (entailment definition)",
+  "Chicco and Jurman (2023), MCC should replace ROC AUC, BioData Mining 16 (metric choice)",
+  "Denny and Spirling (2018), Text preprocessing for unsupervised learning, Political Analysis 26 (preprocessing risks)",
+  "Nguyen, Vu and Nguyen (2020), BERTweet; Kawintiranon and Singh (2022), PoliBERTweet (domain-adapted models in Table 3)",
+  "Mohammad et al. (2016), SemEval-2016 Task 6 (source of Table 1 examples)",
+  "Tornberg (2023a), ChatGPT-4 outperforms experts and crowd workers in annotating political Twitter messages; Spirling (2023), open-source generative AI for science (reproducibility argument)",
+  "Barbera (2015), Birds of the same feather tweet together (tweetscores ideal point estimation used in the replication)",
+  "Barbera, Boydstun, Linn, McMahon and Nagler (2021), Automated text classification of news articles, Political Analysis 29 (sentence versus segment classification)"
+ ],
+ "short_quotes": [
+  "Stance detection is entailment classification and determines how a document responds to a proposition.",
+  "NLI classifiers are a good default approach for their accuracy, scalability, and reproducibility.",
+  "Using non-reproducible models as the primary source of labels should be discouraged."
+ ]
+}

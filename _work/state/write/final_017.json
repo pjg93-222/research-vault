@@ -1,0 +1,1469 @@
+[
+ {
+  "slug": "borodin-nd-threshold-models-competitive",
+  "note": false,
+  "meta": {
+   "title": "Threshold Models for Competitive Influence in Social Networks",
+   "authors": [
+    "Allan Borodin",
+    "Yuval Filmus",
+    "Joel Oren"
+   ],
+   "year": "",
+   "venue": "",
+   "doi": "",
+   "sha12s": [
+    "ee2aebd28f83"
+   ],
+   "category": "Adaptive Influence Maximization",
+   "category_slug": "adaptive-influence-maximization"
+  },
+  "extraction": {
+   "title": "Threshold Models for Competitive Influence in Social Networks",
+   "authors": [
+    "Allan Borodin",
+    "Yuval Filmus",
+    "Joel Oren"
+   ],
+   "year": "",
+   "venue": "",
+   "doi": "",
+   "document_type": "Theoretical computer science paper (working or conference version; no venue stated in the text)",
+   "identification": "Not applicable: proof-based theory paper with no causal or empirical identification strategy.",
+   "coverage": "Full text read in two chunks (lines 0-299 and 300-745 of the text file, 29217 chars, under the 400000 limit). Covers front matter, abstract, introduction, Sections 2-7, Appendices A-D and references. Paul markup: none (p.annot_sha12s is empty and n_annots is 0); this is not one of Paul's own research notes. Lobbying, persuasion/turnout, legislators and text measurement: not in the text. Networks: directed edge-weighted graphs appear only as the model object. Path-finding: only as the liveness argument in the Lemma 2 proof and the Theorem 7 reduction. Allocation: choice of k early adopters. Elections: only motivating examples (voting when abstention is disallowed, Section 4; election race, Section 6.1); no election data. Metadata: title and authors confirmed; year and venue are not stated in the text (cited references run to 2010), so left blank. Page images not rendered.",
+   "research_question": "How can the linear threshold model of influence diffusion be extended to two competing technologies so that a player can choose early adopters to maximize its own spread, and does the greedy (1-1/e) approximation for influence maximization still apply to these competitive extensions?",
+   "theory": "Extends the Kempe-Kleinberg-Tardos linear threshold model with competition. Four variants are proposed: a weight-proportional model where active neighbours of either technology share one threshold and adoption is split by weight; a separated-threshold model with technology-specific weights and thresholds; a forcing extension in which remaining inactive nodes adopt a technology at a final step; and an OR model where each technology spreads independently and a decision function chooses between them at the end, with a repeated-OR variant. Key properties studied are monotonicity and submodularity of the expected A-spread, which determine whether the Nemhauser-Wolsey-Fisher greedy guarantee applies.",
+   "data": "No empirical data. Theoretical instances: directed graph G=(V,E) with per-technology edge weights in [0,1] whose incoming weights sum to at most 1, initial adopter sets for A and B, a budget k, and node thresholds drawn uniformly from [0,1] (or intervals). Sample sizes are illustrative trees and graphs in Figures 1-2 (for example a 7-node tree for the monotonicity counterexample). The hardness reduction builds a graph with N = O(n^(2 alpha+2)) nodes from a Vertex Cover instance.",
+   "method": "Formal model definitions; monotonicity and submodularity counterexamples on small trees (Theorems 1-2, 4, 6; Appendices A, C); an inductive coupling proof over fixed thresholds and coin flips for monotonicity of the separated-threshold model (Lemma 3, Theorem 3, Appendix B); a live-edge equivalence argument for submodularity of the OR model (Lemma 2); a reduction from Vertex Cover for NP-hardness of approximation (Theorems 7-8, Appendix D); and application of Mossel-Roch's result for generalized submodular thresholds (Theorems 10-11).",
+   "scope": "Abstract directed weighted social networks of arbitrary size; no population, institution or era. Main text uses two competing technologies, with a claim (no proof given) that results extend to several. Time is discrete steps with no calendar period. Results are worst-case or existence statements, not average-case.",
+   "measures": [
+    "Expected number of A-active nodes sigma(IA, IB) at termination",
+    "Per-node activation probabilities alpha and beta at step t, and their values after adding a seed x",
+    "Monotonicity and submodularity of sigma",
+    "Approximation ratio under polynomial-time algorithms"
+   ],
+   "key_findings": [
+    {
+     "finding": "Weight-proportional competitive linear threshold model is not monotone: adding an A seed can lower the spread of A.",
+     "location": "Section 2, Theorem 1; proof in Appendix A, Theorem 12 with Figure 1(a)",
+     "numbers": "Node r activation probability for A: 11/40 before and 103/400 after adding a seed (0.275 vs 0.2575)"
+    },
+    {
+     "finding": "Weight-proportional model is also not submodular.",
+     "location": "Section 2, Theorem 2; proof in Appendix A, Theorem 13 with Figure 1(b)",
+     "numbers": "For S={w} vs T={w,y} (probabilities 3/10 to 17/60 for S; 7/10 to 17/50 for T)"
+    },
+    {
+     "finding": "Separated-threshold model is monotone: adding A seeds never reduces the probability a node becomes A-active at any step, and never raises the probability of B.",
+     "location": "Section 3, Theorem 3; proof in Appendix B, Lemma 3 and Theorem 14",
+     "numbers": "None; qualitative inequality alpha-hat at step t >= alpha at step t"
+    },
+    {
+     "finding": "Separated-threshold model is not submodular in general; the claimed counterexample is only in a full version not included in this text.",
+     "location": "Section 3, Theorem 4 (stated without proof here)",
+     "numbers": "None"
+    },
+    {
+     "finding": "Adding a forcing step keeps monotonicity-type properties but does not restore submodularity; the result holds for any tie-breaking and any forcing rule.",
+     "location": "Section 4, Theorem 5 (monotonicity) and Theorem 6 (non-submodularity); counterexample in Appendix C, Figure 2",
+     "numbers": "Forced-model counterexample: A-probability at root 0 for S and 0 for T, but 1 for T with the added seed, violating submodularity"
+    },
+    {
+     "finding": "Separated-threshold competitive problem is NP-hard to approximate within a factor better than N^(1/2 - eps), for any eps > 0.",
+     "location": "Section 5, Theorem 7; reduction in Appendix D, Theorem 16 from Vertex Cover",
+     "numbers": "Ratio bound Omega(N^(1/2 - eps)); gap exponent (alpha+3)/(2 alpha+2) tends to 1/2 with beta = alpha+2"
+    },
+    {
+     "finding": "Same hardness applies to the separate-edge-weight Wave Propagation model of Carnes et al., giving a negative answer to their conjecture that the process remains monotone and submodular.",
+     "location": "Section 5, Theorem 8 and the paragraph before it; reference to Carnes et al. 2007",
+     "numbers": "Same Omega(N^(1/2 - eps)) bound"
+    },
+    {
+     "finding": "OR model (technologies spread independently, then a decision step with monotone submodular decision functions) is monotone and submodular in the A-spread.",
+     "location": "Section 6, Lemma 1 (monotone) and Lemma 2 (submodular)",
+     "numbers": "None"
+    },
+    {
+     "finding": "Greedy (1-1/e-eps) approximation is achievable for the OR model and its generalized version with any monotone submodular node-level functions.",
+     "location": "Section 6, Theorem 9 and Theorem 10 (via Mossel-Roch [8])",
+     "numbers": "Approximation factor 1-1/e-eps in polynomial steps"
+    },
+    {
+     "finding": "Repeating the OR process for several iterations (e.g. daily spread in an election, with edge weights possibly changing between iterations) with one final decision step remains monotone and submodular.",
+     "location": "Section 6.1, Theorem 11",
+     "numbers": "Number of iterations l is arbitrary; no numeric bound"
+    },
+    {
+     "finding": "Authors argue that no single true model exists and suggest game-theoretic settings where competing firms bid for strategic nodes.",
+     "location": "Section 7, Conclusions",
+     "numbers": "None"
+    }
+   ],
+   "limitations": [
+    "Theorem 4 (separated-threshold non-submodularity) is stated without proof; the counterexample is said to appear only in a full version on the authors' websites.",
+    "Proof of Lemma 3 is omitted for lack of space and deferred to the full version.",
+    "Main text treats two technologies; extension to several is asserted, not proven.",
+    "Hardness results are asymptotic worst-case bounds (N^(1/2 - eps)); they do not characterize typical instances or give an algorithm.",
+    "Greedy guarantee applies only to the OR model (and generalized OR) under monotone submodular decision functions; the paper concedes most other models are unfit for the Nemhauser et al. technique and leaves open whether efficient approximations exist.",
+    "Model is one-shot diffusion with uniformly random thresholds; partial-knowledge intervals are mentioned but not analyzed.",
+    "No empirical validation of any model on real networks or election data."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Kempe, Kleinberg, Tardos 2003, KDD: linear threshold model and influence maximization (ref 6)",
+    "Nemhauser, Wolsey, Fisher 1978, Mathematical Programming: greedy (1-1/e) approximation for submodular maximization (ref 4)",
+    "Carnes, Nagarajan, Wild, van Zuylen 2007, ICEC: follower perspective on competitive influence; Wave Propagation conjecture refuted here (ref 2)",
+    "Mossel and Roch 2010, SIAM J. Comput.: submodularity of influence from local to global (ref 8)",
+    "Bharathi, Kempe, Salek 2007, WINE: competitive influence maximization (ref 1)",
+    "Kostka, Oswald, Wattenhofer 2008, SIROCCO: rumor dissemination (ref 7)"
+   ],
+   "short_quotes": [
+    {
+     "quote": "the original greedy approach cannot be used",
+     "location": "Abstract"
+    },
+    {
+     "quote": "there is no single true model",
+     "location": "Section 7, Conclusions"
+    },
+    {
+     "quote": "The process is not submodular in general.",
+     "location": "Section 3, after Theorem 3"
+    }
+   ]
+  },
+  "summary_md": "Borodin, Filmus and Oren (University of Toronto; no year or venue in the text, references run to 2010) ask whether the Kempe-Kleinberg-Tardos linear threshold model can be extended to two competing technologies while keeping the greedy (1-1/e) seed-selection guarantee. Mostly it cannot. A weight-proportional model, where an activated node adopts A with probability equal to A's share of active incoming weight, is not even monotone: adding an A seed moves a root's A-probability from 11/40 to 103/400. A separated-threshold model with per-technology weights and thresholds is monotone but not submodular, and adding a forcing step does not fix this under any tie-breaking rule. With technology-specific weights, the follower problem is NP-hard to approximate within Omega(N^(1/2-eps)). The same reduction refutes a Carnes et al. conjecture. Only the OR model, where each technology spreads independently and a monotone submodular decision function picks the winner at the end, keeps the greedy guarantee, including repeated rounds. For the system as built, the paper is already cited (scenario.py, write_im_sheet.py) as the reason the FLIP side carries no guarantee. That citation is broadly right but loosely mapped. FLIP's pflip = a/(a+b) has the same form as Borodin's weight-proportional adoption split, but it has no random thresholds and no propagation. In a fixed stance state it is separable and concave, so the optimizer's exact certificate holds. The paper bites in two places: modeled-conversion replanning, where the max-normalized neighbour term can make adding pro mass lower other members' pflip, and the coalition frontier's lazy greedy. The frontier keeps one shared kernel for both colours, which stays clear of the Theorem 8 hardness, but its objective includes contest seeds, the seed gate and the leverage factor, and nothing proves those submodular. All bearings below are UNVERIFIED agent analysis (DE-062).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-allocation.joint-optimizer",
+    "relation": "qualifies",
+    "paper_claim": "In the weight-proportional competitive LT model (Eq. 1) the A-spread is not monotone (Theorem 1: root A-probability 11/40 before and 103/400 after adding one A seed, Appendix A Theorem 12) and not submodular (Theorem 2). The Nemhauser-Wolsey-Fisher greedy bound does not transfer to that model.",
+    "paper_location": "Section 2, Eq. 1, Theorems 1-2; Appendix A Theorems 12-13, Figure 1",
+    "system_side": "pflip = a/(a+b) (flip_model.py 92-97) has the form of Eq. 1, but a and b each add a money term to WP*nA/mAt, so it is not the same model. Stance is fixed inside a run, so the objective is separable by member. optimize.py checks concavity at run time (concavity_violations) and labels only the fixed-state run as fixed_state_lazy_greedy. A modeled conversion re-runs topic_setup, where mAt = max(nA) (flip_model.py 138-140), so one conversion can lower another member's WP*nA/mAt term. Such a run is labeled modeled_threshold_replanning (optimize.py 190) and carries no certificate.",
+    "code_ref": "fec/engine/flip_model.py:92-97, 138-140; fec/engine/optimize.py:3-12, 120-123, 142-144, 190",
+    "transfer_conditions": "Structural analogy only. Borodin non-monotonicity runs through multi-step propagation under random thresholds, which pflip does not have. The conversion-path concern applies only when conversion_reachable is true. Whether the mAt renormalisation lowers total winnability after a conversion is not measured in this text.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers and theorem locations confirmed in the text. Code lines confirmed. The analyst called the fixed-state objective concave; the code only tests concavity at run time and the docstring asserts diminishing returns, so the wording is now checked, not proven. The Eq. 1 match is partial because the money term is absent from Borodin model.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Joint CU budget optimizer|Joint CU budget optimizer]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.competitive-cascade-crn",
+    "relation": "supports",
+    "paper_claim": "With technology-specific edge weights, the separated-threshold competitive problem (Theorem 7) and the Carnes wave-propagation variant with technology-specific probabilities (Theorem 8) are NP-hard to approximate within Omega(N^(1/2-eps)) by a Vertex Cover reduction (Appendix D, Theorem 16). This refutes the Carnes et al. conjecture for that case.",
+    "paper_location": "Section 5, Theorems 7-8; Appendix D, Theorem 16, Figure 3",
+    "system_side": "The engine builds one kernel P = build_P(adj) and uses it for both colours (budget_frontier.py 77, per_topic_coalition.py 37, scenario.py 39). Pro and anti frontiers draw the same keyed splitmix value per (iteration, edge) (budget_frontier.py 83-94; per_topic_coalition.py 44-55), and the first colour to reach a node keeps it. The paper states its hardness for models with separate per-technology edge weights, so the shared kernel sits outside that stated scope. The paper does not describe the Bharathi-Kempe-Salek weights, so calling them shared-weight is the analyst reading, not the paper.",
+    "code_ref": "fec/moneyball_core.py:555-562; fec/engine/budget_frontier.py:77, 83-94; fec/engine/per_topic_coalition.py:37, 44-55; fec/engine/scenario.py:3-12, 39",
+    "transfer_conditions": "Holds only while the kernel stays shared. Giving anti-side diffusion its own edge weights or physics, such as cpf_pressure on the B side only (moneyball_core.py 546), would move the engine into the stated hardness scope. Tie-breaking by frontier order is not analysed in this paper.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper theorem locations and the shared-kernel code are confirmed. The label shared-weight Bharathi-Kempe-Salek family is not in Borodin text, which says only that greedy has been applied to competitive extensions [2,1]. Scope statement kept, label removed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Competitive independent cascade with common random numbers|Competitive independent cascade with common random numbers]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.budget-frontier",
+    "relation": "qualifies",
+    "paper_claim": "Most natural competitive extensions lose submodularity. Monotonicity can survive while submodularity fails (Theorems 3-6). The greedy (1-1/e) guarantee is shown only for the OR model with monotone submodular decision functions (Theorems 9-11). Section 7 leaves other models open.",
+    "paper_location": "Sections 3-4 and 6, Theorems 3-6 and 9-11; Section 7",
+    "system_side": "budget_frontier.py runs a CELF-style lazy greedy on a heap. spread() applies the seed gate (line 128) and removes activated contest seeds from the anti set (line 131). marg() multiplies the raw gain by fac, which is REPFAC times leverage for contest seeds (line 143, applied at 156), and floors at zero. audit_frontier.py 27-35 counts marginal inversions on clamped spread and passes up to 35 percent of marginals as MC noise (tolerance 0.35 times the marginal count).",
+    "code_ref": "fec/engine/budget_frontier.py:118-134, 143, 153-167; fec/audit/audit_frontier.py:27-35",
+    "transfer_conditions": "Applies to electoral mode (contest and defend seeds). This paper gives no submodularity result for the electoral objective. Any coalition-mode greedy guarantee comes from the competitive IC literature cited to Bharathi et al. (Borodin ref 1), not from this paper, so coalition-only mode is not covered here. Separating MC noise from structure needs a read-only check of raw marginals under common random numbers.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper theorem locations and claims confirmed. Code lines confirmed, including the marginal and fac logic at budget_frontier.py 153-156 and the 35 percent tolerance. The claims that Bharathi proof excludes contest seeds and that coalition-only mode is closer to a provable case are not in Borodin text, so they are removed as paper-based support.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Budget frontier with knee and electoral modes|Budget frontier with knee and electoral modes]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.lt-priming",
+    "relation": "suggests-extension",
+    "paper_claim": "In the separated-threshold competitive LT model a node is activated by whichever technology weighted active neighbours first exceed that technology own threshold. Adding A seeds never raises the probability that B propagates (Lemma 3 part 1, used in Theorem 3), but the process is not submodular in general (Theorem 4, counterexample only in an unincluded full version).",
+    "paper_location": "Section 3, Theorems 3-4; Appendix B, Lemma 3",
+    "system_side": "lt_priming.py prime() (96-103) sets theta from the tier ladder (base THETA runs from 0.0 for Ally to 3.0 for Opponent, lines 19-21), adds a committed-opponent term and a money-captured term, and sums pressure over pro sources only (proset). Anti neighbours exert no competing threshold pressure. The recruit search (131-140) picks cheapest recruits per target rather than optimising a seed set, so submodularity is not invoked.",
+    "code_ref": "fec/engine/lt_priming.py:19-21, 96-103, 131-140",
+    "transfer_conditions": "Thresholds here are not normalised to Borodin uniform [0,1] draws (base ladder 0.0 to 3.0 plus additive terms). Adding an anti-side threshold would be a model change for Paul to decide. Borodin monotonicity result is for the separated-threshold model and says nothing about this solver recruit lists, for which the paper gives no guarantee.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper claims and code lines confirmed. The threshold range should read 0.0 (Ally) to 3.0 (Opponent) in the base ladder, not 0.6 to 3.0. The claim that Borodin separated-threshold model is the natural competitive version of this solver is the analyst suggestion, not stated in the paper. Lemma 3 part 1 is the B-monotonicity source; Theorem 3 is about A.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Linear-threshold priming (cheapest tip)|Linear-threshold priming (cheapest tip)]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "summary_md says the FLIP objective is separable and concave so the exact certificate holds. The code only checks concavity at run time (concavity_violations in optimize.py) and conditions the certificate on that check. Reword as checked, not proven.",
+   "summary_md and flags say FLIP is not any of Borodin four models. It is closest to the Section 2 weight-proportional split but has no thresholds or propagation, so the accurate claim is that it is not that model either.",
+   "Bearings 2 and 3 use Bharathi-Kempe-Salek characterisations (shared-weight family; fixed-opponent proof excluding contest seeds) that are not in the Borodin text. Removed as paper-based support.",
+   "paul_alignment claims (complex-contagion position on lt-priming; greedy plus CELF as operational layer) have no source in this item: paul_entries is empty and n_annots is 0. Treat as unverified.",
+   "related cai-2025 was marked extends and described as taking up Borodin open question. The Cai text never cites Borodin or uses submodularity, so the relation is changed to complements.",
+   "related bharathi why overstated that Bharathi follower problem keeps the greedy guarantee. Borodin only says greedy has been applied to competitive extensions [2,1]. Wording corrected.",
+   "Lt-priming theta range in the bearing was 0.6 to 3.0; the base ladder runs 0.0 (Ally) to 3.0 (Opponent). Corrected in the bearing."
+  ],
+  "gaps_exposed": [
+   "write_im_sheet.py:26 and scenario.py:11-12 call FLIP competitive Linear Threshold (Borodin), but flip_model.pflip is a one-step weight-proportional ratio with no random thresholds and no propagation. The citation names the right failure (no guarantee) but the wrong model. Only the conversion-replanning path is threshold-like.",
+   "There is no test of whether a modeled conversion lowers total winnability through the mAt = max(nA) renormalization in flip_model.py:140, which is the Borodin-Theorem-1-style non-monotone channel.",
+   "audit_frontier.py:27-35 tolerates up to 35 percent marginal inversions as MC noise and reads clamped marginals. Nothing tests submodularity of the electoral-mode objective (contest seeds shrink the opponent set; fac multipliers), which no cited proof covers.",
+   "The frontier's same-round tie between colours is resolved by list-processing order, not at random. No cited paper establishes submodularity under this rule.",
+   "LT priming ignores anti-neighbour competition entirely. A separated-threshold (Borodin Section 3) or OR-model (Section 6) treatment of opposing pressure is not built.",
+   "Borodin's OR model with a final decision step (Section 6, Theorem 11 for repeated rounds) is the one competitive LT variant with a greedy guarantee, and the system has no counterpart to it."
+  ],
+  "flags": [
+   "Citation-accuracy flag: the repo cites Borodin et al. for FLIP being competitive LT (fec/surfaces/write_im_sheet.py:26; fec/engine/scenario.py:11-12). The built FLIP is not any of Borodin's four models. Borodin's results support the no-guarantee label by analogy, not by direct application.",
+   "Paper is pure theory with no data. Its election examples (forcing as no-abstention voting, Section 4; daily spread in an election race, Section 6.1) are motivation only and give no evidence about legislators or cosponsorship.",
+   "No conflict with the rejected SNA proposals: the paper does not argue for dropping cosponsorship edges or per-edge volume normalization. Its influence language concerns abstract diffusion, not revolving-door edges.",
+   "Theorem 4 and Lemma 3 proofs are deferred to a full version that is not in this text, so the separated-threshold non-submodularity counterexample is unseen here.",
+   "All bearings are new agent analysis, UNVERIFIED until a second path reproduces them (DE-062)."
+  ],
+  "paul_alignment": "Paul has no annotations on this work (n_annots 0), so there is no takeaway to check. It fits his stated positions. On lt-priming he treats coalition formation as complex contagion ('not diminishing'), and Borodin proves competitive threshold models are generally not submodular. On the joint optimizer he treats greedy plus CELF as the operational layer, and optimize.py already limits its certificate to the fixed-state case, which matches the paper. The repo's one-line gloss of Borodin is slightly stale: flip_model is now a ratio model.",
+  "related": [
+   {
+    "slug": "bharathi-nd-competitive-influence-maximization",
+    "relation": "cites",
+    "why": "Borodin cites Bharathi-Kempe-Salek [1] among works that applied the greedy approach to competitive extensions. The system competitive cascade follows that family, and Borodin results mark where the guarantee stops for LT variants. Borodin does not say Bharathi follower problem keeps the guarantee."
+   },
+   {
+    "slug": "golovin-2011-adaptive-submodularity-theory",
+    "relation": "complements",
+    "why": "Borodin does not cite Golovin-Krause. The link is through the code: optimize.py uses a Golovin-Krause data-dependent upper bound as a diagnostic. Borodin shows which competitive objectives lose the submodularity such bounds need."
+   },
+   {
+    "slug": "cai-2025-competitive-influence-maximization",
+    "relation": "complements",
+    "why": "Competitive influence maximization in voter dynamics with timing and network heterogeneity. Its text does not cite Borodin or discuss submodularity, so it is a neighbouring competitive-IM study on a different diffusion model, not a follow-up to Borodin."
+   },
+   {
+    "slug": "moreno-2021-shadowing-shielding-effective",
+    "relation": "complements",
+    "why": "Heuristics for competitive continuous influence maximisation under voting dynamics. A practical alternative when Borodin-style results remove greedy guarantees."
+   },
+   {
+    "slug": "almazaydeh-2026-heuristic-centrality-methods",
+    "relation": "complements",
+    "why": "Compares greedy CELF++ with sampling and centrality heuristics on cost-effectiveness. Relevant once Borodin shows greedy has no guarantee in most competitive LT variants."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "ma-2022-adversarial-attack-graph",
+    "relation": "complements",
+    "why": "Title matches a competitive threshold-model paper, where submodularity can fail. The Ma et al. result gives the single-campaign condition. Item title checked only; the content was not re-read here."
+   },
+   {
+    "slug": "chen-2023-complex-contagion-influence",
+    "relation": "complements",
+    "why": "fec/engine/scenario.py lines 11-12 cite Borodin et al. for competitive LT, where submodularity can fail. This is the competitive threshold counterpart to the K-complex model here."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "amsalem-2018-effect-politicians-personality",
+  "note": false,
+  "meta": {
+   "title": "The Effect of Politicians' Personality on Their Media Visibility",
+   "authors": [
+    "Eran Amsalem",
+    "Alon Zoizner",
+    "Tamir Sheafer",
+    "Stefaan Walgrave",
+    "Peter John Loewen"
+   ],
+   "year": "2018",
+   "venue": "Communication Research (Original Research Article)",
+   "doi": "10.1177/0093650218758084",
+   "sha12s": [
+    "53aade4c3285"
+   ],
+   "category": "Adjacent",
+   "category_slug": "adjacent"
+  },
+  "extraction": {
+   "title": "The Effect of Politicians' Personality on Their Media Visibility",
+   "authors": [
+    "Eran Amsalem",
+    "Alon Zoizner",
+    "Tamir Sheafer",
+    "Stefaan Walgrave",
+    "Peter John Loewen"
+   ],
+   "year": "2018",
+   "venue": "Communication Research (Original Research Article)",
+   "doi": "10.1177/0093650218758084",
+   "document_type": "Empirical journal article: elite survey (Big Five via TIPI) linked to news-mention counts, cross-sectional OLS",
+   "coverage": "Full text read: all 1253 lines of the text file (front matter, abstract, introduction, theory, hypotheses, method, measures, controls, results, Table 1, robustness, discussion, limitations, notes, references, author bios). Online Appendices A-E are cited in the text but are not in the file, so their contents (summary statistics, parsimonious models, randomization inference, country-level and Belgian parliament-level models) are not covered. Paul's markup: none supplied (the task listed no markup files).",
+   "research_question": "Do politicians' Big Five personality traits predict how often they are covered in national news media, beyond institutional power and other individual-level explanations (political power, activity, communication skill, demographics)? The paper focuses on agreeableness and extraversion as interpersonal traits, and also tests openness, neuroticism and conscientiousness (pp. 2-3, lines 74-78 and 146-156).",
+   "theory": "Two mechanisms link traits to visibility (pp. 5-6). (1) A motivational mechanism: traits shape need for interaction and attention, so some politicians seek coverage more (cites Costa & McCrae 1988; Mondak 2010; Cohen et al. 2008; Sheafer 2001). (2) A news-values mechanism: traits shape behaviours that fit journalistic selection criteria (camera performance, sound bites, surprising initiatives) and the ability to cultivate journalist relationships. The authors argue newsworthiness matters more than journalist relationships when the two conflict (p. 7; Helfer & Van Aelst 2016). Agreeableness and extraversion are the most interpersonal traits and voters rely on them (pp. 5-6; Caprara et al. 2002). Hypotheses: H1 agreeableness negative; H2 extraversion positive; H3 openness positive; H4 neuroticism negative; H5 conscientiousness positive (pp. 8-10).",
+   "data": "Unit: incumbent member of parliament (MP). Survey sample N = 339 MPs in three countries, fielded March to August 2015 (p. 10). Belgium: 95 federal MPs (54th federal parliament) and 139 regional MPs, 57% response rate. Canada: 45 federal MPs (41st parliament) and 28 Ontario provincial MPs, 26% response rate (278 contacted). Israel: 32 MPs (20th Knesset), 27% response rate (p. 10 and note 1, p. 20). Media counting windows (note 3, p. 21): Canada federal June 2, 2011 to Aug 2, 2015; Ontario July 2, 2014 to Dec 31, 2015; Belgium June 19, 2014 to Nov 30, 2015; Israel Mar 31 to Dec 31, 2015. Media outlets (p. 10): Belgium 6 newspapers, 2 news websites, 2 TV channels; Canada 3 newspapers, 2 websites, 1 TV channel (CTV); Israel 2 newspapers, 2 websites, 2 TV channels. Regression N: Model 1 n = 306; Model 2 (newspapers) n = 296; Model 3 (websites) n = 286; Model 4 (TV) n = 174 (Table 1, p. 14). The text does not explain why Model 1 n is 306 rather than 339.",
+   "method": "Dependent variable: count of mentions of each MP's full name in each country's major outlets, rescaled per country and medium to 0-1 (min-max, note 4), summed and rescaled again to 0-1 (M = .08, SD = .14, skewness 3.77). Log-transformed for OLS (p. 13); note 11 gives an alternative that adds half the smallest nonzero value. Personality: 10-item TIPI (Gosling et al. 2003), 7-point scale, two items per trait, reverse-coded where needed, averaged per trait (pp. 11-12). Main model: multivariate OLS with standardized betas on all five traits plus controls. Robustness: separate OLS models by medium (Models 2-4); a parsimonious demographic-only model and per-country parsimonious models (Online Appendix E); a randomization inference test (Malesky et al. 2014) for joint significance (pp. 16-17). Controls (pp. 12-13): gender, age, parliamentary experience, coalition membership, minister, party leader, house speaker, conservatism (binary), federal vs regional MP, parliamentary activity (standardized counts of bills, questions, etc.), Facebook posts (standardized), country dummies. Note 10: VIF below 1.63.",
+   "identification": "None beyond covariate adjustment. The design is a single-wave cross-sectional survey linked to media counts, analysed with OLS controlling for institutional power, activity, communication effort, demographics, ideology and country. The paper does not use an instrument, panel, experiment or natural variation. The title's \"effect\" is the authors' framing of conditional associations. Robustness is by medium, by country, by a parsimonious specification, and by randomization inference.",
+   "scope": "Population: incumbent MPs and provincial/regional members in Belgium, Canada (federal and Ontario) and Israel, sampled during the 2011-2015 legislatures. Institutions: three developed parliamentary democracies with different electoral systems (Canada single-member plurality; Belgium multimember with 11 districts; Israel one national proportional district) (pp. 9-10). Era: media coverage counted over roughly 2011-2015, depending on country. The authors say findings may extend to other developed democracies, but they do not claim generalization to presidential or nondemocratic systems (p. 19).",
+   "key_findings": [
+    {
+     "finding": "H1 supported: agreeableness is negatively associated with national media visibility (less agreeable MPs covered more).",
+     "location": "Results p. 13; Table 1 Model 1 p. 14; Discussion p. 17",
+     "numbers": "b = -0.184 (SE 0.075), standardized beta = -.116, p < .05"
+    },
+    {
+     "finding": "H2 supported: extraversion is positively associated with national media visibility.",
+     "location": "Results p. 13; Table 1 Model 1 p. 14",
+     "numbers": "b = 0.129 (SE 0.052), beta = .117, p < .05"
+    },
+    {
+     "finding": "H3 supported: openness to experience is positively associated with visibility.",
+     "location": "Results p. 15; Table 1 Model 1 p. 14",
+     "numbers": "b = 0.153 (SE 0.070), beta = .098, p < .05"
+    },
+    {
+     "finding": "H4 supported: neuroticism (emotional instability) is negatively associated with visibility; more emotionally stable MPs are covered more.",
+     "location": "Results p. 15; Table 1 Model 1 p. 14",
+     "numbers": "b = -0.157 (SE 0.068), beta = -.111, p < .05"
+    },
+    {
+     "finding": "H5 not supported in the pooled model: conscientiousness has a near-zero, insignificant association with visibility.",
+     "location": "Results p. 15; Table 1 Model 1 p. 14",
+     "numbers": "b = -0.008 (SE 0.066), beta = -.006, p = .91"
+    },
+    {
+     "finding": "Institutional power dominates. Being a minister has the largest standardized effect. The personality effects are about one-third as large, and a party leader's effect is only slightly larger than the personality effects.",
+     "location": "Results pp. 16-17 (lines 819-829)",
+     "numbers": "Minister beta = .369 (b = 3.122, p < .001); party leader beta = .195 (b = 1.836, p < .001); house speaker not significant; overall R2 = .483"
+    },
+    {
+     "finding": "Medium-specific robustness. Newspapers: agreeableness b = -0.243 (p < .01), extraversion and neuroticism significant at p < .1, openness and conscientiousness not significant. Websites: extraversion (b = 0.117, p < .05), openness (b = 0.230, p < .01) and neuroticism (b = -0.191, p < .01) significant; agreeableness negative but not significant (-0.102); conscientiousness not significant. TV (n = 174): agreeableness (-0.188) and extraversion (0.128) at p < .1; other traits not significant.",
+     "location": "Robustness Checks pp. 15-16; Table 1 Models 2-4 p. 14",
+     "numbers": "Model 2 R2 = .450 (n = 296); Model 3 R2 = .478 (n = 286); Model 4 R2 = .546 (n = 174)"
+    },
+    {
+     "finding": "Conscientiousness is positive and significant in Canada and Israel but not in Belgium. The authors attribute the Belgian null partly to TIPI measurement error (attenuation). Among Belgian regional MPs (n = 137) conscientiousness significantly decreases visibility; the federal Belgian effect (n = 95) is not significant.",
+     "location": "Robustness pp. 17-18; Discussion pp. 18 (lines 917-935); per-country and Belgian-parliament detail in Online Appendix E",
+     "numbers": "Per-country samples: Israel n = 32, Belgium n = 234 (95 federal + 139 regional), Canada n = 73 (45 federal + 28 Ontario); the country-level coefficients are not reported in the main text"
+    },
+    {
+     "finding": "Authors read the results as personality having a substantial effect beyond institutional explanations, with traits that fit news values (extraversion) giving a long-lasting advantage.",
+     "location": "Discussion pp. 18-19 (lines 936-962)",
+     "numbers": "Four of five traits significant in the pooled model; one trait (conscientiousness) partly predicts (abstract p. 1; discussion p. 18)"
+    }
+   ],
+   "measures": [
+    "Media visibility: outlet-level counts of full-name mentions (newspapers via LexisNexis or outlet sites; TV transcripts or manual broadcast counts; website unique articles), manually checked for the right person; rescaled 0-1 per country and medium; summed and rescaled again (note 2 p. 20; p. 10-11).",
+    "Big Five: 10-item TIPI (Gosling, Rentfrow & Swann 2003), English version and Dutch, French and Hebrew translations; 7-point agree/disagree; two items per trait; averaged per trait. Inter-item r: extraversion .61, openness .25, neuroticism .37, conscientiousness .29, agreeableness .09 (ns). Cronbach alpha: extraversion .75, openness .39, neuroticism .53, conscientiousness .40, agreeableness .15 (note 7 p. 21). Only extraversion had an eigenvalue above 1 (p. 12).",
+    "Parliamentary power: dummies for minister, party leader, house speaker.",
+    "Parliamentary activity: count of bills initiated, questions, laws passed, motions, etc., varying by parliament (note 8 p. 21), standardized 0-1 within each parliament.",
+    "Facebook posts: count from public pages (Facepager) or manual count, standardized 0-1 within country (note 9 p. 21).",
+    "Ideology: binary conservatism (Chapel Hill Expert Survey for Belgium; Conservative Party for Canada; Hazan & Diskin 2015 classification for Israel).",
+    "Demographics: gender, age, years since first election, coalition membership, federal vs regional parliament, country dummies."
+   ],
+   "limitations": [
+    "Social desirability: self-reported personality from office holders may be biased, e.g. understated irritability and overstated dependability (p. 19).",
+    "Brief TIPI measure with low reliability, especially agreeableness (alpha .15; r = .09, ns). The authors say this likely underestimates true effects (pp. 11-12, 19; note 7 p. 21). Facet-level effects cannot be separated (p. 19).",
+    "Only three countries, so generalization to presidential or nondemocratic systems is not established (p. 19-20).",
+    "Small national subsamples (Israel n = 32) limit the country-level conclusions, particularly for conscientiousness (pp. 17-18).",
+    "Only visibility (volume) is measured, not tone of coverage (p. 20).",
+    "The two proposed mechanisms (motivation and newsworthiness) are not measured directly and cannot be disentangled (p. 20).",
+    "Low response rates (Canada 26%, Israel 27%; Belgium 57%) and unexplained drop from N = 339 to n = 306 in Model 1 (pp. 10, 13-14).",
+    "Cross-sectional design with media counts over different windows across countries, so no causal or temporal ordering is established beyond the covariate-adjusted association (note 4, p. 21)."
+   ],
+   "references_of_note": [
+    "Gerber, Huber, Doherty & Dowling (2011a), The Big Five personality traits in the political arena, Annual Review of Political Science: core framework for personality and political behaviour.",
+    "Mondak (2010), Personality and the foundations of political behavior; Mondak & Halperin (2008), framework for personality and political behaviour.",
+    "Gosling, Rentfrow & Swann (2003), TIPI brief Big Five measure used here; Credé et al. (2012) on short-measure attenuation.",
+    "Ramey, Klingler & Hollibaugh (2017), More than a feeling: personality, polarization and the US Congress (cosponsorship and cooperative legislative behaviour; legislative link).",
+    "Dietrich et al. (2012), Big Five among US state legislators (ambition, legislative politics).",
+    "Best (2011), personality factors in parliamentary recruitment.",
+    "Sevenans, Walgrave & Vos (2015), opposition and competition-focused politicians are especially media-attentive.",
+    "Vos (2014), review of which politicians pass news gates; institutional and behavioural predictors of coverage.",
+    "Sheafer (2001), charismatic skill and media legitimacy; actor-centred competition for attention.",
+    "Cohen, Tsfati & Sheafer (2008), presumed media influence and politicians' motivation for coverage.",
+    "Amsalem et al. (2017), media motivation and elite rhetoric in comparative perspective (electoral constraints).",
+    "Helfer & Van Aelst (2016), what makes party messages fit for reporting (journalistic news selection).",
+    "Hopmann, Vliegenthart, De Vreese & Albæk (2010), visibility and tone influence party choice.",
+    "Geiß & Schäfer (2017), visibility- and tonality-based media effects on voting.",
+    "Hopmann, Van Aelst & Legnante (2012), political balance in the news.",
+    "Sellers (2000), legislators use the media to influence colleagues and pass legislation.",
+    "Waismel-Manor & Tsfati (2011) and Tsfati et al. (2010), physical attractiveness and TV coverage of legislators.",
+    "Caprara, Barbaranelli & Zimbardo (2002), voters simplify perceptions of politicians to extraversion and agreeableness.",
+    "Caprara & Zimbardo (2004), congruency model of political preference (personality of politicians)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "less agreeable and more extraverted politicians appearing more frequently in the news",
+     "location": "Abstract, p. 1 (lines 22-23)"
+    },
+    {
+     "quote": "Politicians high on these traits, we argue, enjoy an inherent advantage in the competition for the media's attention.",
+     "location": "Abstract, p. 1 (lines 26-27)"
+    },
+    {
+     "quote": "Fighting for media attention, it appears, requires politicians to display psychological resilience.",
+     "location": "Discussion, p. 18 (lines 914-916)"
+    }
+   ]
+  },
+  "summary_md": "Amsalem, Zoizner, Sheafer, Walgrave and Loewen (2018) linked a 2015 elite survey of 339 legislators in Belgium, Canada (federal and Ontario) and Israel to counts of how often each was named in national newspapers, news websites and TV. Personality was measured with the 10-item TIPI. Window: media counted over country-specific periods between 2011 and 2015. Denominator: n = 306 in the pooled model.\n\nIn a pooled cross-sectional OLS with country dummies, four traits predict visibility, each with a standardized beta of about 0.1:\n- extraversion: positive (beta .117)\n- agreeableness: negative (-.116)\n- neuroticism: negative (-.111)\n- openness: positive (.098)\n\nConscientiousness is null in the pooled model and splits by country. Office matters far more: being a minister has beta .369 and being a party leader .195, with R² = .483. The measures are weak. Agreeableness has alpha .15 and its two items correlate at only r = .09 (not significant). Response rates are 26-57%. The paper does not identify a causal effect, so its \"effect\" is a covariate-adjusted association.\n\nFor Melange the paper matters in three places:\n1. The behavioural visibility disposition is counted from interviews and labelled extraversion-sociability. The paper's extraversion result supports that label, but the paper also shows visibility loads on low agreeableness, emotional stability and, mostly, office.\n2. That disposition raises seed_prob in the receptivity layer. The lexical susceptibility weights point the other way on agreeableness and neuroticism, so the two disagree.\n3. Interview-derived traits, including affective N, exist only for members who get airtime. Everyone else is set to neutral. If airtime selects on temperament, as this paper finds, that missingness is not random.\n\nNone of this has been tested on US Congress data.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.behavioral-dispositions",
+    "relation": "qualifies",
+    "paper_claim": "Extraversion is positive and significant in the pooled OLS: b = 0.129 (SE 0.052), beta .117, p < .05 (Model 1, n = 306, R2 = .483, country dummies and controls). Also significant on news websites (Model 3, b = 0.117, p < .05).",
+    "paper_location": "Table 1 p. 14 (lines 626-634 and 785-795); text p. 15 (lines 590-592 and 800-801)",
+    "system_side": "visibility_z in fec/members/behavioral_dispositions.py is the mean of within-chamber z-scores of log interview count and log interview-program count, computed only for members with at least 3 interviews (others neutral). Documented as the extraversion-sociability role. Committee and leadership sit in dominance_z.",
+    "code_ref": "fec/members/behavioral_dispositions.py:18-19,111-114",
+    "transfer_conditions": "The extraversion direction holds in the paper, but the effect is small (beta .117). The paper's outcome is earned mentions by journalists, not interviews a member gives. The sample is MPs in Belgium, Canada and Israel, 2011-2015, with self-reported TIPI. Office is the dominant predictor there, so a US interview count needs office controls before it reads as temperament. Any claim that visibility_z double-counts dominance_z is an untested inference, not a paper finding.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Coefficients, p-levels, sample design and media windows match Table 1 and the Method section. Softened: the paper does not say visibility double-counts leadership; that is the analyst's inference and is now labeled untested. The extraversion label is supported in direction only.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Behavioural dispositions|Behavioural dispositions]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-influence-engine.receptivity-layer",
+    "relation": "qualifies",
+    "paper_claim": "More visible MPs are less agreeable (beta -.116, p < .05) and more emotionally stable (neuroticism beta -.111, p < .05). The authors read this as media competition requiring psychological resilience (Discussion).",
+    "paper_location": "Table 1 Model 1 p. 14 (lines 617-625 and 653-661); Discussion p. 18 (lines 912-916)",
+    "system_side": "Default basis is behavioral (RECEPT_TRAITS defaults to behavioral, receptivity_layer.py:65). There seed_prob = clip(0.60 + .10 coop + .06 breadth_z + .04 visibility_z, 0.30, 0.90) and susc_trait = .40 coop + .30 Nn - .20 dil - .10 dom, where Nn is affective-content N with missing set to 0. The lexical fallback susc = .40A + .30N - .20C - .10E and seed = 0.60 + .10A + .06O + .04E apply only when the basis is not behavioral.",
+    "code_ref": "fec/members/receptivity_layer.py:65,186,212-214,179,189,216",
+    "transfer_conditions": "On the default path the tension is real but indirect. Visible MPs in the paper have lower A and lower N. Lower cooperation and lower affective N both lower susc_trait, while visibility_z raises seed_prob. Inside seed_prob, the visibility term (+.04) and the cooperation term (+.10) can pull in opposite directions if visible members are less cooperative. This is not a measured US result: the paper's betas are small, self-reported and cross-national, and seed_prob is not an access or introduction probability (D-025). Check corr(visibility_z, coop_v2) and corr(visibility_z, affective N) on the roster; not yet run (DE-062).",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Table 1 and Discussion quotes verified. The analyst's cited weights describe the lexical fallback, not the default path, so the bearing is restated on the active formula. The tension still exists on the default path through coop and affective N.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Receptivity layer (susceptibility, incentive, prospect domain, seed probability)|Receptivity layer (susceptibility, incentive, prospect domain, seed probability)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "suggests-extension",
+    "paper_claim": "Net of office, activity, Facebook output and controls, MPs who are more neurotic (beta -.111) and more agreeable (beta -.116) appear less in national news (Table 1 Model 1). The authors attribute this to temperament, not to interview selection, which they do not test.",
+    "paper_location": "Table 1 p. 14 (lines 617-625 and 653-661); Results text pp. 13-15 (lines 585-592 and 807-811)",
+    "system_side": "affective_n is the default N-slot (RECEPT_N defaults to affective, receptivity_layer.py:74; read at lines 83-89). Its base is LIWC counts from the interview corpus plus LLM affective facets, party-controlled (fec/members/emit_affective_n.py lines 2-7). Members without a row get neutral 0 (receptivity_layer.py:179). visibility_z sets members with fewer than 3 interviews to neutral (behavioral_dispositions.py:111-114).",
+    "code_ref": "fec/members/receptivity_layer.py:74,83-89,179; fec/members/emit_affective_n.py:2-7; fec/members/behavioral_dispositions.py:111-114",
+    "transfer_conditions": "The paper finds airtime selects on temperament among MPs, which would make interview-derived N range-restricted. Whether US interview coverage selects this way is untested. The paper concerns earned news coverage, not interviews a member gives. Test: correlate interview coverage with non-text proxies such as reactivity_z after chamber-leadership controls. The affective N is also residualized on text-E and party, which the paper does not discuss.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper coefficients and the system's missing-to-neutral rule both verified as written. The selection-bias concern is conditional on the paper's finding and remains untested, as the bearing now states.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.undervaluation-lens",
+    "relation": "qualifies",
+    "paper_claim": "Holding office is the strongest predictor of visibility: minister beta .369 (b 3.122), about three times the trait betas. Party leader beta .195 is only slightly stronger than the personality effects. Office here means minister, party leader and house speaker; committee position is not tested.",
+    "paper_location": "Table 1 Model 1 p. 14 (lines 698-715); Results text (lines 819-829)",
+    "system_side": "Underdog = Intrinsic (0.5 Leg% + 0.5 Centrality%) minus Visibility (0.5 Press% + 0.5 Committee%), per the brain workbook note (actors/moneyball-workbook.md line 137). Press% is normalized by signed positive and negative extrema per domain in press_matrix (fec/moneyball_core.py lines 214-237). The code confirms that normalization on workbook press columns, not the stance-by-tone composition or the restriction to .house.gov and .senate.gov statements.",
+    "code_ref": "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md:137; fec/moneyball_core.py:214-241",
+    "transfer_conditions": "The paper's evidence is MPs in three parliamentary systems, not US House members. Its visibility construct is press mentions, which Press% does not capture. Committee% is a visibility input the paper never tests. Any reading of personality as part of the underdog residual is an inference, not a finding.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Table 1 numbers verified. Softened: 'about one third as large' applies to minister, not party leader. The argument that committee position fits the paper's finding is not in the paper, which uses minister, party leader and speaker.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/moneyball-rank-pillars#Undervaluation (underdog) lens|Undervaluation (underdog) lens]]",
+    "system": "moneyball-rank-pillars"
+   },
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "qualifies",
+    "paper_claim": "Extraversion appears in observable media presence (beta .117 pooled; b = 0.117, p < .05 on websites; p < .1 for newspapers and TV). TIPI Cronbach alphas are .75 extraversion, .39 openness, .53 neuroticism, .40 conscientiousness and .15 agreeableness. The agreeableness item pair correlates r = .09, p > .1.",
+    "paper_location": "Note 7 (lines 1063-1064); Table 1 Models 1-4 p. 14; Measures (lines 514-522); TIPI adequacy (line 538)",
+    "system_side": "The receptivity layer comment reads lexical E as broadcast talkativeness and replaces it with behavioral dispositions (receptivity_layer.py:59-60). The lexical Big Five in big5_traits.py is scored by default from social posts, floor speech (CREC) and INTERVIEW text (lines 30-40), and lowconf traits are shrunk by token count with LOWCONF_TOKENS defaulting to 1500 (lines 20 and 28).",
+    "code_ref": "fec/members/receptivity_layer.py:59-60; fec/members/big5_traits.py:20,28,30-40",
+    "transfer_conditions": "The paper does not say an E-broadcast-volume link is partly expected for real extraverts. It says extraversion reflects need for interaction and public recognition (lines 884-887). Overlap between text-E and interview volume is possible but not shown. Lexical E also draws on posts and floor speech, so the circularity point applies only in part. The paper calls the TIPI sufficiently valid overall (line 538), so the claim that elite self-report is not usable for A, O or C is the analyst's inference.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Alphas, significance levels and the agreeableness item correlation verified. The claim that system E is read from the same interview text is only partly right: interviews are one of three default sources. The expected-overlap statement is not in the paper.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "summary_md, Model 1 n: the paper partly explains the drop from 339 to 306. Note 11 (lines 1076-1080) says log-transforming visibility drops MPs with zero mentions because log of zero is undefined. The paper does not report the per-model count dropped, so the 306 figure is not fully explained.",
+   "summary_md, office claim: 'Office matters far more' holds for minister (beta .369, about three times the trait betas, lines 821-823). For party leader (beta .195) the paper says only slightly stronger than personality (lines 824-825). Office should not be presented as uniformly three times personality.",
+   "summary_md point 2 and bearing 2: the lexical susceptibility and seed formulas are the fallback path. The default basis is behavioral (receptivity_layer.py:65), with susc_trait built from coop, affective N, breadth and dominance (line 186) and seed_prob from coop, breadth and visibility (lines 212-214). The sign tension is restated on that path.",
+   "summary_md point 3: interview-derived N is used on the default path, and the neutral-for-missing rule is verified (receptivity_layer.py:179; behavioral_dispositions.py:111-114). The selection-bias concern is conditional on the paper's finding and untested.",
+   "summary_md and bearing 5: the lexical Big Five is scored by default from social posts, CREC floor speech and INTERVIEW text (big5_traits.py:30-40), not interview text alone. The circularity point is therefore only partial.",
+   "bearing 5 transfer: the paper does not say an E-broadcast link is partly expected for real extraverts; it attributes extraversion to need for interaction and recognition (lines 884-887). The paper also calls the TIPI sufficiently valid (line 538), which undercuts the claim that elite self-report is unusable.",
+   "bearing 4 and summary: committee position is not in the paper's model; its office variables are minister, party leader and house speaker (lines 555-556). The statement that committee counts fit the paper's finding is unsupported. Press% composition (signed stance times LSD tone, own-domain statements only) is only partly verified; the code confirms signed-extrema normalization of workbook press columns and nothing more in the cited lines.",
+   "paul_alignment: paul_entries is empty and Paul's own notes were not consulted in this check. Statements about his receptivity notes, his press-pillar stance and his Ramey citations are unverified and should be checked against his entries or removed.",
+   "related lechner-2025-mapping-political-personality: the item confirms the framework but not that it addresses TIPI brevity or social desirability. Relation kept as complements with a weaker reason.",
+   "coverage gap: Online Appendices A-E are not in the text. The Canada and Israel conscientiousness results and the Belgian regional n = 137 result are checked only against the main text and Discussion (lines 866-870 and 930-933).",
+   "coverage: all 1253 lines of the text were read, including Table 1 (lines 597-795), Method and measures (lines 403-545), results and robustness (lines 578-876), Discussion and limitations (lines 877-1011) and notes (lines 1022-1086). Related code checked: receptivity_layer.py, behavioral_dispositions.py, big5_traits.py, emit_affective_n.py and moneyball_core.py press_matrix. Page images were not checked. Dropped items: none."
+  ],
+  "gaps_exposed": [
+   "No earned-media volume measure: the system counts own-domain statements and interviews, and drops third-party coverage, so how often the press actually names a member (the paper's dependent variable) is absent.",
+   "visibility_z is not adjusted for office (chair, ranking member, party leadership), which the paper shows is the largest driver of coverage. As a result visibility_z and dominance_z share leadership variance.",
+   "No audit of whether interview-corpus coverage (the source of affective_n and lexical traits) is selected on temperament or office. The missing-to-neutral rule assumes absence is uninformative.",
+   "No tone-of-coverage measure for third-party media. The paper flags tone as its own unmeasured limitation; the system's LSD tone applies only to own-domain releases.",
+   "No check of the sign of corr(visibility_z, coop_v2) in this roster. That check would show whether the +.04 visibility term in seed_prob works against the cooperation term."
+  ],
+  "flags": [
+   "The title's 'effect' is causal framing for a single-wave, cross-sectional, covariate-adjusted OLS. Quote these results as associations, not effects.",
+   "The pooled coefficients run across three countries and two levels of government with only country dummies. Conscientiousness flips by stratum (positive in Canada and Israel, null in Belgium, negative among Belgian regional MPs, n = 137). Quote any pooled trait coefficient with strata or an UNSTRATIFIED label.",
+   "Media visibility, interview count and seed_prob must not be read as access, closeness or introduction probabilities (D-025).",
+   "The bearings here are new agent analysis, in particular the seed_prob sign tension and the coverage-selection concern. They stay UNVERIFIED until a second path reproduces them on roster data (DE-062).",
+   "The paper argues for neither rejected SNA proposal (dropping regular cosponsorship edges, per-edge volume normalization) and makes no claim about LDA."
+  ],
+  "paul_alignment": "Paul has not annotated this paper. It agrees in part with his stated positions. He treats a member's public statements as the observable persona (press-pillar) and wants psychological traits to adjust response to pressure (receptivity-layer). The paper supports the idea that public presence is shaped by temperament, but finds office drives it about three times as strongly. That argues for controlling for office before reading interview or press volume as a trait. His receptivity notes predate the behavioural basis. In the current code, visibility_z enters seed_prob, and the paper's trait profile for highly visible members (low A, low N) cuts against the lexical susceptibility weights. His notes do not record that sign tension. His Ramey citations (personality and legislative behaviour) are consistent with this paper's framework, and the paper cites Ramey, Klingler and Hollibaugh 2017 on cosponsorship.",
+  "related": [
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Item title confirms Ramey measures elite Big Five from floor speech text. Amsalem uses self-reported TIPI and links it to media visibility, an outcome text-based traits could be checked against."
+   },
+   {
+    "slug": "mondak-nd-online-appendix-personality",
+    "relation": "complements",
+    "why": "Item title confirms expert evaluations of US senators' traits. These are an alternative to the low-reliability TIPI self-report (agreeableness alpha .15) that Amsalem depends on."
+   },
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Item title confirms measurement of politicians' public agency and communion from text. Amsalem's finding that low agreeableness and high extraversion go with coverage is relevant to the persona channel."
+   },
+   {
+    "slug": "byrne-2014-chokes-under-pressure",
+    "relation": "complements",
+    "why": "Item confirms neuroticism was the a priori focus of a pressure-decision study. Amsalem's negative neuroticism-visibility link points the same way, and both bear on the receptivity N-slot."
+   },
+   {
+    "slug": "lechner-2025-mapping-political-personality",
+    "relation": "complements",
+    "why": "Item confirms PoliPers as a facet-level inventory of ideal and actual politician personality. It is a measurement alternative, but nothing in the item shows it addresses TIPI brevity or social desirability as Amsalem's limitations do."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "cao-2024-language-models-personality",
+    "relation": "complements",
+    "why": "Politicians' Big Five personality predicts national media coverage. Cao does not test popularity against it. The perceived-personality-drives-visibility gloss is the analyst's; the excerpt read does not establish that the traits are perceived."
+   },
+   {
+    "slug": "decter-frain-2016-impressive-words-linguistic",
+    "relation": "complements",
+    "why": "Politician personality and media visibility relate to this paper's finding that media tone mediates the language-approval link."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "hargittai-2015-bigger-always-better",
+  "note": false,
+  "meta": {
+   "title": "Is Bigger Always Better? Potential Biases of Big Data Derived from Social Network Sites",
+   "authors": [
+    "Eszter Hargittai"
+   ],
+   "year": "2015",
+   "venue": "The Annals of the American Academy of Political and Social Science, vol. 659 (May 2015), pp. 63-76. Special issue: Big Data Methodological Challenges.",
+   "doi": "10.1177/0002716215570866",
+   "sha12s": [
+    "988ba27f401d"
+   ],
+   "category": "Causal & Methodological",
+   "category_slug": "causal-methodological"
+  },
+  "extraction": {
+   "title": "Is Bigger Always Better? Potential Biases of Big Data Derived from Social Network Sites",
+   "authors": [
+    "Eszter Hargittai"
+   ],
+   "year": "2015",
+   "venue": "The Annals of the American Academy of Political and Social Science, vol. 659 (May 2015), pp. 63-76. Special issue: Big Data Methodological Challenges.",
+   "doi": "10.1177/0002716215570866",
+   "document_type": "Journal article; short essay with an empirical illustration (two survey datasets, logistic regressions)",
+   "coverage": "Full extracted text read in one pass (abstract, introduction, sampling-frame discussion, both empirical sections, Tables 1-4, conclusion, notes, references). Paul's markup: none supplied, so paul_markup is empty. The text file is plain extracted text, so no highlights or sticky notes exist to recover.",
+   "research_question": "Are people's choices to use specific social network sites (SNSs) random with respect to demographics, socioeconomic status and Internet experience? If not, can big data studies that sample only users of one SNS generalize their findings to the broader population or to users of other SNSs?",
+   "theory": "No named theory. The argument rests on sampling-frame logic: a site's users are the sampling frame, non-users are excluded by design, and generalization requires that selection into the site be unrelated to the outcomes studied. The paper also invokes selection on the dependent variable as a second source of bias.",
+   "data": "Dataset 1 (national): Pew Internet Project survey collected 2013, N = 1,801 adults (80.2% use the Internet); landline and cellular random-digit-dial sample; average age 52, half male, 70% white. Regression N ranges 1,510-1,528 (full sample) and 1,231-1,249 (Internet users only), per Table 1.\nDataset 2 (panel): Author's panel of young adults at the University of Illinois at Chicago (UIC), a required first-year class. Wave 1 spring 2009, n = 547 (80.5% of enrolled students); wave 2 summer 2012 by postal mail, 52% of wave 1 returned valid responses. Regression N = 517-519 (Table 4). Group is 61% women, 44% white non-Hispanic, 24% Asian American, 23% Hispanic, 8% African American; ages 21-22 in 2012; 50% of parents have a college degree or more. Paper-pencil instruments in both waves.",
+   "method": "Separate logistic regressions for each SNS.\nPew analysis (Table 1): outcome is current use of Facebook, LinkedIn or Twitter (cross-sectional, 2013). Predictors: age, gender, race/ethnicity, education, logged income. Run on full sample and on Internet users only.\nPanel analysis (Table 4): outcome is 2012 adoption of Facebook, Twitter, Google+, LinkedIn or Tumblr (MySpace dropped for low uptake). Predictors are 2009 measures: gender, race/ethnicity, parental education, logged use years, logged user autonomy (access locations), use frequency, and Internet skills. Internet skills index = mean of 27 Internet terms rated on a 5-point scale (Cronbach's alpha = .94). Descriptive usage trends are in Table 3.",
+   "identification": "Temporal ordering only. Panel predictors are measured in 2009 and outcomes in 2012, so the author argues that skills and experiences predate most SNS adoption (Table 3 shows Twitter at 3% in 2009). This is offered as a partial answer to reverse causality from SNS use to skills. No instrument, experiment or quasi-experimental design is used. The Pew analysis is cross-sectional and carries no such ordering.",
+   "scope": "Population: US adults (Pew, 2013) and a single-institution cohort of first-year students (UIC, 2009-2012, ages 21-22 in 2012). The panel is described as homogeneous on age and education, racially and socioeconomically diverse, and not a random sample of the national population. Era: 2009-2013, a period when Facebook was dominant and Twitter, Google+, LinkedIn and Tumblr were growing.",
+   "key_findings": [
+    {
+     "finding": "Adoption of Facebook, LinkedIn and Twitter is not random with respect to demographics and SES in the national Pew data. Older people are less likely to use all three; the least educated and lower-income people are less likely to use all three.",
+     "location": "Pew results, Table 1 and text, pp. 67-68",
+     "numbers": "Age: Facebook -0.05, LinkedIn -0.02, Twitter -0.06 (all p < .001, full sample). Facebook high school or less: -0.61 (p < .001); LinkedIn: -1.37 (p < .001); Twitter: -0.56 (p < .01). LinkedIn income (logged): 0.72 (p < .001). Pattern largely holds among Internet users only. Shares: Facebook 53% of all adults (text says just over half, or two-thirds of Internet users); LinkedIn 19% of all, 24% of Internet users; Twitter 13% of all, 15% of Internet users. R-squared .09-.16."
+    },
+    {
+     "finding": "Gender and race differ by site. Women are more likely on Facebook (+0.46) and less likely on LinkedIn (-0.39). Black respondents are more likely on LinkedIn and Twitter but less likely on Facebook.",
+     "location": "Pew results, Table 1, p. 68",
+     "numbers": "Female Facebook 0.46 (p < .001); female LinkedIn -0.39 (p < .01); Black Twitter 0.63 (p < .01); Black LinkedIn 0.68 (p < .01); Black Facebook -0.31 (p < .10 only)."
+    },
+    {
+     "finding": "In the young-adult panel, 2009 demographics predict 2012 SNS adoption for Twitter and Tumblr: women, African Americans and students with less-educated parents are more likely on Twitter, and women more likely on Tumblr. Asian Americans are less likely on LinkedIn.",
+     "location": "Panel results, Table 4 and text, pp. 72-73",
+     "numbers": "Female Tumblr 0.84 (p < .01); female Twitter 0.51 (p < .05); Black Twitter 0.87 (p < .05); high school or less parental education Twitter -0.85 (p < .01), Tumblr -1.08 (p < .01); Asian LinkedIn -0.29 (p < .10). Panel R-squared .03-.08."
+    },
+    {
+     "finding": "Internet experience and skills predict later adoption. Higher use frequency predicts adoption of four of five sites (all except Twitter). Internet skills from 2009 predict Twitter, LinkedIn and Tumblr adoption in 2012.",
+     "location": "Panel results, Table 4 and text, pp. 72-73",
+     "numbers": "Use frequency: Facebook 0.48, Google+ 0.45, LinkedIn 0.52, Tumblr 0.48 (all p < .05). Internet skills: Twitter 0.33 (p < .05), LinkedIn 0.33 (p < .05), Tumblr 0.62 (p < .001). Skills not significant for Facebook (-0.06) or Google+ (0.22)."
+    },
+    {
+     "finding": "Adoption is low for most platforms even among this group, so no single SNS can serve as a representative sampling frame. Facebook is near-saturated while the others vary sharply.",
+     "location": "Panel usage, Table 3 and text, p. 71",
+     "numbers": "2009 / 2012 adoption: Facebook 87% / 89%; Twitter 3% / 38%; LinkedIn 0% / 18%; Tumblr N/A / 16%; Google+ not launched / 22%; MySpace 36% / 2%. Text: Twitter used by 37.5% in 2012."
+    },
+    {
+     "finding": "Conclusion: SNS-derived log data are biased toward certain populations (demographics, SES, Internet skills, topical interest). Findings may be wrong in direction, not just imprecise. Good sampling must not be confounded with the substantive question, and studies must state their sampling-frame scope in titles, abstracts, methods, results and press communication.",
+     "location": "Conclusion, pp. 73-74",
+     "numbers": "No new numbers; the conclusion reasons from Tables 1-4 and cites Hargittai (2011) on opposite-direction conclusions."
+    }
+   ],
+   "measures": [
+    "SNS use (Pew 2013): current use of Facebook, LinkedIn, Twitter (binary).",
+    "SNS adoption (UIC panel): 'ever used' item collapsed to current use ('sometimes' or 'often') for Facebook, MySpace, Twitter, Google+, LinkedIn, Tumblr.",
+    "Demographics: age, gender, race/ethnicity, education (Pew), parental education (panel), logged household income (Pew).",
+    "Internet experience: use years (logged), user autonomy as number of access locations (logged), use frequency (weekly web hours; lagged in panel).",
+    "Internet skills: mean of 27 Internet terms on a 5-point understanding scale; Cronbach's alpha = .94 (panel, validated instrument from Hargittai 2005, 2009; Hargittai and Hsieh 2012)."
+   ],
+   "limitations": [
+    "Author's stated limits: Pew did not disaggregate SNS use by service before 2012, did not measure Internet skills, and is cross-sectional with no repeated respondents.",
+    "Panel is one required class at one university (UIC), homogeneous on age and education, not a random sample, and only 547 cases; 52% retention to 2012, with African American share falling from 11% to 8%.",
+    "Paper-pencil surveys, chosen to avoid online-survey bias; the mode choice is a deliberate design decision, not a limitation the author fully resolves.",
+    "Analyses include one SNS at a time and do not control for use of other SNSs (note 3: 28% of Internet users in the Pew sample use more than one SNS; note 4: 56.4% in the panel).",
+    "Study covers only SNS use, not other platforms or offline ties; the Burke and Kraut example shows how single-platform data miss activity elsewhere (pp. 65-66).",
+    "Author limits the paper to one bias (single-SNS sampling frames) due to space constraints (p. 65).",
+    "Temporal ordering is a partial answer to reverse causality, not a causal design.",
+    "Pew dataset was not public at time of writing (note 1)."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Schwartz et al. 2013, PLOS ONE: personality and language from more than 15 million Facebook status updates, collected from people who opted into the My Personality app (critiqued for selection on the dependent variable, p. 65).",
+    "Burke and Kraut 2013, CSCW: Facebook communication with strong and weak ties after job loss; the paper argues the single-platform design cannot rule out weak-tie job search elsewhere (pp. 65-66).",
+    "Granovetter 1973, American Journal of Sociology: 'The strength of weak ties', the classic claim that Burke and Kraut's null weak-tie finding challenges (pp. 65-66).",
+    "Hargittai and Litt 2011, New Media & Society: Twitter adoption among a diverse young-adult sample; topical interest as another source of selection (p. 73).",
+    "Hargittai and Hsieh 2010b, Information, Communication & Society: differentiated SNS practices and their predictors (p. 66).",
+    "Ellison, Steinfield and Lampe 2011, New Media & Society: social-capital implications of Facebook-enabled communication (p. 66).",
+    "Tumasjan et al. 2010 (AAAI ICWSM): predicting elections with Twitter sentiment; cited as an example of Twitter-based big data work (p. 63).",
+    "Asur and Huberman 2010 and Backstrom and Kleinberg 2014: SNS-based prediction and network analysis examples (p. 64).",
+    "Bollen, Mao and Zeng 2011, Journal of Computational Science: Twitter mood and the stock market; cited as an example of economic big data (p. 64).",
+    "Lazer et al. 2009, Science: computational social science agenda; cited for privacy and for the call for big data sampling care (pp. 64, 74).",
+    "Brenner and Smith 2013 (Pew): 72% of online adults use SNSs; cited for age differences in Facebook use (p. 65).",
+    "Hargittai 2011: 'Minding the digital gap'; cited for the claim that biased data may reverse conclusions (p. 74).",
+    "Hargittai and Hsieh 2012, Social Science Computer Review: succinct survey measures of web-use skills (the Internet skills instrument, p. 70)."
+   ],
+   "short_quotes": [
+    {
+     "quote": "people do not select into the use of such sites randomly",
+     "location": "Abstract, p. 63"
+    },
+    {
+     "quote": "if people do not select into the use of the particular site randomly, then findings cannot be generalized beyond the site's population",
+     "location": "Sampling frame section, p. 65"
+    },
+    {
+     "quote": "bigger is not always better; size is not all that matters when it comes to datasets",
+     "location": "Conclusion, p. 74"
+    }
+   ]
+  },
+  "summary_md": "Hargittai asks whether people choose social network sites at random. They do not. In the 2013 Pew national survey (N = 1,801; regression N about 1,510-1,528), age, education, income, gender and race each predict use of Facebook, LinkedIn and Twitter. For example, the LinkedIn coefficient on logged income is 0.72 and on high school or less is -1.37. In a panel of UIC students (2009 to 2012, regression N about 517-519), 2009 Internet skills and use frequency predict which sites people adopted by 2012 (skills to Tumblr 0.62, Twitter 0.33). Adoption differs widely by site (2012: Facebook 89%, Twitter 38%, LinkedIn 18%). Her conclusion is that data from one site describe that site's users only. A biased sampling frame can reverse the direction of a finding, not just add noise. Studies should state their frame in the title, abstract and results.\n\n**What this means here.** Legislators are elite accounts, so platform adoption bias mostly disappears on X: 502 of 515 members in social_media.db have an X handle. It comes back on Bluesky. Bluesky posts run 2023-07-01 to 2026-09-19. Of the 533 roster members (259 D, 271 R, 3 I), 135 posted on Bluesky: 117 D, 16 R and 2 I. Of the 411 Bluesky member-to-member mentions, 392 are D to D, and none cross party. These mentions are added at weight 0.4 to the social interaction layer, which enters the live augmented cascade network. The second problem is the media blend: a member silent on social media in a category gets half their press signal, so silence counts as zero stance. Both counts are my own reading of live files. They stay UNVERIFIED until a second path reproduces them (DE-062). The paper's coefficients do not carry over to this system. Only its sampling-frame logic does.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-sna.multilayer-social-press-edges",
+    "relation": "qualifies",
+    "paper_claim": "People do not select into SNS use at random, and selection differs by site and demographic group. Pew 2013 logistic coefficients (full sample, N 1,510 to 1,528, log-odds): female on Facebook 0.46 (p<.001), female on LinkedIn -0.39 (p<.01), Black on Twitter 0.63 (p<.01). Black on Facebook -0.31 is p<.10 only and -0.06 among Internet users, so it is not a reliable selection effect. Users of one platform are not the population.",
+    "paper_location": "Table 1 (p. 68); sampling-frame section (pp. 64-65); Burke and Kraut discussion (pp. 65-66); conclusion (pp. 73-74)",
+    "system_side": "social_interaction_layer.py: X reposts 1.0, X mentions 0.4, Bluesky mentions 0.4; pair p = events / max(25, X-post count of author), cap 0.25, so Bluesky events enter the numerator only (confirmed). build_multilayer_network.py: new edge w = 6p/(1-p) cap 2.0, or up to +30 percent reinforcement on existing ties (confirmed). Read-only counts from social_media.db on 2026-10-09: 411 Bluesky mentions = 392 D to D, 8 D to I, 5 I to D, 6 R to R, 0 D to R; 135 posters = 117 D, 16 R, 2 I; roster 533 = 259 D, 271 R, 3 I; posts 2023-07-01 to 2026-09-19. JSON written 2026-09-19 holds 739 pairs, 275 reposts, 953 mentions (X and Bluesky). Unverified: rows present at JSON write time, since the DB was modified 2026-10-04.",
+    "code_ref": "fec/network/social_interaction_layer.py:25,36-56; fec/network/build_multilayer_network.py:146-166 (both confirmed)",
+    "transfer_conditions": "Her coefficients do not transfer; her frame logic may. Her data are US adults (2013) and one 2009-2012 student cohort, not legislators or Bluesky. That X adoption bias is mostly gone for legislators is the analyst's inference: the paper never discusses institutional accounts (502 of 515 member rows have an X handle, read-only). The Bluesky handle field is populated for all 515 rows, so 135 is posting, not account adoption. Party-skewed posting may carry a party-skewed edge pattern into the layer; untested, UNVERIFIED (DE-062).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Counts and code confirmed exactly. Softened: (1) none cross party holds only for D vs R; 13 mentions cross the D/I line. (2) Black on Facebook is p<.10 only. (3) The X-adoption claim is analyst inference, not the paper's. (4) Denominators 515 (db) and 533 (roster) must be named at each figure.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-sna#Social and press-engagement layers|Social and press-engagement layers]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-stance.media-blend",
+    "relation": "qualifies",
+    "paper_claim": "Non-users are excluded from a site-based sampling frame by design. If selection is related to outcomes, results from users may reach the opposite conclusion about the wider population. Sampling should not be tied to the substantive question. The paper does not discuss how missing social-media activity should be coded.",
+    "paper_location": "Sampling-frame section (pp. 64-65); conclusion (pp. 73-74)",
+    "system_side": "build_media_blend.py: SOCIAL_W = 0.5; f = min(1, nz/15), with nz the members carrying a nonzero social value in the category (shrink on by default). Cell = (1 - 0.5f) x press/p80 + 0.5f x social/p80. A member with no social value gets sv = 0, so at f = 1 the press side is halved and silence scores as zero, not missing (confirmed at lines 29, 463, 479). The downstream Press Release - Raw link was not checked.",
+    "code_ref": "fec/stance/build_media_blend.py:29,463,479 (confirmed)",
+    "transfer_conditions": "The paper gives no evidence about missing-data coding. The concern bites only if posters differ from non-posters on stance in categories where f = 1; that is untested, and the analyst's own note says so. The stance-ladder rule on missing evidence was not checked. UNVERIFIED.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Code and formula confirmed. The paper supports the selection concern, not the zero-coding critique, so this is an analyst extension rather than a paper claim. Strength lowered from moderate to weak.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Media blend (press + social) with recency decay|Media blend (press + social) with recency decay]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-legislative-data.press-collector-cap",
+    "relation": "suggests-extension",
+    "paper_claim": "A sampling frame tied to the outcome can bias findings (Schwartz et al. 2013 opt-in app users, p. 65). Studies should state the frame scope and keep sampling separate from the outcome.",
+    "paper_location": "pp. 65-66 (selection on the dependent variable); conclusion (pp. 73-74)",
+    "system_side": "cu_text_collector.R lines 112-140: every CU-candidate-titled page is fetched; generic pages are capped at CAP = 1000 per member, newest first (confirmed). Registry figures (P(CU-relevant given CU title) 0.825 vs 0.0089; coverage D 92.5 vs R 87, Senate 83 vs House 96) match the component registry text; not re-measured from the corpus.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_text_collector.R:112-140 (confirmed)",
+    "transfer_conditions": "Hargittai's argument applies only if coverage gaps correlate with CU stance or volume. The cap drops only generic pages (about 0.9 percent CU-relevant per the registry). The cap is not party- or chamber-specific, so 'favours House and Democratic offices' does not follow from the code; it rests on unmeasured coverage rates. The collector comment assumes the skipped bulk is missing at random, which is the untested premise.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Code confirmed. The party and chamber skew is not supported by the cap itself. Limit the claim to: coverage depends on archive depth and title signal; party and chamber effect unmeasured here.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-legislative-data#Signal-prioritized press collection cap|Signal-prioritized press collection cap]]",
+    "system": "melange-legislative-data"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Overstated: 'age, education, income, gender and race each predict use of Facebook, LinkedIn and Twitter'. Gender is null for Twitter (-0.00), income is null for Facebook among Internet users (-0.12), and Hispanic is null for all three. Should say each predicts use of at least one site.",
+   "The 0.72 (LinkedIn, logged income) and -1.37 (LinkedIn, high school or less) are log-odds coefficients from the full Pew sample (N 1,510 for LinkedIn), not effect sizes. Name the scale and window.",
+   "'A biased sampling frame can reverse the direction of a finding' overstates the paper's 'may come to the exact opposite conclusion' (p. 74). Use 'may'.",
+   "'Legislators are elite accounts, so platform adoption bias mostly disappears on X' is the analyst's inference, not the paper's; the paper never discusses institutional accounts. Mark it as inference.",
+   "'none cross party' holds only for D vs R. The same paragraph's counts show 8 D to I and 5 I to D mentions; state that 13 cross the D/I line.",
+   "Denominators are mixed: 502 of 515 have an X handle (social_media.db members table, 515 rows) while party counts use the 533 roster. The Bluesky handle field is populated for all 515 rows, so 135 posters is posting, not account adoption. Name the denominator at each figure.",
+   "The UIC panel 2012 figures (Facebook 89, Twitter 38, LinkedIn 18 percent) come from a 2012 wave with 52 percent return and no N in Table 3; name that. 'UIC students' should read young adults in one required first-year class (2009 wave n = 547).",
+   "Paul-alignment claims (Fink framework; critiques on sign, third-party sentiment and temporal weighting) were not checked against his annotation files; treat as unverified.",
+   "Extraction issues in ext: the 'space constraints' limitation is on p. 66, not p. 65; Black on Facebook -0.31 and Asian on LinkedIn -0.29 need p<.10 flags; 'no single SNS can serve as a sampling frame' is the extractor's inference, while the paper says the usage rates should give pause (p. 71).",
+   "Coverage: all 3 bearings and all 4 related links checked; Tables 1, 3 and 4 re-read in the paper text; code ranges re-read; DB and roster counts re-derived read-only. Not checked: brain figures beyond component registry text, Paul's annotation claims beyond the Baptista highlight, and the 400 tweet-gold count."
+  ],
+  "gaps_exposed": [
+   "The social layers carry no per-platform frame statement. social_interactions.json has a provenance string but no per-platform event counts or party mix, so the Bluesky D-skew is invisible downstream.",
+   "Volume normalization in the social layer uses an X-only post count as the denominator for events from X and Bluesky combined. Cross-platform activity is not on a common base. Any change here would need its own ruling; this is not a recommendation to normalize per edge.",
+   "The media blend treats social silence as zero stance rather than missing. No test checks whether non-posters differ systematically (party, chamber) from posters in the categories where the social share is fully on (f = 1).",
+   "Gold sets (400 tweet golds) and stance accuracy figures describe members who post. Their scope does not say that the accuracies cover only the posting population.",
+   "Press, social and Bluesky corpora have no published per-party and per-chamber coverage tables next to the pillar. Coverage figures live only in brain notes."
+  ],
+  "flags": [
+   "UNVERIFIED (DE-062): the Bluesky party mix (135 posters: 117 D / 16 R / 2 I; 411 mentions: 392 D->D, 0 cross-party; window 2023-07-01 to 2026-09-19; denominator 533 roster members) is a single-path read of social_media.db joined to responsiveness_layers.json party. It needs a second path, and a check that these rows existed when social_interactions.json was built on 2026-09-19.",
+   "Not a call for per-edge volume normalization (REJECTED in this project). The code already applies per-author normalization; the issue raised is the mismatched X-only denominator and the unstated frame. Any fix must avoid re-proposing the rejected option.",
+   "Not a call to drop regular cosponsorship edges (REJECTED). Hargittai's argument concerns social-platform layers, not the cosponsor base.",
+   "Edge weights in this layer are heuristic model inputs, never closeness or access probabilities (D-025). A D-heavy Bluesky subgraph must not be described as Democrats being 'closer'.",
+   "The media blend scores social silence as zero, which sits awkwardly with the stance contract's stated rule that missing evidence is never imputed as neutral (category-stance-ladder assumption). Recorded as an observation for Paul to rule on, not a finding."
+  ],
+  "paul_alignment": "Paul has no annotations on this paper. His positions on the affected components are Fink as the framework for the social layer, his critiques on sign, third-party sentiment and temporal weighting, and Baptista's highlighted caution that more layers are not always better. Hargittai supports the Baptista caution from a sampling angle that his notes do not raise: each added platform layer brings its own selected population. For legislators that shows up as party skew on Bluesky, not as the age, income or education skew Hargittai found in the public. His media-blend note asks for temporal weighting and does not cover platform selection or how silence is scored. That note is not stale, but it is incomplete on this point. Nothing here contradicts his takeaways.",
+  "related": [
+   {
+    "slug": "steinertthrelkeld-2018-twitter-data",
+    "relation": "complements",
+    "why": "Item exists and its title matches (Twitter as Data, 2018). Its content on representativeness was not re-checked in the text. Kept."
+   },
+   {
+    "slug": "baptista-2022-universal-multilayer-network",
+    "relation": "complements",
+    "why": "Item exists. Paul's annotations on it include a highlight reading more network data is not always better (highlight only, no note). That supports the caution, but the wording is network data, not layers. Kept with corrected wording."
+   },
+   {
+    "slug": "azucar-2017-predicting-personality-traits",
+    "relation": "complements",
+    "why": "Item exists; title matches. Its extracted summary says the criterion came from ordinary users of Facebook, Twitter, Weibo and Instagram, so the frame caveat applies. Kept."
+   },
+   {
+    "slug": "kumari-nd-five-personality-predictions",
+    "relation": "complements",
+    "why": "Item exists; title (Big Five Personality Predictions From Twitter Using Regression) matches. Kept."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "zhang-2022-data-assisted-social",
+    "relation": "contradicts",
+    "why": "Hargittai shows that big data from social network sites carries sampling biases. Zhang treats 882,371 tweets as representative of consumer sentiment and never examines who posts."
+   },
+   {
+    "slug": "zhou-2026-measuring-stance-dynamics",
+    "relation": "complements",
+    "why": "Item exists. The paper concedes a non-representative Santiago news-follower sample (Sec. 3.2, Sec. 5.1 p.12, Sec. 6.1 p.16), and Hargittai is relevant to such biases. The paper does not cite her, so 'explains' should read 'relevant to'."
+   },
+   {
+    "slug": "esmalian-2022-characterizing-equitable-access",
+    "relation": "complements",
+    "why": "Hargittai documents sampling biases in big data drawn from digital traces. Esmalian rests on StreetLight cell/GPS traces with an undescribed penetration rate and black-box home-zone inference, which is exactly that kind of bias. Read together, this limits how far its findings by income can be trusted."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "ornstein-2024-train-your-stochastic",
+  "note": false,
+  "meta": {
+   "title": "How to train your stochastic parrot: large language models for political texts",
+   "authors": [
+    "Joseph T. Ornstein",
+    "Elise N. Blasingame",
+    "Jake S. Truscott"
+   ],
+   "year": "2025",
+   "venue": "Political Science Research and Methods, vol. 13, pp. 264-281 (Cambridge University Press, open access CC BY 4.0). Received 12 Sep 2023, revised 23 Jul 2024, accepted 3 Aug 2024. Authors at University of Georgia (Ornstein, Blasingame) and University of Florida (Truscott).",
+   "doi": "10.1017/psrm.2024.64",
+   "sha12s": [
+    "67b4400dd0c4"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "How to train your stochastic parrot: large language models for political texts",
+   "authors": [
+    "Joseph T. Ornstein",
+    "Elise N. Blasingame",
+    "Jake S. Truscott"
+   ],
+   "year": "2025",
+   "venue": "Political Science Research and Methods, vol. 13, pp. 264-281 (Cambridge University Press, open access CC BY 4.0). Received 12 Sep 2023, revised 23 Jul 2024, accepted 3 Aug 2024. Authors at University of Georgia (Ornstein, Blasingame) and University of Florida (Truscott).",
+   "doi": "10.1017/psrm.2024.64",
+   "document_type": "Journal article (original article) with pre-registered analyses",
+   "coverage": "Full text read: all 761 lines of the _text file (about 61.6k chars), including references and the cite block. Paul's markup: none. No file in _annots/ (63 JSON files) references hash 67b4400dd0c4 or the title, and no file in annotations/ mentions Ornstein or the title, so paul_markup is empty. Metadata corrections: the hint DOI (from PII S2049847024000645) does not match the DOI printed in the text, which is 10.1017/psrm.2024.64; the journal is Political Science Research and Methods, not a Cambridge book; the year is 2025 by volume (accepted 2024). Topic coverage: lobbying, network analysis, path-finding, allocation, and persuasion/turnout are absent. Legislators appear only through House floor speeches (virtue-praise labels by party). Elections appear only through campaign-ad tone; no vote, turnout, or persuasion outcome is modeled.",
+   "research_question": "Can few-shot prompts to large language models (GPT-3, GPT-4) be adapted, without task-specific training or large labeled sets, to political text-as-data tasks (sentiment classification, ad tone classification, ideology scaling, topic discovery), matching or beating conventional automated methods and approaching expert or crowd coding at far lower cost? The paper also asks what validation and prompt-design practices make such measures trustworthy.",
+   "theory": "Text-as-data measurement (Grimmer and Stewart 2013: \"validation, validation, validation\"). Contextualized word embeddings and transformer self-attention let word meaning depend on context (Vaswani et al. 2017), so context-dependent labels such as sarcasm can be learned from a prompt rather than from a trained classifier. Few-shot in-context learning (Brown et al. 2020). For topics, the expectation that conservatives praise loyalty, patriotism and hard work while liberals praise fairness, compassion and charity follows Moral Foundations Theory (Graham et al. 2009), p.275.",
+   "data": "Four applications. (1) 945 tweets referencing the US Supreme Court within 24 hours of Masterpiece Cakeshop (2018) and of Trump v. Mazars and Trump v. Vance (2020); unit = tweet; author-coded 7-point sentiment from -1 to +1 after two-stage manual coding (1000 labeled, 55 dropped, 945 kept; Fleiss kappa 0.72). Benchmark classifier trained on 1.2 million tweets from Go et al. (2009). (2) 935 political ads from Carlson and Montgomery (2017); unit = ad; expert ratings and crowd pairwise comparisons (9420 tasks at 6 cents, $565.20 total). (3) 18,263 sentences from 18 British party manifestos, 1987-2010; crowd-coded per Benoit et al. (2016), with an expert-score benchmark. (4) 9,704 one-minute US House floor speeches in the 113th Congress (2013-2014) from Wilkerson and Casas (2017); 9,565 analyzed because 139 speeches over 6,000 characters were omitted for API token limits (fn. 8, p.275). Models: GPT-3 (175B parameters) and GPT-4; GPT-3 was removed from the public API in January 2024 (p.278).",
+   "method": "Few-shot prompting. The LLM returns a next-word probability vector over labels, and continuous measures are built from it. Sentiment (tweets): six few-shot examples, two per class (positive, neutral, negative), with a preamble describing the ruling; the continuous measure is the first principal component of the probability vector (pre-registered via AsPredicted 92341, 92422, 92666, 100718, 125217; p.267-268). Ad tone: one-shot prompt (Figure 3), continuous tone from the probability vector. Ideology: one-shot Policy Prompt applied per sentence; sentence score = P(Conservative) minus P(Liberal); averaged to economic and social passage means per manifesto (p.273). GPT-4 ideology deviated from the pre-registered protocol and used the Le Mens and Gallego (2023) whole-document prompt (p.273). Topics: prompt asks GPT-3 for virtue labels; 51,483 labels returned, about 5-6 per speech, grouped by synonyms (p.275-276). Benchmarks: dictionary sentiment, Naive Bayes (bag of words), TweetNLP (RoBERTa fine-tuned on tweets, Camacho-Collados et al. 2022). Appendix A has zero-shot and one-shot variants (not in the text file).",
+   "identification": "None in the causal sense. The design is measurement validation: each LLM measure is correlated with or compared against human gold labels (author codes, expert ratings, crowd codes), and topic labels are validated by an optimal-label task in which a blinded coder picks the best of four labels for 400 speeches (80 percent agreed with GPT-3's label, chance 25 percent; p.276).",
+   "scope": "Population and era: US tweets about SCOTUS decisions (2018-2020); US campaign ads from the Carlson and Montgomery (2017) corpus (dates not stated in text); UK party manifestos 1987-2010; US House one-minute floor speeches 2013-2014. Models: GPT-3 and GPT-4 (2023-2024 API). The paper argues about political science text-as-data generally, and cautions about closed proprietary models and about tasks needing current or factual information (p.278-279).",
+   "key_findings": [
+    {
+     "finding": "Sentiment on 945 SCOTUS tweets: GPT-3 few-shot correctly predicts negative/positive in 88.4 percent of cases; TweetNLP 64.3 percent; best dictionary method 38.3 percent; Naive Bayes trained on 1.2M tweets 57.7 percent.",
+     "location": "Section 3.1, p.268 (lines 280-285)",
+     "numbers": "88.4% vs 64.3% / 38.3% / 57.7%"
+    },
+    {
+     "finding": "GPT-4 performs slightly worse than GPT-3 on the sentiment task; its probabilities are poorly calibrated and overconfident; for over 70 percent of posts GPT-4 gives a single-label probability above 99 percent; it returns Neutral more often than the authors.",
+     "location": "Section 3.1, p.268 (lines 287-292)",
+     "numbers": "over 70% of posts with >99% probability"
+    },
+    {
+     "finding": "Ad tone: LLM coding of 935 ads took under one minute and cost $0.60, against $565.20 for crowd pairwise coding (9420 tasks at 6 cents), about a 1000-fold cost reduction. The LLM tone measure is said to correlate with expert ratings as strongly as the crowd measure; the text gives no coefficient for this.",
+     "location": "Section 3.2, p.269 (crowd cost lines 326-327) and p.271 (lines 355-358)",
+     "numbers": "$0.60 vs $565.20; 935 ads; under 1 minute"
+    },
+    {
+     "finding": "Ideology scaling of 18 UK manifestos: LLM scores correlate with expert ratings at rho = 0.92 on the economic dimension and rho = 0.8 on the social dimension; better at between-party than within-party variance (true for crowd codes too).",
+     "location": "Section 3.3, p.273 (lines 441-445), Figure 6",
+     "numbers": "rho 0.92 economic; rho 0.8 social"
+    },
+    {
+     "finding": "Cost of ideology scoring: about $2.50 for 18,263 sentences with GPT-3, against about $3,226.70 for the original crowd coding (footnote assumes 1.5 cents per sentence and 215,107 crowd evaluations).",
+     "location": "Section 3.3, p.273 (lines 446-451, fn. 7)",
+     "numbers": "$2.50 vs ~$3226.70; 18,263 sentences; 215,107 evaluations"
+    },
+    {
+     "finding": "Topic labeling of 9,565 House speeches returned 51,483 labels (about 5-6 per speech). Democrats more often praised advocacy (+3.5 pp), charity (+1.5), compassion (+3.9), education (+3.3), fairness (+3). Republicans more often praised bravery (+2), patriotism (+4.2), loyalty (+2.1), sacrifice (+2.8), success (+7.7).",
+     "location": "Section 3.4, p.275 (line 514) and p.276 (lines 525-533), Figure 8",
+     "numbers": "51,483 labels; differences in percentage points as listed"
+    },
+    {
+     "finding": "Topic label validation: for 400 random speeches a blinded coder picked GPT-3's label over three random intruders in 80 percent of cases, against 25 percent chance.",
+     "location": "Section 3.4, p.276 (lines 534-542)",
+     "numbers": "80% vs 25% chance; n = 400"
+    },
+    {
+     "finding": "The model is not a dictionary method: 5,332 speeches contain the word honor, but GPT-3 labels only 145 as praising honor, nearly all about soldiers or veterans.",
+     "location": "Section 3.4, p.276 (lines 543-549)",
+     "numbers": "5,332 contain honor; 145 labeled as praising honor"
+    },
+    {
+     "finding": "Cost trend: computing cost of the paper's applications fell 97 percent between fall 2021 and publication.",
+     "location": "Section 5 Conclusion, p.279 (lines 648-650)",
+     "numbers": "97% decline"
+    },
+    {
+     "finding": "Reproducibility: GPT-3 models used were removed from the public API in January 2024, so exact results cannot be reproduced unless the weights are released.",
+     "location": "Section 4 Discussion, p.278 (lines 598-605)",
+     "numbers": "January 2024"
+    },
+    {
+     "finding": "Bias: GPT-3 answered 58 percent of 817 misconception questions truthfully (Lin et al. 2021), cited as a reason for caution on factual-accuracy tasks.",
+     "location": "Section 4 Discussion, p.278 (lines 614-615)",
+     "numbers": "58% of 817"
+    }
+   ],
+   "limitations": [
+    "Results depend on researcher choices, especially prompt design; the authors recommend a three-step validation: hand-label a small set for prompt design, validate on a second hand-labeled set, then apply to the rest (p.277, lines 567-575).",
+    "GPT-4 is worse-calibrated than GPT-3 for next-word classification because of RLHF (p.268, lines 293-296; p.278, lines 587-597).",
+    "Reproducibility depends on proprietary, closed models that vendors may stop serving; the GPT-3 models used were retired from the API (p.278).",
+    "LLMs inherit human biases and falsehoods, including stereotyped embeddings, and can generate hate speech; RLHF mitigates this at some cost to accuracy (p.278, lines 611-624).",
+    "Authors advise against tasks that need up-to-date factual information (p.278-279).",
+    "Ad tone: model diverges from experts on attacks against unnamed targets, and on ads needing outside context; the authors argue one expert label is arguably miscoded (p.271, lines 359-368).",
+    "Sentiment: tweets whose meaning depends on outside political context can be misread unless the prompt supplies that context.",
+    "Pre-registration deviation: GPT-4 ideology used a different, non-pre-registered protocol (p.273, lines 433-440).",
+    "Speeches over 6,000 characters (139) were dropped because of API token limits (p.275, fn. 8).",
+    "Topic labels are checked only by the 400-speech intruder task; the LDA comparison is conceptual and cited, not estimated in this paper.",
+    "GPT-4 showed little or no improvement over GPT-3 on the ideology and sentiment tasks, so the best-model choice is not settled across tasks (p.273, lines 438-440)."
+   ],
+   "measures": [
+    "Sentiment: first principal component of the Positive/Negative/Neutral next-word probability vector per tweet, compared with a 7-point author-coded score from -1 to +1 (Fleiss kappa 0.72).",
+    "Tone: continuous score from the one-shot ad-tone prompt probability vector, compared with expert ratings of the 935 ads.",
+    "Ideology: per-sentence score P(Conservative) minus P(Liberal), averaged to economic and social passage means per manifesto; compared with expert scores (rho 0.92 economic, 0.8 social).",
+    "Topic: count and share of speeches mentioning each virtue label (and synonyms), by party; difference in percentage points.",
+    "Classification accuracy: share of tweets whose predicted negative/positive sign matches the author label (88.4% for GPT-3).",
+    "Calibration: share of posts with a single-label probability above 99 percent (GPT-4)."
+   ],
+   "references_of_note": [
+    "Carlson D and Montgomery JM (2017) pairwise comparison framework for crowd coding of political texts, APSR 111, 835-843 (ad tone benchmark).",
+    "Benoit K, Conway D, Lauderdale BE, Laver M and Mikhaylov S (2016) Crowd-sourced text analysis, APSR 110, 278-295 (manifesto crowd coding replicated here).",
+    "Wilkerson J and Casas A (2017) Large-scale computerized text analysis in political science, Annual Review of Political Science 20, 529-544 (source of the House floor-speech corpus).",
+    "Grimmer J and Stewart BM (2013) Text as data, Political Analysis 21, 267-297 (validation principle).",
+    "Grimmer J, Roberts ME and Stewart BM (2022) Text as Data: A New Framework for Machine Learning and the Social Sciences (book).",
+    "Ying L, Montgomery JM and Stewart BM (2021) Topics, concepts, and measurement: crowdsourced validation of topics, Political Analysis 30 (optimal label task).",
+    "Eshima S, Imai K and Sasaki T (2024) Keyword-assisted topic models, AJPS 68, 730-750 (concept-driven topic design).",
+    "Le Mens G and Gallego A (2023) Scaling Political Texts with ChatGPT (arXiv:2311.16639), used for GPT-4 ideology.",
+    "Blei DM, Ng AY and Jordan MI (2003) Latent Dirichlet allocation, JMLR 3, 993-1022 (LDA comparison).",
+    "Brown TB et al. (2020) Language models are few-shot learners (few-shot prompting).",
+    "Go A, Bhayani R and Huang L (2009) Twitter sentiment classification using distant supervision (Naive Bayes benchmark data).",
+    "Camacho-Collados J et al. (2022) TweetNLP (RoBERTa Twitter sentiment benchmark).",
+    "Zhao TZ et al. (2021) Calibrate Before Use (example ordering and class balance in few-shot prompts).",
+    "Veselovsky V, Ribeiro MH and West R (2023) crowd workers using LLMs for text production (threat to crowd-coding validity).",
+    "Graham J, Haidt J and Nosek BA (2009) Liberals and Conservatives rely on different sets of moral foundations (theory for virtue expectations).",
+    "Lin S, Hilton J and Evans O (2021) TruthfulQA (GPT-3 truthful on 58 percent of questions).",
+    "Peterson A and Spirling A (2018) Classification accuracy as a substantive quantity of interest (polarization measure in Westminster systems)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "We propose a set of best practices for adapting these models to social science measurement tasks",
+     "location": "Abstract, p.264"
+    },
+    {
+     "quote": "political scientists should strongly consider using few-shot prompts to LLMs for any text classification task",
+     "location": "Section 4 Discussion, p.277 (lines 559-561)"
+    },
+    {
+     "quote": "the GPT-3 models that we used to produce the paper's results were removed from the public-facing API in January 2024",
+     "location": "Section 4 Discussion, p.278 (lines 602-603)"
+    }
+   ]
+  },
+  "summary_md": "Ornstein, Blasingame and Truscott (PSRM 2025, DOI 10.1017/psrm.2024.64) test few-shot prompts to GPT-3 and GPT-4 on four political text tasks. The tasks are sentiment in 945 SCOTUS tweets, tone in 935 campaign ads, ideology in 18,263 sentences from UK manifestos, and virtue-topic labels for 9,565 House one-minute speeches. On the tweets, GPT-3 got 88.4% of negative/positive signs right, against 64.3% for TweetNLP, 57.7% for Naive Bayes and 38.3% for the best dictionary. On ideology, LLM scores correlate with expert scores at rho 0.92 (economic) and 0.80 (social) across the 18 manifestos. LLM topic labels beat three random intruders in 80% of 400 blinded checks, where chance is 25%. Costs dropped about 1000-fold compared with crowd coding.\n\nThree method points matter more than the headline numbers:\n- Continuous measures are built from the label probability vector, not the argmax label.\n- GPT-4, tuned with human feedback (RLHF), is overconfident. For over 70% of posts it put more than 99% on one label, and it chose Neutral more often than the human coders.\n- Validation runs in three steps: tune the prompt on one hand-labelled set, check it on a second, then apply.\n\nThe authors also warn that the GPT-3 models they used were retired in January 2024, so the results cannot be reproduced.\n\nFor Paul's system, the paper does not bear on networks, money or allocation. It bears on the stance and text layer. Melange already supplies outside context in the prompt for its Claude stance rater, and it caches LLM outputs by model. The gaps are elsewhere:\n- run_stage5.R throws away DEBATE's per-label probabilities and keeps only a sign, which is then multiplied by dictionary intensity.\n- The Claude rater reports a confidence it states itself, not a calibrated probability.\n- Regex topic routing has never been checked against human labels.\n- The tweet gold queue puts the model's labels next to the human gold columns.\n\nThe paper measures sentiment toward court rulings, not stance toward a target, so its accuracy figures should not be read as an expected accuracy for CU stance.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-stance.press-value-aggregate",
+    "relation": "suggests-extension",
+    "paper_claim": "Continuous measures built from the label probability vector: per-sentence P(Conservative) minus P(Liberal), averaged per manifesto, gives rho 0.92 (economic) and 0.80 (social) across 18 UK manifestos with GPT-3. Tweet sentiment uses the first principal component of the positive/negative/neutral probability vector.",
+    "paper_location": "Section 3.1 p.267-268 (PCA of probability vector, lines 276-280); Section 3.3 p.273 (rho 0.92 and 0.8, Figure 6, lines 441-445)",
+    "system_side": "run_stage5.R:143 sets press_value = final_sign x intensity, where intensity is abs(lsd_net_norm) by default (line 141). final_sign is the bill sign or stance_sign, which is the argmax of DEBATE (run_stage5.R:140; stage5_debate.py:77-82). run_stage5.R:9 is a comment only. p_support, p_oppose and p_neutral are kept as columns (run_stage5.R:98,166) and do not enter press_value.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:140,141,143,166; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:65,77-82",
+    "transfer_conditions": "The paper evidence uses GPT-3 next-token probabilities on a few-shot prompt, not DEBATE NLI entailment scores. DEBATE runs with multi_label=True (stage5_debate.py:65), so its three scores are independent and do not sum to 1. A p_support minus p_oppose contrast is a different object and would need a pre-registered single look on the 760-row press gold. Remains UNVERIFIED until a second path reproduces it (DE-062).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers and PCA/contrast description checked against the text and confirmed. Code cite for the press_value formula corrected from :9 (a comment) to :143. The p_* columns claim is accurate. Downstream effect is not traced here.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#press_value aggregate and human-label overlay|press_value aggregate and human-label overlay]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "supports",
+    "paper_claim": "Tweets whose meaning depends on outside political context are misread unless the prompt supplies that context. The Masterpiece sentiment prompt included a preamble on the ruling and six few-shot examples, and GPT-3 got the sign right on 88.4 percent of 945 tweets.",
+    "paper_location": "Section 3.1 p.267-268 (lines 228-262 and 281-283)",
+    "system_side": "The system described is claude_stance.py, not DEBATE. Its SYSTEM prompt (lines 19-23) carries a credit-union policy map and tells the model to judge by the member position on the underlying issue, not by the words credit union. Its docstring (lines 5-8) names it the pre-labeller and the third member of the ensemble, with the Credit Card Competition Act example.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:5-8,19-23",
+    "transfer_conditions": "The paper task is sentiment toward a court ruling, not stance toward an interest, so the paper gives no accuracy figure for CU stance. The paper used six few-shot examples; claude_stance.py is zero-shot with a policy map. The supported point is the design choice of supplying context in the prompt.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper claim verified at p.267-268. The component ID names the DEBATE classifier, but the system_side describes the Claude rater, so the bearing belongs to the Claude rater component. Context-in-prompt design is supported.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "qualifies",
+    "paper_claim": "GPT-4, tuned with RLHF, is poorly calibrated and overconfident. For over 70 percent of its posts it gave one label more than 99 percent probability, and it chose Neutral more often than the authors. GPT-4 was slightly worse than GPT-3 on sentiment and little or no better on ideology. Section 4 says newer RLHF models frequently underperform on classification and scaling tasks, and the latest model is not always the best.",
+    "paper_location": "Section 3.1 p.268 (lines 288-296); Section 3.3 p.273 (lines 438-440); Section 4 p.278 (lines 589-597)",
+    "system_side": "claude_stance.py asks for a self-stated confidence from 0 to 1 in its JSON reply (line 25) and defaults to claude-sonnet-4-6 (line 32). A call that fails all 4 attempts stays neutral with confidence 0.0 and reason ERR (lines 80, 95-97). An unrecognised label is set to neutral (lines 89-91), but the stated confidence is still read at line 92, so it is not reset to 0.0.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:25,32,80,89-97",
+    "transfer_conditions": "These are GPT-3 and GPT-4 results, not Claude results. The module requests no token log-probabilities (none found in the file), so the paper probability-vector method cannot be applied as written. claude_conf is a self-stated number, not a calibrated probability. Neutral rows created by ERR should be counted apart from model-chosen neutral rows. No DEBATE-vs-Claude agreement figure was located in the sources checked.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Calibration figures and page cites confirmed. Claim that unrecognised labels get confidence 0.0 is wrong (line 92 keeps the stated value). The 'newer models did not improve on any task' wording overstates the paper, so it is restated. The 87.2 percent agreement figure is not supported by sources read and is removed. Anthropic log-probability claim is restated from the code only.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.lsd-tone",
+    "relation": "qualifies",
+    "paper_claim": "Dictionary methods lose badly when meaning depends on context. The best dictionary the authors could build got 38.3 percent of tweet signs right, against 88.4 percent for GPT-3. Of 5332 speeches containing honor, GPT-3 labels only 145 as praising honor.",
+    "paper_location": "Section 3.1 p.268 (lines 282-286); Section 3.4 p.276 (lines 544-549)",
+    "system_side": "LSD2015 is used only for intensity. run_stage5.R:141 takes abs(lsd_net_norm) by default, or lsd_charge when CU_S5_INTENSITY=charge, and line 143 multiplies it by final_sign. stage5_lsd.R (header lines 10-15) matches and removes negation phrases before counting. Direction in run_stage5.R comes from the DEBATE stance with bill-sign and human-label overrides (lines 139-140), not from the Claude rater.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:139,140,141,143; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:10-15",
+    "transfer_conditions": "The paper dictionary is the authors own construction, not LSD2015, and the paper did not test intensity. Intensity inherits the context blindness the paper describes (ceremonial or quoted language reads as heated). Whether LSD intensity tracks human-coded intensity is untested.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Numbers and page cites confirmed. The cited stage5_debate.py:11-12 is a docstring; the LSD code is in stage5_lsd.R. The statement that direction also comes from the Claude reader is not supported by run_stage5.R and is removed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Lexicoder LSD2015 tone intensity|Lexicoder LSD2015 tone intensity]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-legislative-data.category-taxonomy",
+    "relation": "suggests-extension",
+    "paper_claim": "LLM topic labels can be checked with an optimal-label task. In 400 speeches a blinded coder picked the GPT-3 label over three random intruders 80 percent of the time, against 25 percent chance. Keyword presence overcounts: 5332 speeches contain honor, but only 145 are labelled as praising it.",
+    "paper_location": "Section 3.4 p.276 (lines 534-549)",
+    "system_side": "Release and post categories come from regex keyword maps (CATKW = MR.RAW_PATTERNS at build_media_blend.py:50). No human-label check of those regex tags was found in the files read. Downstream use (media blend, press category weights) was not traced.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/build_media_blend.py:50",
+    "transfer_conditions": "The paper labels are open-ended virtue labels for 2013-2014 House speeches; Melange uses fixed CU policy categories on releases and posts. The intruder protocol transfers as a measurement check on existing regex tags. Adopting LLM-assigned categories would be a separate decision. The R scraper CATEGORIES regex was not opened.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers confirmed. The claim that the categories drive the media blend and the press category weights was not traced and is removed from the verified text. The protocol suggestion is a fair design implication.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-legislative-data#Release category taxonomy and billstatus synthetic rows|Release category taxonomy and billstatus synthetic rows]]",
+    "system": "melange-legislative-data"
+   },
+   {
+    "component_id": "melange-validation.gold-set-and-rank-gate",
+    "relation": "qualifies",
+    "paper_claim": "The recommended validation has three steps: hand-label a small set to design the prompt, validate on a second hand-labelled set (by the team or crowd coders) for strong correlation with ground truth, then apply. Crowd workers increasingly use LLMs (Veselovsky et al. 2023), which threatens crowd-code independence.",
+    "paper_location": "Section 4 p.277 (lines 567-575); Veselovsky point in Section 3.2 p.270-271 (lines 335-343)",
+    "system_side": "build_tweet_gold_queue.py writes model_stance and model_margin into the same rows as the human gold_* columns (lines 92-96). The api_* columns are written as blank placeholders reserved for an optional pre-label pass (line 18 and lines 92-96). Low-margin (Q_LOWMARGIN) and anti-bank (Q_ANTIBANK) slices are oversampled (lines 25-27).",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/build_tweet_gold_queue.py:18,25-27,92-96",
+    "transfer_conditions": "The paper does not test anchoring on pre-labels, so this is a design implication, not a measured effect. If a labeller sees model_stance, agreement with gold partly measures agreement with the model. Oversampled hard slices make these accuracies incomparable with the paper random-sample 88.4 percent.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Oversampling and column structure confirmed. The api_* block is blank at write time, not a populated pre-label block. The Veselovsky point sits in Section 3.2, not Section 4. Treating hand labels as the independent criterion is an interpretation of the paper recommendation.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-validation#Gold-set validation and zero-rank-delta gate|Gold-set validation and zero-rank-delta gate]]",
+    "system": "melange-validation"
+   },
+   {
+    "component_id": "melange-sna.co-appearance-and-references",
+    "relation": "supports",
+    "paper_claim": "Results from closed, vendor-served models can become impossible to reproduce. The GPT-3 models behind the paper results were removed from the public-facing API in January 2024.",
+    "paper_location": "Section 4 p.278 (lines 598-605)",
+    "system_side": "member_reference_layer.py records which model scored each cached row (_cache_models, lines 258-265) and stores resp.model and resp.id with each classification (line 306). agency_communion_llm.py keeps a separate cache file per model (CACHE path, lines 24-28), so instruments do not mix.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/member_reference_layer.py:49,258-265,306; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/agency_communion_llm.py:24-28",
+    "transfer_conditions": "Caching keeps outputs auditable after a model is retired, but does not regenerate them; a re-score on a successor model is a new instrument. The warning applies because both layers call Anthropic-served models. The component label is a weak fit for LLM caching and should name the member-reference and persona LLM layers.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper claim and date confirmed at p.278. Code side confirmed for per-model caching and response metadata. The display-only or low-weight status of both layers was not checked.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-sna#Co-appearance and signed member-reference layers (display only)|Co-appearance and signed member-reference layers (display only)]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-psychometrics.persona-agency-communion",
+    "relation": "qualifies",
+    "paper_claim": "Few-shot LLM classification can match or beat crowd and expert coding, but results depend heavily on prompt design and need checks against hand labels the prompt was not tuned on.",
+    "paper_location": "Abstract p.264; Section 4 p.277-278",
+    "system_side": "agency_communion_llm.py uses a few-shot codebook with strong (1.0) and weak (0.5) cue conditions (docstring lines 5-7; method string near lines 238-239) and classifies sentence-level cues. The 18/18 functional gate, the party signature, and the absence of held-out human-gold accuracy were not verified. PERSONA_W was not found in agency_communion_llm.py, so its definition lives elsewhere.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/agency_communion_llm.py:5-7,238-239",
+    "transfer_conditions": "The paper validates document-level measures against expert and crowd codes; the cues here are sentence-level and aggregated per member. A paper-style check would need a hand-coded cue sample that was not used to write the codebook. PERSONA_W 0.30 is an owner ruling and is not changed by this review.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper claim holds as a general statement. Code side verified only for the codebook and the strong/weak weights. The validation status and PERSONA_W value were not checked, so no claim about them is confirmed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Agency-communion persona channel|Agency-communion persona channel]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary says run_stage5.R throws away DEBATE per-label probabilities. Wrong: p_support, p_oppose and p_neutral are kept as columns (run_stage5.R:98,166). Only the aggregate ignores them.",
+   "Summary says Melange caches LLM outputs by model. True for the member-reference and persona layers. The Claude stance rater (claude_stance.py) writes a resumable CSV with no model key.",
+   "Summary cost claim: the about 1000-fold reduction ($0.60 vs $565.20) covers 935 ad codings priced at April 2024 OpenAI rates (footnote 6). It is not a general or current figure.",
+   "The 87.2 percent DEBATE-vs-Claude agreement figure appears in a bearing but was not found in the Draft Systems or Melange stance and members files searched. It is removed from the verified text.",
+   "paul_alignment: 83.9 percent is supported as an SVM figure (83.9 percent/0.816) in DEEP_AUDIT_MATH_LOGIC_2026-07-02.md line 7. The 0.757 transformer figure was not found, and the member-grouped test description was not checked.",
+   "paul_alignment: no Paul annotation exists for this item (paul_entries and paul_markup are empty). Stated Paul positions (endorses LLM extraction, calls SVM outdated) have no source here and are unverified.",
+   "Bearing cite fix: press_value formula is at run_stage5.R:143; line 9 is a comment. Corrected in bearing 1.",
+   "Bearing cite fix: stage5_debate.py:11-12 is a docstring, so the LSD claim now cites stage5_lsd.R header lines 10-15 and run_stage5.R:141,143.",
+   "Bearing error corrected: an unrecognised label keeps the model stated confidence (claude_stance.py line 92); it is not set to 0.0.",
+   "Bearing error corrected: the api_* columns in build_tweet_gold_queue.py are blank placeholders, not a populated pre-label block.",
+   "Related link Rice and Zorn changed from contradicts to complements. Ornstein does not cite Rice and Zorn.",
+   "Related link Haselmayer: Ornstein benchmarks crowd coding alone, not dictionary plus crowd. Why text corrected.",
+   "Metadata: the p.year field reads 2024 but volume 13 and acceptance in 2024 point to 2025. The DOI in the hint (10.1017/S2049847024000645) does not match the DOI printed in the text (10.1017/psrm.2024.64, confirmed in the page header)."
+  ],
+  "gaps_exposed": [
+   "Probability-based continuous stance is unused. DEBATE's p_support and p_oppose are written but not aggregated (run_stage5.R:98,140), and press_value takes direction from an argmax sign alone.",
+   "The Claude stance rater has no calibrated probabilities: its confidence is stated by the model in its JSON reply, and API errors silently become neutral at confidence 0 (claude_stance.py:80,89-91).",
+   "The regex category router (CATKW, build_media_blend.py:50) has no human-label validation. The paper's 400-item intruder task is a ready, cheap protocol for this.",
+   "Gold queues put model_stance and api_* pre-labels next to the gold_* columns (build_tweet_gold_queue.py:92-96). Nothing records whether gold labelling was blind to the model, so the assumption that gold is independent of the pipeline is untested.",
+   "No plan exists for retiring a model. The caches keep outputs, but no documented rule says how a successor model's scores are bridged or re-validated before they replace cached ones."
+  ],
+  "flags": [
+   "The paper measures SENTIMENT toward SCOTUS rulings, not target-specific STANCE. The brain separates sentiment from stance, so do not quote the 88.4% figure as an expected accuracy for CU stance.",
+   "The paper's numbers come from GPT-3 and GPT-4 (2023-2024 API), and GPT-3 was retired in January 2024. Its figures cannot be reproduced and say nothing directly about Claude or DEBATE.",
+   "The cost figures ($0.60 vs $565.20; $2.50 vs about $3,226.70) are OpenAI prices from that period. They describe the window and denominator stated in the paper (935 ads; 18,263 sentences), not Melange's current costs.",
+   "Any re-scoring proposed here (a probability-contrast stance, LLM categories) is UNVERIFIED until a second path reproduces it (DE-062). Any replacement of a live reader needs a pre-registered single look against held-out gold.",
+   "Possible conflict with the gold-set assumption that gold labels are independent of the pipeline: the tweet gold queue shows model outputs next to the gold columns.",
+   "Nothing in the paper touches the rejected SNA proposals, LDA edges, reciprocity, graph-rank or influence wording."
+  ],
+  "paul_alignment": "Paul has no annotations on this paper. His position on the stance components endorses LLM and transformer extraction (Kim J. 2025, Birkenmaier and Lechner 2025) and calls SVM baselines outdated. The paper broadly agrees: GPT-3 beat a fine-tuned RoBERTa (TweetNLP) and Naive Bayes on tweet sentiment. It adds two cautions his notes lack. First, newer RLHF models (GPT-4) were overconfident and no better. Second, every LLM measure needs separate hand-labelled validation. Paul's preference is partly stale against the system's own record: on the member-grouped held-out test, LinearSVC on TF-IDF scored 83.9%, against 0.757 reported for the transformer. The paper's 88.4% is a sentiment task, not CU stance. His noted weakness, that ambiguous statements are hard to untangle, matches the paper's finding that context-dependent items fail unless the prompt supplies context. The system's Claude rater already supplies that context.",
+  "related": [
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Both papers use few-shot LLM coding checked against human labels. The persona channel code cites Birkenmaier and Lechner cue prompting (agency_communion_llm.py docstring). Ornstein does not cite Birkenmaier, and the Krippendorff-alpha role is not verified here."
+   },
+   {
+    "slug": "kim-2025-measuring-interest-group",
+    "relation": "same-method",
+    "why": "Kim and Ornstein both apply few-shot GPT-class labelling to political text. Ornstein documents GPT-4 overconfidence on sentiment. Ornstein does not cite Kim. The 96.9 percent figure appears in the Kim item file but was not checked against Kim text."
+   },
+   {
+    "slug": "b-2025-comparing-fine-tuned",
+    "relation": "complements",
+    "why": "Khan et al. compare fine-tuned RoBERTa with classical models for political tweet stance. Ornstein uses TweetNLP (a RoBERTa model) as the sentiment baseline that GPT-3 beats, 88.4 vs 64.3 percent. The tasks differ: Khan is stance, Ornstein is sentiment."
+   },
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "complements",
+    "why": "Rice and Zorn build corpus-specific dictionaries. Ornstein does not cite them and does not test corpus-specific dictionaries. Ornstein shows a general dictionary at 38.3 percent against GPT-3 at 88.4 percent on tweet sentiment, which bears on dictionary validity."
+   },
+   {
+    "slug": "haselmayer-2017-sentiment-analysis-political",
+    "relation": "complements",
+    "why": "Haselmayer and Jenny combine a dictionary with crowd coding. Ornstein benchmarks LLM coding against crowd coding alone (Carlson and Montgomery 2017; Benoit et al. 2016), reporting about a 1000-fold cost reduction for 935 ad codings. The dictionary-plus-crowd route is not tested."
+   },
+   {
+    "slug": "dai-2025-large-language-model",
+    "relation": "same-method",
+    "why": "Both apply LLMs to political stance and sentiment classification. Dai adds logic-tensor constraints; Ornstein uses few-shot prompts with probability-vector outputs. Ornstein does not cite Dai."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "taherdoost-2023-artificial-intelligence-sentiment",
+    "relation": "complements",
+    "why": "Gives the political-text LLM evidence that the review does not cover, and is relevant to Paul's LLM-extraction stance."
+   },
+   {
+    "slug": "porter-2025-campaignview-campaign-platforms",
+    "relation": "complements",
+    "why": "Vault file confirms it is about LLMs for political texts (Political Science Research and Methods, 2025). The analyst's use as a scalable check on CampaignView's hand codes is a suggestion, not a claim in either paper."
+   },
+   {
+    "slug": "burnham-2024-political-debate-zero",
+    "relation": "complements",
+    "why": "Covers using LLMs to label political text, the pre-labelling step behind PolNLI (GPT-4 and GPT-4o) and the CU stance set (Claude). Its models are GPT-3 and GPT-4 on sentiment, not NLI."
+   },
+   {
+    "slug": "lemens-2025-positioning-political-texts",
+    "relation": "same-method",
+    "why": "This is the GPT-3 probability-based scaling the paper benchmarks against (its footnote 2 reports expert correlations of .92 and .8). Both position political texts with LLMs; this paper replaces token probabilities with a direct score query."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "cai-2025-competitive-influence-maximization",
+  "note": false,
+  "meta": {
+   "title": "Competitive Influence Maximization in Voter Dynamics",
+   "authors": [
+    "Zhongqi Cai",
+    "Enrico Gerding",
+    "Markus Brede"
+   ],
+   "year": "Not printed in the text (metadata hint says 2025; latest cited reference is 2024, Palermo et al.)",
+   "venue": "Preprint submitted to Elsevier (29 pages). No journal named in the text. Affiliations: Xiamen University of Technology (Cai); University of Southampton (Gerding, Brede).",
+   "doi": "\"\"",
+   "sha12s": [
+    "5630d0d41fa7"
+   ],
+   "category": "Adaptive Influence Maximization",
+   "category_slug": "adaptive-influence-maximization"
+  },
+  "extraction": {
+   "title": "Competitive Influence Maximization in Voter Dynamics",
+   "authors": [
+    "Zhongqi Cai",
+    "Enrico Gerding",
+    "Markus Brede"
+   ],
+   "year": "Not printed in the text (metadata hint says 2025; latest cited reference is 2024, Palermo et al.)",
+   "venue": "Preprint submitted to Elsevier (29 pages). No journal named in the text. Affiliations: Xiamen University of Technology (Cai); University of Southampton (Gerding, Brede).",
+   "doi": "\"\"",
+   "document_type": "Preprint manuscript (simulation and mean-field analysis; not empirical)",
+   "coverage": "Read all 2506 lines of the text file in three chunks (lines 1-955, 956-1755, 1756-2506), covering abstract, introduction, Sections 2-5, Appendices A-E, acknowledgements and references. Nothing omitted. Paul markup: none supplied (the task listed no markup files), so paul_markup is empty. Coverage is complete for the text as extracted; figure content is read only from axis labels and captions.",
+   "research_question": "How do the timing and distribution of a time-limited, budget-constrained influence campaign shape the final vote share in a voter model, and how does network degree heterogeneity change the optimal campaign timing? Two settings: (1) one controller (A) against a constant, fixed opponent (B); (2) two controllers choosing start times simultaneously in a zero-sum game (paper Sections 1, 2, abstract p.1).",
+   "theory": "Non-progressive voter model (reversible opinion changes; Masuda 2015) with heterogeneous mean-field theory and relaxation-time analysis (Son et al. 2008). Degree heterogeneity drives timescales. Competitive timing and budget allocation are analysed with interior-point optimization, stochastic hill climbing, and minimax-based iterative search for Nash equilibria in a zero-sum game. Partial zealotry (Masuda et al. 2010; Moreno et al. 2020) adds agent heterogeneity. Authors contrast their smooth zealotry with latency models (Palermo et al. 2024).",
+   "data": "Simulated and real networks, no empirical opinion or vote-outcome data.\n(a) Synthetic configuration-model scale-free networks. Main experiments: N = 10^4 nodes, target mean degree 10 (realized 10.5), degree exponent lambda in [1.6, 5], k_max = sqrt(N) (p.11, p.25). Individual-optimization experiments: N = 10^2, mean degree 6, k_max = 30, 10 realizations (p.17, p.25). Complete-network zealotry experiment: N = 10^2 (p.26). Each figure reports 100 or 10 realizations (see captions).\n(b) Real networks, Table 1 (p.11): Congress votes N=219, 764 edges, mean degree 7.0, lambda about 1.9 (text: mentions between US politicians with supportive or opposing edges). Facebook N=3862, 87324 edges, mean degree 45.2, lambda about 1.6 (users affiliated with one corporation). Advogato N=6541, 51127 edges, mean degree 15.6, lambda about 1.7 (trust network). Wikipedia Elections N=7118, 103689 edges, mean degree 29.1, lambda about 1.5 (positive/negative votes between users; these are Wikipedia admin-style votes, not political elections). Twitter N=22322, 31823 edges, mean degree 2.9, lambda about 4.3 (following network).\nUnit of analysis: individual node (agent). Time: simulated horizons T=16 (short) and T=256 (long), dimensionless model time, not calendar periods. Initial opinion share 0.5 for all nodes (or 0 in some experiments, p.18, p.26); one illustrative example uses S_A(0)=0.55 with N=10^4, T=30 (p.5).",
+   "method": "Analytical plus numerical simulation.\n- Model (Eq. 1, p.4): each node's opinion-A probability x_i(t) evolves under neighbour influence and two controllers with time-varying gains a_i(t), b_i(t). Budget constraints sum of integrals <= b_A, b_B (p.3-4). Vote share S_A(T) = mean of x_i(T) (Eq. 2).\n- Constant-opponent, uniform start (Sec 2.1, Eq. 3-5): A's gain is 0 until t_a, then b_A/((T-t_a)N); B's gain is constant b_B/(TN). Optimal t_a solved by interior-point method (p.5).\n- Individual optimization (Sec 2.2, Eq. 6-7): each node has its own start time and budget; stochastic hill climbing (Algorithm 1, p.7), with L_max = N^2 iterations (p.26). Budget moves between nodes keep the total fixed.\n- Heterogeneity extension (Sec 2.2.1, Eq. 8): partial zealots with probability q_i of resisting adoption of A when holding B.\n- Game (Sec 2.3, Eq. 9; Algorithm 2, p.8): simultaneous choice of start times t_a, t_b; iterative alternating best responses (A maximizes, B minimizes S_A(T)) with step size mu = 1/i, stopping threshold 1e-9 (p.8).\n- Mean-field (Sec 3, Eq. 10-11, derived in App. B): nodes grouped by degree k; closed-form x_k(t) and S_A(t).\n- Relaxation times (Eq. 12-14, 19): normalized order parameter r_k(t); tau_relax,k and tau_relax as degree-weighted averages; l-percentage relaxation time tau^l.\n- Taylor expansion (Eq. 15-18) to second order in 1/k, assuming (a_k+b_k)/k << 1.\n- Numerical integration: 4th-order Runge-Kutta, time step 0.01 (p.11).\n- Real-network experiments: Table 2 compares optimized t_a with t_a=0 at T in {16, 256} and b_A/b_B in {0.1, 1, 10}.\n- Appendix A: single-node case with fully flexible allocation via calculus of variations (Eq. 20-30), yielding a transcendental equation for start time.",
+   "identification": "None in a causal sense; model-based simulation. Mean-field and Taylor predictions are validated against Runge-Kutta integration (Fig. 2, 3, 4c-f; p.11-16). Optimality of the start time is checked by a convex vote-share peak (Fig. 4c-d, p.15-16). Within-model comparison is optimized start versus t_a=0 (Table 2, p.18).",
+   "scope": "Population: abstract simulated networks (configuration model) and five public network datasets; no sampled human population. Era: none stated. Opinions: binary (A or B), simple contagion, unit link weights, complete knowledge of network topology assumed (p.22-23). Applications named as motivation only (marketing, politics, public health; p.1-2, p.22); no application-specific calibration or validation is reported.",
+   "key_findings": [
+    {
+     "finding": "Constant-opponent, uniform start: optimal strategy is to delay. The controller lets the opponent dominate early, reserves budget, and then increases allocation sharply near the deadline.",
+     "location": "Sec 4.3.1, p.16-17; Fig. 5a; Sec 1 p.3 (main finding i)",
+     "numbers": "Example budgets: N=10^4, T=30, b_A=1.5e4, b_B=1.2e4; S_A(0)=0.55 (p.5). Optimal control time (T - t_a) plotted for T in {1,...,512} (Fig. 5a)."
+    },
+    {
+     "finding": "Network heterogeneity shifts optimal timing with horizon. For short horizons, highly heterogeneous networks (low lambda) should start later; for long horizons they should start earlier.",
+     "location": "Sec 4.3.1, p.16-17; Sec 1 p.3 (main finding i)",
+     "numbers": "Qualitative pattern from Fig. 5a (T=16 vs T=256 curves). Fig. 4e: at T=16 the degree of equilibrium l never exceeds 0.82 (p.16)."
+    },
+    {
+     "finding": "Relaxation time increases with node degree; higher-degree nodes equilibrate more slowly. Mean-field and Taylor estimates track Runge-Kutta.",
+     "location": "Sec 4.2, Fig. 2(a), p.11-12; Eq. 14, 17 p.10",
+     "numbers": "Fig. 2(a) relaxation time on a y-axis of about 52-56 across degree 2-92 (N=10^4, mean degree 10.5, lambda=1.6, 100 realizations). Uniform targeting: tau_relax,k approximately independent of initial state (p.10)."
+    },
+    {
+     "finding": "More heterogeneous networks (lower lambda) have longer overall equilibration times, driven by high-degree nodes.",
+     "location": "Sec 4.2, Fig. 2(b), p.12; Conclusion p.22",
+     "numbers": "Fig. 2(b) x-axis lambda in [1.6, 5]; y-axis tau_relax about 6.35-6.45. Text: more heterogeneous networks have longer timescales (quoted)."
+    },
+    {
+     "finding": "Degree of equilibrium l reverses the ranking of relaxation times. At low l, less heterogeneous networks (high lambda) take longer; near equilibrium, more heterogeneous networks take longer. Early changes are driven by low-degree nodes; late changes by high-degree nodes.",
+     "location": "Sec 4.2, Fig. 3(a)-(b), p.13-14",
+     "numbers": "Fig. 3 uses N=10^4, mean degree 10.5, lambda=1.6 and 5, 100 realizations. Low/high degree split at 80%/20% (Pareto). Fig. 3(a) tau^l axis about 1-6 (inset 5-6.5 near equilibrium)."
+    },
+    {
+     "finding": "Real networks: optimized start time beats t_a=0 in every dataset, both horizons, and all budget ratios tested.",
+     "location": "Sec 4.3.1, Table 2, p.18",
+     "numbers": "Congress votes T=16: b_A/b_B=1 gives opt t_a 12.533, S_A 0.705 vs 0.500 at t_a=0; b_A/b_B=0.1 gives 14.730, 0.248 vs 0.117; b_A/b_B=10 gives 10.476, 0.958 vs 0.909. Twitter T=256, b_A/b_B=1: opt t_a 250.157, S_A 0.973 vs 0.500. Facebook T=16, b_A/b_B=10: 7.897, 0.907 vs 0.889."
+    },
+    {
+     "finding": "Budget advantage means earlier start. A controller with more budget relative to its rival starts influence earlier; a disadvantaged controller starts later.",
+     "location": "Sec 4.3.1, Fig. 5b, p.17-18; Table 2; Appendix A Eq. 30, p.23-24",
+     "numbers": "Congress votes T=16: opt t_a falls from 14.730 (ratio 0.1) to 10.476 (ratio 10). Fig. 5b fixes T=16 with optimal start 9-15 across lambda and ratio 0.01-100 (axis)."
+    },
+    {
+     "finding": "Individual (node-specific) optimization improves vote share over a single uniform start, but absolute gains are small. Relative gains are largest for small budget ratios.",
+     "location": "Sec 4.3.2, Fig. 6(a)-(c), p.17-18; Appendix D p.26; Fig. 11(c) p.27",
+     "numbers": "Fig. 6(a) relative vote share S_indiv/S_const on axis 1.00-1.25 for b_A/b_B from 0.01 to 1 (N=100, mean degree 6, lambda=1.6, T=10, 10 realizations). Text: improvement very small in absolute numbers. Complete-network Fig. 11(c) relative axis 1.0-1.6."
+    },
+    {
+     "finding": "Under node-specific optimization, small budgets target only low-degree nodes. Control gains fall with degree and start times rise with degree when the budget ratio is small; the pattern reverses for large ratios.",
+     "location": "Sec 4.3.2, Fig. 6(b)-(c), p.18; Appendix D Fig. 10(b)-(c), p.26",
+     "numbers": "Fig. 6(b) control gains axis 0-8; Fig. 6(c) starting times 4-10. Appendix D (b_A=b_B): positive correlation between budget and degree; inverse relation between degree and start time; about N^2 iterations for convergence (p.26)."
+    },
+    {
+     "finding": "Zealotry: 20% of nodes are partial zealots. Normal agents receive more resources than zealots at every q, and zealot allocations depend on q.",
+     "location": "Sec 4.3.3, Fig. 7(a)-(d), p.19-20",
+     "numbers": "Lowest zealotry q=0.1: max allocation to zealots under 20 vs near 25 for normal agents (p.19). For medium and large q, zealots receive fewer resources and later starts as degree rises. Normal agents: larger degree, larger budget, earlier start."
+    },
+    {
+     "finding": "Complete-network zealotry (no degree structure, zealotry uniform on [0,1]): at large budget ratio, controller A starts earlier as zealotry rises up to a threshold near q=0.7, then reverses.",
+     "location": "Appendix E, Fig. 11(a)-(c), p.26-27",
+     "numbers": "Fig. 11(a) control gains axis 0-250 for b_A/b_B in {0.1,...,100}; threshold q around 0.7 (text, p.27)."
+    },
+    {
+     "finding": "Game with two controllers: the controller with the larger budget starts first, and the second mover concentrates its budget in the final stage to pull back the vote share.",
+     "location": "Sec 4.3.4, Fig. 8(a)-(b), p.19-20",
+     "numbers": "N=10^4, mean degree 10.5, T=16, b_B=N*T, b_A=10*b_B, 100 realizations per Fig. 8 setup (text: 'Calculations based on N=10^4'). Three stages: no control; first mover; both control."
+    },
+    {
+     "finding": "Nash starting times depend on degree exponent. For budget advantage, the advantaged controller starts at time 0 when lambda > 2.2; below 2.2 it starts later. Advantaged controller's per-node allocation is also larger, so the second mover can only offset, not overtake.",
+     "location": "Sec 4.3.4, Fig. 9(a)-(b), p.21-22",
+     "numbers": "Fig. 9(a) lambda from 1.6 to 5 at b_A/b_B in {0.1, 1, 10}; jump in optimal start near lambda about 2.2. Fig. 9(b) per-node resource axis 1-3.5 over budget ratio 0.2-8. N=10^4, mean degree 10.5, averaged over 10 realizations, T=16."
+    },
+    {
+     "finding": "Analytical single-node result: with fully flexible control against a constant opponent, the optimal start time satisfies a transcendental equation; a larger budget ratio pushes the start earlier.",
+     "location": "Appendix A, Eq. 29-30, p.23-24",
+     "numbers": "Equation: exp((T-t0)/2) - (T-t0)/2 = b_A/(2b) + 1 (as printed in the text, Eq. 30)."
+    }
+   ],
+   "limitations": [
+    "Binary opinions and simple contagion only; complex contagion and multi-state opinion models are not studied (p.22).",
+    "Assumes complete knowledge of network topology and of the opponent's strategy; partial visibility and uncertain opponent behaviour are flagged as future work (p.22-23).",
+    "Mean-field analysis assumes degree-uncorrelated networks (p.9); its accuracy is validated only on configuration-model networks and not on the five real datasets (no mean-field check reported for Table 2).",
+    "Taylor expansion valid only when (a_k+b_k)/k is small (p.10).",
+    "Individual optimization restricted to N=10^2 for computational reasons; absolute improvements described as very small (p.17-18).",
+    "Stochastic hill climbing and the iterative Nash algorithm are numerical heuristics; the text reports no optimality guarantee (p.7-8). Nash equilibria are approximated, not solved in closed form (p.8).",
+    "Individual optimization is not analysed in the game-theoretic setting because gains are small (p.22).",
+    "Integer k_min forces realized mean degree to deviate from target (target 10 gives 10.5) (p.25).",
+    "Degree exponent lower bound 1.6 chosen because lower values fail the k_min constraint (p.25).",
+    "Real datasets are not election outcome or lobbying data: Congress votes are mentions/support-oppose edges, Wikipedia Elections are user-to-user votes, Facebook and Twitter are social graphs. No validation against observed vote shares is reported.",
+    "Time horizons are abstract model units; no calendar mapping is given beyond the illustrative 30-day example (p.5)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "the best strategy for the active controller is to delay its influence",
+     "location": "Sec 1 Introduction, p.3 (main finding i)"
+    },
+    {
+     "quote": "resource-rich controllers tend to start campaigns early, while resource-limited controllers strategically delay to counter their opponent's advantage",
+     "location": "Abstract, p.1"
+    },
+    {
+     "quote": "networks with more heterogeneity have longer timescales to reach equilibrium",
+     "location": "Sec 4.2, p.12"
+    }
+   ],
+   "measures": [
+    "Vote share S_A(T): fraction of nodes holding opinion A at time T (Eq. 2, p.4).",
+    "Node opinion probability x_i(t) and degree-class x_k(t) (Eq. 1, 10).",
+    "Normalized order parameter r_k(t) and mean relaxation times tau_relax,k and tau_relax (Eq. 12-14, p.10-11).",
+    "Degree of equilibrium l = |S_A(T)-S_A(0)| / |S_A(inf)-S_A(0)| and l-percentage relaxation time tau^l (Eq. 19, p.13).",
+    "Relative budget b_A/b_B (ratios 0.01-100 across experiments).",
+    "Degree exponent lambda and mean degree <k> (Table 1, p.11).",
+    "Relative vote share S_indiv(T)/S_const(T) for individual versus uniform optimization (Fig. 6a, 11c).",
+    "Payoffs in game: u_A = S_A(T), u_B = 1 - S_A(T) (p.7)."
+   ],
+   "references_of_note": [
+    "Brede, Restocchi, Stein 2019, 'Effects of time horizons on influence maximization in the voter dynamics', J. Complex Networks 7:445-468 [10]: direct predecessor; time-constrained IM in voter model with fixed (non-time-varying) allocation, per the text (p.2).",
+    "Cai, Brede, Gerding 2020, 'Influence maximization for dynamic allocation in voter dynamics', COMPLEX NETWORKS 2020 [12]: authors' earlier conference version; this paper adds agent heterogeneity and the game setting (p.3, p.22).",
+    "Masuda 2015, 'Opinion control in complex networks', New J. Physics [39]: source of the mean-field rate-equation framework used (p.4).",
+    "Masuda, Gibert, Redner 2010, 'Heterogeneous voter models', Phys. Rev. E [40]: source of heterogeneous-voter framing used for zealotry (p.6).",
+    "Moreno, Manino, Tran-Thanh, Brede 2020, 'Zealotry and influence maximization in the voter model: When to target partial zealots?' [41]: partial zealotry model and degree-dependent allocation pattern compared in Sec 4.3.3 (p.19).",
+    "Ali, Wang, Chen 2019 [1] and 2022 [2]: only prior work the text identifies on inter-temporal competitive IM; reinforcement learning on progressive models with discrete timing (p.2).",
+    "Tong, Wang, Dong, Li 2021, 'Time-constrained adaptive influence maximization' [53]: single-controller adaptive timing (p.2).",
+    "Alshamsi, Pinheiro, Hidalgo 2017, 'When to target hubs? Strategic diffusion in complex networks' [3]: timing of targeting by connectivity; single influencer (p.2).",
+    "Lambiotte, Saramaki, Blondel 2009, 'Dynamics of latent voters' [30]: latency model contrasted with this paper's partial-zealotry formulation (p.6).",
+    "Wilder and Vorobeychik 2018, 'Controlling elections through social influence' [55]: election-control framing cited in the introduction (p.2).",
+    "Vendeville, Guedj, Zhou 2021, 'Forecasting elections results via the voter model with stubborn nodes' [54]: voter-model election forecasting cited as empirical relevance (p.2).",
+    "Fernandez-Gracia et al. 2014, 'Is the voter model a model for voters?' [19]: empirical grounding of the voter model in election outcomes (p.2).",
+    "Son, Jeong, Hong 2008, 'Relaxation of synchronization on complex networks' [51]: relaxation-time definition used (p.10).",
+    "Hegselmann et al. 2015, 'Optimal opinion control: the campaign problem' [26]: campaign-timing motivation cited for transient dynamics (p.2).",
+    "Catanzaro, Boguna, Pastor-Satorras 2005 [15] and Boguna et al. 2004 [7]: configuration-model generation and kmax cutoff used for the synthetic networks (p.11, p.25)."
+   ]
+  },
+  "summary_md": "Cai, Gerding and Brede study a time-limited, budget-constrained influence campaign in a non-progressive voter model, where opinions can flip back. They use heterogeneous mean-field theory, relaxation-time analysis, hill climbing and an iterative minimax search for Nash start times. Every result is a simulation on configuration-model scale-free graphs or on five public graphs. The paper uses no observed votes, lobbying or money data.\n\nFindings. Against a fixed opponent, the best strategy is to hold budget back and spend it late. Across all datasets, horizons and budget ratios in Table 2, an optimized start beat starting at t=0. One example is the 'Congress votes' mentions graph at T=16 with equal budgets: vote share 0.705 against 0.500. A richer controller starts earlier: on that graph the optimal start falls from 14.73 at budget ratio 0.1 to 10.48 at ratio 10. High-degree nodes take longer to settle, so on a short horizon the outcome stays far from equilibrium (degree of equilibrium never above 0.82 at T=16). In the two-controller game the side with more budget moves first, and the second mover can only offset its lead, not overtake it. Small budgets go to low-degree nodes. Partial zealots get fewer resources than normal agents.\n\nWhy it matters here. Melange's money engines have no time dimension at all. The flip model's pflip = a/(a+b) is a stationary share ratio with no time term, the optimizer allocates dollars with no timing, and the competitive cascades let a member who has been reached stay that colour. The paper is the clearest formal case in the vault that timing and reversibility change who wins under a fixed budget. Its evidence is abstract: model time units, unit edge weights, full knowledge of the network, and no calibration to any real campaign. Read it as a design critique and a source of hypotheses. It does not validate or refute any Melange constant, and any agent analysis built on it stays UNVERIFIED (DE-062).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.flip-model",
+    "relation": "qualifies",
+    "paper_claim": "Vote share at a finite horizon depends on when each controller starts and on degree heterogeneity. At T=16 (dimensionless model time, unit-weight graphs) the degree of equilibrium l never exceeds 0.82 and high-degree nodes relax more slowly. An optimized start beats t_a=0 in all 30 rows of Table 2 (5 real networks, T in {16, 256}, budget ratio in {0.1, 1, 10}). Congress votes network, T=16, budget ratio 1: S_A 0.705 vs 0.500 (model output, not observed votes).",
+    "paper_location": "Sec 4.2 p.11-16 (text around Fig 4e); Sec 4.3.1 Table 2 p.18",
+    "system_side": "pflip = a/(a+b), where a and b are each a saturating money pull plus a party-weighted proximity term. It is a static, time-free share with no horizon, no start time and no relaxation lag.",
+    "code_ref": "fec/engine/flip_model.py:3-8,92-97",
+    "transfer_conditions": "Structural parallel only: both are ratios of competing pulls. Magnitudes do not transfer, since paper time is dimensionless, edges have unit weight and opinions are binary simple contagion. The paper shows that an equilibrium-share form omits timing, not that pflip is miscalibrated.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Table 2 (30 rows) and text lines 1385-1410 checked; every optimized vote share exceeds its t_a=0 baseline. The pflip formula and docstring match the code. Claim holds. Any quoted figure should name the window (T, dimensionless) and denominator (N=10^4 synthetic; N for Table 1 real networks).",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Flip - winnability model|Flip - winnability model]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.joint-optimizer",
+    "relation": "suggests-extension",
+    "paper_claim": "With the budget fixed, choosing a start time raises final vote share over spending from t=0 (Table 2, constant-opponent setting). For N=100 networks, per-node start times and budgets raise vote share further: the relative gain is large at small budget ratios but small in absolute terms (Fig 6a relative axis 1.00 to 1.25). A resource-limited controller starts later and a resource-rich one starts earlier (abstract; Sec 4.3.1). Under the uniform-start formula (Eq 3-5) the controller spends its budget over a short late window; the paper does not prescribe this as a rule.",
+    "paper_location": "Abstract p.1; Sec 2.1 Eq 3-5 p.4-5; Sec 4.3.1 Table 2 p.18; Sec 4.3.2 Fig 6 p.17-18",
+    "system_side": "optimize.py docstring describes a lazy greedy allocator with a Golovin-Krause bound kept as a diagnostic. Defaults are a 2.5M pot in 500 increments with a 10k per-candidate cap (PMAX). It allocates amounts per member with no start time or spending schedule; the objective is time-free winnability.",
+    "code_ref": "fec/engine/optimize.py:3-12,26-27",
+    "transfer_conditions": "Only as a hypothesis. PAC dollars cannot be withdrawn, FEC per-cycle limits bind, and the paper's continuous gain a_i(t) has no clear counterpart in lump-sum contributions. The paper's large relative gain at small budgets means the per-node result should not be read as uniformly small. Untested on legislators.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Core claims hold (Table 2, Fig 6 axis labels, abstract). The rewrite adds the large relative gain at small budget ratios, which the bearing omitted. The spend-near-deadline wording is a reading of Eq 3-5, not a paper statement. The name CELF does not appear in the docstring; the code is described as lazy greedy. Appendix A Eq 30 was not re-derived.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Joint CU budget optimizer|Joint CU budget optimizer]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-allocation.break-even-and-roi",
+    "relation": "qualifies",
+    "paper_claim": "Two settings are mixed here. The optimal start for Congress votes at T=16 falls from 14.730 at budget ratio 0.1 to 10.476 at ratio 10 (Table 2, constant-opponent setting, fixed opponent starting at 0). In the two-controller Nash game the controller with the larger budget moves first, and the second mover can only buffer the first mover's gain, never exceed its vote share (Sec 4.3.4, stage 3, p.21-22). Fig 9b shows per-node resource per unit time rising with the budget advantage.",
+    "paper_location": "Sec 4.3.1 Table 2 p.18; Sec 4.3.4 Fig 8-9 p.19-22",
+    "system_side": "The head-to-head panel solves CU share against competitor share in closed form for the baseline odds. It reports that CU money alone cannot fully offset when the required money ratio q is at least 1. The solve uses the CU-to-competitor money ratio at one instant, with no sequencing.",
+    "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:1096-1104",
+    "transfer_conditions": "The paper's statement that a disadvantaged controller can offset but not overtake agrees in spirit with the cannot-offset message. The claim that a disadvantaged side does better by delaying has no counterpart in a static break-even, and it rests on the paper's abstract and simulations only. Transfer would need a model of within-cycle spending order, which the system lacks.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The 14.730, 10.476, 0.705 and 0.500 values match Table 2, but Table 2 is the constant-opponent setting, not the game; the original bearing attributed them to the game. The game statement is qualitative. The code description checks out. Fig 9b per-node axis values were not verified against the figure image.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Break-even CU spend and ROI floor|Break-even CU spend and ROI floor]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.competitive-cascade-crn",
+    "relation": "qualifies",
+    "paper_claim": "Competitive influence is analysed in a non-progressive voter model with reversible opinions, where the opponent is a strategic controller choosing its own start time at a Nash equilibrium (Eq 9, Algorithm 2 p.8; Fig 8 p.19-20). The paper does not state that the second mover concentrates its budget in the final stage. Its text says the second mover starts later and can only buffer the first mover's gain (p.21). End-loaded budgets appear for the budget-advantaged controller when the degree exponent is below about 2.2 (Sec 4.3.4, p.21-22).",
+    "paper_location": "Sec 2.3 Eq 9 Algorithm 2 p.8; Sec 4.3.4 Fig 8-9 p.19-22",
+    "system_side": "A two-colour first-to-reach independent cascade: a reached member keeps its colour for the rest of the run. Industry money enters only as non-strategic bystander activation, min(0.9, ind/400000). Nothing represents an opponent that responds in time.",
+    "code_ref": "fec/engine/budget_frontier.py:79-94,133; fec/engine/per_topic_coalition.py:40-53,101-108",
+    "transfer_conditions": "This is a difference in model class, not evidence that the independent cascade choice is wrong. The original claims that cosponsorship is close to progressive with rare withdrawals, and that stance and votes are not, have no source in the paper or the code. Those claims are UNVERIFIED here and should not be relied on.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The model description and the bystander activation formula match the code (BSCALE=400000 in budget_frontier; PB uses the same min with 0.9). The late-countermove claim is not in the paper, so the bearing was rewritten to the paper's actual statements. The cosponsorship assertion is analyst opinion with no citation.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Competitive independent cascade with common random numbers|Competitive independent cascade with common random numbers]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-influence-engine.persuadability-table",
+    "relation": "supports",
+    "paper_claim": "In the individual-optimization runs with 20 percent of agents as partial zealots (Sec 4.3.3, N=100 per the Sec 4.3.2 reduction; N not restated in 4.3.3), normal agents receive more budget than zealots at every zealotry level q tested. At q=0.1 the maximum zealot allocation is under 20 and the normal-agent maximum is near 25 (allocation units as plotted in Fig 7). At medium and large q zealots get fewer resources and start later as degree rises.",
+    "paper_location": "Sec 4.3.3 Fig 7 p.19-20; Appendix E Fig 11 p.26-27",
+    "system_side": "PERS in moneyball_core.py gives Opponent 0.08, Highly Skeptical 0.15 and Champion 0.10, with middle tiers between 0.50 and 0.65. The F1 gate in optimize.py gives zero allocation to members whose overall tier is Skeptic, Highly Skeptical or Opponent.",
+    "code_ref": "fec/moneyball_core.py:564-568,717; fec/engine/optimize.py:44-52",
+    "transfer_conditions": "The direction matches for resistant tiers (Opponent and Highly Skeptical). Champion is a committed pro tier, so its low multiplier reflects being already won, not zealot resistance, and it does not support the paper's result. The paper never sets zealot allocation to zero, so it does not support the hard zero gate on its own. Simulated agents only.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper direction and the PERS values match the code. The Champion example is mismatched to the paper's one-sided zealotry. The denominator (N, zealot share 20 percent, allocation units) was added. The F1 gate matches the STANCE_GATE_BLOCKED set.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Persuadability table PERS|Persuadability table PERS]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.per-topic-allocators",
+    "relation": "qualifies",
+    "paper_claim": "Under node-specific optimization on N=100 networks with mean degree 6 (Sec 4.3.2), the budget ratio sets the degree pattern. With small budget ratios, control gains fall and start times rise with degree, so low-degree nodes are targeted. With large ratios the pattern reverses (Fig 6b-c p.18; Appendix D Fig 10 p.26).",
+    "paper_location": "Sec 4.3.2 Fig 6(b)-(c) p.18; Appendix D Fig 10 p.26",
+    "system_side": "The coalition water-fill boosts each candidate's marginal spread by (1 + 0.8 bpf), where bpf is a bipartisan share read from bipartisan.json divided by 100, so it favours bipartisan bridges. The ranking does not depend on budget size, although the CAP-clipped water-fill decides how far down the list money goes.",
+    "code_ref": "fec/engine/per_topic_coalition.py:30,68,117; fec/moneyball_core.py:68-72",
+    "transfer_conditions": "bpf is a cross-party share, not degree, so the paper's degree result maps only indirectly. The paper's result rests on N=100 graphs with mean degree 6. Measuring the Melange cosponsor graph's degree exponent and testing whether greedy seeds move toward low-degree members at small budgets would be new analysis and stays UNVERIFIED.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Paper pattern (Sec 4.3.2 text) and the code's BETA_C=0.8 boost and bpf definition match. The bipartisan share is cross-party, not degree. The bearing is an analogy, so the weak strength is right.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-allocation#Per-topic flip and coalition allocators|Per-topic flip and coalition allocators]]",
+    "system": "melange-allocation"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Several related links are not in the paper and were dropped: Borodin (no citation, and the paper has no submodularity or greedy-guarantee discussion, so the claim that Cai's timing game shows competition breaks greedy guarantees is false for this paper), Golovin-Krause, Chen 2021 contingency-aware IM and Noble 2024. These are analyst analogies, not paper claims.",
+   "Brede, Restocchi and Stein 2019 (ref 10, Effects of time horizons on influence maximization in the voter dynamics) is described by the paper as the most directly relevant prior work, but no item for it exists in the items folder. It should be added as a related link once an item exists.",
+   "paul_alignment cites a Kim J. 2025 margin note and Paul's positions on joint-optimizer and competitive-cascade-crn, yet the same paragraph says Paul has not annotated the paper, and the item file has paul_entries empty with no markup supplied. Those statements are unsourced and should be removed or sourced.",
+   "Summary findings give 14.73 to 10.48 and 0.705 vs 0.500 without naming the setting; they are constant-opponent Table 2 values, not Nash-game values. The bearing on break-even had this error.",
+   "The 0.705 vs 0.500 example and the zealot allocation figures (under 20, near 25) are given without N or time window in the summary, which breaks the rule that every figure names its window and denominator.",
+   "The summary's claim that this is the clearest formal case in the vault for timing and reversibility is a vault-level comparison that was not verified here.",
+   "The gap about the optimizer uses the name CELF in the bearing, but optimize.py describes lazy greedy; the name should match the code.",
+   "Figure-axis values (Fig 6a 1.00 to 1.25; Fig 9b 1 to 3.5) were checked only against text extraction of axis labels, not against the figure images, which cannot be rendered on this machine."
+  ],
+  "gaps_exposed": [
+   "No time dimension in any money or influence engine. optimize.py, flip_model.py, budget_frontier.py and scenario.py allocate amounts with no start time, horizon or spending schedule, although the paper shows timing alone shifts final share under a fixed budget.",
+   "No model of a strategic opponent. Competitor money is a fixed input or bystander noise (min(0.9, ind/400000)), never a best-responding player, so the system cannot represent a late countermove by banks.",
+   "No reversibility. Competitive cascades are first-to-reach and absorbing, while stance in the paper (and in reality) can revert. stance_dynamics measures trajectories, but the allocators do not consume them.",
+   "The degree heterogeneity (degree exponent) of the cosponsor graph is unmeasured, though the paper makes optimal timing and degree targeting depend on it, with a regime change near lambda 2.2.",
+   "The contested-bills registry has a schema for a counterparty but no consumer, so the paper's two-controller game framing has nowhere to land (fec/lobbying/contested_bills.py:1-20 says no consumer exists)."
+  ],
+  "flags": [
+   "The paper's 'Congress votes' dataset is a network of mentions between politicians with support/oppose edges. It is not roll calls or cosponsorship, and Table 2 'vote share' is model output, not observed votes. Never quote 0.705 vs 0.500 as an electoral or legislative effect.",
+   "'Influence' in the paper is a model-internal controller gain. Under D-025, no bearing here may be read as closeness, access or a probability of moving a member.",
+   "Every number in the paper is in dimensionless model time on unit-weight graphs. Any figure carried over must name that window and denominator (N, mean degree, lambda, T, realizations).",
+   "The paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization; it uses unit weights as a simplification. Neither rejected SNA proposal is implicated.",
+   "A degree-exponent measurement or timing test on Melange graphs would be new agent analysis. It stays UNVERIFIED until a second path reproduces it (DE-062).",
+   "The component list says contested-bills cites Romero Moreno 2021, but fec/lobbying/contested_bills.py contains no such citation. The link lives only in notes."
+  ],
+  "paul_alignment": "Paul has not annotated this paper. It speaks most directly to two of his positions. On competitive-cascade-crn, he wants rival industries modelled and scenarios simulated cheaply. The paper supports the first and goes further: a rival should be a strategic, time-aware player, which the system does not have. On joint-optimizer, he sees adaptive greedy plus CELF as the operational layer and expects learned policies to replace it at scale. The paper adds a missing axis, when to spend, that neither greedy nor GCOMB covers as built. His Kim J. 2025 margin note about conflicting industries is consistent with the two-controller game. His notes are not stale here; the system simply has no timing layer for them to describe. His ROI enthusiasm should be tempered by the paper's own result that per-node fine-tuning yields very small absolute gains.",
+  "related": [
+   {
+    "slug": "moreno-2021-shadowing-shielding-effective",
+    "relation": "complements",
+    "why": "Same Brede group and voter-model continuous influence-maximization line. The paper cites a different work for zealotry, Moreno, Manino, Tran-Thanh and Brede 2020 (ref 41, Zealotry and influence maximization in the voter model), not this 2021 item. The original builds-on relation was not supported by the text."
+   },
+   {
+    "slug": "bharathi-nd-competitive-influence-maximization",
+    "relation": "complements",
+    "why": "Bharathi, Kempe and Salek 2007 is cited by Cai only for budget constraints (ref 6, with ref 28). The progressive-model claim cites refs 11, 13 and 24, not Bharathi. Bharathi's progressive competitive IC is an alternative formalization, not a contradiction, so contradicts was wrong."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "borodin-nd-threshold-models-competitive",
+    "relation": "complements",
+    "why": "Competitive influence maximization in voter dynamics with timing and network heterogeneity. Its text does not cite Borodin or discuss submodularity, so it is a neighbouring competitive-IM study on a different diffusion model, not a follow-up to Borodin."
+   },
+   {
+    "slug": "madsen-2017-strategic-advantages-micro",
+    "relation": "extended-by",
+    "why": "A two-candidate competitive voter-dynamics model on networks. It adds the voter-to-voter interaction this paper leaves out and says targeting would benefit from."
+   },
+   {
+    "slug": "kempe-2015-maximizing-spread-influence",
+    "relation": "complements",
+    "why": "Competitive IM under voter dynamics, where timing matters; Kempe lists competition and timing as open (Conclusions pp.137-138). Item exists; not re-read here."
+   }
+  ],
+  "evidence_status": "verified"
+ }
+]

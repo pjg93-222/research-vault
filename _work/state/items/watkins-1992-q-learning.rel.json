@@ -1,0 +1,71 @@
+{
+  "summary_md": "Watkins and Dayan (Machine Learning 8, 1992, pp. 279-292) give the convergence proof for one-step Q-learning, a model-free way to learn optimal action values in a finite controlled Markov process. The theorem (p.282) says Q_n(x,a) converges to Q*(x,a) with probability 1 if rewards are bounded, learning rates sit in (0,1) with divergent sums and finite sums of squares, values are kept in a lookup table, and every state-action pair is tried infinitely often. The proof builds an artificial action-replay process from the episode history. Lemma A shows Q_n is optimal for that process. Lemma B shows the process converges to the real one. Section 4 sketches two extensions: undiscounted problems with absorbing goal states, and updating many Q values per step. It also notes that replaying stored episodes moves the method toward certainty-equivalence planning. The proof gives no convergence rate and no finite-sample bound. It does not cover function approximation, which the authors say may fail to converge (p.282), or multi-step TD(lambda) updates. For Paul's systems this is background rather than a method in use. The repo has no reinforcement learning. The joint optimizer is a certainty-equivalence planner. It takes a modeled stance state and runs exact greedy allocation over it, and its list for observed outcomes is empty. The paper matters for one point: Paul expects a learned policy such as GCOMB to replace greedy allocation at scale. GCOMB and S2V-DQN use Q-learning with function approximation, which is outside this theorem. A lobbying cycle also cannot try each member-action pair the many times the theorem requires. An online scan found no applications of RL to lobbying or to allocating contributions across legislators.",
+  "category": "Optimization",
+  "bearings": [
+    {
+      "component_id": "melange-allocation.joint-optimizer",
+      "relation": "qualifies",
+      "paper_claim": "The convergence guarantee requires lookup-table action values and infinitely many trials of every state-action pair (p.281-282). The authors say Q-learning may not converge correctly with other representations (p.282) and give no rate or finite-sample bound. Section 4 (p.286) puts planning on a fixed sample (certainty equivalence) at the far end of a continuum with Q-learning. Citing Barto and Singh (1990), it says acting as if an early model were accurate costs dearly early in learning (p.280).",
+      "paper_location": "Section 2 pp.280-282 (theorem and conditions); Section 4 p.286 (certainty-equivalence continuum)",
+      "system_side": "The optimizer allocates a 2.5M pot in 500-dollar chunks by lazy greedy over a modeled, fixed stance state. Its docstring says the result is exact only in that state. It is pure certainty-equivalence planning with no learning. The observations list is reserved for real outcomes and stays empty. Threshold conversions are modeled transitions that trigger replanning, not observed rewards. Paul's position expects a learned policy (GCOMB) to replace greedy at scale.",
+      "code_ref": "fec/engine/optimize.py:3-12; fec/engine/optimize.py:58; fec/engine/optimize.py:133-144",
+      "transfer_conditions": "The theorem holds only for a finite MDP with repeated sampled transitions and lookup-table values. One election cycle across 533 members yields at most a few observed outcomes per member-action pair, so the infinite-sampling condition cannot be met. Learned policies in the GCOMB and S2V-DQN family use Q-learning with function approximation and fall outside the theorem entirely. At the current problem size, exact greedy is already optimal in a fixed state, so a learned policy has nothing to gain on that point.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-influence-engine.seed-gate",
+      "relation": "context",
+      "paper_claim": "Q-learning learns action values from sampled rewards without a model, but only as each state-action pair is sampled without bound. The action-replay estimates of rewards and transitions converge with probability 1 only as the number of samples grows to infinity (Lemma B.3, pp.284, 290).",
+      "paper_location": "Section 3.1 Lemma B.3 p.284; Appendix p.290",
+      "system_side": "SGATE is a fixed hand-set take-up table by stance tier: Highly Persuadable 1.00 down to Opponent 0.35, unknown 0.85. It is multiplied by the receptivity seed_prob with a floor of 0.15. Paul ties it to Chen et al. 2021, which is RL-based contingency-aware seeding. The built gate is a fixed prior, not a learned value, and nothing updates it from observed contact outcomes.",
+      "code_ref": "fec/moneyball_core.py:626-630",
+      "transfer_conditions": "Learning take-up rates the way Q-learning learns values would need repeated observed contact-to-action outcomes per tier. The system does not have that log at present. The paper gives no finite-sample rate, so it cannot say how many observations would be enough.",
+      "strength": "weak"
+    }
+  ],
+  "gaps_exposed": [
+    "No observed-outcome feedback loop: optimize.py keeps an empty observations list, so every allocation is certainty-equivalence planning on modeled stance states. No sampled rewards ever update the model.",
+    "SGATE take-up probabilities and PERS tiers are fixed priors. Nothing estimates them from logged contact outcomes, so no learning method (RL or otherwise) has data to work from.",
+    "The allocator is single-cycle and one-shot. No multi-cycle sequential policy is modeled, which would be the setting where an MDP framing such as Q-learning applies.",
+    "Paul's expectation that a learned policy (GCOMB) replaces greedy at scale has no stated convergence or sample-size basis. The tabular guarantee in this paper does not carry over to function-approximation Q-learning."
+  ],
+  "flags": [],
+  "paul_alignment": "Paul has no entry or markup for this work. His nearest position is that a learned policy (GCOMB) should replace greedy allocation at scale. This paper qualifies that: the guarantee covers only lookup-table Q-learning with unbounded sampling. GCOMB uses function approximation, which may not converge (p.282). The built optimizer is a greedy planner that is exact in a fixed modeled state (optimize.py:3-12). So the replacement is a scaling preference, not a convergence-backed upgrade. The position is not stale, since no learned policy exists, but this source does not support it.",
+  "related": [
+    {
+      "slug": "sutton-2018-reinforcement-learning-introduction",
+      "relation": "complements",
+      "why": "Textbook treatment of Q-learning as off-policy TD control. It covers the deadly triad (function approximation, bootstrapping and off-policy learning), which explains where this paper's tabular guarantee stops."
+    },
+    {
+      "slug": "manchanda-2020-gcomb-learning-budget-constrained",
+      "relation": "builds-on",
+      "why": "GCOMB trains its node-selection policy with Q-learning over GCN embeddings for budget-constrained influence maximization. That is function-approximation Q-learning, outside this theorem, and it is the learned policy Paul expects to replace greedy allocation."
+    },
+    {
+      "slug": "dai-2017-learning-combinatorial-optimization-graphs",
+      "relation": "builds-on",
+      "why": "S2V-DQN learns greedy graph heuristics with n-step fitted Q-learning on graph embeddings. It extends this paper's update to multi-step returns and function approximation, two cases this paper says its proof does not cover."
+    },
+    {
+      "slug": "chen-2021-contingency-aware-influence",
+      "relation": "builds-on",
+      "why": "Contingency-aware influence maximization trained with reinforcement learning. It is the source Paul maps onto SGATE, and its learning step descends from the Q-learning update proved here."
+    },
+    {
+      "slug": "chen-2023-complex-contagion-influence",
+      "relation": "builds-on",
+      "why": "Applies deep RL, a Q-learning descendant, to influence maximization under complex contagion. That is the threshold-adoption setting closest to the system's linear-threshold priming."
+    },
+    {
+      "slug": "arya-2025-relink-edge-activation",
+      "relation": "builds-on",
+      "why": "Uses deep reinforcement learning to choose edge activations for influence maximization. It is a function-approximation descendant of Q-learning with no tabular convergence guarantee."
+    },
+    {
+      "slug": "golovin-2011-adaptive-submodularity-theory",
+      "relation": "complements",
+      "why": "An alternative to RL for sequential decisions under uncertainty. Adaptive greedy comes with an approximation guarantee and needs no asymptotic sampling. The joint optimizer keeps its data-dependent bound as a diagnostic."
+    }
+  ]
+}

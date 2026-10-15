@@ -1,0 +1,71 @@
+{
+ "summary_md": "A 2026 tutorial vignette for the grf R package (Sverdrup, Hadad, Athey, Tibshirani, Wager), not a research paper. It walks through causal forests for conditional average treatment effects, AIPW doubly robust average effects, best linear projection (BLP) of effect heterogeneity on covariates, rank-weighted average treatment effect (RATE) via TOC/AUTOC curves to test whether a prioritization rule actually concentrates the treatment effect, Qini curves for budgeted targeting, and depth-limited policy trees learned from doubly robust scores. Two randomized examples: a Brazilian school financial-education RCT (about 17,000 students, 850 schools; ATE 4.35 points, SE 0.52; whole-sample AUTOC p = 0.65, but prioritizing low financial autonomy gives AUTOC 0.69, SE 0.22) and a payday experiment (about 2,500 people; held-out AUTOC 0.0061, SE 0.0092, no heterogeneity). The authors flag that out-of-bag TOC tests are heuristics without finite-sample guarantees and that policy trees need held-out evaluation. For Paul's systems the value is methodological. Every targeting score he ships (Terrier untapped potential, the Melange PERS persuadability table, receptivity seed_prob) is a hand-built or correlational ranking of who is most movable. grf supplies the standard test of whether such a ranking sorts people by treatment effect rather than by outcome level. None of it transfers without logged treatment assignment (randomized or known-propensity canvass contacts, outreach or money) and outcomes, which none of the systems currently record. Observational use assumes unconfoundedness. Any analysis built on this stays UNVERIFIED until a second path reproduces it.",
+ "category": "Causal & Methodological",
+ "bearings": [
+  {
+   "component_id": "terrier-canvass.untapped-potential",
+   "relation": "suggests-extension",
+   "paper_claim": "A prioritization score should be judged by RATE/TOC: whether units ranked high by the score have larger treatment effects. In the RCT, ranking by low financial autonomy gave AUTOC 0.69 (SE 0.22, t about 3.2), while ranking by forest CATE gave AUTOC p = 0.65. Policy trees learned from doubly robust scores give an interpretable assignment rule, and Qini curves give budgeted targeting.",
+   "paper_location": "pp.7-10 (TOC/AUTOC, policy_tree); Qini via maq described in the guided tour",
+   "system_side": "Untapped potential ranks people by a fixed formula: undecided = (1 - |2s-1|) x t, supporter = s x (1-t), weighted wp = 0.5 and multiplied by (1 + wi x sphere percentile). This presumes persuasion effects peak at s = 0.5 and mobilization effects peak at low-t supporters. No estimate of effect heterogeneity is used.",
+   "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:9-10",
+   "transfer_conditions": "The district would need randomized (or known-propensity) knock vs no-knock assignment with recorded outcomes (support ID or validated turnout). The potential score would then be scored as a RATE prioritization on held-out doors. Without randomized contacts the test reduces to an observational CATE that assumes unconfoundedness.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-validation.prospective-contract",
+   "relation": "qualifies",
+   "paper_claim": "Effect heterogeneity is tested by ranking on a score and computing the treatment-effect gain over the ATE in the top-ranked fraction (TOC/AUTOC). This requires treated and untreated units. The authors also warn that same-sample out-of-bag TOC is a heuristic and that held-out evaluation is needed.",
+   "paper_location": "pp.8-11",
+   "system_side": "H1 is a cross-sectional Spearman of frozen seed_prob against new CU cosponsorships after the freeze. That measures whether seed_prob predicts the outcome level, not whether CU contact moves high-seed_prob members more. The single-look, held-out design already matches the authors' held-out advice.",
+   "code_ref": "fec/engine/outcome_contract.py:17",
+   "transfer_conditions": "This applies only if CU outreach or money exposure is logged per member with plausibly known assignment. Otherwise H1 should be described as a predictive-validity check, not a receptivity (effect-modification) test.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-influence-engine.persuadability-table",
+   "relation": "qualifies",
+   "paper_claim": "Best linear projection tests whether effects vary along a chosen covariate. Example: financial.autonomy.index coefficient -0.0329, SE 0.0128, p = 0.0099. Other covariates are null (is.female p = 0.17, cash transfer p = 0.066). Heterogeneity is often undetectable at moderate n (payday AUTOC t = 0.67, n about 2,500).",
+   "paper_location": "pp.7, 10-11",
+   "system_side": "PERS is a fixed inverted-U table over stance tiers (Highly Persuadable 0.65, Ally 0.40, Champion 0.10, Opponent 0.08; no-position 0.45 drives about 60 percent of cells). It has never been estimated against observed stance movement after contact.",
+   "code_ref": "fec/moneyball_core.py:564-568",
+   "transfer_conditions": "A BLP of contact effect on stance-tier ordinals would need logged contact and tier movement over 533 members. The payday example suggests 533 units is likely underpowered for tier-level heterogeneity. A null would not refute the table.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "No system logs treatment assignment (canvass knocks, CU outreach, PAC dollars) with propensities, so none of the targeting scores can be tested for effect heterogeneity, only for outcome prediction.",
+  "Terrier untapped potential assumes persuasion peaks at s = 0.5 and mobilization at low-t supporters. Neither has been checked with a RATE/Qini evaluation on held-out canvass outcomes.",
+  "The prospective receptivity contract H1 tests predictive association (Spearman with outcome level), not effect modification. Its label as a receptivity test overstates what it can show.",
+  "The PERS inverted-U table has no estimate of heterogeneity behind it, and the 533-member scale is likely too small to detect tier-level CATE differences."
+ ],
+ "flags": [
+  "Tutorial, not peer-reviewed evidence: both examples are non-political RCTs, and the only positive heterogeneity finding (AUTOC 0.69) comes from a same-sample out-of-bag heuristic that the authors say lacks finite-sample guarantees.",
+  "Any causal-forest or BLP analysis built from this on Paul's data stays UNVERIFIED until a second path reproduces it (DE-062) and must follow single-look discipline. BLP coefficients are pooled and must be quoted with strata (party, chamber) or labelled UNSTRATIFIED.",
+  "No conflict with D-025, D-021 or the rejected SNA proposals. The paper does not touch networks, lobbying data or edge weighting.",
+  "Metadata corrected by the extract stage: five authors, year 2026, venue is the grf package vignette."
+ ],
+ "paul_alignment": "Paul has no annotated-bibliography entry and no PDF markup for this work (n_annots 0), so there is no takeaway to check. His positions on the nearest components rely on substantive persuasion papers (Kalla and Broockman 2020, Broockman and Kalla 2026 for untapped potential; Aref and Neal, Jacoby, Broockman and Kalla for PERS) and never use an estimator for effect heterogeneity. This vignette supplies the missing evaluation tool and does not contradict his reading.",
+ "related": [
+  {
+   "slug": "cagala-2021-optimal-targeting-fundraising",
+   "relation": "same-method",
+   "why": "Applies causal forests and policy learning to target fundraising appeals by estimated individual treatment effect. It is the closest applied analogue for targeting donors or contacts in Paul's systems."
+  },
+  {
+   "slug": "tappin-2023-quantifying-potential-persuasive",
+   "relation": "complements",
+   "why": "Measures how much persuasion effects vary across audiences (microtargeting returns). That is the heterogeneity grf's RATE/TOC tools would test before building targeting on it."
+  },
+  {
+   "slug": "kalla-2020-which-narrative-strategies",
+   "relation": "complements",
+   "why": "Supplies the randomized canvass-experiment design that grf needs as input. Pairing its design with grf evaluation is the route to testing Terrier untapped-potential targeting."
+  },
+  {
+   "slug": "imai-2021-fixed-effects-regression",
+   "relation": "complements",
+   "why": "Covers the identification assumptions for observational panel causal inference. Those assumptions would govern any non-randomized use of grf on Melange legislative panels, where unconfoundedness is the binding assumption."
+  }
+ ]
+}

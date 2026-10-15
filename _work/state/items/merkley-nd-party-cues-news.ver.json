@@ -1,0 +1,88 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-influence-engine.salience-shock",
+      "relation": "qualifies",
+      "paper_claim": "A polarized cue (Democrats for, Republicans against) moves strong Republicans +0.09 points on the 0-1 scale (about 0.3 SD, p~0.002). It is numerically the largest cue effect, but the authors do not report it as significantly different from the single Democratic cue or opposing-GOP cue effects. A single Democratic cue moves them +0.06 (p~0.03). Supporting-GOP and consensus cues show no polarizing effect and no de-polarizing effect. Observationally, +100 articles a quarter with cues held fixed goes with -0.4 SD in Republican skepticism (Model 3, PCCTI, N=54; p~0.03).",
+      "paper_location": "Experimental results and Figure 3 Panels A-C, pp. 20-21; Table 2 Model 3, p. 17; discussion pp. 22-23",
+      "system_side": "Going public is three regimes. Retreat moves co-partisans +1 and out-partisans -1, matching the paper's polarized-cue backlash direction. Rally moves out-partisans +0.5 only when bpf is at least 0.30, which the paper's consensus null does not support. Regime probabilities p and q come from the D-R tier gap z in salience_issue_params, and the advisory actor party defaults to R.",
+      "code_ref": "fec/engine/salience_shock.py:99-111 (steps_for); fec/engine/salience_shock.py:185 (party default R); fec/moneyball_core.py:736-750 (salience_issue_params)",
+      "transfer_conditions": "Carries over only as a direction-of-effect prior. The paper studies mass partisans reacting to elite cues in national newspapers on climate; the engine moves legislators' stance tiers on credit-union issues. The rally result rests on one thin MTurk treatment, so it weakens but does not refute out-partisan rally movement. Treating z as endogenous to going public is the analyst's inference, not the paper's; the Granger results concern cue shares and skepticism, not the partisan stance gap.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Numbers, panels, pages and the Retreat/Rally code verified at the cited lines. Softened: 'largest effect' should read numerically largest, since no significant difference is reported; 'no movement at all' overstates the consensus null. The claim that z is a snapshot the campaign never changes was not verified."
+    },
+    {
+      "component_id": "melange-influence-engine.lt-priming",
+      "relation": "supports",
+      "paper_claim": "Out-group (Democratic) elite cues move Republicans away from the cued position rather than toward it. Experiment: strong Republicans +0.06 toward skepticism (about 0.2 SD, p~0.03), with a party-ID interaction p~0.05. Time series: Democratic cues Granger-cause Republican skepticism (chi2 7.35, p=0.03, 2 lags); the reverse has p=0.86.",
+      "paper_location": "Table 1, p. 15; Figure 3 Panel A and text, p. 20",
+      "system_side": "The Bakker cross-cue factor xf passes a cross-party pro-cue through sqrt(bpf_u*bpf_v), so a non-bridge out-party cue falls to about 0. The priming term is clamped at 0 and never goes negative; the code comment says backfire magnitude is not invented.",
+      "code_ref": "fec/engine/lt_priming.py:56-64 (comment and xf at line 64)",
+      "transfer_conditions": "The paper supports that out-party cues do not persuade and reads as backlash, so a negative sign is consistent with it. But the +0.06 effect is measured on mass Republicans and one climate item, not on legislators reading cosponsorship signals, so it cannot set a backfire magnitude for the priming term. Keeping the zero clamp remains defensible.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "All numbers and pages match the text and Table 1. The clamp and cross-cue factor are confirmed at the cited lines. The paper does not itself say the sign can be negative; that is the bearing's reading of 'repelled, rather than persuaded' (p. 17)."
+    },
+    {
+      "component_id": "melange-influence-engine.cascade-kernel",
+      "relation": "qualifies",
+      "paper_claim": "Democratic cues move Republicans toward skepticism, away from the cued position, in both the experiment and the time series (backlash rather than attenuated persuasion). Republican cues have no aggregate effect (chi2 0.00, p=0.94) and only a weak effect on Republican skepticism (chi2 2.94, p~0.09). The authors say co-partisan sources dominate.",
+      "paper_location": "Table 1, p. 15; Figure 3, p. 20; discussion p. 22",
+      "system_side": "cpf_pressure gives an out-partisan source a 0.5x pull and a co-partisan source 1.7x; cpf_diffusion keeps a 0.4 cross-party floor. Both keep out-party influence positive and weaker, not negative.",
+      "code_ref": "fec/moneyball_core.py:543-548 (cpf_diffusion, cpf_pressure); fec/moneyball_core.py:9-12 (physics note)",
+      "transfer_conditions": "The paper supports co-partisan sources dominating, which fits the 1.7 versus 0.5 ordering. It reports backlash, meaning movement away from the cued position, but estimates no multiplier relative to co-partisan influence, so it cannot show the out-partisan sign should be at or below zero rather than 0.5. Cosponsorship ties are observed behaviour rather than cues, so transfer is weak. The paper gives no support for the 1.7/0.5 ratio itself.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Table 1 numbers verified. The original bearing used Republican cues, which are in-party for Republicans, as evidence of out-party backlash; the paper_claim is rewritten to attribute backlash to Democratic cues. Code lines verified. The 'at or below zero' reading is the analyst's extrapolation, not the paper's estimate."
+    },
+    {
+      "component_id": "melange-stance.lsd-tone",
+      "relation": "qualifies",
+      "paper_claim": "The authors use Lexicoder with a custom dictionary of party names, office titles and party leaders to detect party cues, not sentiment or tone. They validate detection against hand coding of a random 700 articles (about 80% contain a cue by their definition). Stance is hand-coded on a separate random sample of 3000 articles (97% of articles with Democratic messages are wholly pro-consensus). Frames come from SVM classifiers (77-80% accuracy).",
+      "paper_location": "Data and methods, pp. 10-11 (dictionary, 700-article validation, 3000-article stance coding); fn 5, pp. 10-11; pp. 13-14 (SVM frames); fn 9, p. 14 (accuracy)",
+      "system_side": "stage5_lsd.R runs the LSD2015 dictionary in lsd_tone (lines 49-60), returning net tone and charge per word. Live run_stage5.R defaults the intensity to the absolute net tone per word (INTENSITY default net_norm, line 45), with charge only as an option, and press_value equals final_sign times that intensity at lines 141-143. The bearing's earlier statement that charge per word is the intensity used in press_value was wrong.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:49-60; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:45 and 141-143",
+      "transfer_conditions": "The paper is a method precedent only: a dictionary for detecting actors plus hand-coded validation. It never uses or validates sentiment or tone as an intensity measure, so it is no evidence that LSD tone intensity is valid on congressional press releases.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper pages and numbers verified (700 articles, about 80%, 97%, 77-80%). A text search found no tone or sentiment measure in the paper. The system_side and code_ref were wrong: the live default intensity is net tone per word, not charge, and press_value is computed in run_stage5.R, not stage5_lsd.R."
+    }
+  ],
+  "related": [
+    {
+      "slug": "noble-2024-presidential-leadership-legislative",
+      "relation": "complements",
+      "why": "Noble and Turner's item covers going-public structure (Prop. 1, p. 13: going public widens the gridlock region), which the salience shock implements. Merkley and Stecula give mass-public evidence that the out-partisan retreat direction is real (polarized-cue backlash). Their consensus null is not a test of Noble's rally regime, so it does not show a rally fails to move out-partisans."
+    },
+    {
+      "slug": "bakker-nd-understanding-partisan-receptivity",
+      "relation": "complements",
+      "why": "Bakker et al. (Study 1: out-party cue -0.06 on a 0-1 scale, p<.01) is the cited basis for the LT-priming cross-cue clamp. Merkley and Stecula independently find out-party cues move Republicans against the cue, on climate and in news coverage."
+    },
+    {
+      "slug": "boxsteffensmeier-2018-taking-congress-interest",
+      "relation": "complements",
+      "why": "Box-Steffensmeier et al. study legislators taking cues from interest-group Dear Colleague letters; Merkley and Stecula study the mass public taking cues from party elites in news. Together they mark the legislator versus voter boundary for cue parameters."
+    },
+    {
+      "slug": "rice-2018-corpus-based-dictionaries",
+      "relation": "same-method",
+      "why": "Rice and Zorn's item shows corpus-based dictionaries beat standard ones (LIWC, AFINN) on specialized vocabulary, which bears on applying LSD2015 to congressional releases. Merkley and Stecula use Lexicoder with a custom party-cue dictionary validated against hand coding."
+    },
+    {
+      "slug": "haselmayer-2017-sentiment-analysis-political",
+      "relation": "same-method",
+      "why": "Haselmayer and Jenny pair a dictionary with crowdcoding validation (480 coders, 92% mean accuracy). Merkley and Stecula pair a dictionary with hand-coded validation of 700 articles. Whether the LSD tone layer has an equivalent validation sample was not checked (validate_stage5.R was not read)."
+    }
+  ],
+  "summary_issues": [
+    "Consensus cue wording overstates the null: summary says it 'produces no movement and does not depolarize'; the paper reports no polarizing effect and no de-polarizing effect found for the consensus and supporting-GOP conditions (pp. 21-23).",
+    "Summary says 'the paper's consensus condition found no movement at all'; the paper reports no polarizing effect, not zero movement, and the Democratic-cue effect is described as attenuated by the supporting GOP cue (p. 21).",
+    "Summary calls the Rally regime's +0.5 'bridge-builders'; the code gives +0.5 to out-partisans whose bpf is at least 0.30 (cross-pressured out-partisans, salience_shock.py:99-111).",
+    "The -0.4 SD per +100 articles a quarter figure comes from Model 3 (Republican skepticism, PCCTI, N=54), not aggregate skepticism; the summary should say so.",
+    "Summary is otherwise accurate on the Granger statistics (6.96/0.01; 7.35/0.03; reverse 0.32 and 0.86; GOP cues 0.00/0.94), the experiment effects (+0.06 single cue, +0.09 polarized, about 0.2 and 0.3 SD), N=2,970, 172 poll questions, and the 2019 MTurk design.",
+    "Paul's highlight claims in paul_alignment were not checked against the annotation file (_annots/049ac0d19237.json); they are outside summary_md but the alignment text is unverified.",
+    "The LSD bearing's system_side and code_ref were corrected in this verification (default intensity is net tone per word; press_value is in run_stage5.R)."
+  ]
+}

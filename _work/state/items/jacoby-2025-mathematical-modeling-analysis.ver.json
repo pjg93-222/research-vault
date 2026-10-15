@@ -1,0 +1,93 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-validation.sensitivity-and-mc",
+      "relation": "suggests-extension",
+      "paper_claim": "Varying the centrist-flow parameters by 10% produces a wide spread of final C, Y and N counts. In the parameter-impact ranking, centrist-lobbying parameters (M_LF, M_LA) and tau rank high and initial compartment sizes rank low. Linear SVMs on 1000-sample sweeps find no clean pass/fail boundary in multi-parameter sweeps.",
+      "paper_location": "Sec 4, p.12-13 (Figs 4-5); Sec 4.1-4.3, p.14-19 (Figs 6-12)",
+      "system_side": "The receptivity sensitivity harness sweeps only receptivity constants: susc scale, prospect-theory multipliers, retiring factor and persona weight (VARIANTS). It grades each by top-20 overlap (ROBUST at 18 or more). The harness does not sweep the flip model's channel weights WM/WP (0.35/0.65) or the PERS persuadability table. The one centrist-like knob that has been swept, PERS_NONE, was swept by hand and recorded in a comment: top-20 overlap was 16/18/20/18/15 across 0.30-0.95, and total winnability ran from 149.5 to 245.8.",
+      "code_ref": "fec/members/receptivity_sensitivity.py:93-113; fec/engine/flip_model.py:21-27; fec/moneyball_core.py:564-568",
+      "transfer_conditions": "The transfer is a method idea, not evidence. Jacoby's sensitivity comes from a well-mixed ODE model with literature-fixed parameters, and the system's flip model is a network-based ratio of saturating terms. What carries over is the diagnostic: the parameters that decide who is movable and how fast they move should be swept first. The pass/fail SVM is not needed, because top-k overlap already measures decision change. Any such sweep is a bound on the model, not validation (DE-062).",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Paper: 10% variation of centrist-flow parameters (p.12, Fig 4 caption); Fig 12 text names M_LF, M_LA and tau as substantial and initial compartment size S as minimal (p.18-19); linear SVMs trained on 1000 samples, no boundary found for phi (Fig 10) and tau (Fig 11), misclassified points for beta (Fig 9) (p.16). The paper itself calls the model 'robust to moderate changes' (p.13); 'wide spread' is the analyst's reading of 'more significant variability'. Code: VARIANTS at receptivity_sensitivity.py:92-102 are the listed receptivity constants, verdict thresholds 18/15 at :111; a separate seed_prob coefficient sweep (:118 on) is also receptivity-layer, graded by gate analytics. No WM/WP/PERS sweep in the file. PERS_NONE comment with 16/18/20/18/15 and 149.5->245.8 at flip_model.py:22-27."
+    },
+    {
+      "component_id": "melange-influence-engine.persuadability-table",
+      "relation": "qualifies",
+      "paper_claim": "Only undecided centrists (C) move. Committed Y and N legislators are absorbing states, and the equilibrium with all members undecided is unstable. Widening the centrist band on a -1 to 1 ideology scale from ±0.25 to ±0.35 reverses the House result so that no votes exceed yes votes.",
+      "paper_location": "Eqs 2.1a-d p.4-5; Sec 3.1 p.10; Sec 5.3 p.20-21 (Fig 18)",
+      "system_side": "PERS assigns committed tiers near-zero persuadability (Champion 0.10, Defender 0.12, Opponent 0.08) and middle tiers the highest (Highly Persuadable 0.65). Silent members get PERS_NONE 0.45; per the flip_model comment, silent cells are 59.8% of matrix cells. Tiers are based on stance, not ideology.",
+      "code_ref": "fec/moneyball_core.py:564-568; fec/engine/flip_model.py:22",
+      "transfer_conditions": "The paper supports the extremes being near-fixed only because its model assumes it; Y and N are absorbing by construction. It does not test an inverted-U. Its centrist group is defined by an unnamed ideology scale, while PERS is defined by CU stance tier, so the band result carries over only as a warning: how the movable set is defined can decide the outcome. The system's PERS_NONE sweep shows the same thing in the system itself. Evidence is a single bill (ACESA, 2009) at the federal level.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper side holds: Y and N equations have only inflows (p.4-5), the (0,C0,0,0) equilibrium is stated unstable (Sec 3.1), and the ±0.25 to ±0.35 band change yields no > yes (p.21, Fig 18). Code side holds for PERS values (moneyball_core.py:565-568), but the 'about 60% of cells' figure lives in the flip_model.py:22 comment, not the cited moneyball_core lines; code_ref extended and Defender 0.12 added."
+    },
+    {
+      "component_id": "melange-influence-engine.flip-model",
+      "relation": "qualifies",
+      "paper_claim": "With parameters taken from cited literature and databases (none fitted to the vote), adding donations to the House run moves 1 legislator (230 to 231 yes, 8 undecided). The lobbying run yields 231 yes, 203 no, 1 undecided; the authors describe this as undecided members falling from 9 to 1 and conclude that lobbying sways undecided members more than donations do.",
+      "paper_location": "Sec 5.1, p.19-20 (Figs 14-15)",
+      "system_side": "pflip = a/(a+b), with a saturating FEC-money term weighted WM 0.35 and a peer-proximity term weighted WP 0.65. Money is treated as the minority channel. The model has no lobbying-contact channel; money means campaign receipts only.",
+      "code_ref": "fec/engine/flip_model.py:21,92-96",
+      "transfer_conditions": "Directionally consistent with the claim that money moves votes little, but this is a contrast between simulation runs under chosen inputs, not an estimated effect. The firm-value inputs (rho_Y, rho_N, Delta pi) are not reported in Table 2, the effect is 7-8 of 435 members on one bill (House, ACESA 2009), and the lobbying input is a ProPublica count of all ACESA-related lobbyists (regular plus a revolving-door subgroup, Fig 3 caption). The paper gives no basis for setting WM/WP or for adding a lobbying channel. Under D-021, LDA-derived lobbying data cannot become an edge or weight term.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Numbers confirmed at p.19-20 (230/196/9; 231/196/8; 231/203/1; errors 5.02/7.55 baseline, 5.48/4.25 with lobbying). The paper does not say whether the lobbying run also includes donations; 'resolves 8 of 9' is the authors' 9->1 framing, while versus the donations run it is 7. Original transfer_conditions called the lobbying input 'a count of revolving-door lobbyists'; the Fig 3 caption says it includes both regular lobbyists and a revolving-door subgroup, corrected. 'Literature-fixed' corrected: alpha rates from Voteview [16], nu and L from ProPublica [24]. Code lines 21 and 92-96 confirmed."
+    },
+    {
+      "component_id": "melange-influence-engine.money-response-defection",
+      "relation": "supports",
+      "paper_claim": "Campaign donations alone move one House member out of 435 (from 9 undecided to 8, 230 to 231 yes). The Senate is reported only for the combined lobbying-plus-donations run, which changes it by one senator (52/47/1 to 52/48/0). The authors note that donations may reflect ideology rather than buy influence (citing Bonica [5]).",
+      "paper_location": "Sec 5.1-5.2, p.20",
+      "system_side": "MAXSHIFT was cut from 40 to 18 on the premise that money moves positions little, so money-triggered defections are rare and need about a sixth of a member's receipts. Champion and Opponent tiers are immune (COMMITTED set).",
+      "code_ref": "fec/engine/money_response.py:15-25,35,72",
+      "transfer_conditions": "This is a consistency check, not a calibration. The donation effect in the paper is a model output from literature parameters (I_F, I_A taken from Meng and Rode), not an observed shift. It is weaker than the experimental and null-result literature already cited at money_response.py:15.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Original claim said donations alone 'leave the Senate essentially unchanged'; the paper never runs donations alone in the Senate (Fig 17 combines lobbying and donations), corrected. Bonica [5] remark at p.20 confirmed. Code: MAXSHIFT 40->18 at money_response.py:15, ~1/6 boundary at :19-24, but Champion/Opponent immunity is at :35 (COMMITTED), outside the cited range; code_ref extended."
+    }
+  ],
+  "related": [
+    {
+      "slug": "bonica-2013-mapping-ideological-marketplace",
+      "relation": "complements",
+      "why": "Jacoby cites Bonica's roll-call inference paper [5], not the 2013 paper, for the claim that donations may reflect ideology rather than influence (p.20). The 2013 paper is Paul's on-disk anchor for that ideological-money reading but is not itself cited, so the relation is complements, not cites."
+    },
+    {
+      "slug": "kalla-nd-campaign-contributions-facilitate",
+      "relation": "complements",
+      "why": "Kalla and Broockman provide experimental evidence that money buys access. Jacoby's finding that donations barely move votes is a simulated parallel with no causal design, and Kalla is the stronger basis for the flip model's WM < WP. Not cited by Jacoby."
+    },
+    {
+      "slug": "kim-nd-mapping-political-communities",
+      "relation": "cites",
+      "why": "Jacoby cites Kim and Kunisky [14] in its list of data sources used to predict voting outcomes (p.2-3), not for the network framing (the p.3 network sentence is uncited), and does not model a network. Kim and Kunisky is the actual lobbying-network treatment."
+    },
+    {
+      "slug": "poole-1999-nominate-after-years",
+      "relation": "complements",
+      "why": "Jacoby cites Poole and Rosenthal [19] for spatial models and Voteview [16] for the alpha rates (Table 2). This vault item (D-NOMINATE after 10 years) is not itself cited; the centrist-band reversal plausibly depends on that kind of ideal-point scale, though the paper does not name the scale it used."
+    },
+    {
+      "slug": "harrison-2010-introduction-monte-carlo",
+      "relation": "complements",
+      "why": "Jacoby's sensitivity runs are deterministic sweeps of 1000 samples. Monte Carlo practice is the stochastic extension the authors say would enhance the model (p.22). Not cited by Jacoby."
+    },
+    {
+      "slug": "furnas-nd-conflating-lobbying-pacs",
+      "relation": "complements",
+      "why": "Furnas et al. separate lobbying from PAC spending at the organization level. Jacoby's lobbying-versus-donations split rests on parameter choices, not on data that separates the two channels. Not cited by Jacoby."
+    }
+  ],
+  "summary_issues": [
+    "'Adding lobbying resolves 8 more undecided members' implies 9 resolved after the donations step; the paper frames the lobbying run as 9 -> 1 undecided relative to baseline, which is 7 more than the donations run (8 undecided). The paper does not state whether the lobbying run includes donations.",
+    "'Every parameter is fixed from earlier literature (Table 2)' is loose: alpha rates come from Voteview [16], nu and L from ProPublica [24], others from cited papers. The accurate statement is that none is fitted to the ACESA vote.",
+    "'Its lobbyist counts also come from revolving-door staff' is wrong: the Fig 3 caption says the series includes both regular lobbyists and a revolving-door subgroup. The same error appears in the flags ('counts former federal employees, i.e. revolving-door staff') and in the flip-model bearing's transfer_conditions.",
+    "The accuracy critique lists errors 5.02%, 5.48% and 7.55% but omits the 4.25% no-vote error in the lobbying run, which is within 5%; the 'within 5%' claim fails for 3 of the 4 reported House errors, not all of them.",
+    "'Legislators who have already decided are treated as fixed ... This matches the low PERS values' presents a model assumption (Y and N absorbing by construction) as agreement; it is structural similarity, not support.",
+    "The Bonica related link was labeled 'cites', but Jacoby cites a different Bonica paper, not the 2013 vault item.",
+    "paul_alignment speaks of Paul's highlights and notes, but paul_entries is empty and the 47 annotations have empty content fields; only highlighted spans exist, so claims about what Paul's notes record or omit are not verifiable."
+  ]
+}

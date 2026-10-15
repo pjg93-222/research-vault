@@ -1,0 +1,93 @@
+{
+ "summary_md": "Kempe, Kleinberg and Tardos give the founding result of influence maximization. Under the Independent Cascade and Linear Threshold models, expected spread sigma(A) is monotone and submodular. The proof goes through live-edge or triggering-set worlds (Lemma 4.4). Greedy hill-climbing therefore reaches (1-1/e-eps) of the optimal k-seed set, and eps shrinks as the Monte Carlo estimate of sigma improves. The guarantee has hard edges. LT needs thresholds drawn uniformly on [0,1] and in-weights summing to at most 1. General threshold models cannot be approximated within n^(1-eps) (Theorem 3.3). Competing cascades are left open. Experiments run on one 10,748-node hep-th co-authorship graph, with 10,000 simulations per evaluation and k up to 30. Under LT, greedy beats high-degree seeds by about 18% and distance centrality by over 40%. Under IC with p = 10%, the centrality heuristics plateau near 2,415 activations, and random seeds beat them beyond about 12 targets. Edge parameters are set by rule, not estimated. For Melange, the paper is the method source for the edge-keyed common-random-number draws, which are live-edge worlds, and for the lazy-greedy frontier. It also marks where the system sits outside the guarantee. The frontier greedy runs on a two-colour race, scales marginals by a leverage factor and averages only 20 worlds. LT priming uses a fixed threshold ladder. The coalition allocator ranks by singleton marginals, which is the overlap-blind pattern the paper's experiments penalize. All of this is model-based expected activation under assumed parameters. None of it is a closeness, access or persuasion probability (D-025).",
+ "category": "Adaptive Influence Maximization",
+ "bearings": [
+  {
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "qualifies",
+   "paper_claim": "Greedy on a monotone submodular sigma reaches 1-1/e-eps of optimum (Theorem 1.1). Submodularity comes from averaging reachability over fixed live-edge worlds (Lemma 4.4, Theorem 4.5). The experiments used 10,000 simulations per estimate (Section 8.3). Competing cascades are open (Conclusions).",
+   "paper_location": "Theorem 1.1 p.106; Lemma 4.4 pp.119-120; Theorem 4.5 p.121; Section 8.3 pp.134-135; Conclusions pp.137-138",
+   "system_side": "Each frontier cascade draws one keyed splitmix value per (iteration, directed edge), which is exactly a live-edge world. Lazy greedy then adds up to 60 seeds. Three departures put it outside this paper's guarantee: the objective counts pro activations in a first-to-reach A/B race with anti and bystander seeds; marginals are clamped with max(0, .) and multiplied by fac[c] (REPFAC x lev or c); and sigma is a 20-world average.",
+   "code_ref": "fec/engine/budget_frontier.py:83-94, fec/engine/budget_frontier.py:118-135, fec/engine/budget_frontier.py:153-170",
+   "transfer_conditions": "With CRN, greedy is exact greedy on the 20-world sample objective. That objective is submodular only for a single cascade. The two-colour race needs Bharathi-Kempe-Salek, and their tie model is not the BFS order used here (A seeds are queued first). The fac-weighted marginals are not the greedy for any stated set function. So the (1-1/e) bound is context, not a certificate, unless fac = 1 and race submodularity is shown.",
+   "strength": "strong"
+  },
+  {
+   "component_id": "melange-influence-engine.lt-priming",
+   "relation": "qualifies",
+   "paper_claim": "The LT guarantee needs in-weights summing to at most 1 and thresholds drawn uniformly at random on [0,1] (Theorem 4.6). With general or fixed thresholds, influence maximization cannot be approximated within n^(1-eps) unless P = NP (Theorem 3.3).",
+   "paper_location": "Theorem 4.6 pp.121-122; Theorem 3.3 pp.116-117",
+   "system_side": "LT priming uses a fixed THETA ladder from 0.6 to 3.0 plus lean and Opponent add-ons. Pressure sums cascade probabilities P[u][v], which are not normalized to at most 1. It solves a cheapest tip per target by greedy rate sort. It does not maximize a seed set and claims no guarantee.",
+   "code_ref": "fec/engine/lt_priming.py:19-21, fec/engine/lt_priming.py:131-140",
+   "transfer_conditions": "This is the deterministic-threshold regime the paper excludes. Any future joint multi-target priming optimizer would inherit the n^(1-eps) hardness and could not borrow the greedy guarantee. Per-target cheapest tip remains a heuristic.",
+   "strength": "strong"
+  },
+  {
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "qualifies",
+   "paper_claim": "Seeds chosen by individual reach ignore overlap. On hep-th, greedy beat high-degree by about 18% and distance centrality by over 40% under LT. Under IC with p = 10%, the heuristics plateaued near 2,415 activations, and random seeds beat them beyond about 12 targets. Greedy kept rising because it prices overlap.",
+   "paper_location": "Section 8.4 pp.134-137; Figures 1 and 4",
+   "system_side": "The coalition allocator scores each of the top 45 neutrals by its singleton marginal spread({n}) - base, multiplied by (1 + 0.8 bpf), and water-fills $2M. Overlap is only reported afterwards as the joint spread, not used in selection.",
+   "code_ref": "fec/engine/per_topic_coalition.py:115-125",
+   "transfer_conditions": "The evidence is one 10,748-node co-authorship graph with uniform p. Whether singleton ranking loses comparably on the 533-member cosponsor kernel is UNVERIFIED. A check would compare the joint spread of the water-fill seed set against lazy greedy (budget_frontier) at equal seed count and the same CRN. The allocator is labelled diagnostic, which limits the harm.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-influence-engine.cascade-kernel",
+   "relation": "qualifies",
+   "paper_claim": "Edge probabilities were set by rule (uniform p = 1% or 10%, or weighted cascade 1/in-degree), not estimated. Which seeding heuristic wins flips with the activation level: at p = 1% each seed adds about 3 activations and random seeds do relatively well. Estimating parameters from data is left open.",
+   "paper_location": "Section 8.2 p.133; Section 8.4 pp.135-137; Conclusions pp.138-139",
+   "system_side": "The shared kernel is p = x/(x+6), with x = w x cpf x edge_mult. The saturation constant 6 is a design choice, not estimated, and every cascade, frontier, coalition, scenario and priming engine reads this one kernel.",
+   "code_ref": "fec/moneyball_core.py:543-548, fec/moneyball_core.py:556-563",
+   "transfer_conditions": "The paper shows that seed rankings and heuristic orderings are sensitive to the overall activation level. A sweep of the saturation constant (for example 3, 6, 12) should accompany any claim that frontier seed order is stable. This is not a validation of the constant.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "supports",
+   "paper_claim": "When a budget is split across marketing actions with diminishing returns, hill-climbing in small increments achieves 1 - exp(-gamma k/(k + delta m)) of optimum. This extends the Nemhauser-Wolsey-Fisher greedy logic to divisible budgets.",
+   "paper_location": "Section 7, Theorem 7.1 pp.128-130",
+   "system_side": "The optimizer allocates $500 increments with lazy greedy. In a fixed stance state it verifies numerically that per-member chunks are concave and separable, claims the exact grid optimum, and keeps the (1-1/e) floor only as context. Modeled conversions trigger replanning without a certificate.",
+   "code_ref": "fec/engine/optimize.py:3-12, fec/engine/optimize.py:74, fec/engine/optimize.py:126-151, fec/engine/optimize.py:170-193",
+   "transfer_conditions": "This holds only in the fixed stance state where concavity is checked. Once money crosses a defection threshold, returns are non-concave steps, and neither Theorem 7.1 nor the exact certificate applies. The code already states this scope.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "context",
+   "paper_claim": "Degree and distance centrality are weak seed-selection proxies under cascade models (LT: about 18% and over 40% below greedy). Under IC with p = 10%, they fall below random beyond about 12 seeds.",
+   "paper_location": "Section 8.4 pp.134-137",
+   "system_side": "The centrality InfluenceScore (0.60 out-degree, 0.25 betweenness, 0.15 eigenvector) has weight 0 in the rank since 2026-06-25 for being direction-blind, but still feeds the underdog lens.",
+   "code_ref": "congress_centrality_*.xlsx; Blended Model AB12/AB13 (workbook, no py line)",
+   "transfer_conditions": "This is an independent reason not to read centrality as spread potential. Per D-025, centrality scores are heuristic model outputs, not influence or access probabilities. The paper's evidence comes from one physics co-authorship graph.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "The 20-world Monte Carlo average has no stated error bound. The paper used 10,000 simulations, and sample-complexity results (Sadeh et al. 2019, from the online scan) scale with n, seed count and eps^-2. The frontier knee and seed order may move between MC 20 and MC 1000. mc_stability_check.py exists, but whether it bounds seed-order stability was not checked here.",
+  "No greedy-vs-degree-vs-random benchmark in the style of Section 8 has been run on the live 533-member kernel, so the gain from greedy over cheap centrality seeding is unmeasured for this system.",
+  "The coalition-side (1-1/e) claim in scenario.py rests on Bharathi-Kempe-Salek. Whether the BFS first-to-reach race with fixed A-first queue order is submodular in pro seeds has not been shown or tested numerically (for example, by random diminishing-returns probes on the 20 CRN worlds).",
+  "The fac-weighted, max(0, .)-clamped marginals in the frontier greedy optimize no explicitly defined set function, so no approximation statement attaches to the frontier path.",
+  "Kernel edge probabilities are not estimated from data. Kempe flags parameter estimation as open, and the saturation constant 6 has no sensitivity sweep reported against frontier seed order."
+ ],
+ "flags": [
+  "Weighted Cascade (Section 8.2) sets p(u,v) = c_uv / d_v, a per-edge normalization by receiver in-degree. Per-edge volume normalization was measured and REJECTED in this project, so do not adopt the weighted cascade kernel on that basis.",
+  "The paper's 'influence' and sigma are expected activations under an assumed diffusion model. Any Melange spread, frontier or InfluenceScore output must not be described as a closeness, access, introduction or persuasion probability (D-025). The cosponsor_refinement report already words Kempe this way correctly.",
+  "Kempe's experimental margins (18%, 40%, 2,415 activations) come from one hep-th graph, window winter 2002, denominator 10,748 researchers with k = 1..30. Quote them with that window and denominator, never as transferable effect sizes.",
+  "Paper markup: none. annot_sha12s is empty and paul_entries is empty, so no annotation conflicts exist."
+ ],
+ "paul_alignment": "Paul has no annotation or bibliography entry on this paper. His component positions agree with it. His Chen 2023 margin note, that pressure from high-ranking members is not diminishing, matches Kempe's boundary: submodularity needs random thresholds, and fixed thresholds break it (Theorem 3.3). LT priming sits in exactly that non-submodular regime. His view of greedy plus CELF as the operational layer is grounded here. It is not stale, but the built optimizer has moved past the (1-1/e) framing to an exact fixed-state certificate. His wish for cheap Monte Carlo (Viral Centrality) is sharpened by the gap between the paper's 10,000 simulations and the system's 20 CRN worlds.",
+ "related": [
+  {"slug": "bharathi-nd-competitive-influence-maximization", "relation": "extends", "why": "Extends Kempe's IC submodularity to a follower against a fixed opponent. scenario.py cites it as the basis of the coalition-side (1-1/e) claim, which this paper leaves open."},
+  {"slug": "golovin-2011-adaptive-submodularity-theory", "relation": "extends", "why": "Adaptive analogue of Kempe's greedy guarantee. optimize.py keeps its data-dependent bound as a diagnostic."},
+  {"slug": "chen-2021-contingency-aware-influence", "relation": "extends", "why": "Adds seed take-up probability to Kempe's IM, which the system implements as SGATE. A random seed take-up still preserves single-cascade submodularity."},
+  {"slug": "chen-2023-complex-contagion-influence", "relation": "contradicts", "why": "Complex contagion breaks the submodularity Kempe relies on, which is the regime of LT priming and of Paul's not-diminishing margin note."},
+  {"slug": "almazaydeh-2026-heuristic-centrality-methods", "relation": "contradicts", "why": "Argues centrality heuristics can rival greedy, against Kempe's Section 8 finding that greedy beats degree and distance centrality."},
+  {"slug": "fink-2023-congressional-social-network-dataset", "relation": "complements", "why": "Supplies estimated pairwise influence probabilities among members of Congress, the parameter-estimation step Kempe leaves open."},
+  {"slug": "manchanda-2020-gcomb-learning-budget-constrained", "relation": "builds-on", "why": "Learns a budget-constrained replacement for Kempe greedy at scale. Paul expects it to supersede greedy."},
+  {"slug": "trivedi-2020-efficient-influence-maximization", "relation": "builds-on", "why": "Speeds up Kempe-style greedy under Independent Cascade."},
+  {"slug": "zareie-2023-influence-maximization-social", "relation": "cites", "why": "Survey of behaviour-aware IM methods that build on the Kempe models."},
+  {"slug": "kamarthi-2020-influence-maximization-unknown", "relation": "builds-on", "why": "IM when the graph is unknown and must be sampled, which relaxes Kempe's known-graph assumption."},
+  {"slug": "cai-2025-competitive-influence-maximization", "relation": "complements", "why": "Competitive IM under voter dynamics, a non-progressive alternative to Kempe's cascade models in which timing matters."}
+ ]
+}

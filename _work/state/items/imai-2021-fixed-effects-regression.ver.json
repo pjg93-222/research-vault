@@ -1,0 +1,47 @@
+{
+  "bearings": [
+    {
+      "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+      "relation": "qualifies",
+      "paper_claim": "The 2FE estimator equals a matching estimator whose adjustment set has |A_it| = |M_it| x |N_it| and can contain same-status mismatches, so its simultaneous adjustment for unit and time confounders 'critically relies upon the linearity assumption'. Unweighted 2FE is not in general equivalent to the multi-period DiD estimator; the equivalence is the commonly cited justification from the basic two-group, two-period case.",
+      "paper_location": "Proposition 1 and Section 3.1 (eq. 3-4, |A_it| = |M_it| x |N_it|), PDF pp.3-4; Theorem 1 implications, PDF pp.9-10",
+      "system_side": "The study's base L-LV models use sector baselines plus controls; the robustness family adds R-yearFE (sector + year FE), R-logFE, R-FD and FDY (first differences + year effects, EXPLORATORY, descriptive). The L3-LV slope is +0.352 (n=77) in the original specification and -0.477 under sector + year FE (log-FE -0.006; FDY -0.537); these are the Codex review reference values the pipeline checks its run against (sgs_review.R:33-35), and the sign flip is recorded in the sector-growth lane memory file (not the project brain), whose lesson reads 'Never call a trend a finding before the year-FE and incremental-fit checks'.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:33-35,305-307,340-342; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_summaries.R:83-90; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:386",
+      "transfer_conditions": "Transfers in part. The paper covers a binary treatment only (its conclusion says so); the growth regressors here are continuous, so the mismatch and negative-weight algebra does not carry over directly. The general point does: a 2FE slope is a model-based weighted contrast whose causal reading depends on linear additivity, and one-way FE, two-way FE and first-difference fits target differently weighted contrasts. Extension to continuous treatments rests on the TWFE literature the paper cites, not on this paper. The panel is small (77 rows on the L3 base fit). The paper supports the study's existing caution (year FE as a check, no causal language); it does not make the year-FE coefficient the 'true' effect.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Paper side reproduced (text lines ~147, 260, 819-826). Numbers +0.352/-0.477/-0.006 and n=77 confirmed at sgs_review.R:33-35, but they live in the SGS_CODEX_REVIEW reference constants and the auto-memory file sector-growth-study-lane-2026-09-25.md:215, not in the brain as the analyst wrote (rg of the brain found no sector-growth hit for these values). Code refs 305-307/340-342 (variant list, year-FE/log-FE/FDY checks), sgs_summaries.R:83-90 (sector and year factors) and sgs_estimate.R:386 (year_effects) confirmed. Added sgs_review.R:33-35 to code_ref and fixed the provenance."
+    },
+    {
+      "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+      "relation": "suggests-extension",
+      "paper_claim": "The multi-period DiD estimator, where units switch in and out of treatment, equals a weighted 2FE estimator with weights W_it; some control observations receive negative weights when (2X_it - 1)(2X_i't' - 1) = -1, so unweighted 2FE is not the DiD estimator. The wfe R package implements the weighted estimators.",
+      "paper_location": "Theorem 1 and its implications, PDF pp.9-10; Acknowledgments, PDF p.11",
+      "system_side": "DECEL is a within-sector binary indicator (1 when growth is below its prior-year value in the same sector), which switches on and off across years. The DECEL-<base> tests add g_decel and g x g_decel to the base specification, i.e. sector baselines (one-way unit FE) plus controls; no sector + year FE DECEL variant was found in the registry. The pipeline's 'temporal support' diagnostic reports each year's share of the absolute OLS weight on an estimate, not signed per-observation implicit weights.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:358-364; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_panel.R:1007-1021; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:149-155; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_report.R:247; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:252-257",
+      "transfer_conditions": "DECEL has the paper's binary, reversible treatment shape, but it is fit with sector baselines only, not two-way FE, so Theorem 1's 2FE/DiD negative-weight result does not apply as written; the one-way unit-FE matching result is in Imai and Kim (2019), which this paper extends. It would apply directly only if a sector + year FE DECEL variant were added. DECEL is also built from the growth regressor itself, not an assigned treatment. Any signed implicit-weight diagnostic or wfe/PanelMatch comparison would be new analysis: UNVERIFIED until a second path reproduces it (DE-062), EXPLORATORY under the original-model contract.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper side reproduced (Theorem 1 text lines ~790-826; wfe at line 1058). Code: DECEL definition and labels confirmed; temporal support is absolute year-level weight shares (sgs_review.R:252-257) as stated. But the analyst's 'inside the same sector-FE (and year-FE variant) regressions' and 'when estimated with sector + year FE' are not supported: sgs_registry.R:358-364 builds DECEL-<base> on the base spec (sector baselines). Rewrote system_side and transfer_conditions; strength lowered from moderate to weak."
+    }
+  ],
+  "related": [
+    {
+      "slug": "blackwell-2026-effect-political-advertising",
+      "relation": "complements",
+      "why": "Both address causal inference with panel data and time-varying treatments. Blackwell and Yamauchi's IPTW with unit fixed effects in the propensity model for marginal structural models (citing Imai and Kim 2019 on linear FE limits) is a weighting-based alternative of the kind Imai and Kim's conclusion calls for (PDF p.10)."
+    },
+    {
+      "slug": "kim-2020-strategic-sequential-links",
+      "relation": "complements",
+      "why": "Shares co-author In Song Kim. Kim, Stuckatz and Wolters fit linear probability models with firm, year, politician and firm-politician fixed effects and then a matched DiD (Imai, Kim and Wang), so the FE-panel caveat applies and the matched-DiD step is the design-based route this paper points to."
+    }
+  ],
+  "summary_issues": [
+    "The toy-example adjustment factor K = 3/2 (2 mismatches in an adjustment set of 4) belongs to Proposition 2's adjusted matching / weighted 2FE estimator (Figure 1 panel b), on PDF p.7 (article p.6), not to Proposition 1's standard 2FE at PDF pp.5-6 as the summary's flow implies.",
+    "'The DECEL dummy ... is the paper's exact setting' overstates: DECEL is binary and reversible, but DECEL tests are fit with sector baselines only (sgs_registry.R:358-364), not sector + year FE, so Theorem 1's 2FE/DiD result does not apply as written; the one-way case is Imai and Kim 2019.",
+    "The L3-LV +0.352 to -0.477 figures are the Codex review reference values in sgs_review.R:33-35 and the sector-growth lane memory file; the bearing's 'the brain records' attribution is wrong.",
+    "'No other component estimates a causal effect from a panel with unit and time fixed effects' is an unverified repo-wide existence claim; no census was shown. Mark UNVERIFIED.",
+    "'The unweighted 2FE estimator equals DiD only in the 2-group, 2-period case' is stronger than the text: the paper says unweighted 2FE is not in general equivalent to multi-period DiD and cites the 2x2 case as the common justification."
+  ]
+}

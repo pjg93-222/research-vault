@@ -1,0 +1,76 @@
+{
+  "bearings": [
+    {
+      "component_id": "terrier-canvass.untapped-potential",
+      "relation": "suggests-extension",
+      "paper_claim": "Study 1 (Lucid, Feb 2022; 5,284 analyzed across both modules). Citizenship Act: microtargeting 5.17 pp vs single-best-message 2.41 vs naive random message -0.96 (P=0.016 and P<0.001). Precision-weighted across both modules: 5.96 vs 3.48 vs 1.79. UBI module: microtargeting 7.16 vs single-best-message 5.03 vs naive 5.70, not significant. Profiles were ranked with generalized random forests (grf R package) over 250 Monte Carlo 75/25 splits. The advantage was qualitatively largest for one-covariate targeting, though differences were slight.",
+      "paper_location": "pp.3-5 Study 1 Calibration and Experimental Phase; Fig 2 p.5; Materials and Methods pp.8-9",
+      "system_side": "Untapped potential ranks each person by (wp x (1-|2s-1|) x t + (1-wp) x s x (1-t)) x (1 + wi x i), with module defaults wp=0.5 and wi=0.5 that a district can override. It chooses whom to contact, not what to say. It has no message or script variant and no effect-size term, and the (1-|2s-1|) term peaks at s=0.5 by construction.",
+      "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:8-10",
+      "transfer_conditions": "Tappin's effects are online survey estimates from Feb 2022 U.S. respondents with forced exposure on low-salience policy attitudes. They are not field or door-canvass effects. The paper says candidate-centered and non-U.S. settings are untested, and it says survey estimates may overstate the relative advantage of microtargeting in the field. A party or ideology split is the coarse covariate the paper found sufficient in-sample, and Terrier holds registration and partisan scores. Any gain stays UNVERIFIED until Terrier runs its own pretest.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Study 1 and Study 2 numbers and design details checked against the text. Original said message choice drives most of the return. The paper does not decompose the effect, and in the UBI module naive (5.70) beat single-best-message (5.03), which the original omitted. The paper says generalized random forests, not causal forests. Code formula verified at untapped.py lines 9-10 and 118-119. Only wp and wi are weights, each defaulting to 0.5, not three weights."
+    },
+    {
+      "component_id": "terrier-canvass.untapped-potential",
+      "relation": "qualifies",
+      "paper_claim": "The authors say persuasion returns may be highly context dependent. Study 1 Citizenship Act significant (5.17 vs 2.41, P=0.016); UBI not significant (7.16 vs 5.03, P=0.12). Study 2 across 36 issues: per-person issue targeting was directionally below one best-issue ad (12.30 vs 15.42, P=0.11). The authors say survey estimates may overstate the relative persuasive advantage of microtargeting. Candidate-centered and non-U.S. campaigns are untested.",
+      "paper_location": "p.4 Study 1 results; p.6 Study 2 results and Discussion; p.7 limitations",
+      "system_side": "The persuade term (1-|2s-1|) x t assumes that people near s=0.5 who will vote carry persuasion value, with no magnitude attached. Its balance weight wp=0.5 is a module default, not a ruling. The score therefore treats persuadability and reminder value as comparable units with no effect-size evidence behind either.",
+      "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:8-10",
+      "transfer_conditions": "The paper does not estimate effects by distance from s=0.5, so it neither supports nor refutes the peak assumption. It says effect sizes vary by issue and setting and are likely smaller in high-salience contexts with countermessaging. Treat wp as unanchored until Terrier has local contact results.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "All Study 1 and Study 2 figures match the text. Original 'were highly context dependent' should be 'may be', because the paper hedges. The paper says overstate the relative advantage, not field persuasion. The Terrier formula and the unanchored-wp point are supported by the code."
+    },
+    {
+      "component_id": "melange-influence-engine.persuadability-table",
+      "relation": "context",
+      "paper_claim": "In the Study 2 calibration (n=3,990 respondents, 36 issues, 48 progressive video ads), the messages predicted most persuasive were often on obscure, low-information policies such as net neutrality. The authors offer this as one possible explanation for the Study 2 divergence, alongside a mixed pretest design and a nearly one-year gap before follow-up. They expect smaller effects in high-salience settings with countermessaging.",
+      "paper_location": "p.8 Discussion; p.7 limitations",
+      "system_side": "PERS is a fixed table keyed only on stance tier, with an inverted-U shape: Highly Persuadable 0.65, Opponent 0.08, and no-position default 0.45 via the PERS_NONE environment dial. It has no issue-salience or information term. Salience enters separately through fec/engine/salience_shock.py.",
+      "code_ref": "fec/moneyball_core.py:565-568",
+      "transfer_conditions": "Weak. Tappin measures attitude change among public respondents after one video, while PERS models legislators under lobbying. The low-information point might carry over to members on low-visibility CU topics, but nothing here measures that.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Quoted finding and table values verified. The original presents the low-information account as the finding, but the paper lists it as one hypothesis among several. 'Fixed table' omits the PERS_NONE environment override, which defaults to 0.45. The PERS table is at lines 565-568; line 564 is a comment. The salience module exists."
+    }
+  ],
+  "related": [
+    {
+      "slug": "simchon-2024-persuasive-effects-political",
+      "relation": "extends",
+      "why": "Simchon et al test matching ad style to reader openness and whether LLMs can mass-produce matched ads, which fits the generative-AI extension. Tappin supplies the pretest-and-target baseline. The one-covariate finding is Tappin's own result, not Simchon's."
+    },
+    {
+      "slug": "kalla-2020-which-narrative-strategies",
+      "relation": "complements",
+      "why": "Field and survey evidence on which narrative strategies durably persuade, from the canvass side. It bears on the missing content term in Terrier's Untapped score alongside Tappin's survey message-selection result."
+    },
+    {
+      "slug": "broockman-2026-should-moving-middle",
+      "relation": "complements",
+      "why": "Broockman and Kalla argue that returns to moderation depend on where voters are, which echoes Tappin's context-dependent results. Their working paper covers candidate races, which Tappin did not test."
+    },
+    {
+      "slug": "palm-2025-influence-personality-traits",
+      "relation": "complements",
+      "why": "Palm and Tims review how personality traits moderate persuasion strategies. Tappin's Study 1 moral-foundation profiles did not beat one-covariate targeting, which is a check on rich psychological tailoring."
+    }
+  ],
+  "summary_issues": [
+    "summary_md says message choice drives most of the persuasive return. The paper does not decompose the effect. In the UBI module the naive message (5.70) beat single-best-message (5.03), which the summary omits.",
+    "summary_md says pretested messages gave 2.4 to 5.2 pp. That range covers only the Citizenship Act module. Across both modules single-best-message ranged 2.41 to 5.03 and microtargeting 5.17 to 7.16.",
+    "summary_md and bearing 1 say grf causal forests. The paper says generalized random forests (grf R package). The word causal does not appear in the text.",
+    "summary_md says targeting on one covariate did as well as 2-3 or 4+ covariates. The paper says the one-covariate advantage was qualitatively largest, with relatively slight differences.",
+    "summary_md says coarse partisan targeting is enough to capture the gain. This is the paper's in-sample claim (p.8 Discussion) and needs the Study 1 and in-sample qualifier.",
+    "summary_md says both SBM and microtargeting beat naive in Study 2 (6.19). The text confirms only microtargeting vs naive (12.30 vs 6.19, P=0.008). The SBM vs naive comparison appears only in Fig 3, which the text dump does not label, so it is unverified.",
+    "Bearing 1 system_side says three 0.5 weights. The code has two module defaults, wp and wi (DEFAULT_WEIGHTS = (0.5, 0.5)), each overridable per district.",
+    "Bearing 2 paper_claim states persuasion returns were highly context dependent as fact. The paper hedges with may be. It also says survey estimates may overstate the relative advantage, not field persuasion.",
+    "Bearing 3 paper_claim presents the low-information explanation as a finding. The paper lists it as one hypothesis among several (p.8).",
+    "Bearing 3 code_ref 564-568 includes a comment line. The PERS table is at 565-568.",
+    "paul_alignment says Paul's recorded position (component_literature) and that Untapped went live 2026-10-09 with no content term. Neither was verified here: the brain was not read because boot was skipped, and paul_entries is empty. The untapped.py header is dated 2026-10-09, which is consistent but not proof.",
+    "Related links: the item records for Simchon, Kalla, Broockman and Palm exist and their titles match the why text. Only Simchon's item summary was read. The other three were checked by title and metadata, not full text, so their why claims are unverified beyond that."
+  ]
+}

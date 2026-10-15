@@ -1,0 +1,70 @@
+{
+  "summary_md": "Tappin, Wittenberg, Hewitt, Berinsky and Rand (PNAS 2023) test whether microtargeting, meaning pretesting messages and using generalized random forests to send each covariate profile the message predicted to persuade it most, beats two simpler strategies: random messages (naive) and one pretested best message for everyone (single-best-message, SBM). In a Feb 2022 Lucid sample (5,284 U.S. adults analyzed), Study 1 on a single policy found microtargeting moved support 5.96 pp vs 3.48 SBM and 1.79 naive (precision-weighted over two modules). Almost all of that came from the Citizenship Act module (5.17 vs 2.41). The UBI module was not significant. Targeting on one covariate, such as party or ideology alone, did as well as targeting on two to four or more. In Study 2, across 36 issues, letting the targeted issue vary by person did not beat one best issue ad (12.30 vs 15.42, P=0.11), though both beat naive (6.19). The authors call the advantage highly context dependent. They say forced-exposure survey estimates probably overstate field returns, and they did not test candidate races. For Paul's systems, the closest point of contact is Terrier's Untapped potential score. It ranks whom to contact by support closeness to 0.5, chance of voting and sphere of influence. It has no message dimension and no estimate of effect size. The paper says message choice changes the effect a lot (naive was near zero in one module) and that coarse partisan targeting is enough to capture the gain. That is an extension Terrier could add cheaply, but only through its own pretest. Melange's legislator-side persuadability is barely touched: this is a mass-public survey study. Its relevance there is limited to context on low-information issues. No brain rule is in conflict.",
+  "category": "Campaign Politics",
+  "bearings": [
+    {
+      "component_id": "terrier-canvass.untapped-potential",
+      "relation": "suggests-extension",
+      "paper_claim": "Message choice drives most of the persuasive return. Study 1 (Lucid, Feb 2022, n=5,284 analyzed), Citizenship Act module: microtargeted 5.17 pp vs single-best-message 2.41 vs naive random message -0.96. Precision-weighted across both modules: 5.96 vs 3.48 vs 1.79. Targeting on one covariate (e.g. party or ideology) did as well as 2-3 or 4+ covariates. Profiles came from grf causal forests with 250 Monte Carlo 75/25 splits.",
+      "paper_location": "pp.3-5, Study 1 Calibration and Experimental Phase; Fig 2; Materials and Methods p.9",
+      "system_side": "Untapped potential ranks people by (wp x (1-|2s-1|) x t + (1-wp) x s x (1-t)) x (1 + wi x i), with agent-default weights 0.5/0.5/0.5. It chooses whom to knock, not what to say. There is no message or script variant, no effect-size term, and persuasion value is assumed to peak at s=0.5. The brain note says Paul's highlighted canvass protocol is not encoded in the persuasion term.",
+      "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:8-10",
+      "transfer_conditions": "Holds only for script or leaflet variants that Terrier pretests in its own district. Tappin used online forced exposure on low-salience policy attitudes; door canvassing for vote choice in a candidate race was explicitly not tested. The authors expect field returns to be smaller. A party or ideology split is the coarse covariate the paper found sufficient, and Terrier already holds registration and partisan scores. Any gain stays UNVERIFIED until Terrier runs a pretest.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "terrier-canvass.untapped-potential",
+      "relation": "qualifies",
+      "paper_claim": "Persuasion returns were highly context dependent. Study 1: Citizenship Act significant, UBI not (7.16 vs 5.03, P=0.12). Study 2, 36 issues: per-person issue targeting did not beat one best ad (12.30 vs 15.42 pp, P=0.11). The authors say forced-exposure survey effects likely overstate field persuasion and that candidate campaigns are untested.",
+      "paper_location": "p.4 and p.6 Experimental Phase results; p.7 Discussion limitations",
+      "system_side": "The persuade term (1-|2s-1|) x t assumes that people near s=0.5 who will vote yield persuasion value, with no magnitude attached. The persuade-vs-remind balance wp=0.5 is an agent default, not a ruling. So the score treats a unit of persuadability as comparable to a unit of reminder value, with no evidence on how large either effect is.",
+      "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:8-10",
+      "transfer_conditions": "The paper does not estimate effects by distance from s=0.5, so it neither supports nor refutes the peak assumption. It warns only that persuasion magnitudes vary by issue and setting and are smaller in the field. Treat this as a reason to keep wp labelled as a default until local contact results exist.",
+      "strength": "weak"
+    },
+    {
+      "component_id": "melange-influence-engine.persuadability-table",
+      "relation": "context",
+      "paper_claim": "In Study 2 (calibration n=3,990 respondents, 36 issues, 48 progressive video ads), the messages predicted most persuasive often dealt with obscure, low-information policies such as net neutrality. The authors expect smaller effects in high-salience settings with counter-messaging.",
+      "paper_location": "p.8 Discussion; p.7 limitations",
+      "system_side": "PERS is a fixed table keyed only on stance tier, with an inverted U (Highly Persuadable 0.65, Opponent 0.08, no-position 0.45). It has no issue-salience or information term. Salience enters separately through salience_shock.",
+      "code_ref": "fec/moneyball_core.py:564-568",
+      "transfer_conditions": "Weak transfer. Tappin measures attitude change among members of the public after one video. PERS models legislators under lobbying. The low-information point might plausibly carry over to members on low-visibility CU topics, but nothing here measures that.",
+      "strength": "weak"
+    }
+  ],
+  "gaps_exposed": [
+    "Terrier has no message or script dimension. Untapped potential ranks whom to contact but carries no estimate of how much a contact moves anyone, so the persuade-vs-remind weight wp=0.5 is unanchored.",
+    "The Terrier assumption that persuasion value peaks at s=0.5 has no local or cited empirical test. Tappin does not report effects by distance from s=0.5.",
+    "No pretest or heterogeneous-effect estimate (e.g. causal forest over canvass outcomes) exists anywhere in Terrier or Melange. Nothing could learn which covariate profiles respond to which content.",
+    "Melange PERS has no issue-salience or information term. The low-information persuadability point is untested for legislators."
+  ],
+  "flags": [
+    "No conflict with brain rules. The paper does not argue for dropping cosponsorship edges or for per-edge volume normalization, does not use LDA, and makes no reciprocity claim.",
+    "Every effect size here is a survey estimate from Feb 2022 Lucid respondents with forced exposure. Quote them with that window and population, never as field or door-canvass effects.",
+    "The Study 1 headline advantage (about 70 percent over SBM) is pooled over two modules and driven by the Citizenship Act module. Quote it with the per-module split, or label it UNSTRATIFIED."
+  ],
+  "paul_alignment": "Paul has no annotated entry for this work. His recorded position on untapped-potential (component_literature) is that he highlighted the Kalla and Broockman canvass protocol extensively, but it is not encoded in the persuasion term. Tappin backs that concern: what is said changes the effect a great deal (naive random messages were near zero in the Citizenship Act module, while pretested messages gave 2.4 to 5.2 pp). A who-to-contact score with no content term leaves value unused. His note is not stale. The Untapped score went live on 2026-10-09 and still has no content term.",
+  "related": [
+    {
+      "slug": "simchon-2024-persuasive-effects-political",
+      "relation": "extends",
+      "why": "Simchon et al take political microtargeting to generative-AI message production. Tappin supplies the pretest-and-target baseline and its finding that one covariate suffices."
+    },
+    {
+      "slug": "kalla-2020-which-narrative-strategies",
+      "relation": "complements",
+      "why": "Field and survey evidence on which canvass narrative content persuades durably. It is the door-canvass counterpart to Tappin's survey message-selection result, and both bear on the missing content term in Terrier's Untapped score."
+    },
+    {
+      "slug": "broockman-2026-should-moving-middle",
+      "relation": "complements",
+      "why": "Broockman and Kalla find that returns to moderation are issue-specific and depend on where voters are. That echoes Tappin's context-dependent, issue-specific persuasion returns, and it covers the candidate-race setting Tappin did not test."
+    },
+    {
+      "slug": "palm-2025-influence-personality-traits",
+      "relation": "complements",
+      "why": "Palm reviews personality-tailored persuasion. Tappin's Study 1 included moral-foundation covariates and found no gain from targeting on more covariates, which is a check on rich psychological tailoring."
+    }
+  ]
+}

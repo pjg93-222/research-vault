@@ -1,0 +1,96 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-lobbying.lobbied-member-link",
+   "relation": "supports",
+   "paper_claim": "The abstract says LobbyView bridges politicians' sponsorship of bills with reported lobbying by interest groups. Section 2 steps 1-5 describe only matching report text to bill identities (number, Congress, title, range). No step describes a legislator link or any contact. The word sponsor appears once in the paper, in the Abstract.",
+   "paper_location": "Abstract; Section 2 steps 1-5",
+   "system_side": "The system's join is stated in code. lobby_interactions.py docstring says the network answers whether an organization lobbied a bill the member sponsored or cosponsored. build_network_2021_rebuild.py line 13 says each lobbied bill credits every sponsor and cosponsor. So the member link is a bill-roster join, not a contact record. The paper does not describe this join itself.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/lobbying/lobby_interactions.py:4-6 and build_network_2021_rebuild.py:13",
+   "transfer_conditions": "Holds for the system join. The paper's sponsorship wording is only the abstract phrase, and the system's join is wider: sponsor plus all cosponsors. collect_lobbyview.py line 446 records a 2026-08-01 check that BECU 2021 has 181 edges equal to 1 sponsor plus 180 cosponsors of H.R. 1996. That is a code comment; it was not re-run here.",
+   "strength": "strong",
+   "verdict": "softened",
+   "verifier_note": "The paper does not describe a sponsorship join in its method. The bill-roster join and the join-by-construction point rest on the system's code docstrings, and the member-link attribution belongs to the system, not the paper. Wording should say sponsored or cosponsored."
+  },
+  {
+   "component_id": "melange-lobbying.lobbied-member-link",
+   "relation": "suggests-extension",
+   "paper_claim": "Filing-year Congress assignment fails. Google's 2013 report cites H.R. 2577 (Safe Data Act), a 112th Congress bill, not the 113th. LobbyView considers the three preceding Congresses by default, picks the candidate with highest cosine similarity to surrounding text (Eq. 1), falls back to the filing-year Congress if no number matches, and propagates a Congress across the report by majority vote.",
+   "paper_location": "Section 2 (Figure 1; steps 1-3; Eq. 1; fallback sentence)",
+   "system_side": "The 2021+ rebuild binds each formal citation to the filing Congress unless an 'of 20XX' suffix in the same segment resolves to an earlier Congress (_resolve_mention_congress; current mentions set the resolved Congress to filing_congress). The rebuild has no cosine-similarity lookback and no report-level propagation. A search for cosine, propagate, majority and argmax returned no hits.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/lobbying/build_network_2021_rebuild.py:3698-3721 and 4482-4492",
+   "transfer_conditions": "Paper side reproduced. Under the rebuild rule, the paper's own example would bind to the 113th Congress. Risk concentrates in filings made early in a new Congress (odd-year first sessions). The paper gives no rate, so the size of the error in the rebuild is UNVERIFIED.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Paper claims checked against the text (lines 43-88, Eq. 1, Figure 1 text). Both code ranges checked. The system side matches the analyst's description, including the absence of lookback and propagation."
+  },
+  {
+   "component_id": "melange-lobbying.finance-client-classification",
+   "relation": "qualifies",
+   "paper_claim": "Firms (clients) are grouped into industries by NAICS2 (or SIC) to compute per-industry Herfindahl indices. The example run is NAICS for 1996-2011. Output is then merged with Compustat firm data and a trade-issue indicator (Sections 5.5, 5.5.1, 5.5.2).",
+   "paper_location": "Sections 5.5, 5.5.1, 5.5.2",
+   "system_side": "collect_lobbyview.py classifies clients by name rules first (credit-union and bank rules). NAICS is used only as a fallback and yields a low-confidence side. A '+naics-conflict' suffix is recorded when a validated NAICS code disagrees with a name rule (classify_client, lines 213-263). The paper uses NAICS2 as its industry key and does not validate NAICS codes.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/lobbying/collect_lobbyview.py:12-19 and 213-263",
+   "transfer_conditions": "The procedure claim holds. The paper does not say NAICS is usable for research aggregates; it only uses NAICS2 as the grouping key. The reason given for the system's rule (codebook gives NAICS no provenance) is not in the code checked, so it is UNVERIFIED. The system ruling that NAICS is linkage metadata was not checked here. Herfindahl outputs are industry descriptors and must not be edge or weight sources (D-021, not re-checked).",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper side reproduced for the procedure and the example run. Softened because the paper neither validates NAICS nor says it is usable for aggregates. Code side verified for name-first classification, NAICS fallback, and the conflict suffix."
+  },
+  {
+   "component_id": "melange-lobbying.fec-lda-bridge",
+   "relation": "qualifies",
+   "paper_claim": "Close bill numbers with the same prefix and numbers differing by at most 10 are expanded into ranges. The Mattel 2002 citation H.R.4182-4186 becomes five bills (H.R. 4182 to 4186). Bills are also matched by title and the Congress is propagated across the report. No error rates are reported.",
+   "paper_location": "Section 2 steps 3-5; Figure 2",
+   "system_side": "The rebuild's continuation parser (CONTINUATION_RE) accepts only comma, semicolon, ampersand and 'and' separators, so a hyphenated range is not expanded. No hyphen-range expansion was found in the rebuild. Congress binding differs (see the Congress bearing).",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/lobbying/build_network_2021_rebuild.py:575-580",
+   "transfer_conditions": "Paper side reproduced. The claim that the bridge used the LobbyView network.csv vintage for 2021-2022 was dropped, since no source for it was checked. Whether the rule difference is measured on an overlap year is UNVERIFIED.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper claims hold. The parser claim holds for the separator set. The speculative vintage-use sentence in the original was removed."
+  },
+  {
+   "component_id": "melange-lobbying.contact-inference",
+   "relation": "supports",
+   "paper_claim": "The Congress assignment takes an argmax over candidate Congresses (Eq. 1) and falls back to the filing-year Congress when no bill matches. The paper says filing-year guessing often leads to erroneous matches (Section 2). It says the full methods description is still to come, with the quoted sentence 'This document currently contains only some technical details of the database' (Introduction).",
+   "paper_location": "Section 1 Introduction; Section 2 opening paragraph, step 2 and Eq. 1",
+   "system_side": "The brain memo on the contact-inference design, Claims discipline bullet (line 55), requires a mandatory caveat that LDA does not require disclosure of contacts and that scores are inferences. It bars LobbyView-as-validation and lobbied-member wording for inferred rows. The memo does not mention argmax or any cautionary lineage.",
+   "code_ref": "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-data-collection-lanes-contact-inference-design-and-evaluation.md:55",
+   "transfer_conditions": "Paper claims hold, with two corrections. The paper never calls title or range matching heuristic. The methods-deferred quote sits in the Introduction (Section 1), not Section 4.1. The claim that Paul's memos treat LobbyView as a cautionary chain because argmax always returns an answer was not found in the brain vault and is dropped.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Original location for the quote was wrong. The memo supports the caveat and the validation ban, but not the cautionary-lineage characterization."
+  }
+ ],
+ "related": [
+  {
+   "slug": "kim-nd-mapping-political-communities",
+   "relation": "builds-on",
+   "why": "Item exists; its text mentions LobbyView 3 times. Whether its member edges inherit this paper's Congress heuristics was not checked, so the builds-on link is UNVERIFIED beyond the LobbyView mentions."
+  },
+  {
+   "slug": "bacik-2025-measuring-dynamical-evolution",
+   "relation": "same-data",
+   "why": "Item exists; its text mentions LobbyView 37 times, so it uses LobbyView data. The 1999-2023 range and the shared disambiguation lineage were not checked."
+  },
+  {
+   "slug": "huneeus-2018-effects-firms-lobbying",
+   "relation": "same-data",
+   "why": "Item exists; its text mentions LobbyView 3 times and Compustat 9 times, so it uses firm-level LobbyView data with Compustat. The exact merge against herfindadd.py was not checked."
+  },
+  {
+   "slug": "kim-2020-strategic-sequential-links",
+   "relation": "complements",
+   "why": "Item exists; its text mentions LobbyView 3 times and FEC 22 times, so it pairs lobbying with donations. The LobbyView-to-FEC pairing was not checked in detail."
+  }
+ ],
+ "summary_issues": [
+  "Dropped related links: kim-2025-measuring-interest-group (text mentions LobbyView once and never mentions lob_id, so the lob_id keying claim is unsupported) and harrison-2018-application-data-mining (text has no LobbyView mention, and the claim that Paul treats it as an intro guide next to LobbyView is unsupported).",
+  "summary_md point 1 says every LobbyView-derived member link is a bill-roster join. The paper describes no member link at all; the join is the system's own construction, as the lobby_interactions.py docstring states.",
+  "summary_md point 2 says network.csv covers 2000-2022 and that an unmeasured seam exists between the vintage and the 2021+ rebuild. The 2000-2022 range and the seam were not verified in the code or the paper. The rebuild's unsuffixed-citation rule does differ from the paper's, which is verified.",
+  "summary_md point 3 says the system has ruled NAICS linkage metadata only. The code supports name-first classification with NAICS fallback, but the ruling itself was not checked.",
+  "paul_alignment quotes Paul calling LobbyView the 'fundamental data source' for lobbying classification. That phrase was not found anywhere in the brain vault, and the Paul entry carries no takeaways. The quote and the cautionary-chain characterization are unsupported and should be removed.",
+  "paul_alignment says network linkage collapses after 2021 with 2022 = 2,101 rows. No 2,101 figure was found in the lobbying code, so it is UNVERIFIED. The code does show issue-code coverage collapsing after filing_year 2021 (collect_lobbyview.py line 34 coverage note).",
+  "paul_alignment says Paul's rebuild uses the naive filing-year Congress rule for unsuffixed citations. Verified at build_network_2021_rebuild.py lines 4482-4492 and docstring lines 15-18.",
+  "Coverage: all 5 bearings and all 6 related links were checked against the text and code. ext and rel were read from the item JSON itself, since no separate ext.json or rel.json exists. ext key findings beyond the Congress example and the 52,418 count were not separately verified. The 52,418 count is in the paper (Section 5.3) with no year restriction."
+ ]
+}

@@ -1,0 +1,87 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-lobbying.cosponsor-forecaster",
+      "relation": "suggests-extension",
+      "paper_claim": "DICN = (1 + CN)(1 + Corr), where Corr is the Pearson correlation of second-order neighbourhood vectors. At beta = 80% training it has the highest mean AUC (15 random splits) in 8 of 9 networks (e.g. NSC 0.9747 vs CNDP 0.9195; KHN 0.8839 vs SHOPI 0.8509). It loses on UAL (0.9367 vs NCC 0.9416). On test pairs whose nodes share no common neighbour (Exp. 3, compared only with PA, CCPA and SHOPI), it is best in 5 of 9 networks (e.g. KRT 0.8319, NSC 0.8471).",
+      "paper_location": "Eq. 14 p.7; Table 2 and Experiment 1 text p.9; Table 3 and Experiment 3 text pp.9-10",
+      "system_side": "The forecaster scores (bill, member) candidates with ridge logistic regression on prior-Congress HR/S features. The only dyadic feature drawn from the cosponsor graph is the direct prior member-to-sponsor affinity count and rate. The other dyadic terms are attribute-based: same party, state and chamber, NOMINATE distances, and an optional prior committee co-service term. Prior degree and eigenvector centrality are member-level and are computed on an undirected weighted sponsor-cosponsor projection. There is no common-neighbour, Jaccard, Adamic-Adar or second-order similarity feature between sponsor and candidate.",
+      "code_ref": "fec/lobbying/cosponsor_forecast.py:117-140, fec/lobbying/cosponsor_forecast.py:798-838, fec/lobbying/cosponsor_forecast.py:1148-1160",
+      "transfer_conditions": "The paper uses random edge holdout on nine static benchmark graphs (34-3,772 nodes) that it does not describe as weighted or directed; it lists those as future work. The forecaster is temporal (the Congress t-1 graph predicts Congress t joins) and bill-level. Its prior graph is an undirected weighted projection, and its affinity feature is ordered (member, sponsor). Paper margins over the best baseline run from about 0.007 to 0.055 AUC, with no variance reported. A sponsor-candidate CN or DICN feature on the prior-Congress graph is a cheap candidate to test against the affinity baseline. Exp. 3 concerns pairs with no common neighbour, which is a different subset from pairs with zero direct prior affinity, so it should not be read as evidence about zero-affinity pairs. Any lift is UNVERIFIED until shown on the forecaster's own temporal split (DE-062).",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers match the text (Table 2 lines ~515-584 and Table 3 line ~635-650 of the text file; 'eight of the nine' p.9; 'five of the nine' Exp. 3). Code: CONTINUOUS_FEATURES at 117-140 confirmed. Corrections: (1) prior_committee_coservice is also a dyadic feature, though not graph-derived, and same_party/state/NOMINATE distance are dyadic attributes. (2) The prior network is an undirected weighted projection (network_definition string in compute_prior_statistics), not a directed graph. (3) The analyst equated Exp. 3 'no common neighbour' pairs with zero-affinity pairs; these are different subsets."
+    },
+    {
+      "component_id": "melange-sna.press-hcoi-communities",
+      "relation": "qualifies",
+      "paper_claim": "Indirect similarity (Pearson correlation of neighbourhood vectors) is combined multiplicatively with direct common neighbours as (1 + CN)(1 + Corr), and the paper never evaluates the correlation term alone. In Exp. 4 (pairs with equal common-neighbour counts), DICN is clearly worst on UAL (0.5684 vs SHOPI 0.7921); the paper gives no structural reason. The authors say small training sets make the latent relationship harder to detect.",
+      "paper_location": "Eqs. 12-14 pp.6-7; Table 4 and Experiment 4 text p.10; Experiment 2 text p.9",
+      "system_side": "HCoI builds member-member edges purely from Pearson correlation of recency-weighted 19-category press-attention profiles (threshold HCOI_CORR = 0.6, minimum weight 3.0). It then runs Louvain with seed 7 and reports how many cosponsor-isolated members (D4) land in a community. It does not combine the correlation with any direct cosponsor tie.",
+      "code_ref": "fec/network/press_hcoi.py:22, fec/network/press_hcoi.py:52-64, fec/network/press_hcoi.py:85-101",
+      "transfer_conditions": "The analogy is loose. HCoI correlates topic-attention profiles, not neighbourhood vectors. The transferable point is a design point: in DICN the profile correlation is one factor, anchored on direct shared ties. Placing cosponsor-isolated members (D4) by correlation alone is loosely analogous to Exp. 3 (no common neighbours), but that is still a heuristic placement, not evidence of a relationship (D-025).",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Eqs. 12-14, the UAL Table 4 values (SHOPI 0.7921, DICN 0.5684) and the small-training-set remark are confirmed. 'Correlation-driven scoring underperforms where structure is hub-dominated' was removed: the paper never calls UAL hub-dominated or gives any cause for the UAL loss. The 'homophily replication at press resolution was null' clause was removed from system_side because press_hcoi.py does not show it. It appears only in the component list's Paul-position text, not in the cited code."
+    },
+    {
+      "component_id": "melange-stance.stance-dynamics",
+      "relation": "suggests-extension",
+      "paper_claim": "Many existing edges join nodes with no common neighbour: 53.7% in YST, falling to 3.1% in UAL. Correlation of second-order neighbourhood vectors still separates test from non-existing edges for such pairs, and DICN is best in 5 of 9 networks there.",
+      "paper_location": "Observation 1 p.3; Experiment 3 and Table 3 pp.9-10",
+      "system_side": "The silent-member imputation proposal averages stance-tier scores over direct cosponsor-graph neighbours only. It needs at least SD_MINNB = 5 informative neighbours and |estimate| >= SD_CONF = 0.75. Members below that get no proposal. The masking check counts sign agreement only on confident estimates.",
+      "code_ref": "fec/stance/stance_dynamics.py:90, fec/stance/stance_dynamics.py:132-149",
+      "transfer_conditions": "The paper predicts edges, not node attributes, so at most it supports a second-order similarity weight for choosing which neighbours to average. Any second-order variant is a proposal that must beat a party-only baseline on masked cells. Weak.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers and the neighbour rule (MINNB 5, CONF 0.75, direct neighbours from the cosponsor Edges sheet) are confirmed. The '77% sign agreement' and 'co-movement was null' figures are run outputs that the cited code does not contain and that this pass did not reproduce, so they were removed."
+    },
+    {
+      "component_id": "melange-sna.co-appearance-and-references",
+      "relation": "context",
+      "paper_claim": "The paper defines link prediction on plain unlabelled edges (E is a set of links, U = V x V) and has no treatment of negative, signed or valenced ties. It lists directed and weighted networks as future work.",
+      "paper_location": "Problem definition p.1; Conclusion and future work p.10",
+      "system_side": "The member-reference layer scores directed (a->b) references with an LLM valence pass (positive, negative and neutral counts and a net value per edge). The co-appearance layer writes undirected pair counts, and the dashboard draws pairs with n >= 2. The component list cites Zareie & Sakellariou 2020 for this component.",
+      "code_ref": "fec/members/member_reference_layer.py:4-30, fec/network/co_appearance_layer.py:3-16, C:/Users/pgoff/Documents/research/_work/state/component_literature.json",
+      "transfer_conditions": "There is no transfer to the signed layer, because the paper offers nothing on negative ties or valence. At most it could score unsigned co-appearance pairs for missing-link candidates.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "The component-list citation is confirmed in component_literature.json. The paper's lack of signed-tie content is confirmed. The '+0.15 / -0.15 green/red' thresholds are not in member_reference_layer.py or the network code checked. 'Co-appearance is display only' is not stated in co_appearance_layer.py, which says only that the dashboard draws n >= 2. Both were removed. The paper never states 'unsigned, unweighted, undirected' outright; this is inferred from the problem definition and the future-work line."
+    }
+  ],
+  "related": [
+    {
+      "slug": "malaterre-2024-inferring-social-networks",
+      "relation": "complements",
+      "why": "Malaterre infers ties from Pearson correlation of LDA topic profiles at a 0.6 threshold and then runs Louvain, the recipe press_hcoi.py implements. Zareie also uses Pearson correlation, but on structural neighbourhood vectors, and multiplies it by a direct common-neighbour term. The overlap is technique-level, not the same method."
+    },
+    {
+      "slug": "leskovec-2010-predicting-positive-negative",
+      "relation": "complements",
+      "why": "Signed (positive and negative) link prediction covers the negative-tie question for the reference layer, which Zareie's unsigned similarity does not address."
+    },
+    {
+      "slug": "tang-2015-negative-link-prediction",
+      "relation": "complements",
+      "why": "Predicts negative links from positive links and interaction content (Epinions, Slashdot), which fills the signed-tie gap this method leaves open."
+    },
+    {
+      "slug": "sotoudeh-2024-network-based-measure",
+      "relation": "complements",
+      "why": "Builds undirected, weighted, time-decayed House cosponsorship graphs. A DICN-style dyadic feature would have to be adapted to that weighted setting, which Zareie leaves to future work."
+    },
+    {
+      "slug": "zareie-2023-influence-maximization-social",
+      "relation": "complements",
+      "why": "Same authors. A narrative survey of behaviour-aware influence-maximization methods, the downstream use of tie estimates in cascade models."
+    }
+  ],
+  "summary_issues": [
+    "The summary calls the nine networks 'unweighted, undirected'. The paper never states this directly; it lists directed and weighted networks as future work. Wording should say 'treated as static, with directed and weighted graphs left to future work'.",
+    "'Its only pair-level network signal is the direct prior sponsor-to-member affinity count' is slightly overstated. Affinity is the only cosponsor-graph dyadic feature, but the forecaster also has dyadic attribute features (same party, state and chamber, NOMINATE distances) and an optional prior committee co-service term. Degree and eigenvector come from an undirected weighted projection.",
+    "The margin range 'about 0.01 (INF, HAM)' is rounded. INF's actual margin is 0.007 (0.9553 vs CCPA 0.9483). The NSC figure (0.055) is correct.",
+    "Bearing text elsewhere attributes UAL's loss to hub-dominated structure. The paper gives no such reason, and the summary should not import it.",
+    "System facts cited in the bearings but absent from the cited code have been removed in verification: 77% masking sign agreement, null co-movement, null HCoI homophily, +/-0.15 valence colour thresholds, and co-appearance described as 'display only'. They remain UNVERIFIED (DE-062).",
+    "Relation to Malaterre was labelled 'same-method'. It is a shared technique (Pearson profile correlation) on different inputs, so it was downgraded to 'complements'."
+  ]
+}

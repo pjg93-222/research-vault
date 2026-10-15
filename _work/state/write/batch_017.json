@@ -1,0 +1,1063 @@
+[
+ {
+  "slug": "deluca-2022-validating-applicability-bayesian",
+  "note": false,
+  "meta": {
+   "title": "Validating the Applicability of Bayesian Inference with Surname and Geocoding to Congressional Redistricting",
+   "authors": [
+    "Kevin DeLuca",
+    "John A. Curiel"
+   ],
+   "year": "2022",
+   "venue": "Political Analysis, vol. 31 (2023), pp. 465-471; published online 20 May 2022",
+   "doi": "10.1017/pan.2022.14",
+   "sha12s": [
+    "ea669c91615e"
+   ],
+   "category": "Causal & Methodological",
+   "category_slug": "causal-methodological"
+  },
+  "extraction": {
+   "title": "Validating the Applicability of Bayesian Inference with Surname and Geocoding to Congressional Redistricting",
+   "authors": [
+    "Kevin DeLuca",
+    "John A. Curiel"
+   ],
+   "year": "2022",
+   "venue": "Political Analysis, vol. 31 (2023), pp. 465-471; published online 20 May 2022",
+   "doi": "10.1017/pan.2022.14",
+   "document_type": "Research letter (short journal article)",
+   "coverage": "Full text read: all 326 lines of C:\\Users\\pgoff\\Documents\\research\\_text\\ea669c91615e.txt (23,899 chars) in one pass, including the references (pp. 470-471). Supplementary Material is referenced but not in the text file, so its methods details (precinct counts, individual-level diagnostics) are not covered. Paul's markup: no markup files existed for this PDF, so paul_markup is empty. Metadata correction: the hint's venue and DOI were blank; the venue is Political Analysis and the DOI is 10.1017/pan.2022.14. Year 2022 is the online publication year (the print volume is 2023).",
+   "research_question": "Can Bayesian Improved Surname Geocoding (BISG) estimate the racial composition of precincts and congressional districts accurately enough for redistricting, and which posterior allocation rule is better: summing probabilities (PSM) or plurality/modal assignment (PM)? (Abstract p.465; Intro pp.465-466.)",
+   "theory": "BISG applies Bayes' rule, using a surname-based prior and Census geography conditional probabilities, to give each voter a posterior over racial groups (p.466, lines 93-98). The authors argue that plurality assignment invites extreme, clustered errors and goes against population-level best practice (King 1997), so summing posteriors to a geographic unit should be preferred (p.466, lines 124-125). Their stated expectation is that BISG errors are largest where surnames are uninformative and geographic units are racially heterogeneous (p.466).",
+   "data": "Benchmark data are self-reported race from the voter files of North Carolina and Georgia, the two states with race in their voter files (p.466). The outcome is the Black share of registered voters, with White as the comparison group (p.466, fn.3). BISG inputs are surname dictionary priors and ZIP-code demographics via the R package zipWRUext (Clark et al. 2021) (p.466). Unit of analysis: individual voters aggregated to precincts (precinct-level error) and to simulated congressional districts (district-level error). Geography: precinct maps (NC from Curiel and Steelman 2018; GA from its precinct shapefile for 2010 congressional districts, with small hole and overlap fixes) (p.467, fn.4). Sample sizes: 10,000 simulated congressional plans per state, 20,000 total (p.466). Precinct count and total voter N for the validation are not stated in the main text. Only illustrative N is given: about 7 million voters in the Georgia voter file, processed in about 10 minutes on a 3.1-GHz MacBook Pro with 8 GB RAM (p.466, fn.2). Period: not stated. Framed for the 2020 redistricting cycle, with GA 2010 districts as the base map (p.467, p.468). Replication data are on Harvard Dataverse with voter-file PII redacted (p.469).",
+   "method": "Descriptive validation against ground truth. (1) Run BISG with zipWRUext and form two allocations: PSM (sum posteriors within a precinct) and PM (assign each voter to the modal race). (2) Precinct check: compute absolute percentage difference between BISG-estimated and reported counts for White and Black voters, shown as density plots (Fig. 1, p.466-467). (3) District check: draw 10,000 congressional plans per state with the Redist package v2 using rook contiguity on the precinct base map. For each plan, compute absolute percentage-point difference between BISG-estimated and voter-file share for each race, then take the distribution and a 95% interval (p.467). Results are plotted against district White or Black population share (Fig. 2, p.468).",
+   "identification": "No causal identification strategy. The design is criterion validation: BISG estimates are benchmarked against self-reported voter-file race at precinct and district level. Uncertainty about district error comes from the spread across 10,000 simulated plans, not from sampling inference. The authors compare PSM and PM on the same data, so the comparison between allocation rules is within-sample.",
+   "scope": "Population: registered voters in North Carolina and Georgia. Institution: congressional redistricting and VRA-style majority-minority district construction (NC and GA require Black majority or plurality districts, p.466, fn.3). Era: 2010-cycle base maps, applied to the 2020 cycle and to the post-preclearance context (p.468). Race is limited to Black vs White; Hispanic and other groups are excluded (p.466, fn.3; p.469). The authors say results should be more accurate in states with heavy residential segregation and two dominant groups, so they may not transfer to more diverse states (p.469).",
+   "key_findings": [
+    {
+     "finding": "PSM significantly reduces error rates at the precinct and district level relative to plurality assignment; recommended as the preferred method for BISG in redistricting (abstract).",
+     "location": "Abstract, p.465 (lines 17-20)",
+     "numbers": "not reported as a single number"
+    },
+    {
+     "finding": "Precinct level: for White voters the modal error approaches zero under both methods, but PM has a longer right tail. For Black voters PSM vastly outperforms PM.",
+     "location": "Results, p.466 (lines 149-157); Fig. 1 p.467",
+     "numbers": "qualitative; no point estimates in main text"
+    },
+    {
+     "finding": "District level: in nearly all district estimates, PSM gives significantly lower absolute error than PM across 10,000 simulated plans per state.",
+     "location": "p.467 (lines 184-190); Fig. 2 p.468",
+     "numbers": "10,000 plans per state; 95% CIs plotted"
+    },
+    {
+     "finding": "North Carolina, PSM: White-share error close to zero; Black-share error never above 5 percentage points.",
+     "location": "p.467 (lines 191-196)",
+     "numbers": "White about 0 pp; Black max 5 pp"
+    },
+    {
+     "finding": "Georgia, PSM: White-share error reaches about 10 percentage points; Black-share error is lower and peaks around 5 percentage points.",
+     "location": "p.467 (lines 194-196)",
+     "numbers": "White max about 10 pp; Black peak about 5 pp"
+    },
+    {
+     "finding": "Headline district-level accuracy: PSM district minority-share estimates typically fall within five percentage points of voter-file race, with error varying by state and group.",
+     "location": "Intro, p.465 (lines 86-88)",
+     "numbers": "typically within 5 pp"
+    },
+    {
+     "finding": "Practical guidance: aggregate by summing probabilities; assigning race to single voters makes errors drastically higher; expect roughly 5-10 percentage-point district-level error; accuracy is high for White vs non-White coalition districts but lower for specific minority groups.",
+     "location": "Discussion, p.468 (lines 220-230)",
+     "numbers": "5-10 pp expected district error"
+    },
+    {
+     "finding": "Cost: ZIP-level BISG gave race estimates for about 7 million Georgia voters in about 10 minutes on a laptop, with no geocoding.",
+     "location": "p.466 fn.2 (lines 160-163)",
+     "numbers": "7 million voters; about 10 minutes; 3.1 GHz, 8 GB RAM"
+    },
+    {
+     "finding": "BISG is less accurate for non-Black minorities at ZIP level than with block-level geocoding; errors are greatest where surnames are uninformative and geography is heterogeneous.",
+     "location": "p.466 (lines 96-98, 140-142)",
+     "numbers": "not quantified in text"
+    }
+   ],
+   "measures": [
+    "Precinct error: absolute percentage difference between BISG-estimated and reported voter counts of each race (p.466).",
+    "District error: absolute percentage-point difference between BISG-estimated and voter-file share, per race, per simulated plan; 95% interval across plans (p.467).",
+    "Racial share of registered voters (Black, White) from voter-file self-reports as ground truth (p.466).",
+    "Simulated congressional district plans generated with Redist v2 and rook contiguity (p.467)."
+   ],
+   "limitations": [
+    "Only Black and White race categories are analyzed; Hispanic and other minorities are excluded, and Hispanic-as-ethnicity would need a different package (p.466 fn.3; p.469 fn.5).",
+    "Results come from two states with high residential segregation and two dominant groups; the authors expect larger BISG error in more heterogeneous states (p.469).",
+    "BISG uses ZIP-code geography rather than block-level geocoding; the authors concede this is less accurate for non-Black minorities (p.466).",
+    "The paper does not incorporate differential turnout from voter history; this is flagged as future work (p.469).",
+    "Error magnitude varies across states and racial groups, and district errors of 5-10 percentage points should be expected (p.468).",
+    "Precinct-level and district-level claims rest on two states; the main text gives no precinct count, voter N for validation, or time period; these are in Supplementary Material (not in the text file).",
+    "Voter-file self-reported race is treated as ground truth, so any voter-file measurement error passes into the validation (implicit; p.466).",
+    "Replication data have voter PII redacted (p.469).",
+    "Reference-list inconsistency: the text cites Lu et al. (2019, 465) for statistical packages that default to plurality assignment (p.466), but the reference list gives Lu et al. 2019 as a paper on scientific writing styles, which does not match the claim."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "probabilistic summing of the BISG posteriors significantly reduces error rates at the precinct and district level relative to plurality racial assignment",
+     "location": "Abstract, p.465"
+    },
+    {
+     "quote": "researchers using BISG should aggregate up to some polygonal unit of interest by summing the estimated probabilities",
+     "location": "Discussion, p.468"
+    },
+    {
+     "quote": "researchers should be prepared to deal with around a 5-10 percentage point error rate in estimating race at the district level",
+     "location": "Discussion, p.468"
+    }
+   ],
+   "references_of_note": [
+    "Elliott, M. N., et al. 2008. Health Services Research 43(5p1): 1722-1736. Origin of BISG (p.465, p.466).",
+    "Imai, K., and K. Khanna. 2016. Political Analysis 24(2): 263-272. Surname plus residence beats ecological inference; the text says by a magnitude of 10 (p.465). Central to BISG and EI comparison.",
+    "Clark, J. T., J. A. Curiel, and T. Steelman. 2021. Political Analysis. zipWRUext; ZIP-level BISG accuracy (p.466, p.468).",
+    "Fifield, B., et al. 2020b. redist: Simulation Methods for Legislative Redistricting (CRAN). Simulation engine used here (p.467).",
+    "Fifield, B., K. Imai, J. Kawahara, and C. T. Kenny. 2020a. Statistics and Public Policy 7(1): 52-68. Empirical validation of redistricting simulation (p.469).",
+    "King, G. 1997. A Solution to the Ecological Inference Problem. Princeton. Ecological inference benchmark; source of the best-practice argument against plurality assignment (p.466).",
+    "Goodman, L. 1953. American Sociological Review 18: 663-666. Ecological regression (p.465).",
+    "Enos, R. D., A. R. Kaufman, and M. L. Sands. 2019. APSR 113(4): 1012-1028. Plurality assignment with a 90% posterior filter (p.466).",
+    "Curiel, J. A., and T. S. Steelman. 2018. Election Law Journal 17(2): 328-353. Source of the NC precinct base map (p.467).",
+    "Fraga, B. L. 2015. Journal of Politics 78(1). Redistricting and differential turnout (fn.1, p.465).",
+    "Henderson, J. A., J. S. Sekhon, and R. Titiunik. 2016. Political Analysis 24(3): 404-412. Turnout in majority-minority districts (fn.1, p.465).",
+    "Hicks, W. D., et al. 2018. Political Research Quarterly 71(2): 408-423. Packing and cracking in district design (p.465).",
+    "Alvarez, R. M., J. N. Katz, and S.-y. S. Kim. 2020. Election Law Journal 19(1). BISG applied to campaign-finance donor race (p.466). Relevant to elections and money in politics.",
+    "Grumbach, J., A. Sahn, and S. Staszak. 2020. Political Behavior 44: 319-340. BISG applied to campaign-finance donors and intersectionality (p.466). Relevant to elections and money in politics.",
+    "Conroy, M., and J. Green. 2020. Political Research Quarterly 73(4). BISG-based candidate emergence (p.466).",
+    "Shah, P. R., and N. R. Davis. 2017. Journal of Race, Ethnicity, and Politics 2(1). Comparing race measurement methods; minority candidate performance (p.466)."
+   ]
+  },
+  "summary_md": "DeLuca and Curiel test Bayesian Improved Surname Geocoding (BISG) against the race people reported on their own voter-file records. They use the North Carolina and Georgia voter files, Black versus White only, with ZIP-level priors from zipWRUext. They compare two ways of turning each voter's posterior into precinct and district totals. One sums the probabilities (PSM). The other gives each voter the most probable race and counts those (plurality or modal assignment, PM). Across 10,000 simulated congressional plans per state, PSM had lower absolute error in nearly every district. Under PSM the Black share was off by at most about 5 points in both states. The White share was off by about 0 points in North Carolina and up to about 10 in Georgia. At the precinct level, PM had a longer right tail of errors, especially for Black voters. The authors expect errors of 5 to 10 points at the district level. They expect errors to be largest where surnames carry little information and areas are mixed. Their results come from two highly segregated states with two dominant groups.\n\nNone of the Melange federal components estimate race, and none aggregate individual probabilities to areas, so most of the system has no bearing here. The paper matters for Terrier. Terrier's row framework already follows the PSM rule. It takes expected values over imputed class probabilities and never the most probable class (argmax). Area top-decile shares are built from summed probabilities, not flags. This paper is the first outside evidence in the vault for that rule, which was owner policy with no literature behind it. The exposed spot is the Luna completion step, which fills each blank with the most probable class. That is exactly the PM rule the paper argues against. If the area measures read those filled codes, they are plurality aggregates. The transfer is about how to aggregate, not about race. It holds best when the class probabilities are reasonably calibrated, and it is UNVERIFIED for vendor consumer fields until an area-level holdout check exists.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "terrier-row-scoring.cua-index",
+    "relation": "supports",
+    "paper_claim": "Summing BISG posteriors (PSM) significantly reduces precinct- and district-level error relative to plurality/modal assignment (PM); in NC and GA across 10,000 simulated plans per state, PSM Black-share error never exceeds about 5 pp (NC) and peaks about 5 pp (GA), while PM error is higher in nearly all districts.",
+    "paper_location": "Abstract p.465; Results p.467 (lines 184-196); Discussion p.468 (lines 220-230)",
+    "system_side": "For each estimated categorical field, the CUA index uses the expected value mu = P @ m over the class probabilities, plus the variance P@(m*m) - mu^2. It never uses the argmax class. The PR2 rule says 'never argmax'.",
+    "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/engine.py:264-270",
+    "transfer_conditions": "The transfer is about the aggregation rule, not the target. DeLuca's posteriors are Bayes-rule surname x geography posteriors for race. Terrier's are calibrated RF/KNN class probabilities for vendor consumer fields. The benefit of expectation over argmax carries over when the probabilities are roughly calibrated. It shrinks if the imputation probabilities are miscalibrated, and calibration is the open ECE question. Evidence is from two segregated states with two groups. The CUA index is a person-level score, while the paper validates area-level aggregates, so the support is indirect for individual rows.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/terrier-row-scoring#CUA (Credit Union Alignment) index|CUA (Credit Union Alignment) index]]",
+    "system": "terrier-row-scoring"
+   },
+   {
+    "component_id": "terrier-row-scoring.area-eb-aggregation",
+    "relation": "supports",
+    "paper_claim": "Researchers should aggregate to a polygonal unit by summing estimated probabilities; assigning a class to single voters makes errors 'drastically higher'.",
+    "paper_location": "Discussion p.468 (lines 220-226); Fig. 1 p.467",
+    "system_side": "Area top-decile shares are np.bincount over summed P(top10) contributions per area (block, tract, file), then beta-binomial EB shrinkage with a design effect. These are summed probabilities, not flags.",
+    "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/areas.py:436-440",
+    "transfer_conditions": "This applies directly to how individual probabilities become an area share. It is the same structural operation as PSM to precincts. The paper does not test EB shrinkage, so it says nothing about the shrinkage layer. It expects larger errors in heterogeneous areas, which is where shrinkage toward the parent matters most. It is evidence for the aggregation choice, not for the accuracy of Terrier's area values.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/terrier-row-scoring#Area aggregation with empirical-Bayes shrinkage|Area aggregation with empirical-Bayes shrinkage]]",
+    "system": "terrier-row-scoring"
+   },
+   {
+    "component_id": "terrier-imputation.luna-rf-knn",
+    "relation": "qualifies",
+    "paper_claim": "Plurality/modal assignment produces a longer right tail of aggregate error at precinct level and higher district error in nearly all simulated districts, especially for the minority class (Black under PM vs PSM).",
+    "paper_location": "Results p.466 (lines 149-157); Fig. 1 p.467; Fig. 2 p.468",
+    "system_side": "Luna fills each blank sci_* value with the most probable class, and model selection is scored on argmax accuracy. The v3 area measures count literal codes from the source CSV with raw.eq(code) and divide by the valid-code count. If that CSV holds the Luna-completed file, these area shares are plurality aggregates of the imputed codes. I could not confirm which file v3 ingest reads (UNVERIFIED).",
+    "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/tools/luna_district/models.py:386-391; C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/tools/measures.py:197-220",
+    "transfer_conditions": "This applies only if modal-filled codes reach any area-level share. The row framework itself avoids the issue by reading the probability columns. The paper's harm is largest for rare or minority classes. Luna's majority baselines (about 78%) and rare-class prior repair suggest the same risk: the modal fill under-counts rare codes in area shares. The direction and size for vendor consumer fields are not measured here.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/terrier-imputation#Luna stratified RF-KNN completion|Luna stratified RF-KNN completion]]",
+    "system": "terrier-imputation"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "Terrier has no area-level criterion validation of aggregated imputations. The paper's design is to compare summed estimates against ground truth by area. Its Terrier analogue would mask observed sci_* values within blocks or tracts and compare the summed-probability share with the modal-fill share. That would give an error distribution like the paper's Fig. 1.",
+   "Nothing records whether the cu-geography-v3 area measures (measures.py) read observed-only codes or Luna's modal fills. The methodology text says 'literal valid codes' but does not say whether imputed values are included.",
+   "Terrier does not report area-level error by area heterogeneity. The paper expects the largest errors in mixed areas, which are also where EB shrinkage toward the parent has the most effect.",
+   "There is no check of how rare classes are counted in aggregates. The paper's largest PM penalty falls on the minority class, so rare-code shares are where Terrier aggregates would be most biased."
+  ],
+  "flags": [
+   "No conflict with the brain rules: the paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization, and it makes no claims about graph rank, LDA or reciprocity.",
+   "Scope flag: the validation covers Black vs White only, in NC and GA (segregated, two dominant groups). The authors say it may not transfer to more diverse states. Do not cite its 5-10 pp error band as an expected error for Terrier districts (CO, OR-05, CT-01) or for non-race attributes.",
+   "Sensitive-attribute caution: no Terrier or Melange component infers race. If anyone proposes BISG for Terrier, it would add inferred race to voter rows, which is outside the current design. Any such proposal is for Paul to decide, not something this paper recommends.",
+   "Citation defect in the paper: the reference list gives Lu et al. 2019 (cited for packages that default to plurality assignment) as a paper on scientific writing styles. Do not rely on that citation.",
+   "This bearing analysis is new agent analysis and stays UNVERIFIED until a second path reproduces it (DE-062). In particular, the claim that modal fills reach the v3 area shares is unconfirmed."
+  ],
+  "paul_alignment": "Paul has no annotations on this paper. His recorded position for every Terrier row-scoring and imputation component is 'No literature'. The paper therefore gives the first outside support for an owner rule already built into Terrier: use expected values and summed probabilities, never argmax or flags (PR2; 'Summed probabilities, not flags'). His notes are not stale here. They are silent, and the system's design already agrees with the paper. The one tension is Luna's most-probable-class fill. The paper argues against that rule for aggregates, and nothing in Paul's notes or the brain addresses whether those fills feed area shares.",
+  "related": [
+   {
+    "slug": "best-2022-redistricting-commissions-avoid",
+    "relation": "complements",
+    "why": "Same domain: congressional redistricting evaluated with plan comparisons. DeLuca supplies the racial-composition measurement that plan-level analyses of this kind depend on."
+   },
+   {
+    "slug": "becker-nd-gameability-redistricting-criteria",
+    "relation": "same-method",
+    "why": "Both rely on ensembles of simulated district plans as the reference distribution. DeLuca uses 10,000 redist plans per state to get the distribution of district-level error."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "borodin-nd-threshold-models-competitive",
+  "note": false,
+  "meta": {
+   "title": "Threshold Models for Competitive Influence in Social Networks",
+   "authors": [
+    "Borodin",
+    "Filmus",
+    "Oren"
+   ],
+   "year": "",
+   "venue": "",
+   "doi": "",
+   "sha12s": [
+    "ee2aebd28f83"
+   ],
+   "category": "Unsorted",
+   "category_slug": "unsorted"
+  },
+  "extraction": null,
+  "summary_md": "",
+  "paul_entries": [],
+  "bearings": [],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [],
+  "flags": [],
+  "paul_alignment": "",
+  "related": [],
+  "backlinks": [
+   {
+    "slug": "golovin-2011-adaptive-submodularity-theory",
+    "relation": "complements",
+    "why": "Shows that competitive threshold models can be non-submodular, which puts the flip/LT side in the Theorem 26 territory where greedy has no guarantee. scenario.py cites both papers for this scope split."
+   },
+   {
+    "slug": "ma-2022-adversarial-attack-graph",
+    "relation": "complements",
+    "why": "Competitive LT models can lose submodularity, which the flip model already cites. Ma et al. give the single-campaign condition (concave CDF) under which it is recovered."
+   },
+   {
+    "slug": "golovin-2011-adaptive-submodularity-approach",
+    "relation": "complements",
+    "why": "It shows that competitive threshold models can be non-submodular, which is where Thm 9's hardness, rather than Thm 4, applies (flip model, LT priming)."
+   },
+   {
+    "slug": "cai-2025-competitive-influence-maximization",
+    "relation": "complements",
+    "why": "Borodin's competitive threshold models (cited in flip_model for lacking submodularity) and Cai's timing game both show that competition breaks simple greedy guarantees."
+   },
+   {
+    "slug": "moreno-2021-shadowing-shielding-effective",
+    "relation": "complements",
+    "why": "Competitive threshold models, which the flip model cites for having no submodularity guarantee. This paper instead proves concavity and a unique equilibrium in the continuous voter model."
+   },
+   {
+    "slug": "bharathi-nd-competitive-influence-maximization",
+    "relation": "complements",
+    "why": "This is the competitive linear-threshold counterpart, in which submodularity can fail. The system cites it for the FLIP channel and cites Bharathi for the coalition cascade (scenario.py:9-12)."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "amsalem-2018-effect-politicians-personality",
+  "note": false,
+  "meta": {
+   "title": "The Effect of Politicians' Personality on Their Media Visibility",
+   "authors": [
+    "Eran Amsalem",
+    "Alon Zoizner",
+    "Tamir Sheafer",
+    "Stefaan Walgrave",
+    "Peter John Loewen"
+   ],
+   "year": "2018",
+   "venue": "Communication Research (Original Research Article)",
+   "doi": "10.1177/0093650218758084",
+   "sha12s": [
+    "53aade4c3285"
+   ],
+   "category": "Political Psychology",
+   "category_slug": "political-psychology"
+  },
+  "extraction": {
+   "title": "The Effect of Politicians' Personality on Their Media Visibility",
+   "authors": [
+    "Eran Amsalem",
+    "Alon Zoizner",
+    "Tamir Sheafer",
+    "Stefaan Walgrave",
+    "Peter John Loewen"
+   ],
+   "year": "2018",
+   "venue": "Communication Research (Original Research Article)",
+   "doi": "10.1177/0093650218758084",
+   "document_type": "Empirical journal article: elite survey (Big Five via TIPI) linked to news-mention counts, cross-sectional OLS",
+   "coverage": "Full text read: all 1253 lines of the text file (front matter, abstract, introduction, theory, hypotheses, method, measures, controls, results, Table 1, robustness, discussion, limitations, notes, references, author bios). Online Appendices A-E are cited in the text but are not in the file, so their contents (summary statistics, parsimonious models, randomization inference, country-level and Belgian parliament-level models) are not covered. Paul's markup: none supplied (the task listed no markup files).",
+   "research_question": "Do politicians' Big Five personality traits predict how often they are covered in national news media, beyond institutional power and other individual-level explanations (political power, activity, communication skill, demographics)? The paper focuses on agreeableness and extraversion as interpersonal traits, and also tests openness, neuroticism and conscientiousness (pp. 2-3, lines 74-78 and 146-156).",
+   "theory": "Two mechanisms link traits to visibility (pp. 5-6). (1) A motivational mechanism: traits shape need for interaction and attention, so some politicians seek coverage more (cites Costa & McCrae 1988; Mondak 2010; Cohen et al. 2008; Sheafer 2001). (2) A news-values mechanism: traits shape behaviours that fit journalistic selection criteria (camera performance, sound bites, surprising initiatives) and the ability to cultivate journalist relationships. The authors argue newsworthiness matters more than journalist relationships when the two conflict (p. 7; Helfer & Van Aelst 2016). Agreeableness and extraversion are the most interpersonal traits and voters rely on them (pp. 5-6; Caprara et al. 2002). Hypotheses: H1 agreeableness negative; H2 extraversion positive; H3 openness positive; H4 neuroticism negative; H5 conscientiousness positive (pp. 8-10).",
+   "data": "Unit: incumbent member of parliament (MP). Survey sample N = 339 MPs in three countries, fielded March to August 2015 (p. 10). Belgium: 95 federal MPs (54th federal parliament) and 139 regional MPs, 57% response rate. Canada: 45 federal MPs (41st parliament) and 28 Ontario provincial MPs, 26% response rate (278 contacted). Israel: 32 MPs (20th Knesset), 27% response rate (p. 10 and note 1, p. 20). Media counting windows (note 3, p. 21): Canada federal June 2, 2011 to Aug 2, 2015; Ontario July 2, 2014 to Dec 31, 2015; Belgium June 19, 2014 to Nov 30, 2015; Israel Mar 31 to Dec 31, 2015. Media outlets (p. 10): Belgium 6 newspapers, 2 news websites, 2 TV channels; Canada 3 newspapers, 2 websites, 1 TV channel (CTV); Israel 2 newspapers, 2 websites, 2 TV channels. Regression N: Model 1 n = 306; Model 2 (newspapers) n = 296; Model 3 (websites) n = 286; Model 4 (TV) n = 174 (Table 1, p. 14). The text does not explain why Model 1 n is 306 rather than 339.",
+   "method": "Dependent variable: count of mentions of each MP's full name in each country's major outlets, rescaled per country and medium to 0-1 (min-max, note 4), summed and rescaled again to 0-1 (M = .08, SD = .14, skewness 3.77). Log-transformed for OLS (p. 13); note 11 gives an alternative that adds half the smallest nonzero value. Personality: 10-item TIPI (Gosling et al. 2003), 7-point scale, two items per trait, reverse-coded where needed, averaged per trait (pp. 11-12). Main model: multivariate OLS with standardized betas on all five traits plus controls. Robustness: separate OLS models by medium (Models 2-4); a parsimonious demographic-only model and per-country parsimonious models (Online Appendix E); a randomization inference test (Malesky et al. 2014) for joint significance (pp. 16-17). Controls (pp. 12-13): gender, age, parliamentary experience, coalition membership, minister, party leader, house speaker, conservatism (binary), federal vs regional MP, parliamentary activity (standardized counts of bills, questions, etc.), Facebook posts (standardized), country dummies. Note 10: VIF below 1.63.",
+   "identification": "None beyond covariate adjustment. The design is a single-wave cross-sectional survey linked to media counts, analysed with OLS controlling for institutional power, activity, communication effort, demographics, ideology and country. The paper does not use an instrument, panel, experiment or natural variation. The title's \"effect\" is the authors' framing of conditional associations. Robustness is by medium, by country, by a parsimonious specification, and by randomization inference.",
+   "scope": "Population: incumbent MPs and provincial/regional members in Belgium, Canada (federal and Ontario) and Israel, sampled during the 2011-2015 legislatures. Institutions: three developed parliamentary democracies with different electoral systems (Canada single-member plurality; Belgium multimember with 11 districts; Israel one national proportional district) (pp. 9-10). Era: media coverage counted over roughly 2011-2015, depending on country. The authors say findings may extend to other developed democracies, but they do not claim generalization to presidential or nondemocratic systems (p. 19).",
+   "key_findings": [
+    {
+     "finding": "H1 supported: agreeableness is negatively associated with national media visibility (less agreeable MPs covered more).",
+     "location": "Results p. 13; Table 1 Model 1 p. 14; Discussion p. 17",
+     "numbers": "b = -0.184 (SE 0.075), standardized beta = -.116, p < .05"
+    },
+    {
+     "finding": "H2 supported: extraversion is positively associated with national media visibility.",
+     "location": "Results p. 13; Table 1 Model 1 p. 14",
+     "numbers": "b = 0.129 (SE 0.052), beta = .117, p < .05"
+    },
+    {
+     "finding": "H3 supported: openness to experience is positively associated with visibility.",
+     "location": "Results p. 15; Table 1 Model 1 p. 14",
+     "numbers": "b = 0.153 (SE 0.070), beta = .098, p < .05"
+    },
+    {
+     "finding": "H4 supported: neuroticism (emotional instability) is negatively associated with visibility; more emotionally stable MPs are covered more.",
+     "location": "Results p. 15; Table 1 Model 1 p. 14",
+     "numbers": "b = -0.157 (SE 0.068), beta = -.111, p < .05"
+    },
+    {
+     "finding": "H5 not supported in the pooled model: conscientiousness has a near-zero, insignificant association with visibility.",
+     "location": "Results p. 15; Table 1 Model 1 p. 14",
+     "numbers": "b = -0.008 (SE 0.066), beta = -.006, p = .91"
+    },
+    {
+     "finding": "Institutional power dominates. Being a minister has the largest standardized effect. The personality effects are about one-third as large, and a party leader's effect is only slightly larger than the personality effects.",
+     "location": "Results pp. 16-17 (lines 819-829)",
+     "numbers": "Minister beta = .369 (b = 3.122, p < .001); party leader beta = .195 (b = 1.836, p < .001); house speaker not significant; overall R2 = .483"
+    },
+    {
+     "finding": "Medium-specific robustness. Newspapers: agreeableness b = -0.243 (p < .01), extraversion and neuroticism significant at p < .1, openness and conscientiousness not significant. Websites: extraversion (b = 0.117, p < .05), openness (b = 0.230, p < .01) and neuroticism (b = -0.191, p < .01) significant; agreeableness negative but not significant (-0.102); conscientiousness not significant. TV (n = 174): agreeableness (-0.188) and extraversion (0.128) at p < .1; other traits not significant.",
+     "location": "Robustness Checks pp. 15-16; Table 1 Models 2-4 p. 14",
+     "numbers": "Model 2 R2 = .450 (n = 296); Model 3 R2 = .478 (n = 286); Model 4 R2 = .546 (n = 174)"
+    },
+    {
+     "finding": "Conscientiousness is positive and significant in Canada and Israel but not in Belgium. The authors attribute the Belgian null partly to TIPI measurement error (attenuation). Among Belgian regional MPs (n = 137) conscientiousness significantly decreases visibility; the federal Belgian effect (n = 95) is not significant.",
+     "location": "Robustness pp. 17-18; Discussion pp. 18 (lines 917-935); per-country and Belgian-parliament detail in Online Appendix E",
+     "numbers": "Per-country samples: Israel n = 32, Belgium n = 234 (95 federal + 139 regional), Canada n = 73 (45 federal + 28 Ontario); the country-level coefficients are not reported in the main text"
+    },
+    {
+     "finding": "Authors read the results as personality having a substantial effect beyond institutional explanations, with traits that fit news values (extraversion) giving a long-lasting advantage.",
+     "location": "Discussion pp. 18-19 (lines 936-962)",
+     "numbers": "Four of five traits significant in the pooled model; one trait (conscientiousness) partly predicts (abstract p. 1; discussion p. 18)"
+    }
+   ],
+   "measures": [
+    "Media visibility: outlet-level counts of full-name mentions (newspapers via LexisNexis or outlet sites; TV transcripts or manual broadcast counts; website unique articles), manually checked for the right person; rescaled 0-1 per country and medium; summed and rescaled again (note 2 p. 20; p. 10-11).",
+    "Big Five: 10-item TIPI (Gosling, Rentfrow & Swann 2003), English version and Dutch, French and Hebrew translations; 7-point agree/disagree; two items per trait; averaged per trait. Inter-item r: extraversion .61, openness .25, neuroticism .37, conscientiousness .29, agreeableness .09 (ns). Cronbach alpha: extraversion .75, openness .39, neuroticism .53, conscientiousness .40, agreeableness .15 (note 7 p. 21). Only extraversion had an eigenvalue above 1 (p. 12).",
+    "Parliamentary power: dummies for minister, party leader, house speaker.",
+    "Parliamentary activity: count of bills initiated, questions, laws passed, motions, etc., varying by parliament (note 8 p. 21), standardized 0-1 within each parliament.",
+    "Facebook posts: count from public pages (Facepager) or manual count, standardized 0-1 within country (note 9 p. 21).",
+    "Ideology: binary conservatism (Chapel Hill Expert Survey for Belgium; Conservative Party for Canada; Hazan & Diskin 2015 classification for Israel).",
+    "Demographics: gender, age, years since first election, coalition membership, federal vs regional parliament, country dummies."
+   ],
+   "limitations": [
+    "Social desirability: self-reported personality from office holders may be biased, e.g. understated irritability and overstated dependability (p. 19).",
+    "Brief TIPI measure with low reliability, especially agreeableness (alpha .15; r = .09, ns). The authors say this likely underestimates true effects (pp. 11-12, 19; note 7 p. 21). Facet-level effects cannot be separated (p. 19).",
+    "Only three countries, so generalization to presidential or nondemocratic systems is not established (p. 19-20).",
+    "Small national subsamples (Israel n = 32) limit the country-level conclusions, particularly for conscientiousness (pp. 17-18).",
+    "Only visibility (volume) is measured, not tone of coverage (p. 20).",
+    "The two proposed mechanisms (motivation and newsworthiness) are not measured directly and cannot be disentangled (p. 20).",
+    "Low response rates (Canada 26%, Israel 27%; Belgium 57%) and unexplained drop from N = 339 to n = 306 in Model 1 (pp. 10, 13-14).",
+    "Cross-sectional design with media counts over different windows across countries, so no causal or temporal ordering is established beyond the covariate-adjusted association (note 4, p. 21)."
+   ],
+   "references_of_note": [
+    "Gerber, Huber, Doherty & Dowling (2011a), The Big Five personality traits in the political arena, Annual Review of Political Science: core framework for personality and political behaviour.",
+    "Mondak (2010), Personality and the foundations of political behavior; Mondak & Halperin (2008), framework for personality and political behaviour.",
+    "Gosling, Rentfrow & Swann (2003), TIPI brief Big Five measure used here; Credé et al. (2012) on short-measure attenuation.",
+    "Ramey, Klingler & Hollibaugh (2017), More than a feeling: personality, polarization and the US Congress (cosponsorship and cooperative legislative behaviour; legislative link).",
+    "Dietrich et al. (2012), Big Five among US state legislators (ambition, legislative politics).",
+    "Best (2011), personality factors in parliamentary recruitment.",
+    "Sevenans, Walgrave & Vos (2015), opposition and competition-focused politicians are especially media-attentive.",
+    "Vos (2014), review of which politicians pass news gates; institutional and behavioural predictors of coverage.",
+    "Sheafer (2001), charismatic skill and media legitimacy; actor-centred competition for attention.",
+    "Cohen, Tsfati & Sheafer (2008), presumed media influence and politicians' motivation for coverage.",
+    "Amsalem et al. (2017), media motivation and elite rhetoric in comparative perspective (electoral constraints).",
+    "Helfer & Van Aelst (2016), what makes party messages fit for reporting (journalistic news selection).",
+    "Hopmann, Vliegenthart, De Vreese & Albæk (2010), visibility and tone influence party choice.",
+    "Geiß & Schäfer (2017), visibility- and tonality-based media effects on voting.",
+    "Hopmann, Van Aelst & Legnante (2012), political balance in the news.",
+    "Sellers (2000), legislators use the media to influence colleagues and pass legislation.",
+    "Waismel-Manor & Tsfati (2011) and Tsfati et al. (2010), physical attractiveness and TV coverage of legislators.",
+    "Caprara, Barbaranelli & Zimbardo (2002), voters simplify perceptions of politicians to extraversion and agreeableness.",
+    "Caprara & Zimbardo (2004), congruency model of political preference (personality of politicians)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "less agreeable and more extraverted politicians appearing more frequently in the news",
+     "location": "Abstract, p. 1 (lines 22-23)"
+    },
+    {
+     "quote": "Politicians high on these traits, we argue, enjoy an inherent advantage in the competition for the media's attention.",
+     "location": "Abstract, p. 1 (lines 26-27)"
+    },
+    {
+     "quote": "Fighting for media attention, it appears, requires politicians to display psychological resilience.",
+     "location": "Discussion, p. 18 (lines 914-916)"
+    }
+   ]
+  },
+  "summary_md": "Amsalem, Zoizner, Sheafer, Walgrave and Loewen (2018) linked a 2015 elite survey of 339 legislators in Belgium, Canada (federal and Ontario) and Israel to counts of how often each was named in national newspapers, news websites and TV. Personality was measured with the 10-item TIPI. Window: media counted over country-specific periods between 2011 and 2015. Denominator: n = 306 in the pooled model.\n\nIn a pooled cross-sectional OLS with country dummies, four traits predict visibility, each with a standardized beta of about 0.1:\n- extraversion: positive (beta .117)\n- agreeableness: negative (-.116)\n- neuroticism: negative (-.111)\n- openness: positive (.098)\n\nConscientiousness is null in the pooled model and splits by country. Office matters far more: being a minister has beta .369 and being a party leader .195, with R² = .483. The measures are weak. Agreeableness has alpha .15 and its two items correlate at only r = .09 (not significant). Response rates are 26-57%. The paper does not identify a causal effect, so its \"effect\" is a covariate-adjusted association.\n\nFor Melange the paper matters in three places:\n1. The behavioural visibility disposition is counted from interviews and labelled extraversion-sociability. The paper's extraversion result supports that label, but the paper also shows visibility loads on low agreeableness, emotional stability and, mostly, office.\n2. That disposition raises seed_prob in the receptivity layer. The lexical susceptibility weights point the other way on agreeableness and neuroticism, so the two disagree.\n3. Interview-derived traits, including affective N, exist only for members who get airtime. Everyone else is set to neutral. If airtime selects on temperament, as this paper finds, that missingness is not random.\n\nNone of this has been tested on US Congress data.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.behavioral-dispositions",
+    "relation": "qualifies",
+    "paper_claim": "National news visibility rises with extraversion (b = 0.129, beta .117, p < .05). It also rises with LOW agreeableness (beta -.116), LOW neuroticism (beta -.111) and openness (beta .098). Office matters more: minister beta .369 and party leader beta .195, about three times the trait effects. Pooled OLS, n = 306, R² = .483, UNSTRATIFIED across three countries with country dummies.",
+    "paper_location": "Results pp. 13-17; Table 1 Model 1 p. 14 (lines 819-829 for minister vs trait magnitudes)",
+    "system_side": "visibility_z is the mean of within-chamber z-scores of log interview count and log program breadth, for members with at least 3 interviews. It is documented as the extraversion-sociability role ('takes meetings' proxied by taking interviews). Leadership enters the separate dominance_z.",
+    "code_ref": "fec/members/behavioral_dispositions.py:18-19,111-114",
+    "transfer_conditions": "The extraversion label is supported only in direction and only at a small effect size. The paper measures news mentions written by journalists (earned coverage), not interviews a member chooses to give. Its sample is parliamentary MPs in Belgium, Canada and Israel, 2011-2015, with self-reported TIPI. Office was the dominant predictor there, so a US interview count would need office controls (committee chair, leadership) before it could be read as temperament. Without those controls, visibility_z partly double-counts what dominance_z already holds.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Behavioural dispositions|Behavioural dispositions]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-influence-engine.receptivity-layer",
+    "relation": "qualifies",
+    "paper_claim": "More visible politicians tend to be less agreeable (beta -.116) and more emotionally stable (neuroticism beta -.111). The authors read this as media competition requiring 'psychological resilience' (Discussion p. 18).",
+    "paper_location": "Table 1 Model 1 p. 14; Discussion p. 18 (lines 914-916)",
+    "system_side": "On the behavioural basis, seed_prob = clip(0.60 + .10 coop + .06 breadth + .04 visibility_z, 0.30, 0.90), so more visible members get a higher take-up probability. The lexical basis instead sets susceptibility = .40A + .30N - .20C - .10E. Under that weighting, the trait profile the paper ties to visibility (low A, low N) would mean LOWER susceptibility. The visibility term in seed_prob therefore points against the system's own A/N priors.",
+    "code_ref": "fec/members/receptivity_layer.py:212-216",
+    "transfer_conditions": "This is an internal sign tension, not a measured US result. The paper's trait betas are small, self-reported and from a different country set, and seed_prob is not an access or introduction probability (D-025). The tension would matter if visibility_z correlated negatively with coop_v2 in this roster. That check has not been run, so it stays UNVERIFIED (DE-062).",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Receptivity layer (susceptibility, incentive, prospect domain, seed probability)|Receptivity layer (susceptibility, incentive, prospect domain, seed probability)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "suggests-extension",
+    "paper_claim": "How much media attention a politician gets is associated with temperament: more neurotic (beta -.111) and more agreeable (beta -.116) MPs appear less in national news, net of office, activity and Facebook output.",
+    "paper_location": "Results pp. 13-15; Table 1 p. 14",
+    "system_side": "affective_n is computed from interview text. Members without an affective_n row get neutral 0 in the receptivity N-slot. visibility_z also drops members with fewer than 3 interviews to neutral. The interview corpus is therefore a sample selected by airtime, and absence is imputed at the mean.",
+    "code_ref": "fec/members/receptivity_layer.py:83-89,179",
+    "transfer_conditions": "If US broadcast airtime selects on temperament as the paper finds for MPs, interview-derived N is range-restricted, and the missing-to-neutral rule puts high-N, low-airtime members at the roster mean. That biases N toward neutral for the very members the Byrne mechanism targets. The check is whether interview coverage correlates with non-text proxies (for example reactivity_z or hearing antagonism) after controlling for chamber leadership. The transfer is weak: the paper covers different institutions and earned news coverage, not interviews.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.undervaluation-lens",
+    "relation": "qualifies",
+    "paper_claim": "Holding office is the strongest predictor of news visibility (minister beta .369, party leader .195). Personality adds independent effects about one third as large: low agreeableness, high extraversion, low neuroticism, high openness.",
+    "paper_location": "Results pp. 16-17 (lines 819-829); Table 1 p. 14",
+    "system_side": "Underdog = Intrinsic (0.5 Leg% + 0.5 Centrality%) minus Visibility (0.5 Press% + 0.5 Committee%). Press% is not a count of coverage: it is signed stance x LSD tone, taken only from the member's own .house.gov/.senate.gov statements and normalized by signed extrema.",
+    "code_ref": "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md:137; fec/moneyball_core.py:214-241",
+    "transfer_conditions": "Counting committee position as part of 'visibility' fits the paper's finding that office drives coverage. But the lens's Press% measures signed stance intensity in the member's own releases, not how often the press names the member, so the paper's visibility construct is only half present. The paper also implies that part of any underdog residual reflects temperament (agreeable, less extraverted members get less coverage) rather than effectiveness the press overlooks. Evidence is from MPs in three parliamentary systems, not the US House.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/moneyball-rank-pillars#Undervaluation (underdog) lens|Undervaluation (underdog) lens]]",
+    "system": "moneyball-rank-pillars"
+   },
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "qualifies",
+    "paper_claim": "Extraversion shows up in observable media presence (beta .117 pooled; significant on websites, b = 0.117, p < .05; p < .1 for newspapers and TV). Brief self-report elite measures are unreliable: TIPI alpha is .75 for E but .15 for A, .39 for O and .40 for C.",
+    "paper_location": "Measures pp. 11-12 and note 7 p. 21; Table 1 Models 1-4 p. 14",
+    "system_side": "The receptivity layer's indictment note reads lexical E as 'broadcast talkativeness' (a contaminant) and swaps it out for behavioural dispositions. Lexical traits are shrunk by token count, with LOWCONF_TOKENS 1500.",
+    "code_ref": "fec/members/receptivity_layer.py:60; fec/members/big5_traits.py:20,28",
+    "transfer_conditions": "The paper suggests a link between E and broadcast volume is partly expected for real extraverts, so overlap with talkativeness does not by itself show that text-E is invalid. It cannot settle the question, because the system's E is read from the same interview text whose volume it would be validated against (a circular criterion). The paper's low TIPI reliabilities also mean elite self-report is not a usable gold criterion for A, O or C.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "No earned-media volume measure: the system counts own-domain statements and interviews, and drops third-party coverage, so how often the press actually names a member (the paper's dependent variable) is absent.",
+   "visibility_z is not adjusted for office (chair, ranking member, party leadership), which the paper shows is the largest driver of coverage. As a result visibility_z and dominance_z share leadership variance.",
+   "No audit of whether interview-corpus coverage (the source of affective_n and lexical traits) is selected on temperament or office. The missing-to-neutral rule assumes absence is uninformative.",
+   "No tone-of-coverage measure for third-party media. The paper flags tone as its own unmeasured limitation; the system's LSD tone applies only to own-domain releases.",
+   "No check of the sign of corr(visibility_z, coop_v2) in this roster. That check would show whether the +.04 visibility term in seed_prob works against the cooperation term."
+  ],
+  "flags": [
+   "The title's 'effect' is causal framing for a single-wave, cross-sectional, covariate-adjusted OLS. Quote these results as associations, not effects.",
+   "The pooled coefficients run across three countries and two levels of government with only country dummies. Conscientiousness flips by stratum (positive in Canada and Israel, null in Belgium, negative among Belgian regional MPs, n = 137). Quote any pooled trait coefficient with strata or an UNSTRATIFIED label.",
+   "Media visibility, interview count and seed_prob must not be read as access, closeness or introduction probabilities (D-025).",
+   "The bearings here are new agent analysis, in particular the seed_prob sign tension and the coverage-selection concern. They stay UNVERIFIED until a second path reproduces them on roster data (DE-062).",
+   "The paper argues for neither rejected SNA proposal (dropping regular cosponsorship edges, per-edge volume normalization) and makes no claim about LDA."
+  ],
+  "paul_alignment": "Paul has not annotated this paper. It agrees in part with his stated positions. He treats a member's public statements as the observable persona (press-pillar) and wants psychological traits to adjust response to pressure (receptivity-layer). The paper supports the idea that public presence is shaped by temperament, but finds office drives it about three times as strongly. That argues for controlling for office before reading interview or press volume as a trait. His receptivity notes predate the behavioural basis. In the current code, visibility_z enters seed_prob, and the paper's trait profile for highly visible members (low A, low N) cuts against the lexical susceptibility weights. His notes do not record that sign tension. His Ramey citations (personality and legislative behaviour) are consistent with this paper's framework, and the paper cites Ramey, Klingler and Hollibaugh 2017 on cosponsorship.",
+  "related": [
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Ramey measures elite Big Five from speech text. Amsalem uses self-reported TIPI and links it to media visibility, an observable outcome the text-based traits could be checked against."
+   },
+   {
+    "slug": "mondak-nd-online-appendix-personality",
+    "relation": "complements",
+    "why": "Expert ratings of US senators' traits are an alternative to the low-reliability elite self-report (TIPI agreeableness alpha .15) that Amsalem depends on."
+   },
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Birkenmaier measures politicians' public agency and communion from text. Amsalem shows that low agreeableness and high extraversion are what earns news coverage, which is relevant to the persona channel."
+   },
+   {
+    "slug": "byrne-2014-chokes-under-pressure",
+    "relation": "complements",
+    "why": "Byrne ties neuroticism to worse decisions under pressure. Amsalem's 'psychological resilience' finding (neuroticism negative with visibility) points the same way in elite media competition, and both feed the receptivity N-slot."
+   },
+   {
+    "slug": "lechner-2025-mapping-political-personality",
+    "relation": "complements",
+    "why": "PoliPers is a framework for assessing politicians' ideal and actual personality profiles. It addresses the measurement weaknesses (brief TIPI, social desirability) that Amsalem names as limitations."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "hargittai-2015-bigger-always-better",
+  "note": false,
+  "meta": {
+   "title": "Is Bigger Always Better? Potential Biases of Big Data Derived from Social Network Sites",
+   "authors": [
+    "Eszter Hargittai"
+   ],
+   "year": "2015",
+   "venue": "The Annals of the American Academy of Political and Social Science, vol. 659 (May 2015), pp. 63-76. Special issue: Big Data Methodological Challenges.",
+   "doi": "10.1177/0002716215570866",
+   "sha12s": [
+    "988ba27f401d"
+   ],
+   "category": "Causal & Methodological",
+   "category_slug": "causal-methodological"
+  },
+  "extraction": {
+   "title": "Is Bigger Always Better? Potential Biases of Big Data Derived from Social Network Sites",
+   "authors": [
+    "Eszter Hargittai"
+   ],
+   "year": "2015",
+   "venue": "The Annals of the American Academy of Political and Social Science, vol. 659 (May 2015), pp. 63-76. Special issue: Big Data Methodological Challenges.",
+   "doi": "10.1177/0002716215570866",
+   "document_type": "Journal article; short essay with an empirical illustration (two survey datasets, logistic regressions)",
+   "coverage": "Full extracted text read in one pass (abstract, introduction, sampling-frame discussion, both empirical sections, Tables 1-4, conclusion, notes, references). Paul's markup: none supplied, so paul_markup is empty. The text file is plain extracted text, so no highlights or sticky notes exist to recover.",
+   "research_question": "Are people's choices to use specific social network sites (SNSs) random with respect to demographics, socioeconomic status and Internet experience? If not, can big data studies that sample only users of one SNS generalize their findings to the broader population or to users of other SNSs?",
+   "theory": "No named theory. The argument rests on sampling-frame logic: a site's users are the sampling frame, non-users are excluded by design, and generalization requires that selection into the site be unrelated to the outcomes studied. The paper also invokes selection on the dependent variable as a second source of bias.",
+   "data": "Dataset 1 (national): Pew Internet Project survey collected 2013, N = 1,801 adults (80.2% use the Internet); landline and cellular random-digit-dial sample; average age 52, half male, 70% white. Regression N ranges 1,510-1,528 (full sample) and 1,231-1,249 (Internet users only), per Table 1.\nDataset 2 (panel): Author's panel of young adults at the University of Illinois at Chicago (UIC), a required first-year class. Wave 1 spring 2009, n = 547 (80.5% of enrolled students); wave 2 summer 2012 by postal mail, 52% of wave 1 returned valid responses. Regression N = 517-519 (Table 4). Group is 61% women, 44% white non-Hispanic, 24% Asian American, 23% Hispanic, 8% African American; ages 21-22 in 2012; 50% of parents have a college degree or more. Paper-pencil instruments in both waves.",
+   "method": "Separate logistic regressions for each SNS.\nPew analysis (Table 1): outcome is current use of Facebook, LinkedIn or Twitter (cross-sectional, 2013). Predictors: age, gender, race/ethnicity, education, logged income. Run on full sample and on Internet users only.\nPanel analysis (Table 4): outcome is 2012 adoption of Facebook, Twitter, Google+, LinkedIn or Tumblr (MySpace dropped for low uptake). Predictors are 2009 measures: gender, race/ethnicity, parental education, logged use years, logged user autonomy (access locations), use frequency, and Internet skills. Internet skills index = mean of 27 Internet terms rated on a 5-point scale (Cronbach's alpha = .94). Descriptive usage trends are in Table 3.",
+   "identification": "Temporal ordering only. Panel predictors are measured in 2009 and outcomes in 2012, so the author argues that skills and experiences predate most SNS adoption (Table 3 shows Twitter at 3% in 2009). This is offered as a partial answer to reverse causality from SNS use to skills. No instrument, experiment or quasi-experimental design is used. The Pew analysis is cross-sectional and carries no such ordering.",
+   "scope": "Population: US adults (Pew, 2013) and a single-institution cohort of first-year students (UIC, 2009-2012, ages 21-22 in 2012). The panel is described as homogeneous on age and education, racially and socioeconomically diverse, and not a random sample of the national population. Era: 2009-2013, a period when Facebook was dominant and Twitter, Google+, LinkedIn and Tumblr were growing.",
+   "key_findings": [
+    {
+     "finding": "Adoption of Facebook, LinkedIn and Twitter is not random with respect to demographics and SES in the national Pew data. Older people are less likely to use all three; the least educated and lower-income people are less likely to use all three.",
+     "location": "Pew results, Table 1 and text, pp. 67-68",
+     "numbers": "Age: Facebook -0.05, LinkedIn -0.02, Twitter -0.06 (all p < .001, full sample). Facebook high school or less: -0.61 (p < .001); LinkedIn: -1.37 (p < .001); Twitter: -0.56 (p < .01). LinkedIn income (logged): 0.72 (p < .001). Pattern largely holds among Internet users only. Shares: Facebook 53% of all adults (text says just over half, or two-thirds of Internet users); LinkedIn 19% of all, 24% of Internet users; Twitter 13% of all, 15% of Internet users. R-squared .09-.16."
+    },
+    {
+     "finding": "Gender and race differ by site. Women are more likely on Facebook (+0.46) and less likely on LinkedIn (-0.39). Black respondents are more likely on LinkedIn and Twitter but less likely on Facebook.",
+     "location": "Pew results, Table 1, p. 68",
+     "numbers": "Female Facebook 0.46 (p < .001); female LinkedIn -0.39 (p < .01); Black Twitter 0.63 (p < .01); Black LinkedIn 0.68 (p < .01); Black Facebook -0.31 (p < .10 only)."
+    },
+    {
+     "finding": "In the young-adult panel, 2009 demographics predict 2012 SNS adoption for Twitter and Tumblr: women, African Americans and students with less-educated parents are more likely on Twitter, and women more likely on Tumblr. Asian Americans are less likely on LinkedIn.",
+     "location": "Panel results, Table 4 and text, pp. 72-73",
+     "numbers": "Female Tumblr 0.84 (p < .01); female Twitter 0.51 (p < .05); Black Twitter 0.87 (p < .05); high school or less parental education Twitter -0.85 (p < .01), Tumblr -1.08 (p < .01); Asian LinkedIn -0.29 (p < .10). Panel R-squared .03-.08."
+    },
+    {
+     "finding": "Internet experience and skills predict later adoption. Higher use frequency predicts adoption of four of five sites (all except Twitter). Internet skills from 2009 predict Twitter, LinkedIn and Tumblr adoption in 2012.",
+     "location": "Panel results, Table 4 and text, pp. 72-73",
+     "numbers": "Use frequency: Facebook 0.48, Google+ 0.45, LinkedIn 0.52, Tumblr 0.48 (all p < .05). Internet skills: Twitter 0.33 (p < .05), LinkedIn 0.33 (p < .05), Tumblr 0.62 (p < .001). Skills not significant for Facebook (-0.06) or Google+ (0.22)."
+    },
+    {
+     "finding": "Adoption is low for most platforms even among this group, so no single SNS can serve as a representative sampling frame. Facebook is near-saturated while the others vary sharply.",
+     "location": "Panel usage, Table 3 and text, p. 71",
+     "numbers": "2009 / 2012 adoption: Facebook 87% / 89%; Twitter 3% / 38%; LinkedIn 0% / 18%; Tumblr N/A / 16%; Google+ not launched / 22%; MySpace 36% / 2%. Text: Twitter used by 37.5% in 2012."
+    },
+    {
+     "finding": "Conclusion: SNS-derived log data are biased toward certain populations (demographics, SES, Internet skills, topical interest). Findings may be wrong in direction, not just imprecise. Good sampling must not be confounded with the substantive question, and studies must state their sampling-frame scope in titles, abstracts, methods, results and press communication.",
+     "location": "Conclusion, pp. 73-74",
+     "numbers": "No new numbers; the conclusion reasons from Tables 1-4 and cites Hargittai (2011) on opposite-direction conclusions."
+    }
+   ],
+   "measures": [
+    "SNS use (Pew 2013): current use of Facebook, LinkedIn, Twitter (binary).",
+    "SNS adoption (UIC panel): 'ever used' item collapsed to current use ('sometimes' or 'often') for Facebook, MySpace, Twitter, Google+, LinkedIn, Tumblr.",
+    "Demographics: age, gender, race/ethnicity, education (Pew), parental education (panel), logged household income (Pew).",
+    "Internet experience: use years (logged), user autonomy as number of access locations (logged), use frequency (weekly web hours; lagged in panel).",
+    "Internet skills: mean of 27 Internet terms on a 5-point understanding scale; Cronbach's alpha = .94 (panel, validated instrument from Hargittai 2005, 2009; Hargittai and Hsieh 2012)."
+   ],
+   "limitations": [
+    "Author's stated limits: Pew did not disaggregate SNS use by service before 2012, did not measure Internet skills, and is cross-sectional with no repeated respondents.",
+    "Panel is one required class at one university (UIC), homogeneous on age and education, not a random sample, and only 547 cases; 52% retention to 2012, with African American share falling from 11% to 8%.",
+    "Paper-pencil surveys, chosen to avoid online-survey bias; the mode choice is a deliberate design decision, not a limitation the author fully resolves.",
+    "Analyses include one SNS at a time and do not control for use of other SNSs (note 3: 28% of Internet users in the Pew sample use more than one SNS; note 4: 56.4% in the panel).",
+    "Study covers only SNS use, not other platforms or offline ties; the Burke and Kraut example shows how single-platform data miss activity elsewhere (pp. 65-66).",
+    "Author limits the paper to one bias (single-SNS sampling frames) due to space constraints (p. 65).",
+    "Temporal ordering is a partial answer to reverse causality, not a causal design.",
+    "Pew dataset was not public at time of writing (note 1)."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Schwartz et al. 2013, PLOS ONE: personality and language from more than 15 million Facebook status updates, collected from people who opted into the My Personality app (critiqued for selection on the dependent variable, p. 65).",
+    "Burke and Kraut 2013, CSCW: Facebook communication with strong and weak ties after job loss; the paper argues the single-platform design cannot rule out weak-tie job search elsewhere (pp. 65-66).",
+    "Granovetter 1973, American Journal of Sociology: 'The strength of weak ties', the classic claim that Burke and Kraut's null weak-tie finding challenges (pp. 65-66).",
+    "Hargittai and Litt 2011, New Media & Society: Twitter adoption among a diverse young-adult sample; topical interest as another source of selection (p. 73).",
+    "Hargittai and Hsieh 2010b, Information, Communication & Society: differentiated SNS practices and their predictors (p. 66).",
+    "Ellison, Steinfield and Lampe 2011, New Media & Society: social-capital implications of Facebook-enabled communication (p. 66).",
+    "Tumasjan et al. 2010 (AAAI ICWSM): predicting elections with Twitter sentiment; cited as an example of Twitter-based big data work (p. 63).",
+    "Asur and Huberman 2010 and Backstrom and Kleinberg 2014: SNS-based prediction and network analysis examples (p. 64).",
+    "Bollen, Mao and Zeng 2011, Journal of Computational Science: Twitter mood and the stock market; cited as an example of economic big data (p. 64).",
+    "Lazer et al. 2009, Science: computational social science agenda; cited for privacy and for the call for big data sampling care (pp. 64, 74).",
+    "Brenner and Smith 2013 (Pew): 72% of online adults use SNSs; cited for age differences in Facebook use (p. 65).",
+    "Hargittai 2011: 'Minding the digital gap'; cited for the claim that biased data may reverse conclusions (p. 74).",
+    "Hargittai and Hsieh 2012, Social Science Computer Review: succinct survey measures of web-use skills (the Internet skills instrument, p. 70)."
+   ],
+   "short_quotes": [
+    {
+     "quote": "people do not select into the use of such sites randomly",
+     "location": "Abstract, p. 63"
+    },
+    {
+     "quote": "if people do not select into the use of the particular site randomly, then findings cannot be generalized beyond the site's population",
+     "location": "Sampling frame section, p. 65"
+    },
+    {
+     "quote": "bigger is not always better; size is not all that matters when it comes to datasets",
+     "location": "Conclusion, p. 74"
+    }
+   ]
+  },
+  "summary_md": "Hargittai asks whether people choose social network sites at random. They do not. In the 2013 Pew national survey (N = 1,801; regression N about 1,510-1,528), age, education, income, gender and race each predict use of Facebook, LinkedIn and Twitter. For example, the LinkedIn coefficient on logged income is 0.72 and on high school or less is -1.37. In a panel of UIC students (2009 to 2012, regression N about 517-519), 2009 Internet skills and use frequency predict which sites people adopted by 2012 (skills to Tumblr 0.62, Twitter 0.33). Adoption differs widely by site (2012: Facebook 89%, Twitter 38%, LinkedIn 18%). Her conclusion is that data from one site describe that site's users only. A biased sampling frame can reverse the direction of a finding, not just add noise. Studies should state their frame in the title, abstract and results.\n\n**What this means here.** Legislators are elite accounts, so platform adoption bias mostly disappears on X: 502 of 515 members in social_media.db have an X handle. It comes back on Bluesky. Bluesky posts run 2023-07-01 to 2026-09-19. Of the 533 roster members (259 D, 271 R, 3 I), 135 posted on Bluesky: 117 D, 16 R and 2 I. Of the 411 Bluesky member-to-member mentions, 392 are D to D, and none cross party. These mentions are added at weight 0.4 to the social interaction layer, which enters the live augmented cascade network. The second problem is the media blend: a member silent on social media in a category gets half their press signal, so silence counts as zero stance. Both counts are my own reading of live files. They stay UNVERIFIED until a second path reproduces them (DE-062). The paper's coefficients do not carry over to this system. Only its sampling-frame logic does.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-sna.multilayer-social-press-edges",
+    "relation": "qualifies",
+    "paper_claim": "People do not select into SNS use at random. Selection differs by site and by demographic group (Pew 2013: female on Facebook +0.46, on LinkedIn -0.39; Black on Twitter +0.63, on Facebook -0.31). So ties and behaviour seen on one platform describe that platform's users, not the population. The Burke and Kraut critique adds that single-platform data miss ties formed elsewhere.",
+    "paper_location": "Table 1 and pp. 67-68; sampling-frame section p. 65; Burke and Kraut discussion pp. 65-66; conclusion pp. 73-74",
+    "system_side": "social_interaction_layer.py builds member-to-member edges from X reposts (weight 1.0), X mentions (0.4) and Bluesky mentions (0.4). The per-pair probability divides events by max(25, posts(a)), but posts(a) counts only X rows from Quorum Processed.xlsx. Bluesky events add to the numerator and never to the denominator. The pairs feed build_multilayer_network.py as new edges (w = 6p/(1-p), cap 2.0) or as up to +30% reinforcement on existing cosponsor ties, and the AUG xlsx is what all engine loaders glob. Window: social_interactions.json written 2026-09-19 holds 739 pairs, 275 reposts and 953 mentions. In the current social_media.db, 411 Bluesky mentions are 392 D->D, 8 D->I, 5 I->D, 6 R->R and 0 cross-party. They come from 135 posters (117 D, 16 R, 2 I) out of 533 roster members. UNVERIFIED (DE-062); I have not confirmed that all 411 rows existed when the JSON was built.",
+    "code_ref": "fec/network/social_interaction_layer.py:25,36-56; fec/network/build_multilayer_network.py:146-166",
+    "transfer_conditions": "Hargittai's population is US adults and one student cohort, 2009-2013. Elected officials' accounts are institutional and near-universal on X (502/515 handles), so her adoption effect is weak on that platform. It carries over strongly where adoption is partial and party-selected, as Bluesky is here (2023-2026). Her coefficients do not transfer; her logic does: a layer built from a party-selected platform will carry a party-skewed edge pattern into a graph used for cross-party cascades.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-sna#Social and press-engagement layers|Social and press-engagement layers]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-stance.media-blend",
+    "relation": "qualifies",
+    "paper_claim": "Non-users are excluded from the frame by design. Because selection is related to outcomes, results from users can mislead about everyone, including in direction. The paper's advice is to keep sampling separate from the substantive question.",
+    "paper_location": "Sampling-frame section p. 65; conclusion pp. 73-74",
+    "system_side": "The per-category cell is nv = (1 - 0.5f) x press/p80 + 0.5f x social/p80, with f = min(1, nz/15). If a member has no social signal in a category, sv = 0, and where f = 1 their press-side value is halved. Not posting is therefore scored as zero social stance, not as missing. This feeds 'Press Release - Raw', which the press pillar reads. The nz/15 shrink handles categories where few members post. It does not handle which members post, so the halving falls on members who post less on social media.",
+    "code_ref": "fec/stance/build_media_blend.py:29,463,479",
+    "transfer_conditions": "This applies wherever social-media activity on CU topics differs by member type (party, chamber, seniority, staff resources), which the paper's evidence on non-random selection makes likely but does not show for legislators. It matters less if nearly all ranked members post on every heavily weighted category. Not measured here; UNVERIFIED.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#Media blend (press + social) with recency decay|Media blend (press + social) with recency decay]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-legislative-data.press-collector-cap",
+    "relation": "suggests-extension",
+    "paper_claim": "A sampling frame tied to the outcome (Schwartz et al.'s opt-in app users; single-site frames in general) can bias findings. Studies should state the frame's scope and keep sampling separate from the outcome.",
+    "paper_location": "pp. 65-66 (selection on the dependent variable); conclusion pp. 73-74",
+    "system_side": "The collector fetches every CU-titled page plus up to CAP = 1000 of the most recent generic pages per member. The brain records press coverage by party and chamber: D 92.5% vs R 87%, Senate 83% vs House 96%. It also records P(CU-relevant | CU-term title) = 0.825 vs 0.0089 for generic titles. So the frame favours members who put CU terms in their titles and favours House and Democratic offices.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_text_collector.R:112-140",
+    "transfer_conditions": "The selection here is on coverage, not platform adoption. Hargittai's argument applies only if coverage differences correlate with CU stance or volume. The extension is to report the press pillar stratified by coverage band, party and chamber, and to check that the ordering holds among fully covered members. The 0.0089 base rate in generic pages limits how much the bias can be.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-legislative-data#Signal-prioritized press collection cap|Signal-prioritized press collection cap]]",
+    "system": "melange-legislative-data"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "The social layers carry no per-platform frame statement. social_interactions.json has a provenance string but no per-platform event counts or party mix, so the Bluesky D-skew is invisible downstream.",
+   "Volume normalization in the social layer uses an X-only post count as the denominator for events from X and Bluesky combined. Cross-platform activity is not on a common base. Any change here would need its own ruling; this is not a recommendation to normalize per edge.",
+   "The media blend treats social silence as zero stance rather than missing. No test checks whether non-posters differ systematically (party, chamber) from posters in the categories where the social share is fully on (f = 1).",
+   "Gold sets (400 tweet golds) and stance accuracy figures describe members who post. Their scope does not say that the accuracies cover only the posting population.",
+   "Press, social and Bluesky corpora have no published per-party and per-chamber coverage tables next to the pillar. Coverage figures live only in brain notes."
+  ],
+  "flags": [
+   "UNVERIFIED (DE-062): the Bluesky party mix (135 posters: 117 D / 16 R / 2 I; 411 mentions: 392 D->D, 0 cross-party; window 2023-07-01 to 2026-09-19; denominator 533 roster members) is a single-path read of social_media.db joined to responsiveness_layers.json party. It needs a second path, and a check that these rows existed when social_interactions.json was built on 2026-09-19.",
+   "Not a call for per-edge volume normalization (REJECTED in this project). The code already applies per-author normalization; the issue raised is the mismatched X-only denominator and the unstated frame. Any fix must avoid re-proposing the rejected option.",
+   "Not a call to drop regular cosponsorship edges (REJECTED). Hargittai's argument concerns social-platform layers, not the cosponsor base.",
+   "Edge weights in this layer are heuristic model inputs, never closeness or access probabilities (D-025). A D-heavy Bluesky subgraph must not be described as Democrats being 'closer'.",
+   "The media blend scores social silence as zero, which sits awkwardly with the stance contract's stated rule that missing evidence is never imputed as neutral (category-stance-ladder assumption). Recorded as an observation for Paul to rule on, not a finding."
+  ],
+  "paul_alignment": "Paul has no annotations on this paper. His positions on the affected components are Fink as the framework for the social layer, his critiques on sign, third-party sentiment and temporal weighting, and Baptista's highlighted caution that more layers are not always better. Hargittai supports the Baptista caution from a sampling angle that his notes do not raise: each added platform layer brings its own selected population. For legislators that shows up as party skew on Bluesky, not as the age, income or education skew Hargittai found in the public. His media-blend note asks for temporal weighting and does not cover platform selection or how silence is scored. That note is not stale, but it is incomplete on this point. Nothing here contradicts his takeaways.",
+  "related": [
+   {
+    "slug": "steinertthrelkeld-2018-twitter-data",
+    "relation": "complements",
+    "why": "A Twitter-as-data methods text. It covers representativeness and collection limits for the X corpus that the social layer and media blend rely on."
+   },
+   {
+    "slug": "baptista-2022-universal-multilayer-network",
+    "relation": "complements",
+    "why": "Paul highlighted Baptista's point that more layers are not always better. Hargittai gives a sampling-frame reason: each platform layer brings in a selected population."
+   },
+   {
+    "slug": "azucar-2017-predicting-personality-traits",
+    "relation": "complements",
+    "why": "A meta-analysis of predicting traits from social-media footprints. Its pooled validities come from platform-user samples, so Hargittai's frame caveat applies to it directly."
+   },
+   {
+    "slug": "kumari-nd-five-personality-predictions",
+    "relation": "complements",
+    "why": "Predicts the Big Five from Twitter data, so it rests on the single-platform user frame Hargittai warns about."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "zhang-2022-data-assisted-social",
+    "relation": "contradicts",
+    "why": "Hargittai shows that big data from social network sites carries sampling biases. Zhang treats 882,371 tweets as representative of consumer sentiment and never examines who posts."
+   },
+   {
+    "slug": "zhou-2026-measuring-stance-dynamics",
+    "relation": "complements",
+    "why": "Explains the sampling-bias limits this paper concedes: a liberal-leaning Santiago Twitter sample of news-outlet followers."
+   },
+   {
+    "slug": "esmalian-2022-characterizing-equitable-access",
+    "relation": "complements",
+    "why": "Hargittai documents sampling biases in big data drawn from digital traces. Esmalian rests on StreetLight cell/GPS traces with an undescribed penetration rate and black-box home-zone inference, which is exactly that kind of bias. Read together, this limits how far its findings by income can be trusted."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "ornstein-2024-train-your-stochastic",
+  "note": false,
+  "meta": {
+   "title": "How to train your stochastic parrot: large language models for political texts",
+   "authors": [
+    "Joseph T. Ornstein",
+    "Elise N. Blasingame",
+    "Jake S. Truscott"
+   ],
+   "year": "2025",
+   "venue": "Political Science Research and Methods, vol. 13, pp. 264-281 (Cambridge University Press, open access CC BY 4.0). Received 12 Sep 2023, revised 23 Jul 2024, accepted 3 Aug 2024. Authors at University of Georgia (Ornstein, Blasingame) and University of Florida (Truscott).",
+   "doi": "10.1017/psrm.2024.64",
+   "sha12s": [
+    "67b4400dd0c4"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "How to train your stochastic parrot: large language models for political texts",
+   "authors": [
+    "Joseph T. Ornstein",
+    "Elise N. Blasingame",
+    "Jake S. Truscott"
+   ],
+   "year": "2025",
+   "venue": "Political Science Research and Methods, vol. 13, pp. 264-281 (Cambridge University Press, open access CC BY 4.0). Received 12 Sep 2023, revised 23 Jul 2024, accepted 3 Aug 2024. Authors at University of Georgia (Ornstein, Blasingame) and University of Florida (Truscott).",
+   "doi": "10.1017/psrm.2024.64",
+   "document_type": "Journal article (original article) with pre-registered analyses",
+   "coverage": "Full text read: all 761 lines of the _text file (about 61.6k chars), including references and the cite block. Paul's markup: none. No file in _annots/ (63 JSON files) references hash 67b4400dd0c4 or the title, and no file in annotations/ mentions Ornstein or the title, so paul_markup is empty. Metadata corrections: the hint DOI (from PII S2049847024000645) does not match the DOI printed in the text, which is 10.1017/psrm.2024.64; the journal is Political Science Research and Methods, not a Cambridge book; the year is 2025 by volume (accepted 2024). Topic coverage: lobbying, network analysis, path-finding, allocation, and persuasion/turnout are absent. Legislators appear only through House floor speeches (virtue-praise labels by party). Elections appear only through campaign-ad tone; no vote, turnout, or persuasion outcome is modeled.",
+   "research_question": "Can few-shot prompts to large language models (GPT-3, GPT-4) be adapted, without task-specific training or large labeled sets, to political text-as-data tasks (sentiment classification, ad tone classification, ideology scaling, topic discovery), matching or beating conventional automated methods and approaching expert or crowd coding at far lower cost? The paper also asks what validation and prompt-design practices make such measures trustworthy.",
+   "theory": "Text-as-data measurement (Grimmer and Stewart 2013: \"validation, validation, validation\"). Contextualized word embeddings and transformer self-attention let word meaning depend on context (Vaswani et al. 2017), so context-dependent labels such as sarcasm can be learned from a prompt rather than from a trained classifier. Few-shot in-context learning (Brown et al. 2020). For topics, the expectation that conservatives praise loyalty, patriotism and hard work while liberals praise fairness, compassion and charity follows Moral Foundations Theory (Graham et al. 2009), p.275.",
+   "data": "Four applications. (1) 945 tweets referencing the US Supreme Court within 24 hours of Masterpiece Cakeshop (2018) and of Trump v. Mazars and Trump v. Vance (2020); unit = tweet; author-coded 7-point sentiment from -1 to +1 after two-stage manual coding (1000 labeled, 55 dropped, 945 kept; Fleiss kappa 0.72). Benchmark classifier trained on 1.2 million tweets from Go et al. (2009). (2) 935 political ads from Carlson and Montgomery (2017); unit = ad; expert ratings and crowd pairwise comparisons (9420 tasks at 6 cents, $565.20 total). (3) 18,263 sentences from 18 British party manifestos, 1987-2010; crowd-coded per Benoit et al. (2016), with an expert-score benchmark. (4) 9,704 one-minute US House floor speeches in the 113th Congress (2013-2014) from Wilkerson and Casas (2017); 9,565 analyzed because 139 speeches over 6,000 characters were omitted for API token limits (fn. 8, p.275). Models: GPT-3 (175B parameters) and GPT-4; GPT-3 was removed from the public API in January 2024 (p.278).",
+   "method": "Few-shot prompting. The LLM returns a next-word probability vector over labels, and continuous measures are built from it. Sentiment (tweets): six few-shot examples, two per class (positive, neutral, negative), with a preamble describing the ruling; the continuous measure is the first principal component of the probability vector (pre-registered via AsPredicted 92341, 92422, 92666, 100718, 125217; p.267-268). Ad tone: one-shot prompt (Figure 3), continuous tone from the probability vector. Ideology: one-shot Policy Prompt applied per sentence; sentence score = P(Conservative) minus P(Liberal); averaged to economic and social passage means per manifesto (p.273). GPT-4 ideology deviated from the pre-registered protocol and used the Le Mens and Gallego (2023) whole-document prompt (p.273). Topics: prompt asks GPT-3 for virtue labels; 51,483 labels returned, about 5-6 per speech, grouped by synonyms (p.275-276). Benchmarks: dictionary sentiment, Naive Bayes (bag of words), TweetNLP (RoBERTa fine-tuned on tweets, Camacho-Collados et al. 2022). Appendix A has zero-shot and one-shot variants (not in the text file).",
+   "identification": "None in the causal sense. The design is measurement validation: each LLM measure is correlated with or compared against human gold labels (author codes, expert ratings, crowd codes), and topic labels are validated by an optimal-label task in which a blinded coder picks the best of four labels for 400 speeches (80 percent agreed with GPT-3's label, chance 25 percent; p.276).",
+   "scope": "Population and era: US tweets about SCOTUS decisions (2018-2020); US campaign ads from the Carlson and Montgomery (2017) corpus (dates not stated in text); UK party manifestos 1987-2010; US House one-minute floor speeches 2013-2014. Models: GPT-3 and GPT-4 (2023-2024 API). The paper argues about political science text-as-data generally, and cautions about closed proprietary models and about tasks needing current or factual information (p.278-279).",
+   "key_findings": [
+    {
+     "finding": "Sentiment on 945 SCOTUS tweets: GPT-3 few-shot correctly predicts negative/positive in 88.4 percent of cases; TweetNLP 64.3 percent; best dictionary method 38.3 percent; Naive Bayes trained on 1.2M tweets 57.7 percent.",
+     "location": "Section 3.1, p.268 (lines 280-285)",
+     "numbers": "88.4% vs 64.3% / 38.3% / 57.7%"
+    },
+    {
+     "finding": "GPT-4 performs slightly worse than GPT-3 on the sentiment task; its probabilities are poorly calibrated and overconfident; for over 70 percent of posts GPT-4 gives a single-label probability above 99 percent; it returns Neutral more often than the authors.",
+     "location": "Section 3.1, p.268 (lines 287-292)",
+     "numbers": "over 70% of posts with >99% probability"
+    },
+    {
+     "finding": "Ad tone: LLM coding of 935 ads took under one minute and cost $0.60, against $565.20 for crowd pairwise coding (9420 tasks at 6 cents), about a 1000-fold cost reduction. The LLM tone measure is said to correlate with expert ratings as strongly as the crowd measure; the text gives no coefficient for this.",
+     "location": "Section 3.2, p.269 (crowd cost lines 326-327) and p.271 (lines 355-358)",
+     "numbers": "$0.60 vs $565.20; 935 ads; under 1 minute"
+    },
+    {
+     "finding": "Ideology scaling of 18 UK manifestos: LLM scores correlate with expert ratings at rho = 0.92 on the economic dimension and rho = 0.8 on the social dimension; better at between-party than within-party variance (true for crowd codes too).",
+     "location": "Section 3.3, p.273 (lines 441-445), Figure 6",
+     "numbers": "rho 0.92 economic; rho 0.8 social"
+    },
+    {
+     "finding": "Cost of ideology scoring: about $2.50 for 18,263 sentences with GPT-3, against about $3,226.70 for the original crowd coding (footnote assumes 1.5 cents per sentence and 215,107 crowd evaluations).",
+     "location": "Section 3.3, p.273 (lines 446-451, fn. 7)",
+     "numbers": "$2.50 vs ~$3226.70; 18,263 sentences; 215,107 evaluations"
+    },
+    {
+     "finding": "Topic labeling of 9,565 House speeches returned 51,483 labels (about 5-6 per speech). Democrats more often praised advocacy (+3.5 pp), charity (+1.5), compassion (+3.9), education (+3.3), fairness (+3). Republicans more often praised bravery (+2), patriotism (+4.2), loyalty (+2.1), sacrifice (+2.8), success (+7.7).",
+     "location": "Section 3.4, p.275 (line 514) and p.276 (lines 525-533), Figure 8",
+     "numbers": "51,483 labels; differences in percentage points as listed"
+    },
+    {
+     "finding": "Topic label validation: for 400 random speeches a blinded coder picked GPT-3's label over three random intruders in 80 percent of cases, against 25 percent chance.",
+     "location": "Section 3.4, p.276 (lines 534-542)",
+     "numbers": "80% vs 25% chance; n = 400"
+    },
+    {
+     "finding": "The model is not a dictionary method: 5,332 speeches contain the word honor, but GPT-3 labels only 145 as praising honor, nearly all about soldiers or veterans.",
+     "location": "Section 3.4, p.276 (lines 543-549)",
+     "numbers": "5,332 contain honor; 145 labeled as praising honor"
+    },
+    {
+     "finding": "Cost trend: computing cost of the paper's applications fell 97 percent between fall 2021 and publication.",
+     "location": "Section 5 Conclusion, p.279 (lines 648-650)",
+     "numbers": "97% decline"
+    },
+    {
+     "finding": "Reproducibility: GPT-3 models used were removed from the public API in January 2024, so exact results cannot be reproduced unless the weights are released.",
+     "location": "Section 4 Discussion, p.278 (lines 598-605)",
+     "numbers": "January 2024"
+    },
+    {
+     "finding": "Bias: GPT-3 answered 58 percent of 817 misconception questions truthfully (Lin et al. 2021), cited as a reason for caution on factual-accuracy tasks.",
+     "location": "Section 4 Discussion, p.278 (lines 614-615)",
+     "numbers": "58% of 817"
+    }
+   ],
+   "limitations": [
+    "Results depend on researcher choices, especially prompt design; the authors recommend a three-step validation: hand-label a small set for prompt design, validate on a second hand-labeled set, then apply to the rest (p.277, lines 567-575).",
+    "GPT-4 is worse-calibrated than GPT-3 for next-word classification because of RLHF (p.268, lines 293-296; p.278, lines 587-597).",
+    "Reproducibility depends on proprietary, closed models that vendors may stop serving; the GPT-3 models used were retired from the API (p.278).",
+    "LLMs inherit human biases and falsehoods, including stereotyped embeddings, and can generate hate speech; RLHF mitigates this at some cost to accuracy (p.278, lines 611-624).",
+    "Authors advise against tasks that need up-to-date factual information (p.278-279).",
+    "Ad tone: model diverges from experts on attacks against unnamed targets, and on ads needing outside context; the authors argue one expert label is arguably miscoded (p.271, lines 359-368).",
+    "Sentiment: tweets whose meaning depends on outside political context can be misread unless the prompt supplies that context.",
+    "Pre-registration deviation: GPT-4 ideology used a different, non-pre-registered protocol (p.273, lines 433-440).",
+    "Speeches over 6,000 characters (139) were dropped because of API token limits (p.275, fn. 8).",
+    "Topic labels are checked only by the 400-speech intruder task; the LDA comparison is conceptual and cited, not estimated in this paper.",
+    "GPT-4 showed little or no improvement over GPT-3 on the ideology and sentiment tasks, so the best-model choice is not settled across tasks (p.273, lines 438-440)."
+   ],
+   "measures": [
+    "Sentiment: first principal component of the Positive/Negative/Neutral next-word probability vector per tweet, compared with a 7-point author-coded score from -1 to +1 (Fleiss kappa 0.72).",
+    "Tone: continuous score from the one-shot ad-tone prompt probability vector, compared with expert ratings of the 935 ads.",
+    "Ideology: per-sentence score P(Conservative) minus P(Liberal), averaged to economic and social passage means per manifesto; compared with expert scores (rho 0.92 economic, 0.8 social).",
+    "Topic: count and share of speeches mentioning each virtue label (and synonyms), by party; difference in percentage points.",
+    "Classification accuracy: share of tweets whose predicted negative/positive sign matches the author label (88.4% for GPT-3).",
+    "Calibration: share of posts with a single-label probability above 99 percent (GPT-4)."
+   ],
+   "references_of_note": [
+    "Carlson D and Montgomery JM (2017) pairwise comparison framework for crowd coding of political texts, APSR 111, 835-843 (ad tone benchmark).",
+    "Benoit K, Conway D, Lauderdale BE, Laver M and Mikhaylov S (2016) Crowd-sourced text analysis, APSR 110, 278-295 (manifesto crowd coding replicated here).",
+    "Wilkerson J and Casas A (2017) Large-scale computerized text analysis in political science, Annual Review of Political Science 20, 529-544 (source of the House floor-speech corpus).",
+    "Grimmer J and Stewart BM (2013) Text as data, Political Analysis 21, 267-297 (validation principle).",
+    "Grimmer J, Roberts ME and Stewart BM (2022) Text as Data: A New Framework for Machine Learning and the Social Sciences (book).",
+    "Ying L, Montgomery JM and Stewart BM (2021) Topics, concepts, and measurement: crowdsourced validation of topics, Political Analysis 30 (optimal label task).",
+    "Eshima S, Imai K and Sasaki T (2024) Keyword-assisted topic models, AJPS 68, 730-750 (concept-driven topic design).",
+    "Le Mens G and Gallego A (2023) Scaling Political Texts with ChatGPT (arXiv:2311.16639), used for GPT-4 ideology.",
+    "Blei DM, Ng AY and Jordan MI (2003) Latent Dirichlet allocation, JMLR 3, 993-1022 (LDA comparison).",
+    "Brown TB et al. (2020) Language models are few-shot learners (few-shot prompting).",
+    "Go A, Bhayani R and Huang L (2009) Twitter sentiment classification using distant supervision (Naive Bayes benchmark data).",
+    "Camacho-Collados J et al. (2022) TweetNLP (RoBERTa Twitter sentiment benchmark).",
+    "Zhao TZ et al. (2021) Calibrate Before Use (example ordering and class balance in few-shot prompts).",
+    "Veselovsky V, Ribeiro MH and West R (2023) crowd workers using LLMs for text production (threat to crowd-coding validity).",
+    "Graham J, Haidt J and Nosek BA (2009) Liberals and Conservatives rely on different sets of moral foundations (theory for virtue expectations).",
+    "Lin S, Hilton J and Evans O (2021) TruthfulQA (GPT-3 truthful on 58 percent of questions).",
+    "Peterson A and Spirling A (2018) Classification accuracy as a substantive quantity of interest (polarization measure in Westminster systems)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "We propose a set of best practices for adapting these models to social science measurement tasks",
+     "location": "Abstract, p.264"
+    },
+    {
+     "quote": "political scientists should strongly consider using few-shot prompts to LLMs for any text classification task",
+     "location": "Section 4 Discussion, p.277 (lines 559-561)"
+    },
+    {
+     "quote": "the GPT-3 models that we used to produce the paper's results were removed from the public-facing API in January 2024",
+     "location": "Section 4 Discussion, p.278 (lines 602-603)"
+    }
+   ]
+  },
+  "summary_md": "Ornstein, Blasingame and Truscott (PSRM 2025, DOI 10.1017/psrm.2024.64) test few-shot prompts to GPT-3 and GPT-4 on four political text tasks. The tasks are sentiment in 945 SCOTUS tweets, tone in 935 campaign ads, ideology in 18,263 sentences from UK manifestos, and virtue-topic labels for 9,565 House one-minute speeches. On the tweets, GPT-3 got 88.4% of negative/positive signs right, against 64.3% for TweetNLP, 57.7% for Naive Bayes and 38.3% for the best dictionary. On ideology, LLM scores correlate with expert scores at rho 0.92 (economic) and 0.80 (social) across the 18 manifestos. LLM topic labels beat three random intruders in 80% of 400 blinded checks, where chance is 25%. Costs dropped about 1000-fold compared with crowd coding.\n\nThree method points matter more than the headline numbers:\n- Continuous measures are built from the label probability vector, not the argmax label.\n- GPT-4, tuned with human feedback (RLHF), is overconfident. For over 70% of posts it put more than 99% on one label, and it chose Neutral more often than the human coders.\n- Validation runs in three steps: tune the prompt on one hand-labelled set, check it on a second, then apply.\n\nThe authors also warn that the GPT-3 models they used were retired in January 2024, so the results cannot be reproduced.\n\nFor Paul's system, the paper does not bear on networks, money or allocation. It bears on the stance and text layer. Melange already supplies outside context in the prompt for its Claude stance rater, and it caches LLM outputs by model. The gaps are elsewhere:\n- run_stage5.R throws away DEBATE's per-label probabilities and keeps only a sign, which is then multiplied by dictionary intensity.\n- The Claude rater reports a confidence it states itself, not a calibrated probability.\n- Regex topic routing has never been checked against human labels.\n- The tweet gold queue puts the model's labels next to the human gold columns.\n\nThe paper measures sentiment toward court rulings, not stance toward a target, so its accuracy figures should not be read as an expected accuracy for CU stance.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-stance.press-value-aggregate",
+    "relation": "suggests-extension",
+    "paper_claim": "Continuous measures built from the LLM's label probability vector track expert codes. The per-sentence score P(Conservative) minus P(Liberal), averaged per manifesto, gives rho 0.92 (economic) and 0.80 (social) across 18 UK manifestos, 1987-2010. Tweet sentiment uses the first principal component of the positive/neutral/negative probabilities.",
+    "paper_location": "Section 3.3, p.273 (Figure 6); Section 3.1, p.267-268",
+    "system_side": "Stage 5 collapses DEBATE output to an argmax sign. press_value = stance_sign x LSD intensity (run_stage5.R:9). final_sign takes either the bill sign or stance_sign (run_stage5.R:140). p_support, p_oppose and p_neutral are carried as columns (run_stage5.R:98,166) but never enter the aggregate.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:9,98,140,166; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:65,77-82",
+    "transfer_conditions": "The comparison is approximate. The paper's evidence comes from GPT-3 next-token probabilities on a few-shot prompt, validated between parties on 18 documents. DEBATE runs with multi_label=True (stage5_debate.py:65), so its three entailment scores are independent and do not sum to 1. A p_support minus p_oppose contrast can still be defined, but it is a different object. It would have to beat sign x LSD on the 760-row press gold in a pre-registered single look. Until a second path reproduces it, the idea stays UNVERIFIED (DE-062).",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#press_value aggregate and human-label overlay|press_value aggregate and human-label overlay]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "supports",
+    "paper_claim": "Tweets whose meaning depends on outside political context are misread unless the prompt supplies that context. The sentiment prompt included a preamble describing each ruling, and the model reached 88.4% correct sign on 945 tweets.",
+    "paper_location": "Section 3.1, p.267-268; limitations on outside context",
+    "system_side": "The Claude rater's system prompt carries the credit-union policy map and tells the model to judge by underlying interest. One example: a champion of the Credit Card Competition Act counts as oppose even when the text never says 'credit union'. It serves as the pre-labeller and as the third member of the ensemble.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:19-25",
+    "transfer_conditions": "The paper's task is sentiment toward a court ruling, not stance toward an interest. The brain treats sentiment and stance as different things, so the paper supports the context-preamble design but gives no accuracy figure for CU stance. The paper also used few-shot examples, while claude_stance.py is zero-shot with a policy map.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "qualifies",
+    "paper_claim": "GPT-4, tuned with RLHF, is poorly calibrated. For over 70% of posts it gave a single label more than 99% probability, and it returned Neutral more often than the authors did. GPT-4 was slightly worse than GPT-3 on sentiment, and newer models did not reliably improve on any task.",
+    "paper_location": "Section 3.1, p.268; Section 4, p.278",
+    "system_side": "The Claude rater asks the model for a stated confidence from 0 to 1 inside its JSON reply (claude_stance.py:25). It defaults the stance to neutral, with confidence 0.0, when a call fails or returns an unrecognised label (claude_stance.py:80,89-91). It uses an RLHF chat model (default claude-sonnet-4-6, line 32).",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:25,32,80,89-91",
+    "transfer_conditions": "These are GPT-3 and GPT-4 results, not Claude results. The Anthropic API returns no token log-probabilities, so the paper's calibrated probability-vector method cannot be applied to this rater. claude_conf should therefore not be treated as a probability. Neutral rows created by errors inflate the neutral class and should be counted apart from model-chosen neutral rows. This bears on the open question of how much of the reported 87.2% DEBATE-vs-Claude agreement reflects human agreement.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.lsd-tone",
+    "relation": "qualifies",
+    "paper_claim": "Dictionary methods lose badly when meaning depends on context. The best dictionary got 38.3% of tweet signs right, against 88.4% for GPT-3. 5,332 speeches contain the word 'honor', but GPT-3 labels only 145 as praising honor.",
+    "paper_location": "Section 3.1, p.268; Section 3.4, p.276",
+    "system_side": "LSD2015 is used only for intensity (|net|/words), with negation phrases stripped first. Direction comes from the NLI and Claude stance readers, which keeps stance and tone separate.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:11-12; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:9",
+    "transfer_conditions": "The paper measured dictionary error on direction, which the system already takes from a contextual model, so that design choice is consistent with the paper. The paper did not test dictionary intensity. Intensity inherits the same blindness to context: ceremonial or quoted language reads as 'heated'. The component's open question, whether LSD intensity correlates with human-coded intensity, is still untested.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#Lexicoder LSD2015 tone intensity|Lexicoder LSD2015 tone intensity]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-legislative-data.category-taxonomy",
+    "relation": "suggests-extension",
+    "paper_claim": "LLM topic labels can be validated cheaply with an optimal-label task. A blinded coder picked GPT-3's label over three random intruders in 80% of 400 speeches, against 25% chance. Keyword presence badly overcounts a topic: 5,332 speeches contain 'honor', but only 145 praise it.",
+    "paper_location": "Section 3.4, p.276 (lines 534-549)",
+    "system_side": "Release and post categories are assigned by regex keyword patterns (CATKW = MR.RAW_PATTERNS). These categories drive both the media blend and the press pillar's category weights. The component's open question asks for the precision of regex tagging against human coding.",
+    "code_ref": "fec/stance/build_media_blend.py:50",
+    "transfer_conditions": "The paper's labels are open-ended virtue labels for US House one-minute speeches from 2013-2014. Melange uses fixed CU policy categories on press releases and posts. The intruder-task protocol transfers directly as a measurement check on existing regex tags; adopting LLM-assigned categories is a separate decision. The R scraper's CATEGORIES regex was not opened for this review.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-legislative-data#Release category taxonomy and billstatus synthetic rows|Release category taxonomy and billstatus synthetic rows]]",
+    "system": "melange-legislative-data"
+   },
+   {
+    "component_id": "melange-validation.gold-set-and-rank-gate",
+    "relation": "qualifies",
+    "paper_claim": "The recommended validation has three steps: hand-label a small set to design the prompt, validate on a second hand-labelled set, then apply. Hand labels are the independent criterion. The paper also notes that crowd workers increasingly use LLMs themselves (Veselovsky et al. 2023), which threatens how independent crowd codes are.",
+    "paper_location": "Section 4, p.277 (lines 567-575); references (Veselovsky 2023)",
+    "system_side": "The tweet gold queue writes model_stance and model_margin, plus an api_* pre-label block, into the same rows as the human gold_* columns. Low-margin and anti-bank hard cases are deliberately oversampled. The gold-set component assumes that gold labels are independent of the pipeline.",
+    "code_ref": "fec/stance/build_tweet_gold_queue.py:18,25-27,92-96",
+    "transfer_conditions": "The paper does not test anchoring on pre-labels, so this is a design implication, not a measured effect. If the labeller saw model_stance or api_* values, accuracy against these gold labels partly measures agreement with the model. Because hard slices are oversampled, Melange accuracies are not comparable with the paper's random-sample 88.4%.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-validation#Gold-set validation and zero-rank-delta gate|Gold-set validation and zero-rank-delta gate]]",
+    "system": "melange-validation"
+   },
+   {
+    "component_id": "melange-sna.co-appearance-and-references",
+    "relation": "supports",
+    "paper_claim": "Results from closed, vendor-served models can become impossible to reproduce. The GPT-3 models behind the paper's results were removed from the public API in January 2024.",
+    "paper_location": "Section 4 Discussion, p.278 (lines 598-605)",
+    "system_side": "The signed member-reference valence pass records which model scored each cached row (_cache_models) and stores resp.model and response_id with every classification. The agency/communion persona reader also keeps separate caches per model so that outputs from different instruments never mix (agency_communion_llm.py:24-28).",
+    "code_ref": "fec/members/member_reference_layer.py:49,236,258-265,306; fec/members/agency_communion_llm.py:24-28",
+    "transfer_conditions": "Caching keeps the outputs auditable after a model is retired, but scores cannot be regenerated, and a re-score on a successor model is a new instrument. Both layers are display-only or blend at low weight, so the reproducibility risk is bounded. The paper's warning carries over directly because both pipelines depend on Anthropic-served models.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-sna#Co-appearance and signed member-reference layers (display only)|Co-appearance and signed member-reference layers (display only)]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-psychometrics.persona-agency-communion",
+    "relation": "qualifies",
+    "paper_claim": "Few-shot LLM classification can match or beat crowd and expert coding, but only when it is checked against hand labels the prompt was not tuned on. Results depend heavily on prompt design.",
+    "paper_location": "Abstract; Section 4, p.277",
+    "system_side": "The persona channel classifies sentence-level cues with a few-shot codebook (strong cue 1.0, weak 0.5) and blends them at PERSONA_W 0.30. Its recorded validation is a functional gate (18/18) and a party signature, with no held-out human-gold accuracy for the cue labels.",
+    "code_ref": "fec/members/agency_communion_llm.py:5-7,83-90,238-239",
+    "transfer_conditions": "The paper validated measures at the document level against expert and crowd codes. Here cues are classified per sentence and then aggregated per member. The paper's protocol would need a hand-coded cue sample that was not used to write the codebook. PERSONA_W 0.30 is kept by owner ruling, and nothing here argues for changing it.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Agency-communion persona channel|Agency-communion persona channel]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "Probability-based continuous stance is unused. DEBATE's p_support and p_oppose are written but not aggregated (run_stage5.R:98,140), and press_value takes direction from an argmax sign alone.",
+   "The Claude stance rater has no calibrated probabilities: its confidence is stated by the model in its JSON reply, and API errors silently become neutral at confidence 0 (claude_stance.py:80,89-91).",
+   "The regex category router (CATKW, build_media_blend.py:50) has no human-label validation. The paper's 400-item intruder task is a ready, cheap protocol for this.",
+   "Gold queues put model_stance and api_* pre-labels next to the gold_* columns (build_tweet_gold_queue.py:92-96). Nothing records whether gold labelling was blind to the model, so the assumption that gold is independent of the pipeline is untested.",
+   "No plan exists for retiring a model. The caches keep outputs, but no documented rule says how a successor model's scores are bridged or re-validated before they replace cached ones."
+  ],
+  "flags": [
+   "The paper measures SENTIMENT toward SCOTUS rulings, not target-specific STANCE. The brain separates sentiment from stance, so do not quote the 88.4% figure as an expected accuracy for CU stance.",
+   "The paper's numbers come from GPT-3 and GPT-4 (2023-2024 API), and GPT-3 was retired in January 2024. Its figures cannot be reproduced and say nothing directly about Claude or DEBATE.",
+   "The cost figures ($0.60 vs $565.20; $2.50 vs about $3,226.70) are OpenAI prices from that period. They describe the window and denominator stated in the paper (935 ads; 18,263 sentences), not Melange's current costs.",
+   "Any re-scoring proposed here (a probability-contrast stance, LLM categories) is UNVERIFIED until a second path reproduces it (DE-062). Any replacement of a live reader needs a pre-registered single look against held-out gold.",
+   "Possible conflict with the gold-set assumption that gold labels are independent of the pipeline: the tweet gold queue shows model outputs next to the gold columns.",
+   "Nothing in the paper touches the rejected SNA proposals, LDA edges, reciprocity, graph-rank or influence wording."
+  ],
+  "paul_alignment": "Paul has no annotations on this paper. His position on the stance components endorses LLM and transformer extraction (Kim J. 2025, Birkenmaier and Lechner 2025) and calls SVM baselines outdated. The paper broadly agrees: GPT-3 beat a fine-tuned RoBERTa (TweetNLP) and Naive Bayes on tweet sentiment. It adds two cautions his notes lack. First, newer RLHF models (GPT-4) were overconfident and no better. Second, every LLM measure needs separate hand-labelled validation. Paul's preference is partly stale against the system's own record: on the member-grouped held-out test, LinearSVC on TF-IDF scored 83.9%, against 0.757 reported for the transformer. The paper's 88.4% is a sentiment task, not CU stance. His noted weakness, that ambiguous statements are hard to untangle, matches the paper's finding that context-dependent items fail unless the prompt supplies context. The system's Claude rater already supplies that context.",
+  "related": [
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Both papers validate few-shot LLM coding of political text against human gold. Birkenmaier supplies the codebook and Krippendorff-alpha framework used by the persona channel; Ornstein supplies the three-step prompt-validation protocol and the calibration warning."
+   },
+   {
+    "slug": "kim-2025-measuring-interest-group",
+    "relation": "same-method",
+    "why": "Kim uses GPT-4 labels for interest-group positions on lobbying reports (96.9% vs human); Ornstein shows the same few-shot approach on four other text tasks and documents GPT-4's overconfidence."
+   },
+   {
+    "slug": "b-2025-comparing-fine-tuned",
+    "relation": "complements",
+    "why": "Khan compares fine-tuned RoBERTa with classical models for political tweet stance; Ornstein uses a RoBERTa tweet model (TweetNLP) as the baseline that few-shot GPT-3 beats on sentiment."
+   },
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "contradicts",
+    "why": "Rice and Zorn argue that corpus-specific dictionaries fix the failures of general dictionaries on specialised vocabulary. Ornstein shows a dictionary at 38.3% against GPT-3 at 88.4% and argues that context, not vocabulary, is the binding problem."
+   },
+   {
+    "slug": "haselmayer-2017-sentiment-analysis-political",
+    "relation": "complements",
+    "why": "Haselmayer combines a dictionary with crowd coding; Ornstein benchmarks LLMs against exactly that crowd-coding route and reports about a 1000-fold cost reduction."
+   },
+   {
+    "slug": "dai-2025-large-language-model",
+    "relation": "same-method",
+    "why": "Both use LLMs for political stance and sentiment classification; Dai adds logic-tensor constraints where Ornstein relies on few-shot prompting with probability-vector outputs."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "h-2023-artificial-intelligence-sentiment",
+    "relation": "complements",
+    "why": "Gives the political-text LLM evidence that the review does not cover, and is relevant to Paul's LLM-extraction stance."
+   }
+  ],
+  "evidence_status": "unverified"
+ }
+]

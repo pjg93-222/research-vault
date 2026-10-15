@@ -1,0 +1,60 @@
+{
+ "slug": "dai-2017-learning-combinatorial-optimization-graphs",
+ "title": "Learning Combinatorial Optimization Algorithms over Graphs",
+ "authors": [
+  "Hanjun Dai",
+  "Elias B. Khalil",
+  "Yuyu Zhang",
+  "Bistra Dilkina",
+  "Le Song"
+ ],
+ "year": "2017",
+ "venue": "NeurIPS 2017 (NIPS 30); arXiv:1704.01665 v4, Feb 2018",
+ "doi": "",
+ "document_type": "Conference paper (NeurIPS 2017), read from the arXiv v4 text",
+ "coverage": "Full text read: all of the main body (Sections 1-6), Appendix A-B, and Appendix C-D including Tables C.1-C.2 and D.1-D.9, in chunks from line 1 to line 2988 of the text file. Tables D.1-D.8 (generalization grids) were skimmed for their headline pattern rather than every cell. Front matter, abstract, intro, method (Sections 2-4), experiments (Section 5, Tables 2-3), and appendices on instance generation, SCP, realistic data and hyperparameters were all read. Touched by topic: network diffusion and influence spread (MVC on MemeTracker, Appendix C.1 and C.4), path-finding and routing (TSP, MVC/MaxCut as graph heuristics). No lobbying, elections, persuasion, turnout, legislators or text-measurement content. Paul markup: the item lists zero annotation sha12s and no paul_entries, so no _annots files exist to read. Page images not rendered; text only. Metadata check: title, authors, year and venue hints are correct per the text and an online scan (NeurIPS proceedings page, arXiv). doi left empty since neither the text nor the scan supplies one. Online scan confirmed the NeurIPS 2017 venue and the arXiv v4 date; the PDF was already present in _raw, so no new download was made.",
+ "research_question": "Can heuristics for NP-hard graph combinatorial optimization problems be learned automatically from a distribution of instances that share structure, rather than hand-designed with trial and error? (Abstract; Introduction p.2)",
+ "theory": "Greedy meta-algorithm: a feasible solution is built by successively adding nodes chosen by an evaluation function Q, with the problem supplied through a helper function, cost function and termination criterion (Section 2). Reinforcement learning view: states are partial solutions, actions add a node, rewards are changes in the cost (Section 4.1, Table 1). No economic or political theory; the framing is algorithm design and ML.",
+ "data": "Synthetic: Erdos-Renyi (edge probability 0.15) and Barabasi-Albert (average degree 4) graphs for MVC and MaxCut, with node counts sampled from ranges such as 15-20 up to 1000-1200 (Sections 5 and D.1); 2-D Euclidean TSP instances (random and clustered) from the DIMACS generator, unit is one graph or tour instance, training sets of 100 held-out validation graphs and 1000 test graphs (Section 5). Set covering built from the MemeTracker diffusion graph (Appendix B and C.4). Realistic: MemeTracker network of 960 nodes and 5000 edges for MVC (Appendix C.1, diffusion probabilities from average transmission times with alpha 0.1); ten Ising spin-glass MaxCut instances, 125 nodes and 375 edges each, from the optsicom MaxCut library (Appendix C.2); 38 TSPLIB instances from 51 to 318 cities (Appendix C.3). Period: not applicable; no calendar data.",
+ "method": "Structure2vec graph embedding (T about 4 to 5 message-passing rounds, embedding size p = 64) feeds a Q-function approximation for a greedy policy (Sections 3.1-3.2, Table D.9). Training uses n-step Q-learning combined with fitted Q-iteration over an experience replay buffer, with epsilon annealed from 1.0 to 0.05 (Section 4.2, Algorithm 1, Appendix D.5). Testing uses the deterministic greedy policy, not Active Search, except for TSPLIB where Active Search is applied on each instance (Sections 5 and C.3). Baselines: MVCApprox and MVCApprox-Greedy, MaxcutApprox and SDP, TSP heuristics (Farthest, Cheapest, Closest, Christofides, 2-opt, Nearest, MST), pointer networks with actor-critic (PN-AC, reimplemented), and CPLEX for optimal or best-known solutions with a 1-hour cutoff.",
+ "identification": "None in the econometric sense. Generalization is tested by training on one size range (50-100 nodes for the headline generalization table) and testing on larger graphs up to 1200 nodes (Section 5.2, Table 2). Performance is judged by approximation ratio against CPLEX or Concorde best-known values, averaged over test instances (Section 5).",
+ "scope": "Graph combinatorial optimization on synthetic and a few public benchmark graphs. Population: NP-hard graph problems MVC, MaxCut, TSP and set covering. Era: NeurIPS 2017 (arXiv 2017, revised 2018). Not an institutional or political study.",
+ "measures": "Approximation ratio R(S,G) = max(OPT/c, c/OPT) averaged over test instances (Section 4 preamble of Section 5). Running time on a single GPU, and the time-approximation trade-off compared with CPLEX solutions over time (Section 5.3, Figure 3). Cut weight and tour cost in the realistic tables (Tables C.1, C.2).",
+ "key_findings": [
+  "On 1000 synthetic test graphs the approximation ratio of S2V-DQN is very close to 1 for MVC and beats MVCApprox, MVCApprox-Greedy, PN-AC and all TSP heuristics on most settings (Section 5.1, Figure 2).",
+  "Generalization: trained on 50-100 node graphs, S2V-DQN gives MVC (BA) ratio 1.0062 and MaxCut (BA) ratio 1.0038 on 1000-1200 node graphs (Section 5.2, Table 2); TSP clustered ratio rises to 1.1065 at that size.",
+  "Speed: on 1200-node graphs MVC is solved in about 11 seconds on one GPU at ratio 1.0062 (Section 5.3); MVC is slightly slower than the approximation algorithms but much more accurate.",
+  "MemeTracker MVC (Appendix C.1): S2V-DQN covers 474 nodes against an optimum of 473, ratio 1.0021; MVCApprox-Greedy 1.2220 and MVCApprox 1.4080 (Table 3, Section 5.4).",
+  "Ising MaxCut physics instances (Appendix C.2, Table C.1): ratio 1.0223 for S2V-DQN, optimal on 3 of 10 instances, versus 1.2825 for MaxcutApprox and 1.8996 for SDP (Table 3).",
+  "TSPLIB (Appendix C.3, Table C.2): S2V-DQN ratio 1.0475 across 38 instances with 51-318 cities, best tour on all but 6; next best Farthest 1.0800 and 2-opt 1.0947 (Table 3).",
+  "Set covering on MemeTracker-derived graphs (Appendix C.4): S2V-DQN ratio 1.001 versus LP 1.0009 and Greedy 1.03.",
+  "Discovered heuristics (Section 5.5, Appendix D.9-D.10): MVC picks nodes balancing degree against the connectivity of the remaining graph; MaxCut avoids adding nodes that cancel existing cut edges. Authors offer these as interpretable findings, not proofs.",
+  "PN-AC (pointer network, actor-critic) reproduces the Bello et al. TSP ratios only approximately: 1.03 vs 1.02 at TSP20, 1.07 vs 1.05 at TSP50, 1.09 vs 1.07 at TSP100 (Appendix D.11). Comparison is therefore sensitive to reimplementation.",
+  "Training convergence: MVC, MaxCut and SCP converge smoothly on validation; TSP is harder to learn from graph structure because the graph is fully connected (Appendix D.6, Figure D.2).",
+  "Sign of the TSP reward matters: the negative of the insertion reward worked better, which the authors explain as bias toward recent rewards (Appendix D.5)."
+ ],
+ "limitations": [
+  "Authors state the CPLEX 'optimal' values are often best-found solutions under a 1-hour cutoff, so ratios can fall below 1 or be inflated on large instances (Section 5.2, Appendix D.1).",
+  "TSP training is capped at 200-300 nodes by single-GPU memory; TSPLIB instances above 318 cities are not tackled (Appendix C.3).",
+  "Hyperparameters tuned only on graphs under 50 nodes and then fixed for larger graphs (Appendix D.4); MVC pre-training on smaller graphs is a heuristic trick (Section 5).",
+  "Reward design is described as still challenging; the sign-flip for TSP is ad hoc (Appendix D.5).",
+  "Speed comparison with GPU-based S2V-DQN against CPU-based baselines is acknowledged as not exactly fair (Section 5.3).",
+  "Dense graphs may need edge sampling for embedding computation; left as future work (Section 5.3).",
+  "No theoretical guarantees; the learned policy is empirical only."
+ ],
+ "paul_markup": [],
+ "short_quotes": [
+  "The learned greedy policy behaves like a meta-algorithm that incrementally constructs a solution, and the action is determined by a graph embedding network.",
+  "instances of the same type of problem are solved again and again on a regular basis, maintaining the same combinatorial structure, but differing mainly in their data.",
+  "an optimal cover has 473 nodes, whereas S2V-DQN finds a cover with 474 nodes, only one more than the optimum"
+ ],
+ "references_of_note": [
+  "[9] Dai, Dai, Song 2016, structure2vec, ICML (graph embedding backbone).",
+  "[6] Bello et al. 2016, Neural combinatorial optimization with reinforcement learning, arXiv:1611.09940 (PN-AC baseline).",
+  "[21] Khalil, Dilkina, Song 2014, Scalable diffusion-aware optimization of network topology, KDD (MemeTracker diffusion setup).",
+  "[13] Gomez-Rodriguez, Leskovec, Krause 2010, Inferring networks of diffusion and influence, KDD (MemeTracker data source).",
+  "[22] Khalil et al. 2016, Learning to branch in mixed integer programming, AAAI (related learning-for-optimization thread).",
+  "[23] Khalil et al. 2017, Learning to run heuristics in tree search, IJCAI (related learning-for-optimization thread).",
+  "[10] Du et al. 2013, Scalable influence estimation in continuous-time diffusion networks, NIPS (influence-spread context)."
+ ]
+}

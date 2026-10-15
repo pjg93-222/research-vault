@@ -1,0 +1,116 @@
+{
+ "coverage": "Read all 1753 lines of the paper text (Tables 1-5, A1-A4, fn.1-24). Checked Melange code read-only (fec/moneyball_core.py, fec/engine/build_electoral.py, fec/members/receptivity_layer.py), the Draft Systems Ballotpedia scraper, Mentat fec_beneficiary.R and tools/fec_transfer_graph.py, and cosponsor_institutions REPORT.md lines 13 and 96. Opened all six related items and their extracted text. Table OA3 is online-only, so that regression is checked only as the text states it. No ext or rel override files exist.",
+ "bearings": [
+  {
+   "component_id": "melange-influence-engine.competitiveness-multiplier",
+   "relation": "qualifies",
+   "paper_claim": "Vulnerable members (Cook PVI likely, Oct 2018, dichotomous) are about 70% (R) and 75% (D) more likely to receive a member-to-member LPAC tie, per the text. Republican leaders give to vulnerable members at 73% (Table 4 coef 1.004***). 115th Congress, stratified by party; denominators 238 R and 168 D connected nodes (Table 2-3 notes).",
+   "paper_location": "Tables 2-3 notes pp.901-902; text pp.903-906; Table 4 p.906; fn.8 p.912",
+   "system_side": "c = 1 + COMPET_AMPLITUDE*exp(-max(lean,0)/COMPET_SCALE), AMPLITUDE 1.0 and SCALE 5.0. lean is Cook PVI points toward the member's party. Scales effective dollars on both money legs. Code comment marks AMPLITUDE and SCALE as judgment constants and the reciprocity as not validated.",
+   "code_ref": "fec/moneyball_core.py:74-93",
+   "transfer_conditions": "Paper is evidence on where donor LPAC money goes (binary tie presence, Oct 2018 dichotomy, member-to-member only). It does not show a dollar buys more in a competitive seat, which c encodes. It supports Cook PVI as the signal donors act on, not the continuous exp(-lean/5) decay. Neither validates nor refutes D-104..D-108.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Numbers, page locations and denominators match the text. Code formula and comment match. The paper's 70-75% phrasing is its own converted figure from table log-odds."
+  },
+  {
+   "component_id": "melange-influence-engine.electoral-plays",
+   "relation": "qualifies",
+   "paper_claim": "Vulnerability is associated with higher inward LPAC degree, for both raw and weighted degree, from a regression reported in the text. Leadership is associated with higher outward degree. Givers target electorally exposed co-partisans.",
+   "paper_location": "pp.898-899; Table OA3 (online supporting information, not in the text file)",
+   "system_side": "leverage = 1 + LELEV*(1 - security), LELEV default 0.8, security is a percentile of the Ballotpedia Election_Average, with unmatched members set to neutral 0.5.",
+   "code_ref": "fec/engine/build_electoral.py:7,22-31",
+   "transfer_conditions": "Backs vulnerability as a magnet for co-partisan money, consistent with defend plays. Gives no evidence that competitive seats are cheaper to move. The paper uses Cook PVI while this component uses Ballotpedia Election_Average, so two vulnerability measures feed the engine. Applies within party only.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Text supports the regression claim at pp.898-899. Table OA3 coefficients could not be checked. Code matches the description, including the cheaper-to-move comment at line 7."
+  },
+  {
+   "component_id": "melange-influence-engine.cascade-kernel",
+   "relation": "suggests-extension",
+   "paper_claim": "Within a party, Model A (both members in the same caucus) is positive for Freedom +1.208*** and Tea Party +0.686*** (R), and Progressive +0.381* (D, p<0.1). It is negative for Tuesday Group -1.033*** and Liberty -0.389*. Model D (recipient in caucus, donor not) is -1.020*** for Freedom and -0.545*** for Tea Party. Model C (donor in caucus, recipient not) is -1.780*** for Freedom and -0.314*** for Tea Party. Mean transitivity R 0.497, D 0.2768.",
+   "paper_location": "Table 2 p.901; Table 3 p.902; transitivity p.895; text pp.903-905; fn.10 p.912",
+   "system_side": "cpf_pressure returns 1.7 for co-partisan pairs, 0.5 for out-partisan pairs, and 1.0 otherwise. cpf_diffusion is 1.0 within party. Every co-partisan is treated alike; there is no intraparty faction term.",
+   "code_ref": "fec/moneyball_core.py:543-548",
+   "transfer_conditions": "Evidence is binary LPAC donation ties with amounts ignored, not cosponsorship diffusion or persuasion, so it cannot set a faction multiplier. It shows party is not a homogeneous block for money ties, and the fault line is party-specific: any pooled faction coefficient needs party strata. 115th House primary; 116th replication is partial (Tables A1-A4).",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Original claim said shared caucus membership raises tie odds, citing only positive coefficients; Tuesday Group and Liberty are negative in Model A. The nonmembers-withhold line mislabels Model C, which is donor-in-caucus; only Model D is nonmember-to-caucus. Transitivity is on p.895, not p.896. Code verified."
+  },
+  {
+   "component_id": "melange-legislative-data.ballotpedia-leadership-scores",
+   "relation": "suggests-extension",
+   "paper_claim": "Leadership predicts higher outward LPAC degree. Paul Ryan gave to 195 members and Joe Crowley to 80. Republican leaders give to 86% of members but about 30% of Freedom Caucus members (Table 4 Freedom -0.816***). Leader models use the full-party networks; the 238 R and 168 D connected-node counts are in the Table 2-3 notes, and Tables 4-5 give no N.",
+   "paper_location": "pp.898-899; Table 4 p.906; Table 5 p.907; full-party network p.906",
+   "system_side": "party_caucus_score: Speaker and President pro tempore 1.0, Majority Leader 0.8, Minority Leader 0.6, Majority Whip 0.4, Minority Whip 0.2. cu_caucus_leadership_score: Chair 1.0 and Co-Chair/Vice Chair 0.8 across 13 CU-relevant caucuses. Rank-and-file membership scores 0 and is not counted. No ideological intraparty caucus is on the list.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/ballotpedia_119th_cu_scraper.R:33-44,190-216",
+   "transfer_conditions": "Paper treats ideological intraparty caucus membership as a structural variable for within-party money flows. System records only policy-caucus leadership. Adding faction membership needs a dated 119th Congress roster; the paper's Yellow Book membership is self-reported (fn.6). Membership would describe position in party, not CU leverage.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Leadership and degree claims, Table 4 coefficients and scraper scoring all check out. Only the node-count attribution needed fixing: 238 and 168 are from Table 2-3 notes, not Table 4-5."
+  },
+  {
+   "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+   "relation": "method-source",
+   "paper_claim": "Each member-to-member LPAC donation is a directed edge. In the 115th Congress 282 members headed an LPAC, 373 received LPAC money, there are 12,870 unique directed edges, and the average donation is $3,682.19 per tie. Source is OpenSecrets compiled from FEC records.",
+   "paper_location": "pp.890, 894, 903 (the $3,682.19 figure is on p.903, not p.899); fn.9 p.912",
+   "system_side": "Mentat fec_read_candidate_committee_links keeps designation D (Leadership PAC linked to candidate) from ccl files, and fec_read_leadership_pacs reads leadershipYYYY.csv sponsor files, with a Leadership PAC sponsor relationship. fec_transfer_graph.py counts only 24G and 24K cash-transfer records and describes itself as a committee cash-transfer graph.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/R/fec_beneficiary.R:270-330,735-750; C:/Users/pgoff/Mentat/mentat/tools/fec_transfer_graph.py:19-21",
+   "transfer_conditions": "The R functions default to cycles 2022, 2024, 2026. Gaynor's 115th and 116th windows need the 2018 and 2020 cycles, which the defaults do not cover; the cycles argument can override. Sponsor name-key matching can give false or missing links. Any such edge is a donation record, not an access or influence edge (D-025), and must name its cycle window and denominator.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper figures verified in text. Mentat's identity links exist as described. The built-for-industry-attribution framing and holds-the-links-needed claim are not supported: the transfer graph header does not say industry, the default cycles miss 2018 and 2020, and bulk file presence was not checked."
+  },
+  {
+   "component_id": "melange-influence-engine.receptivity-layer",
+   "relation": "qualifies",
+   "paper_claim": "Announced retirees are about 40% (R) and 45% (D) less likely to receive member LPAC ties. Republican leaders give to retirees at 39% (Table 4 coef -0.397***). The Table 5 retirement coefficient is -0.055 marked *** with SE 0.102, which is internally inconsistent.",
+   "paper_location": "Tables 2-3 pp.901-902; text pp.903-904; Table 4 p.906; Table 5 p.907",
+   "system_side": "incent_mult is 0.60 for retiring members (incent_term returns 0.60 if retiring). With COMPET_MULT on, incent_term_compet still returns 0.60 for retirees, so the final-term factor stays.",
+   "code_ref": "fec/members/receptivity_layer.py:17-20,133-137",
+   "transfer_conditions": "Shows peers and leaders put less money into retirees, which fits treating retirees as low-value targets. Says nothing about whether retirees respond less to pressure, which is the mechanism the 0.60 factor encodes. The factor still rests on Fouirnaies and Hall, not this paper.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Percentages, coefficients and the Table 5 inconsistency match the text and tables. Code matches the docstring and the incent_term_compet function."
+  }
+ ],
+ "related": [
+  {
+   "slug": "bonica-2013-mapping-ideological-marketplace",
+   "relation": "complements",
+   "why": "Bonica 2013 builds CFscores from contribution records and discusses competitiveness inducing contributions from some donor segments. Gaynor cites Bonica 2017, not 2013, and studies member LPAC giving, not external donors. Topical link only."
+  },
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "relation": "complements",
+   "why": "Aref and Neal partition House signed networks of collaboration and opposition and find three coalitions fit better than party or two blocs. Gaynor finds intraparty faction structure in LPAC ties. Both describe structure below party level. The network basis (cosponsorship or other) is not confirmed from the abstract."
+  },
+  {
+   "slug": "porter-2005-network-analysis-committees",
+   "relation": "cites",
+   "why": "Gaynor cites Porter et al. 2005 (p.893) as prior network analysis of House committee assignments. Her network is built from LPAC money instead."
+  },
+  {
+   "slug": "report-2024-2024-house-glance",
+   "relation": "complements",
+   "why": "The Cook 2024 House At-A-Glance lists PVI and ratings for 2024 races. Gaynor's vulnerability is the Cook PVI likely category from Oct 2018, citing Cook and Wasserman 2018 race ratings, not this 2024 product. Code c uses 2026 Cook PVI. Topical link only."
+  },
+  {
+   "slug": "fouirnaies-2022-electoral-incentives-affect",
+   "relation": "complements",
+   "why": "Fouirnaies and Hall use term limits in US state legislatures to show final-term legislators cut visible effort. Gaynor shows peers give about 40 to 45 percent less to retirees, not that they stop. Evidence is state-level, not House. Bears on the 0.60 retiring factor from the other side."
+  },
+  {
+   "slug": "kim-2020-strategic-sequential-links",
+   "relation": "complements",
+   "why": "Kim, Stuckatz and Wolters study whether firm campaign donations and lobbying link for the same firm-politician pair and whether donations precede bill lobbying. Gaynor documents a separate member-to-member LPAC channel, which Mentat could capture through sponsor links."
+  }
+ ],
+ "summary_issues": [
+  "Summary says within each party, members of the same intraparty caucus are more likely to donate to each other. Model A is positive only for Freedom +1.208*** and Tea Party +0.686*** (R) and Progressive +0.381* (D, p<0.1). Tuesday Group -1.033*** and Liberty -0.389* are negative; New Dems and Blue Dog are not significant. The claim must name these exceptions.",
+  "Summary's Progressive +0.381 omits that it is significant only at p<0.1 (one star in Table 3).",
+  "Summary says Mentat already holds the FEC leadership-PAC sponsor links needed to rebuild the network. Code reads leadershipYYYY.csv and ccl files for default cycles 2022, 2024, 2026. The 115th and 116th windows need the 2018 and 2020 cycles. Presence of the bulk files on disk was not checked.",
+  "Summary says the caucus experiment has membership data for Problem Solvers only. That holds for membership (54 and 63 named people, REPORT.md line 13). The experiment also has prior-Congress leadership features for eight caucuses from official CMO lists, so say membership specifically.",
+  "Summary's 70-75% and 40-45% figures are the paper's own text conversions from log-odds (pp.903-904), not table coefficients. Name the source when quoting them."
+ ]
+}

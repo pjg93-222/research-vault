@@ -1,0 +1,1524 @@
+[
+ {
+  "slug": "chen-2021-contingency-aware-influence",
+  "note": false,
+  "meta": {
+   "title": "Contingency-Aware Influence Maximization: A Reinforcement Learning Approach",
+   "authors": [
+    "Haipeng Chen",
+    "Wei Qiu",
+    "Han-Ching Ou",
+    "Bo An",
+    "Milind Tambe"
+   ],
+   "year": "2021",
+   "venue": "Accepted to UAI 2021 (37th Conference on Uncertainty in Artificial Intelligence); arXiv:2106.07039v1 [cs.SI], 13 Jun 2021. The metadata hint said \"arXiv preprint (v1)\"; the PDF states UAI 2021 acceptance, so the venue is corrected.",
+   "doi": "arXiv:2106.07039",
+   "sha12s": [
+    "ef034dca27c3",
+    "2116479414e8"
+   ],
+   "category": "Adaptive Influence Maximization",
+   "category_slug": "adaptive-influence-maximization"
+  },
+  "extraction": {
+   "title": "Contingency-Aware Influence Maximization: A Reinforcement Learning Approach",
+   "authors": [
+    "Haipeng Chen",
+    "Wei Qiu",
+    "Han-Ching Ou",
+    "Bo An",
+    "Milind Tambe"
+   ],
+   "year": "2021",
+   "venue": "Accepted to UAI 2021 (37th Conference on Uncertainty in Artificial Intelligence); arXiv:2106.07039v1 [cs.SI], 13 Jun 2021. The metadata hint said \"arXiv preprint (v1)\"; the PDF states UAI 2021 acceptance, so the venue is corrected.",
+   "doi": "",
+   "document_type": "Conference paper (UAI 2021), arXiv preprint v1; algorithm paper with simulation experiments",
+   "coverage": "Full text read in chunks (all 1341 extracted lines: front matter, abstract, introduction, related work, problem setup, MDP formulation, RL4IM algorithm, state abstraction, reward shaping and theorems, experiments, conclusion, references). Paul's annotation file was read in full: 35 highlight items on pages 1-4, none with note text. Figures 1-5 are covered through captions and axis labels only, since plotted values are not in the extracted text. Lobbying, elections, persuasion/turnout, legislators, text measurement and path-finding are absent from the paper. Network content is seed selection for influence spread. Allocation appears only as a per-round budget of B seeds over T rounds, not economic allocation. Highlight colors vary (yellow, green, blue, pink) and the file has no legend.",
+   "research_question": "How to choose seed nodes for influence maximization when each invited node is only probabilistically willing to accept (contingency-aware IM), at low computational cost on new social networks, using reinforcement learning that generalizes to unseen networks without re-running an expensive greedy algorithm (Abstract p.1; Introduction p.1-2).",
+   "theory": "Influence spreads under the Independent Cascade (IC) model (Goldenberg et al. 2001; Kempe et al. 2003), Sec 3.1 p.3. Seed willingness is Bernoulli with a known probability q, Sec 3.1 p.3. The influence function is treated as submodular (stated as \"usually submodular\", Sec 4.3 p.4). The sequential decision is a discrete-time MDP with sub-steps (t,b), Sec 3.2 p.3-4. The learner is DQN with structure2vec-style graph embeddings (Khalil et al. 2017), Sec 4.1 p.4. The key derived result is a surrogate reward (Eq. 11, Theorem 1, p.4) under assumptions Eqs. 9-10 (marginal contribution depends only on the count of willing predecessors; arithmetic-sequence form).",
+   "data": "Synthetic graphs only. Power-law graphs from a Barabasi-Albert growth model with an extra triangle step (Onnela et al. 2007): average degree 3, triangle probability 0.05, Sec 5.1 p.5. Unit of observation: graph and seed node. Default |V|=200 nodes, T=2 rounds, B=4 per round (budget 8), q=0.6, 200 training graphs, 5 validation graphs, 10 unseen test graphs, each run 20 times (200 runs per setting), Sec 5.1-5.2 p.5-6. Influence propagation probability 0.1 in experiments (text reads \"belief propagation probability\", Sec 5.1 p.5). One real-scale runtime reference: CHANGE on a 1000-node, 4974-edge network, propagation probability 0.2, sampling frequency 50, one Intel i9-9820X core; runtime reaches about 10 hours at 20 seeds (Figure 1, p.1-2). Experiment hardware: 2 Xeon Gold 6148 cores, 5 GB RAM, one Tesla V100 (Sec 5.1 p.5). Time period: not stated. No human sample or N of people. The HIV-prevention, homeless-youth setting (Yadav et al. 2016, 2018; Wilder et al. 2018) is the motivating application only.",
+   "method": "Reinforcement learning for influence maximization (RL4IM), Sec 4, p.4-5. (1) Each sub-step selects one node; the state is a 3 x |V| binary matrix (unselected; selected-willing; selected-unwilling; selected-unknown) plus fixed graph G, Sec 3.2 p.3-4. (2) State abstraction: X_bar = X1 + q*X3 (Eq. 5, Sec 4.2 p.4), with a feasible-action set maintained separately for unwilling nodes. (3) Reward shaping: the exact expected marginal reward (Eq. 6) is replaced by r~ = (1-q)*dI0 + q*dI_{b-1} (Eq. 11, Theorem 1), where dI0 and dI_{b-1} bound the marginal contribution (Lemma 1, Eq. 8). Theorem 2: reward computation falls from O(2^b) to O(1). Theorem 3 gives the gap bound max{(q-(1-q)^{b-1})(dI0-dI_{b-1}), (1-q-q^{b-1})(dI0-dI_{b-1})}. (4) Training: DQN with experience replay (memory 4096, batch 32, max 2000 training steps, discount 0.99, S2V embedding + 128-unit MLP, Adam), Sec 5.1 p.5. Baselines: CHANGE greedy (Wilder et al. 2018), S2V-DQN-IM (state abstraction added; reward uses dI_{b-1}), and Random. Validation uses 20 episodes x 5 graphs per checkpoint; IM spread is simulated 100 times per estimate.",
+   "identification": "None in the causal sense. This is an algorithm and simulation study with no quasi-experimental or observational identification. Performance is measured on held-out synthetic graphs: validation graphs select hyperparameters and checkpoints, and unseen test graphs measure generalization. Theorem 3 bounds the approximation gap of the surrogate reward under Eqs. 9-10, which are stated assumptions, not identified facts.",
+   "scope": "Population: synthetic power-law social networks, with a real-scale runtime illustration only (Figure 1). Institutions: Harvard Center for Research on Computation and Society; Nanyang Technological University (p.1). Era: arXiv June 2021, UAI 2021. Application framing: low-resource non-profits running HIV-prevention peer-leader interventions among homeless youth (Introduction p.1-2; Section 3 p.3). Generalization is claimed only across synthetic graphs with similar characteristics (Introduction p.2).",
+   "key_findings": [
+    {
+     "finding": "Formulates contingency-aware IM as a discrete-time MDP in which each sub-step selects one node; the state is the willingness matrix plus the fixed graph. The time horizon is T x B.",
+     "location": "Sec 3.2, p.3-4",
+     "numbers": "T x B sub-steps; state X in {0,1}^(3 x |V|)"
+    },
+    {
+     "finding": "Surrogate reward (Eq. 11) replaces the exact expected marginal contribution with (1-q)*dI0 + q*dI_{b-1}, under assumptions Eqs. 9-10.",
+     "location": "Theorem 1, Sec 4.3, p.4",
+     "numbers": "r~ = (1-q)dI0 + q dI_{b-1}"
+    },
+    {
+     "finding": "The surrogate cuts reward computation from O(2^b) to O(1) per sub-step, using 4 influence evaluations.",
+     "location": "Theorem 2, p.4",
+     "numbers": "O(2^b) reduced to O(1); 4 influence values"
+    },
+    {
+     "finding": "The gap between surrogate and exact reward is bounded, but the bound can be arbitrarily bad as q approaches 0 or 1. Authors say these cases are rare and that RL4IM still works at q=0.2 and q=0.8.",
+     "location": "Theorem 3 and following paragraph, p.4-5",
+     "numbers": "gap <= max{(q-(1-q)^{b-1})(dI0-dI_{b-1}), (1-q-q^{b-1})(dI0-dI_{b-1})}; q=0.2 and 0.8 tested"
+    },
+    {
+     "finding": "Ablation Q1: removing state abstraction or reward shaping makes training unstable or converges to a sub-optimal point. Figure 3 shows validation curves; numeric values are not in the extracted text.",
+     "location": "Q1, Sec 5.2, p.5; Figure 3, p.5",
+     "numbers": "Figure values not extractable"
+    },
+    {
+     "finding": "Q2: more training graphs give a more stable validation curve. The paper uses 200 training graphs for all later experiments.",
+     "location": "Q2, Sec 5.2, p.5-6; Figure 4",
+     "numbers": "training pool sizes 10, 50, 100, 200, 500; 200 chosen"
+    },
+    {
+     "finding": "Q3: across q, RL4IM and CHANGE both reach roughly twice Random and are more stable; S2V-DQN-IM is unstable. Expected influence rises with q.",
+     "location": "Q3, Sec 5.2, p.6; Figure 5(a)",
+     "numbers": "roughly 2x Random; figure axis labels -0.05 to 0.2; plotted values not in text"
+    },
+    {
+     "finding": "Q4: with T x B fixed at 8, RL4IM works for single-round IM (T=1); CHANGE and RL4IM are the two best methods.",
+     "location": "Q4, Sec 5.2, p.6; Figure 5(b)",
+     "numbers": "T in {8,4,2,1}; T x B = 8"
+    },
+    {
+     "finding": "Q5: normalized influence falls as graph size grows from 50 to 1000 nodes with budget fixed at 8; CHANGE and RL4IM are best.",
+     "location": "Q5, Sec 5.2, p.6; Figure 5(c)",
+     "numbers": "|V| in {50,100,200,500,1000}; budget 8; axis 0 to 0.35"
+    },
+    {
+     "finding": "Overall, RL4IM matches or slightly exceeds CHANGE. Authors attribute the edge to proactively modeling unwillingness in the reward, versus CHANGE reacting to realized willingness. Authors claim near-zero test runtime (policy in seconds on a laptop).",
+     "location": "Sec 5.2 p.6 (paragraph after Q5); Conclusion p.6",
+     "numbers": "'slightly better than CHANGE'; runtime 'within seconds' (no measured figure given)"
+    },
+    {
+     "finding": "Runtime motivation: CHANGE needs about 10 hours even with 20 seeds on a 1000-node, 4974-edge network.",
+     "location": "Introduction and Figure 1, p.1-2",
+     "numbers": "10 hours at 20 seeds; 1000 nodes; 4974 edges"
+    }
+   ],
+   "limitations": [
+    "The surrogate reward rests on assumptions (Eqs. 9-10: marginal contribution depends only on the count of willing nodes; arithmetic-sequence form) and on submodularity of influence (Eq. 7; stated as 'usually submodular', p.4). The paper does not test these on real data.",
+    "The Theorem 3 gap bound can be arbitrarily bad as q goes to 0 or 1; the authors call these cases rare and extreme (p.5).",
+    "Willingness probability q is assumed known a priori and identical across nodes (footnote 2, p.3; Sec 3.1 p.3).",
+    "Experiments use synthetic power-law graphs only, with IC propagation probability 0.1 (p.5). The only real-scale measurement is the CHANGE runtime in Figure 1.",
+    "Only the IC model is evaluated.",
+    "No training cost (wall-clock or GPU hours) is reported. The 'negligible runtime at test phase' claim is qualitative ('within seconds', p.6).",
+    "Baselines are one greedy algorithm (CHANGE) and one RL baseline (S2V-DQN-IM with state abstraction added). Other contingency-aware methods, such as the Yadav et al. POMDP, are not benchmarked.",
+    "Key figure results (Figures 3-5) are described only qualitatively in the text; plotted values are not stated numerically.",
+    "The single-round setting (T=1) is evaluated only on synthetic graphs (p.6)."
+   ],
+   "measures": [
+    "Expected normalized influence: spread divided by |V|, averaged over 200 runs per setting (Figure 5 caption, p.6).",
+    "Validation metric: average reward over 20 episodes x 5 validation graphs = 100 runs, used to choose hyperparameters and checkpoints (Sec 5.1 p.5).",
+    "Runtime of CHANGE versus seed count (Figure 1, p.1-2; reported in hours).",
+    "Validation curves of expected influence versus training steps (Figures 3-4).",
+    "Surrogate-reward gap bound (Theorem 3, p.4-5)."
+   ],
+   "references_of_note": [
+    "Yadav et al. 2016, Using social networks to aid homeless shelters: dynamic influence maximization under uncertainty (AAMAS). Original motivating application.",
+    "Yadav et al. 2018, Please be an influencer? Contingency-aware influence maximization (AAMAS). Defines the contingency-aware IM problem (p.1, Sec 3).",
+    "Wilder et al. 2018, End-to-end influence maximization in the field (AAMAS). Source of the CHANGE greedy baseline.",
+    "Wilder et al. 2021, Clinical trial of an AI-augmented intervention for HIV prevention in youth experiencing homelessness (AAAI). Field deployment of CHANGE.",
+    "Kempe, Kleinberg, Tardos 2003 (KDD). Greedy IM with the 1-1/e guarantee and the IC model.",
+    "Khalil et al. 2017, Learning combinatorial optimization algorithms over graphs (NeurIPS). S2V-DQN architecture that the paper adapts.",
+    "Li et al. 2019 (DISCO); Tian et al. 2020; Manchanda et al. 2020 (GCOMB). RL-for-IM methods with marginal-contribution rewards that RL4IM improves on.",
+    "Kamarthi et al. 2020, Influence maximization in unknown social networks: learning policies for effective graph sampling (AAMAS). RL for graph exploration in IM.",
+    "Ko et al. 2020, MONSTOR: inductive approach for estimating and maximizing influence over unseen social networks (ASONAM). Generalization to unseen networks.",
+    "Ou et al. 2021, Active screening for recurrent diseases: a reinforcement learning approach (AAMAS). Same group; RL with GCNs on disease-prevention networks.",
+    "Golovin and Krause 2011, Adaptive submodularity (JAIR). Adaptive IM contrast.",
+    "Sun et al. 2018, Multi-round influence maximization (KDD); Lin et al. 2015, multi-round multi-party IM with learning (KDD). Multi-round seed selection.",
+    "Ali et al. 2018 (WI); Lin et al. 2015 (KDD). RL for competitive influence maximization (cited p.3).",
+    "Onnela et al. 2007, Structure and tie strengths in mobile communication networks (PNAS). Source of the power-law graph generator.",
+    "Leskovec et al. 2007 (CELF); Borgs et al. 2014 (RIS); Tang et al. 2015 (IMM). Faster greedy IM algorithms."
+   ],
+   "short_quotes": [
+    {
+     "quote": "the non-profits usually do not have the HPCs to recalculate the solutions",
+     "location": "Abstract and Introduction, p.1 (12-word fragment; the sentence is longer, so only this fragment is quoted)"
+    }
+   ],
+   "paul_markup": [
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "problem aims at finding a subset of seed nodes in a social net work that maximize the spread of influence.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Such contingency aware IM is critical for applications for non-profit organi zations in low resource communities (e.g., spreading awareness of disease prevention).",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "whenever there is a new social network, the non-profits usually do not have the HPCs to recalculate the solutions.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Markov Decision Process (MDP), and use RL to learn an IM policy over historically seen networks, and generalize to unseen networks with negligible runtime at test phase.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "including state-abstraction and theoretically grounded reward shaping.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Originally derived from the viral marketing domain, the majority of IM algorithms",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "focus on settings where nodes are always willing to be the seeds",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "In this sub-class of IM problems called contingency-aware influence maximization [Yadav et al., 2018], when a node is invited to become a seed node, there is uncertainty in whether it is willing to accept the invitation.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "whenever the underlying social network changes, the solution to the IM problem needs to be recomputed, whereas the stakeholders usually do not have the HPCs to perform the computation on their own",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "on a network with 1000 nodes and 4974 edges when the number of seeds increases (run on a single Intel(R) Core(TM) i9 9820X CPU @ 3.30GHz core, with the sampling frequency of CHANGE set to 50, the influence propagation probability being set to 0.2). CHANGE runs 10 hours even with just 20 seed nodes,",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "The key idea is to decompose the selection of nodes into a sequence, and learn a heuristic policy that selects nodes sequentially.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": ", which is deterministic.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": ", the willingness status of nodes selected before the current step are unknown",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Though this formulation preserves the Markovian property, its state is highly sparse and thus makes it hard for RL to learn efficiently.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "2) The influence function is submodular.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": ", we then design a surrogate reward function in place of the exact expected reward, with provable worst case guarantee compared to the exact expected reward.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": ", RL can perform as good as state-of-the-art greedy IM algorithms from the HIV prevention domain",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Our code can be found via https://github. com/Haipeng-Chen/RL4IM-Contingency",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "which has a guarantee of 1 -1/e.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Adaptive IM differs from our setting in that our focus is to address the uncertainty in a node's willingness to participate, which they do not address.",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": ". These approaches do not generalize well among unseen graphs, or are data inefficient.",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "use RL to do influence maximizaiton in a competitive setting.",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "It uses supervised learning as a preliminary step to predict the individual quality of a node,",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "We will show empirically that directly applying their methods leads to sub-optimal performance.",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "The trained youth will then act as peer-leaders who further spread the awareness of HIV prevention among the youth social network. A",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "(V, E) where V and E are respectively the nodes and edges",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "s either activated, meaning the node is influenced, or inactivated otherwise",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "nitially inactivated unless chosen as the seed node",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "for each node v in V that is activated at a certain time, it has a single chance of activating its neighbors at the next time",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "I(G, S)",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "at finding an seed nodes S* optimal set subset G, such that the influence spread is maximized.",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "As discussed before, when being selected, each node v in St may not necessarily be willing to act as a seed node",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "node willing to be seed (when selected as We assume that this probability is known a priori,",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "Naturally, the set of nodes Ot who are willing to be seeds at round t is a subset of St: Ot subset St",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "we use a binary matrix Xt,b b in a current su {0, 1}3x|V|",
+     "note": ""
+    }
+   ]
+  },
+  "summary_md": "Chen, Qiu, Ou, An and Tambe (UAI 2021) study contingency-aware influence maximization. In this setting an invited seed accepts only with a probability q, which is known in advance and the same for every node. Seeds are chosen over T rounds of B seeds, and willingness is revealed only at the end of each round. The authors cast the problem as an MDP and train a DQN with structure2vec embeddings (RL4IM). Two devices make training tractable: a state abstraction (X1 + q*X3) and a surrogate reward, (1-q)*dI0 + q*dI_{b-1}. The surrogate cuts reward computation from O(2^b) to O(1), and Theorem 3 bounds its gap from the exact reward, though the bound becomes arbitrarily loose as q approaches 0 or 1. All experiments use synthetic Barabasi-Albert-type graphs: 200 nodes, Independent Cascade with p=0.1, q=0.6, budget 8, and 200 runs per setting. On these graphs RL4IM matches or slightly beats the CHANGE greedy baseline, and both reach roughly twice Random. The paper's case for RL is runtime on new, unseen networks: CHANGE takes about 10 hours at 20 seeds on a 1,000-node graph. It gives no empirical estimate of q for any real population.\n\nFor Melange the paper is the cited source of the SGATE contingency gate (fec/moneyball_core.py:626-630). The gate is used non-adaptively in the coalition and frontier spread estimators. The system goes beyond the paper's model in three ways: q varies by member (seed_prob x stance gate), there is a single round with no observed willingness, and committed allies are never gated. The paper's theorems do not cover that model, and the system does not need them, because it estimates expected spread directly by Monte Carlo. The paper does not validate any take-up rate. The 0.60 baseline in seed_prob equals the paper's arbitrary simulation default. The planned H1 test correlates seed_prob with unconditional new cosponsorships, which is not the conditional-on-invitation quantity the paper models. The runtime argument for RL does not apply to a fixed 533-member chamber graph. All agent analysis here is UNVERIFIED (DE-062).",
+  "paul_entries": [
+   {
+    "doc": "Adaptative - Influence Maximization - Melange Annotated Bibliography — Addendum.md",
+    "citation": "**Chen, H., Qiu, W., Ou, H.-C., An, B., & Tambe, M. (2021).** *Contingency-Aware Influence Maximization: A Reinforcement Learning Approach.* UAI '21 (PMLR). arXiv:2106.07039. https://arxiv.org/abs/2106.07039",
+    "text": "**Chen, H., Qiu, W., Ou, H.-C., An, B., & Tambe, M. (2021).** *Contingency-Aware Influence Maximization: A Reinforcement Learning Approach.* UAI '21 (PMLR). arXiv:2106.07039. https://arxiv.org/abs/2106.07039\n\nRL for IM when chosen seeds may decline to participate — sequential, observe-then-act seeding under uncertainty about whether any given activation actually \"takes.\" The contingency framing maps onto legislators who may or may not move when approached, and onto lobbying outreach where commitment is probabilistic rather than guaranteed."
+   }
+  ],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.seed-gate",
+    "relation": "method-source",
+    "paper_claim": "A selected seed is willing with a probability q that is known a priori. Footnote 2 says q is the same for all nodes because per-node values are impractical to know. Default q = 0.6; Q3 varies q over 0.2, 0.4, 0.6, 0.8. The paper estimates no real-world q.",
+    "paper_location": "Sec 3.1 p.3 (text 'known a priori', marker 2); footnote 2 p.3-4; Sec 5.1-5.2 p.5-6; Fig 5(a) p.6",
+    "system_side": "gate(n,cs) = max(0.15, seed_prob(n) x SGATE[stance]) at moneyball_core.py:630. SGATE values at 626-629 match the description (1.00 down to 0.35; unknown 0.85; Ally, Champion, Defender 1.0). seed_prob has a behavioral branch (0.60 + .10 coop + .06 breadth + .04 visibility, clipped 0.30-0.90) and a non-behavioral branch (0.60 + .10A + .06O + .04E, same clip).",
+    "code_ref": "fec/moneyball_core.py:626-630; fec/members/receptivity_layer.py:210-216",
+    "transfer_conditions": "The modeling idea transfers: invitation is not activation. The paper's q is homogeneous and its analysis is multi-round. SGATE is member-specific and used single-shot, so Theorems 1-3 do not cover it. The 0.60 baseline is the paper's simulation default, not an estimate. The source population is HIV peer leaders, not legislators. SGATE values remain design priors until measured.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Quotes and numbers check out against the text (lines 315-316, 367-371, 1002-1003, 1077). Corrections: the paper never says Bernoulli; the seed_prob description omits the non-behavioral branch; calling 0.60 arbitrary goes beyond the paper, which only calls it the default. Code lines verified.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Contingent seed activation gate|Contingent seed activation gate]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.budget-frontier",
+    "relation": "supports",
+    "paper_claim": "The authors attribute RL4IM's slight edge over greedy CHANGE to proactively modeling unwillingness in the reward, versus CHANGE reacting to realized willingness. The edge is called slight and gets no numbers. At T=1 (single round, T x B = 8), RL4IM and CHANGE are the two best methods. The roughly-twice-Random result is stated for the q sweep (Q3), not for T=1. All results are synthetic graphs under IC with p=0.1.",
+    "paper_location": "Q3 p.6 (Fig 5a); Q4 p.6 (Fig 5b); paragraph after Q5 p.6; Sec 5.1 p.5",
+    "system_side": "spread() in budget_frontier.py draws each lobbied seed's activation against gate(n,cs) on a dedicated CRN stream (key offset 2^62, lines 127-128). A failed activation stays an opponent (lines 129-131). MAXSEEDS defaults to 60 (line 7). Lazy-greedy mechanics were not checked.",
+    "code_ref": "fec/engine/budget_frontier.py:7,126-131",
+    "transfer_conditions": "Supports only the design choice of putting take-up uncertainty inside the expected-spread objective. The paper models one colour; the system has a two-colour competitive cascade. The paper's synthetic graphs (about 200 nodes) are comparable in scale to the 533-member graph, but there are no political data. The slight edge is qualitative.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The rel attaches roughly-twice-Random to the T=1 result; in the paper it belongs to the q sweep in Q3 (lines 1081-1083). The rest holds: lines 1089-1092 and 1101-1106, the synthetic-graph setup, and the code lines.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Budget frontier with knee and electoral modes|Budget frontier with knee and electoral modes]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-allocation.per-topic-allocators",
+    "relation": "context",
+    "paper_claim": "Within a round, a seed's exact expected marginal contribution depends on which earlier seeds turned out willing, giving O(2^b) cases. The paper assumes the influence function is submodular, stated as usually submodular and citing Kempe et al. 2003 (Eq. 7).",
+    "paper_location": "Sec 4.3 Eqs. 6-8, Theorems 1-2, p.4 (Eq. 7 text at line 674)",
+    "system_side": "per_topic_coalition.py gates each lobbied seed inside each spread() call (lines 102-110). Individual marginals spread({n}) minus base (line 115) feed a water-fill (line 119). The funded set's joint spread is reported (lines 124-125) because summing marginals overstates the joint gain. The allocator is one-shot, with no rounds and no observed willingness.",
+    "code_ref": "fec/engine/per_topic_coalition.py:102-125",
+    "transfer_conditions": "The paper's O(2^b) dependence arises from realized willingness within sequential sub-steps. The coalition allocator averages willingness inside each spread() call, so there is no conditional dependence to ignore at allocation time. The shared point is only that seed non-additivity is real and the joint report exposes it. The surrogate reward needs homogeneous q and Eqs. 9-10, so it does not port to heterogeneous gates.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Code and Eq. 7 check out (line 674 says usually submodular). The supports framing overstates the analogy, so the relation is changed to context. The M2 comment at lines 122-125 is verified.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Per-topic flip and coalition allocators|Per-topic flip and coalition allocators]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-validation.prospective-contract",
+    "relation": "qualifies",
+    "paper_claim": "q is the probability that a selected node is willing to act as a seed, conditional on being selected or invited. It is assumed known a priori, so it is a take-up rate, not an unconditional outcome.",
+    "paper_location": "Sec 3.1 p.3 (lines 314-316, probability of a node willing to be seed when selected as seed node)",
+    "system_side": "H1 protocol: Spearman correlation of frozen seed_prob with NEW cosponsorships adopted after the freeze, over members with panel coverage in both snapshots. Engaged-only scoring is unavailable until receipted contact data exists. Minimum data is 60 days and 150 members with any delta; otherwise status is UNDERPOWERED (outcome_contract.py:17-21 and 262-263).",
+    "code_ref": "fec/engine/outcome_contract.py:17-21,262-263",
+    "transfer_conditions": "Unconditional new cosponsorship mixes take-up with contact choice and base activity. A pass would not validate seed_prob as a contingency probability, and a miss would not refute it. The construct match needs an engaged-only arm built on a contact log.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "The protocol text, the Spearman definition, the 60-day and 150-member floor and the lack of engaged-only data all verify. Not verified: the 72 of 511 replay count and the look-unspent status, since no matching file was found in the audits folder within the search limit. The cited line 277 was not confirmed; the underpowered check is at 262-263.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-validation#Prospective receptivity contract (H1-H2) and forecast ledger|Prospective receptivity contract (H1-H2) and forecast ledger]]",
+    "system": "melange-validation"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "The summary calls the 0.60 baseline arbitrary. The paper calls q=0.6 its simulation default and gives no basis, so arbitrary goes beyond the text.",
+   "The summary and bearing 1 call willingness Bernoulli. The paper states only a known probability q; the word is not in the paper.",
+   "The summary describes seed_prob as one formula. The code also has a non-behavioral branch (A, O, E terms, same clip) that the summary omits.",
+   "Bearing 2 attaches roughly-twice-Random to the T=1 result. In the paper it belongs to the q sweep (Q3).",
+   "Paul's addendum tier filing is checked: the paper assumes submodularity (Eq. 7), so it does not support a non-submodular tier. Its observe-then-act framing is accurate only between rounds; the system is single-shot.",
+   "Not verified: the 72 of 511 new-event count and the look-unspent status in H1. No matching file was found in the audits folder within the search limit.",
+   "The citation outcome_contract.py:277 was not confirmed; the minimum-data check is at lines 262-263.",
+   "Lazy-greedy mechanics in budget_frontier.py were not checked; only MAXSEEDS=60 (line 7) was verified.",
+   "Coverage: the output schema accepts bearings, related and summary_issues only, so the task's key_findings and paul_markup lists were not returned. Verification covered the paper's Sec 3.1, 3.2, 4.2-4.3, 5.1-5.2 and conclusion, footnote 2, and the three Melange code references plus H1 protocol."
+  ],
+  "gaps_exposed": [
+   "The system never observes or updates willingness. The paper's setting is multi-round: willingness is revealed at the end of each round and later seeds are chosen knowing it. Melange seeding is a one-shot plan. Replanning after observed take-up would need an outreach or contact log, which does not exist.",
+   "No empirical take-up rate backs either SGATE or seed_prob. The paper supplies none for any population, and the 0.60 baseline equals its arbitrary simulation default.",
+   "The H1 receptivity contract measures unconditional cosponsorship, not take-up conditional on contact. The construct Chen defines cannot be tested until receipted contact data exists.",
+   "The paper shows that a seed's marginal value depends on earlier seeds' realized willingness. The coalition allocator funds on individual gated marginals and only reports the joint shortfall afterwards. It does not fund on conditional marginals."
+  ],
+  "flags": [
+   "Language: seed_prob x SGATE is a heuristic design prior. Do not describe it as a measured take-up, access or commitment probability for a legislator. The paper validates no q for any real population, and H1 is unspent and underpowered (72/511 against a 150 floor).",
+   "Paul's addendum files Chen 2021 under 'C. RL influence maximization - the non-submodular envelope'. The paper explicitly assumes submodularity (Eq. 7) and IC. The non-submodular, complex-contagion work is the same group's RL4CCIM (chen-nd-complex-contagion-influence). Chen 2021 should not be cited as evidence for the non-submodular tier.",
+   "Paul's takeaway describes the method as 'observe-then-act'. That is accurate only between rounds; within a round willingness is unknown and is replaced by its expectation (X1 + q*X3). The system as built observes nothing (single-shot), so the 'observe-then-act' framing describes an unbuilt capability.",
+   "The paper's motivation for RL (repeated recomputation on new graphs by low-compute NGOs) does not apply to Melange's fixed 533-member chamber graphs. Its quality result is parity with greedy. Neither supports replacing the CELF or lazy-greedy layer with a learned policy.",
+   "No rule conflicts. The paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization, and it uses no LDA or reciprocity claims."
+  ],
+  "paul_alignment": "Paul's mapping is right in substance and is already built as SGATE. His mapping: a lobbied legislator may or may not take up an invitation, so contact is not activation. The receptivity docstring echoes it ('legislators know they are being lobbied'). The gate is applied inside the frontier and coalition spread estimators. Two parts of his note are stale or loose relative to the system and the paper. First, 'sequential, observe-then-act seeding' describes the paper's multi-round setting, but Melange seeds single-shot and never observes willingness, so that half of his takeaway is an extension, not current behaviour. Second, he files the paper in the non-submodular RL tier, but Chen 2021 assumes submodularity; the complex-contagion argument belongs to RL4CCIM. His broader expectation that a learned policy (GCOMB, RL) will replace greedy is not supported here. RL4IM only matches greedy, and its advantage is runtime on new graphs, which Melange does not face.",
+  "related": [
+   {
+    "slug": "golovin-2011-adaptive-submodularity-theory",
+    "relation": "complements",
+    "why": "Item exists. The paper contrasts itself with adaptive IM, which it says does not address willingness uncertainty. That is a contrast, not a contradiction, so the relation is changed from contradicts."
+   },
+   {
+    "slug": "zareie-2023-influence-maximization-social",
+    "relation": "complements",
+    "why": "Verified title: Influence maximization in social networks: a survey of behaviour-aware methods. Code comments in budget_frontier.py tie it to Chen as the SNAM source for seed_prob."
+   },
+   {
+    "slug": "bharathi-nd-competitive-influence-maximization",
+    "relation": "complements",
+    "why": "Verified title: Competitive Influence Maximization in Social Networks. It is the likely source of the competitive cascade the gate is inserted into; the gate link itself was not checked."
+   },
+   {
+    "slug": "kumar-2022-influence-maximization-social",
+    "relation": "same-method",
+    "why": "Verified title: influence maximization using graph embedding and graph neural networks. Shares the graph-embedding approach of the paper's structure2vec backbone."
+   },
+   {
+    "slug": "arya-2025-relink-edge-activation",
+    "relation": "same-method",
+    "why": "Verified title: RELINK, edge activation for closed-network IM via deep RL. Shares the deep-RL approach; the claim that it sits in the same S2V/DQN lineage was not checked."
+   },
+   {
+    "slug": "almazaydeh-2026-heuristic-centrality-methods",
+    "relation": "complements",
+    "why": "Verified title: heuristic centrality methods challenge greedy optimization in IM. Fits the paper's parity-with-greedy result, which suggests RL's advantage is runtime, not quality."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "trivedi-2020-efficient-influence-maximization",
+    "relation": "extended-by",
+    "why": "Title matches contingency-aware seeding, where invited nodes accept only probabilistically, which the plain DHICM and CELF comparison does not model."
+   },
+   {
+    "slug": "zeng-nd-multi-agent-reinforcement",
+    "relation": "complements",
+    "why": "Both use reinforcement learning to replace a hand-set rule policy. Chen et al. do it for seeding legislators-as-nodes under take-up uncertainty, which is the literature actually behind the SGATE seed gate. Zeng applies RL only to physical swarm control."
+   },
+   {
+    "slug": "madsen-2017-strategic-advantages-micro",
+    "relation": "complements",
+    "why": "Both make contact conditional on the target's receptivity. Chen does it as contingency-aware seeding, which the system implements as SGATE; this paper does it as credibility-gated contact."
+   },
+   {
+    "slug": "chen-2023-complex-contagion-influence",
+    "relation": "built-on-by",
+    "why": "RL4IM from that paper is the base architecture and a baseline in this paper (Sec. 5.2 and Sec. 6.1). receptivity_layer.py line 29 and budget_frontier.py line 73 cite the contingency-aware idea from the same group."
+   },
+   {
+    "slug": "kamarthi-2020-influence-maximization-unknown",
+    "relation": "complements",
+    "why": "Tambe group RL for contingency-aware IM, where invited seeds may refuse (uncertain seed take-up). Wilder is cited, not a co-author. Kamarthi handles an uncertain graph instead. The SGATE mapping is Paul's and was not checked here."
+   },
+   {
+    "slug": "sutton-2018-reinforcement-learning-introduction",
+    "relation": "complements",
+    "why": "Paper exists in the research store (papers/chen-2021-contingency-aware-influence.md) and its components list the seed gate. Its stub does not cite Sutton and Barto, so a builds-on link to this book is not confirmed."
+   },
+   {
+    "slug": "ng-1999-policy-invariance-reward-transformations",
+    "relation": "complements",
+    "why": "Chen et al. 2021 have a reward-shaping component (REWARD SHAPING section) based on marginal contribution, not a potential-based form, so the Ng condition bears directly on it. The earlier needs-the-potential-condition wording is an inference, not a finding in Chen."
+   },
+   {
+    "slug": "watkins-1992-q-learning",
+    "relation": "built-on-by",
+    "why": "Real item: contingency-aware influence maximization as a reinforcement learning approach (title and authors confirmed). Whether its learning step is Q-learning was not verified in the item text."
+   },
+   {
+    "slug": "dai-2017-learning-combinatorial-optimization-graphs",
+    "relation": "built-on-by",
+    "why": "Verified: RL4IM uses S2V-based Q-networks (text line 994) and S2V-DQN-IM is a baseline (line 968)."
+   },
+   {
+    "slug": "manchanda-2020-gcomb-learning-budget-constrained",
+    "relation": "same-method",
+    "why": "Title confirms RL for IM with contingent seed acceptance. Checked by title and note only; item file exists."
+   },
+   {
+    "slug": "kempe-2015-maximizing-spread-influence",
+    "relation": "extended-by",
+    "why": "Adds seed take-up probability to Kempe-style IM. Kempe has no take-up step. Item exists; not re-read here."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "b-2025-comparing-fine-tuned",
+  "note": false,
+  "meta": {
+   "title": "Roman Urdu Stance Detection RoBERTa",
+   "authors": [
+    "Bilal Khan",
+    "Khairullah Khan",
+    "Fida Muhammad Khan",
+    "Haseena Noureen",
+    "Ahmad Ali",
+    "Mohsin Shah"
+   ],
+   "year": "2025",
+   "venue": "IECE Transactions on Advanced Computing and Systems, Vol. 1, No. 2, pp. 78-96 (published 26 May 2025; submitted 24 Feb 2025, accepted 27 Apr 2025)",
+   "doi": "10.62762/TACS.2025.928069",
+   "sha12s": [
+    "b512e0da4709"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "Roman Urdu Stance Detection RoBERTa",
+   "authors": [
+    "Bilal Khan",
+    "Khairullah Khan",
+    "Fida Muhammad Khan",
+    "Haseena Noureen",
+    "Ahmad Ali",
+    "Mohsin Shah"
+   ],
+   "year": "2025",
+   "venue": "IECE Transactions on Advanced Computing and Systems, Vol. 1, No. 2, pp. 78-96 (published 26 May 2025; submitted 24 Feb 2025, accepted 27 Apr 2025)",
+   "doi": "10.62762/TACS.2025.928069",
+   "document_type": "Journal research article: empirical benchmark comparison of classifiers, with a newly built labeled dataset",
+   "coverage": "Full text read: all 2,271 lines of C:\\Users\\pgoff\\Documents\\research\\_text\\b512e0da4709.txt (article pp. 78-96, including Tables 1-8, equations, references and author bios). The metadata hint was correct on title, DOI and year; author list and page range confirmed from the PDF. No Paul markup was supplied (paul_markup is empty). Page numbers are the printed journal page numbers.",
+   "research_question": "Can a fine-tuned RoBERTa model, and five traditional machine learning classifiers on TF-IDF features, classify stance (agree / disagree / unrelated) in Roman Urdu political tweets and replies, and which performs best? A secondary aim is to release a labeled Roman Urdu political stance dataset, since none was publicly available (Abstract p.78; Intro objectives p.80).",
+   "theory": "No explicit theory is tested. Stance is framed as a dialogic social act with evaluation, positioning and alignment, citing definitions attributed to \"Kockelman\" and \"John\" (pp.79-80). The task is modeled as three-class text classification (Fig. 1, p.80). No hypotheses are stated.",
+   "data": "Sample: 8,374 political tweets and comments (Abstract p.78). Table 1 (p.86) reports 8,373 rows and 11 columns, so the abstract and table differ by one row. Unit: a tweet-comment pair combined into one input sequence (p.92). Table 2 (p.87) shows example rows with tweet ID, comment, POS tags, named entities, dependency features, source, stance label and sentiment score. Labels: agree, disagree, unrelated. Source: Twitter API, keyword/hashtag search on Pakistani party and leader names (#ImranKhan, #NawazSharif, #PPP, #PMLN, #PTI; p.84). Collection period: not reported. Annotation: three annotators, with discussion to resolve disagreements; inter-annotator agreement described only as \"substantial\", with no statistic (p.84). Split: 80% train, 20% test (p.88). Test support is 1,675 (Agree 583, Disagree 602, Unrelated 490; Tables 3-7). The RoBERTa table (Table 8, p.93) reports support 6,699 on \"the augmented dataset\" (p.92), so RoBERTa and the classical models appear to be evaluated on different-sized sets. Data availability: \"on request\" (p.94).",
+   "method": "Preprocessing: stop-word removal, tokenization, POS tagging, lowercasing, lemmatization and phonetic spelling normalization (Section 3.3, pp.86-87). Features: TF-IDF for the classical models (pp.88-91). Classifiers: logistic regression (Eq. 5), decision tree with entropy/information gain (Eqs. 6-7), SVM with margin objective and kernel (Eqs. 8-10; kernel type not stated), random forest with majority vote (Eqs. 11-13; number of trees not stated), naive bayes (Eqs. 14-15). Deep model: RoBERTa fine-tuned on the concatenated tweet and comment, with a [CLS] classification head and softmax (pp.91-92). Dataset augmentation and class balancing are said to be applied (p.91), but the augmentation is described with image operations (rotation, flipping, color changes) and no text-augmentation procedure is given. Platform: Google Colab, Python (Section 4.1, p.88). Metrics: accuracy, precision, recall, F1 (Section 3.6, p.87). No hyperparameters, epochs, seeds, cross-validation, confidence intervals or significance tests are reported.",
+   "identification": "None. This is a descriptive benchmark on a single random 80/20 split of one dataset. No causal or quasi-experimental design is used.",
+   "scope": "Population: political tweets and replies in Roman Urdu (code-mixed, informal, multiple spellings) about Pakistani parties and leaders, drawn from Twitter (now X). Institution: none (not a government, party or legislative dataset). Era: collection dates not stated; published May 2025. Language scope: explicitly Roman Urdu, with claims about low-resource and code-mixed languages in general (Abstract p.78; Section 5 p.94).",
+   "key_findings": [
+    {
+     "finding": "Fine-tuned RoBERTa has the highest overall accuracy of the six models, on the augmented evaluation set.",
+     "location": "Table 8 p.93; Section 4.4.2 p.92; Section 4.5 p.93; Abstract p.78",
+     "numbers": "Accuracy 0.97; Agree P/R/F1 0.98/0.93/0.95; Disagree 0.95/0.99/0.97; Unrelated 0.96/0.99/0.98; support 6,699"
+    },
+    {
+     "finding": "Random forest is the best classical model, followed by SVM, logistic regression, decision tree and naive bayes.",
+     "location": "Table 6 p.90 (RF); Table 5 p.90 (SVM); Table 3 p.89 (LR); Table 4 p.89 (DT); Table 7 p.91 (NB); summary Section 4.5 p.93",
+     "numbers": "RF 0.95 (macro F1 0.95, test n=1,675); SVM 0.94; LR 0.93; DT 0.92; NB 0.89"
+    },
+    {
+     "finding": "Naive bayes is called the weakest model, 'close to random guessing'.",
+     "location": "Section 4.5 p.93",
+     "numbers": "NB accuracy 0.89. The majority-class share on the test set is about 0.36 (602/1,675), so the 'random guessing' wording is not supported by the reported numbers."
+    },
+    {
+     "finding": "Computational cost is said to trade off against accuracy (RoBERTa costlier, RF cheaper), but no training time, memory or FLOP figures are reported.",
+     "location": "Section 4.5 p.93",
+     "numbers": "None reported"
+    },
+    {
+     "finding": "Errors concentrate on sarcastic, ambiguous and implicit statements; some disagree items are labeled unrelated when negation is absent. No error counts or confusion matrix are shown.",
+     "location": "Section 4.5 p.93",
+     "numbers": "None reported"
+    },
+    {
+     "finding": "Dataset augmentation and class balancing are credited with improving performance, but no with/without comparison is shown.",
+     "location": "Section 4.4.1 p.91; Section 4.5 p.93",
+     "numbers": "None reported"
+    },
+    {
+     "finding": "The paper claims a 97% result on an independent Twitter dataset, but that dataset is not described.",
+     "location": "Section 3.5 p.85",
+     "numbers": "97% on an unnamed independent dataset; size and source not given"
+    },
+    {
+     "finding": "The F1 discussion leaves template placeholders unfilled in the text, next to the table.",
+     "location": "Section 4.5 p.94",
+     "numbers": "Placeholders [X], [Y], [Z] not filled in"
+    }
+   ],
+   "limitations": [
+    "Stated by authors: RoBERTa misreads sarcastic, ambiguous and indirect statements, and implicit disagreement (p.93). The authors call for sarcasm detection and better contextual embeddings.",
+    "Stated by authors: future work on other transformer architectures (XLM-R, XLNet, GPT-style and multilingual models) (pp.91, 94); hybrid stance plus fake-news classification; domain adaptation; cross-domain training with related low-resource languages; code-switching; a wider set of political topics; tools for other low-resource languages (p.94).",
+    "Stated by authors: BERT and LSTMs were excluded for lower accuracy on Roman Urdu and higher compute, but no numbers are shown (p.91).",
+    "Reader check, not an author claim: the dataset size is 8,374 in the abstract and 8,373 in Table 1. The test support of 1,675 for the classical models differs from the 6,699 support used for RoBERTa, so the models are not compared on one common test split.",
+    "Reader check: no inter-annotator agreement statistic (kappa or alpha) is reported; 'substantial agreement' is asserted only (p.84).",
+    "Reader check: no error bars, repeated runs, cross-validation or significance tests; a single 80/20 split with differences of 1-4 points between models.",
+    "Reader check: RoBERTa training details (learning rate, epochs, batch size, seed, max length) and classical hyperparameters (SVM kernel, RF tree count, TF-IDF settings) are missing, so the study cannot be reproduced from the text.",
+    "Reader check: the augmentation paragraph describes image operations (rotation, flipping, color adjustment) and gives no text-augmentation method (p.91).",
+    "Reader check: the Conclusion says all six models 'turned out as the best model' (p.94), which contradicts Section 4.5, and it mentions 'software repositories' (p.94), which does not match the Twitter political-stance task.",
+    "Reader check: collection period, retrieval date, keyword list completeness and sampling bias are not reported; the dataset is not public ('on request', p.94).",
+    "Reader check: reference-list errors. Yan et al. (ref [9], p.94) gives 2020 and 2018 in one entry. Ref [12] (Kavatagi & Rachh, a hate-speech paper) and ref [17] (Kucuk 2017, joint NER and stance) do not match the topics the text attributes to them, so the related-work citations need checking.",
+    "Reader check: no network, lobbying, persuasion, turnout or legislator analysis, and no election-outcome linkage; the political content is only the topic domain."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Walker, M. A., Anand, P., Abbott, R., & Grant, R. (2012). That is your evidence?: Classifying stance in online political debate. Decision Support Systems, 53(4), 719-729. Cited p.81; ideological debate stance, 4,731 posts; relevant to political text measurement.",
+    "Li, Y., Luo, Y., & Li, C. (2021). P-Stance: A large dataset for stance detection in political domain. Findings of ACL-IJCNLP 2021, 2355-2365. Cited p.82 and ref [18]; tweets from the 2020 US presidential election, the closest election-related stance benchmark in the paper.",
+    "Yan, Y., Chen, J., & Shyu, M.-L. (2018/2020). Efficient large-scale stance detection in tweets. IJMDEM, 9(3). Cited p.81 and ref [9]; 2016 US election tweets on Clinton and Trump; the citation entry has a year error.",
+    "Kucuk, D., & Can, F. (2019). A tweet dataset annotated for named entity recognition and stance detection. arXiv:1901.04787. Cited p.81 and ref [7]; Turkish tweet dataset with stance labels; relevant to dataset construction.",
+    "Kucuk, D., & Can, F. (2018). Stance detection on tweets: An SVM-based approach. arXiv:1803.08910. Cited p.82 and ref [19]; SVM-based stance on P-Stance-style data.",
+    "Ayyub, K., et al. (2021). Stance detection using diverse feature sets based on machine learning techniques. J. Intelligent & Fuzzy Systems, 40(5). Cited p.81 and ref [10]; direct comparison of classical classifiers with RNN, CNN-LSTM and DBN for stance.",
+    "Alturayeif, N., Luqman, H., & Ahmed, M. (2023). A systematic review of machine learning techniques for stance detection and its applications. Neural Computing and Applications, 35(7). Cited ref [6]; review of ML methods for stance.",
+    "AlDayel, A., & Magdy, W. (2021). Stance detection on social media: State of the art and trends. IP&M, 58(4). Cited ref [3]; survey of social-media stance detection.",
+    "Mets, M., Karjus, A., Ibrus, I., & Schich, M. (2024). Automated stance detection in complex topics and small languages: immigration in polarizing news media. PLoS ONE, 19(4). Cited ref [21]; low-resource-language stance on news media, with GPT-3.5 zero-shot.",
+    "Lan, X., Gao, C., Jin, D., & Li, Y. (2024). Stance detection with collaborative role-infused LLM-based agents. ICWSM 18. Cited ref [20]; LLM-agent zero-shot stance on SemEval-16, P-Stance and VAST.",
+    "Wang, X., et al. (2024). DEEM: Dynamic Experienced Expert Modeling for Stance Detection. arXiv:2402.15264. Cited ref [22]; LLM stance on P-Stance and MTSD (F1 81.1 and 83.4 per the text, p.83)."
+   ],
+   "short_quotes": [
+    {
+     "quote": "Models such as BERT and LSTMs were excluded as they exhibited lower accuracy on Roman Urdu text",
+     "location": "Section 4.4, p.91"
+    },
+    {
+     "quote": "The Naïve Bayes classifier performed the worst, with an accuracy of 89%, which is close to random guessing.",
+     "location": "Section 4.5, p.93"
+    },
+    {
+     "quote": "The model achieved an overall accuracy of 97%, demonstrating superior performance in detecting stance from Roman Urdu tweets.",
+     "location": "Section 4.4.2, p.92"
+    }
+   ]
+  },
+  "summary_md": "Khan et al. (2025) built a Roman Urdu dataset of Pakistani political tweet-and-reply pairs, about 8,374 labelled agree, disagree or unrelated. They benchmarked five TF-IDF classifiers against a fine-tuned RoBERTa. Reported accuracy: random forest 0.95, SVM 0.94, logistic regression 0.93, decision tree 0.92, naive bayes 0.89, all on 1,675 test rows. RoBERTa reached 0.97, but on an \"augmented\" set with support 6,699, so it was not scored on the same test split as the others. There is one 80/20 split, with no kappa, no seeds, no hyperparameters and no confidence intervals. The augmentation is described with image operations (rotation, flipping), and the conclusion contradicts the results section. As evidence the paper is weak. The ranking gaps of 1 to 4 points have no error bars, and the transformer-wins headline is not a like-for-like comparison.\n\nIt still matters here because the system cites it as a method source. fec/stance/train_stance_domain.py is literally titled \"Khan et al. pipeline\". It copies the paired target-conditioned input, the five-classifier ladder, the class-balancing analog and the expectation that \"transformer should beat all\". fec/stance/stance_eval.py takes macro-F1 as its headline and adds \"unrelated\" as a class \"per ICCK/TACS\" practice. On Paul's own data the paper's two transferable claims did not hold. A transformer on the augmented press set scored 0.757 macro-F1, below a tuned word+char LinearSVC at 0.816. The Khan multi-view augmentation hurt the classical models and was rejected on 2026-07-03. The lasting value is in the evaluation conventions: \"unrelated\" as its own class, macro-F1 as the headline, and fine-tuning only once labels are clean. The model-ranking claims do not carry over. The code docstring repeats the paper's 0.93 to 0.97 figures as if they were faithful, comparable numbers. It should flag that RoBERTa was scored on a different test set.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-stance.supervised-stance-stack",
+    "relation": "method-source",
+    "paper_claim": "Classical models on TF-IDF features rank RF 0.95 > SVM 0.94 > LR 0.93 > DT 0.92 > NB 0.89 on a 1,675-row test split. Fine-tuned RoBERTa on tweet plus comment paired input reports 0.97 accuracy on a support of 6,699 described as the augmented dataset. Augmentation and class balancing are credited with gains, but no with and without comparison is shown.",
+    "paper_location": "Tables 3-7 pp.89-91 (test support 1,675; Agree 583, Disagree 602, Unrelated 490); Table 8 p.93 (support 6,699); Sections 4.4.1 p.91 and 4.5 p.93",
+    "system_side": "train_stance_domain.py is labelled as the Khan pipeline adapted to the CU domain. It builds a target-conditioned paired input, runs the same five classifiers with class_weight balanced, has an --augment flag that adds title and stance-span views to TRAIN only, and has a --transformer path defaulting to distilroberta-base with 4 epochs and inverse-frequency loss weights.",
+    "code_ref": "fec/stance/train_stance_domain.py:3-8 (docstring cites the paper and restates its accuracies); :31-34 (paired input); :42-59 (multi-view augmentation, train only); :94-103 (five-model ladder; prints the Khan ordering and the expectation that the transformer should beat all); :120-127 (class-weighted RoBERTa loss); :24 and :25 (distilroberta-base default, 4 epochs)",
+    "transfer_conditions": "The mechanics (paired input, balanced loss, per-class P/R/F1 and macro-F1) transfer. The model ordering and the augmentation gain are not established by the paper: its classical rows are scored on 1,675 rows and its RoBERTa row on 6,699 rows. 6,699 is almost exactly 0.8 x 8,374 (6,699.2), the size of the 80 percent training share, so the RoBERTa figure may not be on a held-out set. The paper does not say which, so this is an inference and must be labelled as one.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Paper ranks, accuracies and supports re-read in Tables 3-8 and confirmed. Code lines 3-8, 31-34, 42-59, 94-103, 120-127 confirmed. Correction: the paper never calls the RoBERTa evaluation set a larger test set; the support equals 80 percent of the corpus and the text says only augmented dataset. The 'different and larger test set' wording should be replaced with 'not documented as held-out, support equals 80 percent of corpus'.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Supervised and stacked stance readers|Supervised and stacked stance readers]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.supervised-stance-stack",
+    "relation": "qualifies",
+    "paper_claim": "The transformer beats every classical model (0.97 vs at most 0.95). Dataset augmentation and class balancing are credited with improving performance, with no with and without comparison shown.",
+    "paper_location": "Section 4.4.2 p.92; Section 4.5 p.93; Section 4.4.1 p.91; Abstract p.78",
+    "system_side": "On the CU press gold set (per the analyst, 552 labelled rows, untouched test n=87), a transformer trained on augmented data reached 0.757 macro-F1, below a tuned word plus char LinearSVC at 0.816. The analyst reports the augmentation was rejected on 2026-07-03. Production uses the SVM.",
+    "code_ref": "fec/stance/train_stance_domain.py:26 (--augment flag); :42-59 (augmentation path); :78-92 (tune path with word plus char union and LinearSVC grid, CV on train, one report on test)",
+    "transfer_conditions": "The system numbers are single-look on an 87-row test and were not re-verified here. They are not a refutation of the paper's own measurement; they show that its ordering and augmentation gain did not transfer to this small English press corpus. Relation changed from contradicts to qualifies, because the paper's claim is about its own data.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper claim re-read: 97 percent and 'outperforming all other approaches' on p.93 confirmed; augmentation credited with no comparison confirmed. System-side numbers (0.757, 0.816, 2026-07-02 and 2026-07-03 notes) could not be found by targeted search in the melange-systems-brain STATE.md, so they remain unverified. Code paths confirmed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Supervised and stacked stance readers|Supervised and stacked stance readers]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-validation.gold-set-and-rank-gate",
+    "relation": "method-source",
+    "paper_claim": "Stance is a three-way task in which unrelated is a first-class label alongside agree and disagree. Per-class precision, recall and F1 are reported, with macro averages.",
+    "paper_location": "Fig. 1 p.80; Section 3.6 p.87; Tables 3-8 (Macro Avg. rows)",
+    "system_side": "stance_eval.py scores any prediction column against adjudicated gold, with macro-F1 as the headline, and its class list includes unrelated. train_tweet_stance.py uses the same four classes and scores with 5-fold stratified CV rather than one split.",
+    "code_ref": "fec/stance/stance_eval.py:3-8 (docstring, macro-F1 headline, cites the paper's practice); :17 (CLASSES list including unrelated); fec/stance/train_tweet_stance.py:23 (class list), :42 (StratifiedKFold 5)",
+    "transfer_conditions": "The labelling and metric conventions transfer across language and domain. The paper gives no cross-validation, no agreement statistic and no confidence interval, so it is a source for the convention only, not for validation rigour.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper's three-class scheme and macro averages confirmed in Tables 3-8. Code lines confirmed. The docstring cites the paper for macro-F1 and the paper does report macro averages, so the attribution is fair.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-validation#Gold-set validation and zero-rank-delta gate|Gold-set validation and zero-rank-delta gate]]",
+    "system": "melange-validation"
+   },
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "qualifies",
+    "paper_claim": "A fine-tuned RoBERTa reaches 0.97 accuracy on political stance. Misclassification concentrates in sarcastic, ambiguous and indirect statements, and some disagree-labelled items are predicted unrelated when explicit negation is absent.",
+    "paper_location": "Table 8 p.93; Section 4.5 p.93 (error discussion)",
+    "system_side": "The production transformer reader is Political DEBATE, an NLI-head model fine-tuned on about 552 labelled releases for 3 epochs. Per the analyst it scores 0.839 accuracy and kappa 0.742 held out, 0.571 on an adversarial frame, and the dominant error is implicit support read as neutral (n=78).",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/finetune_debate.py:13 (usage example, base mlburnham Political DEBATE); :34 (epochs default 3.0); :77-78 (TrainingArguments with epochs and learning rate)",
+    "transfer_conditions": "The error-mode finding (implicit and indirect stance is the residual failure) transfers and matches the system's neutral versus support seam. The 0.97 headline should not be a target or prior because it comes from a non-common evaluation set. The DEBATE reader is an NLI entailment model, not a RoBERTa classifier, so the architectures differ. Treat the paper as weak qualitative support only.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper error-mode text confirmed on p.93. Code lines confirmed: the script is NLI-style with entailment and contradiction pairs and default 3 epochs. The 552-row count, the 0.839, 0.742 and 0.571 scores and n=78 were not re-verified. The bearing should name the architecture difference explicitly.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Test-set framing is wrong or unsupported: 1,675 is 0.2 x 8,374 (1,674.8) and 6,699 is 0.8 x 8,374 (6,699.2). The RoBERTa row therefore has the size of the training share, and the paper calls it the augmented dataset without saying it is held out. The summary's 'larger test set' and 'non-common test split' wording should be labelled as an inference.",
+   "Augmentation wording: the paper's section 4.4.1 p.91 lists generic transformations (rotation, flipping, cropping, scaling, added noise, colour adjustments) with no text-specific procedure. Calling it image operations is a fair reading, but the summary should say generic transformations.",
+   "Paul-alignment claim is not sourced from this item: paul_entries is empty and n_annots is 0. The Paul position cited comes from the Birkenmaier item, whose author is Birkenmaier and Lechner 2025, not Birkenmaier and Kim J. 2025. The claim that Paul's highlights call SVM baselines outdated is unverified and should be removed or attributed.",
+   "System-side figures in the summary (0.757 vs 0.816 macro-F1, 0.839 and 0.571 for DEBATE, 552 rows, 2026-07-02 and 2026-07-03 augmentation notes) were not found by targeted search of the melange-systems-brain STATE.md and were not re-verified. Only the code paths were checked.",
+   "Reference-list mismatches to flag: ref 19 Kucuk and Can 2018 is titled an SVM-based approach, but the paper's text credits deep learning at 80.6 macro-F1 on P-STANCE. The summary's SVM-based description repeats the title, not the text. Ref 17 Kucuk 2017 (joint NER and stance) matches only the NER sentence; the text's topic-model plus VADER description on Facebook and WhatsApp does not fit the title. Ref 12 Kavatagi and Rachh 2025 is a Kannada-English hate-speech paper, while the text describes binary against and favor on Facebook comments.",
+   "Ref 9 Yan et al. entry carries two years and two author lists (2020 and 2018), as the summary says; the 2016 US election use case is confirmed in the text.",
+   "Conclusion contradiction is confirmed: section 5 says all six models turned out as the best, with RoBERTa at 97 percent and Random Forest second at 95 percent, while section 4.5 ranks RoBERTa first and the classical models below. The conclusion also mentions software repositories, which does not match the political-tweet task.",
+   "Naive Bayes 'close to random guessing' is false: a 3-class chance level is about 0.33 and the majority class share is 602 of 1,675 (about 0.36), so 0.89 accuracy is far above both. The summary is right to reject the wording.",
+   "Confirmed as stated: 8,374 in the abstract versus 8,373 rows in Table 1 (p.86); 97 percent on an unnamed independent Twitter dataset (p.85, no size or source); 'substantial agreement' with no statistic (p.84); BERT and LSTM exclusion with no numbers (p.91); the 80/20 split (p.88); data on request (p.94); DEEM 81.1 and 83.4 (p.83); Walker 4,731 posts; Li P-Stance tied to the 2020 US election.",
+   "Template placeholders [X], [Y] and [Z] remain in the F1 sentence after Table 8 (text near line 1985, p.93-94). Ext cites p.94; the page boundary is ambiguous in the extracted text, so the page number is not certain.",
+   "Related link park-2025-automatic-construction-direction was dropped: its relation as same-method is not supported, since the paper does not use a lexicon or sign-direction method and the system rejection is a Melange result, not a Khan result. Four links kept (ornstein, dai, birkenmaier with corrected relation, rice). The verifier did not re-read the three non-Birkenmaier items' text.",
+   "Coverage and overrides: no ext.json or rel.json override files exist, so the embedded ext and rel were used. Full text of the paper was read in searched sections (abstract, 3.3 to 4.5, conclusion, references); page images were not available. The paper's 2,271 text lines and the acceptance (27 April 2025) and publication (26 May 2025) dates were confirmed."
+  ],
+  "gaps_exposed": [
+   "The paper's one usable pointer is that implicit and indirect stance is the residual failure. The system knows its dominant error (implicit support read as neutral, n=78), but it has no dedicated handling for implicit stance or sarcasm in either the SVM or DEBATE readers.",
+   "The production press classifier (stance_clf_composed.pkl) still has no 'unrelated' class (07-03 note), although the evaluation harness and tweet trainer treat 'unrelated' as first-class. Training and evaluation label spaces are mismatched on the press side.",
+   "train_stance_domain.py lists the paper's accuracies as a faithful baseline and expects 'transformer should beat all'. The docstring does not record that the paper scored RoBERTa on a different test support (6,699 vs 1,675), or that the system's own result reversed the ordering. A reader of the code would inherit an unsupported expectation."
+  ],
+  "flags": [
+   "The code comment at fec/stance/train_stance_domain.py:103 ('transformer should beat all') and the docstring at :5-8 present the paper's model ordering as established. The paper's RoBERTa and classical results come from different test sets, and the system measured the opposite (0.757 vs 0.816 macro-F1). This is a stale or unsupported expectation embedded in code, not a validated prior.",
+   "Brain notes conflict on the augmentation history. The 2026-07-02 note credits '--augment (Khan multi-view)' plus tuning with the 83.9% / 0.816 result. The 2026-07-03 note says Khan augmentation hurts classical models and was rejected, with tune-only reaching 0.835. The component description follows the 07-03 version. Any citation of the 0.816 figure should state which configuration produced it.",
+   "Any quote of the paper's 0.97 must name its denominator: support 6,699 on the 'augmented dataset', not the 1,675-row test used for the classical models. The paper's own 'close to random guessing' claim for naive bayes at 0.89 is false against a majority-class share of about 0.36."
+  ],
+  "paul_alignment": "Paul's annotated position, from Birkenmaier and Kim J. 2025, favours transformers and LLMs over bag-of-words SVMs. His highlights call SVM baselines outdated. This paper looks as if it supports that view, but its comparison is confounded, and the system's own measurements on CU press data (552 labels) went the other way. A tuned word+char LinearSVC tied or beat the fine-tuned transformers: 0.816 vs 0.757 macro-F1 for distilroberta, and 0.835 vs 0.839 against DEBATE. The LLM and API readers did beat the classical model on tweets (Opus 0.662 vs transfer 0.357 F1). So Paul's preference holds for large LLMs, not for small fine-tuned encoders on a few hundred labels. His notes do not record that outcome, and on this point they are stale relative to the system. His flagged weakness, ambiguous statements, matches the paper's stated error mode.",
+  "related": [
+   {
+    "slug": "ornstein-2024-train-your-stochastic",
+    "relation": "complements",
+    "why": "Ornstein evaluates LLMs on political text with small labelled sets, the regime where the system's LLM readers beat small fine-tuned encoders. Item existence confirmed; its text was not re-read for this check."
+   },
+   {
+    "slug": "dai-2025-large-language-model",
+    "relation": "complements",
+    "why": "Dai addresses LLM-enhanced stance detection for implicit and reasoning-dependent stance, the failure mode Khan reports but does not solve. Item existence confirmed; its text was not re-read."
+   },
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Birkenmaier and Lechner 2025 (not Birkenmaier and Kim J.) report a different task where few-shot GPT-4o at 0.76 macro-F1 beats fine-tuned XLM-R at 0.70 and bag-of-words SVM at 0.55-0.63 per the item summary. That agrees in direction with the transformer-over-classical claim, so it is complementary, not contradictory. Paul's preference rests on it, not on Khan."
+   },
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "complements",
+    "why": "Rice and Zorn dictionary methods are the lexical lineage behind the legacy scorer, one step below the supervised TF-IDF ladder Khan benchmarks. Item existence confirmed; content not re-read."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "steinertthrelkeld-2018-twitter-data",
+    "relation": "built-on-by",
+    "why": "This paper stops at an introduction to NLP tooling for tweets. Khan et al. take political-tweet text to fine-tuned stance classification, which is the step the system's tweet-stance readers actually depend on."
+   },
+   {
+    "slug": "zhou-2026-measuring-stance-dynamics",
+    "relation": "complements",
+    "why": "Item text is the paper Comparing Fine-Tuned RoBERTa with Traditional ML Models for Stance Detection in Political Tweets, so the rel rationale holds. The item ext title (Roman Urdu) is a stale mismatch and should be corrected in the item."
+   },
+   {
+    "slug": "taherdoost-2023-artificial-intelligence-sentiment",
+    "relation": "complements",
+    "why": "This is the direct empirical comparison the review lacks: fine-tuned RoBERTa against traditional ML for stance in political tweets. It bears on the DEBATE-versus-LinearSVC question."
+   },
+   {
+    "slug": "naz-2025-machine-deep-learning",
+    "relation": "complements",
+    "why": "Compares fine-tuned RoBERTa with traditional ML on political-tweet stance, the same classical-versus-transformer comparison applied to the stance task the system actually runs."
+   },
+   {
+    "slug": "park-2025-automatic-construction-direction",
+    "relation": "complements",
+    "why": "Real item, but Khan et al. compare fine-tuned RoBERTa with five TF-IDF classical classifiers on Roman Urdu tweets, not with lexicon methods, so rel's 'beats classical and lexicon methods' misstates it. Park Table 7 shows the same ordering (RoBERTa 0.9620 vs LM+Senti-DD 0.8233 on DS100) on a different task, so this is not a contradiction."
+   },
+   {
+    "slug": "burnham-2023-stance-detection-practical-guide",
+    "relation": "same-method",
+    "why": "Title matches: fine-tuned RoBERTa versus traditional ML for stance in political tweets. The Khan attribution in the analyst note is not verified; the Khan reference in code is a different Roman Urdu study."
+   },
+   {
+    "slug": "burnham-2024-political-debate-zero",
+    "relation": "complements",
+    "why": "Compares fine-tuned RoBERTa with traditional ML for political-tweet stance, the transformer-versus-SVM question the system's supervised stack and DEBATE reader raise. The paper itself does not cite it."
+   },
+   {
+    "slug": "lemens-2025-positioning-political-texts",
+    "relation": "complements",
+    "why": "This compares fine-tuned RoBERTa with classical ML for political-tweet stance, the same supervised-versus-classical contrast Le Mens extends to LLMs."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "taherdoost-2023-artificial-intelligence-sentiment",
+  "note": false,
+  "meta": {
+   "title": "Artificial Intelligence and Sentiment Analysis: A Review in Competitive Research",
+   "authors": [
+    "Hamed Taherdoost",
+    "Mitra Madanchian"
+   ],
+   "year": "2023",
+   "venue": "Computers (MDPI), 12(2), article 37; published 7 Feb 2023",
+   "doi": "10.3390/computers12020037",
+   "sha12s": [
+    "996dcf96b3c8",
+    "acee3d982957"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "Artificial Intelligence and Sentiment Analysis: A Review in Competitive Research",
+   "authors": [
+    "Hamed Taherdoost",
+    "Mitra Madanchian"
+   ],
+   "year": "2023",
+   "venue": "Computers (MDPI), 12(2), article 37; published 7 Feb 2023",
+   "doi": "10.3390/computers12020037",
+   "document_type": "Review (scoping review of Scopus-indexed journal literature; no original empirical data)",
+   "coverage": "Full text read in chunks: all of _text/acee3d982957.txt (lines 0-893; PDF pages 1-15), including front matter, abstract, introduction, background, methodology, results RQ1-RQ3, conclusions and the full reference list. Figures 1 (PRISMA flowchart), 5 (keyword cloud) and 6 (country map) are image-only in the extracted text, so their content is not verified. No Paul markup files were supplied, so paul_markup is empty.",
+   "research_question": "RQ1: What is the current state of research on AI-based sentiment analysis in competitive research (document type, subject area, keywords, author geography, most-cited work)? RQ2: What is the development of the major AI-based sentiment analysis approaches? RQ3: What are the difficulties and prospects of AI-based sentiment analysis in competitive research? (Section 3.1, p.4.) Stated aim: help new researchers keep up with the field and improve future research quality (p.2).",
+   "theory": "None formally stated. Descriptive literature review. Background frames competitive research as comparing a firm and its products with rivals (p.2), and sentiment analysis as a subtype of affective computing (p.2). No hypotheses are tested.",
+   "identification": "None. No causal or identification claims; evidence is descriptive counts plus narrative synthesis of selected papers.",
+   "data": "Unit: a publication (journal article or review). Source: Scopus. Search results: 133 items (Sec 3.2, p.4: 133 Scopus results examined up to 26 Dec 2022); Sec 4 (p.6) says 90 were examined; 43 publications included. Window: 2012-2022. Inclusion: publication 2012-2022, journal scope. Exclusion: articles in press, non-English articles (Table 1, p.5). Document mix: articles 86%, reviews/editorials 14% (p.6).",
+   "method": "Scoping review following a PRISMA-style flow (Figure 1, image only). Boolean search strings combining AI / artificial intelligence / machine learning / deep learning with \"Sentiment Analysis\" and business terms (Competitive, Business, Market, Customer, Product, Service) (Table 1, pp.5-6). Descriptive bibliometric tallies (year, document type, subject area, keywords, author country, citation counts) and narrative review of selected papers for RQ2-RQ3. No quality appraisal, dual coding or inter-rater procedure is described; author contributions list H.T. for methodology and validation (p.13).",
+   "scope": "Population: Scopus-indexed English-language journal articles and reviews from 2012-2022 that combine AI or machine learning with sentiment analysis and business or competitive terms. Era: 2012-2022 (search closed 26 Dec 2022). Not a study of a single institution or firm.",
+   "key_findings": [
+    {
+     "finding": "Corpus size: 43 publications included out of 133 Scopus results.",
+     "location": "Sec 3.2, p.4; Sec 4 Selection Results, p.6",
+     "numbers": "133 results, 90 examined, 43 included (the 133 vs 90 counts are not reconciled in the text)"
+    },
+    {
+     "finding": "Annual publication counts rise after 2018; text says no documents in 2012-2017 but also reports one 2017 paper.",
+     "location": "RQ1, pp.6-7 (Figure 4 is image-only)",
+     "numbers": "2017: 1 (2.32%); 2018: 0; 2019: 5 (11.63%); 2020: 9 (20.93%); 2021: 12 (27.91%); 2022: 16 (37.21%)"
+    },
+    {
+     "finding": "Document type is mostly articles.",
+     "location": "RQ1, p.6 (Figure 2)",
+     "numbers": "Articles 86%; reviews and editorials 14%"
+    },
+    {
+     "finding": "Subject area is dominated by Computer Science.",
+     "location": "RQ1, p.7 (Figure 3 image-only)",
+     "numbers": "Computer Science 31; Engineering 17; Business, Management and Accounting 8; Mathematics 7; Social Sciences 6; Decision Sciences 5; Materials Science 5"
+    },
+    {
+     "finding": "Most frequent keywords across selected papers.",
+     "location": "Table 2, pp.8-9",
+     "numbers": "Sentiment Analysis 32; Deep Learning 19; Machine Learning 16; Artificial Intelligence and Learning Algorithms 8; NLP and Social Networking (online) 7; Data Mining and Feature Extraction 6; CNN and Learning Systems 5"
+    },
+    {
+     "finding": "Author geography is concentrated in a few countries.",
+     "location": "p.8 and Figure 6 (image-only)",
+     "numbers": "India 19; China 7; Malaysia 6; Saudi Arabia 6; Taiwan 5; United States 5"
+    },
+    {
+     "finding": "Most-cited papers in the set, with citation counts as listed by the review.",
+     "location": "Table 3, pp.9-10",
+     "numbers": "Yang et al. 2020 (ref 33): 145; Hung et al. 2020 (ref 34, social network analysis of COVID-19 sentiments): 98; Yi and Liu 2020 (ref 35): 44; Patel et al. 2020 (ref 36): 43; Zhao et al. 2021 (ref 37): 37; Feizollah et al. 2019 (ref 38): 33; Paredes-Valverde et al. 2017 (ref 39): 32; Nandal et al. 2020 (ref 40): 28; Chakriswaran et al. 2019 review (ref 41): 27; Mehta et al. 2021 (ref 42): 21"
+    },
+    {
+     "finding": "Claim that machine learning needs human-chosen features and that no universally agreed strategy exists for business prediction.",
+     "location": "RQ2, p.10",
+     "numbers": "None (narrative claim citing ref 44)"
+    },
+    {
+     "finding": "Reported result from a cited study: a random forest model anticipated a business support system's health status one hour before an emergency.",
+     "location": "RQ2, p.10, citing Chen et al. (ref 47)",
+     "numbers": "Average inaccuracy of 14 points, as reported in the review"
+    },
+    {
+     "finding": "Comparison of predictive versus diagnostic abilities of text-based models.",
+     "location": "RQ2, pp.11-12, citing Alantari et al. (ref 50)",
+     "numbers": "None; qualitative: neural network ML gives the most accurate predictions; topic models poor at prediction; neural networks poor at diagnosis"
+    },
+    {
+     "finding": "Stated future directions (not tested): hybrid ML for sentiment categorization, sarcasm detection via linguistic patterns, micro-text and anaphora resolution, high-inflection languages and emotive lexicons, psychologically motivated reasoning for customer behaviour prediction.",
+     "location": "RQ3, pp.12 (citing refs 54-58 and 49)",
+     "numbers": "None"
+    },
+    {
+     "finding": "Conclusion that the profession is becoming more academic, and that sentiment analysis will play a significant role in customer engagement; both are asserted rather than tested.",
+     "location": "Conclusions, p.13",
+     "numbers": "Based on 43 articles; no statistical test"
+    }
+   ],
+   "limitations": [
+    "Database restriction: review text says the database, which is mostly Scopus, restricts the review process (p.6).",
+    "Acknowledged incompleteness: 'not all of the excellent works of literature were included in the search criteria for a variety of reasons' (p.4).",
+    "Exclusion of articles in press and non-English articles (Table 1, p.5); scope limited to journal articles.",
+    "Internal inconsistencies: 133 results vs 90 examined (pp.4, 6); 'no documents from 2012 to 2017' vs one 2017 paper (p.6).",
+    "No dedicated limitations section. No described quality appraisal, dual screening or inter-rater procedure. Methodology appears to be a single author's (H.T.) work (p.13).",
+    "Figures 1, 5 and 6 are image-only in extraction; PRISMA counts cannot be checked from text.",
+    "Citation counts are as listed in Table 3 without an extraction date.",
+    "Conclusion about the field becoming 'more academic' rests only on yearly paper counts."
+   ],
+   "measures": [
+    "Publication counts by year (2012-2022) and share of total",
+    "Document type shares (articles vs reviews/editorials)",
+    "Counts by Scopus subject area",
+    "Keyword frequencies (Table 2)",
+    "Author counts by country",
+    "Citation counts ('Cited by', Table 3)",
+    "No effect sizes, accuracy metrics or statistical tests reported by the review itself; accuracy figures appear only as quoted from cited studies"
+   ],
+   "references_of_note": [
+    "[34] Hung et al. 2020, Social network analysis of COVID-19 sentiments: Application of AI, J Med Internet Res 22:e22590 (in Table 3; the only explicit SNA-type work discussed).",
+    "[48] Ghiassi, Zimbra, Lee 2016, Targeted Twitter sentiment analysis for brands using supervised feature engineering and dynamic architecture for ANNs, J MIS 33:1034-1058 (brand-level social media sentiment, p.10-11).",
+    "[11] He, Zha, Li 2013, Social media competitive analysis and text mining: pizza industry, Int J Inf Manag 33:464-472 (competitor text mining; cited in the reference list).",
+    "[12] Dey et al. 2011, Acquiring competitive intelligence from social media (cited at p.2 for comparing customer behaviour toward rivals).",
+    "[15] Stieglitz and Dang-Xuan 2013, Emotions and information diffusion in social media, J MIS 29:217-248 (sentiment and diffusion; cited only in the reference list, not discussed in text).",
+    "[16] Yang et al. 2022, Social media data analytics for business decision making system to competitive analysis, Inf Process Manag 59:102751 (cited at p.3).",
+    "[50] Alantari et al. 2022, Empirical comparison of ML methods for text-based sentiment analysis of online consumer reviews, Int J Res Mark 39:1-19 (predictive vs diagnostic trade-off, pp.11-12).",
+    "[23] Palomino and Aider 2022, Evaluating the effectiveness of text pre-processing in sentiment analysis, Appl Sci 12:8765 (preprocessing matters for accuracy, p.3).",
+    "[49] Giatsoglou et al. 2017, Sentiment analysis leveraging emotions and word embeddings, Expert Syst Appl 69:214-224 (cited pp.11-12).",
+    "[42] Mehta, Pandya, Kotecha 2021, Harvesting social media sentiment to enhance stock market prediction using deep learning, PeerJ CS 7:e476 (in Table 3)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "AI comprehends the tone of a statement, as opposed to merely recognizing whether particular words within a group of text",
+     "location": "Abstract, p.1"
+    },
+    {
+     "quote": "Topic models, however, are not well suited for making predictions, and neural network models are not well suited for making diagnoses.",
+     "location": "RQ2, p.12 (citing Alantari et al.)"
+    },
+    {
+     "quote": "Results indicate that this profession is becoming more academic with time.",
+     "location": "Conclusions, p.13"
+    }
+   ]
+  },
+  "summary_md": "Taherdoost and Madanchian (2023) is a scoping review, not an empirical study. They searched Scopus for 2012-2022 journal papers that combine AI or machine learning with sentiment analysis and business or competitive terms. Of 133 hits, 43 papers were kept; the text also says 90 were examined and never reconciles the two counts. The review counts papers by year, subject, keyword, author country and citations. Its narrative section repeats claims from the papers it cites. The one useful methodological point is borrowed from Alantari et al. (2022): neural-network classifiers predict best but diagnose poorly, and topic models do the reverse. The review runs no accuracy tests of its own. It does not separate sentiment from stance or address target-dependent valence. It does not cover political text, and it describes no quality appraisal or dual screening.\n\nFor the system as built, its bearing is thin. The CU stance stack already does what the review recommends, in a stricter form. stage5_debate.py uses a fine-tuned transformer NLI reader for direction, validated on held-out human gold: 0.839, kappa 0.742, n=87, member-grouped. Lexicoder LSD2015 is kept only as a tone-intensity term (stage5_lsd.R; run_stage5.R:141-143) and never decides direction. The predictive-versus-diagnostic split gives a framing for that division: the neural reader handles prediction and the transparent dictionary handles interpretable intensity. But that rests on consumer-review evidence and one cited study. The review says nothing about the system's real bottleneck, the valence hop at 0.689 in the two-hop decomposition, or about adversarial and sign-flip targets (0.571 on goldeval). Treat it as background, not as evidence for any component's design or constants.",
+  "paul_entries": [
+   {
+    "doc": "Machine Learning & Sentiment Analysis - Machine Learning & Sentiment Analysis - Annotated Bibliography.md",
+    "citation": "Taherdoost, Hamed, and Mitra Madanchian. “Artificial Intelligence and sentiment analysis: A review in Competitive Research.” Computers, vol. 12, no. 2, 7 Feb. 2023, p. 37, [https://doi.org/10.3390/computers12020037](https://doi.org/10.3390/computers12020037).",
+    "text": "Taherdoost, Hamed, and Mitra Madanchian. “Artificial Intelligence and sentiment analysis: A review in Competitive Research.” Computers, vol. 12, no. 2, 7 Feb. 2023, p. 37, [https://doi.org/10.3390/computers12020037](https://doi.org/10.3390/computers12020037)."
+   }
+  ],
+  "bearings": [
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "context",
+    "paper_claim": "The paper asserts that AI understands the tone of a statement rather than just recognising words. Citing Alantari et al. 2022, it says neural-network ML gives the most accurate predictions of the text-based methods compared. The review reports no accuracy figures of its own, and its corpus is 43 business and competitive-research papers from 2012-2022.",
+    "paper_location": "Abstract p.1; RQ2 pp.11-12 (citing ref 50)",
+    "system_side": "A fine-tuned Political DEBATE NLI model (mlburnham/Political_DEBATE_base_v1.0) gives the CU stance direction. stance_sign is support, oppose or neutral, and the code states that this is independent of LSD tone. On held-out human gold it scored 0.839 accuracy / kappa 0.742 (n=87). It scored 0.796 on the 760-row frame and 0.571 on the adversarial goldeval frame.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:3-12,26-31",
+    "transfer_conditions": "Weak. The cited evidence covers consumer reviews and business social media, not congressional press releases. It also concerns sentiment polarity, not target-specific stance toward CU policy interests. It neither supports nor tests the system's validated accuracy, which comes from a stricter protocol (held-out, member-grouped human gold).",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.lsd-tone",
+    "relation": "qualifies",
+    "paper_claim": "Alantari et al., as summarised by the review, find a trade-off: neural networks predict well but diagnose poorly, while more transparent methods are poorer predictors. The review frames word-matching approaches as the baseline that AI improves on. The trade-off is qualitative only and no numbers are given.",
+    "paper_location": "RQ2 pp.11-12 (citing ref 50); Abstract p.1",
+    "system_side": "Lexicoder LSD2015 counts run with negation phrases removed first. They yield lsd_net_norm = net/words and lsd_charge = (pos+neg)/words. Only the magnitude (|net_norm| or charge) enters press_value = final_sign x intensity, so the dictionary sets intensity and never direction.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:48-60; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:141-143",
+    "transfer_conditions": "The paper agrees with the system's split of roles: an opaque predictive reader for direction and a transparent dictionary for an interpretable intensity scalar. It gives no evidence that dictionary intensity is valid on political press releases. The open question of whether LSD intensity matches human-coded intensity on this corpus is untouched. The source evidence is consumer reviews.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#Lexicoder LSD2015 tone intensity|Lexicoder LSD2015 tone intensity]]",
+    "system": "melange-stance"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "Neither the review nor the system validates LSD tone intensity against human-coded intensity on congressional press releases. The predictive-versus-diagnostic framing makes this gap more visible, because the dictionary is kept for interpretability, and an interpretability claim needs a validity check.",
+   "The review treats sentiment and stance as one construct and covers no target-dependent valence. The system's measured bottleneck is the valence hop (0.689 on 400 tweet golds), so the review offers nothing on the hardest part of the stack.",
+   "The review's future directions are untested suggestions: sarcasm detection, hybrid ML for sentiment categorisation, and micro-text and anaphora resolution. Anaphora and target resolution may matter for releases that name a bill only once in a roundup, which is the failure behind the rejected bill-sign override. The review offers no method or evidence for this."
+  ],
+  "flags": [
+   "Paul cites Taherdoost & Madanchian 2023 as support for LLM- and transformer-based position extraction under melange-stance.debate-nli-classifier. The paper cannot carry that weight. It is a single-author scoping review with internally inconsistent counts (133 vs 90 screened; 'no documents 2012-2017' vs one 2017 paper). It reports no accuracy figures and covers no LLM or political-text evidence. Cite it as background only.",
+   "The review conflates sentiment with stance. The system's supervised-stance-stack assumes that sentiment is not stance, and stage5_debate.py:11-12 keeps the two separate. Do not cite this review for any stance-accuracy claim.",
+   "The review's only network-analysis item is Hung et al. 2020 (ref 34, a social network analysis of COVID-19 sentiment). It is not used to argue for dropping regular cosponsorship edges or for per-edge volume normalisation, so neither rejected SNA proposal is raised. No influence or closeness wording is implied."
+  ],
+  "paul_alignment": "Paul's one recorded link files this review under melange-stance.debate-nli-classifier. His takeaway there endorses LLM and transformer position extraction and flags the difficulty of ambiguous statements. The review agrees only in general direction (AI and neural nets beat word matching) and adds no evidence for that position. Kim J. 2025 and Birkenmaier & Lechner 2025 carry the actual evidence. The review does not address ambiguous statements, apart from listing sarcasm and anaphora as future work. Paul's annotation is empty (no takeaways, no anchor), so nothing he wrote is stale. The system has already moved past what the review describes: a fine-tuned NLI reader on held-out human gold, a human-label overlay, a two-hop stance-times-valence decomposition and a dictionary used for intensity only.",
+  "related": [
+   {
+    "slug": "b-2025-comparing-fine-tuned",
+    "relation": "complements",
+    "why": "This is the direct empirical comparison the review lacks: fine-tuned RoBERTa against traditional ML for stance in political tweets. It bears on the DEBATE-versus-LinearSVC question."
+   },
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "complements",
+    "why": "Corpus-specific dictionaries are the evidence-based answer to the review's dismissal of word-matching methods. They also bear on whether a general LSD2015 suits congressional text."
+   },
+   {
+    "slug": "haselmayer-2017-sentiment-analysis-political",
+    "relation": "complements",
+    "why": "Combines a political-communication dictionary with crowdcoding validation, the validation step that the review never addresses for dictionary tone."
+   },
+   {
+    "slug": "zhang-2022-data-assisted-social",
+    "relation": "cites",
+    "why": "The review cites a 2022 Inf Process Manag paper on social media analytics for competitive business decisions (ref 16). It appears to be the same work as this vault entry, though the first author is listed differently."
+   },
+   {
+    "slug": "ornstein-2024-train-your-stochastic",
+    "relation": "complements",
+    "why": "Gives the political-text LLM evidence that the review does not cover, and is relevant to Paul's LLM-extraction stance."
+   },
+   {
+    "slug": "park-2025-automatic-construction-direction",
+    "relation": "complements",
+    "why": "A direction-aware lexicon (the one behind the rejected verb lexicon) addresses the sentiment-versus-direction distinction that the review collapses."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "christopher-2016-mathematical-modeling-analysis",
+  "note": false,
+  "meta": {
+   "title": "Mathematical modeling and analysis of a dark money network",
+   "authors": [
+    "Christopher Couch",
+    "William P Fox",
+    "Sean F Everton"
+   ],
+   "year": "2016",
+   "venue": "Journal of Defense Modeling and Simulation: Applications, Methodology, Technology, 13(3):343-354",
+   "doi": "10.1177/1548512915625337",
+   "sha12s": [
+    "266b567ac6e0"
+   ],
+   "category": "Social Network Analysis",
+   "category_slug": "social-network-analysis"
+  },
+  "extraction": {
+   "title": "Mathematical modeling and analysis of a dark money network",
+   "authors": [
+    "Christopher Couch",
+    "William P Fox",
+    "Sean F Everton"
+   ],
+   "year": "2016",
+   "venue": "Journal of Defense Modeling and Simulation: Applications, Methodology, Technology, 13(3):343-354",
+   "doi": "10.1177/1548512915625337",
+   "document_type": "Journal article (applications/methods paper; modeling study of one network, no new empirical dataset)",
+   "coverage": "Full text read: all 1,131 lines of C:\\Users\\pgoff\\Documents\\research\\_text\\266b567ac6e0.txt, including abstract, introduction, AHP/TOPSIS section, sensitivity analysis, game theory, nonlinear programming section, conclusions, references and author biographies. Metadata hint verified against the PDF header and was correct (authors listed in the order Couch, Fox, Everton). No Paul markup files existed (\"(none)\"), and the text contains no highlights or sticky-note content, so paul_markup is empty.",
+   "research_question": "How can social network analysis of a single US dark money network (politically active nonprofits that take unlimited donations without disclosing donors) be made more rigorous by (a) ranking key nodes with a multi-criteria method (AHP/TOPSIS) instead of a subjective choice of centrality measure, and (b) turning the State-versus-network contest into a game with cardinal payoffs so that kinetic (prosecution/legislation) versus non-kinetic (exposure via press) strategy mixes can be solved for (Sections 1-2, 4; abstract).",
+   "data": "No new sample. The unit is the organization (node) in one dark money network (DMN) that the authors analyzed in earlier unpublished work. Network-level description: a money-flow network in which ties mean funds were exchanged, node size is betweenness, tie width is dollar amount, and some nodes attended a strategy event (Figure 1, Section 1). Analytic set: the 8 organizations with the highest overall degree centrality, computed in ORA (Table 1, Section 2). Centrality values come from ORA, which lists only the top ten per metric, so some organizations have missing values (Section 4). Expert inputs: AHP pairwise judgments by the authors on Saaty's nine-point scale (criteria weights, Table 4, CR = 0.062; game payoffs, CR = 0.02244 for State and 0.03248 for DMN). No time period is stated for the network data. The number of nodes in the full DMN and the dollar amounts are not reported numerically.",
+   "method": "Three linked components. (1) AHP criterion weighting over eight SNA measures (out-degree, total degree, eigenvector, betweenness, hub, in-degree, closeness, authority), with out-degree ranked first (weight 0.50199) and authority last (0.03418) (Table 2, Table 4, Section 2). (2) TOPSIS ranking of the 8 organizations on the unscaled ORA values using those weights (Table 5). Sensitivity analysis follows Alinezhad and Amini (Eq. 1): change one weight in 0.1 steps and rescale the others proportionally (Section 3). (3) Game theory on a 2x2 State (non-kinetic A vs kinetic B) by DMN (maintain centralized C vs decentralize D) game. Ordinal ranks 1-4 (Table 6) are converted to cardinal utilities by AHP (Table 7). Solutions use Nash equilibrium, mixed equalizing strategies, prudential (security-level) strategies and Nash arbitration (Feix solver; Fox lottery-alternative approach). A 5-action State vs 2-action DMN extension uses 10 strategies and a nonlinear program (Barron, Equation 2), solved in Maple 15 (Section 4).",
+   "identification": "None. This is a descriptive decision-analysis and modeling paper with no causal identification strategy, no treatment or comparison group, and no estimation of effects from data. Robustness is checked only by one-weight sensitivity analysis (Section 3).",
+   "scope": "Population: one US politically active dark money network of nonprofits and linked LLCs (SMLLCs), with the State modeled as the opposing player. Institutional frame: IRS rules on 501(c) political activity and disclosure, with sources cited to 2010-2014 news and IRS materials (accessed 2014-2015). The paper says the network is currently legal and that the State's kinetic options are prosecution, fines and legislation. Methodological scope is general: the authors state the method applies to any dark network. Era: circa 2010-2015 (inferred from cited sources and access dates).",
+   "key_findings": [
+    {
+     "finding": "Out-degree is weighted most heavily (0.50199), followed by total degree (0.14517) and eigenvector (0.11045); the AHP consistency ratio is 0.062, under the 0.10 threshold.",
+     "location": "Section 2, Table 2 and Table 4, p. 346-347",
+     "numbers": "weights 0.50199, 0.14517, 0.11045, 0.07489, 0.05459, 0.04378, 0.03525, 0.03418; CR = 0.062"
+    },
+    {
+     "finding": "TOPSIS ranks Freedom Partners Chamber of Commerce first, Center to Protect Patients' Rights second, and Corner Table LLC third. Corner Table has low out-degree (7) but ranks third. TC4 Trust, third in out-degree (38), ranks seventh. Only the top two organizations match the out-degree ranking.",
+     "location": "Section 2 and Table 5, p. 346-347",
+     "numbers": "TOPSIS closeness: 0.7538 (FPCC, out-degree 90), 0.6192 (CPPR, out-degree 78), 0.4909 (Corner Table, out-degree 7), 0.4887 (American Future Fund), 0.4869, 0.4837, 0.4835 (TC4 Trust, out-degree 38), 0.4817"
+    },
+    {
+     "finding": "Sensitivity: raising out-degree weight in 0.1 steps until it is no longer the largest weight leaves Freedom Partners Chamber of Commerce ranked first. Raising the lowest weight (closeness) lets Center to Protect Patients' Rights overtake Freedom Partners.",
+     "location": "Section 3, Figure 4 and Figure 5, p. 347",
+     "numbers": "Figures only; no numeric thresholds given in text"
+    },
+    {
+     "finding": "Ordinal game equilibrium is AD (State non-kinetic, DMN decentralize). Cardinal AHP utilities give State values AD 0.480038, BD 0.28523, AC 0.139265, BC 0.095467 (CR 0.02244) and DMN values BC 0.480645, BD 0.290615, AD 0.137848, AC 0.090892 (CR 0.03248).",
+     "location": "Section 4, Tables 6-7, p. 348-350",
+     "numbers": "State and DMN AHP utilities as listed; Nash equilibrium AD at (0.48, 0.137)"
+    },
+    {
+     "finding": "Mixed equalizing strategy for the State is non-kinetic 84.8385% and kinetic 15.1615%. The paper says this replaces the earlier 50/50 recommendation, and the authors conclude that about 85% of effort should go to non-kinetic methods.",
+     "location": "Section 4 and Section 5, p. 349-351 and p. 352",
+     "numbers": "84.8385% non-kinetic; 15.1615% kinetic"
+    },
+    {
+     "finding": "Prudential (security-level) strategies: State plays A (non-kinetic) and DMN plays C (centralize) always, with security levels 0.139 for the State and 0.137 for the DMN.",
+     "location": "Section 4, Figure 6, p. 349",
+     "numbers": "security levels (0.139, 0.137)"
+    },
+    {
+     "finding": "Nash arbitration places the outcome near BD, projected to the Pareto segment at about (0.31, 0.3192).",
+     "location": "Section 4, Figure 8, p. 349-350",
+     "numbers": "(0.31, 0.3192)"
+    },
+    {
+     "finding": "Ten-strategy extension (decomposed actions A1-A3 kinetic, B1-B2 non-kinetic) with a nonlinear program. Solution: State randomizes between two actions with weights 0.92 and 0.8 (as printed), and DMN centralizes with probability 1. The objective value is Z = -0.001129 at p = 0.084, q = 0.0595.",
+     "location": "Section 4, Equation 2 and the solution after it, p. 351-352",
+     "numbers": "Z = -0.001129; p = 0.084; q = 0.0595; x2 = 0.92, x4 = 0.8 as printed; y1 = 1"
+    }
+   ],
+   "limitations": [
+    "The authors say explicitly that no significant changes resulted from the MADM analysis, though the findings were improved (Section 5, p. 352).",
+    "All criterion weights and game payoffs come from the authors' own subjective pairwise judgments on Saaty's scale. No external validation of weights or payoffs is reported. Sensitivity checks cover only one weight changed at a time (Section 3).",
+    "Single network, eight alternatives, unknown time period, and no reported N for the full network. Findings cannot be generalized to other dark networks without further study, although the authors state the method applies to any dark network.",
+    "ORA reports only the top ten nodes per metric, so some centrality values are missing for lower-ranked organizations (Section 4).",
+    "Kinetic and non-kinetic are defined by the authors: kinetic means IRS-related prosecution or fines, legislation on non-profit political activity, donation transparency and LLC anonymity rules; non-kinetic means press exposure of donors (Section 4, p. 348). The payoff structure depends on these definitions.",
+    "Game results depend on the assumed payoff framing. The authors state that anonymity and money flow are the DMN's main goals. The paper also includes a partisan framing of the opposing side ('Liberal leadership in the United States is unable to conduct' kinetic operations, Section 4), which is the authors' premise, not a tested finding.",
+    "The 10-strategy nonlinear solution as printed is internally inconsistent. The reported x2 = 0.92 and x4 = 0.8 sum to 1.72, not 1 as the constraint requires, and the text describes 92% and 8% shares. The likely intended value is 0.08, but this is not confirmed in the paper, so the reported solution is unverified.",
+    "Game-theory analysis treats the State and the DMN as two rational players with fixed payoffs. Structural dynamics such as DMN adaptation or donor response are not modeled.",
+    "Sources are news and advocacy reports from 2010-2014 (for example references 13, 15, 16, 18, 19), and the authors do not state dollar amounts or donor counts for the network analyzed."
+   ],
+   "paul_markup": [],
+   "measures": [
+    "ORA social network centrality: out-degree, in-degree, total degree, eigenvector, closeness, betweenness, hub and authority centrality",
+    "AHP criterion weights (Saaty nine-point scale) and consistency ratio (CR)",
+    "TOPSIS closeness coefficient (larger is better) for ranking 8 organizations",
+    "Sensitivity of rank to one weight changed in 0.1 steps with proportional rescaling (Equation 1)",
+    "Ordinal payoffs 1-4 converted to cardinal AHP utilities; Nash equilibrium, prudential security levels, mixed equalizing strategy, Nash arbitration value, nonlinear program objective Z"
+   ],
+   "theory": "Dark network analysis from the social network analysis literature (covert networks, key-node identification by centrality), combined with multi-criteria decision analysis (AHP and TOPSIS) and two-player game theory with cardinal utility (Nash equilibrium, Nash arbitration, security levels). The paper cites Krebs (2002) and Everton (2012) and argues for disrupting donor anonymity through targeted removal of nodes or through press exposure.",
+   "references_of_note": [
+    "Krebs V. Mapping Networks of Terrorist Cells. Connections 2002; 24: 43-52 (ref 11; SNA of the 9/11 hijacker network that started SNA-based dark network work)",
+    "Everton SF. Disrupting Dark Networks. Cambridge University Press, 2012 (ref 17; the authors' monograph on dark network disruption)",
+    "Baker WE and Faulkner RR. The social organization of conspiracy: illegal networks in the heavy electrical equipment industry. Am Sociol Rev 1993; 58: 837-860 (ref 5)",
+    "Sparrow MK. The application of network analysis to criminal intelligence. Soc Networks 1991; 13: 251-274 (ref 4)",
+    "Raab J and Milward HB. Dark networks as problems. J Publ Adm Res and Theor 2003; 13: 413-439 (ref 1)",
+    "Roberts N and Everton SF. Strategies for combating dark networks. J Soc Structure 2005 (ref 9)",
+    "Everton SF and Cunningham D. Terrorist network adaptation to a changing environment. In: Crime and Networks, Routledge 2013 (ref 10)",
+    "Fox W and Everton SF. Mathematical modeling in social network analysis: using DEA and AHP to find node influences in a social network. J Def Model Sim, 2014, DOI 10.1177/1548512913518273 (ref 24; same authors' prior AHP/TOPSIS-in-SNA method)",
+    "Fox W and Everton SE. Mathematical modeling in social network analysis: using TOPSIS to find node influences. J Math Syst Sci 2013 (ref 22)",
+    "Saaty T. The Analytic Hierarchy Process. McGraw Hill, 1980 (ref 28; source of the nine-point scale and CR threshold)",
+    "Alinezhad A and Amini A. Sensitivity analysis of TOPSIS technique. J Optimiz Ind Eng 2011 (ref 29; source of Equation 1)",
+    "Barron EN. Game Theory: An Introduction. Wiley, 2013 (ref 32; nonlinear formulation for two-player games)",
+    "Fox W. An alternative approach to the lottery method in utility theory for game theory. Am J Oper Res 2015 (ref 31; the cardinal-utility method used here)",
+    "Feix M. Game theory: toolkit and workbook for defense analysis students. NPS master's thesis, 2007 (ref 30; game solver used)"
+   ],
+   "short_quotes": [
+    {
+     "quote": "networks of politically active non-profit organizations that can receive unlimited donations from corporations, individuals, and unions",
+     "location": "Section 1 Introduction, p. 343"
+    },
+    {
+     "quote": "it is obvious that, with proper scaling, the recommendation should have been to execute a non-kinetic strategy",
+     "location": "Section 4, p. 350"
+    },
+    {
+     "quote": "Although no significant changes resulted from MADM analysis",
+     "location": "Section 5 Conclusions, p. 352"
+    }
+   ]
+  },
+  "summary_md": "Couch, Fox and Everton (2016) take one US dark money network: politically active nonprofits and linked single-member LLCs that pass money between them without disclosing donors. They apply two decision-analysis tools to it. First, they rank the 8 organizations with the highest degree using TOPSIS over eight ORA centrality measures. The authors set the weights themselves through AHP pairwise judgments. Out-degree gets 0.502, total degree 0.145, eigenvector 0.110 and betweenness 0.075, with a consistency ratio of 0.062. Freedom Partners Chamber of Commerce ranks first (closeness coefficient 0.754), and the ranking survives a one-weight-at-a-time sensitivity sweep. Only the top two match the plain out-degree order, and the authors admit the method produced \"no significant changes\". Second, they model State versus network as a 2x2 game with payoffs from AHP. The State's equalizing mix is about 85% exposure through the press and 15% prosecution or legislation. There is no outcome data, no time window and no validation, and the 10-strategy solution as printed is inconsistent (0.92 + 0.8 is not 1).\n\nFor Paul's systems the paper is mainly a caution about scope and method, not evidence. Mentat's PAC transfer graph follows only FEC-reported committee cash, so it cannot see the nonprofit layer this paper maps. The retired cosponsor InfluenceScore has the same shape as the paper's composite: a hand-weighted mix of centralities led by out-degree. Neither the paper nor the system checks such a composite against an outcome. The paper's AHP consistency ratio and one-weight sensitivity sweep are reusable ways to document owner-judgment weights such as the pillar blend. They do not make those weights valid. The game theory section has no counterpart in the system.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+    "relation": "suggests-extension",
+    "paper_claim": "Money-flow network among politically active 501(c) nonprofits and SMLLCs. A tie means funds were exchanged, tie width is dollar amount, and node size is betweenness (Figure 1). The top-ranked organization, Freedom Partners Chamber of Commerce, has out-degree 90 (Table 5). The paper does not state how its network data were built: its background sources are news and IRS material from 2010-2014, and the network comes from earlier unpublished work.",
+    "paper_location": "Section 1 p.343-344 (Figure 1 and its description); Section 2 lines 211-216 on the unpublished precursor study; Table 5 p.347",
+    "system_side": "Mentat walks FEC-reported committee-to-committee edges breadth-first to depth 3 (reachable_rows default max_depth=3). allocate() spreads each root's funding pro rata over observed outflows and raises an error if root funding is not conserved. Unattributable dollars go to unresolved buckets (depth_limit, cycle, no_observed_outflow). The allocate() docstring calls the result a conditional pro-rata scenario, not traced dollars.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/tools/fec_transfer_graph.py:439-471 (reachable_rows, default max_depth=3); C:/Users/pgoff/Mentat/mentat/tools/fec_transfer_graph.py:484-498 (allocate docstring); C:/Users/pgoff/Mentat/mentat/tools/fec_transfer_graph.py:543-568 (pro-rata allocation and conservation check)",
+    "transfer_conditions": "Scope statement only. Money that passes through a non-disclosing nonprofit before reaching a committee is invisible to Mentat's committee graph. The paper gives no data-construction method, so its network cannot validate any edge set. Its network is a single partisan donor network from about 2010-2015. Do not import its ranking as evidence about any industry; any key-node ranking on Mentat's graph is a heuristic output (D-025).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Code claims confirmed: depth 3, pro-rata conservation, and docstring wording. The claim that the authors built the network from news and IRS sources, not FEC filings, is not in the paper. It never states its data construction, and its reference 13 is a Sunlight piece about FEC quarterly filings. Rewritten to what the text supports.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-fec-attribution#PAC transfer graph and beneficiary direction partition|PAC transfer graph and beneficiary direction partition]]",
+    "system": "mentat-fec-attribution"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+    "relation": "qualifies",
+    "paper_claim": "Expert-weighted centralities: out-degree 0.50199, total degree 0.14517, eigenvector 0.11045, betweenness 0.07489 (CR 0.062). TOPSIS on this composite matches the plain out-degree order only for the top two of eight. Corner Table LLC (out-degree 7) ranks 3rd and TC4 Trust (out-degree 38) ranks 7th. The authors state that no significant changes resulted, and they validate the composite against no outcome.",
+    "paper_location": "Section 2, Tables 2, 4 and 5, p.346-347; Section 5, p.352",
+    "system_side": "InfluenceScore = 0.60 x max-normalized weighted out-degree + 0.25 x max-normalized betweenness + 0.15 x max-normalized eigenvector, rescaled to 0-100. The weights are hand-set. Per the record, the score was retired from the Influence pillar (AB13 = 0) but still feeds the underdog lens. The retirement and lens use were not checked against code.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/legislation/build_legislation_base_network.py:818-843",
+    "transfer_conditions": "Both composites use judgment weights led by out-degree, so the structural comparison holds. The paper adds a consistency check and a sensitivity sweep but no outcome test, so it cannot justify the 0.60/0.25/0.15 weights or reverse the retirement. Its ties are dollar flows among nonprofits, not cosponsorship. The outcome test that matters is Sotoudeh 2024: does centrality predict bill passage.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Every paper number in the claim matches Tables 4 and 5 and Section 5. The code weights 0.60, 0.25 and 0.15 and the rescale to 0-100 are confirmed at the cited lines. Retirement status and underdog-lens use were not verified from code.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/moneyball-rank-pillars#Cosponsor-network InfluenceScore (computed, weight 0)|Cosponsor-network InfluenceScore (computed, weight 0)]]",
+    "system": "moneyball-rank-pillars"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.score-blend",
+    "relation": "method-source",
+    "paper_claim": "Criterion weights come from AHP pairwise comparison on Saaty's nine-point scale, accepted at CR below 0.10 (here 0.062). Robustness follows Alinezhad and Amini Equation 1: change one weight in 0.1 steps, rescale the others proportionally, and track rank. Raising the out-degree weight keeps Freedom Partners Chamber of Commerce first. Raising the weight the paper labels lowest (closeness, Figure 5) lets Center to Protect Patients Rights overtake it.",
+    "paper_location": "Section 2, Tables 3-4, p.346-347; Section 3, Equation 1 and Figures 4-5, p.347-348",
+    "system_side": "Pillar weights are owner policy, set as constants: Leg 0.45, Press 0.10, Influence 0.40, Demo 0.05. The summary says they are unratified (S-5 open) and that the record conflicts on the ratified set (30/25/40/5 vs 25/30/40/5). Those two statements were not verified.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/pillar_policy.py:11-16",
+    "transfer_conditions": "The one-weight proportional-rescale sweep can be used directly for the open top-133 sensitivity question. AHP would only document owner judgment and check its internal coherence; it gives no outcome validity, and the paper's own weights are unvalidated. Any AHP-derived set must be labelled owner policy with its CR, never an estimate.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Weights and code location confirmed. The summary's claim that the top-ranked node holds under the sweep is true only for the out-degree sweep. The overtake comes from the closeness sweep. The paper calls closeness the lowest criterion, but Table 4 gives authority (0.03418) the lowest weight and closeness 0.03525. Ratification status not verified.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/moneyball-rank-pillars#Four-pillar score blend and rank|Four-pillar score blend and rank]]",
+    "system": "moneyball-rank-pillars"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary says the Freedom Partners ranking survives a one-weight sensitivity sweep. Section 3 and Figure 5 show Center to Protect Patients Rights overtaking it when the closeness weight is raised. Only the out-degree sweep leaves it first.",
+   "Summary and extract call the TOPSIS output a closeness coefficient (0.754). The paper's Table 5 is labelled larger better and never uses that term. The item's flags repeat the error.",
+   "State equalizing mix of about 85 percent non-kinetic is not exactly reproduced. Recomputing from Table 7 gives about 84.6 percent when the DMN cell BC is 0.548, but about 80.2 percent with the text value 0.480645. Table 7 (0.548) and the text (0.480645) conflict on that cell; the item reports only the text value.",
+   "Prudential claim is wrong for the DMN. The paper and the item say the DMN plays C always with security level 0.137. In Table 7 the DMN's C security level is 0.091; its maximin strategy is D, at 0.137848. The State's 0.139 level (strategy A) reproduces.",
+   "Ten-strategy solution: the printed x4 = 0.8 gives weights summing to 1.72 and a positive objective, so it is not the solution. x4 = 0.08 satisfies the sum constraint and reproduces q = 0.0595 and Z of about -0.0012 with p = 0.084. The item's statement that the solution is internally inconsistent is right, but 0.08 is recoverable from the paper's own constraints. The NLP is a 5-action State by 2-action DMN game, not the 10-strategy list the item describes.",
+   "Nash arbitration point (0.31, 0.3192) reproduces approximately (about 0.309, 0.320) on the convex hull of Table 7 with security levels as disagreement point, using the 0.548 DMN cell.",
+   "The item's paul_alignment section cites a Paul note on Furnas, a centrality note and a Sotoudeh highlight. The record shows n_annots 0 and paul_entries empty, so these are unsupported by the record and were not verified.",
+   "The item's coincidence flag about the legacy workbook (0.80, sums to 1.72, brain file moneyball-workbook-lineage-and-june-audit.md line 61) is outside this paper. It was not checked and should not enter the vault as a bearing on this work.",
+   "Figure-based sensitivity claims (Figures 4-8) cannot be checked because page images are unavailable; only the text was verified. Figure 4 is printed on p.348 and Figure 8 on p.351, not p.347 and p.349-350 as the extract lists.",
+   "Extract's ordinal and cardinal game values (AD equilibrium, State values 0.480038, 0.28523, 0.139265, 0.095467; AHP CRs 0.02244 and 0.03248) and TOPSIS values, weights and CR 0.062 reproduce from the text. Coverage: full 1,131-line text read; 0 Paul annotations."
+  ],
+  "gaps_exposed": [
+   "Mentat has no non-disclosing nonprofit (501(c)(4)/(c)(6), SMLLC) layer upstream of reporting committees. Industry money routed through such conduits enters the transfer graph only at the receiving committee, so attributed industry totals are a lower bound on that channel. The paper shows this layer exists and is organized as a network.",
+   "No recorded weight-sensitivity sweep exists for the four-pillar blend. A one-weight-at-a-time proportional-rescale sweep (paper Eq. 1) is a cheap answer to the open question on top-133 overlap between weight sets.",
+   "Owner-judgment tables (pillar weights, IMP weights, SGATE, PERS) have no documented elicitation or internal-consistency check. AHP's consistency ratio is one way to record that judgments are at least coherent. It would not validate them.",
+   "Neither the paper nor the system validates a weighted-centrality composite against an outcome. The retired InfluenceScore still feeds the underdog lens without such a test."
+  ],
+  "flags": [
+   "D-025: the paper calls TOPSIS output a 'closeness coefficient' and frames high scorers as key or influential nodes. If any of this is ported, label it a heuristic model output: not network closeness, access, or influence probability.",
+   "The paper's weights and game payoffs are the authors' own Saaty-scale judgments with no external validation. Do not cite it as evidence that out-degree should dominate a centrality composite.",
+   "The 10-strategy nonlinear-program solution as printed is internally inconsistent: x2 = 0.92 and x4 = 0.8 sum to 1.72. Do not quote it.",
+   "The game's premise contains a partisan framing of the State player, which is the authors' assumption, not a finding. Keep it out of any Melange or Mentat surface.",
+   "Coincidence only: the legacy workbook's Primary Layer weight row also contains 0.80 (likely meant to be 0.08) and also sums to 1.72 (brain actors/moneyball-workbook-lineage-and-june-audit.md:61). The June presentation audit recorded that independently. There is no relation to this paper.",
+   "This analysis is UNVERIFIED until a second path reproduces it (DE-062). Neither rejected SNA proposal (dropping regular cosponsorship edges; per-edge volume normalization) is argued for here. Tie width = dollars is display, not normalization."
+  ],
+  "paul_alignment": "Paul has no annotations on this paper. The component list cites it only as 'on disk' under the PAC transfer graph, next to his note linking dark-money giving to Furnas's ideological infrastructure. The paper supports the idea that a dark-money organization network is real and can be mapped. It also shows that this network sits upstream of anything Mentat's FEC-only graph can trace, which his notes do not address. On centrality, Paul says more research on forms of centrality is needed. The paper's answer is to weight several centralities by expert judgment (AHP/TOPSIS), but it never validates the result. It therefore does not resolve his question and does not reverse the system's retirement of direction-blind centrality. His Sotoudeh highlight (eigenvector is 'not a strong indicator of bill passage') remains the more relevant evidence.",
+  "related": [
+   {
+    "slug": "irvin-2023-dark-investigation-dark",
+    "relation": "complements",
+    "why": "Item file exists. Irvin covers how dark money operates across US nonprofit advocacy organizations, the population this paper samples one network from. Content not re-read here."
+   },
+   {
+    "slug": "sotoudeh-2024-network-based-measure",
+    "relation": "complements",
+    "why": "Item file exists. Sotoudeh tests whether cosponsorship centrality predicts bill passage, the outcome validation the AHP/TOPSIS composite never performs."
+   },
+   {
+    "slug": "ardekani-2026-computational-graph-theoretic",
+    "relation": "complements",
+    "why": "Item file exists. Both papers face the choice of which centrality to use; Ardekani chooses Katz on substantive grounds, while this paper weights eight centralities by expert judgment."
+   },
+   {
+    "slug": "gaynor-2022-financial-ties-bind",
+    "relation": "complements",
+    "why": "Item file exists. Gaynor builds directed money-flow networks among political organizations, the same kind of financial-tie object this paper analyzes. Content not re-read here."
+   },
+   {
+    "slug": "ringe-nd-pinpointing-powerful-voting",
+    "relation": "complements",
+    "why": "Item file exists. Ringe et al. treat network centrality as a candidate measure of political influence, a contrast case for this paper, which assumes rather than tests that centrality stands for power. Content not re-read here."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "anon-2025-cross-industry-political",
+    "relation": "complements",
+    "why": "Couch, Fox and Everton (2016) model a single dark-money network and rank nodes with AHP/TOPSIS. It is a network view of dark money, not a model of the memo's reservoir claim, so the link to Mentat's transfer graph is loose."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "deluca-2022-validating-applicability-bayesian",
+  "note": false,
+  "meta": {
+   "title": "Validating the Applicability of Bayesian Inference with Surname and Geocoding to Congressional Redistricting",
+   "authors": [
+    "Kevin DeLuca",
+    "John A. Curiel"
+   ],
+   "year": "2022",
+   "venue": "Political Analysis, vol. 31 (2023), pp. 465-471; published online 20 May 2022",
+   "doi": "10.1017/pan.2022.14",
+   "sha12s": [
+    "ea669c91615e"
+   ],
+   "category": "Causal & Methodological",
+   "category_slug": "causal-methodological"
+  },
+  "extraction": {
+   "title": "Validating the Applicability of Bayesian Inference with Surname and Geocoding to Congressional Redistricting",
+   "authors": [
+    "Kevin DeLuca",
+    "John A. Curiel"
+   ],
+   "year": "2022",
+   "venue": "Political Analysis, vol. 31 (2023), pp. 465-471; published online 20 May 2022",
+   "doi": "10.1017/pan.2022.14",
+   "document_type": "Research letter (short journal article)",
+   "coverage": "Full text read: all 326 lines of C:\\Users\\pgoff\\Documents\\research\\_text\\ea669c91615e.txt (23,899 chars) in one pass, including the references (pp. 470-471). Supplementary Material is referenced but not in the text file, so its methods details (precinct counts, individual-level diagnostics) are not covered. Paul's markup: no markup files existed for this PDF, so paul_markup is empty. Metadata correction: the hint's venue and DOI were blank; the venue is Political Analysis and the DOI is 10.1017/pan.2022.14. Year 2022 is the online publication year (the print volume is 2023).",
+   "research_question": "Can Bayesian Improved Surname Geocoding (BISG) estimate the racial composition of precincts and congressional districts accurately enough for redistricting, and which posterior allocation rule is better: summing probabilities (PSM) or plurality/modal assignment (PM)? (Abstract p.465; Intro pp.465-466.)",
+   "theory": "BISG applies Bayes' rule, using a surname-based prior and Census geography conditional probabilities, to give each voter a posterior over racial groups (p.466, lines 93-98). The authors argue that plurality assignment invites extreme, clustered errors and goes against population-level best practice (King 1997), so summing posteriors to a geographic unit should be preferred (p.466, lines 124-125). Their stated expectation is that BISG errors are largest where surnames are uninformative and geographic units are racially heterogeneous (p.466).",
+   "data": "Benchmark data are self-reported race from the voter files of North Carolina and Georgia, the two states with race in their voter files (p.466). The outcome is the Black share of registered voters, with White as the comparison group (p.466, fn.3). BISG inputs are surname dictionary priors and ZIP-code demographics via the R package zipWRUext (Clark et al. 2021) (p.466). Unit of analysis: individual voters aggregated to precincts (precinct-level error) and to simulated congressional districts (district-level error). Geography: precinct maps (NC from Curiel and Steelman 2018; GA from its precinct shapefile for 2010 congressional districts, with small hole and overlap fixes) (p.467, fn.4). Sample sizes: 10,000 simulated congressional plans per state, 20,000 total (p.466). Precinct count and total voter N for the validation are not stated in the main text. Only illustrative N is given: about 7 million voters in the Georgia voter file, processed in about 10 minutes on a 3.1-GHz MacBook Pro with 8 GB RAM (p.466, fn.2). Period: not stated. Framed for the 2020 redistricting cycle, with GA 2010 districts as the base map (p.467, p.468). Replication data are on Harvard Dataverse with voter-file PII redacted (p.469).",
+   "method": "Descriptive validation against ground truth. (1) Run BISG with zipWRUext and form two allocations: PSM (sum posteriors within a precinct) and PM (assign each voter to the modal race). (2) Precinct check: compute absolute percentage difference between BISG-estimated and reported counts for White and Black voters, shown as density plots (Fig. 1, p.466-467). (3) District check: draw 10,000 congressional plans per state with the Redist package v2 using rook contiguity on the precinct base map. For each plan, compute absolute percentage-point difference between BISG-estimated and voter-file share for each race, then take the distribution and a 95% interval (p.467). Results are plotted against district White or Black population share (Fig. 2, p.468).",
+   "identification": "No causal identification strategy. The design is criterion validation: BISG estimates are benchmarked against self-reported voter-file race at precinct and district level. Uncertainty about district error comes from the spread across 10,000 simulated plans, not from sampling inference. The authors compare PSM and PM on the same data, so the comparison between allocation rules is within-sample.",
+   "scope": "Population: registered voters in North Carolina and Georgia. Institution: congressional redistricting and VRA-style majority-minority district construction (NC and GA require Black majority or plurality districts, p.466, fn.3). Era: 2010-cycle base maps, applied to the 2020 cycle and to the post-preclearance context (p.468). Race is limited to Black vs White; Hispanic and other groups are excluded (p.466, fn.3; p.469). The authors say results should be more accurate in states with heavy residential segregation and two dominant groups, so they may not transfer to more diverse states (p.469).",
+   "key_findings": [
+    {
+     "finding": "PSM significantly reduces error rates at the precinct and district level relative to plurality assignment; recommended as the preferred method for BISG in redistricting (abstract).",
+     "location": "Abstract, p.465 (lines 17-20)",
+     "numbers": "not reported as a single number"
+    },
+    {
+     "finding": "Precinct level: for White voters the modal error approaches zero under both methods, but PM has a longer right tail. For Black voters PSM vastly outperforms PM.",
+     "location": "Results, p.466 (lines 149-157); Fig. 1 p.467",
+     "numbers": "qualitative; no point estimates in main text"
+    },
+    {
+     "finding": "District level: in nearly all district estimates, PSM gives significantly lower absolute error than PM across 10,000 simulated plans per state.",
+     "location": "p.467 (lines 184-190); Fig. 2 p.468",
+     "numbers": "10,000 plans per state; 95% CIs plotted"
+    },
+    {
+     "finding": "North Carolina, PSM: White-share error close to zero; Black-share error never above 5 percentage points.",
+     "location": "p.467 (lines 191-196)",
+     "numbers": "White about 0 pp; Black max 5 pp"
+    },
+    {
+     "finding": "Georgia, PSM: White-share error reaches about 10 percentage points; Black-share error is lower and peaks around 5 percentage points.",
+     "location": "p.467 (lines 194-196)",
+     "numbers": "White max about 10 pp; Black peak about 5 pp"
+    },
+    {
+     "finding": "Headline district-level accuracy: PSM district minority-share estimates typically fall within five percentage points of voter-file race, with error varying by state and group.",
+     "location": "Intro, p.465 (lines 86-88)",
+     "numbers": "typically within 5 pp"
+    },
+    {
+     "finding": "Practical guidance: aggregate by summing probabilities; assigning race to single voters makes errors drastically higher; expect roughly 5-10 percentage-point district-level error; accuracy is high for White vs non-White coalition districts but lower for specific minority groups.",
+     "location": "Discussion, p.468 (lines 220-230)",
+     "numbers": "5-10 pp expected district error"
+    },
+    {
+     "finding": "Cost: ZIP-level BISG gave race estimates for about 7 million Georgia voters in about 10 minutes on a laptop, with no geocoding.",
+     "location": "p.466 fn.2 (lines 160-163)",
+     "numbers": "7 million voters; about 10 minutes; 3.1 GHz, 8 GB RAM"
+    },
+    {
+     "finding": "BISG is less accurate for non-Black minorities at ZIP level than with block-level geocoding; errors are greatest where surnames are uninformative and geography is heterogeneous.",
+     "location": "p.466 (lines 96-98, 140-142)",
+     "numbers": "not quantified in text"
+    }
+   ],
+   "measures": [
+    "Precinct error: absolute percentage difference between BISG-estimated and reported voter counts of each race (p.466).",
+    "District error: absolute percentage-point difference between BISG-estimated and voter-file share, per race, per simulated plan; 95% interval across plans (p.467).",
+    "Racial share of registered voters (Black, White) from voter-file self-reports as ground truth (p.466).",
+    "Simulated congressional district plans generated with Redist v2 and rook contiguity (p.467)."
+   ],
+   "limitations": [
+    "Only Black and White race categories are analyzed; Hispanic and other minorities are excluded, and Hispanic-as-ethnicity would need a different package (p.466 fn.3; p.469 fn.5).",
+    "Results come from two states with high residential segregation and two dominant groups; the authors expect larger BISG error in more heterogeneous states (p.469).",
+    "BISG uses ZIP-code geography rather than block-level geocoding; the authors concede this is less accurate for non-Black minorities (p.466).",
+    "The paper does not incorporate differential turnout from voter history; this is flagged as future work (p.469).",
+    "Error magnitude varies across states and racial groups, and district errors of 5-10 percentage points should be expected (p.468).",
+    "Precinct-level and district-level claims rest on two states; the main text gives no precinct count, voter N for validation, or time period; these are in Supplementary Material (not in the text file).",
+    "Voter-file self-reported race is treated as ground truth, so any voter-file measurement error passes into the validation (implicit; p.466).",
+    "Replication data have voter PII redacted (p.469).",
+    "Reference-list inconsistency: the text cites Lu et al. (2019, 465) for statistical packages that default to plurality assignment (p.466), but the reference list gives Lu et al. 2019 as a paper on scientific writing styles, which does not match the claim."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "probabilistic summing of the BISG posteriors significantly reduces error rates at the precinct and district level relative to plurality racial assignment",
+     "location": "Abstract, p.465"
+    },
+    {
+     "quote": "researchers using BISG should aggregate up to some polygonal unit of interest by summing the estimated probabilities",
+     "location": "Discussion, p.468"
+    },
+    {
+     "quote": "researchers should be prepared to deal with around a 5-10 percentage point error rate in estimating race at the district level",
+     "location": "Discussion, p.468"
+    }
+   ],
+   "references_of_note": [
+    "Elliott, M. N., et al. 2008. Health Services Research 43(5p1): 1722-1736. Origin of BISG (p.465, p.466).",
+    "Imai, K., and K. Khanna. 2016. Political Analysis 24(2): 263-272. Surname plus residence beats ecological inference; the text says by a magnitude of 10 (p.465). Central to BISG and EI comparison.",
+    "Clark, J. T., J. A. Curiel, and T. Steelman. 2021. Political Analysis. zipWRUext; ZIP-level BISG accuracy (p.466, p.468).",
+    "Fifield, B., et al. 2020b. redist: Simulation Methods for Legislative Redistricting (CRAN). Simulation engine used here (p.467).",
+    "Fifield, B., K. Imai, J. Kawahara, and C. T. Kenny. 2020a. Statistics and Public Policy 7(1): 52-68. Empirical validation of redistricting simulation (p.469).",
+    "King, G. 1997. A Solution to the Ecological Inference Problem. Princeton. Ecological inference benchmark; source of the best-practice argument against plurality assignment (p.466).",
+    "Goodman, L. 1953. American Sociological Review 18: 663-666. Ecological regression (p.465).",
+    "Enos, R. D., A. R. Kaufman, and M. L. Sands. 2019. APSR 113(4): 1012-1028. Plurality assignment with a 90% posterior filter (p.466).",
+    "Curiel, J. A., and T. S. Steelman. 2018. Election Law Journal 17(2): 328-353. Source of the NC precinct base map (p.467).",
+    "Fraga, B. L. 2015. Journal of Politics 78(1). Redistricting and differential turnout (fn.1, p.465).",
+    "Henderson, J. A., J. S. Sekhon, and R. Titiunik. 2016. Political Analysis 24(3): 404-412. Turnout in majority-minority districts (fn.1, p.465).",
+    "Hicks, W. D., et al. 2018. Political Research Quarterly 71(2): 408-423. Packing and cracking in district design (p.465).",
+    "Alvarez, R. M., J. N. Katz, and S.-y. S. Kim. 2020. Election Law Journal 19(1). BISG applied to campaign-finance donor race (p.466). Relevant to elections and money in politics.",
+    "Grumbach, J., A. Sahn, and S. Staszak. 2020. Political Behavior 44: 319-340. BISG applied to campaign-finance donors and intersectionality (p.466). Relevant to elections and money in politics.",
+    "Conroy, M., and J. Green. 2020. Political Research Quarterly 73(4). BISG-based candidate emergence (p.466).",
+    "Shah, P. R., and N. R. Davis. 2017. Journal of Race, Ethnicity, and Politics 2(1). Comparing race measurement methods; minority candidate performance (p.466)."
+   ]
+  },
+  "summary_md": "DeLuca and Curiel test Bayesian Improved Surname Geocoding (BISG) against the race people reported on their own voter-file records. They use the North Carolina and Georgia voter files, Black versus White only, with ZIP-level priors from zipWRUext. They compare two ways of turning each voter's posterior into precinct and district totals. One sums the probabilities (PSM). The other gives each voter the most probable race and counts those (plurality or modal assignment, PM). Across 10,000 simulated congressional plans per state, PSM had lower absolute error in nearly every district. Under PSM the Black share was off by at most about 5 points in both states. The White share was off by about 0 points in North Carolina and up to about 10 in Georgia. At the precinct level, PM had a longer right tail of errors, especially for Black voters. The authors expect errors of 5 to 10 points at the district level. They expect errors to be largest where surnames carry little information and areas are mixed. Their results come from two highly segregated states with two dominant groups.\n\nNone of the Melange federal components estimate race, and none aggregate individual probabilities to areas, so most of the system has no bearing here. The paper matters for Terrier. Terrier's row framework already follows the PSM rule. It takes expected values over imputed class probabilities and never the most probable class (argmax). Area top-decile shares are built from summed probabilities, not flags. This paper is the first outside evidence in the vault for that rule, which was owner policy with no literature behind it. The exposed spot is the Luna completion step, which fills each blank with the most probable class. That is exactly the PM rule the paper argues against. If the area measures read those filled codes, they are plurality aggregates. The transfer is about how to aggregate, not about race. It holds best when the class probabilities are reasonably calibrated, and it is UNVERIFIED for vendor consumer fields until an area-level holdout check exists.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "terrier-row-scoring.cua-index",
+    "relation": "supports",
+    "paper_claim": "Summed BISG posteriors (PSM) give lower absolute error than modal assignment (PM) in nearly all districts. In NC, PSM Black-share error never exceeds about 5 pp; in GA it peaks about 5 pp. PSM White-share error is near 0 in NC and reaches about 10 pp in GA.",
+    "paper_location": "Lines 184-196 (district results); Abstract lines 17-20; Discussion lines 220-224. Item page labels are unreliable; cite lines.",
+    "system_side": "engine.py lines 264-270 (categorical_map branch) compute mu = P @ m as the expected value and variance P @ (m*m) - mu^2 for estimated categorical fields. The draw spec in the same branch samples from the probability columns, not argmax.",
+    "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/engine.py:264-270",
+    "transfer_conditions": "The paper validates area-level aggregates of voter-level race posteriors for Black vs White in two segregated states. CUA is a person-level expected value for vendor consumer fields. Support for the person-level index is indirect and holds only where the class probabilities are roughly calibrated; calibration is the open ECE question.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Code claim holds as written. The paper's evidence concerns summed area aggregates, not person-level scores, so the support is an aggregation-rule analogy. The never-argmax PR2 rule is a brain claim that was not checked here.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/terrier-row-scoring#CUA (Credit Union Alignment) index|CUA (Credit Union Alignment) index]]",
+    "system": "terrier-row-scoring"
+   },
+   {
+    "component_id": "terrier-row-scoring.area-eb-aggregation",
+    "relation": "supports",
+    "paper_claim": "Researchers should aggregate to a polygonal unit by summing estimated probabilities of racial membership. Assigning race to single voters makes errors drastically higher.",
+    "paper_location": "Lines 220-223 (Discussion). Figure 1 caption at lines 172-176.",
+    "system_side": "areas.py eb_top10_params (lines 435-449): area top-decile share is np.bincount of summed P(top10) contributions divided by row count (line 438), followed by beta-binomial EB shrinkage with a design-effect variance (lines 444-448).",
+    "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/areas.py:436-440",
+    "transfer_conditions": "The summed-probability step matches the paper's recommended aggregation. The paper does not test EB shrinkage or top-decile shares, so it says nothing about the shrinkage layer. Its expectation of larger error in heterogeneous areas is where shrinkage matters most. This is an analogy for the aggregation choice, not a validation of Terrier area values.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Both sides hold as written. The quoted phrase drastically higher is verbatim at line 222. Keep only as support for the aggregation rule.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/terrier-row-scoring#Area aggregation with empirical-Bayes shrinkage|Area aggregation with empirical-Bayes shrinkage]]",
+    "system": "terrier-row-scoring"
+   },
+   {
+    "component_id": "terrier-imputation.luna-rf-knn",
+    "relation": "qualifies",
+    "paper_claim": "Modal assignment gives a longer right tail of precinct error for White voters and higher district error than summed probabilities in nearly all simulated districts. For Black voters, PSM vastly outperforms PM at precinct level.",
+    "paper_location": "Lines 152-157 (precinct results); lines 188-190 (district results)",
+    "system_side": "models.py lines 386-393 score Luna candidates by argmax accuracy against a modal majority baseline (confirmed). measures.py lines 197-220 count literal codes with raw.eq(code) over valid-code denominators (confirmed). The step that fills each blank with the most probable class was not located in the lines read. The 78 percent majority baseline was not found in the code.",
+    "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/tools/luna_district/models.py:386-393; C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/tools/measures.py:197-220",
+    "transfer_conditions": "Applies only if modal-filled codes reach an area-level share. Whether the v3 ingest reads the Luna-completed file remains unconfirmed. The rare-class under-count is a hypothesis; the paper measures bias for race only, not for vendor consumer fields.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The paper claim as written misattributes the longer right tail to Black voters. The text gives that finding for White voters (line 153), and a large PSM advantage for Black voters (line 154). Code side confirms argmax scoring and raw.eq counting, but not the modal-fill step or the 78 percent figure.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/terrier-imputation#Luna stratified RF-KNN completion|Luna stratified RF-KNN completion]]",
+    "system": "terrier-imputation"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary says PM had a longer right tail especially for Black voters. Line 153 gives the longer right tail for White voters; for Black voters, line 154 says PSM vastly outperforms PM.",
+   "Page labels appear off by one under the running-footer layout: Intro lines 86-88 fall on p.466 not p.465; Discussion lines 212-230 fall on p.469 not p.468; Fig. 1 caption (line 176) falls on p.468; Fig. 2 caption (line 210) falls on p.469. Fn 2 and fn 3 (lines 160-166) fall on p.467. Line numbers are reliable.",
+   "Summary's Luna claim (fills each blank with the most probable class) was not confirmed in the lines read; the claim that Luna's majority baseline is about 78 percent was not found in the code. Both remain UNVERIFIED.",
+   "Ext headline says PSM typically within 5 pp for minority share; the paper's figures are for the Black share and the White share separately, in NC and GA. Do not generalize to all minority shares.",
+   "Paul alignment claims (recorded position No literature; notes not stale; first outside evidence in the vault) were not checked; this item has no paul_entries or markup, and the vault was not searched.",
+   "Lu et al. 2019 citation mismatch is confirmed: line 128 cites Lu for packages that default to plurality, but the reference at line 317 is a paper on scientific writing styles.",
+   "Codex-path code references resolved, but a grep of the luna_district folder returned hits under C:/Users/pgoff/Documents/Terrier/outputs, so the Codex path may be a link to the Terrier tree. Confirm which is canonical before citing."
+  ],
+  "gaps_exposed": [
+   "Terrier has no area-level criterion validation of aggregated imputations. The paper's design is to compare summed estimates against ground truth by area. Its Terrier analogue would mask observed sci_* values within blocks or tracts and compare the summed-probability share with the modal-fill share. That would give an error distribution like the paper's Fig. 1.",
+   "Nothing records whether the cu-geography-v3 area measures (measures.py) read observed-only codes or Luna's modal fills. The methodology text says 'literal valid codes' but does not say whether imputed values are included.",
+   "Terrier does not report area-level error by area heterogeneity. The paper expects the largest errors in mixed areas, which are also where EB shrinkage toward the parent has the most effect.",
+   "There is no check of how rare classes are counted in aggregates. The paper's largest PM penalty falls on the minority class, so rare-code shares are where Terrier aggregates would be most biased."
+  ],
+  "flags": [
+   "No conflict with the brain rules: the paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization, and it makes no claims about graph rank, LDA or reciprocity.",
+   "Scope flag: the validation covers Black vs White only, in NC and GA (segregated, two dominant groups). The authors say it may not transfer to more diverse states. Do not cite its 5-10 pp error band as an expected error for Terrier districts (CO, OR-05, CT-01) or for non-race attributes.",
+   "Sensitive-attribute caution: no Terrier or Melange component infers race. If anyone proposes BISG for Terrier, it would add inferred race to voter rows, which is outside the current design. Any such proposal is for Paul to decide, not something this paper recommends.",
+   "Citation defect in the paper: the reference list gives Lu et al. 2019 (cited for packages that default to plurality assignment) as a paper on scientific writing styles. Do not rely on that citation.",
+   "This bearing analysis is new agent analysis and stays UNVERIFIED until a second path reproduces it (DE-062). In particular, the claim that modal fills reach the v3 area shares is unconfirmed."
+  ],
+  "paul_alignment": "Paul has no annotations on this paper. His recorded position for every Terrier row-scoring and imputation component is 'No literature'. The paper therefore gives the first outside support for an owner rule already built into Terrier: use expected values and summed probabilities, never argmax or flags (PR2; 'Summed probabilities, not flags'). His notes are not stale here. They are silent, and the system's design already agrees with the paper. The one tension is Luna's most-probable-class fill. The paper argues against that rule for aggregates, and nothing in Paul's notes or the brain addresses whether those fills feed area shares.",
+  "related": [
+   {
+    "slug": "best-2022-redistricting-commissions-avoid",
+    "relation": "complements",
+    "why": "Real item (American Politics Research 2022 on commissions and partisan gerrymanders). Link is thin: DeLuca supplies a racial-composition measure, and no direct analytic dependency was checked. Weak link."
+   },
+   {
+    "slug": "becker-nd-gameability-redistricting-criteria",
+    "relation": "complements",
+    "why": "Real item on the gameability of redistricting criteria. Both papers are in redistricting. The shared ensemble-of-plans method was not verified in Becker and so the same-method label is withdrawn."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "mccartan-2022-simulated-redistricting-plans",
+    "relation": "complements",
+    "why": "DeLuca validates BISG race estimation for redistricting. McCartan's VRA constraint relies on district minority VAP shares, the measurement DeLuca's method addresses."
+   }
+  ],
+  "evidence_status": "verified"
+ }
+]

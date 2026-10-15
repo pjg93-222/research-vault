@@ -1,0 +1,80 @@
+{
+ "summary_md": "Kerr, Lincoln and Mishra (NBER WP 17577, Nov 2011; the AEJ: Economic Policy version is dated 2014) study why firm lobbying is so persistent. In a balanced Compustat panel of 3,260 US-headquartered public firms, 1998-2006, only 10 percent lobby in any year and 6.2 percent in a given year. Among firms that lobbied last year, 92 percent lobby again. In a typical year, 96 percent of lobbying dollars come from firms that lobbied the year before. The authors read this as evidence of sunk entry costs in a Roberts-Tybout model. A Blundell-Bond linear probability model puts the lagged-status effect at about 0.84-0.88. Within-firm fixed-effects OLS gives about 0.44, which the authors say is biased downward (Nickell). Entry clusters in the year before an election, not the election year itself, and exit does not follow the cycle. The policy test uses the 2004 lapse of the expanded H-1B cap. They interact each firm's 2001 dependence on foreign workers with a 2004-2006 dummy, with firm and year fixed effects, in 171 large patenting firms (846 core firm-years). Dependence raises lobbying on high-skill immigration (0.043, SE 0.014, LCA measure). It does not raise the chance of lobbying at all (-0.008, SE 0.009). No highly dependent non-lobbyist entered. All of the response came from firms that were already lobbying (the intensive margin). For Paul's systems this is mainly evidence about forecasting and specification. It backs Mentat's persistence-anchored lobbying forecasts, which leave out election-phase effects. It warns about the lagged-outcome lobbying equation with sector fixed effects in the sector growth study. It also shows that LDA reports cannot measure spending per issue, which is what the contested-bills question would need. The firm-level, 1998-2006 public-firm scope limits how far any of this transfers.",
+ "category": "Lobbying",
+ "bearings": [
+  {
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "supports",
+   "paper_claim": "Persistence: P(lobby in t | lobbied in t-1) = 92 percent (3,260 Compustat firms, 1998-2006), above 80 percent in almost every two-digit NAICS industry. 96 percent of a typical year's lobbying spend comes from firms that lobbied the prior year. Entry clusters in the year before an election, not the election year. Exit is unrelated to the cycle.",
+   "paper_location": "Sec 2, p.7; Table 1",
+   "system_side": "Mentat's lobbying forecast is the one projected quantity exempt from the midterm/presidential phase adjustment (owner rulings 2026-10-01). The calculator rule is last year's level plus slope times predicted-growth change, with no year effect. Bands come from persistence errors.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/forecast/refit/README.md:152; C:/Users/pgoff/Mentat/mentat/forecast/refit/R/rf_backtest.R:68-69; C:/Users/pgoff/Mentat/mentat/forecast/refit/R/rf_v2model.R:132",
+   "transfer_conditions": "The evidence is about firm-level participation, not dollars, in 1998-2006 public firms. It reaches Mentat's sector-year dollar series only because nearly all spend comes from incumbent lobbyists, so year-to-year sector totals mostly reflect changes in how much incumbents spend. Election timing works on entry, which is a small share of dollars, so a phase effect on spending should be small. That expectation is untested here.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "mentat-giving-forecast.refit-gates",
+   "relation": "supports",
+   "paper_claim": "Lagged lobbying status raises the current-year lobbying probability by about 0.84-0.88 (Blundell-Bond, Table 2 cols 2-6, 26,080 firm-years). Responses to a large policy shock (the H-1B cap lapse in 2004) came from changes in how much existing lobbyists lobbied, not from new firms entering (Table 7 Panel E: 0.00 entry among the most dependent non-lobbyists).",
+   "paper_location": "pp.10-12, Table 2; pp.17-19, Tables 5-7",
+   "system_side": "G9 warns that the log-lobbying refit does not beat naive (MAE 4.050 vs naive 3.936). The sector-study backtest also finds last-year naive best on LobbyView 2014-2023 (MAE 3.63 vs 3.99 with growth and 6.55 with control terms). Bands are split-conformal persistence errors over 2014-2023 targets, at horizons of 1-3 years.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/forecast/refit/R/rf_lobbying.R:87-90; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_forecast.R:4-8",
+   "transfer_conditions": "Persistence that close to one makes the naive anchor a hard benchmark to beat. That supports keeping the persistence bands and treating G9 as an expected warning, not a defect. It holds only while sector totals are dominated by a stable set of incumbent filers. Sectors with new entrants (crypto before 2015, fintech) break this.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "method-source",
+   "paper_claim": "In a short panel (T=9), the lagged-outcome coefficient differs sharply by estimator. Within-firm fixed-effects OLS gives about 0.44, which the authors call biased downward following Nickell 1981. Blundell-Bond GMM with lag-two instruments gives 0.84-0.88. Arellano-Bond is more sensitive to specification.",
+   "paper_location": "pp.11-12; Table 2 cols 2-8",
+   "system_side": "The original-study contract equation (3) is log Lobby_it = alpha_i + rho log Lobby_i,t-1 + growth terms + phase terms with sector fixed effects. The implemented core L tests are levels with sector FE and no lagged outcome. Only SEATS-W carries a lagged-outcome sensitivity.",
+   "code_ref": "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md:269; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:33-34,39",
+   "transfer_conditions": "If rho is estimated with sector FE over about 16 years and 5 sector clusters, expect a downward Nickell bias of order (1+rho)/(T-1). GMM is not feasible with 5 clusters. Reporting rho as a persistence estimate needs that label. The levels model without a lag leaves serially correlated errors, which the wild cluster bootstrap only partly handles. This is an agent reading and stays UNVERIFIED until reproduced.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "suggests-extension",
+   "paper_claim": "Firm size predicts whether a firm lobbies (mean sales of 5,407 $m for lobbyists vs 1,423 $m for non-lobbyists, Table 1). The policy response is identified from pre-period exposure (2001) times a post-shock dummy (2004-2006), with firm and year FE. High-skill lobbying rises 0.043 (SE 0.014) per log point of LCA dependence. A falsification check on unrelated issues is null.",
+   "paper_location": "Table 1; eq 3 p.14; Table 5 p.17; pp.15-16",
+   "system_side": "Growth adds no adjusted R2 (0.884717 vs 0.884690). The L3-LV growth coefficient flips from +0.352 to -0.477 with sector+year FE. The study tests size-like growth on annual changes.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:30-34; C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md:233-239",
+   "transfer_conditions": "Kerr's evidence is that size explains differences in lobbying levels across firms, while changes over time follow issue-specific shocks common to exposed firms. Year FE are needed for that reason. A future design could interact sector exposure fixed before the shock with a dated CU or bank policy event. That would be a new, preregistered estimand, not a rescue of the growth tests.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-lobbying.contested-bills",
+   "relation": "qualifies",
+   "paper_claim": "LDA reports do not break spending out by topic. So Kerr measures issue-specific intensity by the number of years an issue appears, and by keyword matches in the specific-issue text (H-1B, L-1, PERM, high-skill bills).",
+   "paper_location": "pp.5-6; p.19",
+   "system_side": "The registry records only the bill, congress, mode, counterparty industries and ratification fields. It has no spend field, and no engine wiring is built. The component question asks whether relative bank vs CU lobbying spend predicts bill outcomes.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/lobbying/contested_bills.py:33-41",
+   "transfer_conditions": "Any relative-spend test per contested bill has to apportion report-level dollars across issues and bills, which Kerr avoids. A count of filings or issue mentions per bill is the defensible proxy. LDA stays an identity and measurement source, never an edge or weight (D-021).",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "No extensive-margin view: sector totals over a fixed roster of companies cannot separate entry and exit from changes in incumbent spending. Kerr shows the two behave differently, and crypto and fintech entry would show up only as level jumps.",
+  "The lobbying equation in the sector study's original contract (lagged outcome plus sector FE) has no stated treatment of Nickell bias. The implemented core drops the lag entirely, and neither choice is documented against the dynamic-panel problem.",
+  "No literature backs the 2026-10-01 ruling that exempts lobbying from the election-phase adjustment. Kerr's pre-election-year entry result is a testable reason, but the odd-year entry effect is not measured in Mentat.",
+  "The contested-bills question about relative spend has no measurement, because LDA does not disclose spend per issue or per bill.",
+  "melange-lobbying.fec-lda-bridge: Kerr shows lagged lobbying status and firm size absorb most of the variation in participation. Any later bridge design would need to condition on both. The current product rule bars FEC as a lobbying predictor, so this is noted, not proposed."
+ ],
+ "flags": [
+  "Year mismatch: the text file is NBER WP 17577 (Nov 2011). The slug and the year hint of 2014 refer to the AEJ: Economic Policy version, and coefficients may differ from the published tables.",
+  "Kerr's dollar figures (mean 475k, median 164k per active firm) are CRP totals. They do not distinguish in-house from outside-firm spend (fn 6). Mentat never adds the two, and the sector config notes that undifferentiated sums double count self-filers' outside fees. Do not compare the magnitudes directly.",
+  "The Nickell-bias reading of the sector-study lobbying equation is new agent analysis and is UNVERIFIED (DE-062).",
+  "No conflict with the barred SNA proposals or with D-025. The paper uses LDA for firm identity and participation, not edges, which is consistent with D-021."
+ ],
+ "paul_alignment": "No annotations on this work. It is cited in the sector growth study, where Paul holds that returns motivate deep pockets. Kerr partly agrees: size predicts who lobbies. But here yearly changes follow persistence and issue shocks, which fits the null growth result better than a confident ROI reading. Paul's cycle-model note says lobbying syncs with elections and peaks in election years. Kerr qualifies that: entry peaks the year before and exit is acyclical. The built system already exempts lobbying from the phase adjustment (README:152), so his note is stale.",
+ "related": [
+  {"slug": "bombardini-2020-empirical-models-lobbying", "relation": "complements", "why": "A survey of empirical lobbying models that covers the fixed-cost and participation-selection literature Kerr builds on (Bombardini 2008)."},
+  {"slug": "kim-2018-lobbyview-firm-level", "relation": "same-data", "why": "Firm-level LDA data. LobbyView is the source behind the sector-year lobbying series that Mentat's persistence bands and sector backtest use."},
+  {"slug": "huneeus-2018-effects-firms-lobbying", "relation": "builds-on", "why": "Models firm lobbying with a fixed participation cost and size selection. That is the same mechanism Kerr estimates through state dependence."},
+  {"slug": "alexander-2009-lobbying-analysis-under", "relation": "complements", "why": "Another 2004 US policy event (AJCA) studied through firm lobbying. It gives a returns view where Kerr gives a participation-dynamics view."},
+  {"slug": "kim-2020-strategic-sequential-links", "relation": "complements", "why": "Studies the timing of donations relative to lobbying. That bears on Kerr's finding that lobbying entry clusters in pre-election years."},
+  {"slug": "bacik-2025-measuring-dynamical-evolution", "relation": "complements", "why": "Measures change over time in the US lobbying network, a network-level counterpart to Kerr's firm-level persistence and entry facts."},
+  {"slug": "defigueiredo-2013-advancing-empirical-research", "relation": "complements", "why": "A review of empirical lobbying research from the same period. It frames the LDA-based firm panel designs Kerr uses."},
+  {"slug": "bickmore-2025-corporate-lobbying-political", "relation": "complements", "why": "Links corporate lobbying and PACs to firm size and market concentration, extending Kerr's size gradient in lobbying participation."}
+ ]
+}

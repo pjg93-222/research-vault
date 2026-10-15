@@ -1,0 +1,107 @@
+{
+ "summary_md": "Le Mens and Gallego (arXiv 2311.16639, v3 dated September 2024) test a simple measurement recipe: ask an instruction-tuned LLM for a 0 to 100 position score for each short text (a tweet or one manifesto sentence), let it answer NA when the text is not on the dimension, and average the answered scores to place longer documents or actors. Across four settings the best models track human benchmarks closely. On 899 Congress tweets, GPT-4o reaches r=0.92 with a mean of about 20 crowd raters. For 117th-Congress senators, the comparison is with the first Nokken-Poole roll-call dimension, and r=0.97. On 18 UK manifestos, r=0.98 on the economic dimension and 0.94 on the social one, against expert coding. On 36 European Parliament coal-subsidy speeches in 10 languages, r=0.93 with crowd coding. Fine-tuned BERT, tf-idf and GloVe classifiers score lower. The headline figures are mostly between-party, though. Within-party correlations fall to 0.66 to 0.72 for tweets and senators. On the pro/anti-subsidy dimension, the Against group drops to 0.04 to 0.07 for every model except GPT-4o. All validity evidence is concurrent correlation, and Claude models were not tested. For Paul's systems, the paper supports using an LLM as a stance rater and contrasts with classical TF-IDF readers. It also points to three things the CU stance pipeline does not yet have: a continuous position score, explicit not-applicable handling kept separate from neutral, and validity reported within party. Because the paper's dimensions are left-right and pro/anti-subsidy, it cannot validate the target-specific credit-union stance on its own.",
+ "category": "Machine Learning & Sentiment Analysis",
+ "bearings": [
+  {
+   "component_id": "melange-stance.debate-nli-classifier",
+   "relation": "supports",
+   "paper_claim": "Directly asking an LLM for a position score with JSON output, temperature 0 and an NA option gives text-level positions. GPT-4o reaches r=0.92 against crowd means on 899 tweets. The paper puts the API cost at about 1.5 USD for 900 tweets, against about 1,626 GBP for the crowd coding, and estimates that LLM scores are worth about 3 to 7 human raters.",
+   "paper_location": "Sec 2, Sec 3.1 Fig 1, Sec 4, App E.3 Table A2",
+   "system_side": "claude_stance.py is a Claude API rater with a JSON-only reply (stance, confidence, reason). It pre-labels the hand-coding set and is the third member of the ensemble alongside fine-tuned DEBATE and the bill signal.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:3-9,19-25,84-91",
+   "transfer_conditions": "The paper tests GPT-4, GPT-4o, MiXtral and Llama 3 on left-right, economic, social and subsidy dimensions, not Claude and not credit-union interest. The system's rater is categorical, not a 0-100 scale, and is partly validated against a gold set it pre-labelled, whereas the paper's benchmarks are independent crowds.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-stance.supervised-stance-stack",
+   "relation": "contradicts",
+   "paper_claim": "On tweets, LLM direct query beats supervised readers trained on research data: GPT-4o r=0.92 versus fine-tuned BERT 0.78, tf-idf 0.66 and GloVe 0.63. The paper says no classifier matches the best LLMs on within-party differences.",
+   "paper_location": "Sec 3.1 Fig 1; Sec 3.2 Fig 2 (senators: BERT 0.93, tf-idf 0.90 vs GPT-4o 0.97)",
+   "system_side": "The best classical reader is LinearSVC on word and character TF-IDF: 83.9% accuracy and macro-F1 0.816 on n=87. Supervised tweet stance reached 0.737 CV on 399 golds.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/train_tweet_stance.py",
+   "transfer_conditions": "The paper's tasks are continuous ideological positioning scored by correlation; the system's task is three-class target stance scored by accuracy. The system's TF-IDF finding (SVM beats transformer, 83.9% vs 0.757) is on a small domain set, so the direction of the gap may differ. The paper's result is evidence for a head-to-head test, not proof.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-stance.media-blend",
+   "relation": "suggests-extension",
+   "paper_claim": "Positions for longer texts or actors are averages over answered units, and NA units are dropped. Tweets the LLM scored had more human ratings on average (18.7) than unscored ones (11.6), which the paper reads as NA marking low political content.",
+   "paper_location": "Sec 2; Sec 3.3; App E Table A1",
+   "system_side": "SIGN maps neutral to 0.0 and the blend sums sign x intensity x decay over posts. Neutral posts therefore add zero and are not removed from a denominator, and the cell is a decayed sum scaled by p80, not a mean of answered posts. claude_stance.py also writes neutral when the API fails or returns an unparseable reply, so missing data and real neutrality look the same.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/build_media_blend.py:54,130; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:80,89-91,96-99",
+   "transfer_conditions": "Averaging measures position while the system's sum mixes in volume. Whether volume should count is owner policy; this is not a recommendation to normalize. The paper's averaging was validated for left-right placement, not for CU advocacy intensity. Any change needs Paul's ruling and a zero-rank-delta or look discipline.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-stance.two-hop-decomposition",
+   "relation": "qualifies",
+   "paper_claim": "On a single target-specific dimension (pro or anti coal subsidies, 36 speeches in 10 languages), overall r is 0.93 for GPT-4o, but within the Against group r is 0.07 for GPT-4 Turbo, 0.05 for Llama 3 70B and 0.04 for MiXtral. Within-party r for tweets is 0.66 to 0.68.",
+   "paper_location": "Sec 3.4 Fig 5; Sec 3.1 Fig 1",
+   "system_side": "CU alignment is stance(speaker to target) x valence(target to CU). On 400 tweet golds the stance hop is 0.915 and the valence hop is 0.689, the bottleneck, and the curated registry reaches 0.782 accuracy.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/apply_two_hop_stance.py",
+   "transfer_conditions": "The paper suggests a single direct query on a policy-specific dimension is strong between camps but weak within a camp. That matches the system's finding that end-to-end CU alignment is the hard part and favours keeping the decomposition. This is inferred from a different task (subsidy placement), so it is suggestive only.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+   "relation": "qualifies",
+   "paper_claim": "The sentence-then-average recipe validates with r=0.94 to 0.98 on manifestos. Single whole-document prompts do worse (social dimension r about 0.83 to 0.92, with weaker within-party fit). The texts are not de-identified, and the paper does not test name-based priors.",
+   "paper_location": "Sec 3.3 Figs 3-4; App G.2 Figs A12-A13",
+   "system_side": "big5_llm.py scores about 1,200-word de-identified chunks item by item, codes 'cannot tell' as 0 and averages up to member level. The reader is display-only and fails its behavioural diagonal gate (+0.064 < 0.12).",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/big5_llm.py:8-17,51,216-221",
+   "transfer_conditions": "The paper supports chunk-then-average over whole-document scoring, but its units are single sentences and it drops NA rather than coding it as 0. Its senator-level r=0.97 could partly reflect model priors about named politicians, which big5_llm.py removes by design. The traits measured differ, so the paper does not rescue the failed gate.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "No continuous LLM position score for CU stance. The rater returns support, oppose or neutral only, so within-category intensity relies on LSD tone rather than a direct position query.",
+  "claude_stance.py records API errors and unparseable replies as neutral with confidence 0. That makes non-response look like a neutral stance. The paper keeps NA separate and documents its composition effect.",
+  "There is no within-party validity figure for the stance pipeline or the press pillar. The paper shows overall correlations of 0.92 to 0.97 shrink to 0.66 to 0.72 within party, and CU stance mostly varies within party.",
+  "There is no reliability estimate (split-half with Spearman-Brown, or effective number of raters) for the Claude rater against independent human coders. Its gold labels were pre-labelled by the same rater.",
+  "There has been no head-to-head test of an LLM direct-query rater against the TF-IDF LinearSVC on the untouched n=87 or the 760-row gold frame."
+ ],
+ "flags": [
+  "Concurrent-correlation validity only. Senator r=0.97 is against the first Nokken-Poole dimension and is largely between-party; quote it only with the within-party figures (0.72 per party), per the stratification rule.",
+  "The paper tests no Claude models and no credit-union dimension, so its accuracy figures cannot be quoted as properties of the system's Claude rater. Any adoption would be a new agent analysis and stays UNVERIFIED until a second path reproduces it (DE-062).",
+  "Year hint 2025 conflicts with the text, which is dated September 2024 (arXiv v3). The slug keeps 2025.",
+  "Internal inconsistencies in the paper: the senator count is 98 in the Fig 2 caption and 97 in App A.2, and ENO for GPT-4o is 7 in Table A2 but 5 to 7 in the text."
+ ],
+ "paul_alignment": "Paul has no annotations on this work. It agrees with his recorded positions on the stance components: he endorses LLM position extraction (Kim's GPT-4 labels; Birkenmaier and Lechner's GPT-4o beating SVM) and calls bag-of-words SVMs outdated. Here a TF-IDF LinearSVC is still the system's best classical reader, which this paper argues against. The weak within-party and within-camp fits also support the weakness he flagged, ambiguous statements. His notes do not cover non-response handling or within-party validity, so they are incomplete rather than stale.",
+ "related": [
+  {
+   "slug": "ornstein-2024-train-your-stochastic",
+   "relation": "same-method",
+   "why": "This is the GPT-3 probability-based scaling the paper benchmarks against (its footnote reports expert correlations of .92 and .8). Both position political texts with LLMs; this paper replaces token probabilities with a direct score query."
+  },
+  {
+   "slug": "burnham-2024-political-debate-zero",
+   "relation": "complements",
+   "why": "Political DEBATE is the NLI base model the system fine-tunes for CU stance. Le Mens offers the generative direct-query alternative for the same reader slot."
+  },
+  {
+   "slug": "burnham-2023-stance-detection-practical-guide",
+   "relation": "complements",
+   "why": "This guide covers target-specific stance classification. Le Mens covers continuous positioning; together they frame the categorical versus scaled choice for the CU rater."
+  },
+  {
+   "slug": "poole-1999-nominate-after-years",
+   "relation": "complements",
+   "why": "The senator benchmark is the first Nokken-Poole roll-call dimension, a period-specific NOMINATE variant."
+  },
+  {
+   "slug": "bonica-2013-mapping-ideological-marketplace",
+   "relation": "complements",
+   "why": "CFscores are the second actor-level benchmark (App A8). They correlate highly overall but less within party."
+  },
+  {
+   "slug": "birkenmaier-2025-measuring-politicians-public",
+   "relation": "same-method",
+   "why": "This also measures politicians from their text with GPT-4o, here for agency and communion. Paul cites it for the LLM readers; both find GPT-4o strongest."
+  },
+  {
+   "slug": "b-2025-comparing-fine-tuned",
+   "relation": "complements",
+   "why": "This compares fine-tuned RoBERTa with classical ML for political-tweet stance, the same supervised-versus-classical contrast Le Mens extends to LLMs."
+  }
+ ]
+}

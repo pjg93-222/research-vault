@@ -1,0 +1,57 @@
+{
+ "bearings": [
+  {
+   "component_id": "mentat-sector-growth-study.seats-weekly-test",
+   "relation": "qualifies",
+   "paper_claim": "House-majority ties raise contract-firm revenue in 12 of 13 tests; Senate ties in only 3 of 13. In the 2011 House-flip kernel-weighted difference-in-differences, lobbyists at Republican-aligned firms gained just over $10,000 for the year, and ousted Democratic-aligned firms lost more than $40,000 in annual revenue (stated per lobbyist for one year in the key findings). Outcome: revenue per lobbyist; 1,603 contract firms, 2008 Q1-2016 Q3. The 2015 Senate flip shows no significant effect.",
+   "paper_location": "p.2 (key findings); p.7-8 (difference-in-differences, Figures 3-4); p.8 Conclusion",
+   "system_side": "SEATS-W keeps House and Senate on separate seat scales (sgs_seats.R:24). The brain records one election, the 2022 House, 17 weeks, 538 Lite: -3.47 pp in the Democratic share of giving per +1 expected Democratic seat (block-bootstrap p 0.0086 at 3-week / 0.0174 at 5-week blocks; Holm 0.034 / 0.070), with the Senate showing nothing. The result is EXPLORATORY.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:14-24; C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md:257",
+   "transfer_conditions": "The House-yes, Senate-null pattern in SEATS-W matches the paper's House-over-Senate pattern, which supports chamber-specific estimates. The paper does not predict SEATS-W's sign: it measures contract-lobbying revenue after control actually changed, by firm partisanship; SEATS-W measures the partisan share of giving as within-cycle seat forecasts move. It cannot be cited as evidence for access-seeking in SEATS-W. Both are single-episode designs.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Paper numbers confirmed at text lines 91-95, 826-831, 983-986, 1000-1004. sgs_seats.R line 24 reads 'House and Senate are always separate, each on its own seat scale'. Brain numbers confirmed at 2026-09-feature-sector-growth-study.md:257 (Holm-adjusted p added; the 5-week Holm value 0.070 is above 0.05). Added the brain line to code_ref because the numbers are not in the R file."
+  },
+  {
+   "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+   "relation": "qualifies",
+   "paper_claim": "A change in House control moves contract-lobbying revenue between partisan firms: in 2011 lobbyists at Republican-aligned firms gained just over $10,000 for the year and ousted Democratic-aligned firms lost more than $40,000 in annual revenue (firm-level difference-in-differences on revenue per lobbyist). In Figure 2 (90% threshold, time-fixed measure only) Republican and Democratic firms were roughly at parity, with a marginal advantage to Democratic firms in 2008-2010 and to Republican firms in 2011-2016; bipartisan firms consistently earned greater average revenue.",
+   "paper_location": "p.3-4 (Figure 2 text); p.7-8 (Figure 3)",
+   "system_side": "The lobbying card carries outside-firm fees (LDA income_total) and in-house expenses (expenses_total) as separate series, never added. The lobbying refit is sector-aggregate with no partisan or control term: dy ~ dg + factor(year), anchor last_year, clustered by study_sector and year.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:379,554; C:/Users/pgoff/Mentat/mentat/forecast/refit/registry/models.json:22-26",
+   "transfer_conditions": "The paper's population (federal contract registrants, registrant differs from client) corresponds to the outside-firm fees series, not in-house expenses. The effect is distributional across firm partisanship; the paper does not identify a sector-total change. A common control shock would be absorbed by factor(year) in the fit but cannot be projected forward. Before adding a control-flip term, test whether outside-firm totals step after the 2011, 2015 and 2019 flips.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Analyst wrote that Democratic firms 'led' in 2008-2010 and Republican firms in 2011-2016; the paper says the two were 'roughly at parity' with a 'marginal advantage' trading back and forth, and Figure 2 uses only the 90% time-fixed measure. Reworded. Code lines confirmed (379 LOBBY_SERIES; 554 'never added here'; models.json lobby entry at 22-26)."
+  },
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "context",
+   "paper_claim": "Firm ties to the House majority are worth approximately $5,000 to $6,000 per lobbyist per quarter in the six levels models (firm random effects, year fixed effects, 2008-2016, N = 33,243 firm-quarters, 1,603 firms); first-differences models give $1,800 to $5,000. Senate effects appear only with the time-fixed measure in the levels models and not at all in first differences.",
+   "paper_location": "p.4-5, Table 2; p.5-6, Table 3",
+   "system_side": "The SHIFT spec (brain) regresses RShare = R/(R+D) of candidate giving on Shift = P - RMajNow (expected minus current Republican control), by recipient chamber. The SHIFT preview (2021-25 window) shows no stable partisan shift: chamber-stacked -0.04, p 0.76; House +0.68 is SATURATED (2023 vs 2025 only); Senate -0.16. The cited sgs_panel.R lines build the SHIFT tables (which store the Democratic share D/(D+R) and expected/current Democratic control), not the regression itself.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_panel.R:624-640; C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md:225,268",
+   "transfer_conditions": "The outcomes differ: the paper measures who earns lobbying fees, not where giving goes, and the separate Furnas et al. paper on lobbying/PAC overlap reports minimal overlap between lobbying and campaign-spending organizations. A null SHIFT preview is not contradicted by a lobbying-firm revenue premium. If SHIFT is ever extended to lobbying, key it to realized House control with chambers stratified.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper side holds (text lines 333-336, 568-573). System side corrected: sgs_panel.R:624-640 is the table builder storing the D share, not a regression of the R share; the RShare-on-Shift spec is in the brain at line 268. Added the 2021-25 preview window and the House +0.68 value the analyst omitted."
+  }
+ ],
+ "related": [
+  {"slug": "bacik-2025-measuring-dynamical-evolution", "relation": "complements", "why": "Bacik reports that registrants employing lobbyists with connections to both parties generate higher income per lobbyist (Fig. S46C) while legislators polarize; this paper finds bipartisan lobbying firms earn the highest average revenue."},
+  {"slug": "furnas-nd-conflating-lobbying-pacs", "relation": "complements", "why": "Same first author; reports minimal overlap between organizations that lobby and those that make campaign expenditures, which explains why a lobbying-revenue premium need not appear in PAC giving-share tests."},
+  {"slug": "kim-2018-lobbyview-firm-level", "relation": "same-data", "why": "Both build on Lobbying Disclosure Act filings; this paper uses the registrant-versus-client split to isolate contract firms."},
+  {"slug": "bonica-2013-mapping-ideological-marketplace", "relation": "same-method", "why": "Both infer the partisanship or ideology of actors from campaign contribution records."},
+  {"slug": "kim-2020-strategic-sequential-links", "relation": "complements", "why": "Kim links campaign donations and lobbying sequentially; this paper uses lobbyists' donations as a partisan identity signal for firms."},
+  {"slug": "bombardini-2020-empirical-models-lobbying", "relation": "complements", "why": "The review discusses Bertrand et al. (2014) on connections versus expertise, which this paper extends from individual lobbyists to firms."}
+ ],
+ "summary_issues": [
+  "Summary: '42% to 60% of firms are partisan' and 'bipartisan firms earn the highest average revenue' omit their bases; the 42-60% range depends on the 85/90/95% cutoffs, and the bipartisan revenue lead comes from Figure 2 at the 90% time-fixed measure only.",
+  "Summary: 'Senate alignment matters only under the time-fixed measure' holds for the levels models only; the first-differences models show no Senate support at all.",
+  "Summary: the +$10k / -$40k difference-in-differences figures lack their denominator; the paper states them as revenue per lobbyist for one year (2010 to 2011), firm-level.",
+  "Flag and paul_alignment are wrong that Paul's highlight 'does not state that the figure is per lobbyist': his highlight of the key findings includes 'roughly US$40,000 per lobbyist for one year'.",
+  "Flag 'Paul's seats-weekly position says neither paper on disk' could not be located in the brain topic or the sector_growth_study notes; treat as UNVERIFIED.",
+  "Bearing 3 system_side misdescribed sgs_panel.R:624-640 as the regression and its outcome as the Republican share; those lines build tables that hold the Democratic share. The RShare-on-Shift spec is in the brain topic.",
+  "Bearing 2 overstated Figure 2 ('Democratic firms led'); the paper says the parties were roughly at parity with a marginal advantage."
+ ]
+}

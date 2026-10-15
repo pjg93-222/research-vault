@@ -1,0 +1,906 @@
+{
+ "system": {
+  "slug": "melange-labels-and-tiers",
+  "name": "Melange stance labels, say-do gate and tier boards",
+  "description": "Turns signed evidence into displayed labels. It covers the fixed ten-band per-category ladder, the IMP-weighted overall tier, the say-do (costly-signal) gate, the action-based rank honors (rule G), the primacy (CU-purity) tier board, the per-area grade and the per-industry boards with the crown law. Labels are the alignment axis and never feed the rank pillars.",
+  "brain_notes": [
+   "C:/Users/pgoff/Documents/brain/concepts/say-do-gate.md",
+   "C:/Users/pgoff/Documents/brain/concepts/stance-pipeline-integrity-contract.md",
+   "C:/Users/pgoff/Documents/brain/concepts/behavior-qualified-recognition.md",
+   "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-primacy-and-industry-tier-boards.md"
+  ]
+ },
+ "components": [
+  {
+   "id": "melange-labels-and-tiers.category-stance-ladder",
+   "system": "melange-labels-and-tiers",
+   "name": "Fixed ten-band per-category stance ladder",
+   "computes": "Label per member x 18 categories from a signed raw score.",
+   "method": "Bands: >=0.70 Champion/Defender, >=0.35 Ally, >=0.25 Highly Persuadable, >=0.15 Persuadable, >=0.05 Lean Persuadable, >=-0.05 True Neutral, >=-0.15 Lean Skeptic, >=-0.35 Skeptic, >=-0.70 Highly Skeptical, else Opponent; no evidence shows an em dash. Legislation uses a sqrt scale of 2.0 and media a scale of 1.0. Exceptional rounding adds at most +/-0.05. Since 2026-08-03 four domains use signed empirical midrank CDF curves. DOC CONFLICT: MATHEMATICAL_SPECIFICATION.md line 14 describes median+k*IQR cuts.",
+   "assumptions": [
+    "Missing evidence is never imputed as neutral",
+    "Signed scores are comparable across members within a category"
+   ],
+   "empirical_questions": [
+    "Do label boundaries correspond to observable vote-probability thresholds on CU roll calls?",
+    "Are curved-domain labels better calibrated to subsequent behaviour than fixed bands?"
+   ],
+   "code_refs": [
+    "fec/stance/stance_rules.py:12-20",
+    "fec/stance/per_category_stance.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/stance-pipeline-integrity-contract.md"
+   ],
+   "heading": "Fixed ten-band per-category stance ladder"
+  },
+  {
+   "id": "melange-labels-and-tiers.say-do-gate",
+   "system": "melange-labels-and-tiers",
+   "name": "Say-do (costly-signal) gate and delivery multiplier",
+   "computes": "Caps Champion/Defender cells to Ally unless corroborated, applies an overall Champion audit cap, and sets a delivery discount on engine targets.",
+   "method": "Cell gate (fail-closed since 742b68aec): path A = authored or original-cosponsored bill in the category; path V = CU-aligned final-passage vote (lean >= 0.5). Path J (committee gatekeeping) was removed; VERIFIED absent from the current moneyball_core.py. Overall gate: at least 6 top cells, 2/3 delivered, and for >=10 direct bills at least 20% advanced (waived at >=20 bills with all top cells delivered). The overall gate is display-only since 391a4a8b5 and fails open. delivery_mult = clip(1 - 0.15 max(0, gap-1), 0.70, 1.00).",
+   "assumptions": [
+    "Sponsorship and final-passage votes are costly signals; committee office is not an action",
+    "High-volume introduction with little advancement indicates cheap talk"
+   ],
+   "empirical_questions": [
+    "Do members whose top labels fail the say-do gate show lower subsequent CU-aligned behaviour than corroborated members with the same rhetoric?",
+    "Is the say-do gap associated with lower bill advancement rates (cheap talk vs effectiveness)?"
+   ],
+   "code_refs": [
+    "fec/moneyball_core.py:880-966 (cap_uncorroborated, overall_say_do_gate)",
+    "fec/vote_category_lean.json",
+    "say_do_gap.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/say-do-gate.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-gate2-and-say-do.md"
+   ],
+   "heading": "Say-do (costly-signal) gate and delivery multiplier"
+  },
+  {
+   "id": "melange-labels-and-tiers.overall-tier",
+   "system": "melange-labels-and-tiers",
+   "name": "Overall tier (IMP-weighted aggregate) and Champion crown",
+   "computes": "Overall label = band of the IMP-weighted mean of tier prototypes (Champion 4 ... Opponent -4), with a +/-0.05 nudge. The display Champion is the primacy board top 13.",
+   "method": "Band cutoffs at 3.0, 2.0, 1.0, 0.4, 0.0, -0.3, -0.75, -1.5. IMP weights include Interchange 2.0, NCUA 1.0, Exam 0.75 and Capital 0.25. Unknown cells are excluded.",
+   "assumptions": [
+    "IMP weights reflect relative issue importance (judgment)",
+    "Silence does not dilute earned tiers"
+   ],
+   "empirical_questions": [
+    "Does an importance-weighted overall stance predict votes on the highest-IMP issues better than an unweighted mean?"
+   ],
+   "code_refs": [
+    "fec/moneyball_core.py:631-712",
+    "fec/stance/overall_stance_policy.py",
+    "fec/sync_stance_clean.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/stance-pipeline-integrity-contract.md"
+   ],
+   "heading": "Overall tier (IMP-weighted aggregate) and Champion crown"
+  },
+  {
+   "id": "melange-labels-and-tiers.rank-honors",
+   "system": "melange-labels-and-tiers",
+   "name": "Action-based rank honors (rule G ladder)",
+   "computes": "Recognition labels per policy field from accepted actions only.",
+   "method": "Base: signed action sum with role weights 3/2/1, votes 1, and Congress decay 1/0.8/0.64; cutoffs at 5/15/20% of N. Rule G (default since 2026-09-16): a signed rate per service year from 2021-01-03 (years floored 0.5, capped 6), votes 0.4, no decay; positive and negative sub-cohort shares as recorded; True Neutral for zero record.",
+   "assumptions": [
+    "Only accepted actions earn labels; silence earns none",
+    "Low rank never implies opposition"
+   ],
+   "empirical_questions": [
+    "Is rate-per-service-year a fairer predictor of future CU actions than raw cumulative counts for junior members?"
+   ],
+   "code_refs": [
+    "fec/stance/rank_honors_policy.py",
+    "fec/stance/build_rank_honors.py",
+    "fec/stance/RANK_HONORS.md (pre-rule-G only)"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/behavior-qualified-recognition.md"
+   ],
+   "heading": "Action-based rank honors (rule G ladder)"
+  },
+  {
+   "id": "melange-labels-and-tiers.primacy-board",
+   "system": "melange-labels-and-tiers",
+   "name": "Primacy (CU-purity) tier board",
+   "computes": "Tier 1/2/3 (13/24/48) of members whose legislative acts are most purely CU-focused.",
+   "method": "factor_raw = sum(role_w x act_w) / sum(role_w) with role weights sponsor 1, original 0.5, cosponsor 0.25. Act weights: cu_primary 1, shared .5, other industry .15, offtopic 0, oppose -1; letters 0.6, amendments x0.5; tensor cell overrides. Shrinkage lambda = min(1, credit/15) toward the agenda-weighted baseline, then an uncertainty penalty K = 0.25. Evidence floor cu_primary >= 0.75. diagnostic_v1 (CLASS_DOCK_PRESS_GRADE_ALL, within-chamber) is default since 2026-09-20. Volume-blind by design.",
+   "assumptions": [
+    "CU purity, not volume, defines primacy (owner intent)",
+    "Thin portfolios shrink toward the roster mean"
+   ],
+   "empirical_questions": [
+    "Do high-purity members deliver more enacted CU-aligned provisions than high-volume, low-purity members?",
+    "Does shrinkage at anchor 15 produce better out-of-sample rank stability across Congresses?"
+   ],
+   "code_refs": [
+    "fec/engine/primacy_factors.py:28-490",
+    "fec/engine/primacy_method.py:1-12",
+    "fec/tier_util.py primacy_scores()",
+    "fec/legislation_measure_key.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-primacy-and-industry-tier-boards.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-primacy-and-industry-tier-boards-primacy-factor-drift-crown.md"
+   ],
+   "heading": "Primacy (CU-purity) tier board"
+  },
+  {
+   "id": "melange-labels-and-tiers.per-area-grade",
+   "system": "melange-labels-and-tiers",
+   "name": "Per-area primacy grade (D-031)",
+   "computes": "grade = sum over areas of IMP x (0.80 n_leg + 0.20 n_press), with within-chamber percentiles.",
+   "method": "leg = role-weighted signed acts x (1 + 0.5 tensor) + 0.4 x votes, per service year (clipped 0.5-6). Press = (pos - neg)/items when items >= 5. Role weights 0.40/0.25/0.15.",
+   "assumptions": [
+    "Within-chamber percentiles avoid cross-chamber comparison (D-027)",
+    "Press proportion applies uniformly to all areas (no per-item area tags)"
+   ],
+   "empirical_questions": [
+    "Does per-area grade predict area-specific roll-call alignment?"
+   ],
+   "code_refs": [
+    "fec/engine/per_area_grade.py:1-526",
+    "fec/engine/primacy_press.py:1-62"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-primacy-and-industry-tier-boards.md"
+   ],
+   "heading": "Per-area primacy grade (D-031)"
+  },
+  {
+   "id": "melange-labels-and-tiers.industry-boards-crown",
+   "system": "melange-labels-and-tiers",
+   "name": "Per-industry tier boards, industry-axes tensor and crown law",
+   "computes": "Separate CU, bank, crypto and fintech boards, and an industry tensor tie-break.",
+   "method": "Same desk method per industry. The tensor cell (relevance x valence) is a secondary tie-break, never blended. Crown law: 12-13 Tier-1 champions, and a champion cannot be a threat in another sector.",
+   "assumptions": [
+    "Industries can be scored independently by the same method",
+    "Missing tensor cells are not zero"
+   ],
+   "empirical_questions": [
+    "Do cross-industry champions exist empirically (members aligned with both banks and CUs on contested bills)?"
+   ],
+   "code_refs": [
+    "fec/lobbying/industry_tiers.py",
+    "fec/engine/primacy_factors.py:111-194",
+    "tier_overrides.json"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-primacy-and-industry-tier-boards.md"
+   ],
+   "heading": "Per-industry tier boards, industry-axes tensor and crown law"
+  }
+ ],
+ "positions": [
+  {
+   "component_id": "melange-labels-and-tiers.category-stance-ladder",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "melange-labels-and-tiers.say-do-gate",
+   "citations": [
+    "Fouirnaies & Hall 2022",
+    "Kim, Stuckatz & Wolters 2020/2026"
+   ],
+   "paul_position": "Paul's sources frame sponsorship and committee activity as costly, observable effort. His notes do not discuss a say-do gate."
+  },
+  {
+   "component_id": "melange-labels-and-tiers.overall-tier",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "melange-labels-and-tiers.rank-honors",
+   "citations": [
+    "Fouirnaies & Hall 2022"
+   ],
+   "paul_position": "Indirect support for rewarding observable actions only. No annotation addresses rate-per-service-year."
+  },
+  {
+   "component_id": "melange-labels-and-tiers.primacy-board",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "melange-labels-and-tiers.per-area-grade",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "melange-labels-and-tiers.industry-boards-crown",
+   "citations": [
+    "Kim J. et al. 2025",
+    "Kim & Kunisky 2020"
+   ],
+   "paul_position": "Paul wants champions identified for rival and allied industries, along with their level of commitment. His margin note says 'I may need to take into account the presence of conflicting industries'."
+  }
+ ],
+ "citations_in_system": [
+  {
+   "citation": "Ramey, Klingler & Hollibaugh, 'Measuring Elite Personality Using Speech', Political Science Research and Methods (year conflict in repo: 2016 in PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32 and code; 2019 in big5_methods.md:12). Replication data doi:10.7910/DVN/JDH6KR",
+   "where": [
+    "fec/members/big5_traits.py:1-25",
+    "fec/members/fit_smoreg_rkh.py:5",
+    "fec/members/lep_criterion.py:5-6",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32",
+    "big5_methods.md:12",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Lexical Big Five pipeline, token shrinkage, RKH reference targets (melange-psychometrics); ceremonial-share C criterion (melange-legislative-data)"
+  },
+  {
+   "citation": "Mairesse et al. (2007), JAIR, personality from text (SMOreg on LIWC/MRC; 53-58% band)",
+   "where": [
+    "fec/members/fit_smoreg_essays.py:4",
+    "fec/members/big5_traits.py:13-16",
+    "fec/members/interaction_features.py:5-6",
+    "big5_methods.md:31",
+    "big5_audio_prereg.md:15"
+   ],
+   "used_for": "SMOreg feature weights and word-count features (melange-psychometrics); audio cues"
+  },
+  {
+   "citation": "Pennebaker & King (1999); Yarkoni (2010); Pennebaker (2003, Annual Review)",
+   "where": [
+    "fec/members/big5_traits.py:14-15",
+    "fec/members/affective_n_validate.py:10",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Published-correlate lexical weights; essays corpus; negative-emotion basis for affective N"
+  },
+  {
+   "citation": "Birkenmaier & Lechner (2025), 'Measuring Politicians' Public Personality', Political Analysis; Birkenmaier, Lechner & Wagner (2024)",
+   "where": [
+    "fec/members/agency_communion_llm.py:3,33",
+    "fec/members/big5_llm.py:10",
+    "fec/members/big5_traits.py:9",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:33",
+    "big5_behavioral_extraversion_prereg.md:239"
+   ],
+   "used_for": "Agency/communion persona cue classifier and PERSONA_W; cannot-tell coding"
+  },
+  {
+   "citation": "Lechner, Aichholzer, Birkenmaier & Bluemke (2025), 'Mapping the Political Personality' (Polipers v0.1, GESIS)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Review of politician-personality studies; external criterion search"
+  },
+  {
+   "citation": "'Personality on the Hill' Senate insider and academic gold panels (online_appendix.pdf, SHA-256 43c98926...; author/year not recorded)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "External gold for Big Five validation"
+  },
+  {
+   "citation": "Amsalem et al. (2018), media visibility of Belgian, Canadian and Israeli MPs (Eran.pdf) - provenance warning only, NOT the gold source",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Hash-mismatch provenance check"
+  },
+  {
+   "citation": "Norgaard & Klemmensen (2019), J. Personality 87(2):267-275; Schumacher & Zettler (2019), PAID 141:173-181",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Elite self-report personality benchmarks and desirability caveat"
+  },
+  {
+   "citation": "Cao & Kosinski (PNAS Nexus 2024); Peters & Matz (PNAS Nexus 2024, doi:10.1093/pnasnexus/pgae231)",
+   "where": [
+    "fec/members/big5_llm.py:12",
+    "big5_methods.md:46-49",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "De-identification before LLM trait scoring; LLM zero-shot personality benchmark"
+  },
+  {
+   "citation": "Valente (Interspeech 2012); Yu (Interspeech 2019); Rienks & Heylen (2005)",
+   "where": [
+    "fec/members/interaction_features.py:5-8",
+    "fec/members/behavioral_dispositions.py:17",
+    "big5_methods.md:30"
+   ],
+   "used_for": "Turn-statistic dominance and reactivity features"
+  },
+  {
+   "citation": "Koutsoumpis (meta-analysis, language and personality); Yang, Lau & Abbasi (ISR 2023)",
+   "where": [
+    "big5_methods.md:114",
+    "AUDIT_FINDINGS_2026-07-04.md:332",
+    "big5_behavioral_extraversion_prereg.md:221"
+   ],
+   "used_for": "Text tracks observer more than self-report; response-selection bias; PERSONA_W scope argument"
+  },
+  {
+   "citation": "Soto & John (2017) BFI-2-XS; Connelly & Ones (2010); Judge et al. (2002); Funder & Ozer (2019); Dietrich (2012); Dynes (2019); Wagner (2024); Steiger (1980); Stern et al. (2021); Harari (2022); Rubio et al. (2024); Marrero et al. (2022); Marengo et al. (2018, doi:10.1016/j.paid.2017.12.018); Hargittai (2015, doi:10.1177/0002716215570866); Hinds & Joinson (2024, doi:10.1037/bul0000430); Marengo, Montag & Settanni (2025, doi:10.1111/jopy.70019); Lau & Abbasi (2023)",
+   "where": [
+    "big5_expert_panel_prereg.md",
+    "big5_nomological_prereg.md",
+    "big5_n_matrix_prereg.md",
+    "big5_audio_prereg.md",
+    "big5_es_crossmodal_prereg.md",
+    "big5_a_coverage_prereg.md",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "Prereg designs for Big Five expert panel, nomological, audio and coverage looks (melange-psychometrics)"
+  },
+  {
+   "citation": "Salam et al. (2022), PMLR 173, personalised NAS Big Five on UDIVA",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md:132"
+   ],
+   "used_for": "Audio trait benchmark and sex-conditioning check"
+  },
+  {
+   "citation": "Mestre & Ryan (2026), validated aeneas forced alignment; Dietrich (2019)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Audio identity design (forced alignment, within-speaker F0)"
+  },
+  {
+   "citation": "ECAPA-TDNN speaker embedding (name only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Proposed speaker verification"
+  },
+  {
+   "citation": "Byrne, Silasi-Mansat & Worthy (2015), 'Who chokes under pressure?', PAID",
+   "where": [
+    "fec/members/receptivity_layer.py:6-7,189,233",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:34",
+    "AUDIT_FINDINGS_2026-07-04.md:548",
+    "fec/engine/outcome_contract.py:18"
+   ],
+   "used_for": "Susceptibility composite (only N and A supported; C and E are design priors); H2 predictor"
+  },
+  {
+   "citation": "Fouirnaies & Hall, 'How Do Electoral Incentives Affect Legislator Behavior?' (APSR)",
+   "where": [
+    "fec/members/receptivity_layer.py:15-20",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:35",
+    "fec/engine/money_response.py:27"
+   ],
+   "used_for": "Retiring-member incentive multiplier and competitiveness term"
+  },
+  {
+   "citation": "Linde & Vis (2016), 'Do Politicians Take Risks Like the Rest of Us?', Political Psychology",
+   "where": [
+    "fec/members/receptivity_layer.py:22-28",
+    "fec/engine/money_response.py:27-29",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:36"
+   ],
+   "used_for": "Prospect-theory domain multiplier and attenuated loss frame"
+  },
+  {
+   "citation": "Kahneman & Tversky (loss aversion)",
+   "where": [
+    "fec/engine/money_response.py:29",
+    "fec/members/receptivity_layer.py:27"
+   ],
+   "used_for": "LOSSFRAME 1.10"
+  },
+  {
+   "citation": "Chen, Kamarthi, Wilder & Tambe, contingency-aware influence maximization (UAI 2021, arXiv 2106.07039; venue corrected from ICML); Zareie & Sakellariou (SNAM 2023)",
+   "where": [
+    "fec/members/receptivity_layer.py:28-34",
+    "fec/engine/budget_frontier.py:72-74",
+    "fec/engine/outcome_contract.py:17",
+    "AUDIT_FINDINGS_2026-07-04.md:564-565"
+   ],
+   "used_for": "Seed take-up probability and seed gate; H1 predictor"
+  },
+  {
+   "citation": "Bharathi, Kempe & Salek, Competitive Influence Maximization",
+   "where": [
+    "fec/engine/scenario.py:6-11",
+    "fec/engine/budget_frontier.py",
+    "fec/engine/per_topic_coalition.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Competitive IC cascade and coalition submodularity"
+  },
+  {
+   "citation": "Borodin et al. (submodularity can fail in competitive LT)",
+   "where": [
+    "fec/engine/scenario.py:11-12"
+   ],
+   "used_for": "Flip side treated as heuristic"
+  },
+  {
+   "citation": "Kempe, Kleinberg & Tardos (2003, KDD) influence maximization",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:157",
+    "quant skill references"
+   ],
+   "used_for": "Cascade and threshold model assumptions"
+  },
+  {
+   "citation": "Golovin & Krause (2011), Adaptive Submodularity, JAIR (Lemma 5.3/A.9)",
+   "where": [
+    "fec/engine/optimize.py:8,108-113",
+    "fec/engine/scenario.py:8-10",
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md"
+   ],
+   "used_for": "Joint optimizer bound and framing (melange-allocation)"
+  },
+  {
+   "citation": "Leskovec et al. (KDD 2007) CELF lazy greedy; Nemhauser (1-1/e)",
+   "where": [
+    "fec/engine/optimize.py:74-96",
+    "fec/engine/budget_frontier.py:96-106",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Lazy greedy seed and budget selection"
+  },
+  {
+   "citation": "Almazaydeh et al. (2026), Scientific Reports, s41598-026-47299-8",
+   "where": [
+    "fec/engine/mc_stability_check.py:3-10",
+    "influence-modeling-reference SKILL.md"
+   ],
+   "used_for": "Noisy MC corrupts CELF; motivates CRN and stability check"
+  },
+  {
+   "citation": "Manchanda et al., GCOMB, NeurIPS 2020, arXiv:1903.03332",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Budget mode: locality, degree pruning, CELF (melange-pathfinding)"
+  },
+  {
+   "citation": "Chen & Lam, most-reliable path; Ren et al., Multi-Objective Path-Based D* Lite (MOPBD*) and RELINK",
+   "where": [
+    "fec/engine/cosponsor_route.py:3-5",
+    "fec/engine/scenario.py:13",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Pathfinder and route-finder concepts (melange-pathfinding)"
+  },
+  {
+   "citation": "Sotoudeh, Porter & Krishnagopal (2024), arXiv 2406.19554, network measure of cosponsorship influence on bill passage",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Cosponsor edge weights and path grounding"
+  },
+  {
+   "citation": "Aref & Neal (2020, 2021), signed-network optimal partitioning / generalized balance; Neal signed backbone (R backbone sdsm)",
+   "where": [
+    "fec/network/signed_coalitions.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Signed coalition partition and multi-target coalition mode"
+  },
+  {
+   "citation": "Porter, Mucha, Newman et al. (PNAS 2005), committee network community structure / normalized interlock",
+   "where": [
+    "fec/surfaces/make_member_desk.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-model-facts.md",
+    "HOLISTIC_NETWORK_DESIGN_2026-08-17.md:78"
+   ],
+   "used_for": "Committee-cluster layout; community structure in pathfinder"
+  },
+  {
+   "citation": "Fink et al. (2023), Congressional Twitter influence network, Data in Brief",
+   "where": [
+    "fec/network/social_interaction_layer.py:15-19",
+    "MATHEMATICAL_SPECIFICATION.md:44",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Author-volume normalized social and press edges"
+  },
+  {
+   "citation": "Malaterre & Lareau (2024), HCoI communities",
+   "where": [
+    "fec/press_hcoi.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Press-attention communities"
+  },
+  {
+   "citation": "Zhou & Elejalde (2026), Information Processing & Management, TWLGCN",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Stance dynamics port"
+  },
+  {
+   "citation": "Joo & Steinert-Threlkeld (2022), Computational Communication Research; Steinert-Threlkeld, Twitter as Data",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Frame alignment"
+  },
+  {
+   "citation": "Ringe, Victor & Gross (BJPS 2013), Friends and Enemies",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:599"
+   ],
+   "used_for": "Signed mention layer concept"
+  },
+  {
+   "citation": "Battaglini & Patacchini, 'Influencing Connected Legislators', NBER w22739",
+   "where": [
+    "fec/engine/kb_benchmark.py:2-18"
+   ],
+   "used_for": "Katz-Bonacich benchmark"
+  },
+  {
+   "citation": "Kim & Kunisky, lobbying networks / latent communities (local PDF)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Community structure exploited by pathfinder"
+  },
+  {
+   "citation": "Noble & Turner (2024), 'Presidential Leadership and Legislative Polarization'; Lee (2009)",
+   "where": [
+    "fec/engine/salience_shock.py:4-38",
+    "fec/surfaces/build_dashboard_bundle.py:663",
+    "fec/moneyball_core.py:731"
+   ],
+   "used_for": "Salience shock regimes; retreat regime"
+  },
+  {
+   "citation": "Furnas, LaPira, Hertel-Fernandez, Drutman & Kosar (congressional staff survey experiment); Bakker (partisan cues); Bakker, Lelkes & Malka (JOP)",
+   "where": [
+    "fec/moneyball_core.py:11",
+    "fec/engine/lt_priming.py:56-58",
+    "fec/surfaces/templates/make_dashboard_html_00.tpl:742",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "cpf_pressure 1.7/0.5; out-party cue clamp; executive cue factor; money capped, information is the lever"
+  },
+  {
+   "citation": "Ansolabehere, de Figueiredo & Snyder (2003); Fowler, Garro & Spenkuch (2020); Hall & Wayman (1990); Kalla & Broockman (2016), 'Campaign Contributions Facilitate Access'; Kalla & Broockman (general-election persuasion about zero); Coppock (persuasion about 5 pp / 0.1 SD)",
+   "where": [
+    "fec/engine/flip_model.py:21",
+    "fec/engine/money_response.py:15,20",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Money buys access not votes; WM/WP weights; MAXSHIFT calibration; access multiplier"
+  },
+  {
+   "citation": "Huneeus & Kim (lobbying distorts policy); Bombardini & Trebbi (annual review of empirical lobbying); Pritoni (lobbying coalitions); Bacik et al. / Kim, lobbying-network dynamics (arXiv 2503.11745); Azaiez & Mandel (EC lobby hypergraph); Harrison et al. (lobbying record mining)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-scenario-model-build.md"
+   ],
+   "used_for": "Calibration context for small, capped lobbying returns; pathfinder background"
+  },
+  {
+   "citation": "Trivedi & Singh (Procedia 2020) coalition modeling; Scientific Reports 2026 IM algorithm comparison (CELF++/RIS/IMM)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md"
+   ],
+   "used_for": "Coalition and IM algorithm references"
+  },
+  {
+   "citation": "Gaynor (LSQ 2022); Kim, Stuckatz & Wolters (JOP 2026); Furnas, LaPira & Brock (PS 2025)",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:706-711"
+   ],
+   "used_for": "Leadership PAC edges and donation/lobbying sequencing (identified, not implemented)"
+  },
+  {
+   "citation": "Volden & Wiseman, legislative effectiveness (five-stage LES; Center for Effective Lawmaking LES 93-118); Bucchianeri/Volden/Wiseman-style",
+   "where": [
+    "fec/members/lep_criterion.py:1-15",
+    "fec/engine/flip_model.py:142 (comment only)",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md",
+    "C:/Users/pgoff/Documents/brain/actors/codex-executor-incidents.md"
+   ],
+   "used_for": "Effectiveness shadow score and convergence criterion; uncoded passage-bonus comment"
+  },
+  {
+   "citation": "Nokken & Poole dynamic ideal points; DW-NOMINATE (Poole-Rosenthal)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Drift criterion for N (MISS); NOMINATE rejected for vote edges"
+  },
+  {
+   "citation": "Matz et al. (PNAS 2017); Simchon (2024, PNAS Nexus); Hackenburg & Margetts (2024)",
+   "where": [
+    "fec/surfaces/make_member_desk.py:846",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Persona-matched appeals (design-only) and aggregate null caution"
+  },
+  {
+   "citation": "Brysbaert concreteness norms; Guiraud index; Empath lexicon; Valente (N overlap stat 68.7%)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-record-1-big5-campaign.md"
+   ],
+   "used_for": "Big Five lexical features"
+  },
+  {
+   "citation": "Miller & Sutherland, APSR (hearing conduct; doctrine WITHDRAWN 2026-07-10)",
+   "where": [
+    "big5_methods.md:36",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics.md"
+   ],
+   "used_for": "Withdrawn hearing-antagonism doctrine"
+  },
+  {
+   "citation": "Burnham, 'Stance detection: a practical guide' (PSRM 2024.35); mlburnham/Political_DEBATE_base_v1.0 (Hugging Face)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39",
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md"
+   ],
+   "used_for": "NLI stance templates and the DEBATE base model (melange-stance)"
+  },
+  {
+   "citation": "Stanceformer, arXiv 2410.07083; ACL 2023.acl-long.560 (TSE); MDPI 2076-3417/15/21/11784",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39,63",
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md"
+   ],
+   "used_for": "Target-aware stance (planned); two-stage decoupling; neutral-class difficulty"
+  },
+  {
+   "citation": "Khan et al. (2025), IECE TACS, Roman Urdu agree/disagree/unrelated stance",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md:45"
+   ],
+   "used_for": "Multi-view augmentation (hurt classical readers)"
+  },
+  {
+   "citation": "Park, Lee & Cho (2025), 'Automatic construction of direction-aware sentiment lexicon using direction-dependent words', Language Resources & Evaluation 59:843-869",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:65"
+   ],
+   "used_for": "Direction-aware valence lexicon idea (rejected on dry run)"
+  },
+  {
+   "citation": "Soroka et al., Lexicoder Sentiment Dictionary LSD2015 (snsoroka.com LSDaug2015.zip); Haselmayer & Jenny (2017); Rice & Zorn (2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-congress-r-scrapers-graded-scoring-and-audits.md:26-28"
+   ],
+   "used_for": "Stage 5b tone intensity; graded tone and polarity normalization"
+  },
+  {
+   "citation": "Dai, Liao, Zhao et al. (2025), LLM-enhanced Logic Tensor Network for stance detection, Neural Networks 183:106956, doi:10.1016/j.neunet.2024.106956",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md:198",
+    "stance_valence_folcot_prereg.md:13"
+   ],
+   "used_for": "FOL-CoT valence proposals (not adopted)"
+  },
+  {
+   "citation": "Kim, Kim, Jeong, Oh & In Song Kim (2025), 'Measuring Interest Group Positions on Legislation' (PNAS draft); LobbyView positions dataset doi:10.7910/DVN/D0QWM2; In Song Kim LobbyView (Song 2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md",
+    "fec/lobbying/lobby_position_benchmark.py:9",
+    "fec/lobbying/collect_lobbyview.py:35"
+   ],
+   "used_for": "LDA data and interest-group positions (melange-lobbying)"
+  },
+  {
+   "citation": "Romero Moreno (2021)",
+   "where": [
+    "CONTESTED_BILLS_DESIGN.md:29-30"
+   ],
+   "used_for": "Contested-bills counterparty term"
+  },
+  {
+   "citation": "Delano, Rudkin & Kim (2025), BICAM, Scientific Data 12:1567, doi:10.1038/s41597-025-05737-8; Porter, Case & Treul (2025), CampaignView, Scientific Data 12:1237, doi:10.1038/s41597-025-05491-x; Zhan & Cai (2025), ESWA 263:125705, doi:10.1016/j.eswa.2024.125705; Cao, Gai, Wu et al. (2025), Information Fusion 120:103107, doi:10.1016/j.inffus.2025.103107",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md",
+    "CAMPAIGN_SITE_COLLECTION_2026_RUNBOOK.md:10"
+   ],
+   "used_for": "Research-integration proposals (bill-LDA linkage, campaign corpus, trust-KNN imputation, signed trust propagation)"
+  },
+  {
+   "citation": "Russo et al. (ACL 2023), 'Helping a Friend or Supporting a Cause?'; Brandenberger (2018), 'Trading Favors', Social Networks 54:238-253, doi:10.1016/j.socnet.2018.02.001; Montgomery & Nyhan (2017), doi:10.1086/690301; Shalizi & Thomas (2011); Nay (2017), PLOS ONE doi:10.1371/journal.pone.0176999",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:153-158",
+    "fec/research/cosponsor_challengers/PROTOCOL.md:44-47"
+   ],
+   "used_for": "Cosponsorship prediction and reciprocity baselines; homophily vs contagion confounding; staff exchange and policy similarity"
+  },
+  {
+   "citation": "Tiedens & Fragale (2003), doi:10.1037/0022-3514.84.3.558; Santoro & Broockman (2022), Science Advances, doi:10.1126/sciadv.abn5515",
+   "where": [
+    "fec/research/member_personal_relationships/PERSONALITY_CONTEXT_EXPLORATION.md:46"
+   ],
+   "used_for": "Context only for member personal-relationship research"
+  },
+  {
+   "citation": "DerSimonian-Laird random-effects estimator",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "used_for": "R2 partially pooled industry slope (mentat-giving-forecast)"
+  },
+  {
+   "citation": "Cameron, Gelbach & Miller (2011), two-way cluster-robust variance; Holm step-down; Newey-West HAC; Driscoll-Kraay (requested); Ball (2024)",
+   "where": [
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-8,168,210",
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:71-76,389,588",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Inference in the sector growth regressions and SEATS-W"
+  },
+  {
+   "citation": "Bross (1958) ridit; Spearman-Brown; Kendall tau-b; pool-adjacent-violators (PAV)",
+   "where": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/design/spec_rigor.md",
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "used_for": "Ridit transforms, internal consistency and sensitivity tests (terrier-row-scoring); turnout calibration (terrier-canvass)"
+  },
+  {
+   "citation": "MAST multi-agent failure taxonomy (named only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/metaloop.md"
+   ],
+   "used_for": "Failure-attribution tags (metaloop-orchestration)"
+  },
+  {
+   "citation": "SR 11-7 model risk management (superseded 2026-04-17 by SR 26-2); quant-model-evaluation skill bibliography (Cinelli & Hazlett 2020; Politis & Romano 1994; Simar & Wilson 1998; Grubesic & Matisziw 2006; Fouirnaies & Hall 2018; Powell & Grimmer 2016; others)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md",
+    ".claude/skills/quant-model-evaluation/references/sources.md"
+   ],
+   "used_for": "Audit tooling references applied to Melange (melange-validation)"
+  },
+  {
+   "citation": "Data sources (not literature): MEDSL Dataverse election returns; Cook Political Report PVI; Voteview; congress-legislators; govinfo BILLSTATUS; Ballotpedia; openFEC and FEC bulk; OpenSecrets; IBISWorld; Census ACS/CBP/LODES/cb_2024 and cb_2020; FDIC SOD; NCUA Call Reports; HMDA; Polymarket/Kalshi/IEM; Crystal Ball/538",
+   "where": [
+    "fec/engine/build_competitiveness.py",
+    "fec/district/demographic_potential.py",
+    "DEMOGRAPHIC_POTENTIAL_METHOD.md:185-191",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Model inputs across systems"
+  }
+ ],
+ "evidence": [
+  {
+   "slug": "broockman-2026-should-moving-middle",
+   "title": "Should Moving to the Middle Win Candidates Votes? It Depends Where Voters Are",
+   "year": "2026",
+   "component_id": "melange-labels-and-tiers.overall-tier",
+   "relation": "qualifies",
+   "claim": "Gains and losses across issues and voters can net to modest aggregate effects, so a small average conceals larger, opposite-signed issue-level responses. In a stylized example (Figure A7), 50% more voters change their votes than the average net effect implies.",
+   "system_side": "The overall label is a band of the IMP-weighted mean of tier prototypes (TORD: Champion 4 ... Opponent -4) plus a bounded +/-0.05 rounding nudge. A member who is Champion on one topic and Opponent on another can therefore average into a middle band. The money layer (fec/engine/money_response.py) reads this overall tier.",
+   "transfer": "This is an analogy on how aggregation behaves, with a different population: legislators' issue positions are far more one-dimensional than voters'. The point is a reading caution. A middle overall tier should not be read as 'persuadable everywhere'. Before acting on the overall label, check the dispersion of the per-topic cells. The paper provides no legislator evidence.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "fouirnaies-2022-electoral-incentives-affect",
+   "title": "How Do Electoral Incentives Affect Legislator Behavior? Evidence from U.S. State Legislatures",
+   "year": "2022",
+   "component_id": "melange-labels-and-tiers.say-do-gate",
+   "relation": "qualifies",
+   "claim": "Sponsorship is effort directed at voters' inferences, not a revelation of position: it falls when reelection ends while ideology stays flat. Legislators advertise bills introduced on their webpages.",
+   "system_side": "Path A treats an authored or original-cosponsored bill in the category as the costly signal that corroborates Champion or Defender. The overall gate's thin_high_volume rule (at least 10 direct bills with no more than 20% advanced) treats high-volume introduction as cheap talk.",
+   "transfer": "Weak. The paper supports the thin_high_volume reading, since introduction volume responds to electoral display. It also cautions that path A sponsorship is partly advertising, though a bill signed in the CU direction is still more than talk. The evidence comes from state legislatures with bill-introduction caps in half the states (p.666), and the paper does not test whether a bill's direction corroborates rhetoric.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "poole-1999-nominate-after-years",
+   "title": "D-NOMINATE After 10 Years: A Comparative Update to Congress: A Political Economic History of Roll Call Voting",
+   "year": "1999",
+   "component_id": "melange-labels-and-tiers.say-do-gate",
+   "relation": "qualifies",
+   "claim": "The second dimension now adds less than 1 percent improvement in classification over the first in both chambers (p.7). Party overlap, measured as the share of a party's members closer to the opposing party's mean than to their own, is under 1.5 percent in both chambers for the past 5 Congresses, with none in the past 3 Senates (p.15). The paper does not discuss final-passage votes specifically; the inference that a single final-passage vote mostly records party position is the analyst's, not the paper's.",
+   "system_side": "vote_corroboration() (Path V) marks a category as corroborated when vote_category_lean.json shows lean >= 0.5 with n >= 1 for the member; it does not condition on party or ideal point. Verifier re-ran the same function on 2026-10-09 (window = current vote_category_lean.json; denominators = moneyball_core.party() roster counts, D 259, R 271, I 3 excluded) and got identical shares: CFPB D 4/259 (2%) vs R 179/271 (66%); Technology & Emerging D 18 (7%) vs R 263 (97%); Examination & Supervision D 106 (41%) vs R 261 (96%); CU Capital Requirements D 9 (3%) vs R 149 (55%); Charter Modernization D 215 (83%) vs R 70 (26%); NCUA Budget & Insurance D 145 (56%) vs R 51 (19%). Not every category sorts by party: Mortgage & Housing D 78% vs R 74%, Fraud Prevention 63% vs 68%, Defense CU Issues 57% vs 58%. Correct category names are 'CU Capital Requirements' and 'NCUA Budget & Insurance'.",
+   "transfer": "Paper evidence ends at the 105th Congress (1998). The party split is a re-run of the same function, not an independent second method, so it stays UNVERIFIED under DE-062 and is quoted stratified by party only. The qualification applies to the party-sorted categories, not to Mortgage & Housing, Fraud Prevention or Defense CU Issues.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "poole-1999-nominate-after-years",
+   "title": "D-NOMINATE After 10 Years: A Comparative Update to Congress: A Political Economic History of Roll Call Voting",
+   "year": "1999",
+   "component_id": "melange-labels-and-tiers.category-stance-ladder",
+   "relation": "method-source",
+   "claim": "Appendix eqs. A2-A3: utility for an outcome is beta times exp of minus the weighted squared distance plus a normal error; the choice probability is a probit on the utility difference between Yea and Nay. Table 2: beta 4.125 (House, 2D linear).",
+   "system_side": "FIXED_BANDS: nine cut points (0.70/0.35/0.25/0.15/0.05/-0.05/-0.15/-0.35/-0.70) defining ten bands on signed scores.",
+   "transfer": "Testing band edges against vote probabilities needs a member x CU roll-call matrix with dates, which the brain records as not in the repo. Paul's FreeText 'Most important part' sits on the appendix.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "kim-2025-measuring-interest-group",
+   "title": "Measuring Interest Group Positions on Legislation: An AI-Driven Analysis of Lobbying Reports",
+   "year": "2025",
+   "component_id": "melange-labels-and-tiers.industry-boards-crown",
+   "relation": "supports",
+   "claim": "Oppose is the GNN's hardest class. The text says Oppose F1 is 'in the 60s', but SI Table 12 shows Oppose F1 from 57.65 to 64.06 across the 17 graph configurations, with five configurations below 60. Engage dominates GNN output: 137,023 of 188,639 Engage-class labels (72.6%) come from the GNN stage. Fig 5 orders industries by mean LPscore, with commercial sectors at one end and social/progressive sectors at the other.",
+   "system_side": "Kim-format positions are joined onto the ledger with basis tag inferred_<variant>, and the module states that a Support badge is a lead, not a fact. In industry_tiers the adjudicated credit-union cell owns the CU tensor weight, and the older raw position overlay (acu_position) is removed from it.",
+   "transfer": "The paper's Oppose weakness belongs to its GNN stage. The system's weak Oppose agreement belongs to its Haiku lane, scored against Kim labels. They point the same way, but they are different readers. The bank-column pilot result (about 70% of Oppose labels wrong, zero rows signed) was not found in the cited code or in a repo search, so it is dropped here as UNVERIFIED.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kim-2020-mapping-political-communities",
+   "title": "Mapping Political Communities: A Statistical Analysis of Lobbying Networks in Legislative Politics",
+   "year": "2020",
+   "component_id": "melange-labels-and-tiers.industry-boards-crown",
+   "relation": "qualifies",
+   "claim": "'Finance & Insurance' is one of the eight named legislation communities. The paper states the data 'do not distinguish between lobbying for or against' a bill, and therefore analyses domain broadening rather than alliances. (That co-lobbying would place rival finance interests in one community is an inference, not a paper finding.)",
+   "system_side": "champions_v2.py builds direction-aware, mutually exclusive champion boards over sectors credit_union, bank, crypto, fintech, telecom, with the crown law: Tier-1 crowns never eligible for any threat board. primacy_factors.py validates a signed industry-axis valence in [-1, 1].",
+   "transfer": "The biLCM cannot supply rival-industry champions because it carries no sign. Separating banks from CUs needs a signed position source (e.g. Kim J. et al. 2025). The paper neither supports nor refutes the crown law.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "porter-2005-network-analysis-committees",
+   "title": "A network analysis of committees in the U.S. House of Representatives",
+   "year": "2005",
+   "component_id": "melange-labels-and-tiers.say-do-gate",
+   "relation": "qualifies",
+   "claim": "In the 107th House roll-call matrix (990 votes, 2001-02) the leading SVD coordinate is the bipartisan one, which groups nearly all members together. It holds 45.3% of the sum of squares, against 29.6% for the partisan coordinate. Always guessing 'pass' is right on 735 of 990 votes (74.2%). The Optimal Classification comparison keeps 749 of 990 roll calls after dropping votes with a small minority share; the threshold glyph is lost in extraction.",
+   "system_side": "Path V counts a category as corroborated when a member's mean signed lean is at least 0.5 with n at least 1 (moneyball_core.py:871). build_vote_category.py aggregates direction times Yea(+1)/Nay(-1) over every Yea or Nay member vote on HS117, HS118 and HS119 roll calls, with no contestedness or minority-share filter (grep found none). One Yea on a lopsided roll call alone gives lean 1.0 with n=1 and passes.",
+   "transfer": "Paper supports only that bipartisan variance dominates the 107th House matrix. Its 45.3% is for all 990 votes in 2001-02, not a 117-119 statistic and not a share of lopsided votes in CU data. The share of admitted roll calls with minority at or below a small threshold is unmeasured; this is a candidate check, UNVERIFIED until reproduced (DE-062). The code read does not establish that the source is final-passage only.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "thakur-2025-matching-theory-perspective",
+   "title": "A matching theory perspective on legislative organization: assignment of committees",
+   "year": "2025",
+   "component_id": "melange-labels-and-tiers.say-do-gate",
+   "relation": "supports",
+   "claim": "Freshman Senate Democrats list Prestige committees as first choice 8% less often than non-freshmen (p=0.15, Frisch-Kelly 1947-1995), consistent with strategic hedging under the Boston mechanism. Republican freshmen show no such gap (p=0.80, Dole archive, first choices only, 91st and 103rd Congresses). The paper treats Democratic strategic reporting as a prediction it cannot test (Prediction 1).",
+   "system_side": "The cell gate lowers Champion or Defender to Ally unless the member authored or original-cosponsored the bill (path A) or has a CU-aligned final-passage vote (path V). Path J is not in cap_uncorroborated, which checks only A and V.",
+   "transfer": "Senate Democrats, descriptive, 1947-1995. The 8 percent gap is not significant at conventional levels (p=0.15). Supports excluding seat-holding as corroboration of an action; says nothing about markup or floor votes.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bucchianeri-2025-legislative-effectiveness-american",
+   "title": "Legislative Effectiveness in the American States",
+   "year": "2025",
+   "component_id": "melange-labels-and-tiers.say-do-gate",
+   "relation": "qualifies",
+   "claim": "Bill advancement is tilted toward majority members (+0.370 pooled, 58 percent above minority mean), chairs (+0.507 pooled; 0.609 lower, 0.307 upper), senior members (+0.032 per term) and moderates (distance from median -0.114). These are associational estimates; the paper does not measure effort and does not show that low minority advancement reflects position rather than effort.",
+   "system_side": "fec/moneyball_core.py lines 901-925 (overall_say_do_gate): Champion is capped to Ally when the member has at least 10 direct sponsored bills and an advancement rate at or below 0.20, unless the exceptional authorship case applies (at least 20 direct bills with full top-tier delivery), or when breadth or coverage fails. It fails open when the bill source is unavailable. It changes the displayed tier, not rank. No adjustment for majority, chair or seniority.",
+   "transfer": "The coefficients are state-level pooled estimates and must carry strata or labels. A low advancement rate is not evidence of cheap talk without a within-chamber, majority-adjusted baseline, so the rel's caution holds.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "vanderdoes-2022-strategic-identity-signaling",
+   "title": "Strategic identity signaling in heterogeneous networks",
+   "year": "2022",
+   "component_id": "melange-labels-and-tiers.say-do-gate",
+   "relation": "suggests-extension",
+   "claim": "Under mixed audiences people cut overt signaling but keep some covert signals, and those who switched strategy earned more (SI Fig. S8). Low visible talk is a strategic response to audience, not lack of position.",
+   "system_side": "cap_uncorroborated only lowers Champion or Defender cells to Ally when no authored bill or aligned vote exists. The overall gate likewise only caps. Nothing flags the opposite case: members whose sponsorship and votes are CU-aligned while their rhetoric is muted or neutral-coded.",
+   "transfer": "An action-without-talk audit would be a display-side diagnostic, not a rank change. It goes through zero-rank-delta and change control, and it stays UNVERIFIED until a second path reproduces it. The paper gives a mechanism, not legislator evidence.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  }
+ ]
+}

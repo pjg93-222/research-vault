@@ -1,0 +1,147 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-stance.press-value-aggregate",
+      "relation": "suggests-extension",
+      "paper_claim": "Continuous measures built from the label probability vector: per-sentence P(Conservative) minus P(Liberal), averaged per manifesto, gives rho 0.92 (economic) and 0.80 (social) across 18 UK manifestos with GPT-3. Tweet sentiment uses the first principal component of the positive/negative/neutral probability vector.",
+      "paper_location": "Section 3.1 p.267-268 (PCA of probability vector, lines 276-280); Section 3.3 p.273 (rho 0.92 and 0.8, Figure 6, lines 441-445)",
+      "system_side": "run_stage5.R:143 sets press_value = final_sign x intensity, where intensity is abs(lsd_net_norm) by default (line 141). final_sign is the bill sign or stance_sign, which is the argmax of DEBATE (run_stage5.R:140; stage5_debate.py:77-82). run_stage5.R:9 is a comment only. p_support, p_oppose and p_neutral are kept as columns (run_stage5.R:98,166) and do not enter press_value.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:140,141,143,166; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:65,77-82",
+      "transfer_conditions": "The paper evidence uses GPT-3 next-token probabilities on a few-shot prompt, not DEBATE NLI entailment scores. DEBATE runs with multi_label=True (stage5_debate.py:65), so its three scores are independent and do not sum to 1. A p_support minus p_oppose contrast is a different object and would need a pre-registered single look on the 760-row press gold. Remains UNVERIFIED until a second path reproduces it (DE-062).",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers and PCA/contrast description checked against the text and confirmed. Code cite for the press_value formula corrected from :9 (a comment) to :143. The p_* columns claim is accurate. Downstream effect is not traced here."
+    },
+    {
+      "component_id": "melange-stance.debate-nli-classifier",
+      "relation": "supports",
+      "paper_claim": "Tweets whose meaning depends on outside political context are misread unless the prompt supplies that context. The Masterpiece sentiment prompt included a preamble on the ruling and six few-shot examples, and GPT-3 got the sign right on 88.4 percent of 945 tweets.",
+      "paper_location": "Section 3.1 p.267-268 (lines 228-262 and 281-283)",
+      "system_side": "The system described is claude_stance.py, not DEBATE. Its SYSTEM prompt (lines 19-23) carries a credit-union policy map and tells the model to judge by the member position on the underlying issue, not by the words credit union. Its docstring (lines 5-8) names it the pre-labeller and the third member of the ensemble, with the Credit Card Competition Act example.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:5-8,19-23",
+      "transfer_conditions": "The paper task is sentiment toward a court ruling, not stance toward an interest, so the paper gives no accuracy figure for CU stance. The paper used six few-shot examples; claude_stance.py is zero-shot with a policy map. The supported point is the design choice of supplying context in the prompt.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper claim verified at p.267-268. The component ID names the DEBATE classifier, but the system_side describes the Claude rater, so the bearing belongs to the Claude rater component. Context-in-prompt design is supported."
+    },
+    {
+      "component_id": "melange-stance.debate-nli-classifier",
+      "relation": "qualifies",
+      "paper_claim": "GPT-4, tuned with RLHF, is poorly calibrated and overconfident. For over 70 percent of its posts it gave one label more than 99 percent probability, and it chose Neutral more often than the authors. GPT-4 was slightly worse than GPT-3 on sentiment and little or no better on ideology. Section 4 says newer RLHF models frequently underperform on classification and scaling tasks, and the latest model is not always the best.",
+      "paper_location": "Section 3.1 p.268 (lines 288-296); Section 3.3 p.273 (lines 438-440); Section 4 p.278 (lines 589-597)",
+      "system_side": "claude_stance.py asks for a self-stated confidence from 0 to 1 in its JSON reply (line 25) and defaults to claude-sonnet-4-6 (line 32). A call that fails all 4 attempts stays neutral with confidence 0.0 and reason ERR (lines 80, 95-97). An unrecognised label is set to neutral (lines 89-91), but the stated confidence is still read at line 92, so it is not reset to 0.0.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:25,32,80,89-97",
+      "transfer_conditions": "These are GPT-3 and GPT-4 results, not Claude results. The module requests no token log-probabilities (none found in the file), so the paper probability-vector method cannot be applied as written. claude_conf is a self-stated number, not a calibrated probability. Neutral rows created by ERR should be counted apart from model-chosen neutral rows. No DEBATE-vs-Claude agreement figure was located in the sources checked.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Calibration figures and page cites confirmed. Claim that unrecognised labels get confidence 0.0 is wrong (line 92 keeps the stated value). The 'newer models did not improve on any task' wording overstates the paper, so it is restated. The 87.2 percent agreement figure is not supported by sources read and is removed. Anthropic log-probability claim is restated from the code only."
+    },
+    {
+      "component_id": "melange-stance.lsd-tone",
+      "relation": "qualifies",
+      "paper_claim": "Dictionary methods lose badly when meaning depends on context. The best dictionary the authors could build got 38.3 percent of tweet signs right, against 88.4 percent for GPT-3. Of 5332 speeches containing honor, GPT-3 labels only 145 as praising honor.",
+      "paper_location": "Section 3.1 p.268 (lines 282-286); Section 3.4 p.276 (lines 544-549)",
+      "system_side": "LSD2015 is used only for intensity. run_stage5.R:141 takes abs(lsd_net_norm) by default, or lsd_charge when CU_S5_INTENSITY=charge, and line 143 multiplies it by final_sign. stage5_lsd.R (header lines 10-15) matches and removes negation phrases before counting. Direction in run_stage5.R comes from the DEBATE stance with bill-sign and human-label overrides (lines 139-140), not from the Claude rater.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:139,140,141,143; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:10-15",
+      "transfer_conditions": "The paper dictionary is the authors own construction, not LSD2015, and the paper did not test intensity. Intensity inherits the context blindness the paper describes (ceremonial or quoted language reads as heated). Whether LSD intensity tracks human-coded intensity is untested.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Numbers and page cites confirmed. The cited stage5_debate.py:11-12 is a docstring; the LSD code is in stage5_lsd.R. The statement that direction also comes from the Claude reader is not supported by run_stage5.R and is removed."
+    },
+    {
+      "component_id": "melange-legislative-data.category-taxonomy",
+      "relation": "suggests-extension",
+      "paper_claim": "LLM topic labels can be checked with an optimal-label task. In 400 speeches a blinded coder picked the GPT-3 label over three random intruders 80 percent of the time, against 25 percent chance. Keyword presence overcounts: 5332 speeches contain honor, but only 145 are labelled as praising it.",
+      "paper_location": "Section 3.4 p.276 (lines 534-549)",
+      "system_side": "Release and post categories come from regex keyword maps (CATKW = MR.RAW_PATTERNS at build_media_blend.py:50). No human-label check of those regex tags was found in the files read. Downstream use (media blend, press category weights) was not traced.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/build_media_blend.py:50",
+      "transfer_conditions": "The paper labels are open-ended virtue labels for 2013-2014 House speeches; Melange uses fixed CU policy categories on releases and posts. The intruder protocol transfers as a measurement check on existing regex tags. Adopting LLM-assigned categories would be a separate decision. The R scraper CATEGORIES regex was not opened.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers confirmed. The claim that the categories drive the media blend and the press category weights was not traced and is removed from the verified text. The protocol suggestion is a fair design implication."
+    },
+    {
+      "component_id": "melange-validation.gold-set-and-rank-gate",
+      "relation": "qualifies",
+      "paper_claim": "The recommended validation has three steps: hand-label a small set to design the prompt, validate on a second hand-labelled set (by the team or crowd coders) for strong correlation with ground truth, then apply. Crowd workers increasingly use LLMs (Veselovsky et al. 2023), which threatens crowd-code independence.",
+      "paper_location": "Section 4 p.277 (lines 567-575); Veselovsky point in Section 3.2 p.270-271 (lines 335-343)",
+      "system_side": "build_tweet_gold_queue.py writes model_stance and model_margin into the same rows as the human gold_* columns (lines 92-96). The api_* columns are written as blank placeholders reserved for an optional pre-label pass (line 18 and lines 92-96). Low-margin (Q_LOWMARGIN) and anti-bank (Q_ANTIBANK) slices are oversampled (lines 25-27).",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/build_tweet_gold_queue.py:18,25-27,92-96",
+      "transfer_conditions": "The paper does not test anchoring on pre-labels, so this is a design implication, not a measured effect. If a labeller sees model_stance, agreement with gold partly measures agreement with the model. Oversampled hard slices make these accuracies incomparable with the paper random-sample 88.4 percent.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Oversampling and column structure confirmed. The api_* block is blank at write time, not a populated pre-label block. The Veselovsky point sits in Section 3.2, not Section 4. Treating hand labels as the independent criterion is an interpretation of the paper recommendation."
+    },
+    {
+      "component_id": "melange-sna.co-appearance-and-references",
+      "relation": "supports",
+      "paper_claim": "Results from closed, vendor-served models can become impossible to reproduce. The GPT-3 models behind the paper results were removed from the public-facing API in January 2024.",
+      "paper_location": "Section 4 p.278 (lines 598-605)",
+      "system_side": "member_reference_layer.py records which model scored each cached row (_cache_models, lines 258-265) and stores resp.model and resp.id with each classification (line 306). agency_communion_llm.py keeps a separate cache file per model (CACHE path, lines 24-28), so instruments do not mix.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/member_reference_layer.py:49,258-265,306; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/agency_communion_llm.py:24-28",
+      "transfer_conditions": "Caching keeps outputs auditable after a model is retired, but does not regenerate them; a re-score on a successor model is a new instrument. The warning applies because both layers call Anthropic-served models. The component label is a weak fit for LLM caching and should name the member-reference and persona LLM layers.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Paper claim and date confirmed at p.278. Code side confirmed for per-model caching and response metadata. The display-only or low-weight status of both layers was not checked."
+    },
+    {
+      "component_id": "melange-psychometrics.persona-agency-communion",
+      "relation": "qualifies",
+      "paper_claim": "Few-shot LLM classification can match or beat crowd and expert coding, but results depend heavily on prompt design and need checks against hand labels the prompt was not tuned on.",
+      "paper_location": "Abstract p.264; Section 4 p.277-278",
+      "system_side": "agency_communion_llm.py uses a few-shot codebook with strong (1.0) and weak (0.5) cue conditions (docstring lines 5-7; method string near lines 238-239) and classifies sentence-level cues. The 18/18 functional gate, the party signature, and the absence of held-out human-gold accuracy were not verified. PERSONA_W was not found in agency_communion_llm.py, so its definition lives elsewhere.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/agency_communion_llm.py:5-7,238-239",
+      "transfer_conditions": "The paper validates document-level measures against expert and crowd codes; the cues here are sentence-level and aggregated per member. A paper-style check would need a hand-coded cue sample that was not used to write the codebook. PERSONA_W 0.30 is an owner ruling and is not changed by this review.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper claim holds as a general statement. Code side verified only for the codebook and the strong/weak weights. The validation status and PERSONA_W value were not checked, so no claim about them is confirmed."
+    }
+  ],
+  "related": [
+    {
+      "slug": "birkenmaier-2025-measuring-politicians-public",
+      "relation": "complements",
+      "why": "Both papers use few-shot LLM coding checked against human labels. The persona channel code cites Birkenmaier and Lechner cue prompting (agency_communion_llm.py docstring). Ornstein does not cite Birkenmaier, and the Krippendorff-alpha role is not verified here."
+    },
+    {
+      "slug": "kim-2025-measuring-interest-group",
+      "relation": "same-method",
+      "why": "Kim and Ornstein both apply few-shot GPT-class labelling to political text. Ornstein documents GPT-4 overconfidence on sentiment. Ornstein does not cite Kim. The 96.9 percent figure appears in the Kim item file but was not checked against Kim text."
+    },
+    {
+      "slug": "b-2025-comparing-fine-tuned",
+      "relation": "complements",
+      "why": "Khan et al. compare fine-tuned RoBERTa with classical models for political tweet stance. Ornstein uses TweetNLP (a RoBERTa model) as the sentiment baseline that GPT-3 beats, 88.4 vs 64.3 percent. The tasks differ: Khan is stance, Ornstein is sentiment."
+    },
+    {
+      "slug": "rice-2018-corpus-based-dictionaries",
+      "relation": "complements",
+      "why": "Rice and Zorn build corpus-specific dictionaries. Ornstein does not cite them and does not test corpus-specific dictionaries. Ornstein shows a general dictionary at 38.3 percent against GPT-3 at 88.4 percent on tweet sentiment, which bears on dictionary validity."
+    },
+    {
+      "slug": "haselmayer-2017-sentiment-analysis-political",
+      "relation": "complements",
+      "why": "Haselmayer and Jenny combine a dictionary with crowd coding. Ornstein benchmarks LLM coding against crowd coding alone (Carlson and Montgomery 2017; Benoit et al. 2016), reporting about a 1000-fold cost reduction for 935 ad codings. The dictionary-plus-crowd route is not tested."
+    },
+    {
+      "slug": "dai-2025-large-language-model",
+      "relation": "same-method",
+      "why": "Both apply LLMs to political stance and sentiment classification. Dai adds logic-tensor constraints; Ornstein uses few-shot prompts with probability-vector outputs. Ornstein does not cite Dai."
+    }
+  ],
+  "summary_issues": [
+    "Summary says run_stage5.R throws away DEBATE per-label probabilities. Wrong: p_support, p_oppose and p_neutral are kept as columns (run_stage5.R:98,166). Only the aggregate ignores them.",
+    "Summary says Melange caches LLM outputs by model. True for the member-reference and persona layers. The Claude stance rater (claude_stance.py) writes a resumable CSV with no model key.",
+    "Summary cost claim: the about 1000-fold reduction ($0.60 vs $565.20) covers 935 ad codings priced at April 2024 OpenAI rates (footnote 6). It is not a general or current figure.",
+    "The 87.2 percent DEBATE-vs-Claude agreement figure appears in a bearing but was not found in the Draft Systems or Melange stance and members files searched. It is removed from the verified text.",
+    "paul_alignment: 83.9 percent is supported as an SVM figure (83.9 percent/0.816) in DEEP_AUDIT_MATH_LOGIC_2026-07-02.md line 7. The 0.757 transformer figure was not found, and the member-grouped test description was not checked.",
+    "paul_alignment: no Paul annotation exists for this item (paul_entries and paul_markup are empty). Stated Paul positions (endorses LLM extraction, calls SVM outdated) have no source here and are unverified.",
+    "Bearing cite fix: press_value formula is at run_stage5.R:143; line 9 is a comment. Corrected in bearing 1.",
+    "Bearing cite fix: stage5_debate.py:11-12 is a docstring, so the LSD claim now cites stage5_lsd.R header lines 10-15 and run_stage5.R:141,143.",
+    "Bearing error corrected: an unrecognised label keeps the model stated confidence (claude_stance.py line 92); it is not set to 0.0.",
+    "Bearing error corrected: the api_* columns in build_tweet_gold_queue.py are blank placeholders, not a populated pre-label block.",
+    "Related link Rice and Zorn changed from contradicts to complements. Ornstein does not cite Rice and Zorn.",
+    "Related link Haselmayer: Ornstein benchmarks crowd coding alone, not dictionary plus crowd. Why text corrected.",
+    "Metadata: the p.year field reads 2024 but volume 13 and acceptance in 2024 point to 2025. The DOI in the hint (10.1017/S2049847024000645) does not match the DOI printed in the text (10.1017/psrm.2024.64, confirmed in the page header)."
+  ]
+}

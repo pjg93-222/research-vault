@@ -1,0 +1,60 @@
+{
+  "slug": "ng-1999-policy-invariance-reward-transformations",
+  "title": "Policy invariance under reward transformations: theory and application to reward shaping",
+  "authors": [
+    "Andrew Y. Ng",
+    "Daishi Harada",
+    "Stuart Russell"
+  ],
+  "year": "1999",
+  "venue": "ICML (International Conference on Machine Learning); venue line not printed in the extracted text, hint kept from item",
+  "doi": "",
+  "document_type": "conference paper (theory with simulation demonstration)",
+  "coverage": "Full extracted text read in two chunks (about 10,024 lines): abstract, introduction, preliminaries, shaping rewards, main results (theorem, corollary, remarks), experiments, discussion, acknowledgments, references, Appendix A (necessity proof). Reward design, value functions, goal-reaching path tasks and multi-step learning were all read. The paper has no lobbying, network, allocation, election, persuasion, turnout, legislator or text-measurement content. Page images not rendered. Paul annotations: none (item lists n_annots 0 and annot_sha12s empty; no _annots file exists for sha12 94066dc12fe3), so paul_markup is empty. Extraction drops ligatures and some digits, so the learning rate, epsilon, slip probabilities, number of runs and the Manhattan scaling constant are unreadable and left out.",
+  "research_question": "Under what conditions can the reward function of a finite Markov decision process be modified (reward shaping) without changing which policies are optimal, especially when the learner does not know the transition function or the original reward?",
+  "theory": "Bellman optimality for finite MDPs (discounted, and undiscounted with an absorbing goal state). A shaping reward F(s,a,s prime) is added to the original reward R. The paper defines potential-based shaping F(s,a,s prime) = gamma*Phi(s prime) - Phi(s) for an arbitrary real function Phi on states.",
+  "data": "No empirical dataset. Simulated grid-world MDPs: a shortest-path goal task on a 10x10 grid, the same task on a 50x50 grid, and a 5x5 grid in which five subgoals (flags) must be visited in order before the final goal. Start and goal are in opposite corners for the goal-only grids. Unit of analysis: learning trial and steps taken to reach the goal. Number of independent runs used for averaging is not recoverable from the extraction.",
+  "method": "Formal analysis: definitions, a sufficiency proof (potential-based F leaves optimal policies unchanged, with Q and V shifted by Phi), a necessity proof for the case of no prior knowledge of T and R (Appendix A, fully worked for finite states and two actions), and robustness remarks. Simulation: Sarsa and Sarsa(lambda) with epsilon-greedy exploration on the grid worlds, comparing no shaping against shaping with a Manhattan-distance potential and, in the subgoal task, a subgoal-count potential and a fine-tuned estimate of V*.",
+  "identification": "",
+  "scope": "Finite-state, finite-action MDPs with deterministic, bounded rewards. The paper argues infinite-state results follow under suitable regularity conditions but defers those proofs to a full version. Era: 1999 reinforcement-learning practice. Population: learning agents in small simulated domains; no real-world system.",
+  "measures": "Steps taken to reach the goal per trial (learning curves). Theoretical objects: optimal Q-function, optimal value V*, and shaped Q and V. No statistical tests are reported.",
+  "key_findings": [
+    "Potential-based shaping F(s,a,s prime) = gamma*Phi(s prime) - Phi(s) is sufficient: every optimal policy of the shaped MDP is optimal in the original MDP, and vice versa. Location: Main results, Theorem, sufficiency part and its proof.",
+    "Necessity: absent prior knowledge of T and R, potential-based F is the only shaping form that guarantees consistency with the optimal policy; for any non-potential F there exist transitions and rewards such that no optimal policy of the shaped MDP is optimal in the original. Location: Main results, Theorem, necessity part; proof in Appendix A (finite states, two actions).",
+    "Corollary: Q prime*(s,a) = Q*(s,a) - Phi(s) and V prime*(s) = V*(s) - Phi(s), so the shaped problem has the same argmax over actions. With Phi zero at the absorbing state the identities hold exactly in the undiscounted case. Location: Main results, Corollary.",
+    "Robustness remark: the identities hold for arbitrary policies, not only optimal ones, so near-optimal policies are also preserved and an epsilon-optimal policy learned on the shaped MDP is epsilon-optimal in the original. Location: Main results, Remark (Robustness and learning).",
+    "Remark: if the original reward is itself potential-based, every policy is optimal in the original MDP, so potential-based shaping gives no reason to prefer one policy over another. Location: Main results, Remark (All policies optimal under potential).",
+    "Choosing Phi = V*(s) makes the shaped optimal value function identically zero, which the authors describe as an easy function to learn, leaving only the non-zero Q-values to learn. Location: Main results, paragraph after the Corollary.",
+    "On the 10x10 goal grid, a Manhattan-distance potential speeds learning substantially; on the 50x50 grid, unshaped learning is far slower, with the authors saying it is losing hopelessly to the potential-based version. Location: Experiments, first two grid-world figures; the step axes run to about 600 (10x10) and about 2.5 x 10^4 (50x50).",
+    "Even a crude potential (zero, or a distance-based estimate) still helps the early phase of learning, while the finely tuned V*-based potential does better still. Location: Experiments, first grid-world discussion.",
+    "Subgoal task (5x5 grid, five flags visited in order): a potential that counts achieved subgoals, scaled by an expected time per subgoal, gives a reward jump at each subgoal and speeds learning clearly over no shaping; the fine-tuned V*-estimate potential performs better still. Location: Experiments, subgoal figure and text; the trial axis runs to about 450 and the step axis to about 800.",
+    "Non-potential shaping can create positive-return cycles: in the bicycle example (Randlov and Alstrom), an agent rewarded for progress toward the goal but not penalized for moving away learned to ride in tiny circles; a soccer robot rewarded for touching the ball learned to stay next to it and vibrate. Location: Introduction and Shaping rewards section.",
+    "Discussion: the authors suggest that non-potential shaping may still help in practice when used with care, but carries no guarantee; learning a rough shaping function as a multiscale value-function approximation is named as promising future work. Location: Discussion and Conclusions.",
+    "Extensions stated without full proof: for semi-MDPs with variable action durations tau the potential form generalizes to F = gamma^tau*Phi(s prime) - Phi(s); policy-class-restricted learning also preserves the guarantee; positive rescaling of rewards is allowed. Location: Discussion and Conclusions; Shaping rewards section."
+  ],
+  "limitations": [
+    "Fully rigorous proofs only for finite state spaces; infinite-state extensions are asserted, with bounded shaping rewards required, and the full proofs are deferred to a longer paper.",
+    "Necessity proof is given in full only for two actions; the general case is described as obvious but tedious.",
+    "The guarantee covers optimal policies under the stated assumptions; for undiscounted problems with non-potential shaping the authors concede no general guarantee.",
+    "Empirics are limited to small simulated grid worlds and a subgoal task; there is no real-world or high-dimensional domain, no statistical tests, and the number of runs is not recoverable from the extraction.",
+    "Only Sarsa and Sarsa(lambda) are tested; there is no comparison with other shaping schemes or with learned shaping functions.",
+    "Non-potential shaping is discussed qualitatively; the paper does not quantify its harm or benefit.",
+    "Text extraction garbles several numeric parameters, so exact learning rates, exploration rates and slip probabilities are unknown from this copy."
+  ],
+  "paul_markup": [],
+  "short_quotes": [
+    "one can add a reward for transitions between states",
+    "any other transformation may yield suboptimal policies unless further assumptions are made about the underlying MDP",
+    "Often, a very simple pattern of extra rewards suffices to render straightforward an otherwise completely intractable problem"
+  ],
+  "references_of_note": [
+    "Randlov and Alstrom, learning to drive a bicycle using reinforcement learning and shaping (ICML); source of the cycling bug example",
+    "Mataric, reward functions for accelerated learning (ICML); shaping in robot learning",
+    "Dorigo and Colombetti, robot shaping: developing autonomous agents through learning (Artificial Intelligence)",
+    "Rust, structural estimation of MDPs; recovering model and reward from observed optimal behavior",
+    "Russell, learning agents for uncertain environments (COLT workshop); inverse reinforcement learning",
+    "Singh and Yee, upper bound on the loss from approximate optimal-value functions; Williams and Baird, tight performance bounds on greedy policies",
+    "Baird, advantage updating; Bertsekas and Tsitsiklis, neuro-dynamic programming (advantage and policy-iteration links)",
+    "Sutton and Barto, Reinforcement Learning: An Introduction (Sarsa and the MDP regularity conditions)"
+  ]
+}

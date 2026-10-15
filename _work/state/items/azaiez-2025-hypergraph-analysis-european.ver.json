@@ -1,0 +1,127 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-staffer-network.overlap-edge-rule",
+   "relation": "qualifies",
+   "paper_claim": "Projecting meetings onto pairwise cliques inflates nodes that have low hypergraph degree but attend a few large meetings. Within each framework the measures agree (clique coreness C vs Cstak r = 0.93; hypercoreness R vs Rstak r = 0.79); cross-framework correlations are weaker (exact values only in Fig. 6). Separately, edge betweenness correlates 0.74 with meeting size.",
+   "paper_location": "p.16-17 (Fig. 6, Fig. 7); p.4",
+   "system_side": "The co-tenure operator enumerates every concurrent pair inside a payroll container (a clique expansion of a container hyperedge); kappa depends only on container KIND. The 54 admin containers (70.8% of pairs in v5) were excluded by owner ruling 2026-09-07. Container-size normalisation remains an OPEN ruling. The vault records Pearson(degree, largest office size - 1) = 0.8694 for the v5 generation, before the admin exclusion.",
+   "code_ref": "audits/staffer_network/build_staffer_social_network.py:176-187,222-234",
+   "transfer_conditions": "The mechanism carries over: clique projection of any large hyperedge inflates its members. Magnitudes do not: EC meetings are single simultaneous events, payroll containers are multi-year co-presence. The paper's remedy is a hypergraph-native measure (hypercoreness), not per-edge down-weighting; the project's Katz finding (STATE.md:886-896) is that per-edge reweighting cannot remove a degree artifact under sum-based centrality. Evidence for Paul's open ruling, not a recommendation. The 0.87 figure is pre-admin-exclusion and must carry that label.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper side confirmed in text: 0.74 edge betweenness vs edge size (p.4); clique-clique coreness r = 0.93 and hypercoreness-hypercoreness r = 0.79, cross-framework 'weaker' (p.16, Fig. 6); 'inflated' nodes with low hypergraph degree in a few large meetings (p.16-17). Code confirmed: admin exclusion at build_staffer_social_network.py:176-187, OPEN container_size_normalisation ruling at 222-234. Corrections: the r = 0.87 (Pearson 0.8694, degree vs largest office size - 1) lives in the brain vault note concepts/concurrent-service-overlap-edge-rule.md and was measured on the v5 generation BEFORE the 54 admin containers were excluded, so it is not a current-operator figure. The Katz per-edge finding is at Project Brain STATE.md:886-896, not 912-915."
+  },
+  {
+   "component_id": "melange-staffer-network.cotenure-exposure-weights",
+   "relation": "supports",
+   "paper_claim": "Hypergraphs are warranted where coordination or simultaneous interaction of more than two actors matters (p.3, citing prior literature). Clique projection explodes a d-person meeting into d-choose-2 links, so nodes with low hypergraph degree but a few large meetings get inflated coreness; hypercoreness avoids this (p.16-17).",
+   "paper_location": "p.3; p.16-17",
+   "system_side": "The exposure index already divides each shared day by concurrent headcount, using duration / max(1, count-1)^gamma in the Census prefix integrals. In the sidecar closeness math, a pair's contact opportunity therefore shrinks as the container grows, unlike the operator's kind-only kappa.",
+   "code_ref": "fec/staffer_network/closeness_math.py:67-93",
+   "transfer_conditions": "Supports the direction of the correction, not the 1/(n-1) form or the gamma value. The paper never estimates a dilution exponent. The evidence comes from EC meeting attendance and only loosely fits multi-year office co-tenure. It also shows a live inconsistency: the sidecar dilutes by headcount and the scored operator does not.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Code confirmed: closeness_math.py:67-93 Census class accumulates duration / max(1, count-1)^gamma (GAMMA = 1.0 at line 19). Paper side is a paraphrase: p.3 says the literature argues for hypergraphs where coordination or simultaneous interaction of more than two actors matters; it never states 'n-1 pairwise ties'. The over-crediting claim (p.16-17) is about nodes with LOW hypergraph degree in a few crowded meetings, not an explicit comparison to repeated small meetings."
+  },
+  {
+   "component_id": "melange-staffer-network.layer-balanced-pagerank",
+   "relation": "qualifies",
+   "paper_claim": "Core measures computed on the clique expansion diverge from hypergraph-native hypercoreness. The authors say a hypergraph representation is 'more than a minor modeling choice'.",
+   "paper_location": "p.11; p.16-17 (Fig. 6)",
+   "system_side": "PageRank (d 0.7/0.85/0.95) and the component eigenvector run on row-normalized co-tenure strengths, which are pairwise edges derived from container co-presence. Containers are grouping layers, not hyperedges in the operator.",
+   "code_ref": "audits/staffer_network/build_staffer_social_network.py:191-206",
+   "transfer_conditions": "The paper compares coreness, not PageRank, so it only implies that walk-based ranks on a projection may diverge from a hypergraph treatment. Under D-025 the ranks are heuristic outputs, not access measures, in either representation.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Paper: 'more than a minor modeling choice' at p.11 (Discussion), and Fig. 6 cross-framework divergence at p.16. Code: OPERATOR_DEFINITION at build_staffer_social_network.py:191-206 states PageRank at 0.7/0.85/0.95 on row-normalised co-tenure strengths, component-local eigenvector, containers as grouping layers only. Both sides hold."
+  },
+  {
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "supports",
+   "paper_claim": "Large hyperedges inflate attendees' centrality when projected to cliques, yet those large hyperedges are what connects the network (edge betweenness correlates 0.74 with size).",
+   "paper_location": "p.4; p.16-17",
+   "system_side": "Stage 3 builds sponsor-to-cosponsor ties per bill and multiplies each by sizenorm_factor(C) with SIZE_NORM = 'sqrt' (1/sqrt(C)). That discounts big multi-cosponsor bills without removing them. The engine reads the resulting Edges sheet and mean-symmetrizes it.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/congress_member_scraper.R:1781,1788,1927; fec/moneyball_core.py:461-485",
+   "transfer_conditions": "Supports discounting by hyperedge (bill) size, which is distinct from the REJECTED per-edge volume normalisation (sqrt(Out*In) or row-stochastic, STATE.md:895-896). It gives no basis for 1/sqrt(C) over log or 1/C. A bill roster is an asynchronous set of signatures with sponsor direction, not a simultaneous meeting. The data are EC lobbying meetings, not US House cosponsorship.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper side confirmed (0.74 at p.4; inflation at p.16-17). Code confirmed: SIZE_NORM <- 'sqrt' and sizenorm_factor in congress_member_scraper.R near 1781/1788, f_bill = ... * sizenorm_factor(C_b) at 1927; moneyball_core.py:461-485 load_network mean-symmetrises the Edges sheet. Wording fix: the REJECTED proposal recorded in the brain is per-EDGE volume normalisation (sqrt(Out*In) / row-stochastic), not 'per-member'."
+  },
+  {
+   "component_id": "melange-sna.sector-networks",
+   "relation": "suggests-extension",
+   "paper_claim": "Core-periphery and rich-club claims are tested against hypergraph configuration null models (Chodrow 2020) that preserve degree and edge size, using rho(k) = phi(k)/phi_rand(k). Stakeholders show rho > 1 for all k. Large meetings drive connectivity.",
+   "paper_location": "p.4-5 (Fig. 2); methods p.14-15",
+   "system_side": "The sector diagnostic flags hub concentration with a fixed rule: 'dominated' if hub degree >= 3x the second-highest. Crypto is recorded as one 167-degree star (the CBDC cosponsor roster, which is a single large bill) against 25 for second place, with cascade reach 33 from the hub vs 7.",
+   "code_ref": "fec/network/build_sector_diagnostic.py:390-412",
+   "transfer_conditions": "A null-model rich-club or core test would show whether a sector's concentration exceeds what its degree and bill-size sequence already implies. The 3x rule cannot separate that. This only holds if sector bill rosters are treated as hyperedges. With the thin samples (crypto p_max 0.23), null-model variance will be large. Any result is UNVERIFIED until reproduced (DE-062).",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Paper: rho(k) = phi(k)/phi_rand(k) with Chodrow (2020) configuration null models (p.14-15); rho > 1 for all k on Hstak (p.4-5, p.15). Code: build_sector_diagnostic.py:390-412 carries the crypto 167-vs-25 star and the 'dominated' = hub >= 3x second rule; crypto p_max 0.23 is in the same file header (line 16) and STATE.md:1053."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "supports",
+   "paper_claim": "Network centrality is a proxy for embeddedness, not a direct measure of influence. Company hypercoreness is predicted by lobbying FTE (beta 0.464) and assets (0.253), R2 = 0.398, N = 1,178, with reverse causation acknowledged.",
+   "paper_location": "p.8-10 (Table 1); p.9 short quote; p.10",
+   "system_side": "The cosponsor InfluenceScore (0.60 out-degree + 0.25 betweenness + 0.15 eigenvector) was retired from Influence on 2026-06-25 (AB13 = 0) because it is direction-blind. It still feeds the underdog lens.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/congress_member_scraper.R:1800-1804; C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md:117,133,137",
+   "transfer_conditions": "The regression covers EC company nodes (N = 1,178 in H, 702 in Hstak), not legislators, so it supports the principle that centrality tracks resources and activity rather than influence, not any US estimate. It agrees with the project finding that the raw all-bills Katz ranking measured activity (Spearman with tie volume +0.845, STATE.md:886-887).",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper confirmed: Table 1 (p.8-9) H: FTE 0.464, assets 0.253, R2 0.398, N = 1,178; reverse causation p.9; 'does not directly measure influence' p.10; hypercoreness as embeddedness p.11/p.17. Code_ref corrected: the 0.60/0.25/0.15 weights are in congress_member_scraper.R:1800-1804 (INFLUENCE_WEIGHTS), not the workbook note; the workbook note records AB12/AB13 at line 117, the direction-blind retirement at line 133, and the underdog lens (uses Centrality%) at line 137. STATE.md activity finding is at 886-887, not 903-906."
+  },
+  {
+   "component_id": "melange-lobbying.lobbied-member-link",
+   "relation": "context",
+   "paper_claim": "Each edge comes from an official register entry that names both the EC official and the interest representative in a dated meeting. Duplicate meetings were fuzzy-merged at partial ratio >= 70 (460 pairs).",
+   "paper_location": "p.4, p.12-13",
+   "system_side": "LD-2 filings never name a member, so the bill-roster join gives P(joined | lobbied) = 1 by construction. It is REFUTED as evidence of influence, and LDA stays an identity source only (D-021).",
+   "code_ref": "fec/lobbying/lobby_interactions.py:4-12; memory/lobbying-member-link-is-circular-2026-08-19.md:8,18",
+   "transfer_conditions": "The paper shows what a valid lobbying-contact layer requires: a register that names both parties to the contact. No US congressional equivalent exists, so the design does not carry over to LDA. It is a benchmark for any future contact source, not a method to apply.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper confirmed: high-level EC officials must publish meetings with named stakeholders (p.3-4); fuzzy partial ratio >= 70 merges 460 pairs (p.12-13). Code_ref only partly supports system_side: lobby_interactions.py:4-12 shows the shipped network joins organisation to member via bills the member sponsored or cosponsored; the 'LD-2 never names a member' and 'P(joined | lobbied) = 1 by construction' statements come from the memory note lobbying-member-link-is-circular-2026-08-19.md (lines 8, 18), not this code."
+  }
+ ],
+ "related": [
+  {
+   "slug": "bacik-2025-measuring-dynamical-evolution",
+   "relation": "complements",
+   "why": "Bacik measures the US LDA (LobbyView) lobbying network over 1999-2023; Azaiez measures the EC meetings register 2019-2024. Together they contrast a disclosure regime whose filings do not record meetings with named members (LDA) with one that names both parties to each meeting (EC register)."
+  },
+  {
+   "slug": "kim-nd-mapping-political-communities",
+   "relation": "complements",
+   "why": "Kim infers latent communities from a bipartite interest-group-by-bill lobbying network; Azaiez studies community, rich-club and core structure in an EC meeting hypergraph. Both treat lobbying as group affiliation rather than pairwise ties, but the methods differ (link-community Poisson model vs hypercore/rich-club)."
+  },
+  {
+   "slug": "porter-2005-network-analysis-committees",
+   "relation": "complements",
+   "why": "Porter projects the two-mode member-by-committee network onto a one-mode committee graph (normalised interlocks). Azaiez shows that projecting group structures to pairwise graphs changes core rankings relative to a hypergraph treatment."
+  },
+  {
+   "slug": "sotoudeh-2024-network-based-measure",
+   "relation": "complements",
+   "why": "Sotoudeh builds a cosponsorship network (a projection of bill rosters) and finds an outcome-based influence measure predicts House bill passage better than eigenvector, closeness and strength centrality. Azaiez gives a general reason projected centrality can mislead."
+  },
+  {
+   "slug": "pritoni-2025-lobbying-coalitions-determinants",
+   "relation": "complements",
+   "why": "Azaiez's reading of NGO core presence in the stakeholder-only network cites Hanegraaff and Pritoni (2019) on coalitions as a sign of weakness (p.10); Pritoni 2025 reviews that coalition literature and tests the 'relative weakness' hypothesis."
+  },
+  {
+   "slug": "battaglini-2016-influencing-connected-legislators",
+   "relation": "complements",
+   "why": "Battaglini and Patacchini model PAC allocation by legislators' Bonacich centrality; Azaiez finds interest-group resources associated with the groups' own centrality (associational, reverse causation acknowledged). The system's kb_benchmark is diagnostic only."
+  }
+ ],
+ "summary_issues": [
+  "'The full network cannot be tested the same way, because it has no official-only meetings' overstates the paper: plain null models (1)-(2) are biased downward for an EC-member rich club, but hybrid null models (3)-(4) do test the full hypergraph H and find stakeholder rich-club behaviour less salient yet still qualitatively distinguishable (p.4-5, p.15).",
+  "'Coreness on the clique projection agrees only weakly with coreness on the hypergraph' overstates the text, which says only that cross-framework correlations are 'weaker' than the within-framework 0.93 and 0.79; the exact cross values are in Fig. 6 and not quoted.",
+  "The 'recorded r = 0.87 between staffer degree and office size' is the v5-generation Pearson 0.8694 (vault concepts/concurrent-service-overlap-edge-rule.md), measured before the 54 admin containers were excluded on 2026-09-07; it must carry that window label and is not a property of the current operator.",
+  "Related link to ringe-nd-pinpointing-powerful-voting removed: Azaiez does not contradict co-voting centrality as an influence measure; it says centrality does not directly measure influence but cites prior work showing a correlation between central positions and influence (p.10).",
+  "Several brain line pins are stale: the Katz activity and per-edge normalisation findings sit at Project Brain STATE.md:886-896, not 903-915."
+ ]
+}

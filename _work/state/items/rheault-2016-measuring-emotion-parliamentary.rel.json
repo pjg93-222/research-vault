@@ -1,0 +1,87 @@
+{
+  "summary_md": "Rheault, Beelen, Cochrane and Hirst build a domain-adapted emotion lexicon for the UK House of Commons (Hansard 1909-2013, about 957 million tokens). They train 300-dimension GloVe vectors on lemma-PoS pairs, score each word by cosine similarity to 100 positive minus 100 negative emotion seeds, and keep the 4,200 most polar words. Period polarity is the lexicon-weighted sum divided by all lemmas, with a negation window to punctuation. Debate grows more positive over the century, and the rise holds under NRC, OpinionFinder and SentiWordNet. Recession years lower annual polarity change (ARMAX -0.198, SE 0.062, N=104 years, pooled over government and opposition, so UNSTRATIFIED). Election years raise it (+0.187). Labor disputes Granger-cause polarity (chi2 9.42, p=.002) but not the reverse. Split by side, the effect runs through the opposition (chi2 8.05, p=.005) and not the government (p=.761). The design is associational, and the authors say the cointegrating relation is not causal. The lexicon is validated only on film reviews, never on parliamentary speech. For Paul's systems the work matters in three places. It is the method source for the opt-in GloVe seed-expansion helper in the legacy press scorer. It qualifies the general-purpose LSD2015 tone intensity that feeds press_value: domain adaptation is argued for, the default intensity is |net|/words (a polarity magnitude, not a charge), and macro-period shifts in tone are not removed. And it shows that negative-emotion language in a legislature follows institutional role (opposition vs government) and economic shocks. That bears on the affective-N slot, which controls for party but not for majority status or period. All three are UNVERIFIED single-agent readings (DE-062).",
+  "category": "Machine Learning & Sentiment Analysis",
+  "bearings": [
+    {
+      "component_id": "melange-stance.legacy-regex-scorer",
+      "relation": "method-source",
+      "paper_claim": "Domain lexicon from seeds plus domain-trained GloVe: 300 dimensions, symmetric window 15, lemma-PoS pairs with frequency 10 or more (108,506 types), 100 positive and 100 negative emotion seeds, score = summed cosine to positive seeds minus negative seeds, top and bottom 2,000 kept (4,200 words). Even at about 957M tokens some top entries are odd, e.g. compound scored -1.00 as a negative verb.",
+      "paper_location": "Materials and Methods, Eq 1 and Table 1, pp.3-4",
+      "system_side": "The legacy scorer has an opt-in, offline expand_tone_lexicon helper. It trains GloVe on the scraped CU press corpus and lists the cosine-nearest candidates to 10 positive and 10 negative seeds, which an analyst reviews and promotes. Live scoring stays on the curated TONE_LEXICON.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R:2477-2496 (helper and seeds); TONE_LEXICON at :2323",
+      "transfer_conditions": "The press corpus is orders of magnitude smaller than Hansard, so the vectors will be noisier than Rheault's, and his own odd top entries show the risk is real even at scale. Several of Paul's seeds (support, champion, protect) are stance words, not emotion words, so the expansion mixes direction toward credit unions with affect. Rheault's seeds are emotion-only. The human-review step Paul keeps is the right safeguard. Rheault's automatic top/bottom cut has no in-domain validation.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-stance.lsd-tone",
+      "relation": "qualifies",
+      "paper_claim": "General-purpose sentiment lexicons may misread specialized political vocabulary, so the authors build a Hansard-specific lexicon. The long-run trend still reproduces with NRC, OpinionFinder and SentiWordNet (S1 Fig). Polarity is signed: the weighted sum over all lemmas. The validation (up to 80 percent accuracy) is on film reviews only. Tone shifts with period shocks: recession -0.198, election +0.187 per year (pooled, UNSTRATIFIED), and the yearly series has a unit root, so shocks persist.",
+      "paper_location": "pp.3-7; Table 2 p.9; long-memory and stationarity pp.7-8",
+      "system_side": "LSD2015 (a news-domain dictionary) is applied unchanged to congressional press releases. Tone = net/words or charge = (pos+neg)/words. run_stage5 defaults INTENSITY to net_norm, so heat = abs(net/words). That heat multiplies the stance sign to give press_value. No period or date demeaning is applied.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:44-60; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:45,141-143",
+      "transfer_conditions": "Rheault measures direction (polarity). Paul uses tone only as an intensity multiplier. Under net_norm, a release dense in both positive and negative words scores near zero heat, which is the opposite of heated, and Rheault's work offers no support for reading abs(polarity) as intensity. The lsd_charge option is closer to an intensity construct. Period effects matter only if members' release windows differ in date coverage. Under raw/max within one common window they mostly cancel. Westminster debate text is not US press-release text.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-psychometrics.affective-n",
+      "relation": "qualifies",
+      "paper_claim": "Negative emotional language in a legislature tracks institutional role and economic context. Labor disputes Granger-cause opposition polarity (chi2 8.048, p=.005) but not government polarity (chi2 0.092, p=.761). Impulse responses are larger for the opposition, and recession and election years shift chamber-wide tone. These are annual aggregates over 104 years, and the authors frame them as associations, not causes.",
+      "paper_location": "Table 4 bottom, p.13; S5 Fig; discussion pp.13-14; Table 2 p.9",
+      "system_side": "affective_n is a z-score of E-residualized LLM facets (pessimism, anxiety, depression, volatility) from interview text, then residualized on a Republican dummy. LIWC (i + negemo - posemo) is computed only as the convergent-validity anchor. The measure does not control for majority or minority status or for interview date or period.",
+      "code_ref": "fec/members/emit_affective_n.py:30-38 (LIWC anchor), :39-43 (round-7b design note), :52-57 (E then party residualization)",
+      "transfer_conditions": "The paper is chamber-level and Westminster, not individual-level and US. Within one Congress, party and majority status coincide, so the party control absorbs role. Across the 2019-2026 chamber flips the two separate, and interviews pooled across those windows can carry role-driven negativity into a trait score. This is an untested confound, not a demonstrated bias.",
+      "strength": "weak"
+    }
+  ],
+  "gaps_exposed": [
+    "LSD2015 tone has never been validated against human-coded intensity on congressional press releases. Rheault's own domain lexicon was validated only on film reviews, so neither the general nor the adapted approach has in-domain evidence here.",
+    "The default intensity, abs(net/words) via INTENSITY=net_norm, is a polarity magnitude, not a charge. Mixed-valence heated releases score low. No test compares net_norm with lsd_charge against a behaviour criterion.",
+    "Tone and affect measures carry no period or date adjustment. Rheault shows chamber-wide tone shifts with recessions and election years and persists (unit root). Whether member press and interview windows are date-balanced is unchecked.",
+    "The affective-N slot controls for party but not for majority or minority status, while Rheault finds negativity concentrated in the opposition. No test splits interview negativity by majority status across the 2019-2026 chamber flips.",
+    "The opt-in GloVe expansion helper uses stance words as seeds (support, champion, protect), which blends direction toward credit unions with affect. Rheault-style emotion-only seeds would keep tone separate from stance."
+  ],
+  "flags": [
+    "Component description drift: components.txt describes affective_n as z(LIWC) + z(LLM), but emit_affective_n.py:39-43 says LIWC was dropped as a component in round-7b (2026-07-11) and kept only as the convergent anchor (r=+.24). The description should be refreshed.",
+    "The paper's ARMAX recession and election coefficients are pooled over the government-opposition fault line that the same paper shows matters, so quote them as UNSTRATIFIED. Only the Granger tests are stratified.",
+    "The paper suggests studying emotional contagion over parliamentary networks (Coviello ref 63). Any such use in Melange would put influence-style language on network edges. Treat it as an untested idea, not a recommendation, and never on revolving-door edges.",
+    "All bearings are a single-agent reading and stay UNVERIFIED until a second path reproduces them (DE-062)."
+  ],
+  "paul_alignment": "Paul left no annotation on this work (n_annots 0, no paul_entries). The nearest stated position is on melange-stance.lsd-tone, where Paul highlighted Merkley and Stecula's use of Lexicoder with custom dictionaries. Rheault supports that direction: domain-adapted lexicons for political speech, with off-the-shelf lexicons as a robustness check. The system has partly acted on it, through the opt-in Rice-Zorn/GloVe expansion helper in the legacy scorer. The live press_value path still runs plain LSD2015, so the custom-dictionary idea has not reached production. No note is contradicted.",
+  "related": [
+    {
+      "slug": "rice-2018-corpus-based-dictionaries",
+      "relation": "same-method",
+      "why": "Corpus-derived, minimally supervised domain sentiment dictionaries from seed words and embeddings. The legacy scorer's expansion helper cites Rice and Zorn for the same seed-to-domain-vocabulary logic Rheault uses."
+    },
+    {
+      "slug": "osnabrugge-2021-playing-gallery-emotive",
+      "relation": "builds-on",
+      "why": "Measures emotive rhetoric in UK parliamentary speech and cites Rheault et al. 2016 as prior work on emotion in Westminster debate."
+    },
+    {
+      "slug": "aroyehun-2026-politics-of-feelings",
+      "relation": "builds-on",
+      "why": "Moves emotional-expression measurement to the US Congress and links it to legislative effectiveness. It cites Rheault et al. 2016 for emotion varying with institutional status and speaker attributes."
+    },
+    {
+      "slug": "hargrave-2022-longer-conforming-stereotypes",
+      "relation": "same-data",
+      "why": "Also analyses language and emotional style in UK House of Commons debate, though by gender rather than by economic conditions."
+    },
+    {
+      "slug": "haselmayer-2017-sentiment-analysis-political",
+      "relation": "complements",
+      "why": "Builds a political sentiment dictionary validated by crowdcoding in-domain, which addresses Rheault's gap of validating only on film reviews."
+    },
+    {
+      "slug": "merkley-nd-party-cues-news",
+      "relation": "complements",
+      "why": "Uses Lexicoder with custom dictionaries. Together they bracket the choice Paul faces between a general dictionary (LSD2015, live) and a domain-adapted lexicon."
+    },
+    {
+      "slug": "dietrich-2019-pitch-perfect-vocal",
+      "relation": "complements",
+      "why": "Measures the emotional intensity of congressional speech from vocal pitch rather than words. That is a non-lexical check on the intensity construct LSD tone stands in for."
+    }
+  ]
+}

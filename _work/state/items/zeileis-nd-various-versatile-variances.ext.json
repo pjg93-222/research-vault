@@ -1,0 +1,68 @@
+{
+ "title": "Various Versatile Variances: An Object-Oriented Implementation of Clustered Covariances in R",
+ "authors": [
+  "Achim Zeileis",
+  "Susanne Köll",
+  "Nathaniel Graham"
+ ],
+ "year": "2020",
+ "venue": "Journal of Statistical Software 95(1), 1-36 (this text is a slightly modified reprint; it reports R 4.6.1 and sandwich 3.1-3)",
+ "doi": "10.18637/jss.v095.i01",
+ "document_type": "software vignette / modified reprint of a JSS software article",
+ "coverage": "Full text read in two chunks (lines 1-2061 of 2061): front matter, abstract, Sec 1 intro, Sec 2 overview (lm/glm, lme4, GEE, plm, geepack, Stata), Sec 3 theory (sandwich, clustered, multi-way, panel Newey-West, Driscoll-Kraay, PCSE), Sec 4 software, Sec 5 illustrations (Aghion et al. hurdle model, Petersen 2009 benchmark), Sec 6 Monte Carlo design and Experiments I-IV, Sec 7 summary, computational details, references, Appendix A. Figures 1-6 read from captions and axis labels only (no images). Lobbying, networks, path-finding, allocation, elections, persuasion/turnout and text measurement are not discussed. No annotation files exist for this item (n_annots 0), so paul_markup is empty. Metadata hints corrected: year set to 2020 (JSS original, per the text reference list), venue and DOI taken from the text reference list.",
+ "research_question": "How can clustered and panel sandwich covariances be provided as one object-oriented R implementation that works for any model with estfun() and bread() methods, and how well do these covariances perform in finite samples beyond lm() and glm()?",
+ "theory": "Quasi-maximum likelihood / M-estimation with misspecified likelihood (White 1994); sandwich covariance B M B with bread and meat; cluster-robust meat with G approaching infinity (Cameron and Miller 2015); independence working model of GEE (Liang and Zeger 1986).",
+ "data": "Sec 5.1: InstInnovation data from the sandwich package, following Aghion, Van Reenen and Zingales (2013): 803 firms, firm-level panel 1991-1999, citation-weighted patent counts; clustered by company (803 clusters) and by industry. Sec 5.2: PetersenCL simulated benchmark data from Petersen (2009): 500 firms over 10 years, linear model y on x. Sec 6 and Appendix A: Monte Carlo simulations with balanced clusters of 5 observations (up to 50 in Appendix A), G from 10 to 250 clusters, 100 clusters in the main Experiments I-III, cluster correlation rho from 0 to 0.9 via a Gaussian copula, regressor correlation rho_x = 0.25; unit of analysis is the observation within cluster; period is cross-sectional simulation (no calendar period).",
+ "method": "Object-oriented sandwich estimators in R package sandwich: vcovCL (one-way and multi-way clustered covariances with HC0-HC3 bias corrections, cluster factor G/(G-1), multi-way inclusion-exclusion sum with odd/even signs, optional multi0 variant), vcovPL (panel Newey-West and Driscoll-Kraay with Bartlett or other kernels, lag NW1987 or NW1994), vcovPC (Beck and Katz panel-corrected SEs, balanced and unbalanced via pairwise or casewise), vcovBS (clustered bootstrap with xy, residual, wild, Mammen, Webb, norm types, R default 250). Benchmarks against lmtest, multiwayvcov, plm, geepack, pcse and lme4 random-intercept models, and GEE with exchangeable correlation.",
+ "identification": "None in the causal sense. Inference is via Wald tests and 95 percent confidence intervals using the estimated covariance; the paper notes that clustering in treatment assignment matters more than clustering in sampling (Abadie, Athey, Imbens and Wooldridge 2023) when fixed cluster effects are included.",
+ "measures": "Standard errors from the candidate covariance matrices; empirical coverage of nominal 95 percent Wald confidence intervals over 10,000 replications (1,000 for bootstrap in Experiment III); HC bias-correction factors HC0-HC3; Driscoll-Kraay and PCSE sandwich forms; comparison of standard errors across methods on real and benchmark data.",
+ "scope": "Population: regression models with estfun() and bread() methods (lm, glm, mlm, nls, betareg, clm, coxph, survreg, crch, hurdle, zeroinfl, mlogit, polr, rlm); simulated cross-section and panel data; benchmark data from finance and political-economy style applications. Software era: sandwich 2.4.0 onward, paper computations with sandwich 3.1-3 and R 4.6.1. Not an institutional or historical study.",
+ "key_findings": [
+  "Sec 5.1 (p.17): hurdle negbin on Aghion et al. data with CL clustering by company (803 clusters): institutions in zero part 0.00658, clustered SE 0.00209, p = 0.0016; in count part 0.00397, SE 0.00430, p = 0.357. Only the zero-part coefficient is significant.",
+  "Sec 5.1 (p.17-18): usual standard errors greatly overstate precision. Standard and basic sandwich SEs for zero institutions are both about 0.00135 versus 0.00209 under clustering; clustered SEs are about 1.5 to 2 times the basic sandwich SEs.",
+  "Sec 5.1 (p.18): the clustered bootstrap (vcovBS, R = 250) agrees closely with CL-1, e.g. count institutions 0.00411 versus 0.00430, at much higher computational cost.",
+  "Sec 5.2 (p.18-19): on the Petersen benchmark (500 firms, 10 years), one-way firm-clustered slope SE 0.050596 from vcovCL matches multiwayvcov; plm and geepack give 0.050540 with HC0 and no cluster adjustment.",
+  "Sec 5.2 (p.20): two-way firm and year clustering gives intercept SE 0.065066 and slope SE 0.053561 (multi0 = TRUE); the authors caution that year has only 10 clusters, below what theory requires.",
+  "Sec 5.2 (p.20-21): Driscoll-Kraay vcovPL with adjust = FALSE gives slope SE 0.028163, identical to plm vcovSCC; PCSE slope SE 0.025276 agrees with pcse, including unbalanced panels (pairwise 0.025338, casewise 0.025241).",
+  "Sec 6.2 Experiment I (p.24): with G = 100 clusters of 5 observations and cluster correlation rho up to 0.9, standard, basic, PL and PC covariances lose coverage for the correlated and clustered regressors; CL-0 stays near the nominal 0.95. PL also fails for the uncorrelated regressor x3.",
+  "Sec 6.2 Experiment II (p.25): binomial (logit) and Poisson GLMs give results similar to the Gaussian case, so clustered covariances work well with GLMs; random-intercept mixed models differ because they are conditional rather than marginal in nonlinear models.",
+  "Sec 6.2 Experiment III (p.26-27): beta, zero-truncated Poisson and zero-inflated Poisson: CL-0 performs well and is similar to bootstrap (R = 250); coverage for zerotrunc and zeroinfl sits slightly below 0.95 regardless of rho, which the authors attribute to the normal approximation rather than to clustering.",
+  "Sec 6.2 Experiment IV (p.27-28): at rho = 0.25 and G = 10, standard errors are underestimated in most cases; about 50 to 100 clusters suffice for CL-0. For small G the ordering is HC3 best, then HC2, HC1, HC0; bootstrap is somewhat better than HC0 and HC1 at small G.",
+  "Sec 6.2 Experiment IV (p.28): the authors do not find HC3 overly aggressive for small G, contrary to Pustejovsky and Tipton (2018), though HC3 slightly over-corrects for binomial models at G = 10.",
+  "Appendix A (p.35-36): with 5 to 50 observations per cluster, PL and PC approach 0.95 only under AR(1) correlation; under exchangeable correlation with correlated or clustered regressors their coverage falls as clusters get longer. Clustered HC0 performs satisfactorily throughout."
+ ],
+ "limitations": [
+  "HC2 and HC3 cluster corrections need blocks of the full hat matrix, which no object-oriented extractor provides, so they are available only for lm and glm (Sec 4.1, p.9 and p.13).",
+  "Panel estimators PL and PC are unreliable for short panels and with non-decaying autocorrelation (Sec 7, p.28; Appendix A).",
+  "Small numbers of clusters bias standard errors downward (G = 10 in Exp IV); the year dimension in the Petersen example has only 10 clusters, so its two-way results are cautioned (p.20).",
+  "Residual cluster bootstrap is not well defined for unbalanced clusters and only issues a warning (p.16).",
+  "The fixed-G asymptotic framework is not pursued (p.4). Main simulations use balanced clusters of size 5 and at most three regressors with fixed coefficient vectors, fixed beta precision 10 and zero-inflation probability 0.3.",
+  "The authors explain the below-0.95 coverage for zero-truncated and zero-inflated Poisson by the normal approximation but do not test this explanation (p.26-27).",
+  "The xy bootstrap makes the same assumptions as the asymptotic estimator, so its results converge to it and may be unnecessary when the asymptotic estimator is available (p.15).",
+  "Multi-way clustering default follows Ma (2014) and differs from multiwayvcov unless multi0 is set (p.13, p.20).",
+  "Clustered estimators are unavailable when a model package lacks estfun() (p.15)."
+ ],
+ "references_of_note": [
+  "Abadie, Athey, Imbens and Wooldridge (2023), When should you adjust standard errors for clustering, QJE 138(1)",
+  "Petersen (2009), Estimating standard errors in finance panel data sets, RFS 22(1)",
+  "Cameron, Gelbach and Miller (2011), Robust inference with multiway clustering, JBES 29(2)",
+  "Cameron and Miller (2015), A practitioners guide to cluster-robust inference, JHR 50(2)",
+  "Aghion, Van Reenen and Zingales (2013), Innovation and institutional ownership, AER 103(1)",
+  "Berger, Stocker and Zeileis (2017), Innovation and institutional ownership revisited, Empirical Economics 52(4)",
+  "Driscoll and Kraay (1998), Consistent covariance matrix estimation with spatially dependent panel data, REStat 80(4)",
+  "Beck and Katz (1995), What to do (and not to do) with time-series cross-section data, APSR 89(3)",
+  "Harden (2011), A bootstrap method for conducting statistical inference with clustered data, SPPQ 11(2)",
+  "Pustejovsky and Tipton (2018), Small-sample methods for cluster-robust variance estimation, JBES 36(4)",
+  "Webb (2014), Reworking wild bootstrap based inference for clustered errors, Queens WP 1315",
+  "Zeileis (2004), Econometric computing with HC and HAC covariance matrix estimators, JSS 11(10)",
+  "Zeileis (2006), Object-oriented computation of sandwich estimators, JSS 16(9)",
+  "Ma (2014), Are we really doing what we think we are doing, SSRN working paper",
+  "Thompson (2011), Simple formulas for standard errors that cluster by both firm and time, JFE 99(1)"
+ ],
+ "paul_markup": [],
+ "short_quotes": [
+  "the usual standard errors greatly overstate the precision of the estimators",
+  "clustered covariances work reasonably well in the models investigated but some care is needed when applying panel estimators",
+  "the larger the number of clusters G, the better the coverage and the less standard errors are underestimated"
+ ]
+}

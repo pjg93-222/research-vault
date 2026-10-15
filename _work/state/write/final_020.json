@@ -1,0 +1,1586 @@
+[
+ {
+  "slug": "ren-2022-multi-objective-path",
+  "note": false,
+  "meta": {
+   "title": "Multi-Objective Path-Based D* Lite",
+   "authors": [
+    "Zhongqiang Ren",
+    "Sivakumar Rathinam",
+    "Maxim Likhachev",
+    "Howie Choset"
+   ],
+   "year": "2022",
+   "venue": "IEEE Robotics and Automation Letters, vol. 7, no. 2, April 2022",
+   "doi": "10.1109/LRA.2022.3146918",
+   "sha12s": [
+    "1006f6d4f610"
+   ],
+   "category": "Path-Finding Algorithms",
+   "category_slug": "path-finding-algorithms"
+  },
+  "extraction": {
+   "title": "Multi-Objective Path-Based D* Lite",
+   "authors": [
+    "Zhongqiang Ren",
+    "Sivakumar Rathinam",
+    "Maxim Likhachev",
+    "Howie Choset"
+   ],
+   "year": "2022",
+   "venue": "IEEE Robotics and Automation Letters, vol. 7, no. 2, April 2022",
+   "doi": "10.1109/LRA.2022.3146918",
+   "document_type": "journal article (robotics path-planning algorithm with simulation study)",
+   "coverage": "Read full extracted text _text/1006f6d4f610.txt (47,178 bytes) in 3 chunks, all sections and references; no page images. Table I and II cell values and Figs 1-3 are not in the extracted text, so their numbers are not reported. No lobbying, network, election, persuasion, turnout, legislator or text-measurement content: the paper is about path planning. Annotations: 49 highlights, zero sticky notes; 40 returned, 9 dropped as fragments or duplicates. Item paul_entries (campaign donors, crypto forecasts) belong to other documents and were not used; flagged as misfiled. Metadata hints verified against text.",
+   "research_question": "How to incrementally recompute the full Pareto-optimal path set in a graph whose multi-objective edge costs change during robot navigation, by fusing D* Lite reuse with NAMOA* path-based expansion.",
+   "data": "Synthetic 4-connected grid maps from a public multi-agent pathfinding benchmark (Stern et al. 2019): empty, maze, random and game categories. Edge cost vectors are random integers in [1,10] (main tests) or [1,5] (obstacle test). Two to four objectives. Number of maps and test instances not stated in the extracted text. Time limit 1 minute per planning task (Sec VII-A) or 5 minutes (Sec VII-D). Unit: grid node. No real-world data.",
+   "method": "Algorithm design plus simulation benchmark, implemented in Python. Simulator: planner computes the Pareto set; robot follows a random path from it; every k=7 moves an obstacle node (incident edges set to infinite cost) is added ahead; planner replans. Baselines: MOD* (node-based incremental) and NAMOA* from scratch. MOPBD*-epsilon compared with NAMOA*-epsilon, epsilon in {0.01, 0.02, 0.05}. Heuristic: unit vector scaled by Manhattan distance. Correctness argued by Theorem 1 (proof, no numerical check); worst-case runtime argued analytically. No statistical testing.",
+   "scope": "Single robot on grid-graph path planning with changing edge costs; 2 to 4 objectives; 2022 publication. Results apply to simulated grids in Python, not to physical robots, continuous space or large real networks.",
+   "identification": "Not applicable: controlled algorithmic benchmark on randomly generated inputs; no causal identification strategy.",
+   "theory": "Incremental search theory from D* Lite (local consistency via g and v values) extended to sets of non-dominated cost vectors: a set-based consistency notion (a state is consistent if its cost vector is in V(u)), Pareto dominance, and epsilon-dominance for approximate fronts.",
+   "key_findings": [
+    {
+     "finding": "MOPBD* is faster than the node-based incremental baseline MOD* by up to an order of magnitude on two-objective grid maps.",
+     "location": "Abstract p.1; Sec VII-B p.7 (Table I)",
+     "numbers": "up to 10x runtime speedup; Table I cell values not recoverable from extraction"
+    },
+    {
+     "finding": "Against NAMOA* from scratch, MOPBD* needs fewer expansions on all maps but is not uniformly faster; it is slower on average on the 16 x 16 empty map because ProcessEdge is expensive.",
+     "location": "Sec VII-B p.7 (Table I)",
+     "numbers": "fewer expansions on all maps; runtime exception: 16x16 empty map"
+    },
+    {
+     "finding": "MOD* timed out in some planning tasks on the 65 x 81 game map, so its average solution count is lower than the other two planners.",
+     "location": "Sec VII-B p.7",
+     "numbers": "1 minute limit per planning task; 65 x 81 game map"
+    },
+    {
+     "finding": "With three objectives, as epsilon rises from 0.01 to 0.05, MOPBD*-epsilon beats NAMOA*-epsilon on more planning tasks; epsilon 0.01 has few data points because many tasks time out.",
+     "location": "Sec VII-C p.7, Fig. 3",
+     "numbers": "epsilon in {0.01, 0.02, 0.05}; x-axis l_k/l_0 in [0,1]; Fig. 3 values not in text"
+    },
+    {
+     "finding": "Epsilon-dominance shrinks the stored G- and V-sets, making ProcessEdge and ComputePath faster; the trade-off is approximation quality.",
+     "location": "Sec VI-C p.6-7",
+     "numbers": "not quantified in text"
+    },
+    {
+     "finding": "With random add/delete of obstacles in a 5 x 5 window on the maze map (epsilon 0), MOPBD* beats from-scratch NAMOA* in median and average runtime in general.",
+     "location": "Sec VII-D p.8 (Table II)",
+     "numbers": "M = 2, 3, 4; costs in [1,5]; 5 minute limit; Table II values not recoverable"
+    },
+    {
+     "finding": "The advantage of MOPBD* shrinks as objectives increase; at M = 4 from-scratch NAMOA* outperforms MOPBD*.",
+     "location": "Sec VII-D p.8; Conclusion p.8",
+     "numbers": "M = 4 is the crossover reported"
+    },
+    {
+     "finding": "Theorem 1 states that when ComputePath terminates, the set V(uc) equals the true Pareto-optimal front C*.",
+     "location": "Sec VI-A p.6, Theorem 1",
+     "numbers": "none (proof claim)"
+    },
+    {
+     "finding": "Worst-case runtime can exceed from-scratch search, because all previous search results are deleted before searching again when many states are invalidated.",
+     "location": "Sec VI-B p.6",
+     "numbers": "none"
+    },
+    {
+     "finding": "Multi-objective shortest path is NP-hard even with two objectives, and the Pareto front can grow exponentially with the number of nodes.",
+     "location": "Sec I p.1; Sec VI-B p.6",
+     "numbers": "none"
+    }
+   ],
+   "limitations": [
+    "Worst case is exponential in graph size; MOPBD* is less efficient than from-scratch search when many states are deleted after cost changes (Sec VI-B).",
+    "Advantage shrinks with more objectives; from-scratch NAMOA* beats MOPBD* at M = 4 (Sec VII-D).",
+    "Slower than NAMOA* on average on the 16 x 16 empty map (Sec VII-B).",
+    "Evaluation uses simulated 4-connected grids with random integer costs and synthetic obstacles; no physical robot or real cost data (Sec VII-A, VII-D).",
+    "Timeouts censor some runs, e.g. MOD* on the game map and epsilon 0.01 runs (Sec VII-B, VII-C).",
+    "The epsilon variant trades solution quality for speed; the quality ceiling depends on epsilon (Sec VI-C).",
+    "Baseline labelling is inconsistent: the introduction calls MOD* baseline 1 and NAMOA* baseline 2, while Sec VII calls both baselines without numbering (Sec I, VII)."
+   ],
+   "paul_markup": [
+    {
+     "page": "PDF p.1 (journal p.3318)",
+     "type": "Highlight",
+     "text": "quent path planning tasks",
+     "note": ""
+    },
+    {
+     "page": "PDF p.1 (journal p.3318)",
+     "type": "Highlight",
+     "text": "reuse previous, and perhaps partial, searches to expedite subsequent",
+     "note": ""
+    },
+    {
+     "page": "PDF p.1 (journal p.3318)",
+     "type": "Highlight",
+     "text": "We numerically evaluate the performance of MOPBD* and its variants in various maps with two and three objectives.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.1 (journal p.3318)",
+     "type": "Highlight",
+     "text": "is a problem of fundamental importance with numerous applications in robotics and logistics",
+     "note": ""
+    },
+    {
+     "page": "PDF p.1 (journal p.3318)",
+     "type": "Highlight",
+     "text": "When edge costs change, incremental search algorithms aim to reuse previous searches to speed up subsequent planning tasks.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.1 (journal p.3318)",
+     "type": "Highlight",
+     "text": "objectives such as travel risk, fuel usage, arrival time, to name a few.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.1 (journal p.3318)",
+     "type": "Highlight",
+     "text": "MO-SPP generalizes the conventional SPP by associating each edge in the given graph with a cost vector where each component of the vector corresponds to an objective to be minimized.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.1 (journal p.3318)",
+     "type": "Highlight",
+     "text": "we consider the dynamic version of the MO-SPP where the costs of the edges can change",
+     "note": ""
+    },
+    {
+     "page": "PDF p.2 (journal p.3319)",
+     "type": "Highlight",
+     "text": "This work aims to leverage both D* Lite and the path-based expansion in NAMOA* to create a novel incremental multi-objective planner to plan paths in dynamic environments.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.2 (journal p.3319)",
+     "type": "Highlight",
+     "text": "However, all these algorithms optimize a single-objective: minimizing the sum of edge cost values along the planned path.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.2 (journal p.3319)",
+     "type": "Highlight",
+     "text": "which leverages both path-based expansion in NAMOA* and incremental search in D* Lite.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.2 (journal p.3319)",
+     "type": "Highlight",
+     "text": "The numerical results show that MOPBD* outperforms both baselines.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.2 (journal p.3319)",
+     "type": "Highlight",
+     "text": "The set of all the non-dominated paths between uc and ud is called the Pareto-optimal set.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.3 (journal p.3320)",
+     "type": "Highlight",
+     "text": "Let OPEN denote a priority queue containing all inconsistent nodes to be expanded, where the nodes are prioritized by comparing their keys in the lexicographic order.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.3 (journal p.3320)",
+     "type": "Highlight",
+     "text": "Among these nodes, inconsistent ones are inserted into OPEN with updated keys.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.3 (journal p.3320)",
+     "type": "Highlight",
+     "text": "The basic difference between MO-SPP and SPP is that there are multiple non-dominated partial solution paths between any pair of nodes in the graph in general",
+     "note": ""
+    },
+    {
+     "page": "PDF p.3 (journal p.3320)",
+     "type": "Highlight",
+     "text": "Similarly, H(u) is a set of heuristic vectors, each of which underestimates the cost of a non-dominated path between u and uc.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.3 (journal p.3320)",
+     "type": "Highlight",
+     "text": "These two features show that MOA* takes a node-based expansion strategy.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.3 (journal p.3320)",
+     "type": "Highlight",
+     "text": "In addition, node expansion can be computationally demanding as all partial solutions at this node need to be extended.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.4 (journal p.3321)",
+     "type": "Highlight",
+     "text": "Then MOD* searches in the same manner by expanding inconsistent nodes until all Pareto-optimal paths are found.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.4 (journal p.3321)",
+     "type": "Highlight",
+     "text": "NAMOA* employs a path-based expansion to mitigate the drawbacks of the node-based expansion.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.5 (journal p.3322)",
+     "type": "Highlight",
+     "text": "we introduce the Delete procedure, which is invoked by UpdateVset",
+     "note": ""
+    },
+    {
+     "page": "PDF p.5 (journal p.3322)",
+     "type": "Highlight",
+     "text": "By doing so, V(u) for all u in U always contains the cost vectors of non-dominated paths between ud and u (Invariant-1).",
+     "note": ""
+    },
+    {
+     "page": "PDF p.5 (journal p.3322)",
+     "type": "Highlight",
+     "text": "dominated by g_k becomes non-dominated after the removal of g_k, and may lead to Pareto-optimal solutions.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.6 (journal p.3323)",
+     "type": "Highlight",
+     "text": "then s represents a (partial solution) path that goes through",
+     "note": ""
+    },
+    {
+     "page": "PDF p.6 (journal p.3323)",
+     "type": "Highlight",
+     "text": "ComputePath is invoked either at line 3 or line 9 in Algorithm 1.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.6 (journal p.3323)",
+     "type": "Highlight",
+     "text": "Theorem 1: When ComputePath terminates, C = C*.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.6 (journal p.3323)",
+     "type": "Highlight",
+     "text": "It is also known that multi-objective search requires exponential space and time with respect to the size of the graph in the worst case [6].",
+     "note": ""
+    },
+    {
+     "page": "PDF p.6 (journal p.3323)",
+     "type": "Highlight",
+     "text": "MOPBD* is thus less efficient in comparison with naively searching from scratch, when there are lots of states to be deleted after the edge cost changes.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.7 (journal p.3324)",
+     "type": "Highlight",
+     "text": "We assigned every edge in G a random integer vector of length M with components randomly sampled from [1, 10], where M varies in the following sections.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.7 (journal p.3324)",
+     "type": "Highlight",
+     "text": "After every k (k = 7 in our tests) moves of the robot, the simulator adds an obstacle node in front of the robot along the selected path.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.7 (journal p.3324)",
+     "type": "Highlight",
+     "text": "All algorithms use the same heuristic",
+     "note": ""
+    },
+    {
+     "page": "PDF p.7 (journal p.3324)",
+     "type": "Highlight",
+     "text": "in terms of the number of expansions, MOPBD* outperforms NAMOA* over all maps.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.7 (journal p.3324)",
+     "type": "Highlight",
+     "text": "When k = 0, l0 denote the average length of the Pareto-optimal paths between the initial start and ud.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.7 (journal p.3324)",
+     "type": "Highlight",
+     "text": "The reason is that when epsilon increases, only a few non-dominated partial solution paths are stored at each node, and the number of vectors in the V-sets",
+     "note": ""
+    },
+    {
+     "page": "PDF p.8 (journal p.3325)",
+     "type": "Highlight",
+     "text": "the G-sets) at nodes become smaller, which makes the procedure ProcessEdge computationally less demanding when edge costs change.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.8 (journal p.3325)",
+     "type": "Highlight",
+     "text": "MOPBD* outperforms running NAMOA* from scratch for each planning task in general, based on the median and the average over succeeded cases",
+     "note": ""
+    },
+    {
+     "page": "PDF p.8 (journal p.3325)",
+     "type": "Highlight",
+     "text": "However, as the number of objectives increases, the advantage of MOPBD* becomes less obvious and when M = 4, NAMOA* outperforms MOPBD*.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.8 (journal p.3325)",
+     "type": "Highlight",
+     "text": "The numerical results verify the efficiency of MOPBD* and its variant MOPBD*-epsilon with two, three and four objectives in comparison with baseline methods.",
+     "note": ""
+    },
+    {
+     "page": "PDF p.8 (journal p.3325)",
+     "type": "Highlight",
+     "text": "One can also leverage MOPBD* to improve multi-objective multi-agent planners",
+     "note": ""
+    }
+   ],
+   "short_quotes": [
+    {
+     "quote": "MOPBD* is thus less efficient in comparison with naively searching from scratch",
+     "location": "Sec VI-B p.6"
+    },
+    {
+     "quote": "as the number of objectives increases, the advantage of MOPBD* becomes less obvious",
+     "location": "Sec VII-D p.8"
+    },
+    {
+     "quote": "MOPBD* outperforms NAMOA* over all maps.",
+     "location": "Sec VII-B p.7 (number of expansions)"
+    }
+   ],
+   "measures": [
+    "runtime per planning task (median and average over succeeded cases, Table II)",
+    "average number of expansions (node expansions for MOD*, path expansions for MOPBD* and NAMOA*)",
+    "average number of solutions found (Table I)",
+    "timeouts under 1 minute and 5 minute limits",
+    "ratio l_k/l_0 of Pareto path length to initial length as the robot progresses (Fig. 3)"
+   ],
+   "references_of_note": [
+    "Koenig and Likhachev 2005, D* Lite, IEEE Trans. Robotics (ref 8)",
+    "Stewart and White 1991, Multiobjective A*, J. ACM (ref 21, MOA*)",
+    "Mandow and De La Cruz 2008, Multiobjective A* with consistent heuristics, J. ACM (ref 11, NAMOA*)",
+    "Oral and Polat 2016, MOD* lite, IEEE Trans. Cybernetics (ref 12, baseline)",
+    "Perny and Spanjaard 2008, near admissible multiobjective search (ref 13, epsilon-dominance)",
+    "Stern et al. 2019, multi-agent pathfinding benchmarks (ref 20, map source)",
+    "Ren, Rathinam and Choset 2021, multi-objective conflict-based search (ref 15, future application)"
+   ]
+  },
+  "summary_md": "Ren, Rathinam, Likhachev and Choset (RA-L 2022) present MOPBD*, an incremental planner that keeps the full Pareto-optimal path set between a moving start and a fixed goal when edge cost vectors change. It merges D* Lite's reuse of earlier search (g and v values, local consistency) with NAMOA*'s path-based expansion, so each node stores a set of non-dominated cost vectors rather than one value. Theorem 1 claims the stored set equals the true Pareto front on termination. An epsilon-dominance variant trims those sets and trades accuracy for speed. The tests use simulated 4-connected grids from the Stern et al. MAPF benchmark, with random integer costs, 2 to 4 objectives, Python code, obstacles inserted every 7 moves, and 1 to 5 minute limits. Against the node-based incremental MOD*, MOPBD* is faster by up to an order of magnitude with two objectives. Against NAMOA* from scratch it needs fewer expansions but is not always faster: it is slower on the 16x16 empty map, and at four objectives from-scratch NAMOA* wins. The worst case can exceed from-scratch search when many states are invalidated. In Melange, cosponsor_route.py names MOPBD* in its docstring but does not implement it. It builds greedy recruitment sets under five fixed risk weights and then filters the points by dominance. That is a weighted-sum sweep over a set-selection problem, not a Pareto search over source-target paths, and it never replans incrementally. The paper's main use for Melange is as a yardstick that shows this gap. A second use is a possible two-objective view of the staffer route cost, which currently folds strength and uncertainty into one weighted sum. This analysis is UNVERIFIED (DE-062).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-pathfinding.cosponsor-route-pareto",
+    "relation": "qualifies",
+    "paper_claim": "MOPBD* returns the exact Pareto-optimal set of source-to-goal paths (Theorem 1: C = C*). Multi-objective shortest path is NP-hard even with two objectives, and the front can grow exponentially with the number of nodes.",
+    "paper_location": "Theorem 1 at PDF p.6 (text line 672); NP-hard and exponential statements at PDF p.1 and p.6 (text lines 88-90 and 675-676)",
+    "system_side": "Docstring line 3 says RELINK + MOPBD*. The code runs a greedy build_route for each lambda in 0, 0.5, 1, 2, 4 (line 70), scoring candidate edges as (gain - lam(1-p))/cost, then filters (cost, spread, risk) points by dominance (lines 64-76). It is a lambda-parameterised greedy heuristic over recruitment sets, not a weighted sum over the three objectives and not a path search.",
+    "code_ref": "fec/engine/cosponsor_route.py:3, 41-62, 64-76",
+    "transfer_conditions": "The paper claim concerns source-target paths with additive vector costs. The route finder uses a product-form reach and a mean-p risk over a recruitment set, so MOPBD* cannot be dropped in. The docstring overstates the method; the front is a heuristic approximation, not an exact Pareto set.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Paper claims and docstring verified. The analyst wording weighted-sum sweep over five fixed risk weights is inaccurate: lambda is a risk penalty inside a greedy value, not a weights vector over objectives. The convex-hull point is a generic weighted-sum property that does not describe this code. Fields corrected.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Cosponsor recruitment route finder (Pareto front)|Cosponsor recruitment route finder (Pareto front)]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.cosponsor-route-pareto",
+    "relation": "qualifies",
+    "paper_claim": "Incremental reuse helps when cost changes are few and local. On the maze map with random obstacle add and delete (M = 2, 3, 4; 5 minute limit), MOPBD* beats from-scratch NAMOA* in general on median and average runtime, but its advantage shrinks as M grows and from-scratch NAMOA* wins at M = 4. The worst case can exceed from-scratch search when many states are invalidated.",
+    "paper_location": "Sec VI-B at PDF p.6 (highlight on deleted states); Sec VII-D at PDF p.8, Table II (text lines 808-833)",
+    "system_side": "cosponsor_route.py keeps no saved search state: each run rebuilds routes from scratch (build_route called fresh for each lambda, lines 41-62 and 70-72). Edge probabilities come from MBC.build_P(adj) over the whole network (around line 22). The statement that these probabilities change in batch at pipeline refresh was not verified from code read here.",
+    "code_ref": "fec/engine/cosponsor_route.py:22, 41-62, 70-76",
+    "transfer_conditions": "The paper evidence covers single-robot grid planning with local edge changes at 1 to 5 minute limits on simulated grids in Python. It does not cover whole-network batch refresh or changes to global weights such as lambda or K.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "No-state reuse verified in code. The M = 4 crossover and the worst-case caveat are verified in the paper. The analyst reading that MOPBD* beats NAMOA* at M = 2-3 on the maze map is not stated; Table II is maze-only with M = 2, 3, 4 and is described in general terms, and its values are not recoverable from the extraction. The batch-refresh statement is unverified.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Cosponsor recruitment route finder (Pareto front)|Cosponsor recruitment route finder (Pareto front)]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.staffer-closeness-routes",
+    "relation": "suggests-extension",
+    "paper_claim": "Vector costs with a non-dominated set expose trade-offs that a single scalar sum hides. Epsilon-dominance (0.01 to 0.05) gives smaller stored sets and faster runs, at a cost in solution quality; the paper states no set-size or runtime bound. The advantage over from-scratch search shrinks as the number of objectives grows.",
+    "paper_location": "Sec VI-C at PDF p.6-7; Sec VII-B and VII-C at PDF p.7, Fig 3; Sec VII-D at PDF p.8",
+    "system_side": "Hop cost is minus log of HOP_FACTOR times strength plus a fixed weight times uncertainty (_hop_cost, lines 115-116). HOP_FACTOR is 0.8 in fec/staffer_network/closeness_math.py:20. Search is bidirectional Dijkstra with heuristic 0 (ALGORITHM, line 79). Yen loopless alternatives follow the same scalar (module docstring, line 23). Ties go to the fewest steps, then the least cost (around line 519).",
+    "code_ref": "fec/surfaces/staffer_closeness_routes.py:23, 79, 115-116, 519; fec/staffer_network/closeness_math.py:20",
+    "transfer_conditions": "The extension applies only if the strength-uncertainty trade-off should be shown as a front rather than fixed by w. It would add latency where route speed is already a concern. Any front members remain heuristic model outputs, never closeness or introduction probabilities (D-025).",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Code verified: scalar hop cost, HOP_FACTOR 0.8, bidirectional Dijkstra with heuristic 0, Yen alternatives, tie rule. The paper says epsilon shrinks sets and runtime but gives no bound, so bounds is removed. Two objectives performs best is a reading of the trend across M, not a stated claim, so it is softened to largest advantage at two objectives.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Staffer closeness route search|Staffer closeness route search]]",
+    "system": "melange-pathfinding"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Annotation file shows 48 Highlight entries and 1 Ink entry (49 total), not 49 highlights; there are no text sticky notes. Checked against _annots/1006f6d4f610.json.",
+   "paul_entries (7 items: Bouton 2022 campaign donors and Grand View crypto forecasts) are misfiled and contain nothing about this paper. Confirmed.",
+   "paul_markup: 8 of 40 quotes did not match the annotation covered_text by 40-character prefix, possibly due to ligature or whitespace normalisation. Unresolved; no verdict depends on them.",
+   "summary_md describes a weighted-sum sweep over five fixed risk weights. The code is a lambda-penalised greedy with a dominance filter, not a weighted sum over objectives. Corrected in bearing 1.",
+   "paul_alignment says the outperforms claim omits the 16x16 and M = 4 exceptions. The paper states both itself (text lines 757 and 829); the omission is only in Paul's highlight selection.",
+   "The chen-2016 link's code basis (buildPath and chainHold) was not found by rg in fec/ for *.py and *.js. Link kept on the paper-level relation only.",
+   "The D* Lite and LPA* operational-layer claim traces to the Influence Maximization addendum (annotations folder, line 65), a general IM note rather than a cosponsor-routing document. The paraphrase is accurate but the scope is broader.",
+   "Extraction coverage states 47,178 bytes; the item n_chars is 46,067 characters. Byte count not checked; not material to any verdict."
+  ],
+  "gaps_exposed": [
+   "cosponsor_route.py's docstring claims MOPBD*, but the code is a 5-point weighted-sum greedy sweep with post-hoc dominance filtering, and no code in fec implements MOPBD*, NAMOA*, D* Lite or LPA*.",
+   "The route-finder front is unmeasured against an exact or epsilon-approximate multi-objective front, so how many non-supported trade-off points it misses is unknown.",
+   "No pathfinding component reuses search state across edge changes. Paul's addendum names D* Lite or LPA* as the operational layer, but nothing is built, and no use case (an interactive single-edge what-if) has been defined in which incremental reuse would pay.",
+   "The staffer router fixes the strength-uncertainty trade-off through w, with no Pareto view and no sensitivity report over w."
+  ],
+  "flags": [
+   "Item paul_entries are misfiled. They are Bouton et al. 2022 Small campaign donors (x2) and five Grand View Research crypto forecast entries, which belong to other documents and say nothing about this paper. Paul's view here comes only from his 49 highlights, with zero sticky notes.",
+   "The docstring overstates the method: fec/engine/cosponsor_route.py:3 labels the module RELINK + MOPBD*, but the algorithm is a greedy scalarised sweep. Melange-facing text should call it a lambda-sweep approximate front.",
+   "The paper's evidence argues against adopting incremental replanning by default: its advantage disappears at M=4 and under widespread state invalidation. This qualifies the addendum's D* Lite/LPA* operational-layer plan.",
+   "No conflict with the rejected SNA proposals, D-021 (LDA) or the reciprocity rule. Any multi-objective staffer front must keep the D-025 wording.",
+   "All bearings are UNVERIFIED until a second path reproduces them (DE-062)."
+  ],
+  "paul_alignment": "Paul's highlights, with no notes, cover incremental reuse, the Pareto set, the D* Lite plus NAMOA* fusion, and the claim that it outperforms both baselines. His addendum makes D* Lite and LPA* the operational layer. The paper backs the Pareto concept but qualifies replanning: the gains come on small grids with local changes and vanish at M=4. The outperforms claim omits the 16x16 and M=4 exceptions. His takeaway is aspirational rather than stale: no incremental planner exists, and the module that cites MOPBD* does not implement it.",
+  "related": [
+   {
+    "slug": "abdelrahman-2025-conflict-based-search",
+    "relation": "same-method",
+    "why": "Second D* Lite citation, used as the low-level planner inside multi-agent Conflict-Based Search for replanning. Item text confirmed."
+   },
+   {
+    "slug": "luo-2020-path-planning-algorithm",
+    "relation": "same-method",
+    "why": "Improved single-objective D* Lite for UAV replanning; a contrast with MOPBD*'s set-valued multi-objective extension of the same incremental core."
+   },
+   {
+    "slug": "xu-2024-improved-lite-based",
+    "relation": "same-method",
+    "why": "Improved single-objective D* Lite for ship routing in a changing cost field; the setting in which incremental replanning is used."
+   },
+   {
+    "slug": "lawande-2022-systematic-review-analysis",
+    "relation": "complements",
+    "why": "Survey placing D* Lite among pathfinding families. Background context only, not evidence for the paper's claims."
+   },
+   {
+    "slug": "chen-2016-most-reliable-path",
+    "relation": "complements",
+    "why": "Most-reliable-path search with a -log p style objective, a conceptual pairing with vector-cost route search. The code reference to buildPath and chainHold was not found in fec/ and is dropped."
+   },
+   {
+    "slug": "duan-2025-breaking-sorting-barrier",
+    "relation": "complements",
+    "why": "Faster single-source shortest-path algorithm, a separate lever for staffer route latency. The link is conceptual; the paper does not discuss it."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "arya-2025-relink-edge-activation",
+    "relation": "complements",
+    "why": "cosponsor_route.py cites RELINK together with MOPBD*. The linked item is titled Multi-Objective Path-Based D* Lite, so the link is via the code docstring, not via RELINK's own text."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "mondak-nd-online-appendix-personality",
+  "note": false,
+  "meta": {
+   "title": "Personality on the Hill: Online Appendix (Tables A1-A2)",
+   "authors": [
+    "Mondak"
+   ],
+   "year": "",
+   "venue": "Online appendix to an article in a political science journal (venue not shown)",
+   "doi": "",
+   "sha12s": [
+    "f0024efe0e39"
+   ],
+   "category": "Personality & Psychometrics",
+   "category_slug": "personality-psychometrics"
+  },
+  "extraction": {
+   "title": "Personality on the Hill: Online Appendix (Tables A1-A2)",
+   "authors": [],
+   "year": "",
+   "venue": "",
+   "doi": "",
+   "document_type": "Online appendix (supplemental tables) to \"Personality on the Hill: Expert Evaluations of U.S. Senators' Psychological Traits\". Metadata hint corrected: the text shows the parent article title only; journal, year and authors are not shown (Mondak is an unverified hint).",
+   "coverage": "Read the entire text file in one pass (1,870 lines, about 15,100 chars): front note, Table A1 (Senate insiders and APSA Congressional Fellows), Table A2 (academics), and all table notes. No markup file exists (\"(none)\"), so paul_markup is empty. The document contains nothing on lobbying, networks, path-finding, allocation, elections, persuasion/turnout or text measurement beyond the party-composition note.",
+   "research_question": "Not stated in this appendix. It only describes its two supplemental tables.",
+   "theory": "Not stated in this appendix.",
+   "data": "Unit: U.S. senator. Table A1 has 129 senator rows of mean Big Five ratings from Senate insiders and APSA Congressional Fellows (row count made from the text); these feed Tables 2-5 of the main article. Table A2 has 126 senator rows from academic experts (row count made from the text); used only in the second section of Table 1 of the main article. Each row gives the number of ratings. Time period and the analytic N in the main paper are not stated.",
+   "method": "Expert coding: multiple raters score each senator on five traits (openness to experience, conscientiousness, extraversion, agreeableness, emotional stability). Decimal values (e.g., 4.67, 4.17) suggest averaging across raters, but the aggregation rule is not stated. Raters sometimes used 0.50 increments, retained as coded. Observed values range from 1.50 to 7.00; the scale anchors are not stated.",
+   "identification": "Not stated in this appendix.",
+   "scope": "Current-era U.S. Senate members appearing in the two tables (names span multiple Congresses); the appendix does not state the population or era explicitly.",
+   "measures": [
+    "Openness to experience",
+    "Conscientiousness",
+    "Extraversion",
+    "Agreeableness",
+    "Emotional stability",
+    "Number of ratings per senator"
+   ],
+   "key_findings": [
+    {
+     "finding": "Democrats hold 62% of senators receiving the highest personality scores in the main article's Table 3, and 65% of the lowest-scoring senators.",
+     "location": "Online appendix p.1, lines 11-14 (refers to main-article Table 3)",
+     "numbers": "62% high; 65% low (Democrats)"
+    },
+    {
+     "finding": "Using academic ratings (Table A2 in the text, labelled Table A3 in the front note), 80% of the high scores go to Democrats (Angus King counted as a Democrat) and 80% of the low scores go to Republicans.",
+     "location": "Online appendix p.1, lines 15-17",
+     "numbers": "80% high Democrats; 80% low Republicans"
+    }
+   ],
+   "limitations": [
+    "Senators with data from only a single coder are excluded from all analyses in the main paper, but single-coder rows still appear in the tables.",
+    "Table A2 data are not used in the main paper except for Table 1.",
+    "Bold and italic designations for top and bottom three scores are only for senators with at least two coders; they are not visible in the plain text.",
+    "Front note cites Table A3 for the academic comparison, but the academic table is labelled Table A2.",
+    "Some cells are blank or malformed (e.g., Baldwin, Heitkamp, Ensign, Capito and Feingold rows; '4..33' in Table A2), and there are a few inconsistent values such as 4.0 vs 4.00 formatting.",
+    "Aggregation method, scale anchors, sample period and main-analysis N are not stated."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "62% of senators receiving the highest personality scores are Democrats",
+     "location": "Online appendix p.1, lines 13-14"
+    },
+    {
+     "quote": "Senators with data from only a single coder are excluded from all analyses reported in the main paper.",
+     "location": "Table A1 note, appendix p.4"
+    },
+    {
+     "quote": "Data in this table are from academics. Except for Table 1, these data are not used in the main paper.",
+     "location": "Table A2 note, appendix p.5 onward"
+    }
+   ],
+   "references_of_note": []
+  },
+  "summary_md": "This is the online appendix to *Personality on the Hill*, not the article. It has two tables of mean Big Five ratings of U.S. senators. Table A1 has about 129 rows from Senate insiders and APSA Congressional Fellows and feeds the main paper's Tables 2-5. Table A2 has about 126 rows from academics and is used only in the main paper's Table 1. Each row gives a rating count. The front note adds two facts that matter for anyone using the data. First, senators rated by only one coder appear in the tables but are excluded from every analysis in the main paper. Second, partisan composition is lopsided at the extremes. Democrats are 62% of the insiders' highest scorers and 65% of their lowest. In the academic table, 80% of high scores go to Democrats and 80% of low scores to Republicans. The appendix states no scale anchors, aggregation rule or era.\n\nFor Paul's system this is not background reading: it is the frozen external gold. `build_big5_senate_gold.py` turns the PDF into `big5_senate_expert_gold.json` (129 insider rows, 125 academic rows), and the trait validators score against it. So the appendix bears directly on how that gold is used:\n- **Rating count.** The main validators keep single-coder rows. The paper drops them. Only some side probes stratify or weight by count.\n- **Panel averaging.** The multitrait validator averages the two panels into one target, although the authors treat the academic panel as secondary.\n- **Party.** Neither primary validator partials out party, while the academic panel's extremes are 80/80 party-sorted. That fits the recorded pattern that O passes only against academics and that lexical O reversed on the party check. That link is a hypothesis and stays UNVERIFIED.\n- **Extraction.** The academic count of 125 against roughly 126 text rows, plus a malformed '4..33' cell, suggests the extractor may silently skip one row.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.gold-panel-validation",
+    "relation": "measurement-source",
+    "paper_claim": "Table A1 gives Senate-insider and APSA-Fellow mean Big Five ratings for 129 senators, feeding main-paper Tables 2-5. Table A2 gives academic ratings for 126 senator name entries (text count), used only in main-paper Table 1. Each row carries a rating count. Observed values run 1.00-7.00 with 0.50 increments noted by the authors.",
+    "paper_location": "Appendix p.1 front note; Table A1 (pp.2-4) and note; Table A2 (pp.5-7) and note",
+    "system_side": "build_big5_senate_gold.py writes a SHA-256-pinned frozen artifact (data/stance/big5_senate_expert_gold.json) keeping panel, source name, page and ratings_n. EXPECTED_COUNTS is 129 insiders and 125 academics (line 20); the 1-7 range check is at line 62. The artifact has 129 insider and 125 academic records. The academic count is one short of the 126 text entries: the academic Feingold row (malformed cell 4..33, text line 1297) is absent; Feingold appears only as an insider with ratings_n 2. The except branch at lines 56-61 drops that row silently, and its comment that only headings reach it is wrong. The usage contract at lines 85-90 is as stated. Both validators score per panel via map_gold.",
+    "code_ref": "fec/members/build_big5_senate_gold.py:20,46-49,56-67,75-90; fec/members/b5_external_gold_validate.py:86-102,114-118",
+    "transfer_conditions": "Senate-only and historic; era unstated. Validates rank order on overlap with current members only, as the code caveat at b5_external_gold_validate.py:209 says. Ratings are as coded by the raters, not self-report.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Counts verified from text (129 and 126 name entries) and from the artifact (129 and 125). Value minimum corrected: observed minimum is 1.00, not 1.50. Scale anchors and aggregation rule absent from the appendix (searched). The 1-7 scale is asserted by the code, not stated by the authors.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Big Five validation against Senate gold panels and criteria|Big Five validation against Senate gold panels and criteria]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.gold-panel-validation",
+    "relation": "qualifies",
+    "paper_claim": "Senators rated by only one coder are excluded from all analyses in the main paper but still appear in both tables. Bold and italic top and bottom designations apply only to senators with at least two coders.",
+    "paper_location": "Table A1 note (appendix p.4, text lines 950-953); Table A2 note (text lines 1864-1869)",
+    "system_side": "The primary validators do not filter on ratings_n. averaged_gold (b5_gold_multitrait_validate.py:83-97) averages insider and academic values with no count weight. oof_variant (126-134) keeps any row with a non-null trait. row_correlations (b5_external_gold_validate.py:114-118) filters only on null traits. Side probes respect the rule: b5_gold_criterion_probes.py:58-68 stratifies insider k=1 vs k>=2, and b5_o_weighted_look.py:399 weights by sqrt(ratings_n) with a k>=2 subset at line 417.",
+    "code_ref": "fec/members/b5_gold_multitrait_validate.py:83-97,126-134; fec/members/b5_external_gold_validate.py:114-118; fec/members/b5_gold_criterion_probes.py:58-68; fec/members/b5_o_weighted_look.py:399,417",
+    "transfer_conditions": "Same data and same inclusion rule. The size of the effect depends on how many current-roster matches are k=1 insiders, which was not counted here. Any k>=2 re-run is a new look under single-look discipline, not a free re-score.",
+    "strength": "strong",
+    "verdict": "reproduced",
+    "verifier_note": "Both table notes confirmed against the text. All cited code lines confirmed: no ratings_n filter in the primary validators, and the stratified and weighted probes exist as described.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Big Five validation against Senate gold panels and criteria|Big Five validation against Senate gold panels and criteria]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.gold-panel-validation",
+    "relation": "qualifies",
+    "paper_claim": "The extremes of both panels are party-skewed. Democrats are 62% of the insider highest scorers and 65% of the lowest (main-paper Table 3, as cited). In the academic table 80% of high scores go to Democrats (Angus King counted as Democrat) and 80% of low scores to Republicans. The note calls the academic table A3; it is labelled A2.",
+    "paper_location": "Appendix p.1 front note, text lines 11-17",
+    "system_side": "The panel pass/miss pattern matches the artifact big5_gold_anchored.json: E and A pass both panels; O passes academics only (insider one-sided permutation p 0.104); N passes insiders only (academic p 0.195). Neither primary validator controls for party: b5_gold_multitrait_validate.py and b5_external_gold_validate.py contain no party term. The ONC look partials out female and republican covariates (b5_onc_dual_panel_look.py:121-164, covariates at 151-153, loader at 188). The claim that lexical O was reversed on a party check is not supported: the ONC candidate file marks O NOT_LOOKED_CRITERION_STOP_BAR_MISS, and no such result was found in the brain notes.",
+    "code_ref": "fec/members/b5_gold_multitrait_validate.py:137-169; fec/members/b5_onc_dual_panel_look.py:121-164,188; data/stance/big5_gold_anchored.json; data/members/big5_onc_crosspanel_successor.json.candidate",
+    "transfer_conditions": "Party is a known fault line here. Panel-level correlations should be quoted with party strata or an UNSTRATIFIED label. The suggestion that O passes only against academics because of party is new agent analysis and stays UNVERIFIED (DE-062). The 62/65 and 80/80 figures describe only the extremes.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Percentages and the A2/A3 mislabel confirmed in the text. Table 3 figures are cited from the main paper and not checked. The O party-check reversal claim has no supporting artifact and is removed from system_side.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Big Five validation against Senate gold panels and criteria|Big Five validation against Senate gold panels and criteria]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "measurement-source",
+    "paper_claim": "Insider, APSA Fellow and academic raters supply Big Five ratings of senators' public persona, usable as an external criterion for text-derived traits. The appendix calls these Big Five measures built from insider and academic data. It does not call them independent or observer ratings.",
+    "paper_location": "Appendix p.1 front note; Tables A1-A2",
+    "system_side": "The panels serve as external gold in b5_external_gold_validate.py and b5_gold_multitrait_validate.py. Full-sample gold-fitted weights are emitted after the OOF verdict (b5_gold_multitrait_validate.py:4-7, 136, 165). b5_profile_basis.py loads the gold artifact at line 128 and passes selected_weights into member_basis at lines 36-44, so for shipped composites the panels are no longer untouched; only the OOF figures are clean. The cited code does not refit the lexical instrument to RKH targets. The v2 lexical builder (big5_lexcal_v2.py docstring, lines 3-12) learns weights against behavioral criteria and describes the RKH and Mairesse weights as v1 priors.",
+    "code_ref": "fec/members/b5_gold_multitrait_validate.py:4-7,136,165; fec/members/b5_profile_basis.py:36-44,128-140; fec/members/big5_lexcal_v2.py:3-12",
+    "transfer_conditions": "Applies to senators who overlap the appendix and to text from the same public-persona era. Does not carry to House members or to genres (floor, interview, social) the raters never saw. Ratings describe perceived public persona, not self-report.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Gold-independence point confirmed in code. The RKH refit claim is not supported by the cited refs and is rewritten. The independent or observer wording is not in the appendix and is removed. Whether any other builder refits to RKH was not checked.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Value range wrong: the appendix minimum is 1.00 (e.g. the DeMint academic-table row region), not 1.50; maximum 7.00 is correct.",
+   "Academic row count: text has 126 senator name entries (insider 129 verified); the artifact has 125. Confirmed, not just agent-counted: the academic Feingold row with the malformed 4..33 cell (text line 1297) is absent from the artifact. The comment at build_big5_senate_gold.py:60 that only headings reach the except branch is wrong.",
+   "Claim that lexical O was reversed on the party check is unsupported by any artifact found (ONC candidate marks O NOT_LOOKED); remove.",
+   "Claim that the lexical Big Five is refit to RKH targets is not supported by the cited code; big5_lexcal_v2.py learns weights against behavioral criteria.",
+   "Paul alignment unverified: no mention of Mondak or Personality on the Hill found in brain notes beyond the gold-anchor entries, so the 'on disk only' listing and the stale-notes claim cannot be confirmed. Paul highlighting Birkenmaier codebook, Krippendorff alpha and macro-F1 is also unverified.",
+   "The gold-anchor pass/miss record (E and A both panels; O academic-only; N insider-only) is correctly reported and matches big5_gold_anchored.json.",
+   "Coverage: text file read via searches and counts; the PDF and page images were not available. All 129 insider and 126 academic name entries were counted from the text file. All four bearings and four related links were checked. paul_markup empty (no markup file). key_findings not present in the rel output, so none verified. Brain notes and research item files read only."
+  ],
+  "gaps_exposed": [
+   "The primary gold validators do not apply the authors' exclusion of single-coder senators. A k>=2 filter, or weighting by ratings_n, exists only in side probes and the O-weighted look.",
+   "Neither primary validator controls for party, although both panels' extremes are party-skewed (academic 80% D high / 80% R low). The panel pass/miss verdicts are effectively UNSTRATIFIED.",
+   "b5_gold_multitrait_validate averages insider and academic values into one target. The authors use the academic panel only for their Table 1, so averaging imports its stronger partisan sorting into the target.",
+   "Possible extraction loss. EXPECTED_COUNTS is 125 for academics, but the text shows about 126 rows, and Table A2 has a malformed '4..33' cell. The parse-failure branch at build_big5_senate_gold.py:56-61 silently skips rows, and its comment claims only headings reach it. The row-count difference is agent-counted and UNVERIFIED.",
+   "Scale anchors and the aggregation rule are not in the appendix. The code asserts a 1-7 panel mean (build_big5_senate_gold.py:62,82) as an inference.",
+   "The panel era is unstated. Current-roster overlap measures only rank agreement for senators who served in the appendix era."
+  ],
+  "flags": [
+   "Rule 'pooled coefficient over a known fault line': the panel-level E/A/O/N verdicts pool across party, and the appendix documents strong party skew at the extremes. Quote them with party strata or an UNSTRATIFIED label.",
+   "DE-062: the hypothesis that O passing only against academics is a party artefact is new agent analysis and stays UNVERIFIED until a second path reproduces it.",
+   "Gold-independence: once full-sample gold-fitted weights ship (b5_gold_multitrait_validate.py:4-7, consumed by b5_profile_basis.py:128), the appendix panels stop being an independent criterion for those composites. Only the OOF figures count as validation.",
+   "Any re-scoring with a k>=2 filter or a party partial is a new confirmatory look under single-look discipline and is not a free re-run."
+  ],
+  "paul_alignment": "Paul's position lists Mondak 'Personality on the Hill' only as 'on disk' under gold-panel validation, and says his notes do not reflect the system's single-look MISS record. That note is stale. The appendix has been the frozen external gold since the July psychometrics lanes (big5_senate_expert_gold.json; gold-set-validation.md names it as the Big Five anchor). The appendix supports how he wants the gold used: independent observer ratings as the criterion, as in Birkenmaier's validation framework. It adds two cautions his notes do not record. The authors drop single-coder senators, and both panels, especially the academics, are party-sorted at the extremes. Both cautions temper reading the panel 'passes' as clean validity, and they fit the psych-audit stance that validity claims need status labels.",
+  "related": [
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Item exists. Birkenmaier and Lechner 2025 is a text-based agency and communion measure; brain notes give prompting macro-F1 0.74-0.77. Paul highlighting codebook, Krippendorff alpha and macro-F1 is not found in the brain notes, so that part is unverified. Supplies a validation approach, not this appendix's criterion."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Item exists; ext describes Big Five measurement from floor speech text for US legislators, so the complement relation holds. Calling it the template for the lexical Big Five in Melange is not verified here."
+   },
+   {
+    "slug": "koutsoumpis-2024-kernel-truth-text",
+    "relation": "complements",
+    "why": "Item exists; ext describes Big Five and LIWC relations across 52 categories. Using it as a realistic convergence ceiling for these panels is the analyst's inference, not the paper's claim."
+   },
+   {
+    "slug": "lechner-2025-mapping-political-personality",
+    "relation": "complements",
+    "why": "Item exists; ext describes ideal and actual politician personality profiles, which supports the complement relation to observer-rated public-persona tables."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "byrne-2014-chokes-under-pressure",
+    "relation": "complements",
+    "why": "Expert ratings of US senators' traits, including N. Could test whether the system's N-slot measure tracks neuroticism, which Byrne's mechanism needs before transfer."
+   },
+   {
+    "slug": "celli-nd-twenty-years-personality",
+    "relation": "complements",
+    "why": "Existence confirmed. The survey does not cite it. The panel role is a Melange-side claim."
+   },
+   {
+    "slug": "amsalem-2018-effect-politicians-personality",
+    "relation": "complements",
+    "why": "Item title confirms expert evaluations of US senators' traits. These are an alternative to the low-reliability TIPI self-report (agreeableness alpha .15) that Amsalem depends on."
+   },
+   {
+    "slug": "rubio-2024-feasibility-data-analytics",
+    "relation": "complements",
+    "why": "Real item (title confirmed: expert evaluations of senators' traits). Analogous to the zero-acquaintance expert criterion; the paper itself does not mention it."
+   },
+   {
+    "slug": "soto-2017-next-five-inventory",
+    "relation": "complements",
+    "why": "Expert ratings of U.S. senators' traits, the kind of other-rater criterion whose convergence the BFI-2 self-peer figures help calibrate. Title confirmed."
+   },
+   {
+    "slug": "mairesse-2007-automatic-recognition-personality",
+    "relation": "complements",
+    "why": "Online appendix to expert evaluations of senators. The link to this paper is conceptual (observer or expert ratings); the appendix does not mention Mairesse 2007."
+   },
+   {
+    "slug": "cao-2024-language-models-personality",
+    "relation": "complements",
+    "why": "Expert evaluations of senators' traits (Personality on the Hill) are a perception measure of public figures, the construct Cao and Kosinski predict from names, so reputation and halo can enter both. Cao does not cite it; the link is the analyst's."
+   },
+   {
+    "slug": "peters-2024-language-models-infer",
+    "relation": "complements",
+    "why": "The appendix gives the Senate insider and academic observer panels used as the system criterion. Its text-count of academic rows (about 126) differs from the 125 in the gold-set note."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "simchon-2024-persuasive-effects-political",
+  "note": false,
+  "meta": {
+   "title": "The persuasive effects of political microtargeting in the age of generative artificial intelligence",
+   "authors": [
+    "Almog Simchon",
+    "Matthew Edwards",
+    "Stephan Lewandowsky"
+   ],
+   "year": "2024",
+   "venue": "PNAS Nexus, 2024, 3(2), pgae035 (Brief Report; advance access 29 January 2024)",
+   "doi": "10.1093/pnasnexus/pgae035",
+   "sha12s": [
+    "2c2abbe8bafc"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "The persuasive effects of political microtargeting in the age of generative artificial intelligence",
+   "authors": [
+    "Almog Simchon",
+    "Matthew Edwards",
+    "Stephan Lewandowsky"
+   ],
+   "year": "2024",
+   "venue": "PNAS Nexus, 2024, 3(2), pgae035 (Brief Report; advance access 29 January 2024)",
+   "doi": "10.1093/pnasnexus/pgae035",
+   "document_type": "Brief report; empirical; four online survey experiments with a UK Prolific sample",
+   "coverage": "Full text read in one pass (26,914 chars, under the 400,000 limit). Read front matter, abstract, significance statement, introduction, Results (study 1 and study 2), Discussion, Materials and methods, prompting strategy, open science statement, notes, acknowledgments, funding, author contributions, data availability and the full reference list. Page images not rendered. n_annots is 0 and annot_sha12s is empty, so no _annots file exists and paul_markup is empty (0 items, 0 dropped). No ext or rel override files existed. Supplementary material is cited but not in the text file, so supplementary results are reported only as the authors' claims. Metadata corrections: venue and DOI confirmed from the text header (the hint said inferred); title and authors confirmed. Lobbying, networks, path-finding, allocation and legislator content: absent. Elections and turnout: only via cited microtargeting turnout studies (refs 8 and 9) and the discussion of close elections. Text measurement: the openness-scoring model is cited (ref 13) but not described here. Internal inconsistencies flagged: sample sizes for studies 2a and 2b are swapped between Results and Methods versus the Fig 1 caption; reported t degrees of freedom (e.g. 26348 for study 1a with 440 participants rating 9 ads, 48173 for study 1b with 804 participants rating 10 ads) exceed the rating counts implied by the sample sizes, so the unit of analysis is unclear from the text.",
+   "research_question": "Does personality-congruent political messaging (ads matched to a reader's openness to experience) increase perceived persuasiveness, and can generative AI automate producing and validating such personalized ads at scale?",
+   "theory": "Message tailoring and personality-matching persuasion (matching to audience characteristics; cites a systematic review with r = 0.17 and Hirsh et al. 2012 personalized persuasion). No formal theory beyond this; the Big Five openness trait is the test case, and the paper frames the risk as a manipulation machine exploiting vulnerabilities.",
+   "data": "Study 1a: n = 440 UK Prolific participants (mean age 39.45), each rating 10 ads (only 9 distinct ads due to a design error). Study 1b: n = 804 (mean age 40.58), 10 ads. Ad corpus: 1,552 real political ads published on Facebook to UK users Dec 2019 to Dec 2021; 10 selected for study 1. Study 2a: n = 803 in Results and 804 in Methods (GPT-3 generated ads, 10 ad pairs, mean age 41.76 per Methods). Study 2b: n = 804 in Results and 803 in Methods (ChatGPT gpt-3.5-turbo, Feb 2023 version, 10 ad pairs, mean age 40.59 per Methods). Unit: participant-by-ad perceived persuasion rating, 1-5. Study period: 2023 fielding; ads from 2019-2021.",
+   "method": "Linear mixed model predicting perceived persuasion from the participant's openness score, the ad's openness score and the matching score Matching_ij = |z(Openness_i) - z(Openness_j)|, with random intercepts for ads and participants. Study 2 generates low- and high-openness rewrites of each ad with GPT-3 or ChatGPT using a prompt containing the openness definition, an instruction and the original ad; openness of each ad scored by a previously validated language model (ref 13). Generated pairs with maximal openness difference selected, then run through the study 1 pipeline. Algorithmic validation via t-tests on generated ad openness scores; a smaller human-rater validation is reported in the supplement. Llama 2 70B replication of the algorithmic validation reported in the supplement.",
+   "scope": "UK adults recruited via Prolific, mean age about 40, online survey, about 6 minutes; political-style Facebook-format ads; one trait (openness to experience) only; two LLMs (GPT-3 and gpt-3.5-turbo) with one generation per ad; 2023 data collection.",
+   "identification": "Study 2 randomly assigns each participant to the low or high openness version of each generated ad, so ad version is randomized within participant. Study 1 uses existing real ads and self-reported openness with no manipulation of matching; the matching effect there is observational across existing participant and ad scores.",
+   "key_findings": [
+    {
+     "finding": "Study 1a: larger personality mismatch lowers perceived persuasion (matching effect negative and significant), with real Facebook ads and 440 participants.",
+     "location": "Results, study 1, p.2",
+     "numbers": "b = -0.07, 95% CI (-0.09, -0.05), t(26348) = -7.40, p < 0.001"
+    },
+    {
+     "finding": "Study 1b: replication with 804 participants and the corrected 10-ad design shows the same negative matching effect.",
+     "location": "Results, study 1, p.2",
+     "numbers": "b = -0.08, 95% CI (-0.10, -0.07), t(48173) = -12.87, p < 0.001"
+    },
+    {
+     "finding": "Algorithmic validation: GPT-3 low- and high-openness rewrites differ in predicted openness in the expected direction, but the effect is small.",
+     "location": "Results, study 2 validation, p.2",
+     "numbers": "Study 2a: t(870) = 2.07, p = 0.039, Cohen's d = 0.07, 95% CI (0.00, 0.14)"
+    },
+    {
+     "finding": "Algorithmic validation: ChatGPT rewrites differ in predicted openness in the expected direction, with a larger effect than GPT-3.",
+     "location": "Results, study 2 validation, p.2",
+     "numbers": "Study 2b: t(995) = 16.01, p < 0.001, Cohen's d = 0.51, 95% CI (0.44, 0.57)"
+    },
+    {
+     "finding": "Study 2a (GPT-3-generated ads): matching effect narrowly fails conventional significance.",
+     "location": "Results, study 2a, p.2-3",
+     "numbers": "b = -0.01, 95% CI (-0.02, 0.00034), t(48173) = -1.91, p = 0.057"
+    },
+    {
+     "finding": "Study 2b (ChatGPT-generated ads): matching effect is significant; the authors say the more powerful model is what produced the significant effect.",
+     "location": "Results, study 2b, p.3",
+     "numbers": "b = -0.03, 95% CI (-0.04, -0.02), t(48233) = -4.25, p < 0.001"
+    },
+    {
+     "finding": "Authors state the effect sizes are rather small, and argue that small effects can become substantial at scale.",
+     "location": "Discussion, p.3",
+     "numbers": "Effect sizes described qualitatively; no single headline effect size given in the Discussion beyond the coefficients above"
+    },
+    {
+     "finding": "Simulation: out of 100,000 individuals exposed to personality-tailored messages, 2,490 would be persuaded (cutoff 3 on the 5-point scale), based on the median mismatch versus no mismatch change.",
+     "location": "Discussion, p.3",
+     "numbers": "2,490 per 100,000 at median-to-no-mismatch change; extrapolated to 11,405 per 100,000 from worst to best match"
+    },
+    {
+     "finding": "The authors report that the openness-scoring validation replicates with Meta's open-source Llama 2 70B, addressing the closed-source concern (supplementary material; not verifiable from the text file).",
+     "location": "Discussion, p.3",
+     "numbers": "Qualitative: similar conclusions reported; no numbers in main text"
+    },
+    {
+     "finding": "Generative tools have no built-in safeguard against microtargeted rephrasing, since it does not violate the OpenAI usage policy as the authors read it.",
+     "location": "Discussion, p.3",
+     "numbers": ""
+    }
+   ],
+   "measures": [
+    "Perceived persuasiveness: six items, adapted from Hirsh et al. 2012, on a 1-5 Likert scale, averaged per ad",
+    "Openness to experience (participant): BFI-2, 12 items, 1-5 Likert (studies 2a and 2b; study 1 also measured openness)",
+    "Openness score of each ad: predicted by a previously validated language model (ref 13)",
+    "Matching score: absolute difference between standardized participant and ad openness scores",
+    "Algorithmic validation: openness score difference between low and high versions of generated ads",
+    "Cutoff of 3 (midpoint of the 5-point scale) used in the simulation of persuaded individuals"
+   ],
+   "limitations": [
+    "Authors acknowledge the demonstrated effect sizes are rather small.",
+    "Study 1a used only nine distinct ads due to a design error; corrected in study 1b.",
+    "Study 2b was not preregistered; study 2a and study 1a were preregistered, but the preregistered binary ad classification was replaced by a continuous openness measure.",
+    "The GPT-3 matching effect (study 2a) did not reach conventional significance (p = 0.057).",
+    "Only one generation per ad was used; the authors acknowledge stochastic LLM outputs may vary, and argue the variation is likely inconsequential.",
+    "Perceived persuasiveness is self-reported rather than behavioral (no click-through or vote outcomes); the authors justify this as attitudinal endorsement.",
+    "Only the openness trait was tested; the authors note other traits and moral reframing may be effective but did not test them here.",
+    "ChatGPT model is closed source; the Llama 2 70B replication is only for algorithmic validation, and the human-rater validation is only in the supplement.",
+    "Sample sizes for studies 2a and 2b are inconsistent between Results and Methods and the Figure 1 caption.",
+    "Reported t degrees of freedom exceed the number of ratings implied by the sample sizes, so the unit of analysis is unclear from the text.",
+    "Participants are UK Prolific respondents, so generalizability to voters and to other countries or platforms is untested.",
+    "Simulated persuasion counts are extrapolations from a 5-point self-report cutoff, not observed behavior."
+   ],
+   "references_of_note": [
+    "Simchon A, Sutton A, Edwards M, Lewandowsky S. 2023. Online reading habits can reveal personality traits: towards detecting psychological microtargeting. PNAS Nexus (ref 13; source of the openness-scoring model)",
+    "Tappin BM et al. 2023. Quantifying the potential persuasive returns to political microtargeting. PNAS (ref 10)",
+    "Coppock A, Hill SJ, Vavreck L. 2020. The small effects of political advertising are small regardless of context, message, sender, or receiver. Science Advances (ref 7)",
+    "Haenschen K. 2023. The conditional effects of microtargeted Facebook advertisements on voter turnout. Political Behavior (ref 8)",
+    "Lavigne M. 2021. Strengthening ties: the influence of microtargeting on partisan attitudes and the vote. Party Politics (ref 9)",
+    "Hirsh JB, Kang SK, Bodenhausen GV. 2012. Personalized persuasion: tailoring persuasive appeals to recipients personality traits. Psychological Science (ref 19; source of the perceived-persuasion items)",
+    "Joyal-Desmarais K et al. 2022. Meta-analysis of 702 experimental tests of motivational message matching on persuasion. Psychological Bulletin (ref 11)",
+    "Matz SC et al. 2017. Psychological targeting as an effective approach to digital mass persuasion. PNAS (ref 12)",
+    "Kim T, Barasz K, John LK. 2018. Why am I seeing this ad? The effect of ad transparency on ad effectiveness. Journal of Consumer Research (ref 16)",
+    "Lorenz-Spreen P et al. 2021. Boosting people's ability to detect microtargeted advertising. Scientific Reports (ref 17)",
+    "Soto CJ, John OP. 2017. The next big five inventory (BFI-2). Journal of Personality and Social Psychology (ref 14)"
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "personalized political ads tailored to individuals personalities are more effective than nonpersonalized ads",
+     "location": "Abstract, p.1"
+    },
+    {
+     "quote": "the larger the deviance from matching, the less persuasive the message was rated",
+     "location": "Results, study 1, p.2"
+    },
+    {
+     "quote": "small effect sizes can turn substantial at scale",
+     "location": "Discussion, p.3"
+    }
+   ]
+  },
+  "summary_md": "Simchon, Edwards and Lewandowsky (PNAS Nexus 2024, brief report) test whether matching a political ad's style to a reader's openness to experience raises perceived persuasiveness, and whether LLMs can mass-produce such matched ads. Four UK Prolific survey experiments (n = 440, 804, 803, 804) score each ad with a previously validated reader-side openness model and regress 1-5 perceived persuasion on person openness, ad openness and the mismatch |z(O_person) - z(O_ad)| in a mixed model with random intercepts for ads and participants. Mismatch lowers ratings with real Facebook ads (b = -0.07 and -0.08 per SD of mismatch) and with ChatGPT rewrites (b = -0.03, p < 0.001); GPT-3 rewrites miss significance (b = -0.01, p = 0.057). The authors call the effects small and convert them, by simulation on a midpoint cutoff, into 2,490 extra persuaded per 100,000 (median mismatch to none). The outcome is self-reported perceived persuasion, not attitude change or behaviour; only one trait is tested; reported t degrees of freedom do not square with the sample sizes, and study 2a/2b sample sizes are swapped between text and figure. For Paul's systems the paper is mostly a design contrast. Melange's receptivity layer treats Big Five traits as person-level main effects on susceptibility and seed probability, with no message-by-trait term, while this paper locates the effect in the interaction, above and beyond person openness. That is a modelling gap, not a recommendation: the population is the UK public rating ads, not legislators meeting lobbyists, the effects are small, and Melange's text-derived openness is its weakest trait. The paper's openness score also measures the appeal of text to open readers, a different construct from the author-trait openness Melange extracts from floor speech.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.receptivity-layer",
+    "relation": "qualifies",
+    "paper_claim": "Persuasion depends on the fit between message style and recipient openness, above and beyond the recipient's own openness: mismatch coefficient b = -0.07 (study 1a, n = 440) and -0.08 (study 1b, n = 804) per SD of |z(O_person) - z(O_ad)| on a 1-5 perceived-persuasion scale, b = -0.03 for ChatGPT-tailored ads (n = 804), with person and ad openness held as separate predictors.",
+    "paper_location": "Results, study 1 and study 2b, p.2-3; Fig. 1",
+    "system_side": "The receptivity layer maps traits to person-level multipliers only: susc_trait = .40A + .30N - .20C - .10E, susc_mult and edge_mult as affine gains of that one scalar, and on the lexical basis seed_prob = clip(0.60 + .10A + .06O + .04E, 0.30, 0.90). The default basis is behavioral (RECEPT_TRAITS defaults to behavioral), so lexical O does not enter seed_prob at all by default. No term varies with the content or framing of the ask; receptivity is message-invariant.",
+    "code_ref": "fec/members/receptivity_layer.py:65; fec/members/receptivity_layer.py:189; fec/members/receptivity_layer.py:210-216",
+    "transfer_conditions": "Holds only if trait-message fit operates for legislators receiving lobbying asks as it does for UK Prolific adults rating Facebook ads; the outcome is self-reported perceived persuasion, not a vote or cosponsorship; effects are small (simulated 2,490 per 100,000 at a midpoint cutoff). Any matching term would need a message-side trait score Melange does not compute, and would stay UNVERIFIED until tested against the prospective H1/H2 contract.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Receptivity layer (susceptibility, incentive, prospect domain, seed probability)|Receptivity layer (susceptibility, incentive, prospect domain, seed probability)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "qualifies",
+    "paper_claim": "The ad openness score comes from a language model trained to predict how attractive a text is to readers high in openness (Simchon et al. 2023, ref 13), not who wrote it; prompted ChatGPT rewrites shift that score by Cohen's d = 0.51 and GPT-3 rewrites by only d = 0.07, so the style can be produced on demand.",
+    "paper_location": "Results, study 1 and study 2 validation, p.2",
+    "system_side": "Melange scores author openness from floor speech and interview text with a closed-vocabulary linear map (O weights sixltr .30, insight .25, article .20, i -.15, certain -.10), refit to RKH targets. Held-out CV vs RKH for O is .214, the weakest of the five traits, and O is checked against an expected negative party sign.",
+    "code_ref": "fec/members/big5_traits.py:184; fec/members/big5_traits.py:276",
+    "transfer_conditions": "The paper shows openness-styled text is easy to generate on demand (d = 0.51 with a simple prompt), which supports the worry that legislators' public text reflects staff and communications strategy rather than author trait; it does not validate author-side lexical O in either direction. Applies to Melange only as a construct-validity caution for O on prepared speech.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "terrier-canvass.untapped-potential",
+    "relation": "context",
+    "paper_claim": "Personality-matched messaging produces small attitudinal increments (b = -0.03 to -0.08 per SD of mismatch on a 1-5 self-report), which the authors translate to 2,490 to 11,405 extra persuaded per 100,000 under a midpoint cutoff, with no behavioural outcome.",
+    "paper_location": "Discussion, p.3",
+    "system_side": "Untapped potential values persuasion as (1 - |2s - 1|) x t, a function of the voter's support position and turnout only; it is message-invariant and uses no personality data.",
+    "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:9-10",
+    "transfer_conditions": "Only relevant if Terrier ever tailors canvass scripts by inferred voter traits; the paper's effects are on perceived persuasion of ads in a UK online panel, not doorstep vote choice, so it does not argue for changing the potential formula.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/terrier-canvass#Untapped potential|Untapped potential]]",
+    "system": "terrier-canvass"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "No message-side model anywhere in the receptivity layer: susceptibility and seed probability are person-level only, so the system cannot represent the trait-by-message fit this paper identifies as the active ingredient.",
+   "Under the default behavioral basis, text-derived openness does not enter seed_prob, so any openness-based tailoring idea would have no live trait input to attach to.",
+   "Melange's author-side lexical openness (CV .214 vs RKH) is not distinguished from reader-appeal openness of text, a construct the paper's scoring model measures; prepared floor text may carry staff-crafted appeal style rather than member trait."
+  ],
+  "flags": [
+   "Paper's own reporting inconsistencies: t degrees of freedom (26,348 for 440 participants x 9 ads; 48,173 for 804 x 10) exceed the rating counts implied by the samples, and study 2a/2b sample sizes are swapped between Methods and the Fig. 1 caption; quote the coefficients with this caveat.",
+   "Outcome is self-reported perceived persuasion; the 2,490 per 100,000 figure is a simulated extrapolation on a midpoint cutoff (window: 2023 fielding, UK Prolific adults; denominator: 100,000 simulated exposures), not observed persuasion.",
+   "Any matching term added to the receptivity layer would be new analysis and stays UNVERIFIED until a second path reproduces it (DE-062); it would also be a rank-moving recalibration that is Paul's call.",
+   "No conflict with the barred SNA proposals, D-021 or D-025: the paper makes no network, edge-weight or LDA claims."
+  ],
+  "paul_alignment": "Paul has no annotated-bibliography entry and no markup for this work (0 annotations), so there is no takeaway of his to test. His receptivity-layer position (traits adjust response to pressure) treats traits as person-level modifiers, as the code does. This paper qualifies that: its trait effect lives in message-recipient fit. It does not justify a matching term: public ad ratings, small effects, and Melange's weakest trait (O).",
+  "related": [
+   {
+    "slug": "tappin-2023-quantifying-potential-persuasive",
+    "relation": "cites",
+    "why": "Cited as ref 10 for microtargeting working even on a single attribute; Tappin measures persuasive returns to targeting with real attitude outcomes, a stronger test than this paper's perceived-persuasion ratings."
+   },
+   {
+    "slug": "palm-2025-influence-personality-traits",
+    "relation": "complements",
+    "why": "A systematic review of personality as a moderator of persuasion strategies; it places this paper's openness-matching result within the wider trait-by-message literature."
+   },
+   {
+    "slug": "madsen-2017-strategic-advantages-micro",
+    "relation": "complements",
+    "why": "An agent-based model of why microtargeted campaigning pays at scale; it is the theoretical counterpart to this paper's argument that small per-person effects add up across 100,000 exposures."
+   },
+   {
+    "slug": "byrne-2014-chokes-under-pressure",
+    "relation": "complements",
+    "why": "Byrne supplies the person-level trait-to-susceptibility composite in Melange's receptivity layer; Simchon shows a message-by-trait interaction that a main-effects composite cannot capture."
+   },
+   {
+    "slug": "azucar-2017-predicting-personality-traits",
+    "relation": "complements",
+    "why": "A meta-analysis of inferring Big Five traits from digital footprints, the inference step this paper's manipulation machine assumes on the recipient side."
+   },
+   {
+    "slug": "koutsoumpis-2024-kernel-truth-text",
+    "relation": "complements",
+    "why": "A meta-analysis of LIWC and Big Five links that bounds how much openness signal closed-vocabulary text carries, relevant to both this paper's text scoring and Melange's lexical O."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "broockman-2026-should-moving-middle",
+    "relation": "complements",
+    "why": "It tests microtargeted persuasion with generative AI. This paper explains why tailoring by issue should matter: cross-pressured voters respond with opposite signs on different issues."
+   },
+   {
+    "slug": "kalla-2023-which-narrative-strategies",
+    "relation": "complements",
+    "why": "A microtargeting persuasion study. It is a contrast to interpersonal narrative persuasion when deciding whether Terrier's persuade term should model the message or only the target."
+   },
+   {
+    "slug": "marrero-2022-evaluating-voice-samples",
+    "relation": "complements",
+    "why": "Cited with Marrero in Addendum 1 as the payoff argument, conditioned on the voice pilot; the framing is the audio prereg's, not the paper's."
+   },
+   {
+    "slug": "cagala-2021-optimal-targeting-fundraising",
+    "relation": "complements",
+    "why": "Item file title matches Simchon et al. 2024 on persuasive effects of political microtargeting; it parallels the policy-tree vs all-gift comparison in persuasion."
+   },
+   {
+    "slug": "celli-nd-twenty-years-personality",
+    "relation": "complements",
+    "why": "Existence confirmed. Not cited in the survey; complement claim unverified."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "dietrich-2019-pitch-perfect-vocal",
+  "note": false,
+  "meta": {
+   "title": "Pitch Perfect: Vocal Pitch and the Emotional Intensity of Congressional Speech",
+   "authors": [
+    "Bryce J. Dietrich (University of Iowa)",
+    "Matthew Hayes (Rice University)",
+    "Diana Z. O'Brien (Rice University)"
+   ],
+   "year": "2019",
+   "venue": "American Political Science Review 113(4): 941-962 (received Oct 21, 2017; accepted July 1, 2019; published online Aug 23, 2019)",
+   "doi": "10.1017/S0003055419000467",
+   "sha12s": [
+    "4f03c5875253"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "Pitch Perfect: Vocal Pitch and the Emotional Intensity of Congressional Speech",
+   "authors": [
+    "Bryce J. Dietrich (University of Iowa)",
+    "Matthew Hayes (Rice University)",
+    "Diana Z. O'Brien (Rice University)"
+   ],
+   "year": "2019",
+   "venue": "American Political Science Review 113(4): 941-962 (received Oct 21, 2017; accepted July 1, 2019; published online Aug 23, 2019)",
+   "doi": "10.1017/S0003055419000467",
+   "document_type": "Journal article (empirical; includes Supplemental Information referenced but not in the text file)",
+   "coverage": "Read the full extracted text (2,898 lines, printed pages 941-962, including all tables, footnotes 1-33 and the reference list) in six chunks; nothing skipped. Metadata hint confirmed from the text (title, authors, APSR 113(4), pp. 941-962, DOI all match). Paul's markup: no markup files were among the input set (\"(none)\"), so paul_markup is empty and no highlights, underlines or sticky notes were read. Plain-text extraction drops figure images, so Figures 1-3 values come from the printed notes and prose. Table 3 group averages do not extract cleanly (Panel B pitch-difference column is garbled), so only the t-tests and text figures are relied on. The paper contains no lobbying, network, path-finding, allocation or vote-share-of-election analysis; the only election-related material is the literature review on voter responses to candidate pitch.",
+   "research_question": "Do small within-speaker deviations in vocal pitch (mean F0 relative to a speaker's own baseline) measure legislators' emotional intensity on an issue? Test case: do female House members speak with higher-than-baseline pitch when referencing women, compared with (a) male MCs on the same topic and (b) their own speech on other topics? Secondary questions: does pitch track issue commitments (women's interest-group scores; party-owned issues), and do emotionally intense female speeches about women relate to male MCs' subsequent speech and voting (p. 941-942, 944, 951)?",
+   "theory": "Emotional arousal tightens the vocal folds and raises pitch (Puts, Gaulin and Verdolini 2006; Owren and Bachorowski 2007; Mauss and Robinson 2009) (p. 942). Pitch is a measure of arousal/intensity, not valence (fn 1). Because pitch is hard to control, it sits low on the \"leakage hierarchy\" (Zuckerman and Driver 1985; Ekman et al. 1991; Kraut 1978), so it is a less strategic signal than topic choice, word choice or speech length (p. 942-944). Descriptive representation theory: female legislators have experience-based commitment to women's concerns (Reingold 1992; Mansbridge 1999), so their intensity should rise when speaking about women (p. 944-945). Signalling extension: when many women speak intensely about women, male colleagues attend and respond (Boyd, Epstein and Martin 2010; Mendelberg, Karpowitz and Oliphant 2014), with a possible backlash alternative (Kathlene 1994; Krook 2015) (p. 951, 957). Partisan extension: parties own issues and partisans speak with more intensity on owned issues (Petrocik 1996; Petrocik, Benoit and Hansen 2003) (p. 949-951).",
+   "data": "Source: HouseLive (Office of the Clerk) video, audio and closed-caption text for all US House floor debates, 6,432 hours from 863 debates, 2009-01-06 to 2014-08-04 (p. 944). Unit of analysis: individual floor speech of at least 50 words; N = 74,158 speeches (p. 944). Speaker sex from GovTrack; race, seniority, DW-NOMINATE and party from GovTrack/Voteview; committee chair from Stewart and Woon (2016) (p. 946). Table 1 model N: 74,151 speeches and 619 MCs (Models 1.1-1.2); 71,198 speeches and 613 MCs (Models 1.3-1.4). Female-speech counts: 13,484 speeches by women (2,403 mention women, 17.82%); 60,667 by men (5,507 mention women, 9.08%) (p. 946). Women's own speech, male-on-female-day analysis: 50,235 speeches, 509 men (Table 5). Male pitch analysis: 49,914 speeches, 506 men (Table 6). Voting analysis: 21,920 observations, 485 men (Table 7). Interest groups: 24 women's groups via Project Vote Smart, averaged per MC (p. 948). Women's bills: Volden, Wiseman and Wittmer (2018); CQ \"Bills to Watch\" count (p. 952). Closed captions reported ~95% accurate by the vendor; authors' transcription of 100 speeches matched (fn 11).",
+   "method": "Pitch: mean fundamental frequency per speech extracted with Praat (Boersma 1993 algorithm; male floor 75 Hz, ceiling 300 Hz; female range 100-500 Hz), then z-scored within speaker so units are SD above/below each MC's baseline (p. 945-946; alternative Praat windows in SI S22-S30). Topic: binary indicator for any term in Pearson and Dancey (2011b) women dictionary; alternatives are word-share and a 30-topic structural topic model (STM) (p. 945-946). Models: multilevel logit for \"Women mentioned\" (Models 1.1-1.2, 5.1-5.2) and multilevel linear regression for standardized pitch with random intercepts per MC (Models 1.3-1.4, 4.x, 6.x); outcome models for Table 5, 6, 7 are multilevel logit/linear with day-level Female Speeches, Female Pitch and interactions (p. 946-956). Descriptive comparisons: Welch-type t-tests across speakers and groups (Table 2; Table 3 top-25 vs bottom-25 female MCs by pitch difference; t = 2.59, df = 48). Partisan issue test: Table 4 interaction of party with party-owned STM topics. Male voting outcome: proportion of votes cast with female speakers, standardized against each male MC's prior co-voting rate (p. 955-956). Predicted values from Models 5.2, 6.1 and 7.2 at female pitch +/-2 SD (p. 953-956).",
+   "identification": "None causal. The paper states the design is observational and that \"legislators' speeches on women simply cannot be randomly assigned\" (p. 957). Within-speaker z-scoring removes stable speaker-level pitch differences (including sex differences in baseline pitch), random intercepts absorb unobserved MC heterogeneity, and a rich control set is used (race, seniority, chair, DW-NOMINATE, party, one-minute speech, duration, election year). Placebo tests and dyadic models are in SI S55-S62. Male-response models restrict to men who spoke on the same legislative day as women's speeches and add agenda controls (Women's bills, CQ bills). The volume-times-pitch interaction is the key test. Robustness: results unchanged under alternative DV operationalizations (word share, STM) (p. 946), re-estimated without observations beyond +/-2 SD (fn 28, p. 953), and different Praat pitch windows (p. 945-946).",
+   "scope": "Population: all US House floor speeches of at least 50 words during the 111th-113th Congresses (Jan 2009 to Aug 2014), roughly 77-81 women in the House in that span (p. 956). Institution: US House floor only (not the Senate, committees, or state legislatures, which the authors name as future audio sources, p. 958). Era: 2009-2014. Speeches are natural floor speech, not acted or induced emotion (p. 944). The authors explicitly do not claim general causal effects of women's speech on male behavior (p. 957).",
+   "measures": [
+    "Standardized mean F0 (vocal pitch) per speech, in SD above/below speaker baseline (Praat; Titze 2000 F0 framework)",
+    "Raw mean F0 in Hz (Table 2 and footnote 15)",
+    "Women-mention dictionary indicator (Pearson and Dancey 2011b), with word-share and STM alternatives",
+    "Female (GovTrack sex)",
+    "Party, DW-NOMINATE, seniority, committee chair, race, one-minute speech, speech duration, election year",
+    "Pitch difference: mean Hz when mentioning women minus not mentioning (Table 3)",
+    "Women's interest-group scores: average of 24 Project Vote Smart scorecards",
+    "Women's bills introduced (Volden, Wiseman and Wittmer 2018) and CQ Bills to Watch (count per legislative day)",
+    "Party-owned issue topics from a 30-topic STM (9 Democratic-owned, 9 Republican-owned categories)",
+    "Female Speeches (count per day of women's speeches mentioning women) and Female Pitch (their average standardized pitch)",
+    "Male co-voting with female speakers, standardized against each male MC's prior co-voting (Voteview votes)"
+   ],
+   "key_findings": [
+    {
+     "finding": "Women are more likely than men to reference women in floor speeches.",
+     "location": "p. 946, Results; Table 1 Models 1.1-1.2",
+     "numbers": "17.82% of female speeches (2,403/13,484) vs 9.08% of male speeches (5,507/60,667); predicted probability 0.17 vs 0.08 (2.13 times). Holds with controls (Model 1.2)."
+    },
+    {
+     "finding": "Female MCs speak at higher-than-baseline pitch when referencing women, and male MCs do not.",
+     "location": "p. 946-947, Results; Table 1 Models 1.3-1.4",
+     "numbers": "Female x 'Women mentioned' = 0.090 SD (SE 0.027, p<0.01) without controls and 0.112 SD (SE 0.027, p<0.01) with controls. Female MCs: +0.09 SD when referencing women, about five times the male change of +0.02 SD. Male pitch unchanged (t = 0.02, df 58,281). Democratic women t = 3.12; Republican women t = 2.81."
+    },
+    {
+     "finding": "Raw pitch levels: female MCs' pitch rises on speeches mentioning women; male pitch is flat.",
+     "location": "p. 948, Table 2",
+     "numbers": "Female MCs: 206.01 Hz when mentioning women vs 203.27 Hz otherwise. Male MCs: 151.50 Hz vs 151.49 Hz. Republican women 207.02 Hz vs Democratic women 205.68 Hz when mentioning women (not significantly different, fn 15)."
+    },
+    {
+     "finding": "Among female MCs, the most emotionally intense on women's issues have higher women's interest-group scores.",
+     "location": "p. 949, Table 3 and text",
+     "numbers": "Top 25 vs bottom 25 female MCs by pitch difference: difference in Vote Smart scores t = 2.59, df = 48, p < 0.02. Democratic women only: t = 2.83, df = 39, p <= 0.01. Republican women: t = 0.14, df = 7, not significant (small N). Table 3 group averages are not reliably extracted and are not relied on."
+    },
+    {
+     "finding": "Partisans speak with higher pitch on their party-owned issues and lower pitch on the opposing party's issues.",
+     "location": "p. 949-952, Table 4 and text",
+     "numbers": "Democrat x Democratic-owned issues = 0.328 (Model 4.1) and 0.288 (Model 4.2), both p<0.01. Republican x Republican-owned issues = 0.380 (Model 4.3) and 0.355 (Model 4.4), both p<0.01. Democrats use 9.02% more words on Democratic-owned topics; Republicans use 17.21% more on Republican-owned topics (t = 18.43 and 30.51). Topic shares capture under 8% of words per speech on average."
+    },
+    {
+     "finding": "Male MCs mention women more often on days with more female speeches on women, and more so when female pitch is high in the interaction model.",
+     "location": "p. 953, Table 5 and Figure 1",
+     "numbers": "Table 5 Model 5.2: Female speeches = 0.060 (SE 0.003); Female speeches x Female pitch = 0.011 (p<0.05). Figure 1 (Female pitch +2 SD): going from 0 to 43 female speeches raises P(male mention of women) from 0.05 to 0.56. From 6 to 11 speeches (1 SD either side of mean): 0.07 to 0.10. Model 5.1 interaction is not significant at 0.05."
+    },
+    {
+     "finding": "Male MCs' pitch on women rises with the volume and intensity of female speeches on women.",
+     "location": "p. 954, Table 6 and Figure 2",
+     "numbers": "Three-way interaction (Women mentioned x Female speeches x Female pitch) = 0.016 (SE 0.005, p<0.01). At Female pitch +2 SD, raising female speeches from 6 to 11 moves male pitch on women from 0.17 SD to 0.26 SD; from 0 to 43 moves it from 0.12 SD to 1.79 SD."
+    },
+    {
+     "finding": "Male co-voting with female speakers rises with the volume and intensity of women's speeches; no backlash detected.",
+     "location": "p. 956-958, Table 7 and Figure 3",
+     "numbers": "Female speeches x Female pitch = 0.015 (Model 7.1, p<0.01) and 0.012 (Model 7.2, SE 0.002, p<0.01). At Female pitch +2 SD, the standardized co-voting rate rises from -0.23 SD to +0.53 SD as female speeches go from 0 to 43 (p. 956). Authors read this as no evidence of male backlash (p. 957)."
+    },
+    {
+     "finding": "The maximum observed volume of female speeches on women is large relative to the chamber.",
+     "location": "p. 956",
+     "numbers": "43 female speeches on women on one day = 56% of the 77-81 women in the 111th-113th Congresses."
+    },
+    {
+     "finding": "Results are robust to alternative outcome measures and to trimming extreme pitch values.",
+     "location": "p. 946 (alternative DVs); fn 28, p. 953 (+/-2 SD trim); SI S30-S36, S66-S69",
+     "numbers": "Word-share and STM operationalizations of women-topic give identical substantive results. Trimming pitch beyond +/-2 SD is 'generally robust' (no numbers reported in text)."
+    }
+   ],
+   "limitations": [
+    "Observational design; the authors say they do not claim causal effects of female MCs' intense speech on male behavior, and that alternative explanations cannot be ruled out (p. 957).",
+    "Male response is not zero at low female participation: at few female speeches the effect is absent or negative, so the signalling story is conditional on volume (p. 957).",
+    "Backlash is examined only with one voting measure and cannot be ruled out in other outcomes; votes may come before or after speeches because the data have no time stamps (fn 31, p. 955-956).",
+    "Pitch-based intensity is an arousal measure, not valence; a single pitch number cannot say whether a speaker is enthusiastic or angry (fn 1, p. 942).",
+    "Mean F0 per speech is a coarse measure; other factors (question intonation, duration) also move mean pitch, though controls are included (fn 8, p. 945; p. 958-959).",
+    "Women-topic is a coarse dictionary indicator; alternatives used as robustness checks (p. 945-946).",
+    "Effect size is small: 0.09 SD for female MCs on women's topics, which the authors concede is 'slight' and likely below conscious control (p. 947).",
+    "Confidence and expertise could explain some intensity; the paper does not separate them, and male MCs with the most women's bills did not show the same pattern (fn 19, p. 948).",
+    "Republican-owned and Republican-women effects are weaker or not significant in some specifications, partly due to small N of Republican women (p. 948-949; fn 17; t = 0.14 with df = 7 for Republican women in Table 3 comparison).",
+    "Male MCs' floor attendance is unobserved; the sample uses all male MCs who spoke the same day as a proxy for exposure (fn 24, p. 953).",
+    "Closed-caption text is ~95% accurate per the vendor (fn 11, p. 945).",
+    "Table 3 group averages do not extract cleanly from the PDF text; only the reported t-tests are used here.",
+    "Single chamber (US House) and single era (2009-2014); generalization to other chambers or periods is untested (p. 958-959)."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Grimmer and Stewart 2013, 'Text as Data' (Political Analysis) - text-measurement framework the paper positions audio against (p. 941).",
+    "Laver, Benoit and Garry 2003, APSR - word-as-data position extraction (text measurement) (p. 941).",
+    "Hopkins and King 2010, AJPS - automated nonparametric content analysis (text measurement) (p. 941).",
+    "Quinn et al. 2010, AJPS - political attention from floor speech with minimal assumptions (legislative speech measurement) (p. 941).",
+    "Proksch and Slapin 2012, AJPS - institutional foundations of legislative speech (speech and institutions) (p. 941).",
+    "Diermeier et al. 2012, BJPolS - language and ideology in Congress (ideology from speech) (p. 942).",
+    "Poole and Rosenthal 1985, 2001 (NOMINATE); Clinton, Jackman and Rivers 2004 (roll call analysis) - ideology measures used as controls (p. 942, 946).",
+    "Mayhew 1974 - position-taking on the floor (p. 942).",
+    "Maltzman and Sigelman 1996, JOP - floor time and institutionally disadvantaged members (control rationale) (p. 946).",
+    "Pearson and Dancey 2011a (House speech participation) and 2011b (women's dictionary used here) (p. 944, 945).",
+    "Volden, Wiseman and Wittmer 2018, Political Science Research and Methods - women's issues bills (p. 952).",
+    "Petrocik 1996, AJPS; Petrocik, Benoit and Hansen 2003, PSQ - issue ownership in elections (basis for party-owned issue test) (p. 949).",
+    "Goggin and Theodoridis 2017, Political Behavior - public perceptions of disputed issue ownership (p. 949).",
+    "Klofstad 2016, Political Psychology - candidate voice pitch influences election outcomes (only election-related paper on pitch) (p. 942).",
+    "Anderson and Klofstad 2012; Klofstad, Anderson and Peters 2012; Klofstad, Anderson and Nowicki 2015 - voice pitch and leadership or candidate evaluation (p. 942).",
+    "Boyd, Epstein and Martin 2010, AJPS - sex effects on judging, male judges respond to women colleagues (signal mechanism) (p. 951).",
+    "Mendelberg, Karpowitz and Oliphant 2014, Perspectives on Politics; Karpowitz and Mendelberg 2014 - gender and deliberation (signal mechanism) (p. 951, 957).",
+    "Kathlene 1994, APSR - gender and committee power, backlash mechanism (p. 957).",
+    "Krook 2015 - critical mass and backlash (p. 957).",
+    "Dietrich, Enos and Sen 2019, Political Analysis - standardizing pitch within speaker; emotional arousal predicts Supreme Court votes (method) (p. 945).",
+    "Dietrich, O'Brien and Yao 2019, MPSA working paper - word-level vocal inflections (future work) (p. 952, 959).",
+    "Zuckerman and Driver 1985; Ekman et al. 1991; Kraut 1978 - leakage hierarchy and controllability of voice (theory) (p. 943).",
+    "Reingold 1992, LSQ; Mansbridge 1999, JOP; Swers 2002 - women's representation and descriptive representation (theory) (p. 944).",
+    "Snyder and Groseclose 2000, AJPS - party influence in roll calls (party confound) (p. 942).",
+    "Schiller 1995, AJPS - bill sponsorship and staff/seniority confounds (p. 942).",
+    "Stewart and Woon 2016 (committee assignments); Voteview; GovTrack; Project Vote Smart - data sources (p. 946, 948)."
+   ],
+   "short_quotes": [
+    {
+     "quote": "small deviations above or below a speaker's baseline vocal pitch",
+     "location": "p. 941, Abstract/Introduction (lines 57-58)"
+    },
+    {
+     "quote": "These shifts in vocal pitch are subtle and difficult for the speaker to control.",
+     "location": "p. 942, Vocal Pitch as a Measure of Emotional Intensity"
+    },
+    {
+     "quote": "Vocal pitch, on the other hand, typically lies beyond the control of the individual.",
+     "location": "p. 943, Emotional Intensity in Legislators' Speech"
+    }
+   ]
+  },
+  "summary_md": "Dietrich, Hayes and O'Brien use 74,158 US House floor speeches from 2009 to 2014, each at least 50 words, taken from Clerk HouseLive audio. They measure each speech's mean vocal pitch (F0, extracted with Praat) and z-score it against the speaker's own baseline. They argue this is a hard-to-fake measure of arousal. It tracks intensity, not valence (footnote 1). Female members speak about 0.09 to 0.11 SD above their baseline when they mention women, while male members do not change (Table 1). Partisans speak about 0.29 to 0.38 SD higher on topics their party owns (Table 4). On days when many women speak with high pitch about women, male members mention women more, raise their own pitch on the topic, and co-vote more with the women speakers (Tables 5-7). These response results are observational, and the authors say they are not causal (p. 957).\n\nThe system has already built this method. `fec/members/b5_audio_descriptors_candidate.py:209-254` cites the paper by name and computes `pitch_deviation_from_speaker_baseline_z` and `topic_emotional_intensity`. The two differ in three ways. The paper relies on a cross-speaker contrast (female versus male, times topic) and roughly 120 speeches per speaker. The system reports a per-speaker topic mean with no comparison group. Its floors are 5 speech units per member, 2 topics, and 2 units per topic (`fec/audio_rules.py:20-22`). Effects of 0.1 to 0.4 SD cannot be detected at those floors. With only two topics, the sign of each topic's deviation is fixed by construction. The paper also measures in one floor venue with one channel. The system's baseline is pooled across interview programs and channels. The paper supports the system's existing rules: absolute F0 stays out of personality scores, and audio stays display-only. It also points to a better identity source: Clerk floor video, where the chamber has already identified the speaker.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-audio-speech.prosody-and-disfluency",
+    "relation": "method-source",
+    "paper_claim": "Intensity is each speech's mean F0 z-scored against the speaker's own baseline, in SD units. Table 1 pitch models (N1 = 74,151 speeches, N2 = 619 members, 2009-2014 House floor): female x 'women' mentioned = 0.090 (SE 0.027) without controls and 0.112 (SE 0.027) with controls. About 120 speeches per member is only the average (74,151 / 619); the paper states no required sample size. The authors call the raw magnitude 'slight enough'.",
+    "paper_location": "p. 945-947, Table 1 (pitch models); p. 947",
+    "system_side": "Candidate descriptor converts eGeMAPS semitones to Hz (code comment cites Dietrich, Hayes and O'Brien at line 210), z-scores each speech unit against the member mean and SD inside _speaker_pitch_profile, and reports topic_emotional_intensity as mean deviation per transcript topic. Floors: 5 speech units per member, 2 distinct topics, 2 units per reported topic. No comparison group. Default status CANDIDATE_CONSUMED_BY_NOTHING_AWAITING_USER_RATIFICATION (line 273). The brain's count of 0 accepted v2 clips was not checked.",
+    "code_ref": "fec/members/b5_audio_descriptors_candidate.py:209-254 (comment line 210; standardization and topic summary); fec/audio_rules.py:20-22 (floors 5 / 2 / 2)",
+    "transfer_conditions": "The within-speaker z transform transfers. The inference does not: the paper identifies effects from a cross-speaker contrast over 74,151 speeches, while the system computes one member's topic mean from 2-5 units. Assuming independent units, the SE of a 2-5 unit topic mean is about 0.45-0.7 SD (arithmetic; no minimum detectable effect was computed). The paper's effects are 0.09-0.38 SD.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Table 1 numbers, the standardization and the floors are confirmed in code and text. Softened: the paper does not say a member needs about 120 speeches; that figure is an average. The power statement is arithmetic under an independence assumption, not a computed detection threshold.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-audio-speech#eGeMAPS prosody and Whisper disfluency rates|eGeMAPS prosody and Whisper disfluency rates]]",
+    "system": "melange-audio-speech"
+   },
+   {
+    "component_id": "melange-audio-speech.prosody-and-disfluency",
+    "relation": "qualifies",
+    "paper_claim": "Pitch measures arousal, not valence (footnote 1, p. 942). The paper adds controls for speech duration, a one-minute dummy and an election-year dummy (p. 946, Table 1). It acknowledges that question intonation also moves mean F0 (footnote 8, p. 945) but does not control for it, arguing mean pitch remains reliable. The baseline is one venue: the House floor via HouseLive.",
+    "paper_location": "fn 1 p. 942; fn 8 p. 945; p. 946 controls; Table 1",
+    "system_side": "The baseline pools all accepted units for a member across at least 2 programs. Channel (studio, remote, telephone) is recorded in the brain as uncontrolled. Neither the per-member z nor the Washington Journal subject_effects centering has a duration, question or speech-type term. The WJ table on the desk shows topic shifts from as few as 2 reactions. The brain channel note was not checked.",
+    "code_ref": "fec/members/b5_audio_descriptors_candidate.py (baseline and z, roughly lines 229-249); fec/speech/build_descriptive_speech.py:2491-2531 (member centering) and :2521 (minimum 2 reactions); fec/surfaces/templates/make_member_desk_00.tpl:1280 (WJ reactions display)",
+    "transfer_conditions": "Applies wherever the system compares a member's pitch across topics. The paper's controls cover duration and one-minute speeches but not question intonation, so the system's gap is wider than the analyst stated. Program or channel offsets can exceed the paper's 0.1 SD effects, so a topic concentrated on one program picks up that offset. 'Relative emotional intensity' must not be read as anger or enthusiasm.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Softened: the paper does not add question intonation as a control; it names it as a confound it does not model. Duration and one-minute controls are real. Code gaps confirmed: no duration, question or speech-type term in either centering, and the 2-reaction minimum is in place. The channel note is brain-sourced and not checked.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-audio-speech#eGeMAPS prosody and Whisper disfluency rates|eGeMAPS prosody and Whisper disfluency rates]]",
+    "system": "melange-audio-speech"
+   },
+   {
+    "component_id": "melange-audio-speech.prosody-and-disfluency",
+    "relation": "supports",
+    "paper_claim": "Raw F0 differs mainly by sex: Table 2 gives female means of about 203-206 Hz and male means of about 151 Hz. Deviation from each speaker's own baseline removes stable between-speaker level by construction. The authors read the measure as an emotional disposition toward an issue, and say the slight changes are consistent with pitch indicating a lawmaker's emotional disposition toward an issue.",
+    "paper_location": "p. 945-946; Table 2 p. 948; issue-commitment discussion (page not confirmed in extracted text)",
+    "system_side": "Output contract sets absolute_f0_enters_personality to False and audio_may_modify_big_five to False, and excludes absolute F0 or inferred gender as a personality input. The brain's sex-confound correlation (r = -0.266) and the audio-N MISS at N = 90 are brain-sourced and were not checked.",
+    "code_ref": "fec/members/b5_audio_descriptors_candidate.py:253, 358, 373, 389, 482",
+    "transfer_conditions": "Excluding absolute F0 from personality scores is directly supported by Table 2. The paper gives no evidence that pitch measures a between-member disposition such as N, so the closed audio-N route is consistent with it. The paper's own gloss is a topic-specific emotional disposition, which the rel calls a state; it is an interpretation the authors do not test.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Table 2 values and the exclusion lines are confirmed. Softened: the paper frames the measure as a disposition toward issues and leaves room for a trait-like reading, so 'a topic-level state, not a trait' overstates what the paper establishes. The brain figures were not checked.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-audio-speech#eGeMAPS prosody and Whisper disfluency rates|eGeMAPS prosody and Whisper disfluency rates]]",
+    "system": "melange-audio-speech"
+   },
+   {
+    "component_id": "melange-audio-speech.speaker-verification",
+    "relation": "suggests-extension",
+    "paper_claim": "The corpus is Clerk HouseLive video, audio and closed captions: 6,432 hours from 863 House debates, 6 Jan 2009 to 4 Aug 2014. Speeches are split on caption timestamps, giving 74,158 speeches of at least 50 words. The captioning vendor asserts about 95 percent word accuracy (footnote 11). The authors transcribed 100 random speeches and found the captions 'essentially mirrored' them. The paper does not say the chamber attributes each speech to a member.",
+    "paper_location": "p. 944; fn 11 p. 945",
+    "system_side": "Clips are kept when Haiku 4.5 reads YouTube auto-captions and returns SOLO_TARGET with identity MATCH or NEUTRAL. The brain's share of kept clips with no identifying content (33.7 percent) and the pre-2026-07-09 contamination figure (38 percent) are brain-sourced and were not checked.",
+    "code_ref": "fec/members/b5_audio_verify.py:7 (docstring) and :77 (Haiku 4.5 call; keep rule follows it)",
+    "transfer_conditions": "Clerk speaker attribution is not established by the paper, so using it as an identity source needs a separate check of Clerk floor video metadata. If confirmed, House floor video from 2009 onward could replace guessed identity on floor clips. It does not reach interview, Sunday-show, Senate or hearing audio, where the identity gap is largest.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Corpus size, dates, the 95 percent vendor figure and the keep rule are confirmed. Softened: 'the chamber has already identified the speaker' is not in the paper, and 'matched' overstates 'essentially mirrored'. The brain percentages were not checked.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-audio-speech#Caption-based speaker verification|Caption-based speaker verification]]",
+    "system": "melange-audio-speech"
+   },
+   {
+    "component_id": "melange-stance.lsd-tone",
+    "relation": "qualifies",
+    "paper_claim": "Speech topic, word choice and length of remarks are highly controllable and driven by strategic concerns, while vocal pitch typically lies beyond the individual's control, making it a more honest indicator of intensity on a given issue (leakage hierarchy, pp. 942-944). The paper does not compare dictionary tone or LSD scores with pitch.",
+    "paper_location": "p. 942-944 (leakage hierarchy passage)",
+    "system_side": "Press intensity is |LSD net| / words or (pos + neg) / words (lsd_charge) per member press release. The press pillar multiplies stance sign by this heat.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:141-143; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:46-59",
+    "transfer_conditions": "A theoretical argument only; the paper never tests LSD tone against pitch. The claim that press releases are staff-drafted and so more strategic than floor speech has no support in the paper or the code. LSD charge measures crafted rhetorical tone, not felt intensity, and should be labelled that way.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The leakage passage and code lines are confirmed. Softened: the paper says pitch is less controllable, not that audio gives an intensity signal that text cannot give. The staff-drafting claim is unsupported here.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Lexicoder LSD2015 tone intensity|Lexicoder LSD2015 tone intensity]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-influence-engine.lt-priming",
+    "relation": "context",
+    "paper_claim": "Table 7, Model 7.1 gives 0.015 (SE 0.002) and Model 7.2 gives 0.012 (SE 0.002) for female speeches x female pitch on the share of male votes cast with female members. At +2 SD pitch (1.41 on the paper's scale), that share moves from 0.23 SD below to 0.53 SD above as female speeches go from 0 to 43 (Figure 3, p. 957). The authors say the data are observational and do not claim causation (p. 956-957). Vote timing is unknown (fn 31).",
+    "paper_location": "p. 955-957, Table 7, Figure 3, fn 31",
+    "system_side": "The cross-party cue weight is sqrt(bpf_u * bpf_v) (line 64). Searches of lt_priming.py found no intensity or pitch term in the cue weight or the pressure terms.",
+    "code_ref": "fec/engine/lt_priming.py:11-145 (cue weight at line 64)",
+    "transfer_conditions": "Weak and gender-specific: women's issues, 2009-2014, floor votes with no timestamps, not cosponsorship. The paper does not test a threshold mechanism, so it cannot set any engine constant.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Coefficients, the -0.23 to +0.53 SD range and the +2 SD condition match the paper. The code claim is confirmed: no intensity term. 'Absent or negative at low volume' is the rel's gloss; the paper gives a negative value at 0 speeches.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Linear-threshold priming (cheapest tip)|Linear-threshold priming (cheapest tip)]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Sample and denominator: summary gives 74,158 speeches; Table 1 models use N1 = 74,151 speeches and 619 members. Both figures should name their window (2009-2014, House floor) and denominator.",
+   "'Hard-to-fake' is not the paper's term. The paper says pitch is difficult for speakers to control (abstract; p. 942).",
+   "'About 120 speeches per speaker' is an average (74,151 / 619), not a design parameter or a stated requirement.",
+   "'Male members mention women more' holds only in Table 5 Model 5.2 (interaction 0.011, p < 0.05); Model 5.1 is 0.009 and not significant.",
+   "'Raise their own pitch on the topic' rests on the three-way term in Table 6 (0.016, p < 0.01). The 'women mentioned' main effect is 0.026 and not significant.",
+   "'Male members do not change': the paper reports a 0.02 SD change that is essentially unchanged (t = 0.02, p about 0.99). State it as 0.02 SD, not significant.",
+   "'Partisans speak 0.29 to 0.38 SD higher on topics their party owns' comes from interaction terms in Table 4, ranging 0.288 to 0.380 across four models, in standardized units. Name them as interactions.",
+   "The paper's causal disclaimer is attributed to p. 957; the extracted text does not confirm that page (it appears around pp. 956-957).",
+   "'The chamber has already identified the speaker' in Clerk video is not stated in the paper and should be removed or marked as an open check.",
+   "The claim that the floors cannot detect 0.1-0.4 SD effects is arithmetic under an independence assumption (SE about 0.45-0.7 SD for 2-5 units). No minimum detectable effect was computed; say so.",
+   "Baseline pooling across interview programs is confirmed in code. Pooling across channels is not confirmed, and the brain's channel-uncontrolled note was not checked.",
+   "Brain-sourced claims (permutation null and commit 4193f0140, r = -0.266, audio-N MISS at N = 90, 33.7 and 38 percent clip shares, 0 accepted v2 clips) were not checked here. The live candidate file was confirmed to lack any null or sign_informative field. Under DE-062 they stay UNVERIFIED.",
+   "Coverage: no ext.json or rel.json overrides exist for this item; rel was used as written. No Paul markup or annotations exist for this item (n_annots 0, paul_entries empty). Paul's Monitoring tool note appears only in the Joo item and was confirmed there."
+  ],
+  "gaps_exposed": [
+   "No comparison group. The paper's evidence is a cross-speaker contrast (female vs male, times topic), but topic_emotional_intensity reports one member's topic mean with nothing to compare it against (b5_audio_descriptors_candidate.py:237-249).",
+   "Power. The floors are 5 units per member, 2 topics and 2 units per topic (audio_rules.py:20-22). At those floors the SE of a topic mean is roughly 0.45-0.7 SD, while the paper's effects are 0.09-0.38 SD and needed about 120 speeches per member. No minimum detectable effect is reported anywhere.",
+   "The sign is fixed by construction when a member has 2 topics. The brain records a within-member permutation-null fix (sign_informative, commit 4193f0140 on the unmerged speech-recognition branch), but the live b5_audio_descriptors_candidate.py has no null or sign_informative field. UNVERIFIED drift between brain and live tree.",
+   "No controls for question intonation, speech duration or speech type, and no venue or channel term, in either the per-member z or the WJ subject_effects (build_descriptive_speech.py:2491-2531). The paper treats these as confounds of mean F0.",
+   "The floor-speech audio does not use Clerk HouseLive, where the chamber has already attributed each speech to a member. The system instead verifies identity from captions with an LLM.",
+   "No issue-ownership check. The paper's party-owned-topic pitch effect (0.29-0.38 SD) gives a ready external sanity check for any topic-pitch descriptor, and the system has not run it."
+  ],
+  "flags": [
+   "The desk shows per-member topic pitch shifts from as few as 2 WJ reactions (build_descriptive_speech.py:2521; make_member_desk_00.tpl:1280). The window and count are shown, but at that n the values are noise relative to the paper's effect sizes. Treat them as UNVERIFIED descriptive output, never as an intensity finding.",
+   "The brain says topic_emotional_intensity was fixed with a permutation null, but the live candidate file lacks it. This is a committed-vs-live discrepancy, and per DE-062 it stays UNVERIFIED until a second check of the branch.",
+   "The paper's male-response results (Tables 5-7) are observational and gender-specific (authors, p. 957). Any import into cascade or threshold constants would be unvalidated. Do not describe them as influence probabilities.",
+   "No conflict with the rejected SNA proposals, D-021 or D-025. The paper does not touch cosponsorship edges, edge normalization or LDA."
+  ],
+  "paul_alignment": "Paul lists this paper as on disk without annotation, under his interest in non-textual channels for the prosody component. The paper confirms that pitch can carry a real signal, but only as a within-speaker state (arousal by topic), only with large samples, and only through cross-speaker contrasts. That matches the system's ruling that audio is display-only and never feeds the Big Five scores (b5_audio_descriptors_candidate.py:358). His note is out of date in one way: the method has already been transplanted, and the code cites the paper by name at b5_audio_descriptors_candidate.py:210. The open question is no longer whether to use pitch. It is whether the implementation meets the paper's sample and comparison requirements, and at current floors it does not. His margin note on Joo ('Monitoring tool?') concerns a different Dietrich paper, on video and aisle crossing, not this one.",
+  "related": [
+   {
+    "slug": "mestre-2026-potential-pitfalls-audio",
+    "relation": "complements",
+    "why": "Covers general pitfalls of audio as political data (alignment, features, classifiers). Real item; relation holds."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Measures legislator traits from floor-speech text; Dietrich studies a vocal state. Real item; the text-versus-voice contrast holds."
+   },
+   {
+    "slug": "salam-2022-learning-personalised-models",
+    "relation": "complements",
+    "why": "Real item. The brain's use of Salam for sex-conditioning prosody is brain-sourced and was not checked, so only the complements relation is kept."
+   },
+   {
+    "slug": "marrero-2022-evaluating-voice-samples",
+    "relation": "complements",
+    "why": "Real item. Marrero tests whether voice samples carry Big Five information (vocal features explain 6.24 percent of trait variance out of sample). Dietrich tests no personality outcome, so the two answer different questions; relation changed from contradicts."
+   },
+   {
+    "slug": "joo-2022-image-data-automated",
+    "relation": "complements",
+    "why": "Real item. Paul's Monitoring tool note in this item sits beside a Dietrich (2018) aisle-crossing passage, not this paper; the audio counterpart framing is fair."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "pennebaker-2003-psychological-aspects-natural",
+    "relation": "complements",
+    "why": "Real item (2019; vocal pitch and emotional intensity of 74,158 House floor speeches). Measures intensity without emotion-word counts, consistent with the review sparsity point."
+   },
+   {
+    "slug": "rubio-2024-feasibility-data-analytics",
+    "relation": "complements",
+    "why": "Real item (title confirmed: vocal pitch and emotional intensity of congressional speech). Supports the emotional-intensity, not trait, framing."
+   },
+   {
+    "slug": "aroyehun-2026-politics-of-feelings",
+    "relation": "complements",
+    "why": "Not cited by this paper. The item measures emotional intensity of congressional floor speech from vocal pitch, an acoustic counterpart to the text intensity measure here."
+   },
+   {
+    "slug": "osnabrugge-2021-playing-gallery-emotive",
+    "relation": "complements",
+    "why": "The paper cites Dietrich, Hayes and O'Brien (2019) for visual or audio measurement of political emotion. Verified in text; the vocal-pitch channel is the analyst's comparison."
+   },
+   {
+    "slug": "rheault-2016-measuring-emotion-parliamentary",
+    "relation": "complements",
+    "why": "Measures emotional intensity of congressional speech from vocal pitch rather than words, a non-lexical check on the intensity construct. Verified in the Dietrich item."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "tappin-2023-quantifying-potential-persuasive",
+  "note": false,
+  "meta": {
+   "title": "Quantifying the potential persuasive returns to political microtargeting",
+   "authors": [
+    "Ben M. Tappin",
+    "Chloe Wittenberg",
+    "Luke B. Hewitt",
+    "Adam J. Berinsky",
+    "David G. Rand"
+   ],
+   "year": "2023",
+   "venue": "PNAS 120(25): e2216261120 (published June 12, 2023)",
+   "doi": "10.1073/pnas.2216261120",
+   "sha12s": [
+    "4bf1755ddc9a"
+   ],
+   "category": "Campaign Politics",
+   "category_slug": "campaign-politics"
+  },
+  "extraction": {
+   "title": "Quantifying the potential persuasive returns to political microtargeting",
+   "authors": [
+    "Ben M. Tappin",
+    "Chloe Wittenberg",
+    "Luke B. Hewitt",
+    "Adam J. Berinsky",
+    "David G. Rand"
+   ],
+   "year": "2023",
+   "venue": "PNAS 120(25): e2216261120 (published June 12, 2023)",
+   "doi": "10.1073/pnas.2216261120",
+   "document_type": "empirical research article: two randomized survey experiments, with a calibration phase run on previously collected experimental data",
+   "coverage": "Full text read in chunks (1249 lines, 80770 bytes): pp. 1-10 including abstract, intro, Study 1 and Study 2 results, Fig 1-3 captions and axis labels, Discussion, Materials and Methods, and references. Page images unavailable. Paul markup: no annotation files exist (n_annots 0, annot_sha12s empty), so paul_markup is empty and 0 items were dropped. Not a Paul research note. Metadata hints verified correct. Fig 2 profile-level numbers appear only as unlabelled values in the text dump and are not mapped to profiles. SI not provided.",
+   "research_question": "Does political microtargeting (message pretesting combined with machine learning, so each person sees the message predicted to persuade them most) produce a persuasive advantage over a naive random-message strategy and a single-best-message strategy? Does targeting by more covariates, or targeting issues rather than messages on one issue, add returns?",
+   "theory": "Microtargeting depends on treatment effect heterogeneity, meaning different people respond differently to different messages. Large-scale studies (refs 24-27) find heterogeneity usually small, so the persuasive returns to microtargeting are theoretically ambiguous. Study 2 frames the choice: if people are most persuadable on the same issues, show everyone one issue message; if persuadability differs across people by issue, targeting issues pays.",
+   "data": "Study 1 calibration: two existing survey experiments (ref 37). U.S. Citizenship Act (n=17,013; 26 pro-Act treatment messages plus control) and universal basic income (n=6,408; 10 anti-UBI treatment messages plus control). Study 2 calibration: first experiment of ref 38 (n=3,990 U.S. respondents; 9,712 observations; 36 policy issues; 48 professionally produced progressive video ads from the Peoria Project database). Experimental phase: new U.S. adult sample recruited through Lucid in Feb 2022, quota-matched on age, gender, ethnicity and region; 7,531 entered, 5,284 analyzed (completed at least one module). Three modules in random order. Unit: individual respondent. Outcome: policy support (Study 1, same items as calibration) or 5-point agreement with message position (Study 2, message-specific). Per-module N not stated in main text. Preregistered (osf.io/kvd9t). Data on OSF (osf.io/t3dhe).",
+   "method": "Calibration: for each covariate profile (255 profiles from 8 covariates in Study 1; 511 profiles from 9 covariates in Study 2), generalized random forests (grf R package) trained on 75 percent of data estimate message-level heterogeneity. The message predicted best for each subgroup is evaluated on the 25 percent test set by restricting the treatment group to people assigned their predicted-best message and comparing to control. Monte Carlo cross-validation: 250 random splits; median per profile; top profile in each stratum (1, 2-3, or 4+ covariates) refit on full data. Single-best-message = message with largest OLS ATE in training data. Experimental phase: OLS with condition dummies vs control, robust (HC2) SEs. Study 2: separate OLS per strategy, then difference-in-differences interaction models.",
+   "identification": "Randomized survey experiment. Condition assignment is independent of pretreatment covariates by design, so filtering the treatment group to predicted-best assignment preserves covariate balance in expectation. Targeting covariates were measured before treatment. Study 1 microtargeting arm further randomized across three covariate profiles with equal probability. Study 2 randomizes strategy first, then treatment vs control within strategy. Balance and attrition checks reported in SI (not reviewed).",
+   "scope": "Population: U.S. adults recruited online (quota-matched), February 2022. Issues: U.S. Citizenship Act, universal basic income, and 36 multi-issue advocacy topics (e.g., net neutrality, minimum wage, gun control, climate change). Setting: issue advocacy and ideology-shift campaigns; messages delivered by survey video, not field advertising. Era: calibration data from prior survey work; experimental data 2022; publication 2023.",
+   "measures": [
+    "Persuasive impact = difference in policy support (percentage points) between treatment and control, by strategy",
+    "Study 2 outcome: 5-point Likert agreement with the message position, specific to each message",
+    "Study 1 covariates: age, gender, party ID, ideology (binned), religiosity (1-7), three moral-foundation scores (MF1-MF3) from 12 Moral Foundations Questionnaire items via PCA",
+    "Study 2 covariates: age, gender, party ID, ideology, education, race, income, Cognitive Reflection Test (0-4), political knowledge test (0-4)",
+    "Exploratory: issue importance and willingness to share the video with a friend or colleague"
+   ],
+   "key_findings": [
+    {
+     "finding": "Study 1, U.S. Citizenship Act: microtargeting produced over twice the persuasive impact of single-best-message, and far more than naive messaging.",
+     "location": "p.4, Study 1 Experimental Phase",
+     "numbers": "MT 5.17 vs SBM 2.41 pp (P=0.016); MT vs naive 5.17 vs -0.96 (P<0.001)"
+    },
+    {
+     "finding": "Study 1, UBI: microtargeting point estimates favor it over both alternatives but are not statistically significant.",
+     "location": "p.4, Study 1 Experimental Phase",
+     "numbers": "MT 7.16 vs SBM 5.03 (P=0.12); MT vs naive 7.16 vs 5.70 (P=0.33)"
+    },
+    {
+     "finding": "Study 1 precision-weighted across both modules: microtargeting advantage is about 70 percent larger than SBM and over 200 percent larger than naive.",
+     "location": "p.4, Study 1 Experimental Phase",
+     "numbers": "MT 5.96 vs SBM 3.48 (P=0.004); vs naive 1.79 (P<0.001)"
+    },
+    {
+     "finding": "No evidence that targeting by more covariates increases persuasive returns; the advantage was qualitatively largest with one covariate, though differences were slight. Coarse targeting by party or ideology alone produced an advantage.",
+     "location": "p.4 text; Fig 2, p.5",
+     "numbers": "Fig 2 profile values not mapped in text; differences described as relatively slight"
+    },
+    {
+     "finding": "Study 2, multi-issue: microtargeting is directionally but not significantly below single-best-message, and clearly above naive messaging.",
+     "location": "p.6, Study 2 Experimental Phase; Fig 3, p.6",
+     "numbers": "MT 12.30 vs SBM 15.42 (P=0.11); MT vs naive 12.30 vs 6.19 (P=0.008)"
+    },
+    {
+     "finding": "Study 2 conclusion: targeting different issues to different people was not more impactful than distributing one pretested ad on one issue to everyone, though pretested targeting clearly beat naive.",
+     "location": "p.6, Study 2 summary",
+     "numbers": ""
+    },
+    {
+     "finding": "Messages predicted most persuasive in Study 2 often dealt with obscure policies (e.g., net neutrality), consistent with low-information issues being most persuadable.",
+     "location": "p.8, Discussion",
+     "numbers": ""
+    },
+    {
+     "finding": "Study 1 headline advantage (70 percent or more) was driven primarily by the U.S. Citizenship Act messaging.",
+     "location": "p.6, Discussion",
+     "numbers": "70 percent or more over alternatives"
+    },
+    {
+     "finding": "Authors find no evidence that the microtargeting advantage requires vast personal data; a single covariate was enough to generate the benefit observed.",
+     "location": "p.8, Discussion",
+     "numbers": ""
+    },
+    {
+     "finding": "Authors conclude the advantage of microtargeting is highly context dependent, with clear gains in a policy-centered campaign and limited gains in a multi-issue campaign.",
+     "location": "p.8, Discussion (closing paragraph)",
+     "numbers": ""
+    }
+   ],
+   "limitations": [
+    "Survey, not field, experiments: covariates measured precisely and exposure forced. Authors say this may overstate the advantage because campaigns lack high-quality covariates and mis-targeting may reduce efficacy (p.7).",
+    "Social media ad delivery is nonrandom and idiosyncratic and may attenuate the advantage; engagement optimization might boost it (p.7).",
+    "Forced exposure: respondents engaged with content they might have ignored in real life; roughly half of disseminated political ads may not reach intended audiences (p.7, citing ref 49).",
+    "Only a small set of low-salience issues and messages; high-salience contexts with countermessaging likely yield smaller effects and possibly a smaller relative advantage (p.7).",
+    "U.S. only; candidate-centered campaigns and non-U.S. contexts untested (p.7).",
+    "Cost-effectiveness not assessed; microtargeting needs more time, money and data science than SBM, which could yield more persuasion per dollar (p.8).",
+    "Study 2 divergence unresolved: pretest design was mixed between and within subjects, calibration preceded follow-up by almost a year, and all Study 2 messages were progressive professional videos (p.5, p.8).",
+    "Study 1 excluded messages opposing the Act and supporting UBI due to resource constraints (p.9).",
+    "Well-funded campaigns could train models at finer covariate resolution with larger pretest data, so results may understate the advantage (p.7).",
+    "Per-module experimental N and balance/attrition checks are in SI, not the main text (p.9); SI not reviewed.",
+    "Study 2 outcome variables differ by message, so strategy comparisons rely on a difference-in-differences design (p.9)."
+   ],
+   "references_of_note": [
+    "Athey, Tibshirani, Wager 2019, Generalized random forests, Ann. Statist. (ref 41)",
+    "Coppock 2022, Persuasion in Parallel (ref 24)",
+    "Coppock, Hill, Vavreck 2020, small effects of political advertising across 59 experiments, Sci. Adv. (ref 26)",
+    "Hewitt and Tappin 2022, Rank-heterogeneous effects of political messages, OSF (ref 37)",
+    "Wittenberg et al 2021, minimal persuasive advantage of political video over text, PNAS (ref 38)",
+    "Matz et al 2017, psychological targeting as effective approach to digital mass persuasion, PNAS (ref 45)",
+    "Eckles, Gordon, Johnson 2018, threats to internal validity of psychologically targeted ads, PNAS (ref 46)",
+    "Aggarwal et al 2023, 2 million-person field experiment on digital ads and turnout, Nat Hum Behav (ref 49)",
+    "Broockman and Kalla 2022, when and why campaigns' persuasive effects are small (ref 52)",
+    "Hersh and Schaffner 2013, targeted campaign appeals and the value of ambiguity, J. Polit. (ref 29)",
+    "Zarouali et al 2022, personality-tailored ads on social media, Commun. Res. (ref 31)",
+    "Endres 2020, targeted issue messages and voting behavior, Am. Polit. Res. (ref 28)"
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "we found no evidence that targeting messages by more than one covariate yielded additional persuasive gains",
+     "location": "p.1, Abstract"
+    },
+    {
+     "quote": "the persuasive impact of microtargeting is directionally (although not significantly) smaller than the SBM strategy",
+     "location": "p.6, Study 2 Results"
+    },
+    {
+     "quote": "this advantage may be highly context dependent",
+     "location": "p.6, Discussion"
+    }
+   ]
+  },
+  "summary_md": "Tappin, Wittenberg, Hewitt, Berinsky and Rand (PNAS 2023) test whether microtargeting, meaning pretesting messages and using generalized random forests to send each covariate profile the message predicted to persuade it most, beats two simpler strategies: random messages (naive) and one pretested best message for everyone (single-best-message, SBM). In a Feb 2022 Lucid sample (5,284 U.S. adults analyzed), Study 1 on a single policy found microtargeting moved support 5.96 pp vs 3.48 SBM and 1.79 naive (precision-weighted over two modules). Almost all of that came from the Citizenship Act module (5.17 vs 2.41). The UBI module was not significant. Targeting on one covariate, such as party or ideology alone, did as well as targeting on two to four or more. In Study 2, across 36 issues, letting the targeted issue vary by person did not beat one best issue ad (12.30 vs 15.42, P=0.11), though both beat naive (6.19). The authors call the advantage highly context dependent. They say forced-exposure survey estimates probably overstate field returns, and they did not test candidate races. For Paul's systems, the closest point of contact is Terrier's Untapped potential score. It ranks whom to contact by support closeness to 0.5, chance of voting and sphere of influence. It has no message dimension and no estimate of effect size. The paper says message choice changes the effect a lot (naive was near zero in one module) and that coarse partisan targeting is enough to capture the gain. That is an extension Terrier could add cheaply, but only through its own pretest. Melange's legislator-side persuadability is barely touched: this is a mass-public survey study. Its relevance there is limited to context on low-information issues. No brain rule is in conflict.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "terrier-canvass.untapped-potential",
+    "relation": "suggests-extension",
+    "paper_claim": "Study 1 (Lucid, Feb 2022; 5,284 analyzed across both modules). Citizenship Act: microtargeting 5.17 pp vs single-best-message 2.41 vs naive random message -0.96 (P=0.016 and P<0.001). Precision-weighted across both modules: 5.96 vs 3.48 vs 1.79. UBI module: microtargeting 7.16 vs single-best-message 5.03 vs naive 5.70, not significant. Profiles were ranked with generalized random forests (grf R package) over 250 Monte Carlo 75/25 splits. The advantage was qualitatively largest for one-covariate targeting, though differences were slight.",
+    "paper_location": "pp.3-5 Study 1 Calibration and Experimental Phase; Fig 2 p.5; Materials and Methods pp.8-9",
+    "system_side": "Untapped potential ranks each person by (wp x (1-|2s-1|) x t + (1-wp) x s x (1-t)) x (1 + wi x i), with module defaults wp=0.5 and wi=0.5 that a district can override. It chooses whom to contact, not what to say. It has no message or script variant and no effect-size term, and the (1-|2s-1|) term peaks at s=0.5 by construction.",
+    "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:8-10",
+    "transfer_conditions": "Tappin's effects are online survey estimates from Feb 2022 U.S. respondents with forced exposure on low-salience policy attitudes. They are not field or door-canvass effects. The paper says candidate-centered and non-U.S. settings are untested, and it says survey estimates may overstate the relative advantage of microtargeting in the field. A party or ideology split is the coarse covariate the paper found sufficient in-sample, and Terrier holds registration and partisan scores. Any gain stays UNVERIFIED until Terrier runs its own pretest.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Study 1 and Study 2 numbers and design details checked against the text. Original said message choice drives most of the return. The paper does not decompose the effect, and in the UBI module naive (5.70) beat single-best-message (5.03), which the original omitted. The paper says generalized random forests, not causal forests. Code formula verified at untapped.py lines 9-10 and 118-119. Only wp and wi are weights, each defaulting to 0.5, not three weights.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/terrier-canvass#Untapped potential|Untapped potential]]",
+    "system": "terrier-canvass"
+   },
+   {
+    "component_id": "terrier-canvass.untapped-potential",
+    "relation": "qualifies",
+    "paper_claim": "The authors say persuasion returns may be highly context dependent. Study 1 Citizenship Act significant (5.17 vs 2.41, P=0.016); UBI not significant (7.16 vs 5.03, P=0.12). Study 2 across 36 issues: per-person issue targeting was directionally below one best-issue ad (12.30 vs 15.42, P=0.11). The authors say survey estimates may overstate the relative persuasive advantage of microtargeting. Candidate-centered and non-U.S. campaigns are untested.",
+    "paper_location": "p.4 Study 1 results; p.6 Study 2 results and Discussion; p.7 limitations",
+    "system_side": "The persuade term (1-|2s-1|) x t assumes that people near s=0.5 who will vote carry persuasion value, with no magnitude attached. Its balance weight wp=0.5 is a module default, not a ruling. The score therefore treats persuadability and reminder value as comparable units with no effect-size evidence behind either.",
+    "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:8-10",
+    "transfer_conditions": "The paper does not estimate effects by distance from s=0.5, so it neither supports nor refutes the peak assumption. It says effect sizes vary by issue and setting and are likely smaller in high-salience contexts with countermessaging. Treat wp as unanchored until Terrier has local contact results.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "All Study 1 and Study 2 figures match the text. Original 'were highly context dependent' should be 'may be', because the paper hedges. The paper says overstate the relative advantage, not field persuasion. The Terrier formula and the unanchored-wp point are supported by the code.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/terrier-canvass#Untapped potential|Untapped potential]]",
+    "system": "terrier-canvass"
+   },
+   {
+    "component_id": "melange-influence-engine.persuadability-table",
+    "relation": "context",
+    "paper_claim": "In the Study 2 calibration (n=3,990 respondents, 36 issues, 48 progressive video ads), the messages predicted most persuasive were often on obscure, low-information policies such as net neutrality. The authors offer this as one possible explanation for the Study 2 divergence, alongside a mixed pretest design and a nearly one-year gap before follow-up. They expect smaller effects in high-salience settings with countermessaging.",
+    "paper_location": "p.8 Discussion; p.7 limitations",
+    "system_side": "PERS is a fixed table keyed only on stance tier, with an inverted-U shape: Highly Persuadable 0.65, Opponent 0.08, and no-position default 0.45 via the PERS_NONE environment dial. It has no issue-salience or information term. Salience enters separately through fec/engine/salience_shock.py.",
+    "code_ref": "fec/moneyball_core.py:565-568",
+    "transfer_conditions": "Weak. Tappin measures attitude change among public respondents after one video, while PERS models legislators under lobbying. The low-information point might carry over to members on low-visibility CU topics, but nothing here measures that.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Quoted finding and table values verified. The original presents the low-information account as the finding, but the paper lists it as one hypothesis among several. 'Fixed table' omits the PERS_NONE environment override, which defaults to 0.45. The PERS table is at lines 565-568; line 564 is a comment. The salience module exists.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Persuadability table PERS|Persuadability table PERS]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "summary_md says message choice drives most of the persuasive return. The paper does not decompose the effect. In the UBI module the naive message (5.70) beat single-best-message (5.03), which the summary omits.",
+   "summary_md says pretested messages gave 2.4 to 5.2 pp. That range covers only the Citizenship Act module. Across both modules single-best-message ranged 2.41 to 5.03 and microtargeting 5.17 to 7.16.",
+   "summary_md and bearing 1 say grf causal forests. The paper says generalized random forests (grf R package). The word causal does not appear in the text.",
+   "summary_md says targeting on one covariate did as well as 2-3 or 4+ covariates. The paper says the one-covariate advantage was qualitatively largest, with relatively slight differences.",
+   "summary_md says coarse partisan targeting is enough to capture the gain. This is the paper's in-sample claim (p.8 Discussion) and needs the Study 1 and in-sample qualifier.",
+   "summary_md says both SBM and microtargeting beat naive in Study 2 (6.19). The text confirms only microtargeting vs naive (12.30 vs 6.19, P=0.008). The SBM vs naive comparison appears only in Fig 3, which the text dump does not label, so it is unverified.",
+   "Bearing 1 system_side says three 0.5 weights. The code has two module defaults, wp and wi (DEFAULT_WEIGHTS = (0.5, 0.5)), each overridable per district.",
+   "Bearing 2 paper_claim states persuasion returns were highly context dependent as fact. The paper hedges with may be. It also says survey estimates may overstate the relative advantage, not field persuasion.",
+   "Bearing 3 paper_claim presents the low-information explanation as a finding. The paper lists it as one hypothesis among several (p.8).",
+   "Bearing 3 code_ref 564-568 includes a comment line. The PERS table is at 565-568.",
+   "paul_alignment says Paul's recorded position (component_literature) and that Untapped went live 2026-10-09 with no content term. Neither was verified here: the brain was not read because boot was skipped, and paul_entries is empty. The untapped.py header is dated 2026-10-09, which is consistent but not proof.",
+   "Related links: the item records for Simchon, Kalla, Broockman and Palm exist and their titles match the why text. Only Simchon's item summary was read. The other three were checked by title and metadata, not full text, so their why claims are unverified beyond that."
+  ],
+  "gaps_exposed": [
+   "Terrier has no message or script dimension. Untapped potential ranks whom to contact but carries no estimate of how much a contact moves anyone, so the persuade-vs-remind weight wp=0.5 is unanchored.",
+   "The Terrier assumption that persuasion value peaks at s=0.5 has no local or cited empirical test. Tappin does not report effects by distance from s=0.5.",
+   "No pretest or heterogeneous-effect estimate (e.g. causal forest over canvass outcomes) exists anywhere in Terrier or Melange. Nothing could learn which covariate profiles respond to which content.",
+   "Melange PERS has no issue-salience or information term. The low-information persuadability point is untested for legislators."
+  ],
+  "flags": [
+   "No conflict with brain rules. The paper does not argue for dropping cosponsorship edges or for per-edge volume normalization, does not use LDA, and makes no reciprocity claim.",
+   "Every effect size here is a survey estimate from Feb 2022 Lucid respondents with forced exposure. Quote them with that window and population, never as field or door-canvass effects.",
+   "The Study 1 headline advantage (about 70 percent over SBM) is pooled over two modules and driven by the Citizenship Act module. Quote it with the per-module split, or label it UNSTRATIFIED."
+  ],
+  "paul_alignment": "Paul has no annotated entry for this work. His recorded position on untapped-potential (component_literature) is that he highlighted the Kalla and Broockman canvass protocol extensively, but it is not encoded in the persuasion term. Tappin backs that concern: what is said changes the effect a great deal (naive random messages were near zero in the Citizenship Act module, while pretested messages gave 2.4 to 5.2 pp). A who-to-contact score with no content term leaves value unused. His note is not stale. The Untapped score went live on 2026-10-09 and still has no content term.",
+  "related": [
+   {
+    "slug": "simchon-2024-persuasive-effects-political",
+    "relation": "extends",
+    "why": "Simchon et al test matching ad style to reader openness and whether LLMs can mass-produce matched ads, which fits the generative-AI extension. Tappin supplies the pretest-and-target baseline. The one-covariate finding is Tappin's own result, not Simchon's."
+   },
+   {
+    "slug": "broockman-2026-should-moving-middle",
+    "relation": "complements",
+    "why": "Broockman and Kalla argue that returns to moderation depend on where voters are, which echoes Tappin's context-dependent results. Their working paper covers candidate races, which Tappin did not test."
+   },
+   {
+    "slug": "palm-2025-influence-personality-traits",
+    "relation": "complements",
+    "why": "Palm and Tims review how personality traits moderate persuasion strategies. Tappin's Study 1 moral-foundation profiles did not beat one-covariate targeting, which is a check on rich psychological tailoring."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "kalla-2023-which-narrative-strategies",
+    "relation": "complements",
+    "why": "It quantifies the persuasive returns to targeting messages by audience. This paper shows message content (perspective-getting) carries the effect. Together they separate who-to-target from what-to-say, the split Terrier's potential formula collapses into target selection."
+   },
+   {
+    "slug": "cagala-2021-optimal-targeting-fundraising",
+    "relation": "complements",
+    "why": "Item file title matches Tappin et al. 2023 on potential persuasive returns to political microtargeting; it addresses the same benchmark-relative question in persuasion."
+   },
+   {
+    "slug": "celli-nd-twenty-years-personality",
+    "relation": "complements",
+    "why": "Existence confirmed. The persuasion threat in Section 4.2 is consistent with it; the survey does not cite it."
+   },
+   {
+    "slug": "madsen-2017-strategic-advantages-micro",
+    "relation": "complements",
+    "why": "Tappin measures persuasive returns to microtargeting with experiments; Madsen and Pilditch only simulate them. Tappin is the empirical check on this paper's claim that targeting has an advantage."
+   },
+   {
+    "slug": "sverdrup-nd-introduction-grf-causal-forests",
+    "relation": "complements",
+    "why": "Vault item exists with a tappin-2023 ext and rel file. Rel describes it as measuring how persuasion effects vary across audiences. Kept on existence; content not re-read here."
+   }
+  ],
+  "evidence_status": "verified"
+ }
+]

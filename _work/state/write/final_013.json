@@ -1,0 +1,1506 @@
+[
+ {
+  "slug": "leskovec-2010-predicting-positive-negative",
+  "note": false,
+  "meta": {
+   "title": "Predicting Positive and Negative Links in Online Social Networks",
+   "authors": [
+    "Jure Leskovec",
+    "Daniel Huttenlocher",
+    "Jon Kleinberg"
+   ],
+   "year": "2010",
+   "venue": "WWW 2010 (Raleigh, NC), Full Paper",
+   "doi": "10.1145/1772690.1772756",
+   "sha12s": [
+    "74cd7af78361"
+   ],
+   "category": "Social Network Analysis",
+   "category_slug": "social-network-analysis"
+  },
+  "extraction": {
+   "title": "Predicting Positive and Negative Links in Online Social Networks",
+   "authors": [
+    "Jure Leskovec",
+    "Daniel Huttenlocher",
+    "Jon Kleinberg"
+   ],
+   "year": "2010",
+   "venue": "WWW 2010 (Raleigh, NC), Full Paper",
+   "doi": "10.1145/1772690.1772756",
+   "document_type": "academic-article (conference full paper)",
+   "coverage": "Full text read in chunks, all 1624 lines of the text file (about 70k chars): front matter, abstract, introduction, Sec 2 data, Sec 3 sign prediction (features, logistic regression, balance and status reductions, cross-dataset transfer, heuristics), Sec 4 global structure, Sec 5 positive-edge existence, conclusion and references. Figures 1-3 are plot images, so only their captions and the prose were available; numbers are taken from the prose and tables. Annotations: the item lists n_annots 0 and an empty annot_sha12s, so no _annots file was read and paul_markup is empty; p.note is not set. Metadata hints corrected: authors expanded to full names; title, year 2010 and WWW 2010 venue confirmed in text; DOI does not appear in the text and is carried over from the item record. Page numbers come from the running page footers.",
+   "research_question": "Can the sign (positive or negative) of a hidden directed link in an online social network be predicted from the signs of the rest of the network? Which local structural principles drive signed-link formation, and do they agree with balance and status theory? Secondary: does knowing negative links help predict positive links, and does global balance (factions) or global status (ordering) appear in these networks?",
+   "theory": "Structural balance (Heider; Cartwright and Harary: the enemy of my friend is my enemy, and related triad rules), Davis's weak balance (makes no prediction on the enemy-of-enemy triad), and status theory (a positive edge means the source regards the target as higher status; a negative edge means lower; signs flip when direction flips). Each theory is written as a mapping from triad types to predicted sign and compared to learned logistic regression coefficients.",
+   "data": "Three explicitly signed directed networks. Epinions trust/distrust: 119,217 nodes, 841,200 edges in Table 1 (text says 841,000), 85.0 percent positive, data from 1999 to 12 Aug 2003. Slashdot friend/foe: 82,144 nodes, 549,202 edges, 77.4 percent positive, crawled Feb 2009. Wikipedia admin-election votes: 7,118 users, 103,747 votes across 2,794 elections (1,235 promotions, 1,559 failures), 78.7 percent positive, from the Jan 2008 dump. Unit of analysis: a directed signed edge (u,v). Main accuracy results use edges with minimum embeddedness 25 (default Em), averaged over 10-fold cross validation, on a balanced sample in which each negative edge is paired with a random positive edge. Full unbalanced data is also reported.",
+   "method": "Logistic regression over 23 features: 7 degree features (signed in- and out-degrees of u and v, total out-degree of u, total in-degree of v, and embeddedness C(u,v)) plus a 16-dimensional count of directed signed triad types formed by a common neighbor w with u and v. Reduced models: 4-type undirected balance counts, 4-type status counts after canonicalizing signs and directions, and 4-type counts on the all-positive subgraph. Hand-written heuristics (balance majority, status score sigma(x) with predicted sign from sigma(u) versus sigma(v), out-degree majority, in-degree majority) as baselines. Global tests: randomized local search for a two-set partition maximizing satisfied edges (balance), and random pairwise-swap search for a node ordering maximizing satisfied edges (status, as a maximum acyclic subgraph problem), compared with permuted-sign and degree-preserving rewired baselines. Positive-edge existence task: classifier separates true positive edges from matched non-edge pairs with equal embeddedness.",
+   "identification": "No causal identification. Sign prediction is a leave-one-out style task: hide one edge sign and predict it from all other edges, reported with 10-fold cross validation. Cross-dataset transfer trains on one network and tests on another (Tables 6-7). Interpretation of triad coefficients as support for balance or status is associational.",
+   "scope": "Three online platforms: a product-review trust site (Epinions), a technology news site with friend/foe tags (Slashdot), and Wikipedia adminship votes. Snapshots from roughly 2003 to 2009; web-era pre-2010 data. Population is active users with signed links. The paper's claims of generalization are limited to these three domains.",
+   "key_findings": [
+    {
+     "finding": "Learned logistic regression predicts edge signs with high accuracy on Epinions, beating the best error reported by Guha et al.",
+     "location": "Sec 3.1, p.644, Figure 1 text",
+     "numbers": "Error on Epinions: 6.58 percent All23, 6.64 percent 16Triads, 11.45 percent Degree, versus 14.7 percent best in Guha et al. (balanced sample, Em 25)"
+    },
+    {
+     "finding": "On the full unbalanced data, random guessing is about 80 percent accurate and the logistic models reach 90-95 percent, roughly 15 points above chance; AUC is consistent with accuracy.",
+     "location": "Sec 3.1, p.644",
+     "numbers": "Balanced sample: AUC about 0.90. Full data: AUC about 0.95; random accuracy about 0.80 on full data, 0.50 on balanced"
+    },
+    {
+     "finding": "Triad features gain value as embeddedness rises; degree features are stronger for edges with few common neighbors. Wikipedia accuracy is clearly lower than the other two networks even at high embeddedness.",
+     "location": "Sec 3.1, p.644, Figure 1",
+     "numbers": "Qualitative from Figure 1; accuracy curves plotted for Em = 0, 10, 25 with no table values in the text"
+    },
+    {
+     "finding": "The All23 model transfers across networks with little loss: even a model trained on Wikipedia predicts Epinions and Slashdot nearly as well as one trained on the target network.",
+     "location": "Sec 3.3, p.647, Table 6",
+     "numbers": "Test on Epinions: 0.9342 self-trained, 0.9249 trained on Slashdot, 0.9272 trained on Wikipedia. Test on Wikipedia: 0.8021 self-trained, 0.7722 trained on Epinions, 0.7717 trained on Slashdot"
+    },
+    {
+     "finding": "Balance theory matches the learned undirected triad coefficients for every triad type except enemy-of-enemy (mm), where the learned sign agrees with Davis's weak balance (no prediction) rather than balance.",
+     "location": "Sec 3.2, p.645-646, Table 3",
+     "numbers": "Undirected model coefficients listed per dataset (e.g., mm type disagrees across Epinions, Slashdot, Wikipedia); weak balance is the Davis 1963 variant"
+    },
+    {
+     "finding": "Balance-based models transfer well across domains, while learned status models transfer poorly and often do worse than untrained status baselines.",
+     "location": "Sec 3.3, p.647, Table 7",
+     "numbers": "BalanceLrn cross-dataset accuracies 0.90-0.92 among Epinions and Slashdot (e.g., 0.9027, 0.9166, 0.9020, 0.9203) versus BalanceDet 0.77-0.84; StatusLrn cross-dataset accuracies range about 0.61-0.83"
+    },
+    {
+     "finding": "A triad with v linking positively to w and w linking positively to u is evidence for a negative (u,v) edge in all three datasets, a pattern status theory explains as a lower-status reversal.",
+     "location": "Sec 3.2, p.646, Table 5",
+     "numbers": "Coefficient on the BB positive-path feature: -0.0692 Epinions, -0.0293 Slashdot, -0.0259 Wikipedia (all-positive subgraph model)"
+    },
+    {
+     "finding": "Simple heuristics beat chance but trail the learned models; out-degree of the edge generator is the strongest single cue on two of three networks, while in-degree performs poorly.",
+     "location": "Sec 3.4, p.647-648, Figure 3",
+     "numbers": "Figure 3 curves only; no table values in the text. The text says out-degree (OutSign) performs well on two of three networks"
+    },
+    {
+     "finding": "A global status ordering fits the networks far better than chance or baselines: about 79 to 85 percent of edges respect an ordering, versus 50 percent for random orderings.",
+     "location": "Sec 4, p.649, Table 8",
+     "numbers": "Status satisfied fraction, Epinions/Slashdot/Wikipedia: network 0.7905/0.8221/0.8538; permuted signs 0.7241/0.7568/0.7767; rewired 0.6377/0.6644/0.6321"
+    },
+    {
+     "finding": "No significant global balance (faction) structure: partition objective values are essentially the positive fraction, and rewired networks with the same degrees score higher.",
+     "location": "Sec 4, p.649, Table 8",
+     "numbers": "Balance satisfied fraction, Epinions/Slashdot/Wikipedia: network 0.8344/0.8105/0.7809; permuted 0.8562/0.7779/0.7866; rewired 0.8993/0.8310/0.8316; trivial all-positive partition yields about 0.80"
+    },
+    {
+     "finding": "Negative links help predict where positive links exist: adding signed triad features beats positive-only features on all three networks.",
+     "location": "Sec 5, p.650, Table 9",
+     "numbers": "Positive-only accuracy 0.5612 Epinions, 0.5579 Slashdot, 0.6983 Wikipedia; positive plus negative accuracy 0.5911, 0.5953, 0.7114 (random 0.50)"
+    }
+   ],
+   "limitations": [
+    "Wikipedia sign prediction is much harder than the other two networks; the authors conjecture that public, consequential, information-based votes resist structural prediction.",
+    "Global balance and status searches are approximate heuristics; the status problem (maximum acyclic subgraph) is hard to approximate in the worst case, and the authors say local-to-global scaling of sign patterns remains an open question.",
+    "The naive all-positive partition already satisfies about 80 percent of edges, so balance objective values are only meaningful against rewired and permuted baselines.",
+    "Triad features carry little information at low embeddedness, and their performance drops again at very high embeddedness, reflecting a tradeoff in sparsity.",
+    "Balance and status each hold only approximately at the granularity where they are formulated; the 16-type model captures effects beyond either theory's resolution.",
+    "Learned status properties are more dataset-specific than balance properties, so the status model does not generalize as well.",
+    "Analysis is restricted to directed links; the undirected extension is mentioned but not developed. Opposite-direction edge pairs are treated as having no sign.",
+    "Edge count for Epinions is given as 841,000 in the text and 841,200 in Table 1."
+   ],
+   "measures": [
+    "Accuracy on balanced sample (chance 0.50)",
+    "AUC on balanced and full samples",
+    "Degree features: signed in-/out-degree of u and v, embeddedness C(u,v)",
+    "16 signed directed triad counts; 4-type undirected balance and 4-type status counts",
+    "Logistic regression coefficients per triad type",
+    "Heuristic accuracy by minimum embeddedness",
+    "Global satisfied-edge fraction for balance partitions and status orderings",
+    "Positive-edge existence accuracy (chance 0.50)"
+   ],
+   "references_of_note": [
+    "Guha, Kumar, Raghavan, Tomkins 2004, Propagation of trust and distrust (WWW), the Epinions trust-propagation baseline",
+    "Cartwright and Harary 1956, structure balance generalization of Heider's theory",
+    "Davis 1963, structural balance and weak balance variant",
+    "Liben-Nowell and Kleinberg 2007, link-prediction problem for social networks",
+    "Leskovec, Huttenlocher, Kleinberg 2010 CHI, Signed networks in social media (earlier balance and status analysis)",
+    "Kunegis, Lommatzsch, Bauckhage 2009, The Slashdot Zoo: mining a social network with negative edges",
+    "Guruswami, Manokaran, Raghavendra 2008 FOCS, inapproximability of maximum acyclic subgraph",
+    "Marvel, Strogatz, Kleinberg 2009, energy landscape of social balance"
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "We find that the signs of links in the underlying social networks can be predicted with high accuracy",
+     "location": "Abstract, p.641"
+    },
+    {
+     "quote": "balance theory is in notably better alignment with the learned model for Epinions and Slashdot than it is for Wikipedia",
+     "location": "Sec 3.2, p.645"
+    },
+    {
+     "quote": "we find no significant evidence for the kind of partitioning into factions that balance theory suggests at a global level",
+     "location": "Sec 4, p.649"
+    }
+   ]
+  },
+  "summary_md": "Leskovec, Huttenlocher and Kleinberg (WWW 2010) ask whether the sign of a hidden directed edge can be predicted from the rest of a signed network, using Epinions (119,217 nodes, 85.0 percent positive), Slashdot (82,144 nodes, 77.4 percent positive) and Wikipedia adminship votes (7,118 users, 78.7 percent positive). A logistic regression on 7 degree features plus 16 signed directed triad counts reaches about 93-94 percent accuracy on a balanced sample of edges with at least 25 common neighbours (Epinions error 6.58 percent versus 14.7 percent for Guha et al.), and the model transfers across sites with little loss. Learned triad coefficients agree with structural balance except for the enemy-of-my-enemy triad, where they match Davis weak balance (no prediction). Status theory explains directed patterns, and a global status ordering satisfies 79-85 percent of edges, well above permuted and rewired baselines. Global balance does not: a two-faction partition scores near the trivial all-positive value (about 0.80) and below degree-preserving rewired networks, so the authors find no significant faction structure. Negative links modestly improve prediction of where positive links exist (for example 0.5612 to 0.5911 on Epinions, chance 0.50). For Melange the sharpest consequence is for the signed mention-layer coalition diagnostic, which compares frustration only against the one-cluster baseline on a substrate that is 83 percent positive by edge count, with no rewired or sign-permuted null and with edge direction discarded. The paper also supports the relationships pilot keeping shared-enemy counts sign-agnostic, and offers a cheap structural consistency check for the LLM-valenced reference edges. All bearings here are new agent analysis and stay UNVERIFIED until reproduced by a second path.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-sna.signed-coalitions",
+    "relation": "qualifies",
+    "paper_claim": "Global balance is not significant. Best two-set partitions satisfy 0.8344 / 0.8105 / 0.7809 of edges (Epinions / Slashdot / Wikipedia), near the trivial all-positive value (about 0.80) and below degree-preserving rewired networks (0.8993 / 0.8310 / 0.8316). Sign-permuted baselines: 0.8562 / 0.7779 / 0.7866.",
+    "paper_location": "Sec 4, p.649, Table 8",
+    "system_side": "signed_coalitions.py partitions the member_references mention layer by frustration local search and prints F(1), F(2), F(3) against each other, with F(1) (all negatives frustrated) as the one-cluster baseline. It has no rewired or sign-permuted null, and edge direction is discarded (each edge is appended to both endpoints). Artifact 2026-07-19 signed_coalitions.json: 520 nodes, 7,153 signed edges, 5,959 positive (83.3 percent by count); F(1) 1092.31 of total |net| weight 6799.18 (16.1 percent); F(2) 15.31 percent; gap 0.76 points; 14-member splinter.",
+    "code_ref": "fec/network/signed_coalitions.py:71-81",
+    "transfer_conditions": "Paper signs are actor-declared on web platforms; ours are LLM-valenced speech mentions weighted by |net|. Only the comparison logic transfers. Any null for the Melange layer must preserve weights as well as degrees.",
+    "strength": "strong",
+    "verdict": "reproduced",
+    "verifier_note": "Table 8 values and page confirmed in text. Code lines 35-36, 71-81 and 107 confirmed. Artifact counts, F(1) and F(2) percentages and the 0.76-point gap reproduced from the JSON. Minor: code line 93 prints the positive share by |net| weight, while the 83.3 figure is by edge count. Conclusion holds: no null exists in the code.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-sna#Signed-network coalition partition|Signed-network coalition partition]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-sna.signed-coalitions",
+    "relation": "suggests-extension",
+    "paper_claim": "Global status ordering: 0.7905 / 0.8221 / 0.8538 of edges respect the best ordering, versus 0.7241 / 0.7568 / 0.7767 under sign permutation and 0.6377 / 0.6644 / 0.6321 under rewiring (random 0.50). Directed triad: a positive v-to-w-to-u path is evidence for a negative u-to-v edge, BB coefficients -0.0692 / -0.0293 / -0.0259 in the all-positive subgraph model.",
+    "paper_location": "Sec 3.2 p.646 Table 5; Sec 4 p.649 Table 8",
+    "system_side": "member_reference_layer.py stores directed speaker-to-target edges with net = (pos - neg) / (pos + neg + neu). signed_coalitions.py appends each edge to both endpoints, so direction is discarded before partitioning, and no ordering or directed-triad test exists on the mention layer.",
+    "code_ref": "fec/network/signed_coalitions.py:34-36; fec/members/member_reference_layer.py:366-373",
+    "transfer_conditions": "Only meaningful if a negative public mention is an asymmetric judgement by the speaker about the target. Any ordering is a heuristic model output, never an influence, access or closeness claim (D-025). Dyads with edges in both directions are set aside by the paper and are not reciprocity evidence (D-104..D-108).",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Table 8 and Table 5 values and page numbers confirmed. Code lines 35-36 confirmed to append both endpoints. Net formula confirmed at member_reference_layer.py line 372 (within the cited range). Paper codes opposite-direction pairs as 0 (Sec 3.1), so the reciprocity caveat holds. Suggestion only; the existence claim about the Melange layer is confirmed.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-sna#Signed-network coalition partition|Signed-network coalition partition]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-sna.co-appearance-and-references",
+    "relation": "method-source",
+    "paper_claim": "Epinions balanced-sample accuracy about 93.4 percent (6.58 percent error, All23 model, minimum embeddedness 25, 10-fold CV). Slashdot and Wikipedia accuracies appear only in plotted Figure 1, not in the text. Balanced AUC about 0.90 and full-data AUC about 0.95 (text). Wikipedia self-trained accuracy 0.8021 (Table 6). Triad features add little at low embeddedness.",
+    "paper_location": "Sec 3.1 p.644 and Figure 1; Sec 3.3 p.647 Table 6",
+    "system_side": "Reference-edge signs come from per-context LLM valence aggregated into net. The eyeball sheet is capped at 500 edges (member_reference_layer.py around line 392). A 2-context minimum was not confirmed in the lines read. A leave-one-out sign prediction on the mention layer would give a structural consistency check: if valence were noise, accuracy would sit near the positive base rate.",
+    "code_ref": "fec/members/member_reference_layer.py:346-373",
+    "transfer_conditions": "Needs an embeddedness census first: about 7,153 signed edges over 520 nodes, and many dyads may have few common neighbours, where triad features carry little information. Predictability measures consistency, not validity of the labels, and does not replace gold-label review. State the base rate and denominator with any reported accuracy.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "The 93-94 percent figure is confirmed for Epinions only. The text gives no Slashdot or Wikipedia balanced accuracy, so a cross-site range was not established; Wikipedia is stated as clearly lower. The 500-edge cap is confirmed. The 2-context minimum was not confirmed. The leave-one-out check is an analyst suggestion, not a paper result.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-sna#Co-appearance and signed member-reference layers (display only)|Co-appearance and signed member-reference layers (display only)]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-sna.co-appearance-and-references",
+    "relation": "qualifies",
+    "paper_claim": "In the undirected 4-type model, learned coefficients match balance theory for the three non-mm triad types in all three datasets. The enemy-of-enemy (mm) coefficient is negative in all three (-0.0149 Epinions, -0.0262 Slashdot, -0.0465 Wikipedia), disagreeing with balance. The authors say this is consistent with Davis weak balance, which makes no prediction for mm.",
+    "paper_location": "Sec 3.2 p.645-646, Table 3",
+    "system_side": "The member-relationships pilot uses shared negative targets (members whom both a and b referenced negatively) as a discovery stratum (signed_reference_proximity, sorted by shared-negative count, descending) and as a descriptive feature. A code comment states the pattern has no assumed affinity sign.",
+    "code_ref": "fec/research/member_personal_relationships/run.py:91-94,160",
+    "transfer_conditions": "The pilot pattern is directed (a and b both point negatively at c). The paper's evidence is for the undirected collapse only; the Table 2 directed rows are hard to read in the text extraction, so no directed-level sign is claimed. The paper shows the mm pattern is not balance-like; it does not show the pattern carries no sign.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Table 3 coefficients and the Davis wording confirmed. Code comment and feature confirmed at run.py lines 91-93 and 160. The paper's mm coefficients are small but negative, so 'supports sign-agnostic' overstates the paper; the relation is changed to qualifies. The descending sort on shared negatives uses the pattern as an ordering key in discovery, which the comment describes as discovery-only.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-sna#Co-appearance and signed member-reference layers (display only)|Co-appearance and signed member-reference layers (display only)]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-lobbying.cosponsor-forecaster",
+    "relation": "suggests-extension",
+    "paper_claim": "Using all 16 signed directed triad counts (which include the 4 positive-only path types) instead of only those 4 positive-only path counts raises accuracy for predicting a positive edge on matched non-edge pairs (chance 0.50): 0.5612 to 0.5911 Epinions, 0.5579 to 0.5953 Slashdot, 0.6983 to 0.7114 Wikipedia (gains 1.3 to 3.7 points).",
+    "paper_location": "Sec 5 p.650, Table 9",
+    "system_side": "cosponsor_forecast.py feature list uses prior cosponsorship history, network degree and eigenvector, NOMINATE, party, state, chamber, seniority, committee terms, bill type and policy area. It has no signed or mention-derived feature. prior_sponsor_affinity is a count of prior-Congress HR/S cosponsorships with the sponsor. METHOD_NOTE confirms a fixed ridge lambda of 1.0.",
+    "code_ref": "fec/lobbying/cosponsor_forecast.py:117-142",
+    "transfer_conditions": "Gains are 1.3 to 3.7 points on a matched-embeddedness task and may vanish against a cosponsorship-history baseline, which the forecaster must beat first. Only references dated before the forecast Congress may enter. The paper's comparison also changes feature count, so the gain is attributable to the added signed types only.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Table 9 values and gains confirmed. The positive-only set (4 path counts) is a subset of the 16 triads, so the comparison isolates the added signed types; the claim wording now says so. Feature list and ridge note confirmed. The 265,396 frozen-prediction count was not found in the fec/lobbying source and was not checked against any frozen artifact.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#Ridge-logistic cosponsor forecaster|Ridge-logistic cosponsor forecaster]]",
+    "system": "melange-lobbying"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "summary_md says about 93-94 percent balanced accuracy across the sites; the text gives this for Epinions only (6.58 percent error). Slashdot and Wikipedia accuracies appear only in plotted Figure 1, and Wikipedia is stated as clearly lower.",
+   "summary_md says learned triad coefficients agree with balance except for enemy-of-enemy; that holds only for the undirected 4-type reduction (Table 3). In the directed 16-type model (Table 2) the total-error row reads 3/3, 4/2, 7/2 (balance/status by dataset, as extracted), so balance disagrees on several directed types.",
+   "summary_md says the paper supports keeping shared-enemy counts sign-agnostic. The paper reports a small negative mm coefficient and says only that Davis weak balance makes no prediction; this supports not assuming a sign, not that the pattern carries none.",
+   "summary_md says mm matches Davis weak balance (no prediction). The paper says the disagreement is consistent with Davis weak balance; the learned mm sign is negative, so 'match' overstates it.",
+   "summary_md omits that the paper says balance alignment is notably weaker for Wikipedia (Sec 3.2, p.645). This matters because Melange votes are public-facing mentions.",
+   "The 83 percent positive figure: the artifact confirms 83.3 percent by edge count, but code line 93 prints the positive share by |net| weight. Cite count and weight separately.",
+   "Unverified in this pass: 4,358 signed reference edges in the component catalogue; the 265,396 frozen forecaster predictions (no such number in fec/lobbying source); the June Phase-2 workbook Persuadable Index use; a 2-context minimum in member_reference_layer.py; Paul's valuation of Aref-Neal, which comes from memory notes and not from this paper.",
+   "Tang 2015 related link dropped: this paper neither cites nor discusses Tang, so an extends relation is not supported by the text. The item exists, but the relation rests on outside knowledge.",
+   "ext file checked against the text: key findings and table values are accurate. Its edge-count discrepancy (841,000 in text vs 841,200 in Table 1) is already flagged there."
+  ],
+  "gaps_exposed": [
+   "signed_coalitions.py reports F(k) with no weight- and degree-preserving rewired null or sign-permuted null, so the 14-member splinter and its antagonist-set label are untested against chance structure.",
+   "Edge direction from member_references is discarded in the signed partition; no status-ordering or directed-triad test exists on the mention layer.",
+   "LLM-valenced reference signs have no structural consistency check (leave-one-out sign prediction) and no embeddedness census.",
+   "The component question whether negative references predict lower future cosponsorship is still untested; Sec 5 of this paper gives a matched-pair design for it.",
+   "The component catalogue lists 4,358 signed reference edges while the 2026-07-19 signed_coalitions.json counts 7,153 signed edges (net not zero) over 520 members; the catalogue figure needs its window and filter stated."
+  ],
+  "flags": [
+   "Wording (D-025): the code labels the k=2 splinter the antagonist set, and the June Phase-2 workbook used per-member frustration inside the Persuadable Index; this paper finds no significant global faction structure in three signed networks, so splinter membership and frustration are heuristic model outputs, not evidence of antagonism, closeness or persuadability, and need a null-model comparison before any such reading.",
+   "Reciprocity (D-104..D-108): the paper treats opposite-direction edge pairs as unsigned and offers no evidence on reciprocity; do not cite it as reciprocity validation.",
+   "No conflict with the two rejected SNA proposals: the paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization (its embeddedness thresholds are evaluation strata, not weights).",
+   "Windows and denominators: paper figures are 1999-2009 web snapshots over edges (balanced sample, minimum embeddedness 25 unless stated); system figures are from the 2026-07-19 artifact with total |net| weight or edge count as denominator.",
+   "All bearings are new agent analysis and remain UNVERIFIED until a second path reproduces them (DE-062)."
+  ],
+  "paul_alignment": "Paul has no annotation on this work (paul_entries empty, 0 annotations). He values Aref and Neal as an efficient alternative layer, with gaps of no path-finding and no time tracking. This paper tempers that: the signal sits in local triads and a directed status ordering, while a global two-faction split is not distinguishable from rewired baselines, so the layer also lacks a null and discards direction. His LLM-valence answer to negative ties is not contradicted; the paper supplies its missing structural check. No stale note.",
+  "related": [
+   {
+    "slug": "aref-2021-identifying-hidden-coalitions",
+    "relation": "complements",
+    "why": "Paper does not cite Aref. It bears on the missing null: its global-balance partitions score below degree-preserving rewired networks, the baseline the Aref-Neal diagnostic currently lacks. Item exists in the vault."
+   },
+   {
+    "slug": "aref-2020-detecting-coalitions-optimally",
+    "relation": "complements",
+    "why": "Paper does not cite Aref 2020. Both use a frustration-type partition objective; this paper finds no global faction signal in three signed networks, so any partition result on signed data needs a null. Item exists in the vault."
+   },
+   {
+    "slug": "zareie-2020-similarity-based-link",
+    "relation": "complements",
+    "why": "Paper does not cite Zareie. Its Sec 5 shows signed triad features improve positive-edge existence over positive-only path features, not over unsigned similarity baselines. Item exists in the vault."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "tang-2015-negative-link-prediction",
+    "relation": "built-on-by",
+    "why": "Title confirmed as Predicting Positive and Negative Links in Online Social Networks (2010). Tang uses Leskovec et al.'s 16 weighted signed-triad features as part of its 45-feature set (Sec. 4.2)."
+   },
+   {
+    "slug": "ringe-2013-pinpointing-powerful-voting",
+    "relation": "complements",
+    "why": "Item title confirmed (positive and negative links). The shared point that tie sign changes what a tie predicts is a framing link only; content not re-verified."
+   },
+   {
+    "slug": "zareie-2023-influence-maximization-social",
+    "relation": "complements",
+    "why": "Real item (WWW 2010, predicting positive and negative links). It supplies a method for signed-edge inference, the data prerequisite for the friend-or-foe family the survey reviews."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "koutsoumpis-2024-kernel-truth-text",
+  "note": false,
+  "meta": {
+   "title": "The Kernel of Truth in Text-Based Personality Assessment: A Meta-Analysis of the Relations Between the Big Five and the Linguistic Inquiry and Word Count (LIWC)",
+   "authors": [
+    "Antonis Koutsoumpis",
+    "Janneke K. Oostrom",
+    "Djurre Holtrop",
+    "Ward van Breda",
+    "Sina Ghassemi",
+    "Reinout E. de Vries"
+   ],
+   "year": "2022",
+   "venue": "Psychological Bulletin, 148(11-12), 843-868. Correction to metadata hint: the hint said 2024; the PDF gives 2022 (received April 8, 2022; accepted November 2, 2022).",
+   "doi": "10.1037/bul0000381",
+   "sha12s": [
+    "694a803d85d2"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "The Kernel of Truth in Text-Based Personality Assessment: A Meta-Analysis of the Relations Between the Big Five and the Linguistic Inquiry and Word Count (LIWC)",
+   "authors": [
+    "Antonis Koutsoumpis",
+    "Janneke K. Oostrom",
+    "Djurre Holtrop",
+    "Ward van Breda",
+    "Sina Ghassemi",
+    "Reinout E. de Vries"
+   ],
+   "year": "2022",
+   "venue": "Psychological Bulletin, 148(11-12), 843-868. Correction to metadata hint: the hint said 2024; the PDF gives 2022 (received April 8, 2022; accepted November 2, 2022).",
+   "doi": "10.1037/bul0000381",
+   "document_type": "Meta-analysis (peer-reviewed journal article)",
+   "coverage": "Read the full extracted text (all 4,110 lines, front matter through the reference list and receipt dates). Full coverage of the abstract, introduction, method, results (Tables 2-6 and Figure 3), discussion, limitations, conclusion and references. The paper contains no content on lobbying, legislators, networks, path-finding, allocation, or persuasion/turnout. Elections appear only as one included study task (Abe, 2018, reflection on U.S. elections; Table 2). Text measurement is covered in depth (LIWC closed-vocabulary method). Paul's markup: no files were listed for this PDF, and a search of /_annots for the document hash 694a803d85d2 returned no matches, so no markup was read or reported. Page numbers come from the running heads in the text dump and may be off by one in places; section and table locations are exact.",
+   "research_question": "Do self-reported and observer-reported Big Five traits correlate with the 52 LIWC categories shared across LIWC2001, LIWC2007 and LIWC2015 (cue validity and cue utilization)? Which categories form a \"kernel of truth\" that both self- and observer-reports link to? Do 10 study, sample and task moderators explain heterogeneity in these effects? (Introduction, pp. 843-847.)",
+   "theory": "Brunswik's (1955) lens model (cue validity vs cue utilization); Realistic Accuracy Model (Funder, 1995, 2012) for the kernel-of-truth idea; Self-Other Knowledge Asymmetry model (Vazire, 2010), which predicts observer reports will show larger effects for overt behavior such as verbal behavior; Trait Activation Theory (Tett and Guterman, 2000; Tett et al., 2021), used for predictions on language formality and task synchronicity; \"words as attention\" account of word use (Tausczik and Pennebaker, 2010).",
+   "data": "31 eligible samples from 26 studies (k = 31 samples, 26 studies), total N = 85,724 participants. Unit of analysis: sample/study-level correlations between Big Five trait scores and LIWC category scores. Cue validity: 26 self-report samples (Table 3 note reports k = 25, n = 83,243-84,084 for the analysed effects; Schwartz et al., 2013 alone has n = 72,809). Cue utilization: 5 observer-report samples (Table 3 note: n = 1,637). Mean age 27.96 years (SD 10.50) for cue validity samples; 23.66 (SD 5.52) for cue utilization. Text length >40 words required. Period: literature searched September 8-10, 2020, from 1999 onward (LIWC publication year). Eligible: healthy English-speaking adults; LIWC2022 excluded because it was published after the search. Screening: 691 database records plus 22 additional records; 429 abstracts screened; 124 full texts; 26 studies included (Figure 2, p. 849). Missing data: 12% of values imputed (see method).",
+   "method": "PRISMA-reported systematic review followed by meta-analysis (random-effects model, R package \"meta\"). Effect size: Pearson r, Fisher z transformation and back-transformation; Spearman rho converted to r for one study. Corrected effects (rho) disattenuated for personality-measure reliability only (Cronbach alpha for self-reports; ICC for observer reports); LIWC categories not corrected. Missing effect sizes (12% of values) imputed with a self-devised \"mean minus 1\" rule (sum of available effects plus zeros, divided by k-1); analyses based on this rule (pp. 847-849). Heterogeneity: Cochran Q, I2, tau. Publication bias: Egger's test on uncorrected, nonimputed data. Moderators (five categorical: LIWC version, written-spoken, formality, synchronicity, sample composition; five continuous: sample size, text length, age, percentage women, publication year) tested with meta-regression. Explained variance per trait: meta-analytic linear regression of each trait on all LIWC categories in lavaan, using a 52-category weighted average correlation matrix from 14 studies (n = 6,405) and the harmonic mean n. Content vs function words analysed separately, using narrow categories only to avoid double counting. Two coders per study (first author coded all; four research assistants coded a quarter each).",
+   "identification": "None in the econometric sense. This is a correlational meta-analysis. Cue validity is the correlation between self-reports and LIWC categories; cue utilization is the correlation between observer reports and LIWC categories; the \"kernel of truth\" is the set of categories significant in the same direction for both (Figure 1). The authors explicitly state that \"valid cues\" does not mean \"true\" personality.",
+   "scope": "Population: healthy adults writing or speaking English (mostly students and general-population samples, US-centric social media). Era: studies from 1999 to 2020, LIWC2001, LIWC2007 and LIWC2015 only. Instrument scope: the 52 LIWC categories shared by these versions; Big Five (plus HEXACO Emotionality/Agreeableness treated as Big Five, one study). HEXACO Honesty-Humility not reported (single study). Text types: blogs, Facebook/Twitter posts, essays, dreams, interviews, daily speech (EAR), chats. Results are English-specific (p. 861).",
+   "key_findings": [
+    {
+     "finding": "Self-reported traits correlate significantly with LIWC categories, but effects are small. Strongest |rho| ranged .08-.14; the 52 categories explain on average 5.1% of self-reported personality variance.",
+     "location": "Abstract, p. 843; Discussion, p. 854",
+     "numbers": "|rho| = .08-.14; mean R2 = 5.07% (cue validity, narrow categories, Table 4)"
+    },
+    {
+     "finding": "Observer-reported traits correlate with LIWC categories with small-to-medium effects, explaining much more variance than self-reports.",
+     "location": "Abstract, p. 843; Results, Cue Utilization, pp. 852-853; Table 4, p. 854",
+     "numbers": "|rho| = .18-.39; mean R2 = 38.52% (cue utilization); Emotional Stability lowest at 31.48%, Conscientiousness highest at 47.32%"
+    },
+    {
+     "finding": "Cue validity effects for individual categories (Table 3). Examples: Openness with words longer than six letters rho = .11; Conscientiousness with negative emotions rho = -.12, swear words -.11, anger -.10; Agreeableness with anger -.14, swear -.10, negative emotions -.10, positive emotions .10; Emotional Stability with negative emotions -.12. No Extraversion category reached |rho| >= .10.",
+     "location": "Results, Cue Validity, p. 852; Table 3, pp. 852-853",
+     "numbers": "As listed; k = 25 samples, n = 83,243-84,084 (Table 3 note)"
+    },
+    {
+     "finding": "Cue utilization effects for individual categories (Table 3). Examples: Agreeableness with swear words rho = -.39; Conscientiousness with swear words -.35, anger -.32, negative emotions -.30, sexual -.29; Extraversion with word count .31; Openness with word count .18 and leisure .17; Emotional Stability with first-person singular pronouns -.29.",
+     "location": "Results, Cue Utilization, pp. 852-853; Table 3",
+     "numbers": "k = 5 samples, n = 1,637 (Table 3 note)"
+    },
+    {
+     "finding": "Kernel of truth: 20 of 260 linguistic markers (5 traits x 52 categories) were significant in the same direction for both self- and observer-reports (3 Openness, 4 Conscientiousness, 3 Extraversion, 4 Agreeableness, 6 Emotional Stability). Eight reached |rho| >= .10; four also had lower 95% CI >= .05 (Conscientiousness: swear, anger, negative emotions; Agreeableness: swear). Across the 20 markers, cue validity and utilization correlate r = .94; across all 260, r = .52. Four markers pointed in opposite directions.",
+     "location": "Results, Kernel of Truth, p. 853; Figure 3, p. 853; Discussion, pp. 856-857",
+     "numbers": "20/260; r = .94 (20 markers); r = .52 (all 260); 8 at |rho| >= .10; 4 with lower CI >= .05"
+    },
+    {
+     "finding": "Cue utilization was larger than cue validity in both effect sizes and explained variance, consistent with the Self-Other Knowledge Asymmetry model.",
+     "location": "Discussion, Self-Other Knowledge Asymmetry Model, p. 857",
+     "numbers": "R2 mean 38.52% (utilization) vs 5.07% (validity)"
+    },
+    {
+     "finding": "Function words explained little variance but were valid and utilized markers for some traits; content words explained more.",
+     "location": "Results, Explained Variance, p. 853; Discussion, Other Findings: Function Words, p. 858; Table 4, p. 854",
+     "numbers": "Cue validity: function 1.31%, content 3.71%. Cue utilization: function 5.05%, content 28.68%."
+    },
+    {
+     "finding": "Heterogeneity was pervasive and moderators explained part of it. Significant heterogeneity in 96% of cue-validity and 82% of cue-utilization effects; the 10 moderators explained some heterogeneity in 70% and 61% of effects.",
+     "location": "Discussion, Moderators and TAT, p. 857",
+     "numbers": "96% (validity), 82% (utilization); 70% and 61% explained"
+    },
+    {
+     "finding": "Language formality: low-Agreeableness individuals used more swear words in informal settings (rho = -.14) than formal (rho = -.07), a significant difference (QM = 4.64, p = .03), as TAT predicted. Synchronicity did not moderate Extraversion and positive emotion (synchronous rho = .07 vs asynchronous .01; QM = 1.03, p = .31), so the Chen et al. (2020) finding was not replicated.",
+     "location": "Results, Categorical Moderators, p. 854; Discussion, Regarding TAT, p. 858",
+     "numbers": "rho -.14 informal vs -.07 formal (QM = 4.64, p = .03); QM = 1.03, p = .31"
+    },
+    {
+     "finding": "Text mode: Extraversion with word count was much stronger for spoken than written language.",
+     "location": "Results, Categorical Moderators, p. 854; Table 5, p. 855",
+     "numbers": "Spoken rho = .23 vs written .03 (word count, Extraversion)"
+    },
+    {
+     "finding": "LIWC version: older versions produced larger average effects.",
+     "location": "Results, Categorical Moderators, p. 854; Discussion, p. 857",
+     "numbers": "average |rho| = .042 (LIWC2001), .039 (LIWC2007), .030 (LIWC2015)"
+    },
+    {
+     "finding": "Continuous moderators: effects were typically stronger for longer texts and weaker for larger samples. Negative-valence associations for Conscientiousness and Agreeableness (swear, anger, negative emotions) and for Emotional Stability (negative emotions) weakened with publication year.",
+     "location": "Results, Continuous Moderators, p. 854; Table 6, p. 856; Discussion, p. 858",
+     "numbers": "Year-of-publication slopes significant for Agreeableness swear and anger and Emotional Stability negative emotions (cue validity, Table 6); sample size b < .001 for many cue-utilization effects"
+    },
+    {
+     "finding": "Publication bias: Egger tests flagged 99 of 260 cue-validity and 11 of 260 cue-utilization effects; excluding Schwartz et al. (2013) left 6. The authors argue small-study effects do not indicate publication bias because effects did not shrink with sample size and were smaller without Schwartz.",
+     "location": "Results, Publication Bias, p. 854",
+     "numbers": "99 (validity), 11 (utilization), 6 after excluding Schwartz et al."
+    },
+    {
+     "finding": "Benchmark against other methods. The strongest LIWC category per trait beat human judges for most traits but lagged computer methods (Moreno et al., 2021; IBM-WPI; HTTP). Average LIWC correlation in the table was .10 (self) and .25 (observer), versus .12 for human judges (Tskhay and Rule, 2014) and .27-.31 for other computer methods.",
+     "location": "Discussion, LIWC Versus Other Methods, pp. 858-860; Table 7, p. 859; Future Research, p. 861",
+     "numbers": "Average r: LIWC .10 (self) / .25 (observer); human judges .12; Moreno et al. (2021) .27; IBM-WPI .13; HTTP .31 (uncorrected)"
+    }
+   ],
+   "measures": [
+    "LIWC (LIWC2001, LIWC2007, LIWC2015): 52 categories shared across versions; word count, dictionary, words >6 letters, function-word and affect categories, and others (Table 1)",
+    "Big Five traits via self-report inventories (BFI-44, TIPI-10, IPIP-20/50/100/300, NEO-FFI, BFAS-100, HEXACO-PI-R; Table 2) and observer ratings (acquaintances, strangers, Facebook-based ratings)",
+    "Effect size: Pearson r (Fisher z pooled), corrected to rho for personality reliability (Cronbach alpha or ICC)",
+    "Explained variance R2 (%) per trait from meta-analytic regression across LIWC categories",
+    "Heterogeneity: Cochran Q, I2, tau; publication bias: Egger test"
+   ],
+   "limitations": [
+    "Corrected effects are probably underestimates: LIWC categories were not disattenuated for their reliability (authors argue they are formative measures; Limitations, p. 860).",
+    "Cue utilization rests on only k = 5 samples (vs 26 for cue validity), so categorical moderators could not be tested for it and the kernel of truth is probably underestimated (p. 861).",
+    "The cue-validity pool is dominated by Schwartz et al. (2013), n = 72,809 (the authors ran analyses with and without it).",
+    "12% of effect-size and moderator values were missing; missingness was non-random (non-significant effects were often unreported). The authors used a self-devised 'mean minus 1' imputation, which they admit may distort true effects (pp. 847-849).",
+    "Observer reports were mostly zero-acquaintance, and only one study used acquaintances; the acquaintance effect could not be tested (p. 861).",
+    "Several studies were small, and the authors note only large effects reach significance in small samples (p. 862).",
+    "Test-retest reliability was not used, because repeating verbal tasks can change responses (p. 860).",
+    "Results are English-specific, and LIWC has not been designed for personality assessment; Table 7 comparisons use each method's best category and are post hoc (footnote 9, p. 859).",
+    "Language formality and synchronicity are broad classifications, which may have attenuated situational moderation (p. 858).",
+    "Honesty-Humility is not covered (single study, Holtrop et al., 2019).",
+    "Egger's test flagged many cue-validity effects; the authors argue this reflects small-study effects rather than publication bias, which is a judgment call (p. 854)."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Abe, J. A. A. (2018). Personality and political preferences: The 2016 U.S. Presidential Election. Journal of Research in Personality, 77, 70-82. Included study; task was reflection on upcoming U.S. elections (Table 2, p. 851). Only election-related item in the paper.",
+    "Schwartz, H. A., et al. (2013). Personality, gender, and age in the language of social media: The open-vocabulary approach. PLOS ONE, 8(9), e73791. Facebook MyPersonality data, n = 72,809; drives cue-validity results.",
+    "Eichstaedt, J. C., et al. (2021). Closed- and open-vocabulary approaches to text analysis: A review, quantitative comparison, and recommendations. Psychological Methods, 26(4), 398-427. Comparative benchmark for closed vs open vocabulary methods.",
+    "Park, G., et al. (2015). Automatic personality assessment through social media language. JPSP, 108(6), 934-952. Open-vocabulary benchmark; test-retest comparison cited in Conclusion.",
+    "Mairesse, F., et al. (2007). Using linguistic cues for the automatic recognition of personality in conversation and text. JAIR, 30, 457-500. Source of the PersonalityRecognizer tool built on LIWC categories; reanalysed Pennebaker and King data.",
+    "Holtzman, N. S., et al. (2019). Linguistic markers of grandiose narcissism: A LIWC analysis of 15 samples. Journal of Language and Social Psychology, 38(5-6), 773-786. Prior LIWC meta-level moderator comparison.",
+    "Chen, J., Qiu, L., & Ho, M. H. R. (2020). A meta-analysis of linguistic markers of extraversion: Positive emotion and social process words. Journal of Research in Personality, 89. Prior LIWC meta-analysis; source of the synchronicity moderator hypothesis.",
+    "Holtrop, D. J., et al. (2022). Exploring the application of text-to-personality algorithms in job interviews. EJWOP, 31(6). HTTP closed-vocabulary tool; comparison benchmark.",
+    "Hickman, L., Tay, L., & Woo, S. E. (2019). Validity evidence for off-the-shelf language-based personality assessment using video interviews. Personnel Assessment and Decisions, 5(3). IBM-WPI validity failure in job interviews.",
+    "Moreno, J. D., et al. (2021). Can personality traits be measured analyzing written language? A meta-analytic study on computational methods. Personality and Individual Differences, 177. Computational text-personality meta-analysis benchmark.",
+    "Tskhay, K. O., & Rule, N. O. (2014). Perceptions of personality in text-based media and OSN: A meta-analysis. JRP, 49, 25-30. Human-judge accuracy benchmark (r = .12).",
+    "Vazire, S. (2010). Who knows what about a person? The self-other knowledge asymmetry (SOKA) model. JPSP, 98(2), 281-300. Theoretical basis for cue-utilization > cue-validity prediction.",
+    "Funder, D. C. (1995). On the accuracy of personality judgment: A realistic approach. Psychological Review, 102(4), 652-670. RAM underpinning the kernel-of-truth concept.",
+    "Tausczik, Y. R., & Pennebaker, J. W. (2010). The psychological meaning of words: LIWC and computerized text analysis methods. JLSP, 29(1), 24-54. Core LIWC methods reference.",
+    "Qiu, L., Lin, H., Ramsay, J., & Yang, F. (2012). You are what you tweet: Personality expression and perception on Twitter. JRP, 46(6), 710-718. Included Twitter study (cue validity and utilization); Twitter-based personality expression.",
+    "Golbeck, J., Robles, C., Edmondson, M., & Turner, K. (2011). Predicting personality from Twitter. IEEE PASSAT/SocialCom. Included prediction study on social media text."
+   ],
+   "short_quotes": [
+    {
+     "quote": "self-reported personality traits are significantly correlated with linguistic categories, but the effect sizes are relatively small",
+     "location": "Abstract, p. 843"
+    },
+    {
+     "quote": "the LIWC categories serve as linguistic markers of personality traits",
+     "location": "Conclusion, p. 862"
+    },
+    {
+     "quote": "cue utilization was larger than cue validity, both in terms of effect sizes and explained variance",
+     "location": "Discussion, Self-Other Knowledge Asymmetry Model, p. 857"
+    }
+   ]
+  },
+  "summary_md": "Koutsoumpis et al. (Psychological Bulletin, 2022; the vault slug says 2024, the PDF says 2022) pooled 31 samples (N = 85,724). They correlated Big Five scores with the 52 LIWC categories shared by LIWC2001, 2007 and 2015.\n\n**Self-reports (cue validity), 26 samples.** Effects are small. The strongest correlations run |rho| .08-.14, and all 52 categories together explain about 5.1% of trait variance.\n\n**Observer ratings (cue utilization), only 5 samples (n = 1,637).** Effects are larger: |rho| .18-.39, with R2 averaging 38.5%.\n\n**Overlap.** Only 20 of 260 trait-by-category markers agree in direction for both self and observer reports. The paper calls this the \"kernel of truth\". Examples: swear words, anger and negative emotion for low Conscientiousness and low Agreeableness, and negative emotion for low Emotional Stability.\n\n**Other results.** Heterogeneity is nearly universal: 96% of self-report effects and 82% of observer effects. Formal settings weaken some markers, for example Agreeableness with swear words is -.07 formal vs -.14 informal. Spoken text carries much more Extraversion signal through word count than written text (.23 vs .03). LIWC also trails other computer methods (.10 vs .27-.31).\n\n**Why it matters for Melange.** The system's lexical Big Five (`big5_traits.py`) is this closed-vocabulary method applied to formal congressional speech. It uses short published-exemplar word lists, not licensed LIWC dictionaries. The paper sets a low ceiling on how much true trait signal such rates can carry. That supports four existing choices: the brain's reading that the RKH convergence (CV mean .350) is inflated by shared method, retiring the lexical basis from the receptivity layer, square-root token shrinkage, and keeping status labels on any external claim.\n\nThe paper also gives a direction check for the active SMOreg weights, and some of them point the opposite way. Finally, observer-panel passes need care. The paper says plainly that valid cues are not the same as true personality, so convergence with the Senate expert panels may partly reflect raters using the same cues the text model uses (utilization), not validity.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "qualifies",
+    "paper_claim": "Self-reported Big Five correlate with LIWC categories at most |rho| .08-.14 (abstract p. 843). The 52 categories explain a mean R2 of 5.07 percent of self-report variance (narrow categories, k = 25 self-report samples, n = 83,243-84,084). About 87 percent of that n is Schwartz et al. 2013 (n = 72,809). Heterogeneity significant in 96 percent of cue-validity effects. Table 7 lists LIWC best-category average r = .10 (self) against Moreno et al. .27, HTTP .31, IBM-WPI .13 and human judges .12, all uncorrected.",
+    "paper_location": "Abstract p. 843; Table 3 note p. 853; Table 4 p. 854; heterogeneity p. 857; Table 7 p. 859 with footnote 9",
+    "system_side": "Code matches the description. Exemplar lists include swear = damn hell crap (big5_traits.py:100). Per-1000-word rates are at :220. Hand-set weights W are at :179-185, the SMOreg override at :186-189, and corpus z-scoring at :241-242. The stated held-out CV mean .350 and E .510 were not found in the brain topic or the fec tree. The brain topic records only C +0.348 held-out (round 2, 2026-07-08).",
+    "code_ref": "fec/members/big5_traits.py:100, :179-189, :220, :241-242; fec/liwc/mairesse_smoreg.json",
+    "transfer_conditions": "Paper samples are mostly informal English social media and student or general-population samples, LIWC 2001-2015. Congressional speech is formal and partly staff-written, and the paper shows formality attenuates markers. The system uses exemplar lists, not licensed LIWC dictionaries, so category equivalence is unverified. Table 7 values are post hoc best-category maxima and cannot rank methods.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Abstract, Table 4 and Table 3 figures match the text. Softened because Table 7 omits IBM-WPI at .13, which is above LIWC at .10, and the paper calls the best-category comparison post hoc. The CV .350 and E .510 figures and the claim that RKH convergence is method-inflated were not found in the brain topic or the repo, so they are unsupported as written.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "qualifies",
+    "paper_claim": "Bivariate cue-validity effects (self-report, Table 3): Openness words over six letters rho .11; Conscientiousness negative emotion -.12, swear -.11, anger -.10; Agreeableness anger -.14, swear -.10, negative emotion -.10, positive emotion .10. Emotional Stability has no first-person singular validity effect at |rho| .10 or more. Cue utilization (observer): Emotional Stability first-person singular -.29.",
+    "paper_location": "Results pp. 852-853; Table 3; Figure 3 p. 853",
+    "system_side": "Verified SMOreg weights: A anger -.0202 (json line 66), A swear -.0323 (:87), C anger -.0556 (:95), C swear -.0446 (:116), O sixltr +.0292 (:147). The paper agrees on these signs. Disagreements: ES first-person singular +.0094 (:43), ES negative emotion -.0002 (:51), and E positive emotion -.0339 (:20). The rel line citations were wrong for A anger (cited :43).",
+    "code_ref": "fec/liwc/mairesse_smoreg.json:20, :43, :51, :66, :87, :95, :116, :147; fec/members/big5_traits.py:180-181",
+    "transfer_conditions": "The paper estimates are bivariate correlations. SMOreg weights are multivariate, so suppression can flip signs without error. The ES first-person comparison sets an observer-based paper effect against a model fit to other data, so it is not like-for-like. The flagged signs remain UNVERIFIED (DE-062) and are an audit lead only.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper values match Table 3 and pp. 852-853. The contradicts label is too strong: the paper does not test SMOreg, and the ES first-person comparison mixes observer utilization with a self-report-fit model. Weight values and signs match the json. Relation changed to qualifies.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.gold-panel-validation",
+    "relation": "qualifies",
+    "paper_claim": "Observer-rated (cue utilization, k = 5, n = 1,637, mostly zero-acquaintance raters) explained variance averages 38.52 percent against 5.07 percent for self-report cue validity. Largest observer |rho| .39 (Agreeableness swear) and .31 (Extraversion word count). Emotional Stability has the lowest observer R2 at 31.48 percent. The authors say valid or utilized cues are not the same as true personality.",
+    "paper_location": "Results pp. 852-853; Table 4 p. 854; Discussion p. 857; Limitations p. 861",
+    "system_side": "Senate panels are 129 insiders and 125 academics (brain topic line 52). The brain topic says E and A clear both panels, and O, C and N are one-panel association supported (line 58). The rel's per-panel splits (O academics only, N insiders only, C insider only) and the A-ES figures of about .44 and .21 halo do not appear in the brain topic. The cited file fec/big5_improvements_eval.py is not in the repo.",
+    "code_ref": "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics.md:52, :58 (fec/big5_improvements_eval.py not found)",
+    "transfer_conditions": "The paper observer samples are k = 5 with n = 1,637, nearly all zero-acquaintance. The Senate panels are informed insiders and experts, which the paper could not test. SOKA predicts the overt traits (E, A) would pass and ES would be weakest, which fits the brain topic. Panel convergence shows raters and text use the same cues, not trait accuracy.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers match. Softened because the per-panel assignments and the A-ES .44 and .21 halo figures are not in the brain topic. Recheck them against the source files before any use.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Big Five validation against Senate gold panels and criteria|Big Five validation against Senate gold panels and criteria]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "supports",
+    "paper_claim": "Emotional Stability relates negatively to negative-emotion words (cue validity rho -.12, p. 853) and to first-person singular pronouns (cue utilization rho -.29). Emotional Stability carries 6 of the 20 kernel markers (p. 853). The Emotional Stability negative-emotion validity effect weakens with publication year (Table 6, b = .006). No positive-emotion effect for Emotional Stability is reported.",
+    "paper_location": "Results p. 853; Table 3; Table 6 p. 856; Discussion p. 858",
+    "system_side": "The anchor in emit_affective_n.py counts first-person pronouns, a hand-written negative-affect regex and a hand-written positive-affect regex in interview text of 800 or more words, then z-scores them. These are custom lexicons, not LIWC dictionaries, despite the LIWC framing. Since round 7b the anchor is convergent-validity only (r = +.24 per the rel). Genre-transfer values (.050, .161) were not checked here.",
+    "code_ref": "fec/members/emit_affective_n.py:15-17 (regexes), :34 (counts), about :38-43 (anchor)",
+    "transfer_conditions": "The paper supports the sign structure for Emotional Stability only, and it reports heterogeneity by mode and formality. An expected anchor size near .24 is the analyst's inference, not a paper result. This is direction support only, not evidence that N predicts yielding.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper values match. Softened because the anchor uses custom regexes, not LIWC, and the paper has no Emotional Stability positive-emotion effect, so the 'less posemo' part of the support is not backed by the paper.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-influence-engine.receptivity-layer",
+    "relation": "supports",
+    "paper_claim": "The strongest self-report category effects sit at |rho| .08-.14 (abstract p. 843), and the 52 categories explain 5.07 percent of self-report variance (Table 4 p. 854). Effects are typically stronger for longer texts (Table 6 continuous moderators, p. 854).",
+    "paper_location": "Abstract p. 843; Table 4 p. 854; Table 6 p. 856",
+    "system_side": "Default basis is behavioral (RECEPT_TRAITS default). The lexical fallback is susc = .40A + .30N - .20C - .10E. Shrinkage is min(1, sqrt(tokens/1500)). Code and comments match the rel. The sqrt form is not estimated by this paper.",
+    "code_ref": "fec/members/receptivity_layer.py:59-64, :165, :189 (cited lines checked by content)",
+    "transfer_conditions": "Closed-vocabulary rates carry little true trait variance, so a lexical composite is mostly noise. This supports keeping the lexical basis out of the default, but not the specific sqrt shrinkage form.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Code claims match. Softened because the abstract range is .08 to .14, not about .10 to .14 as the rel states, and the paper says nothing about the sqrt shrinkage form.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Receptivity layer (susceptibility, incentive, prospect domain, seed probability)|Receptivity layer (susceptibility, incentive, prospect domain, seed probability)]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Coverage: ext.json and rel.json override files do not exist, so the rel in the item JSON was used. Paul paul_markup is empty and the item has no annotations, so no Paul notes were dropped. All 4110 lines of the text file were searched for the cited numbers and sections; the paper text was not fully read line by line.",
+   "Summary says the paper's year is 2022 (correct; received 2022, DOI 10.1037/bul0000381), but the item p.year field still reads 2024 and should be corrected.",
+   "Summary LIWC benchmark line '.10 vs .27-.31' omits IBM-WPI at .13, which is above LIWC. It also omits that the LIWC value is a post hoc best-category maximum (Table 7, footnote 9).",
+   "Summary ext list says LIWC lags computer methods across the board. Paper text says LIWC beats IBM-WPI for Conscientiousness and Extraversion.",
+   "Summary gives Emotional Stability negative emotion as a kernel example. The paper's Emotional Stability kernel marker at |rho| of .10 or more is first-person singular pronouns only, and negative emotion is shown only as a validity effect (-.12). Kernel membership is not shown.",
+   "Summary quotes pooled cue-validity figures (|rho| .08-.14, 5.1 percent variance) without the Schwartz 2013 concentration (n = 72,809 of about 84k). Give the with and without Schwartz figures (paper says results almost identical) and state k and n for each figure.",
+   "Summary says the brain reads the RKH convergence (CV mean .350, E .510) as method-inflated. Neither figure appears in the brain topic or the fec tree. The brain topic records C +0.348 held-out only.",
+   "Summary says the lexical basis is retired from the receptivity layer. Code shows only the default changed; RECEPT_TRAITS=lexical still reverts to it. Reword as a default change.",
+   "Ext year-of-publication list omits Conscientiousness swear (validity, b = .006, Table 6). Incomplete, not wrong.",
+   "Several rel code line citations were off: SMOreg Agreeableness anger is json line 66, not 43. Bearing 2 cites fec/big5_improvements_eval.py, which does not exist in the repo.",
+   "Bearing 2 panel assignments (O academics only, N insiders only, C insider only) and the A-ES .44 and .21 halo figures do not appear in the brain topic, which says only E and A clear both panels and O, C and N are one-panel supported."
+  ],
+  "gaps_exposed": [
+   "The lexical reader has no licensed LIWC dictionary: categories are short exemplar lists (swear = 3 words) plus the Empath overlay. The paper's effect sizes are for LIWC dictionaries, and the system has no check that its categories are equivalent.",
+   "There is no formality or genre moderator in the lexical model. The paper shows formality and spoken vs written mode change effect sizes (Agreeableness-swear -.14 vs -.07; Extraversion-word count spoken .23 vs written .03). The system pools floor, interview and social text and has already seen genre transfer fail for N.",
+   "No sign audit of the fitted SMOreg weights against literature kernel directions. ES on first-person singular and E on positive emotion run opposite to the paper, and ES on negative emotion is near zero.",
+   "No open-vocabulary or embedding benchmark: the paper's Table 7 puts other computer methods at r .27-.31 against LIWC's .10 for self-reports. The system's alternative LLM reader is display-only and failed its behavioral diagonal (+0.064).",
+   "No cue-validity vs cue-utilization distinction in the validation framing: observer-panel convergence (E, A) is not separated from shared-stereotype cue use."
+  ],
+  "flags": [
+   "Metadata: the vault slug and hint say 2024. The paper is Psychological Bulletin 2022, 148(11-12), 843-868, doi 10.1037/bul0000381.",
+   "Documentation drift: the component brief says affective_n = z(LIWC) + z(LLM). The live code, emit_affective_n.py:39-43, says LIWC is only the convergent-validity anchor since round-7b, and the measure is the E-residualized, party-controlled LLM affective-N.",
+   "The active SMOreg weights (fec/liwc/mairesse_smoreg.json:20, :43, :51) give E a negative weight on positive emotion, ES a positive weight on first-person singular, and ES a near-zero weight on negative emotion, against the paper's directions. This is a multivariate-suppression caveat, not proof of error. UNVERIFIED single-path analysis (DE-062).",
+   "Do not quote the RKH held-out CV (.350, E .510) as trait validity. RKH is itself Mairesse-LIWC text-derived, and the paper's 5% ceiling on self-report variance makes method-shared inflation the likely explanation.",
+   "Do not read observer-panel passes as trait accuracy. The paper says valid or utilized cues do not mean 'true' personality, and its observer evidence rests on k = 5 mostly zero-acquaintance samples.",
+   "No brain wording rule is triggered: the paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization, and makes no LDA, reciprocity or influence claims."
+  ],
+  "paul_alignment": "Paul calls Ramey's closed-vocabulary approach \"dated but foundational\" and asks for frameworks specific to each venue. Birkenmaier's highlights call Ramey's SVM outdated and unvalidated. This meta-analysis backs both points with numbers. Closed-vocabulary categories explain only about 5% of self-reported trait variance, and venue matters: formality, spoken vs written, and heterogeneity in 96% of effects. So the evidence agrees with his skepticism and with his call for venue-specific frameworks.\n\nHis notes are stale relative to the system. They do not record three things:\n- The pre-registered nomological test already indicted the lexical Big5 for behavioral prediction, and the receptivity layer now defaults to a behavioral basis (receptivity_layer.py:59-64).\n- N now comes from an E-residualized LLM reader, with LIWC only as an anchor.\n- RKH convergence is method-shared.\n\nThe paper does not support his endorsement of LLM trait reading directly, because it does not test LLMs. It only shows that non-LIWC computer methods reach r of about .27-.31. The system's own LLM reader has not cleared its behavioral bar.",
+  "related": [
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "same-method",
+    "why": "Item exists (Measuring Elite Personality Using Speech, 2016). Same closed-vocabulary method applied to congressional speech; the paper sets an effect-size ceiling for that method. Ramey characterization not separately checked."
+   },
+   {
+    "slug": "pennebaker-2003-psychological-aspects-natural",
+    "relation": "builds-on",
+    "why": "Item exists. The meta-analysis cites Pennebaker et al. 2003 and LIWC category design rests on this line of work."
+   },
+   {
+    "slug": "azucar-2017-predicting-personality-traits",
+    "relation": "complements",
+    "why": "Item exists (Predicting the Big 5 from digital footprints, meta-analysis). It is a parallel open-vocabulary meta-analysis. The rel's claim that its effects are larger was not checked in this paper."
+   },
+   {
+    "slug": "mondak-nd-online-appendix-personality",
+    "relation": "complements",
+    "why": "Item exists (Personality on the Hill appendix, Senate expert ratings). Observer ratings make the cue-utilization versus cue-validity distinction relevant to reading panel convergence."
+   },
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Item exists (computational measurement of politicians' agency and communion). Relevant context for the closed-vocabulary ceiling. The claim that it criticizes Ramey-style SVM was not checked here."
+   },
+   {
+    "slug": "yang-2023-getting-personal-deep",
+    "relation": "complements",
+    "why": "Item exists (deep-learning text personality artifact, 2023). This paper does not discuss it, so 'contradicts' is not supported. Relabelled complements: both are benchmark comparisons of text-based trait measurement."
+   },
+   {
+    "slug": "celli-2012-role-emotional-stability",
+    "relation": "complements",
+    "why": "Item exists (The Role of Emotional Stability in Twitter Conversations, 2012). Relevant to the Emotional Stability kernel markers and the affective-N anchor."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "marrero-2022-evaluating-voice-samples",
+    "relation": "same-method",
+    "why": "Meta-analysis of Big Five and LIWC links; useful context for how small the paper's LIWC-alone figure of 3.13 percent is against published LIWC-trait associations."
+   },
+   {
+    "slug": "palm-2025-influence-personality-traits",
+    "relation": "complements",
+    "why": "Palm & Tims rely on self-reported traits. Koutsoumpis meta-analyses how weakly text-based (LIWC) traits track self-reports, which limits any transfer to the system's text-derived traits."
+   },
+   {
+    "slug": "rammstedt-2025-going-global-language",
+    "relation": "complements",
+    "why": "This meta-analysis gives the LIWC-to-Big-Five correlations that bear on Melange's text-derived traits, which is the validity side that Rammstedt's documentation paper omits."
+   },
+   {
+    "slug": "celli-nd-twenty-years-personality",
+    "relation": "complements",
+    "why": "Existence confirmed. The survey does not cite it, so the complement claim is unverified."
+   },
+   {
+    "slug": "simchon-2024-persuasive-effects-political",
+    "relation": "complements",
+    "why": "A meta-analysis of LIWC and Big Five links that bounds how much openness signal closed-vocabulary text carries, relevant to both this paper's text scoring and Melange's lexical O."
+   },
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "complements",
+    "why": "Item exists. Meta-analysis of LIWC-Big Five validity; relevant to LIWC demotion, not re-checked beyond existence."
+   },
+   {
+    "slug": "naz-2025-machine-deep-learning",
+    "relation": "complements",
+    "why": "A meta-analysis of LIWC-Big Five relations, which bounds what the closed-vocabulary features the survey treats as baseline (and the system's lexical reader) can recover."
+   },
+   {
+    "slug": "soto-2017-next-five-inventory",
+    "relation": "complements",
+    "why": "Meta-analysis of LIWC and Big Five correlations, which brackets the text-to-trait convergence reachable against self-report. Title confirmed."
+   },
+   {
+    "slug": "kumari-nd-five-personality-predictions",
+    "relation": "complements",
+    "why": "A meta-analysis of LIWC-Big Five correlations. It gives realistic, small magnitudes for the LIWC features this paper proposes, and bears on the closed-vocabulary weights in big5_traits.py."
+   },
+   {
+    "slug": "mairesse-2007-automatic-recognition-personality",
+    "relation": "complements",
+    "why": "Meta-analysis of 52 LIWC categories against the Big Five that reports small effect sizes. This supports the point about small closed-vocabulary signal; the paper does not cite Mairesse 2007."
+   },
+   {
+    "slug": "cao-2024-language-models-personality",
+    "relation": "complements",
+    "why": "Meta-analysis of LIWC-Big Five correlations, which are mostly small. Cao does not cite it, and it measures a different target (self and observer reports from text), so the rel's comparison of Cao's r with LIWC effects is not like for like."
+   },
+   {
+    "slug": "decter-frain-2016-impressive-words-linguistic",
+    "relation": "complements",
+    "why": "Meta-analysis of how far LIWC categories carry Big Five signal. It bounds how much the coder-weighted LIWC agency and communion indexes can mean."
+   },
+   {
+    "slug": "osnabrugge-2021-playing-gallery-emotive",
+    "relation": "complements",
+    "why": "Not cited by this paper; analyst link on LIWC-to-Big-Five meta-analysis bounding trait versus context in affect rates."
+   },
+   {
+    "slug": "peters-2024-language-models-infer",
+    "relation": "complements",
+    "why": "Meta-analysis of Big Five and LIWC relations, the closed-vocabulary baseline against which zero-shot LLM inference is compared. Published 2022; the slug year is 2024, a naming difference only."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "cagala-2021-optimal-targeting-fundraising",
+  "note": false,
+  "meta": {
+   "title": "Optimal Targeting in Fundraising",
+   "authors": [
+    "Tobias Cagala",
+    "Ulrich Glogowsky",
+    "Johannes Rincke",
+    "Anthony Strittmatter"
+   ],
+   "year": "2021",
+   "venue": "arXiv preprint arXiv:2103.10251v3 [econ.EM], 29 Sep 2021 (dated September 30, 2021 on the title page). No journal appears in the text. AEA RCT Registry ID AEARCTR-0007581. The metadata hint matches the text.",
+   "doi": "\"\"",
+   "sha12s": [
+    "48cece80b196"
+   ],
+   "category": "Causal & Methodological",
+   "category_slug": "causal-methodological"
+  },
+  "extraction": {
+   "title": "Optimal Targeting in Fundraising",
+   "authors": [
+    "Tobias Cagala",
+    "Ulrich Glogowsky",
+    "Johannes Rincke",
+    "Anthony Strittmatter"
+   ],
+   "year": "2021",
+   "venue": "arXiv preprint arXiv:2103.10251v3 [econ.EM], 29 Sep 2021 (dated September 30, 2021 on the title page). No journal appears in the text. AEA RCT Registry ID AEARCTR-0007581. The metadata hint matches the text.",
+   "doi": "\"\"",
+   "document_type": "Working paper / arXiv preprint with online appendix (Appendices A-I)",
+   "coverage": "Full text read: all 4,079 lines of the file, including main text (pp. 1-34), references (pp. 34-39) and Online Appendix A-I (pp. 1-21). No Paul markup exists for this item (no markup files were supplied), so paul_markup is empty.",
+   "research_question": "Can a charity raise more net donations (donations minus fundraising cost) by targeting an unconditional gift (small Dürer postcards mailed with a solicitation letter) to a subset of potential donors, using causal machine learning to learn an optimal targeting rule from a randomized field experiment, and does that rule generalize? Theory: charities face costly fundraising and donor overhead aversion (Rose-Ackerman 1982; Name-Correa and Yildirim 2013; Gneezy et al. 2014); the optimal rule targets \"net donors\" whose expected additional donation exceeds the marginal cost; heterogeneous motives (altruism, warm glow, reciprocity, sequential reciprocity) make gift effects heterogeneous across individuals.",
+   "data": "Natural field experiment in 2014 with a Catholic Church fundraiser in a German urban area (26% of residents are church members). Unit: individual church member (donor). Sample of 19,779 individuals: warm list (previous donors) N=2,354 (1,180 gift, 1,174 control); cold list (never donors) N=17,425 (2,283 gift, 15,142 control). Randomization stratified on list, gender, household type, quintiles of predicted baseline giving and age quintiles. Outcomes: donation amount in euro in the first year after the experiment (2015) and the first two years; donation dummy; net donation (donation minus gift variable cost, 1.16 euro). Covariates: (a) administrative records (gender, marital status, age, residency, donation history 2006-2015, per the text) and (b) Google Maps geospatial counts within 300 m (restaurants, supermarkets, medical, cultural facilities, churches) plus distances to station, city hall, main church and airport, travel time and elevation. External validity: 2015 follow-up experiment on a new warm-list sample (text says N=3,616; Table G.2 says 3,612), 50% gift probability; the 2015 sample is matched to 2014 by caliper propensity-score matching (radius 0.1). The text states donation records run 2006-2015 while also saying two post-experiment years were observed; the second year's dates are not reconciled in the text.",
+   "method": "Potential-outcomes framework. CATE delta(x) and ATE identified under stratified randomization and SUTVA (Appendix B). Outcome-model/propensity nuisance estimation: logit for propensity, OLS for outcome regressions (Table D.1), combined into an augmented inverse probability weighting (AIPW) score (Eq. 3-4). Optimal targeting rule estimated directly via Athey and Wager (2021) empirical welfare maximization, using exact policy-learning trees of Zhou, Athey and Wager (2018) with search depth two (policytree R package). Gains evaluated by 20-fold cross-validation of out-of-sample net donations versus all-gift, no-gift and random-gift benchmarks. Descriptive heterogeneity: sorted-effects approach (Chernozhukov, Fernandez-Val and Luo 2018) with multiplier-bootstrap bands, plus best linear predictor test with causal forest (Chernozhukov et al. 2020). Data-type ablations (socioeconomic, donation history, geospatial, combinations). Sensitivity to depth one and three exact trees, CART (fixed and cross-validated depth), weighted logit (baseline and flexible), logit lasso, classification forest; nuisance robustness via population propensity and cross-fitted lasso (Tables I.1-I.4). Identification of the targeting gain does not require identifying the causal effect of each characteristic; trees indicate correlations only.\nIdentification strategy: random assignment of the gift within strata (Zi), exogenous of potential outcomes conditional on Zi, 0 &lt; p(z) &lt; 1; heterogeneity variables Xi are not needed for identification.",
+   "scope": "Population: church members in one German urban area, targeted by one Catholic Church fundraiser with an annual solicitation mailing, split into warm (past donors) and cold (never donors) lists. Institution: a single religious charity; religious giving is the largest private giving category in Germany (about 35% of private giving per the text, citing Deutscher Spendenrat 2016). Era: 2014 treatment with 2015 (and second-year) outcomes; 2015 follow-up experiment on warm list. The paper states the findings may be specific to the setting.",
+   "key_findings": [
+    {
+     "finding": "Gift ATE on donations (first year): warm list +1.21 to +1.24 euro, not significant. Net of the 1.16 euro gift cost: +0.05 to +0.08 euro, not significant. Cold list ATE +0.19 euro (significant); net of cost -0.97 euro per donor, so the all-gift rule loses money in the cold list.",
+     "location": "Section 5.1, Table 1 (p.17-18)",
+     "numbers": "warm ATE 1.21-1.24 (SE 1.15-1.25); warm net 0.05-0.08; cold ATE 0.19 (SE 0.07-0.10); cold net -0.97 (SE 0.07-0.10); preferred AIPW warm ATE 1.22, net 0.06"
+    },
+    {
+     "finding": "Heterogeneity: sorted effects show substantial individual variation in warm-list gift effects; 45% of warm-list individuals have estimated effects above the 1.16 euro cost. Effects range from +17.99 euro (95th percentile responders) to -11.59 euro (5th percentile). In the cold list, effects exceed cost only above the 92nd percentile and are small.",
+     "location": "Section 5.2, Figure 2 (p.19-20)",
+     "numbers": "warm: 45% above cost; 5th pct -11.59 euro; responsive individuals +17.99 euro; cold: 5th pct -0.73, 95th pct +1.38 euro"
+    },
+    {
+     "finding": "Best linear predictor test with causal forest detects significant effect heterogeneity in the warm list and none in the cold list.",
+     "location": "Section 5.2 and Table E.3 (p.21; Appendix p.12)",
+     "numbers": "warm heterogeneity loading 0.959* (SE 0.710); cold 0.511 (SE 1.069)"
+    },
+    {
+     "finding": "Warm list optimal rule (cross-validated out-of-sample): gift is assigned to 33% of warm-list individuals; expected net donations 17.61 euro, which is 2.14 euro (13.8%) above all-gift, 2.20 euro (14.3%) above no-gift, and 2.17 euro (14.1%) above random-gift, all significant.",
+     "location": "Section 5.3, Table 2 Panels A-B (p.21-22)",
+     "numbers": "share treated 0.33; net donation 17.61 euro (SE 0.97); vs all-gift 2.14*** (0.82); vs no-gift 2.20*** (0.81); vs random 2.17*** (0.58)"
+    },
+    {
+     "finding": "Secondary outcomes (warm list): donation probability in first year is +0.025 (significant at 5%) vs no-gift, with no significant difference from the all-gift rule; net donations over two years are 32.94 euro, +2.33 vs all-gift and +3.75 vs no-gift, so the gains persist and there is no evidence of pull-forward.",
+     "location": "Section 5.3, Table 2 Panel C (p.22-23)",
+     "numbers": "donation probability 1st year 0.503; vs no-gift 0.025**; two-year net donations 32.94 euro; +2.33* vs all-gift; +3.75*** vs no-gift; two-year probability 0.582"
+    },
+    {
+     "finding": "Cold list optimal rule assigns the gift to only 1.4% of cold-list individuals. Expected net donation 0.15 euro, essentially equal to no-gift (-0.005, not significant), and significantly above all-gift (0.97 euro) and random-gift (0.48 euro). The paper concludes the gift should not be sent to cold-list individuals at all.",
+     "location": "Section 5.3, Table 3 (p.23-24) and Conclusion (p.33)",
+     "numbers": "share treated 0.014; net donation 0.15***; vs all-gift 0.97*** (0.10); vs no-gift -0.005 (0.012); vs random 0.48*** (0.05)"
+    },
+    {
+     "finding": "Warm-list targeted (net donor) vs non-targeted (net receiver) characteristics: targeted donors gave more before the experiment (average 4.10 vs 3.90 prior donations; 130.98 vs 123.39 euro total prior donations), live at lower elevation (308.66 vs 321.38 m), and have more restaurants, churches and cultural facilities nearby. Socioeconomic differences are small. Sample: 787 targeted vs 1,567 non-targeted.",
+     "location": "Section 5.4, Table 4 (p.24-25)",
+     "numbers": "elevation std diff 157.80; cultural facilities 0.240 vs 0.050 (std diff 32.27); female share 0.507 vs 0.539 (std diff 6.46)"
+    },
+    {
+     "finding": "Cold-list targeted vs non-targeted: targeted individuals live closer to city hall, main station and airport, have fewer restaurants nearby (5.48 vs 10.40), and are more often female (0.558 vs 0.503) and single (0.713 vs 0.642). Sample: 251 targeted vs 17,174 non-targeted.",
+     "location": "Section 5.4, Table 5 (p.26)",
+     "numbers": "distance to city hall 1.364 vs 2.816 km (std diff 103.02); restaurants 5.482 vs 10.40 (std diff 57.08)"
+    },
+    {
+     "finding": "Data needed: the warm-list rule using only geospatial data (17.40 euro expected net donation, +1.92** vs all-gift, +1.98** vs no-gift) or only donation history (17.20 euro, +1.73** and +1.79**) performs about as well as the baseline (17.61 euro). Socioeconomic data alone do not beat the three benchmarks (15.71 euro; differences insignificant). Adding socioeconomic data does not improve the rules. Cold list: geospatial-only rule gives 0.15 euro, the same as the baseline.",
+     "location": "Section 5.5, Tables 6-7 (p.27-29)",
+     "numbers": "warm geospatial-only 17.40; donation-history-only 17.20; socioeconomic-only 15.71 with vs no-gift 0.27 (insignificant); cold geospatial-only 0.15 with vs no-gift -0.005"
+    },
+    {
+     "finding": "External validity over time: the 2014 rule applied to a caliper-matched 2015 warm-list sample (radius 0.1) yields 19.85 euro expected net donation, +2.64* vs all-gift and +2.30** vs no-gift, and 35.6% treated. Applied to the full 2015 sample it yields 17.16 euro with no significant gain over all-gift (-0.88) or no-gift (+0.45). The text says the 2015 average gift effect is 1.33 euro vs 0.08 in 2014.",
+     "location": "Section 5.6, Table 8 and Figure H.1 (p.30-32)",
+     "numbers": "matched: 19.85, +2.64*, +2.30**, random +2.47**; full 2015: 17.16, -0.88, +0.45, -0.22; share treated 0.356 matched, 0.353 full; 2015 gift ATE 1.33 vs 2014 0.08"
+    },
+    {
+     "finding": "Caliper sensitivity: the 2014 rule significantly beats no-gift up to a caliper radius of 0.25; beating all-gift is harder because the gift raises average net donations in the full 2015 sample. Above 0.1 the effects are no longer statistically significant but remain positive in expectation.",
+     "location": "Section 5.6 and Appendix H, Figure H.1 (p.31-32)",
+     "numbers": "significance against no-gift holds to caliper 0.25; radius 0.1 is the standard"
+    },
+    {
+     "finding": "Sensitivity: in the warm list, the baseline exact policy tree (depth 2) dominates the alternative estimators, which yield lower net donations. Depth-1 trees and flexible logit have the lowest performance. The cross-validated-depth CART is the only alternative that significantly beats both all-gift and no-gift (17.40 euro, +1.93** and +1.98**). In the cold list, logit lasso and cross-validated CART are 0.01 euro higher, but the no-gift conclusion holds.",
+     "location": "Section 5.7, Tables I.1-I.2 (p.32-33; Appendix p.18-19)",
+     "numbers": "CV-CART warm 17.40 (+1.93 vs all-gift); flexible logit 16.28; depth-1 tree 15.05; cold logit lasso/CV-CART +0.01 euro"
+    },
+    {
+     "finding": "Nuisance-parameter robustness: using the population propensity score or cross-fitted logit-lasso nuisances gives essentially identical results (warm 17.63 and 17.35 euro expected net donation; cold 0.15 euro).",
+     "location": "Appendix I, Tables I.3-I.4 (p.20-21)",
+     "numbers": "population propensity: warm 17.63, +2.15***, +2.21***; cross-fitted lasso: warm 17.35, +1.85***, +1.79**"
+    },
+    {
+     "finding": "Example decision trees: the warm-list tree splits first on maximum prior donation (101.76 euro) and home elevation (313.55 m). The cold-list tree splits on number of restaurants within 300 m (5), distance to city hall (1.28 km) and distance to airport (3.06 km). The text warns that trees show correlations, not causal effects.",
+     "location": "Section 5.4 and Figure F.1 (p.26-27; Appendix p.13)",
+     "numbers": "warm leaves: gift 4.94 euro (N=758), 81.13 euro (N=48); cold leaf 21.44 euro (N=58)"
+    }
+   ],
+   "measures": [
+    "Donation amount in euro, first year after the experiment (2015), and cumulative first two years",
+    "Donation dummy (any donation), first year and first two years",
+    "Net donation = donation minus gift variable cost (1.16 euro for the gift treatment; letter costs 0.43 euro)",
+    "Expected net donation under a targeting rule P(pi), and excess net donation versus all-gift (Q1), no-gift (Q-1) and random-gift (QR) benchmarks",
+    "Share of individuals assigned the gift by the rule",
+    "CATE / sorted effects (euro); best linear predictor heterogeneity loadings",
+    "Standardized differences (Rosenbaum and Rubin 1983 threshold 20) for balance and targeted-vs-non-targeted comparisons",
+    "Geospatial counts within 300 m (restaurants, supermarkets, medical, cultural facilities, churches) and distances (km) and travel time (minutes) to station, city hall, main church and airport; elevation (m)"
+   ],
+   "limitations": [
+    "Authors state that findings 'may well be specific to the setting' (one Catholic Church fundraiser, one German urban area, one annual letter with a folded-card gift).",
+    "The optimal targeting rule identifies the policy gain, not the causal effect of each characteristic; trees show correlations, and unobserved variables (e.g., income, willingness to give) may drive the heterogeneity (Section 5.4).",
+    "The gain estimates are cross-validated (K=20) rather than from a fresh holdout sample; external validity is tested only on one 2015 follow-up with warm-list individuals.",
+    "External validity holds only when the new sample is similar to the training sample: the 2014 rule works against no-gift up to caliper 0.25, but against all-gift only for similar samples; the full 2015 sample shows no significant gains (Table 8).",
+    "Cold-list results have far fewer treated individuals in the rule (1.4%, 251 individuals), and depth-three exact trees are infeasible in the cold list (Table I.2 note), so the cold-list tree comparison is limited.",
+    "Data scope: the authors use only covariates the charity can collect (administrative records and Google Maps data); richer data could change results (Section 5.5 and Conclusion).",
+    "Robustness checks use parametric nuisance estimators (logit and OLS); the authors note the AIPW estimator requires consistent and fast-converging nuisance estimators (Section 4.3).",
+    "Internal inconsistencies in the text: the 2015 follow-up sample is 3,616 in the text but 3,612 in Table G.2 and 1,806+1,806 in Table G.1; the Table 8 note cites an expected 17.01 euro while the table shows 19.85; the text says donation records cover 2006-2015 but also refers to two post-experiment years."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "machine-learning-based optimal targeting allows the charity to substantially increase donations net of fundraising costs relative to uniform benchmarks",
+     "location": "Abstract (p.1)"
+    },
+    {
+     "quote": "We conclude that charities not engaging in optimal targeting waste significant resources.",
+     "location": "Abstract (p.1)"
+    },
+    {
+     "quote": "We conclude that the fundraiser should not target cold-list individuals at all.",
+     "location": "Section 6, Conclusion (p.33)"
+    }
+   ],
+   "identification": "Random assignment of the gift stratified on list, gender, household type, quintiles of predicted baseline willingness to give and age quintiles; SUTVA; overlap 0 &lt; p(z) &lt; 1 (Appendix B). Targeting gains are identified from the AIPW score; no need to observe heterogeneity variables for identification.",
+   "theory": "Charities are public-goods providers facing costly fundraising and donor overhead aversion. Targeting a costly instrument at net donors (expected gain above marginal cost) maximizes net donations (Name-Correa and Yildirim 2013). Donor heterogeneity from altruism, warm glow and reciprocity (Falk 2007; Falk et al. 2018) makes gift effects heterogeneous.",
+   "references_of_note": [
+    "Athey, S. and Wager, S. (2021). Policy Learning with Observational Data. Econometrica. (optimal policy learning; the method this paper applies)",
+    "Kitagawa, T. and Tetenov, A. (2018). Who Should be Treated? Empirical Welfare Maximization Methods for Treatment Choice. Econometrica.",
+    "Zhou, Z., Athey, S. and Wager, S. (2018). Offline Multi-action Policy Learning: Generalization and Optimization. arXiv:1810.04778 (exact policy-learning trees).",
+    "Athey, S. and Imbens, G. (2019). Machine Learning Methods that Economists Should Know About. Annual Review of Economics.",
+    "Chernozhukov et al. (2018b). The Sorted Effects Method. Econometrica. (descriptive heterogeneity)",
+    "Chernozhukov et al. (2020). Generic Machine Learning Inference on Heterogenous Treatment Effects in Randomized Experiments. arXiv:1712.04802 (best linear predictor test)",
+    "Falk, A. (2007). Gift Exchange in the Field. Econometrica. (unconditional gifts in the warm list)",
+    "Landry, C. et al. (2010). Is a Donor in Hand Better Than Two in the Bush? AER. (zero gift effect in warm list)",
+    "Alpizar, F., Carlsson, F. and Johansson-Stenman, O. (2008). Anonymity, Reciprocity, and Conformity. JPubE. (gifts do not cover costs)",
+    "Name-Correa, A. and Yildirim, H. (2013). A Theory of Charitable Fund-Raising with Costly Solicitations. AER. (optimal strategy targets net donors)",
+    "Rose-Ackerman, S. (1982). Charitable Giving and 'Excessive' Fundraising. QJE.",
+    "Andreoni, J. and Payne, A. (2011, 2013). Fundraising and charitable giving surveys. (fundraising cost shares)",
+    "Adena, M. and Huck, S. (2019). Personalized Fundraising: threshold matching of donation (working paper). (targeting matching thresholds)",
+    "Drouvelis, M. and Marx, B. (2021). Can Charitable Appeals Identify and Exploit Belief Heterogeneity? CESifo WP 8855. (belief-based targeting)",
+    "Dong, L., Ratti, C. and Zheng, S. (2019) PNAS; Glaeser, E. et al. (2018, 2020). (geospatial data as proxies for neighborhood income and socioeconomic status)",
+    "Guelman, L., Guillen, M. and Perez-Marin, A. (2015). Uplift Random Forests. (uplift/marketing targeting)",
+    "Ascarza, E. (2018). Retention Futility. JMR. (targeting risk and futility in marketing)",
+    "Kleinberg, J. et al. (2015). Prediction Policy Problems. AER P&P. (machine-learning prediction for policy)"
+   ]
+  },
+  "summary_md": "Cagala, Glogowsky, Rincke and Strittmatter ran a natural field experiment in 2014 with a Catholic Church fundraiser in one German city (N=19,779 church members). A small gift (postcards, cost 1.16 euro) was randomly assigned with the solicitation letter, stratified by warm list (past donors, N=2,354) and cold list (never donors, N=17,425). Sending the gift to everyone barely paid for itself on the warm list (net +0.06 euro, not significant) and lost money on the cold list (-0.97 euro per person). Gift effects varied widely across warm-list donors, from -11.59 to +17.99 euro between the 5th and 95th percentiles. The authors used AIPW scores and a depth-2 exact policy tree (Athey-Wager policy learning) to learn who should get the gift. Under 20-fold cross-validation, the rule sent the gift to 33% of the warm list and raised expected net donations by about 2.1-2.2 euro (about 14%) over all-gift, no-gift and random assignment. On the cold list the rule chose almost nobody (1.4%). Geospatial covariates alone did about as well as the full set of covariates. Applied to a new 2015 sample, the rule only helped where the 2015 donors closely resembled the 2014 donors (caliper match 0.1). On the full 2015 sample it showed no significant gain.\n\nWhat this means for Paul's systems: a targeting rule for a costly treatment is only justified when it beats uniform and random benchmarks out of sample, and that requires randomized variation in the treatment. Melange's money allocators and Terrier's canvass potential score both target on heterogeneity that is assumed, through hand-set response curves, multipliers and weights. Neither is learned from a randomized assignment. The paper describes the experiment and benchmark test the system lacks. It does not validate any of the system's constants. Its setting (individual charitable donors) also differs from the system's targets: legislators for Melange, and voters for Terrier.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-allocation.joint-optimizer",
+    "relation": "qualifies",
+    "paper_claim": "Warm-list targeting rule (2014 field experiment, first-year net donations; warm list N=2,354 with 1,180 gift and 1,174 control; 20-fold cross-validated out-of-sample): gift to 33 percent of warm-list individuals; expected net donation 17.61 euro, which is +2.14 (13.8 percent) vs all-gift, +2.20 (14.3 percent) vs no-gift and +2.17 (14.1 percent) vs random-half, all significant at 1 percent (Table 2, Panel B). On the full 2015 follow-up sample (N=3,616): expected 17.16 euro, -0.88 vs all-gift and +0.45 vs no-gift, neither significant (Table 8, Panel B2).",
+    "paper_location": "Section 5.3, Table 2 (pp. 21-22); Section 5.6, Table 8 (pp. 30-31)",
+    "system_side": "fec/engine/optimize.py: lazy greedy allocation of BUDGET (default 2,500,000) in INC (default 500) chunks across members, maximizing modeled winnability in a fixed stance state. The docstring calls the greedy an exact discrete optimum within that state and withholds the fixed-state certificate when a modeled money threshold changes stance. The observations list is reserved and empty; no realized-outcome comparison against uniform, random or no-spend allocation was found.",
+    "code_ref": "fec/engine/optimize.py:3-11,26,55-63,108-109 (Melange repo, read-only)",
+    "transfer_conditions": "The transferable part is the evaluation design: benchmark-relative, net-of-cost gains on held-out units under randomized treatment. Effect sizes do not transfer (1.16-euro gift to German church donors in 2014-15, vs PAC dollars to members of Congress). FEC limits and the absence of randomization mean the system cannot replicate the identification. Any optimizer gain stays model-internal and UNVERIFIED (DE-062) until outcomes are scored against a benchmark allocation.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper numbers re-checked against Table 1, Table 2, Table 8 and the Section 5.3 and 5.6 text. Code side re-read: budget and chunk defaults, lazy greedy, fixed-state certificate wording, and no realized-outcome benchmark. The original CELF label is changed to lazy greedy, following the docstring.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-allocation#Joint CU budget optimizer|Joint CU budget optimizer]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.competitiveness-multiplier",
+    "relation": "qualifies",
+    "paper_claim": "Responsiveness to the gift is heterogeneous and has to be estimated. Causal-forest best linear predictor heterogeneity loading 0.959 (SE 0.710; p 0.088 one-sided) on the warm list and 0.511 (SE 1.069) on the cold list (Table E.3). The 2014 rule applied to a caliper-matched 2015 warm-list sample (radius 0.1, 35.6 percent treated) gave +2.64 vs all-gift and +2.30 vs no-gift. On the full 2015 sample it gave no significant gain. The paper reports significance against no-gift up to caliper radius 0.25 and says effects are not significant above radius 0.1.",
+    "paper_location": "Section 5.2 and Table E.3 (p. 21; Appendix p. 12); Section 5.4; Section 5.6 and Figure H.1 (pp. 30-32)",
+    "system_side": "c = 1 + 1.0*exp(-max(lean,0)/5.0), with lean = Cook PVI points toward the member's own party (function compet_c). It multiplies effective dollars on both money legs of the flip family; the per-member cap and the pot stay real dollars. The code labels the constants as owner judgment, uncalibrated, with the reciprocity they encode not validated. The dial defaults ON (unset means ON; '0' reverts).",
+    "code_ref": "fec/moneyball_core.py:76-93 (Melange repo, read-only); fec/engine/optimize.py:55-63 uses CM",
+    "transfer_conditions": "The paper is about method, not legislators or PVI. It shows what establishing heterogeneous dollar effectiveness would require: randomized variation, a heterogeneity test and a transfer check to a new population. It gives no evidence for or against the PVI shape of c. Do not cite it as support for c.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Formula, constants and default-ON status verified in code. The original bearing said significance against all-gift holds only up to caliper 0.1; the paper does not say that. Corrected to the paper's actual statements. Brain entries D-104 to D-108 were not read in this run.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Competitiveness multiplier c (COMPET_MULT)|Competitiveness multiplier c (COMPET_MULT)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "terrier-canvass.untapped-potential",
+    "relation": "suggests-extension",
+    "paper_claim": "Responsiveness to a costly contact is heterogeneous. Warm-list gift effects (2014, first-year net donations) run from -11.59 euro at the 5th percentile to +17.99 euro at the 95th, and 45 percent of warm-list individuals have estimated effects above the 1.16-euro cost (Section 5.2, Figure 2). A rule built on 300-m geospatial counts, distances and elevation (17.40 euro expected net donation) does not significantly differ from the full-covariate rule (17.61 euro; Table 6, column 6 difference -0.22, not significant).",
+    "paper_location": "Section 5.2, Figure 2; Section 5.5, Tables 6-7 (pp. 27-29)",
+    "system_side": "potential = (wp x undecided + (1 - wp) x supporter) x (1 + wi x i), with undecided = (1 - |2s - 1|) x t and supporter = s x (1 - t). The weights wp and wi come from a per-district entry; 0.5 is the default used only when that entry names none (DEFAULT_WEIGHTS). The module as read computes a formula and does not estimate contact response; saved walk results are used only to exclude doors already worked.",
+    "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:1-12,50-56",
+    "transfer_conditions": "Applies to individual-level targeting of a costly contact, which is structurally closest to Terrier. The numbers do not transfer: they come from charitable gifts, not canvass persuasion or GOTV. A learned rule would need randomized contact assignment, such as held-out control households per turf, because saved walk results may be selected on who was knocked (plausible, not checked against walk data).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers and the formula match the code. Corrected: the 0.5 weights are per-district defaults, not hand-set constants for all districts. The paper's warning concerns samples and years that change, not districts. Non-random selection of walk results is an inference that was not checked.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/terrier-canvass#Untapped potential|Untapped potential]]",
+    "system": "terrier-canvass"
+   },
+   {
+    "component_id": "melange-validation.prospective-contract",
+    "relation": "suggests-extension",
+    "paper_claim": "Policy gains are identified from randomized assignment through the AIPW score; identifying the causal effect of each covariate is not needed (Section 4.3, Appendix B). The 2014 rule's gains held in a caliper-matched 2015 sample but not in the full 2015 sample (Section 5.6, Table 8). The paper validates with 20-fold cross-validation rather than a single-look holdout (Section 5.3).",
+    "paper_location": "Section 4.3, Appendix B; Section 5.3; Section 5.6, Table 8",
+    "system_side": "fec/engine/outcome_contract.py fixes CLAIM_SCOPE to receptivity_forecast_only_not_spending_effects and describes itself as forecasting machinery, never spending-effect evidence. The H1 seeding and H2 pressure tests check rank correlations of frozen features with later cosponsorship and tier movement. No randomized treatment is part of the design.",
+    "code_ref": "fec/engine/outcome_contract.py:1-5,13-22,108 (Melange repo, read-only)",
+    "transfer_conditions": "The paper shows the missing design: randomized treatment within strata, which is the precondition for upgrading from forecasting to spending-effect evidence. This is feasible for Terrier contacts or CU outreach logs and not for statutory PAC contributions to legislators. The paper's gains are not evidence for the system.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Paper claims checked against Section 5.6, Table 8 and the Appendix B identification wording. Code scope string and H1/H2 wording verified. Equation numbers Eq. 3-4 were not re-checked. The original held only for similar units wording is replaced with the matched-versus-full-sample contrast.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-validation#Prospective receptivity contract (H1-H2) and forecast ledger|Prospective receptivity contract (H1-H2) and forecast ledger]]",
+    "system": "melange-validation"
+   },
+   {
+    "component_id": "melange-allocation.workbook-allocator",
+    "relation": "qualifies",
+    "paper_claim": "Treating everyone as a gift recipient is net-negative or near zero: all-gift minus no-gift is +0.05 to +0.08 euro for the warm list (not significant) and -0.97 euro per donor for the cold list (significant) (Table 1). Targeted warm-list donors differ from non-targeted donors only modestly in prior giving (8-year total 130.98 vs 123.39 euro; 787 targeted vs 1,567 non-targeted; Table 4, Panel A). The paper cautions that observed characteristics are correlates of response, not the channels through which the gift works (Section 5.4).",
+    "paper_location": "Section 5.1, Table 1 (pp. 17-18); Section 5.4, Table 4 (pp. 24-25)",
+    "system_side": "The workbook sheet Blended Model has an Allocation column (column U) beside Rank (column T) and Score (column S). In the copy read here that column has no cached values, so the claim that the top 133 of 533 members are funded from a flat 2.0 million dollar pot was NOT reproduced. The cited producer fec/apply_alloc_cap.py does not exist in the repo.",
+    "code_ref": "Moneyball Main Version - Blended.xlsx, sheet Blended Model, column U (Melange repo, read-only); fec/apply_alloc_cap.py (absent)",
+    "transfer_conditions": "Conceptual only. The magnitudes come from donors, not legislators. The transferable point is to compare any proportional allocator against uniform and random benchmarks. The paper does not show that the allocator is wrong, and the system side is unverified.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers verified in Table 1 and Table 4 and the Section 5.4 cautions. The system side could not be reproduced: the workbook has no cached allocation values and the cited producer file is absent. The bearing stays weak and conceptual.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Workbook allocator (top-133 from fixed pot)|Workbook allocator (top-133 from fixed pot)]]",
+    "system": "melange-allocation"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "summary_md says the 2014 rule helped only where 2015 donors closely resembled 2014 donors (caliper 0.1). The paper reports significance against no-gift up to caliper radius 0.25 and says effects are not significant above 0.1; the full-sample gain is not significant.",
+   "summary_md and finding 3 call the warm-list heterogeneity loading (0.959) significant without caveat. It is significant only at the 10 percent level (p 0.088 one-sided, Table E.3).",
+   "Key finding 8 misstates the socioeconomic-only rule against no-gift: Table 6 Panel A gives 0.29 vs no-gift and 0.27 vs random-gift, not 0.27 vs no-gift.",
+   "The bearing for the competitiveness multiplier says significance against all-gift holds only up to caliper 0.1. The paper does not state that threshold (corrected in the bearing).",
+   "The paper gives the 2015 follow-up sample as 3,616 in the text and Figure H.1, but 3,612 in Table G.2. Quote figures with that inconsistency named.",
+   "The workbook-allocator system side (top 133 of 533 members, flat 2.0 million dollar pot) was not reproduced: no cached values in the Blended Model sheet and the cited producer file is absent.",
+   "Ext coverage says the text file has 4,079 lines; wc counts 4,078 lines. Trivial, but the line count should be corrected."
+  ],
+  "gaps_exposed": [
+   "No randomized or held-out variation in any costly treatment (PAC dollars, outreach, canvass contact). Every response heterogeneity in the allocators and in Terrier is an owner-set prior, not an estimated CATE.",
+   "No benchmark-relative evaluation: neither the optimizer nor the workbook allocator reports realized, net-of-cost gain against all-fund, no-fund or random-fund allocations.",
+   "Terrier's untapped-potential score targets on support level and turnout propensity. It has no estimate of who responds to a knock, and saved walk results are selected (non-random), so they cannot identify response.",
+   "There is no check that a targeting rule carries over to a changed population (new Congress, new district, new cycle), which is the paper's 2015 caliper test. The paper's rule lost significance on the full new sample.",
+   "There is no test of which covariate families (cheap geospatial vs administrative vs socioeconomic) are sufficient for targeting, which matters for Terrier's vendor-field costs."
+  ],
+  "flags": [
+   "Do not cite this paper as evidence that dollars buy more in competitive seats or that reciprocity holds. It studies charitable donors, not legislators, and reciprocity is NOT validated (D-104..D-108).",
+   "Any figure quoted from it must name its window and denominator. Examples: 2014 treatment with 2015 first-year outcomes; warm list N=2,354, of whom 787 were targeted; cold list N=17,425; the 2015 follow-up sample is 3,616 in the text and 3,612 in Table G.2 (an internal inconsistency).",
+   "The headline +14% gain is cross-validated in-sample (K=20). On the full 2015 sample, the gain over all-gift was not significant (-0.88 euro). Quote both, never the 14% alone.",
+   "Any agent-built Terrier or allocator benchmark inspired by this paper stays UNVERIFIED until a second path reproduces it (DE-062).",
+   "The paper makes no SNA, LDA-edge or per-edge normalization argument, so the rejected-proposal flags do not apply."
+  ],
+  "paul_alignment": "Paul has not annotated this paper, so no note is stale. It partly cuts against his ROI framing of money (flip-model and break-even positions): uniformly applied, the costly instrument barely covered its cost, and it paid only when targeted on response that had been learned from randomized data. It partly supports his joint-optimizer position that a learned policy should eventually replace hand-built greedy targeting. The paper's sense of 'learned', though, is causal policy learning from an RCT, not GCOMB-style learning over graphs. On Terrier, Paul highlighted the Kalla & Broockman canvass protocol. This paper adds the complementary point: who to contact should be estimated from randomized contact, not assumed from support level and turnout propensity.",
+  "related": [
+   {
+    "slug": "tappin-2023-quantifying-potential-persuasive",
+    "relation": "complements",
+    "why": "Item file title matches Tappin et al. 2023 on potential persuasive returns to political microtargeting; it addresses the same benchmark-relative question in persuasion."
+   },
+   {
+    "slug": "simchon-2024-persuasive-effects-political",
+    "relation": "complements",
+    "why": "Item file title matches Simchon et al. 2024 on persuasive effects of political microtargeting; it parallels the policy-tree vs all-gift comparison in persuasion."
+   },
+   {
+    "slug": "kalla-nd-campaign-contributions-facilitate",
+    "relation": "same-method",
+    "why": "Item file title matches Kalla and Broockman, a randomized field experiment on a costly political instrument (campaign contributions and access). Both use randomized field designs for a costly political treatment."
+   },
+   {
+    "slug": "broockman-2026-should-moving-middle",
+    "relation": "complements",
+    "why": "Item file title matches Broockman and Kalla 2026 on whether moderation wins votes depending on where voters are, the same lesson that effects depend on population."
+   },
+   {
+    "slug": "madsen-2017-strategic-advantages-micro",
+    "relation": "complements",
+    "why": "Item file title matches Madsen and Pilditch 2017, an agent-based proof of principle for micro-targeted campaigning; this paper supplies the field-experimental counterpart with net-of-cost numbers."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "sverdrup-nd-introduction-grf-causal-forests",
+    "relation": "same-method",
+    "why": "Vault item exists. Rel describes it as applying causal forests and policy learning to target fundraising appeals by estimated individual effect. Content was not re-read in this pass; kept on existence and title fit."
+   },
+   {
+    "slug": "bouton-2022-small-campaign-donors",
+    "relation": "complements",
+    "why": "Bouton et al. describe small donors as responding to candidate fundraising requests and external events. Cagala et al. (2021, arXiv, Optimal Targeting in Fundraising) study the supply side of solicitation. Bouton et al. do not cite this work, so the link is a vault-level complement."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "tang-2015-negative-link-prediction",
+  "note": false,
+  "meta": {
+   "title": "Negative Link Prediction in Social Media",
+   "authors": [
+    "Jiliang Tang",
+    "Shiyu Chang",
+    "Charu Aggarwal",
+    "Huan Liu"
+   ],
+   "year": "2015",
+   "venue": "WSDM 2015 (Shanghai, China; Feb 2-6, 2015)",
+   "doi": "10.1145/2684822.2685295",
+   "sha12s": [
+    "3366fe771bb1"
+   ],
+   "category": "Social Network Analysis",
+   "category_slug": "social-network-analysis"
+  },
+  "extraction": {
+   "title": "Negative Link Prediction in Social Media",
+   "authors": [
+    "Jiliang Tang",
+    "Shiyu Chang",
+    "Charu Aggarwal",
+    "Huan Liu"
+   ],
+   "year": "2015",
+   "venue": "WSDM 2015 (Shanghai, China; Feb 2-6, 2015)",
+   "doi": "10.1145/2684822.2685295",
+   "document_type": "Conference paper (ACM WSDM, pp. 87-96)",
+   "coverage": "Read the full extracted text (1,523 lines, pages 87-96, abstract through references). Metadata hint confirmed: title, authors, WSDM 2015 and DOI match the text. No lobbying, elections, legislators, persuasion/turnout or text-measurement content appears in this paper. Figure 4 (cross-site generalization) and Figures 2, 3 and 5 are axis labels only in the extraction, so plotted values are not recoverable; only numbers stated in prose or tables are reported. No Paul markup files were supplied (the task listed none), so paul_markup is empty.",
+   "research_question": "Can negative (distrust/foe) links be predicted in social media when no negative links are observed, using only positive links and content-centric user interactions (likes/dislikes, ratings, posted opinions)? (Abstract; Sec. 1; Sec. 2, Eq. 1: f: {Gp, A, O} -> Gn.)",
+   "theory": "Balance theory (Heider; Cartwright and Harary) and status theory (Leskovec et al.) as structural constraints on signed triads, plus the empirical claim that negative interactions (disagreement/antagonism) correlate with negative links. The \"enemies are close\" pattern (negative-link pairs sit within a few hops in the positive network) motivates the features (Sec. 3.1-3.3).",
+   "data": "Two sites with explicit trust/distrust or friend/foe links, used for analysis and ground truth. Epinions: 14,765 users, 272,513 positive links, 52,704 negative links, 612,321 posts, 6,937,986 positive opinions, 163,502 negative opinions. Slashdot: 7,275 users, 67,705 positive links, 20,851 negative links, 300,932 posts, 1,742,763 positive opinions, 42,260 negative opinions (Table 1, p. 89). Unit of analysis: ordered user pair. Imbalance of negative to missing pairs is 1:4131 (Epinions) and 1:2534 (Slashdot) (Sec. 4.1, p. 90). Collection period is not stated. Epinions opinions come from helpfulness ratings (>3 positive, <3 negative); Slashdot opinions come from MPQA-lexicon polarity of comments (Sec. 3, p. 88). Users with no positive or negative links were filtered out.",
+   "method": "Descriptive analysis (shortest-path distributions, balance and status triad counts, a two-sample t-test and ratio curves), then a supervised classifier, NeLP. Labels: missing pairs are positive samples; negative samples come from pairs with negative interactions (Algorithm 1), refined by status-theory removals and additions, with reliability weights W = f(Nij) if Nij > 0, else r, where f(x) = 1 - 1/log(1+x) (Eq. 2; Sec. 4.1, 5.2). Features: 45 per pair (8 user features for each member, 7 pair features, 22 signed features including 16 weighted triads from Leskovec et al.) (Sec. 4.2). Model: soft-margin SVM with separate costs Cp (positives) and Cn (negatives), per-sample negative weights cj, and a balance-theory Laplacian regularizer weighted by Cb (Eqs. 4-6), solved in dual QP form with a kernel (Eqs. 7-15). Parameters: Cp=1, Cn=0.5, Cb=0.1 (Epinions); Cp=1, Cn=0.7, Cb=0.01 (Slashdot) (Sec. 5.2). Baselines: Random; sPath (predict negative for pairs at a fixed shortest-path length); negIn (predict negative for pairs with negative interactions); negInS (negIn refined by status-theory steps); NeLP-negIn (NeLP trained on negIn labels). Parameterized baselines are reported at their best setting (Sec. 5.2, p. 93).",
+   "identification_strategy": "None in a causal sense. Prediction is framed as supervised classification with constructed (noisy) labels. Evidence for signal comes from a t-test and conditional ratios (Sec. 3.3). Generalization is checked by training on one site and testing on the other (Sec. 5.2, Fig. 4). Ablations remove components (Cn, cj, Cb) one at a time (Sec. 5.3, Tables 4-5) and vary Cb over {0, 0.001, 0.01, 0.05, 0.1, 0.5, 1} (Sec. 5.4, Fig. 5). The text does not describe the train/test split, folds, or how evaluation negatives were drawn.",
+   "scope": "Population: online users of two platforms (Epinions product-review trust network; Slashdot technology-news friend/foe network). No institutional or regulatory setting. Era: not stated; the datasets are pre-2015 snapshots. Claims are limited to these two platforms and to pairs with at least one positive link or interaction. Generalization is tested only between these two sites.",
+   "key_findings": [
+    {
+     "finding": "Negative-link pairs sit close together in the positive network: about 82.64% (Epinions) and 87.86% (Slashdot) are within 3 hops; over 45% have shortest path below 3 and over 80% below 4.",
+     "location": "Sec. 3.1, p. 89, Fig. 2",
+     "numbers": "82.64% (Epinions), 87.86% (Slashdot) within 3 hops"
+    },
+    {
+     "finding": "Triads are mostly balanced and satisfy status theory, supporting both theories as structural constraints.",
+     "location": "Sec. 3.2, p. 89",
+     "numbers": "Balanced triads: 92.31% (Epinions), 93.01% (Slashdot). Status-consistent triads: 94.73% (Epinions), 93.38% (Slashdot)"
+    },
+    {
+     "finding": "Pairs with negative interactions are much more likely to have a negative link than randomly matched pairs; the t-test rejects H0 at alpha=0.01. The ratio of negative-link pairs rises with the number of negative interactions K.",
+     "location": "Sec. 3.3, pp. 89-90, Fig. 3",
+     "numbers": "p = 5.72e-89 (Epinions), p = 1.93e-109 (Slashdot); random-pair negative-link ratio 2.4177e-04 (Epinions), 3.9402e-04 (Slashdot)"
+    },
+    {
+     "finding": "NeLP is best on both sites. Random and sPath are near zero; negIn is a strong heuristic; negInS and NeLP-negIn improve on it; full NeLP is top on F1 and precision.",
+     "location": "Sec. 5.2, p. 93, Table 3",
+     "numbers": "Epinions F1/Precision: random 0.0005/0.0002; sPath 0.0040/0.0075; negIn 0.2826/0.2097; negInS 0.2893/0.2124; NeLP-negIn 0.3206/0.2812; NeLP 0.3242/0.2861. Slashdot: random 0.0008/0.0004; sPath 0.0090/0.0172; negIn 0.1986/0.1483; negInS 0.2072/0.1524; NeLP-negIn 0.2394/0.2083; NeLP 0.2441/0.2139"
+    },
+    {
+     "finding": "Status-theory refinement (negInS over negIn) gives a small relative F1 gain on both sites.",
+     "location": "Sec. 5.2, p. 93",
+     "numbers": "+2.37% relative F1 (Epinions), +1.45% (Slashdot)"
+    },
+    {
+     "finding": "A classifier trained on one site transfers to the other with little loss, so the features are site-general.",
+     "location": "Sec. 5.2, p. 93, Fig. 4",
+     "numbers": "Figure values not extractable; text says the decrease is 'remarkably little' in both directions"
+    },
+    {
+     "finding": "Ablations show each component contributes. Using cj=1 (no interaction-based reliability) cuts precision the most. Removing balance regularization (Cb=0) also hurts.",
+     "location": "Sec. 5.3, pp. 93-94, Tables 4-5",
+     "numbers": "Epinions full NeLP F1 0.3242 / P 0.2861; Cn=1 gives 0.3188/0.2793; cj=1 gives precision 0.2612 (-8.70%); Cb=0 gives 0.3084/0.2686; all removed gives 0.2992/0.2342. Slashdot full 0.2441/0.2139; cj=1 precision 0.1902 (-11.08%); Cb=0 gives 0.2347/0.1972; all removed gives 0.2213/0.1722"
+    },
+    {
+     "finding": "Balance regularization is sensitive to Cb. Precision rises from Cb=0 to 0.001, is flat over a middle range, and drops sharply at large Cb.",
+     "location": "Sec. 5.4, pp. 94-95, Fig. 5",
+     "numbers": "Precision +4.02% (Epinions) and +4.41% (Slashdot) from Cb 0 to 0.001; stable from 0.001 to 0.1 in Epinions; sharp drop after about 0.05 in Slashdot"
+    },
+    {
+     "finding": "Accuracy is rejected as a metric because of extreme class imbalance. Precision and F1 are reported on the negative class.",
+     "location": "Sec. 5.1, pp. 92-93",
+     "numbers": "A trivial all-missing classifier can reach 99.99% accuracy in a sparse network (text example)"
+    }
+   ],
+   "measures": [
+    "Negative-class F1-measure (harmonic mean of precision and recall, Sec. 5.1)",
+    "Negative-class precision (the emphasized metric, Sec. 5.1)",
+    "Shortest-path length between ui and uj in the positive network (BFS; 'inf' if unreachable)",
+    "Share of negative-link pairs within k hops",
+    "Triad balance (four sign patterns, two balanced) and status-theory consistency",
+    "Pair-level count of negative interactions Nij",
+    "Ratio of pairs with negative links among pairs with at least K negative interactions",
+    "Two-sample t-test on negative-link indicators for interacting vs matched pairs",
+    "Relative F1 and precision change in ablations",
+    "Weighted in/out-degree and Jaccard coefficients on positive and negative links, plus 16 weighted triads (45 features total)"
+   ],
+   "limitations": [
+    "Negative labels are not observed. Training labels are constructed from negative interactions and status-theory refinement, and the paper says they are noisy, especially for negatives (Sec. 4.3, p. 91; Sec. 7, p. 95).",
+    "Negative links in Epinions and Slashdot serve only as ground truth for analysis and evaluation; the model itself does not use them (Sec. 3, p. 88).",
+    "Opinion labels are proxies: Epinions helpfulness ratings are thresholded at 3, and Slashdot comment polarity comes from the MPQA lexicon (Sec. 3, p. 88).",
+    "Severe class imbalance (1:4131 and 1:2534), so precision and F1 stay modest (best F1 0.3242 Epinions, 0.2441 Slashdot) (Sec. 4.1, Table 3).",
+    "Balance regularization uses only pairs at shortest-path length 2 plus the labeled sets, a simplification for scale (Sec. 4.3, p. 92).",
+    "Parameterized baselines are reported at their best setting, and NeLP parameters differ per site (Sec. 5.2, p. 93). The text gives no held-out tuning protocol.",
+    "The evaluation protocol is incomplete: the text does not describe the train/test split, folds, or how evaluation negatives were drawn.",
+    "User-generated content (text) is not used, and only one classifier family (soft-margin SVM) is tested (Sec. 7, p. 95).",
+    "Only two platforms with explicit signed links are studied. Collection period is not stated, and the datasets are older snapshots, so transfer to current platforms is untested.",
+    "Recall is defined (Sec. 5.1) but not reported separately; only precision and F1 appear."
+   ],
+   "references_of_note": [
+    "[13] Leskovec, Huttenlocher, Kleinberg (2010). Predicting positive and negative links in online social networks. WWW. Balance-theory features and the signed-link baseline that NeLP extends.",
+    "[14] Leskovec, Huttenlocher, Kleinberg (2010). Signed networks in social media. CHI. Status-theory basis for signed triads.",
+    "[9] Heider (1946) and [2] Cartwright and Harary (1956). Balance theory, the structural basis of the balance regularizer.",
+    "[7] Guha, Kumar, Raghavan, Tomkins (2004). Propagation of trust and distrust. WWW. Earlier trust/distrust propagation on Epinions.",
+    "[11] Kunegis, Lommatzsch, Bauckhage (2009). The Slashdot Zoo: mining a social network with negative edges. WWW. Source of the Slashdot signed data.",
+    "[12] Kunegis, Preusse, Schwagereit (2013). What is the added value of negative links in online social networks? WWW. Argues negative links add analytic value, the premise of this paper.",
+    "[15] Liben-Nowell and Kleinberg (2003/2007). The link prediction problem for social networks. Standard positive link-prediction baselines.",
+    "[17] Lichtenwalter, Lussier, Chawla (2010). New perspectives and methods in link prediction. KDD. Supervised link-prediction advantages cited for the classifier design.",
+    "[26] Yang, Smola, Long, Zha, Chang (2012). Friend or frenemy? Predicting signed ties in social networks. SIGIR. Sign prediction on a known-link set, contrasted in Sec. 2.",
+    "[4] Chiang, Natarajan, Tewari, Dhillon (2011). Exploiting longer cycles for link prediction in signed networks. CIKM. Longer-cycle signed features.",
+    "[3] Chiang, Hsieh, Natarajan, Tewari, Dhillon (2013). Prediction and clustering in signed networks: a local to global perspective. arXiv:1302.5145.",
+    "[25] Wang, Pedreschi, Song, Giannotti, Barabasi (2011). Human mobility, social ties, and link prediction. KDD. Cited for the point that accuracy misleads under imbalance (Sec. 5.1).",
+    "[10] Hsieh, Chiang, Dhillon (2012). Low rank modeling of signed networks. KDD. Matrix-factorization alternative for signed links.",
+    "[28] Zhu, Ghahramani, Lafferty (2003). Semi-supervised learning using Gaussian fields and harmonic functions. ICML. Basis for the balance regularizer as a graph Laplacian."
+   ],
+   "short_quotes": [
+    {
+     "quote": "negative links have added value over positive links",
+     "location": "Sec. 7 (Conclusion), p. 95"
+    },
+    {
+     "quote": "our enemies are often close to us in the positive network",
+     "location": "Sec. 3.1, p. 89"
+    },
+    {
+     "quote": "users with negative interactions are likely to have negative links",
+     "location": "Sec. 3.3, p. 90"
+    }
+   ],
+   "paul_markup": []
+  },
+  "summary_md": "Tang, Chang, Aggarwal and Liu (WSDM 2015) ask whether distrust or foe links can be predicted when none are observed, using only positive links and content interactions. They test this on Epinions (14,765 users, 52,704 negative links) and Slashdot (7,275 users, 20,851 negative links). They report three facts. First, negative-link pairs sit close together in the positive network: 82.64% and 87.86% are within 3 hops. Second, signed triads are mostly balanced (92.31% and 93.01%). Third, pairs with negative interactions are far more likely to hold a negative link (t-test p = 5.72e-89 and 1.93e-109). Their SVM, NeLP, adds reliability weights that grow with the interaction count, plus a balance-theory regularizer. Even so, the best F1 on the negative class is only 0.3242 on Epinions and 0.2441 on Slashdot. The simple rule \"a negative interaction means a negative link\" (negIn) reaches a precision of only 0.2097 and 0.1483. Precision drops the most (-8.70% and -11.08%) when the count-based reliability weights are removed.\n\nFor Paul's systems, the paper's main point is a caution. Melange's signed member-reference layer builds negative edges directly from LLM-scored negative references. That is the paper's negIn signal, which the paper shows to be a real but low-precision proxy for an antagonistic relationship. Congress has no explicit foe declaration, so the system cannot score its reference signs against ground truth the way Tang does. Its negative edges should therefore be read as a measure of negative interaction, not of negative ties. The diagnostic signed-coalition partition uses these signs with no evidence-count floor, while the dashboard drawing does use one. The paper's balance statistics support the sign-product logic in the two-hop stance composer. They also give a cheap test the system could run: are negative-reference dyads close together in the cosponsor graph? Every result here comes from 2015-era online trust platforms, not legislatures.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-sna.co-appearance-and-references",
+    "relation": "qualifies",
+    "paper_claim": "Pairs with negative interactions hold negative links far above chance: t-test p = 5.72e-89 (Epinions) and 1.93e-109 (Slashdot). The rule negIn reaches precision 0.2097 and F1 0.2826 on Epinions, and precision 0.1483 and F1 0.1986 on Slashdot. The ratio of negative-link pairs tends to increase with the number of negative interactions K. Reliability weight f(Nij) = 1 - 1/log(1+Nij) applies to pairs with negative interactions; other pairs get a constant r.",
+    "paper_location": "Sec. 3.3 pp. 89-90 and Fig. 3; Sec. 4.1 Eq. 2 p. 90; Table 3 p. 93",
+    "system_side": "Code confirmed: net = (pos - neg) / (pos + neg + neu), so neutral-substantive contexts sit in the denominator, and one scored negative context gives net -1.0. Counts re-read from member_references.json on disk: 7,944 edges, 1,161 with net below 0, 6,028 above 0, 755 at 0. Of the 1,161 negative edges, 567 (about 49 percent) have n_scored equal to 1. The dashboard n_scored >= 2 filter is confirmed. These counts come from one read path and remain UNVERIFIED under DE-062.",
+    "code_ref": "fec/members/member_reference_layer.py:366-373; fec/surfaces/build_dashboard_bundle.py:233-239",
+    "transfer_conditions": "Tang checks interaction-derived signs against declared negative links, which Congress lacks, so the transfer concerns interpretation only, not a calibrated precision. Tang's interaction labels are thresholded helpfulness ratings and MPQA lexicon polarity, a cruder reader than an LLM. Whether LLM-valenced precision is higher or lower is untested. Tang's count-based reliability weighting is a per-edge volume weight of the kind this project rejected, so it is flagged here, not recommended.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "All cited numbers reproduce from the paper text. Softened: the K trend is a tendency ('tend to increase'), and the reliability weight applies only to pairs with negative interactions, with constant r otherwise. The single-context -1.0 behavior and the file counts hold. The 'LLM reads better than MPQA' comparison is the analyst's opinion, not the paper's.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-sna#Co-appearance and signed member-reference layers (display only)|Co-appearance and signed member-reference layers (display only)]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-sna.signed-coalitions",
+    "relation": "qualifies",
+    "paper_claim": "Balanced triads are 92.31 percent (Epinions) and 93.01 percent (Slashdot) of undirected triads (Sec. 3.2 p. 89). Setting negative-sample reliability weights to 1 (cj = 1) cuts precision by 8.70 percent on Epinions (Table 4) and 11.08 percent on Slashdot (Table 5). The balance regularizer raises precision from Cb = 0 to 0.001 (+4.02 and +4.41 percent), is relatively stable from 0.001 to 0.1 on Epinions, and drops sharply after 0.05 on Slashdot (Sec. 5.4, Fig. 5). Large Cb hurts. The paper does not say the regularizer helps only at small weight.",
+    "paper_location": "Sec. 3.2 p. 89; Tables 4-5 pp. 93-94; Sec. 5.4 and Fig. 5 pp. 94-95",
+    "system_side": "Code confirmed: signed_coalitions.py takes sign(net) and weight |net| with MINW default 0.0 (line 21) and no n_scored floor, so a one-context negative edge enters at full weight 1.0. Correction: the script says the output is not consumed by the chain, which holds for the pipeline. But signed_coalitions.json is read by run_legislation_dashboard_member_desk.py, run_legislation_shadow_recompute.py, make_member_desk.py (splinter_k2 antagonist list) and dashboard_integrity.py, so the output reaches member-desk and audit surfaces.",
+    "code_ref": "fec/network/signed_coalitions.py:21,28-31,41-46; fec/surfaces/make_member_desk.py:826",
+    "transfer_conditions": "Tang's balance figures come from declared trust networks. The system's signs are interaction-derived, which is the paper's noisy-label case, and the paper does not estimate how much frustration comes from noise. Tang's count-based reweighting is the rejected per-edge volume kind. The n_scored >= 2 floor the summary proposes is a count threshold of the same family, so it is flagged, not recommended on this paper's authority. Any sensitivity run needs its own project approval.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Balance percentages and ablation precision drops reproduce. Softened: the regularizer claim, which the paper does not state as helps only at small weight, and the chain-consumption claim, which needs the downstream consumers listed. The floor recommendation is flagged under the project's rejected-proposal rule.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-sna#Signed-network coalition partition|Signed-network coalition partition]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-stance.two-hop-decomposition",
+    "relation": "supports",
+    "paper_claim": "Signed triads are overwhelmingly balanced: 92.31 percent (Epinions) and 93.01 percent (Slashdot) of undirected triads (Sec. 3.2 p. 89). This is a structural prior that sign products usually hold in person-to-person trust networks. The paper does not test stance-times-valence composition.",
+    "paper_location": "Sec. 3.2 p. 89",
+    "system_side": "Sign logic confirmed: compose(stance, v) returns support when stance is support and v is positive, and when stance is oppose and v is negative; it returns oppose for the other two combinations. Correction: compose() sets no cu_alignment variable; cu_alignment appears only as CSV column names (lines 37, 55-56). The 0.872 oracle ceiling and 0.677 flat baseline are in the file docstring. The 0.782 registry two-hop score (tweet_stance_stack.py docstring) is measured on the 400 tweet golds the design iterated against, not 5-fold CV; the 5-fold out-of-fold claim applies to the stacked model.",
+    "code_ref": "fec/stance/apply_two_hop_stance.py:27-33; fec/stance/apply_two_hop_stance.py:5,64; fec/stance/tweet_stance_stack.py:11",
+    "transfer_conditions": "Paper triads are person-to-person links. The system's third node is an interest reached through a curated valence registry. The paper supplies only a structural prior and does not validate the registry. The registry numbers are on the golds the design iterated against, so they are not an out-of-sample validation.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The 92.31 and 93.01 figures reproduce. The sign-product logic matches compose(). The cu_alignment naming and the 5-fold CV description of the 0.782 figure are wrong and are corrected in system_side.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Two-hop stance x valence decomposition with curated registry|Two-hop stance x valence decomposition with curated registry]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-lobbying.cosponsor-forecaster",
+    "relation": "supports",
+    "paper_claim": "Accuracy is misleading under extreme imbalance: a trivial all-missing classifier reaches 99.99 percent accuracy (Sec. 5.1 pp. 92-93). Imbalance is 1:4131 and 1:2534 (Sec. 4.1 p. 90). Parameterized baselines are reported at their best setting, and NeLP parameters are set per site, with no held-out tuning protocol described (Sec. 5.2 p. 93).",
+    "paper_location": "Sec. 4.1 p. 90; Sec. 5.1 pp. 92-93; Sec. 5.2 p. 93",
+    "system_side": "Confirmed: precision_at_k uses cutoffs 10, 25 and 50, bill-averaged (lines 1796-1853). split_verdict compares model average precision with the best of named baselines B1 member propensity, B2 sponsor affinity and B3 party match (lines 1865-1869 and 2063-2105). Average precision is the comparison metric, and no accuracy metric appears in cosponsor_forecast.py. Not confirmed: the frozen-before-scoring clause. That file has no freeze or pre-registration language, so the clause is removed here unless another artifact shows it.",
+    "code_ref": "fec/lobbying/cosponsor_forecast.py:1796-1853; fec/lobbying/cosponsor_forecast.py:1865-1869; fec/lobbying/cosponsor_forecast.py:2063-2105",
+    "transfer_conditions": "The metric choice carries across domains. Tang's unspecified tuning protocol and best-setting baseline reporting are a negative example of protocol, not a template for the system.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "All paper numbers and the imbalance and accuracy points reproduce. The system-side metric description holds for AUC, average precision and precision at k. The frozen-before-scoring statement is not supported by the cited code.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#Ridge-logistic cosponsor forecaster|Ridge-logistic cosponsor forecaster]]",
+    "system": "melange-lobbying"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "The summary's '2015-era online trust platforms' is not supported: the paper gives no collection period (Table 1 and Sec. 3), and 2015 is only the publication year. Say the datasets are older snapshots with an unstated collection period.",
+   "The summary says precision drops the most (-8.70 and -11.08 percent) when count-based reliability weights are removed. That holds only as the largest single-component ablation (Tables 4-5). Removing all three components drops more: Epinions precision 0.2861 to 0.2342 (-18.1 percent), Slashdot 0.2139 to 0.1722 (-19.5 percent).",
+   "The summary's paul_alignment says Paul's note reads the layer more strongly than the evidence allows. No Paul markup or note was supplied with this item, so the claim cannot be verified and should be dropped or marked unverified.",
+   "The summary treats the share of negative-link pairs as rising with K. The paper says the ratios tend to increase, which is a softer claim than the summary's rises with K.",
+   "The summary's 'cheap test' (are negative-reference dyads close together in the cosponsor graph?) is an analyst extension of Tang's positive-network distance test, not a Tang result. Label it as an untested extension.",
+   "Bearing system_side fields name a shared chain and a 0.782 5-fold CV figure that the code does not support. Corrected in the bearings above; the summary should carry the same corrections."
+  ],
+  "gaps_exposed": [
+   "No evidence-count reliability on signed reference edges. net = (pos-neg)/sub treats a single scored context the same as many unanimous ones, and signed_coalitions.py applies no n_scored floor. Only the dashboard drawing filters at n_scored >= 2.",
+   "No ground truth for negative ties. The system cannot estimate the precision of LLM-valenced negative references as relationship indicators. Tang's negIn precision (0.15-0.21) shows that this gap matters.",
+   "A cheap untested check: Tang's 'enemies are close' pattern (82.64% and 87.86% of negative pairs within 3 hops of the positive graph) could be measured for negative-reference dyads on the cosponsor graph. The result would show whether negative references sit inside working relationships or across camps.",
+   "Signed triad census not reported: the share of balanced triads in member_references.json is not measured. That share would show how much of the Aref-Neal frustration is structural and how much is label noise.",
+   "Negative signs never enter the cascade kernel. Out-party sources get a cpf_pressure of 0.5 rather than a negative edge. The paper argues that negative links add value, but this project has not tested that for Congress."
+  ],
+  "flags": [
+   "NEAR-REJECTED PROPOSAL: Tang's count-based reliability weight f(Nij) = 1 - 1/log(1+Nij) is a form of per-edge evidence-volume weighting. Per-edge volume normalization was measured and REJECTED in this project. Do not recommend reweighting cascade or SNA edges by volume on this paper's authority. At most, apply the existing n_scored >= 2 floor as a diagnostic sensitivity run on signed_coalitions.",
+   "Status theory (94.73% and 93.38% status-consistent triads) concerns directional asymmetry in declared links. It must not be read as evidence for reciprocity, which is NOT validated in this system (D-104..D-108).",
+   "The edge counts quoted here (7,944 directed edges, 1,161 with net < 0, as of 2026-10-09 on disk) come from one read path and stay UNVERIFIED until reproduced by a second path (DE-062).",
+   "Negative references and signed-partition outputs must not be described as measured hostility, closeness or access (D-025). They are model outputs built on LLM-valenced interactions."
+  ],
+  "paul_alignment": "Paul's position for co-appearance-and-references is that LLM valence per context window answers his question about negative ties. Tang supports this only in part. Negative interactions carry strong signal about negative relationships, but as a direct label they are noisy (negIn precision 0.21 on Epinions and 0.15 on Slashdot), and reliability grows with the number of interactions. The system therefore measures negative interactions, not validated negative ties. Paul's note reads the layer more strongly than this evidence allows, and it does not mention that the diagnostic signed partition uses single-context edges at full weight. For two-hop decomposition, Paul asked how agreement is quantified when two actors share negative sentiment toward a third. Tang's balance census (about 92-93% balanced triads) is direct supporting evidence for the sign-product answer the system already uses in compose(), though from online trust networks rather than Congress. For signed coalitions, the paper supports Paul's interest in Aref-Neal balance partitions but adds the caveat about noisy labels.",
+  "related": [
+   {
+    "slug": "leskovec-2010-predicting-positive-negative",
+    "relation": "builds-on",
+    "why": "Title confirmed as Predicting Positive and Negative Links in Online Social Networks (2010). Tang uses Leskovec et al.'s 16 weighted signed-triad features as part of its 45-feature set (Sec. 4.2)."
+   },
+   {
+    "slug": "aref-2021-identifying-hidden-coalitions",
+    "relation": "complements",
+    "why": "Title confirmed as hidden coalitions in the US House by optimally partitioning signed networks under generalized balance (2021). That is the method signed_coalitions.py implements, and Tang's balance and noisy-label results bear on it."
+   },
+   {
+    "slug": "aref-2020-detecting-coalitions-optimally",
+    "relation": "complements",
+    "why": "Title confirmed as detecting coalitions by optimally partitioning signed networks of political collaboration (2020). It applies the same frustration-minimization approach that Tang's balance evidence supports, with the same caution about interaction-derived signs."
+   },
+   {
+    "slug": "zareie-2020-similarity-based-link",
+    "relation": "complements",
+    "why": "Title confirmed as similarity-based link prediction using latent relationships (2020), which predicts positive links. Tang's features include Jaccard coefficients, but its classifier is an SVM and it targets negative links, so same-method overstates the overlap."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "zareie-2023-influence-maximization-social",
+    "relation": "complements",
+    "why": "Real item (WSDM 2015, negative link prediction in social media). It is relevant to the same negative-tie data prerequisite for trust-aware IM."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "ma-2022-adversarial-attack-graph",
+  "note": false,
+  "meta": {
+   "title": "Adversarial Attack on Graph Neural Networks as an Influence Maximization Problem",
+   "authors": [
+    "Jiaqi Ma",
+    "Junwei Deng",
+    "Qiaozhu Mei"
+   ],
+   "year": "2022",
+   "venue": "WSDM 2022 (Fifteenth ACM International Conference on Web Search and Data Mining), Tempe AZ, virtual, Research Paper track, pp. 675-685",
+   "doi": "10.1145/3488560.3498497",
+   "sha12s": [
+    "d3f0c986a967"
+   ],
+   "category": "Adaptive Influence Maximization",
+   "category_slug": "adaptive-influence-maximization"
+  },
+  "extraction": {
+   "title": "Adversarial Attack on Graph Neural Networks as an Influence Maximization Problem",
+   "authors": [
+    "Jiaqi Ma",
+    "Junwei Deng",
+    "Qiaozhu Mei"
+   ],
+   "year": "2022",
+   "venue": "WSDM 2022 (Fifteenth ACM International Conference on Web Search and Data Mining), Tempe AZ, virtual, Research Paper track, pp. 675-685",
+   "doi": "10.1145/3488560.3498497",
+   "document_type": "Conference paper (WSDM 2022 research paper, 11 pages including references and appendices)",
+   "coverage": "Read the full text file in chunks: lines 1-1391 and 1392-1699 (all of it), covering abstract, introduction, related work, preliminaries, Section 4 analysis (4.1-4.4, Propositions 1-2, Lemma 1, Corollaries 1-2), Section 5 experiments (Tables 1-3, Figures 2-3), conclusion, references 1-35, and Appendices A (proofs) and B (additional experiments). Metadata hint verified: title, venue, year and DOI are correct; authors confirmed from the header. Paul markup: no markup files were listed for this document, and no annotation file named d3f0c986a967.json exists in the research _annots folder (checked by filename only; the other 63 annotation files were not opened), so paul_markup is empty. Scope note: the paper has no material on lobbying, elections, persuasion or turnout, legislators, or text measurement. Network content is graph influence (linear threshold model), random-walk importance and centrality baselines.",
+   "research_question": "Can a restricted, realistic black-box attack on a GNN, which perturbs the features of a small set of nodes with no access to model parameters or predictions, be formalized and solved efficiently by connecting node selection to influence maximization on a threshold model? (Abstract; Sections 1 and 3.2, pp. 675-677.)",
+   "theory": "Adversarial attack on GNNs recast as influence maximization. Under a ReLU path-independence assumption (Assumption 1, after Xu et al. 2018), the expected mis-classification rate becomes a spread function on a directed bipartite graph with node-specific thresholds (general or linear threshold model, Kempe et al. 2003). The objective is submodular when threshold CDFs are concave on the positive domain (Proposition 2, p. 678), so greedy selection applies. Section 4.2, p. 677-678.",
+   "data": "Three public citation benchmarks: Cora, Citeseer, Pubmed (Sen et al. 2008; Yang et al. 2016). Unit: nodes. Graph sizes N are not stated in the text. Random 60/20/20 train/validation/test splits (Table 1 and 2); 10 percent training data in Table 3 and Appendix B.2. 40 independent trials per model-dataset pair. Victim models: GCN and GAT with 2 layers, JK-Net with 7 layers. Proxy models: 20 GCNs trained on separate splits to build the perturbation vector. Period: not stated; benchmark data only, no time period.",
+   "method": "Two-step attack: (1) select a node set S with |S| at most r and degree at most m; (2) add a constant perturbation vector epsilon to features of nodes in S. The paper focuses on step 1. InfMax-Unif greedily maximizes the saturated coverage objective h(S) = sum over j of (min(sum over i in S of B_ji, a) + b) divided by (a+b), with B = M^L (random-walk transition matrix, L = 4), uniform threshold distribution, a = 0.01 (Corollary 1, Eq. 6). InfMax-Norm greedily maximizes sum over j of (1 + erf(sum B_ji / (sigma sqrt 2)))/2 with sigma = 0.01 (Corollary 2, Eq. 7). Baselines: Degree, Betweenness, PageRank (alpha = 0.85), RWCS and GC-RWCS (Ma et al. 2020; L = 4, l = 30, k = 1). Constraints: r = 1 percent of graph size; m = lowest degree of the top 10 or 30 percent of nodes. Perturbation: lambda = 10, top 2 percent features by average gradient sign-consistent across 20 proxy GCNs, value in {-lambda, 0, lambda}. Significance: pairwise t-test at alpha 0.05. Section 3.2 and 5.1-5.2, pp. 676-681.",
+   "identification": "Not applicable in the causal sense. This is an adversarial-attack benchmark, not causal inference. Validity rests on the black-box design: proxy GCNs trained on different splits build the perturbation vector, so it does not depend on victim models. The authors note the Ma et al. 2020 setup used victim-model information (Appendix B.1).",
+   "scope": "Population: node-level, untargeted, evasion, black-box attacks by feature perturbation on GNNs (GCN, GAT, JK-Net) for node classification on three citation networks. Institution: University of Michigan School of Information. Era: 2022 publication on 2008-2016 public benchmarks. Excludes graph-topology perturbation and binary or nonnegative features (future work, p. 685).",
+   "key_findings": [
+    {
+     "finding": "The mis-classification rate objective, with model parameters replaced by their expectation, equals an influence-maximization objective on a directed bipartite graph with node thresholds theta_j (Proposition 1, Eq. 3-4).",
+     "location": "Section 4.2, Proposition 1, p. 677; proof Appendix A.1",
+     "numbers": "Influence weights B = M^L with L-step random walk; threshold theta_j = (ybar_j(empty) minus max-class logit margin) over (W_khat minus W_y)^T epsilon"
+    },
+    {
+     "finding": "Influence maximization on this bipartite linear threshold graph is NP-hard (reduction from Set Cover).",
+     "location": "Lemma 1, Section 4.2, p. 678",
+     "numbers": "none"
+    },
+    {
+     "finding": "If each threshold CDF F_j is concave on [0, inf), the expected mis-classification rate h(S) is submodular in S, so greedy selection has a guarantee.",
+     "location": "Proposition 2, Section 4.3, p. 678; proof Appendix A.2",
+     "numbers": "none"
+    },
+    {
+     "finding": "Uniform thresholds give saturated coverage objective (InfMax-Unif); normal thresholds give an erf objective (InfMax-Norm). Both are submodular.",
+     "location": "Corollaries 1 and 2, Eq. 6-7, pp. 678-679",
+     "numbers": "a = 0.01 and sigma = 0.01 fixed in all experiments; authors say results are fairly robust to these choices (p. 679)"
+    },
+    {
+     "finding": "On the 60 percent training setting, InfMax-Unif gives lower test accuracy than the strongest baseline GC-RWCS in most setups, with significance marked in Table 1. Example: Cora GAT, 10 percent threshold, 55.9 vs 57.5 (no attack 87.7). Pubmed GAT, 30 percent threshold, 64.1 vs 69.1 (no attack 85.2).",
+     "location": "Section 5.2, Table 1, pp. 679-681",
+     "numbers": "Text says both proposed methods beat all baselines in all but 3 of 18 setups. Table 1 shows near-ties on Citeseer GCN and GAT at 10 percent (InfMax-Unif 60.7 and 62.4 vs GC-RWCS 60.5 and 62.4); the authors' count was not independently rechecked."
+    },
+    {
+     "finding": "The 10 percent threshold setting shows Cora GCN 68.8 (InfMax-Unif) vs 70.0 (GC-RWCS), and Pubmed JK-Net 55.6 vs 56.7. Degree and Betweenness baselines are weaker than the random-walk methods.",
+     "location": "Table 1, Section 5.2, pp. 680-681",
+     "numbers": "See Table 1 rows; Random baseline Cora JK-Net 70.5 (10 percent threshold)"
+    },
+    {
+     "finding": "Empirical threshold distributions, estimated by 1000 GCN initializations on Cora, are non-increasing on the positive domain in most cases, supporting the submodularity assumption.",
+     "location": "Section 5.3, Figure 2, p. 681",
+     "numbers": "1000 model initializations; 3 nodes shown; rho set to 1 for visualization (footnote 5)"
+    },
+    {
+     "finding": "On a stochastic blockmodel with 4 communities, the better methods (GC-RWCS and the proposed methods) spread selected nodes more evenly across communities.",
+     "location": "Section 5.4, Figure 3, p. 681",
+     "numbers": "Qualitative; no statistic reported"
+    },
+    {
+     "finding": "With 10 percent training data and in the Ma et al. (2020) setup, the same trends hold.",
+     "location": "Appendix B.1-B.2, Tables 2-3, p. 685",
+     "numbers": "Table 3 Cora GCN no attack 81.1; InfMax-Unif 10 percent threshold 72.6 (JK-Net 58.1); the authors call the trend similar"
+    }
+   ],
+   "limitations": [
+    "Assumption 1 (ReLU activations independent with a common probability) is an approximation taken from Xu et al. 2018; it is a simplification of the real network.",
+    "The thresholds are treated as random. The authors say independence across nodes is unrealistic for GNNs because neighbours' predictions correlate, and they leave concentration of the mis-classification rate around its expectation to future work (Section 4.4, p. 679).",
+    "The distribution assumptions (uniform or normal thresholds) likely deviate from the real distribution; the authors state this (p. 679).",
+    "Hyperparameters a and sigma are fixed at 0.01 without tuning; the theoretically optimal choice depends on epsilon and the dataset (p. 679).",
+    "Only node selection is studied. The perturbation vector is constant across nodes (no personalization), and the attack is untargeted.",
+    "Only feature perturbation with continuous features is treated; graph-structure perturbation and binary or nonnegative features are future work (Conclusion, p. 685).",
+    "The bipartite connection uses rho (the path activation probability), which is unknown; visualization sets rho = 1 (footnote 5, p. 681).",
+    "Evaluation covers three citation benchmarks and three GNN architectures with a single attack budget r = 1 percent of graph size. Graph sizes are not reported in the text.",
+    "Greedy submodularity gives an approximation guarantee for the expected objective, not for the actual mis-classification rate. The paper does not prove the concentration of the actual rate."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Kempe, Kleinberg, Tardos 2003, Maximizing the spread of influence through a social network (KDD) - linear and general threshold models; greedy submodular maximization underlying the paper's connection (ref 14).",
+    "Granovetter 1978, Threshold models of collective behavior (ref 8) - origin of threshold diffusion models.",
+    "Mossel and Roch 2007, On the submodularity of influence in social networks (ref 20) - submodularity of general threshold influence.",
+    "Schoenebeck, Tao, Yu 2019, Think globally, act locally: optimal seeding for nonsubmodular influence maximization (ref 21) - why spread-apart seed sets matter.",
+    "Lin and Bilmes 2011, A class of submodular functions for document summarization (ref 18) - saturated coverage function used in InfMax-Unif.",
+    "Ma, Ding, Mei 2020, Towards More Practical Adversarial Attacks on Graph Neural Networks (NeurIPS) (ref 19) - the restricted black-box setup and RWCS/GC-RWCS baselines this paper builds on.",
+    "Zugner, Akbarnejad, Gunnemann 2018 (ref 34) and Zugner and Gunnemann 2019 (ref 35) - adversarial attacks on GNN graph data, the standard comparison set.",
+    "Jin et al. 2020, Adversarial attacks and defenses on graphs: a review and empirical study (ref 12) - taxonomy used for the attack setup.",
+    "Xu et al. 2018, Representation learning on graphs with jumping knowledge networks (ref 30) - JK-Net and the ReLU independence assumption.",
+    "Kipf and Welling 2016 (ref 15), Velickovic et al. 2018 (ref 26), Hamilton et al. 2017 (ref 9) - GCN, GAT and GraphSAGE architectures.",
+    "Holland, Laskey, Leinhardt 1983, Stochastic blockmodels (ref 10) - synthetic graph in the case study.",
+    "Sen et al. 2008 (ref 22) and Yang, Cohen, Salakhutdinov 2016 (ref 31) - Cora, Citeseer, Pubmed benchmark datasets."
+   ],
+   "measures": [
+    "Test accuracy (%) after attack, with standard error over 40 independent trials (Tables 1-3).",
+    "Pairwise t-test at significance 0.05 for the difference from the best baseline.",
+    "Mis-classification rate (objective of Eq. 2) and its expectation h(S) (Eq. 5-7).",
+    "Node centralities used as baselines: degree C_D(i) = |N_i|/N; betweenness; PageRank with alpha = 0.85; random-walk column sum I(i) = sum over j of [M^L]_ji.",
+    "Threshold theta_j from logit margins (Eq. 4) and its empirical histogram over 1000 initializations (Figure 2).",
+    "Random-walk transition matrix M with L = 4 steps (B = M^L)."
+   ],
+   "short_quotes": [
+    {
+     "quote": "the proposed attack strategies significantly degrade the performance of three popular GNN models",
+     "location": "Abstract, p. 675"
+    },
+    {
+     "quote": "we follow the most strict black-box setup [19] to our knowledge, which prohibits any probing of the model",
+     "location": "Section 2 (Related Work), p. 676"
+    },
+    {
+     "quote": "the expected mis-classification rate is submodular with respect to the selected set of nodes to perturb",
+     "location": "Introduction, p. 675"
+    }
+   ]
+  },
+  "summary_md": "Ma, Deng and Mei (WSDM 2022) study a strict black-box attack on graph neural networks. The attacker cannot see model parameters or predictions. It may change the features of at most r nodes (1 percent of the graph), each with degree at most m. The paper's main contribution is choosing which nodes to perturb. Under a ReLU path-independence approximation, the expected misclassification rate becomes an influence-maximization objective on a directed bipartite linear-threshold graph. Influence weights are B = M^L (an L-step random walk, L = 4), and the thresholds are random. The problem is NP-hard (Lemma 1). It is submodular, so greedy selection carries a guarantee, only when each threshold CDF is concave on the positive domain (Proposition 2). Uniform thresholds give a saturated-coverage objective (InfMax-Unif) and normal thresholds give an erf objective (InfMax-Norm). On Cora, Citeseer and Pubmed, both methods usually cut test accuracy more than the GC-RWCS, PageRank, degree and betweenness baselines; degree and betweenness are the weakest. One example is Cora GAT: 87.7 with no attack, 57.5 under GC-RWCS and 55.9 under InfMax-Unif. Near-ties occur on Citeseer. A qualitative SBM case study suggests the better selectors spread their seeds across communities.\n\nThe paper does not concern legislatures, lobbying or persuasion, so nothing about political behavior transfers. What does transfer is the mathematics. Proposition 2 gives the exact condition for a greedy guarantee on a threshold model: the threshold CDF must be concave. Paul's system uses deterministic tier thresholds in lt_priming and lazy greedy over Monte Carlo spread in the frontier and coalition allocators. The paper says when those greedy claims hold and when they do not. Its other lessons are that coverage-style saturating objectives beat raw centrality, and that seed sets should avoid redundancy. The adversarial result itself has no counterpart in the system, which runs no GNN. It does give an analogy for testing how neighbour-propagated stance imputation behaves when a few node inputs are corrupted. That analogy is weak and UNVERIFIED.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.lt-priming",
+    "relation": "qualifies",
+    "paper_claim": "Proposition 2: if each threshold CDF F_j is concave on [0, +inf), the expected spread h(S) is submodular, so greedy selection applies. Corollary 1 (uniform thresholds, Eq. 6) gives a saturated coverage objective that is submodular. Lemma 1: influence maximization on the directed bipartite linear threshold graph is NP-hard, by reduction from Set Cover with thresholds alpha/2.",
+    "paper_location": "Section 4.2-4.3: Lemma 1 p.678; Proposition 2 p.678; Corollary 1 p.678-679; proof of Proposition 2 in Appendix A.2 p.684",
+    "system_side": "lt_priming THETA ladder: deterministic constants from 0.6 (Highly Persuadable) to 3.0 (Opponent). prime() adds net_lean/120 and 0.25 per declared Opponent cell, sums P[u][v] times xf over pro sources, and solves each target separately for the cheapest mix of recruits and money. No seed-set objective is optimized.",
+    "code_ref": "fec/engine/lt_priming.py: THETA about lines 20-21; prime() about lines 96-104",
+    "transfer_conditions": "The concavity result transfers as mathematics only. Lemma 1 is an NP-hardness result for deterministic thresholds; the paper does not state a converse that missing concavity implies hardness. A point-mass (step) threshold CDF is not concave on [0, +inf), so the paper's submodularity guarantee does not cover lt_priming's deterministic thresholds if they were aggregated into a seed-set objective. Moderate for the mathematics, weak for empirical relevance.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Proposition 2, Corollary 1 and the THETA values, COMMIT=0.25 and the pressure sum were reproduced from the text and code. Softened: Lemma 1 is an unconditional NP-hardness result for the deterministic problem, not a dichotomy keyed to concavity. lt_priming also adds a lean term to theta, so theta is not purely the tier ladder.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Linear-threshold priming (cheapest tip)|Linear-threshold priming (cheapest tip)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.per-topic-allocators",
+    "relation": "qualifies",
+    "paper_claim": "Table 1: both InfMax methods beat Degree, Betweenness and PageRank in all 18 setups. The paper says both proposed methods beat all baselines in all but 3 of 18 setups. Pubmed GAT at 30 percent threshold: GC-RWCS 69.1, InfMax-Unif 64.1, no attack 85.2. In a 4-community SBM the better selectors spread seeds more evenly (qualitative).",
+    "paper_location": "Section 5.2 Table 1, pp.680-681; Section 5.4 Figure 3, p.681",
+    "system_side": "per_topic_coalition ranks neutral candidates by ev (engagement priority times delivery) and keeps the top 45, not by singleton marginal. Singleton marginal spread({n}) minus base is then computed over those 45 and used as the allocation weight, boosted by (1 + 0.8 times bpf). The 2M budget is water-filled with a 50k per-seed cap. The joint spread of the funded set is reported afterwards and does not shape the allocation.",
+    "code_ref": "fec/engine/per_topic_coalition.py: lines 113-125 (cand top-45 cut, mg, boost, coal_waterfill, joint spread)",
+    "transfer_conditions": "The paper's objective is GNN misclassification on citation graphs at a 1 percent node budget. The CU objective is a Monte Carlo competitive cascade on the cosponsor kernel. The structural point transfers: weighting by singleton marginals ignores overlap, so funded seeds can cluster. The code already measures the joint-vs-naive gap. The community-spread finding is qualitative. Weak to moderate.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Table 1 numbers for the stand-alone baselines and the Pubmed GAT example were reproduced. The 3-of-18 count was not reproduced: the best of the two InfMax methods strictly beats the best baseline in 17 of 18 setups (only Citeseer GCN 10 percent fails); both methods strictly beat it in 14 of 18 (non-wins: Citeseer GCN 10, Citeseer GAT 10, Citeseer JK 10, Cora GCN 30). The system_side ranking claim is wrong: the top-45 cut uses ev, and singleton marginals only set allocation weights.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Per-topic flip and coalition allocators|Per-topic flip and coalition allocators]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+    "relation": "suggests-extension",
+    "paper_claim": "Corollary 1 Eq. 6 with a = 0.01 over B = M^L (L = 4) is a saturated coverage function and is submodular. The paper says this objective outperforms one-step and centrality heuristics. The paper's experiments compare against Degree, Betweenness, PageRank, RWCS and GC-RWCS; no one-step coverage baseline is tested.",
+    "paper_location": "Corollary 1 Eq. 6, pp.678-679; Section 5.1 settings p.679; Table 1 pp.680-681",
+    "system_side": "budgetRecruit is cardinality-bounded (nSeeds), not cost-bounded as its comment says. Coverage cov = 1 - prod(1-p) is updated over DIRECT edges PE only, so coverage is one hop. Greedy marginal gain includes an optional target weight (1 + 2 dT) and a stance filter. The code comment claims the 1-1/e guarantee.",
+    "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl: about lines 773-800 (multiTarget, budgetRecruit)",
+    "transfer_conditions": "The 1-1/e guarantee applies to plain greedy on the monotone coverage objective. It does not transfer cleanly to the target-weighted variant, where argmax of (1 + 2 dT) times marginal is not greedy on the reach objective. A multi-hop extension would replace p with an L-step walk weight on the kernel; on the cosponsor graph that is a heuristic reach score (D-025), not an introduction probability, and must not reintroduce the rejected per-edge volume normalization. Weak.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Corollary 1 and the one-hop coverage update were reproduced. Softened: cost-bounded is a misnomer; the paper does not test one-step heuristics, so the outperformance clause is not supported as a one-step comparison; the 1-1/e claim does not cover the target-weighted variant.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Best-sponsor, multi-target tree and budget max-coverage modes|Best-sponsor, multi-target tree and budget max-coverage modes]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-stance.stance-dynamics",
+    "relation": "suggests-extension",
+    "paper_claim": "Perturbing features of only 1 percent of nodes, chosen by an influence-maximization criterion, sharply lowers accuracy of GCN, GAT and JK-Net. Cora GAT falls from 87.7 (no attack) to 55.9 under InfMax-Unif at the 10 percent degree threshold. The paper's model (B = M^L) implies that propagation lets a few nodes affect many predictions; no propagation ablation is reported.",
+    "paper_location": "Abstract p.675; Section 5.2 Table 1 pp.680-681; Section 4.2 Eq. 4-5 p.677-678",
+    "system_side": "Neighbour imputation takes the one-hop mean TSCORE of at least 5 labelled cosponsor neighbours and keeps proposals with |est| at least 0.75. The masking validation sign agreement is stored in data/stance/stance_dynamics.json as 0.775 over n = 1087. Proposals go to a CSV only; the matrix is unchanged.",
+    "code_ref": "fec/stance/stance_dynamics.py: lines 131-146 (MINNB, CONF, neighbour mean, proposals); lines 143-157 (masking validation and JSON output)",
+    "transfer_conditions": "The system has no GNN and uses a one-hop mean with human adjudication, so propagation is shallow and an adversary is implausible. The transferable idea is a sensitivity test: flip or corrupt the labels of a few high-coverage members, chosen by walk coverage rather than at random, and count sign changes in the proposals. Any result stays UNVERIFIED until reproduced (DE-062). Weak.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The Table 1 numbers were reproduced (Cora GAT 87.7, 55.9, GC-RWCS 57.5). The 5-neighbour and 0.75 thresholds were confirmed in the code. The 77 percent figure matches the stored 0.775 (n = 1087, file dated 2026-07-01). Softened: the sentence that propagation is what lets few nodes affect many predictions is the analyst's inference, not a tested result. The runtime print still says at least 3 neighbours, a stale message.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Stance dynamics and neighbour imputation|Stance dynamics and neighbour imputation]]",
+    "system": "melange-stance"
+   }
+  ],
+  "refuted": [
+   {
+    "component_id": "melange-sna.katz-bonacich-benchmark",
+    "relation": "context",
+    "paper_claim": "As seed selectors, plain centralities are weaker than random-walk column sums with saturation. In Table 1, Degree and Betweenness fall below RWCS, GC-RWCS and InfMax, and PageRank is intermediate.",
+    "paper_location": "Section 5.1 baselines and Section 5.2 Table 1, pp.679-681",
+    "system_side": "kb_benchmark computes Katz-Bonacich centrality b = (I - delta A)^-1 1 with delta = 0.85 over the spectral radius, on the live kernel P = build_P(adj), counting weighted out-walks. It is a Spearman diagnostic only and no chain step consumes it.",
+    "code_ref": "fec/engine/kb_benchmark.py: lines 1-40 (header, DELTA_FRAC, matvec)",
+    "transfer_conditions": "The paper concerns GNN attack selection on citation benchmarks, not legislators, so it is context only. KB and walk-sum scores remain heuristic outputs (D-025). The defensible transfer is narrower: unsaturated walk sums (RWCS) are not a strong selection rule in this paper, which is consistent with keeping KB diagnostic only.",
+    "strength": "weak",
+    "verdict": "refuted",
+    "verifier_note": "The ordering claim is contradicted by Table 1. Degree and Betweenness give lower post-attack accuracy, meaning stronger attacks, than RWCS and PageRank in all 18 setups, and are weaker than GC-RWCS and both InfMax methods in all 18. PageRank is the weakest baseline (highest post-attack accuracy) in 14 of 18 setups and RWCS in 4. Means over 18 setups: PageRank 74.5, RWCS 74.1, Betweenness 67.6, Degree 67.0, GC-RWCS 62.5, InfMax-Unif 61.1, InfMax-Norm 61.0. The code description holds: diagnostic only, delta scaled by the spectral radius."
+   }
+  ],
+  "summary_issues": [
+   "Summary says Degree and Betweenness are the weakest baselines. Table 1 shows they beat RWCS and PageRank in every one of 18 setups. PageRank is the weakest baseline in 14 of 18 setups and RWCS in 4.",
+   "Summary and bearing repeat the paper's count that both proposed methods beat all baselines in all but 3 of 18 setups. Not reproduced: strict both-method wins occur in 14 of 18 setups; best-method wins in 17 of 18.",
+   "Summary says Paul's frontier and coalition allocators use lazy greedy over Monte Carlo spread. per_topic_coalition.py uses singleton marginals with water-filling and no greedy loop; budget_frontier.py has no lazy, CELF or greedy term by grep. Unsupported as written.",
+   "Guarantee wording: submodularity and the greedy guarantee apply to the expected objective h(S) under the threshold assumptions, not to the realized misclassification rate. The paper leaves concentration open (Section 4.4).",
+   "The Paul alignment note (margin note on Chen 2023, static and submodular tier, GCOMB and CELF expectations) cannot be checked from this item. paul_entries is empty and no annotation exists for this work, so it should not enter the vault as a finding about this paper.",
+   "The golovin-2011 link (builds-on) is unsupported: Ma et al. do not cite Golovin or Krause. Dropped from related.",
+   "The stance bearing sentence that propagation is what lets few nodes affect many predictions is an inference from the model, not a tested result. Softened in its verdict.",
+   "Summary says the greedy guarantee holds only when each threshold CDF is concave. Proposition 2 is a sufficient condition, not an if-and-only-if, and Lemma 1 is an unconditional hardness result for the deterministic problem. The same overstatement appears in the rel gaps field."
+  ],
+  "gaps_exposed": [
+   "No greedy step states whether its objective is submodular. budget_frontier and per_topic_coalition run lazy greedy or marginal ranking over a competitive cascade with bystander activation. The paper shows that a guarantee needs a specific structural condition (concave threshold CDF), so a (1-1/e) bound should not be assumed from greedy alone.",
+   "lt_priming's thresholds are deterministic tier constants. A seed-set version of LT priming would have no greedy guarantee, and NP-hardness applies (Lemma 1).",
+   "The coalition allocator funds by singleton marginals and checks redundancy only afterwards (joint vs naive-additive). There is no overlap-aware selection like that of the coverage-objective methods, which beat stand-alone-importance baselines.",
+   "There is no robustness test of graph-propagated estimates (neighbour imputation, cascade spreads) against a few corrupted or mislabelled high-coverage nodes.",
+   "Coverage in budgetRecruit is one hop. Multi-hop, saturating reach has not been tried."
+  ],
+  "flags": [
+   "The paper's 'influence' means spread of misclassification in a GNN. It is not legislator influence, and its results must not be quoted as evidence about persuasion, lobbying or access.",
+   "Random-walk importance B = M^L and walk-sum centralities are heuristic model outputs, never closeness, access or introduction probabilities (D-025).",
+   "Porting M = D^-1 A to the cosponsor graph normalizes by node degree. Check that it does not bring back the REJECTED per-edge volume-normalization proposal under another name. The paper itself argues for neither rejected SNA proposal.",
+   "Table 1 figures come from 3 citation benchmarks, 40 trials and a 1% node budget, with no graph sizes reported. Any number quoted must carry that window and denominator.",
+   "The paper's count of 'all but 3 of 18 setups' was not independently rechecked, and Citeseer at the 10% threshold shows near-ties."
+  ],
+  "paul_alignment": "The paper sharpens Paul's own caution. His margin note on Chen 2023 says pressure from high-ranking members is \"not diminishing\", which he reads as a challenge to submodular assumptions. Proposition 2 makes that exact: the greedy guarantee holds only when the threshold CDF is concave. Non-diminishing or step-like threshold responses break it. Paul's three-tier architecture places the per-topic allocators in a \"static and submodular\" tier. As built, those allocators run greedy over a competitive cascade with bystander mobilization, and the code never establishes submodularity. Labelling that tier submodular is therefore an assumption, not a property. His GCOMB and CELF expectations for the joint optimizer are untouched, because that optimizer is separable and concave per member. Paul has no annotation on this paper.",
+  "related": [
+   {
+    "slug": "borodin-nd-threshold-models-competitive",
+    "relation": "complements",
+    "why": "Title matches a competitive threshold-model paper, where submodularity can fail. The Ma et al. result gives the single-campaign condition. Item title checked only; the content was not re-read here."
+   },
+   {
+    "slug": "almazaydeh-2026-heuristic-centrality-methods",
+    "relation": "contradicts",
+    "why": "Almazaydeh argues centrality heuristics challenge greedy optimization in influence maximization. Ma et al. find Degree, Betweenness and PageRank weaker than greedy-type selectors on this coverage objective. The two papers study different objectives, so this is a tension rather than a direct contradiction."
+   },
+   {
+    "slug": "kumar-2022-influence-maximization-social",
+    "relation": "complements",
+    "why": "Title shows Kumar uses a GNN to solve influence maximization, while Ma et al. use influence maximization to attack a GNN. The item was checked by title only."
+   },
+   {
+    "slug": "zhou-2026-measuring-stance-dynamics",
+    "relation": "complements",
+    "why": "Item describes a temporal GNN stance model with silent-user information. If such a model is adopted, the node-perturbation vulnerability shown by Ma et al. becomes a direct robustness question."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ }
+]

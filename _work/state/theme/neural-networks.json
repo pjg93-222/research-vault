@@ -1,0 +1,98 @@
+{
+ "name": "Neural Networks",
+ "slug": "neural-networks",
+ "paul_notes": [
+  {
+   "doc": "The annotation document \"Neural Networks - Untitled document.md\" (sha12 da706e80ef35) contains no annotations. Its body is four bare links with no citation titles, no takeaways, and no commentary from Paul. The archived copy in annotations/_versions/bib-20260705 (sha12 78990c3e052f, same 1153-byte body) is identical. No reviewer comments or highlights exist: the file C:/Users/pgoff/Documents/research/_annots/da706e80ef35.json is absent. The four links are listed below as unannotated entries so the gap is visible. Nothing has been inferred about what the works say or how Paul would apply them. The document-level arguments, research questions, syntheses and stated gaps therefore cannot be extracted from this file. Paul's Neural Networks thinking may live in another document (the Curated Annotations file, or the Path-Finding and Social Network Analysis bibliographies), or the four works may need re-annotating.",
+   "doc_level_notes": [
+    "Source file C:/Users/pgoff/Documents/research/annotations/Neural Networks - Untitled document.md is 1153 bytes: YAML frontmatter plus four URLs and nothing else. No annotation text, takeaways, or system links are present.",
+    "No reviewer annotation JSON exists for sha12 da706e80ef35 under C:/Users/pgoff/Documents/research/_annots/.",
+    "Archived version C:/Users/pgoff/Documents/research/annotations/_versions/bib-20260705/Neural Networks - Untitled document.md (sha12 78990c3e052f, source zip 20260705) has an identical body, so no annotation was lost between versions.",
+    "Overarching arguments, research questions, cross-work syntheses and stated gaps cannot be derived from this file. Nothing was fetched from the four links, because any takeaway would have to be Paul's own rather than mine.",
+    "Suggested next step for Paul: check whether the Neural Networks thinking was written in the Curated Annotations file or another bibliography, or add the annotations to this document so it can be re-run."
+   ]
+  }
+ ],
+ "works": [
+  {
+   "slug": "zhou-2026-measuring-stance-dynamics",
+   "title": "Measuring stance dynamics in political debate using temporal graph neural networks",
+   "year": "2026",
+   "summary": "Zhou and Elejalde build TWLGCN, a temporal graph network that infers whether a Twitter user favours or opposes a referendum. It works on a user-hashtag graph rebuilt every 28 days, plus optional user-user edges. The model is trained on only 80 to 106 hashtags labelled by side, from Chile's 2020 and 2022 referendums (about 1.21M tweets; 12,237 and 4,934 users). Each period's embeddings carry into the next. This beats re-starting each period by 1.3% to 9.8% on the 2022 dataset. Mention, quote and reply edges add about 3% macro-F1; follower edges add little. Labels taken from hashtags agree with human coders (kappa 0.81 to 0.94, on 100 snapshots per dataset). The second half is descriptive: seven classes of movement per transition, with a \"static\" band of median + MAD; flip curves that mirror each other; and neighbours who tend to shift in the same direction (Fig. 6). There is no null baseline and no causal test.\n\nThis matters because `fec/stance/stance_dynamics.py` is an explicit port of this paper, without the GNN. It uses 91-day windows on the CU press corpus, carries a member's last stance through silent windows, uses the seven-dynamics taxonomy, tests whether neighbours move together, and proposes stances for silent members from their neighbours. Checked against the live output (`data/stance/stance_dynamics.json`), the port has three problems. The paper's static band assumes a continuous probability. On pooled stance signs it comes out at 0.708, so almost every move counts as static. The neighbour co-movement test is null (134 same / 122 opposite, 52%). The 77.5% sign agreement for imputation (n=1,087) has no party or majority-class baseline, while the paper scores with macro-F1 because its classes are imbalanced. The paper backs the design ideas. It does not validate carrying a label forward, the 91-day window, or the imputation. All of those remain UNVERIFIED.",
+   "question": "Can a temporal graph neural network infer user-level stance (favor vs. against) toward a referendum from user-hashtag and user-user interaction graphs at each 28-day period, including users who never post about the target, and can the resulting trajectories characterize opinion shifts at population, individual and neighborhood levels? (Sec. 1.1, p.2-3.)",
+   "method": "TWLGCN (Temporal Weighted LightGCN), an extension of WLGCN (Zhou & Elejalde, 2024). Each 28-day snapshot is a bipartite user-hashtag graph with count-weighted edges (Sec. 3.3). Four GCN propagation layers with symmetric degree normalization (Eq. 3), then multi-head attention over layer outputs (Eq. 4). User embeddings go to an MLP classifier with batch norm and dropout. Loss = focal loss (Eq. 5-6, class imbalance) + lambda1 * SSCL + lambda2 * ||H0||^2 (Eq. 11), with lambda1 = 1e-3 and lambda2 = 1e-6 (Sec. 4.1). SSCL, the Supervised Stance Contrastive Loss (Eq. 9-10), treats same-stance users and hashtags as positives and uses the adaptive reweighting alpha(x) = (rho + x)^(-lambda) from DynaDeno (Eq. 8). Noise-based augmentation of embeddings (Eq. 7). Sequential warm start: Xavier initialization at t=0; later periods inherit embeddings and MLP weights; hashtag initial embeddings from period-specific FastText (Sec. 3.3). User-user graphs: Pas (static follower/friend edges) and Act (per-period directed mention/quote/reply edges, Sec. 3.6, Eq. 12). Adam optimizer; max 1000 epochs; early stop after 50 epochs without validation macro-F1 gain. Stance probabilities from hashtag counts: p+ = |R+| / (|R+| + |R-|) (Eq. 1); ties are assigned by larger count, and ambiguous users are kept in training (p.6).",
+   "findings": [
+    {
+     "finding": "TWLGCN variants keep macro-F1 steady across periods, while the non-TWLGCN baselines (WLGCN, EvolveGCN, DynaDeno) fluctuate much more sharply.",
+     "location": "Sec. 4.3.1, p.10; Fig. 2",
+     "numbers": "Steady 70%-90% macro-F1 over observed periods; exact baseline values are in Fig. 2 and Table S4 (supplement, not in text)."
+    },
+    {
+     "finding": "The abstract claims the model beats network-based baselines in macro-F1 by more than 5% at each period using only 0.2% labeled hashtags. The main text does not report the baseline gap numerically, so the claim cannot be checked from the text.",
+     "location": "Abstract, p.1; Sec. 4.3.1, p.10",
+     "numbers": "Claimed >5%; labeled hashtags 80/171,615 (about 0.05%) in Entry_DS and 106/57,211 (about 0.19%) in Exit_DS (Table 1, p.5)."
+    },
+    {
+     "finding": "Carrying embeddings forward across snapshots matters: the full model beats the discrete variant that re-initializes embeddings each period.",
+     "location": "Sec. 4.3.1, p.10",
+     "numbers": "On Exit_DS, the full TWLGCN outperforms the discrete variant by 1.3% to 9.8%."
+    },
+    {
+     "finding": "Adding active user-user relations (mentions, quotes, replies) gives the best overall performance. Passive follower/friend relations add little, and combining both does not help.",
+     "location": "Sec. 4.3.1, p.10; Sec. 6, p.15",
+     "numbers": "Act improves the base model by about 3% on both datasets."
+    },
+    {
+     "finding": "The supervised contrastive loss (SSCL) adds accuracy on top of focal loss. The authors attribute this to same-class contrastive signal.",
+     "location": "Sec. 4.3.1, p.10-11",
+     "numbers": "TWLGCN vs. TWLGCN w/o SSCL: about 2% gain in macro-F1."
+    },
+    {
+     "finding": "Human annotators agree substantially with each other on the stance of user snapshots, and with hashtag-derived labels, which supports hashtags as a stance proxy.",
+     "location": "Sec. 3.4, p.6-7",
+     "numbers": "Human-human Cohen's kappa 0.836 (Entry_DS) and 0.842 (Exit_DS); human vs. hashtag-derived kappa 0.81 to 0.94; 100 user snapshots per dataset."
+    }
+   ],
+   "related": [
+    {
+     "slug": "malaterre-2024-inferring-social-networks",
+     "relation": "complements",
+     "why": "Item exists. The HCoI acronym matches its hidden communities of interest method, so the link to the HCoI layer is plausible. This is a system-side link; the Zhou paper does not cite it."
+    },
+    {
+     "slug": "steinertthrelkeld-2018-twitter-data",
+     "relation": "complements",
+     "why": "Item exists (Twitter As Data). Relevant to the Twitter measurement issues behind hashtag-proxy labels. The July 2026 provenance claim in the rel was not checked."
+    },
+    {
+     "slug": "b-2025-comparing-fine-tuned",
+     "relation": "complements",
+     "why": "Item text is the paper Comparing Fine-Tuned RoBERTa with Traditional ML Models for Stance Detection in Political Tweets, so the rel rationale holds. The item ext title (Roman Urdu) is a stale mismatch and should be corrected in the item."
+    },
+    {
+     "slug": "dai-2025-large-language-model",
+     "relation": "complements",
+     "why": "Item exists and its title matches (LLM-enhanced logic tensor network for stance detection). The Zhou paper lists LLM-based user-level stance as future work (Sec. 6.1 p.17), which is accurate."
+    },
+    {
+     "slug": "hargittai-2015-bigger-always-better",
+     "relation": "complements",
+     "why": "Item exists. The paper concedes a non-representative Santiago news-follower sample (Sec. 3.2, Sec. 5.1 p.12, Sec. 6.1 p.16), and Hargittai is relevant to such biases. The paper does not cite her, so 'explains' should read 'relevant to'."
+    },
+    {
+     "slug": "kumar-2022-influence-maximization-social",
+     "relation": "complements",
+     "why": "Item exists (influence maximization with graph embedding and GNN). Both use graph embeddings on social graphs, but Kumar addresses seed selection and the Zhou paper addresses stance classification, so same-method overstates the link."
+    }
+   ],
+   "bearings": [
+    "melange-stance.stance-dynamics:method-source:VERIFIED-SOFTENED",
+    "melange-stance.stance-dynamics:qualifies:VERIFIED-SOFTENED",
+    "melange-stance.stance-dynamics:qualifies:VERIFIED-SOFTENED",
+    "melange-stance.stance-dynamics:qualifies:VERIFIED-SOFTENED",
+    "melange-stance.stance-dynamics:qualifies:VERIFIED",
+    "melange-sna.multilayer-social-press-edges:suggests-extension:VERIFIED-SOFTENED"
+   ]
+  }
+ ]
+}

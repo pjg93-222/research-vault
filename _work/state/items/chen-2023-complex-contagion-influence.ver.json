@@ -1,0 +1,88 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-allocation.budget-frontier",
+      "relation": "qualifies",
+      "paper_claim": "Complex-contagion IM is non-submodular (Thm 1) and NP-hard (Thm 2). Greedy can be arbitrarily bad: normalised influence 0.0396 for Greedy vs 0.5347 for RL4CCIM on India (202 nodes), and 0.0293 vs 0.5585 on Exhibition. Deterministic setting p0=1, p1=0, budget T=8 (T=12 on Exhibition).",
+      "paper_location": "Sec. 3 PDF p3 (Thm 1 and 2); Table 1 and Sec. 6.1 PDF p7",
+      "system_side": "budget_frontier.py runs a lazy-greedy heap over a candidate pool with MAXSEEDS default 60 (line 7). Spread comes from an edge-keyed IC cascade over the P kernel (lines 83-94). The loop stops when the best marginal is zero (inside lines 161-172). The knee is the last seed whose gain is at least a quarter of the peak gain on the spread path (frontier_knee, lines 49-58, called at line 172). Both the stop rule and the knee presume diminishing returns.",
+      "code_ref": "fec/engine/budget_frontier.py:7,49-58,83-94,161-172",
+      "transfer_conditions": "The zero-marginal failure bites only if real cosponsor joining is threshold-like, so that single-seed marginals are zero until K partners are joined. Under the system's per-edge IC kernel the stop rule and knee are internally coherent. The paper's numbers are simulated cascades on non-legislative networks, so they do not transfer as estimates.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Table 1 values for Greedy and RL4CCIM on India and Exhibition match the claim. Setting, Thm 1 and Thm 2 match the text. Code claims about MAXSEEDS 60, the zero-marginal stop, the IC-style cascade and the quarter-peak knee were checked at the cited lines. The knee is an inclusive rule on gains, equivalent to 4 x gain at least peak."
+    },
+    {
+      "component_id": "melange-allocation.per-topic-allocators",
+      "relation": "suggests-extension",
+      "paper_claim": "Credit sparseness in an 8-node toy (K=3, T=4): only 17 of 70 four-seed sets (24.3 percent) are effective, and the seed sequence 1,2,3,5 earns per-step rewards 1,1,1,2, so a seed's value shows only alongside specific other seeds.",
+      "paper_location": "Sec. 5.1 PDF p4 for the numbers; Sec. 1 PDF p2 for the qualitative point",
+      "system_side": "per_topic_coalition.py takes the top 45 neutral members ranked first by a priority engagement score ev (line 114), and only then computes each candidate's solo marginal over the base spread (line 115). It keeps candidates with positive marginal (line 116), boosts them by (1 + 0.8 bpf) (line 117) and water-fills the budget. The funded set's joint spread is one extra MC evaluation, printed beside the naive-additive sum. The code comment asserts spread is submodular.",
+      "code_ref": "fec/engine/per_topic_coalition.py:114-127",
+      "transfer_conditions": "A joint gain above naive-additive on a topic would show complementarity that solo ranking cannot see. Under pure IC the joint should stay at or below naive-additive, so the printout is a real check only if threshold effects exist. The 45-candidate cut uses engagement rather than marginal value, so a seed valuable only in combination can be dropped before any marginal is computed.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Toy numbers and the reward sequence verified in Sec. 5.1 (text lines 432-441). The analyst said the top 45 are ranked by solo marginal. The code ranks them by ev before any marginal is computed, so the wording is corrected here. The zero-marginal drop happens after the cut, which strengthens the gap the analyst raised."
+    },
+    {
+      "component_id": "melange-influence-engine.lt-priming",
+      "relation": "qualifies",
+      "paper_claim": "K-complex model (Eq. 1): activation probability p0 when at least K neighbours are active and p1 much smaller otherwise. It is motivated by Centola and Macy 2007 and Centola 2010 but not validated on field adoption data in this paper; the paper cites succeeding studies as support.",
+      "paper_location": "Sec. 3 Eq. 1 PDF p3; Sec. 1 PDF p1 for the motivation; Sec. 2 PDF p2 for the cited validation",
+      "system_side": "lt_priming.py is a deterministic gap model. Its THETA ladder runs from 0.6 to 3.0 (lines 19-21), adjusted per member by net_lean/120 and a commitment term for Opponent cells. Pressure is the sum of P[u][v] times a cross-cue factor from pro neighbours. Money closes the rest, and recruits are cheaper pro neighbours (lines 96-145). Each target is solved alone and one hop deep.",
+      "code_ref": "fec/engine/lt_priming.py:19-21,96-145",
+      "transfer_conditions": "The paper supports only the modelling option that adoption can be threshold-like. It gives no K or threshold values for legislators. Joint multi-target priming would be a new model needing owner authorisation and a holdout look.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper claim verified, including the field-validation caveat. The analyst called the thresholds fixed design constants. The base ladder is fixed, but the effective theta per member is adjusted by net_lean and by commitment, so the system-side wording is corrected here."
+    },
+    {
+      "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+      "relation": "qualifies",
+      "paper_claim": "The (1-1/e) greedy guarantee of Kempe et al. 2003 applies to submodular IC and LT. Under complex contagion no such guarantee holds, and CCIM is NP-hard to approximate even under simplified network models (citing Schoenebeck and Tao 2019).",
+      "paper_location": "Sec. 1 PDF p2 (NP-hard approximation); Sec. 2 PDF p2 (Kempe guarantee); Sec. 3 PDF p3",
+      "system_side": "make_dashboard_html_00.tpl budgetRecruit (line 779) is greedy max coverage with coverage 1 - prod(1 - p) over recruiter edges. The comment at lines 773-776 claims the (1-1/e) guarantee. The closed-cascade route (line 832) is commented at line 831 as non-submodular with no (1-1/e) claim. The one live call (line 1126) passes target -1, so the target-distance multiplier (1 + 2 dT) is not applied there.",
+      "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:773-779,831,1126",
+      "transfer_conditions": "The guarantee is true of the coverage proxy only, not of real recruitment. Dashboard wording should say so if threshold joining is plausible. The target-weighted branch multiplies marginals by (1 + 2 dT), which lies outside the classic argument, so the guarantee should not be cited for targeted calls.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Paper statements verified in the text (Sec. 1 page 2 and Sec. 2). The code comment, the coverage objective and the closed-cascade comment were checked at the cited lines. The guarantee claim holds for the live call path, which uses target -1."
+    },
+    {
+      "component_id": "melange-influence-engine.cascade-kernel",
+      "relation": "context",
+      "paper_claim": "IC and LT assume activation probability independent of how many neighbours are active, which keeps them submodular. Complex contagion breaks this (Sec. 3, lines 254-258 and footnote 2).",
+      "paper_location": "Sec. 3 PDF p3",
+      "system_side": "build_P (moneyball_core.py lines 555-562) sets each edge probability to x/(x+6), where x = w times cpf_diffusion times receiver edge_mult. None of these terms depends on how many in-neighbours are already active. cpf_diffusion (lines 543-545) uses a party term and a bridge factor bpf, which is network position, not a seniority or leadership term.",
+      "code_ref": "fec/moneyball_core.py:543-562",
+      "transfer_conditions": "Context only. The paper gives no legislative estimate. Any count-dependent kernel would be a new model and must keep the two cpf physics separate.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Paper statement and the build_P formula verified. The no-leadership-term claim holds, though the kernel does contain a bridge-position term bpf that the analyst did not mention."
+    }
+  ],
+  "related": [
+    {"slug": "chen-2021-contingency-aware-influence", "relation": "builds-on", "why": "RL4IM from that paper is the base architecture and a baseline in this paper (Sec. 5.2 and Sec. 6.1). receptivity_layer.py line 29 and budget_frontier.py line 73 cite the contingency-aware idea from the same group."},
+    {"slug": "kamarthi-2019-influence-maximization-unknown", "relation": "cites", "why": "The paper cites Kamarthi et al. (AAMAS 2020) on learned graph sampling for IM in unknown networks. The item slug is dated 2019."},
+    {"slug": "arya-2025-relink-edge-activation", "relation": "same-method", "why": "Deep RL for closed-network IM. fec/surfaces/templates/make_dashboard_html_00.tpl line 831 says the closed-cascade route follows RELINK and is non-submodular, the regime this paper treats."},
+    {"slug": "kumar-2022-influence-maximization-social", "relation": "same-method", "why": "Graph embedding and GNN encoders for IM. This paper does not cite it, so the same-method link is an analyst judgment, parallel to the GAT encoder here."},
+    {"slug": "bharathi-nd-competitive-influence-maximization", "relation": "complements", "why": "fec/engine/scenario.py lines 6 and 11 cite Bharathi, Kempe and Salek for the competitive IC cascade. This paper shows what greedy loses once cascades are threshold-based rather than IC."},
+    {"slug": "borodin-nd-threshold-models-competitive", "relation": "complements", "why": "fec/engine/scenario.py lines 11-12 cite Borodin et al. for competitive LT, where submodularity can fail. This is the competitive threshold counterpart to the K-complex model here."},
+    {"slug": "golovin-2011-adaptive-submodularity-theory", "relation": "complements", "why": "fec/engine/optimize.py line 108 keeps a Golovin-Krause data-dependent bound as a diagnostic. That bound presumes submodularity, the premise this paper shows fails under complex contagion."},
+    {"slug": "almazaydeh-2026-heuristic-centrality-methods", "relation": "complements", "why": "Also challenges greedy influence maximization, from the heuristic-centrality side rather than RL."},
+    {"slug": "trivedi-2020-efficient-influence-maximization", "relation": "complements", "why": "Efficient IM under the submodular IC model, the setting whose guarantees this paper shows do not carry to complex contagion."},
+    {"slug": "zareie-2023-influence-maximization-social", "relation": "complements", "why": "Survey of behaviour-aware IM methods. receptivity_layer.py line 29 cites it alongside Chen UAI 2021 for contingency-aware seeding."}
+  ],
+  "summary_issues": [
+    "Summary says nine small networks. The paper's nine are five small shelter networks (CHANGE, DC, DOSIM, MFP, SPY) and four larger public networks (Football, Polbooks, India, Exhibition); India alone has 202 nodes (Sec. 6.1, PDF p7).",
+    "Summary says four additions address sparse rewards. The paper ties only the first three (solution filtering, reward-prioritised replay, global reward shaping) to the two sparseness causes. The GAT encoder is a representation change (Sec. 5.2, PDF p4).",
+    "Summary says the India ablation drops are 10.2 to 35.2 percent. Single-component drops are 4.6 (wo-PER), 9.3 (wo-RS), 10.2 (wo-SF) and 21.3 (wo-GAT) percent. Removing all components gives 35.2 percent (Sec. 6.3, PDF p7).",
+    "Summary says all coalition engines run an IC cascade with greedy or knee logic. The dashboard budget-recruit uses one-hop coverage probabilities, not a cascade. Per-topic coalition is a one-pass marginal ranking with water-fill, not greedy.",
+    "Summary and table use the SPY OPT value 0.5522 as a MIP optimum. The paper says the MIP exceeded its 12-hour limit from SPY onward, so the SPY OPT figure is unverified. The 6 to 8 percent gap claim is weaker for SPY than stated.",
+    "Gap item says greedy paths exist in per-topic coalition. That engine is not greedy (see bearing 2), so the gap wording should name only the budget frontier.",
+    "Bearing 2 said the top 45 candidates are ranked by solo marginal. The code ranks them by engagement score ev before computing marginals (per_topic_coalition.py line 114).",
+    "Bearing 2 paper_location cites Sec. 1 PDF p2 for the 17-of-70 and 24.3 percent figures. Those numbers appear only in Sec. 5.1 (PDF p4) and Sec. 5.3 (24.2 percent).",
+    "Coverage: the Thm 1 proof sits in Appendix A, which is absent from the extracted text. Thm 1 is verified only as a stated theorem, and Appendices B to E were not checked.",
+    "Paul note: the only annotation text is one FreeText item truncated mid-word; the paul_alignment reading is consistent with it but cannot be confirmed in full."
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-stance.lsd-tone",
+      "relation": "qualifies",
+      "paper_claim": "General-purpose dictionaries carry valences that are wrong in specialized vocabularies (tennis 'love'). On the movie-review benchmark a corpus-derived dictionary reached 80.4% in-sample and 79.5% held-out, versus LIWC 69.4% and AFINN 71.3% in-sample and AFINN 70.6% held-out.",
+      "paper_location": "Intro pp.3-4 (tennis example p.3); Sec 3 pp.10-12, Figure 1 (held-out 25,000 test documents)",
+      "system_side": "Stage 5b scores full release bodies with the stock LSD2015 dictionary (1,709 positive and 2,858 negative entries; counts verified against LSDaug2015.zip). Intensity = abs(pos-neg)/words. Verified entries: 'credit' family (credit, credits, credited, creditable, crediting) is positive; debt*, charge*, risk*, oversight* and fraud* are negative. No domain masking in run_stage5.R:79. The local masking figures (4.5% and 7.0% of mass, rho 0.953, 4.1% sign flips, press_value rho 0.976) were NOT reproduced here: no R runtime, and the text cache is R rds only.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:48-61; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:79,141-143 (both opened and checked)",
+      "transfer_conditions": "The paper's evidence covers polarity classification of movie reviews and court opinions, not intensity and not congressional press releases. The mechanism (domain nouns read as tone) is visible directly in the LSD entries. Size of the effect on releases remains UNVERIFIED in this pass. The paper does not test whether LSD intensity tracks human-judged heat.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers and page refs hold as written. The LSD entries and code lines hold. The four local masking figures and the brain-side 3-case smoke test were not reproduced and stay UNVERIFIED. Held-out LIWC (69.7 in Figure 1) is omitted from the paper claim, which is harmless."
+    },
+    {
+      "component_id": "melange-stance.legacy-regex-scorer",
+      "relation": "method-source",
+      "paper_claim": "Polarity = (sum Wp - sum Wn)/(sum Wp + sum Wn), with Wp and Wn built from tf-idf and cosine-weighted counts over 500 positive and 500 negative words taken from 300-dimensional GloVe vectors (window 50, minimum count 90) trained on the domain corpus, seeded by 10 positive and 10 negative words. Gains over LIWC and AFINN already appear at 5,000 documents, rise steeply to about 15,000, and show marginal gains after 30,000.",
+      "paper_location": "Sec 2 pp.6-9 incl. fn.3-6 (seeds fn.3 p.7; stop-word and AFINN filter fn.4 p.7); Sec 3 pp.13-16, Figure 2 p.14",
+      "system_side": "Formula at cu_press_release_scraper.R:2799 matches (Wp-Wn)/(Wp+Wn). Wp and Wn come from the hand-curated TONE_LEXICON, whose weights are 1, 2 and 3 (confirmed), not corpus-derived cosine or tf-idf weights. expand_tone_lexicon() (line 2490 onward) departs from the paper: GloVe rank 50 (paper 300), window 5 (paper 50), term_count_min 5 (paper 90), a bipolar axis, 200 terms per side (paper 500), different seeds, 50-document floor. lexicon_candidates.csv is absent, consistent with never having run. The 2026-06-21 supersede claim (21 of 32 neutral releases) is unsupported in files checked (UNVERIFIED).",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R:131-132,2323-2358,2490-2542,2785-2800 (all opened; 2799 formula confirmed)",
+      "transfer_conditions": "The formula transfers as written. The paper's validity evidence applies only to corpus-derived, similarity-weighted dictionaries, which this code does not build. The paper's own accuracy gains start at 5,000 documents; the CU-relevant set is 1,563 text-bearing releases. Paper says document-level polarity hides subject (p.27), which supports the stance split.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Paper formula, dimensions and seed counts verified. The code divergences are verified line by line, so the citation should read as the R and Z formula over a curated lexicon, not as an R and Z dictionary. The 2026-06-21 supersede claim is unsourced here. The level-off wording is a paraphrase; the paper says about 15,000 documents reaches standard ML accuracy and 30,000 or more gives marginal gains."
+    },
+    {
+      "component_id": "melange-stance.press-value-aggregate",
+      "relation": "qualifies",
+      "paper_claim": "Changing the dictionary reorders units. Justice-level rank correlations are 0.29 (corpus measure vs LIWC) and 0.16 (corpus measure vs AFINN), versus 0.64 between LIWC and AFINN. Standard deviation of justice means is 0.25 (corpus), 0.22 (LIWC) and 0.16 (AFINN). Justices with more than 50 majority opinions; comparison across 84 justices.",
+      "paper_location": "Sec 4 pp.23-24, Figures 4-5 (SD and Burton p.23; correlations p.24)",
+      "system_side": "press_value = final_sign x abs(lsd_net_norm), or lsd_charge when INTENSITY is charge (run_stage5.R:141-143, verified). Member and category roll-up uses decay weights (cu_press_release_scraper.R:154-158 comment). The Press pillar normalization is signed-extrema in fec/moneyball_core.py:214-237 (verified as normalization, not as press_value roll-up). Only one instrument is used; no alternative is compared.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:141-143 (171-184 not opened this pass); C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R:154-158; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/moneyball_core.py:214-237",
+      "transfer_conditions": "The divergence evidence comes from a 217-year court corpus with large semantic drift. Press releases from 2022 on are a narrow window, so the divergence is probably smaller there; that is the analyst's inference and is untested. The live blend press weight of 0.10 was not checked in this pass.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers and pages verified. Added the decay-weight code ref, which the analyst omitted. fec/moneyball_core.py:214-237 is the press normalization, not the press_value roll-up, so the claim wording should say so."
+    },
+    {
+      "component_id": "melange-psychometrics.affective-n",
+      "relation": "context",
+      "paper_claim": "LIWC trails the domain-built measure on benchmark accuracy (69.4% vs 80.4% in-sample; 69.7% vs 79.5% held-out). Its unit-level ranks diverge: Burton ranks 1st in the corpus measure and 50th of 84 under LIWC.",
+      "paper_location": "Sec 3 pp.10-12, Figure 1; Sec 4 pp.23-24",
+      "system_side": "The live affective N measure is the E-residualized, party-controlled sum of LLM affective facets. The LIWC base was removed as a component (the comment cites Jack Bergman moving from #1 to #412) and kept only as a convergent anchor (r = +.24, gate G3). Verified at emit_affective_n.py comment lines 37-41 and affective_n_validate.py:16-17 and 81-82. The stale component description (z(LIWC) + z(LLM)) was not checked in this pass.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/emit_affective_n.py:30-45; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/affective_n_validate.py:16-17,81-82",
+      "transfer_conditions": "The paper measures document polarity in movie reviews and court opinions, not a trait from interview transcripts. Only the general point transfers: closed-vocabulary counts can misfire outside their home register. The paper says nothing about personality or speech.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers verified. The analyst's relation was supports, but the paper contains no evidence on affective N, so it is recast as context. Code comments verified; the component-description drift claim was not checked here."
+    }
+  ],
+  "related": [
+    {
+      "slug": "haselmayer-2017-sentiment-analysis-political",
+      "relation": "complements",
+      "why": "Verified: cu_press_release_scraper.R cites Haselmayer & Jenny (lines 126, 144, 2311, 2360) and Rice & Zorn (lines 131, 2441) together. Item exists."
+    },
+    {
+      "slug": "park-2025-automatic-construction-direction",
+      "relation": "same-method",
+      "why": "Item exists. The 3 good / 43 bad sign-change figure appears in the Park item text as a rejected naive override on gold. The rejection rationale is cited from the item, not the code."
+    },
+    {
+      "slug": "merkley-nd-party-cues-news",
+      "relation": "complements",
+      "why": "Item exists. Paul's highlight on page 10 (Lexicoder plus a dictionary of key terms) is verified in the item's annotations."
+    },
+    {
+      "slug": "koutsoumpis-2024-kernel-truth-text",
+      "relation": "complements",
+      "why": "Item exists. Meta-analysis of LIWC-Big Five validity; relevant to LIWC demotion, not re-checked beyond existence."
+    },
+    {
+      "slug": "pennebaker-2003-psychological-aspects-natural",
+      "relation": "cites",
+      "why": "Item exists. The paper cites Pennebaker, Francis and Booth 2001 for LIWC (text line 69); the 2003 item is a related LIWC lineage paper rather than the paper's own citation, so 'cites' is loose."
+    },
+    {
+      "slug": "ornstein-2024-train-your-stochastic",
+      "relation": "complements",
+      "why": "Item exists. LLM-based alternative to minimally supervised dictionaries; relevant to the system's stance and affective choices, not re-checked beyond existence."
+    }
+  ],
+  "summary_issues": [
+    "Wrong benchmark size: summary_md says 'On 50,000 IMDB reviews this reaches 80.4% in-sample and 79.5% held out'. The paper uses 100,000 IMDB reviews. Accuracy is on 25,000 labeled in-sample reviews, which sit among the 75,000 documents used to train vectors (the other 50,000 are unlabeled), and on 25,000 held-out test reviews.",
+    "Threshold wording: 'It needs roughly 5,000 or more documents before it beats them' is consistent with the paper (it already outperforms LIWC and AFINN at 5,000 documents in its sample sweep), but 'needs' reads as a hard threshold and should be stated as 'already beats them at 5,000 documents'.",
+    "Venue overstated: summary_md and ext say PSRM revise-and-resubmit. The text names no journal; it shows a July 20, 2018 date and a footnote about posting to the PSRM Dataverse. The R and R status comes from the file name and metadata only.",
+    "Abstract framing: the paper's abstract describes the court application as U.S. federal appellate court decisions; the body analyzes Supreme Court majority opinions. The summary's 'Supreme Court' is correct for the body; the mismatch should be noted.",
+    "Local LSD figures (4.5%, 7.0%, 0.953, 4.1%, 0.976) are presented as a check that 'found the effect real but small'. They are single-path, unreproduced, and should be labeled UNVERIFIED in the summary, not as established findings.",
+    "The paper's court evidence is 'suggestive - though not conclusive' (p.25); the summary states this correctly, and the bearings keep it. No change needed beyond keeping the label.",
+    "Paul-alignment claim that his position note for legacy-regex-scorer says Rice and Zorn is on disk but unannotated was not checked against that note in this pass."
+  ],
+  "key_findings": [
+    "Paper numbers check out: 80.4 and 79.5 for the corpus measure, 69.4 LIWC and 71.3 / 70.6 AFINN, 0.29 and 0.16 justice-level correlations, 0.64 LIWC-AFINN, SDs 0.25 / 0.22 / 0.16, Burton 14th AFINN and 50th LIWC of 84, 26,000 opinions over 217 years, mean opinion length 2,097 tokens.",
+    "GloVe settings verified: 300 dimensions, Xmax 10, window 50, drop 20 most frequent tokens, drop tokens in over 90% of documents or under 90 occurrences, AdaGrad, text2vec in R (footnote 2).",
+    "Seeds (10 positive, 10 negative) and the top-500 per side extraction verified; footnote 4 filters SMART stop words and AFINN opposite-valence terms.",
+    "Summary error: the movie-review benchmark is 100,000 reviews with accuracy on 25,000 in-sample and 25,000 held-out, not 50,000.",
+    "Stage 5b LSD dictionary facts verified from the zip: 1,709 positive and 2,858 negative entries; credit family positive; debt*, charge*, risk*, oversight*, fraud* negative. No masking in run_stage5.R.",
+    "Legacy scorer: the Rice and Zorn formula is cited and matches line 2799, but the lexicon is hand-weighted (weights 1, 2, 3). The expansion helper departs from the paper on rank 50 vs 300, window 5 vs 50, min count 5 vs 90, 200 vs 500 terms per side, and the 50-document floor. It has never been run.",
+    "The 2026-06-21 supersede claim (21 of 32 neutral releases over-flagged) is not in any file checked. Remove it or source it from the brain.",
+    "Local masking numbers were not reproduced: no R runtime, and the fulltext cache is R rds only. Keep them UNVERIFIED under DE-062.",
+    "Affective N: the LIWC anchor role and the Bergman #1 to #412 example are verified in code comments. The analyst's relation supports was recast as context, since the paper does not test affective measures.",
+    "Park item: the 3 good / 43 bad figure is present in the item text, and the same-method link is plausible, though the paper is about direction-aware lexicons, not corpus dictionaries.",
+    "Paul annotation: this paper has 0 annotations (n_annots 0). Merkley's page-10 highlight on Lexicoder with custom dictionaries is verified.",
+    "Verdict overall: softened. No bearing is refuted; four bearings needed wording or citation fixes, and the summary needs its benchmark and venue corrected."
+  ],
+  "paul_markup": [],
+  "coverage": "Paper text read by targeted search and sed across pp.1-27 and the references (Figures 1-5 captions and values; footnotes 3, 4, 8, 9). Appendix not in file. All rel bearings and six related slugs checked; all six related items exist. Code refs opened for Draft Systems stage5_lsd.R, run_stage5.R (79, 141-143; 171-184 not opened), cu_press_release_scraper.R, and Melange fec files. Dictionary entries and counts verified from LSDaug2015.zip. Local LSD masking figures not reproduced. paul_markup empty: 0 annotations for this paper. 0 items dropped."
+}

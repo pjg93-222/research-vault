@@ -1,0 +1,122 @@
+{
+  "summary_md": "Burnham, Kahn, Wang and Peng (arXiv 2024) release Political DEBATE: DeBERTa V3 base (86M) and large (304M) NLI classifiers, further trained on PolNLI. PolNLI holds 201,691 political documents and 852 hypotheses across stance, topic, hate-speech and event tasks, and its sources include congressional newsletters. On test hypotheses unseen in training, both models beat general NLI models, Llama 3.1 8B and Claude 3.5 Sonnet on zero-shot MCC. On the hardest stance set (quote tweets), Claude scores MCC 0.29, base 0.62 and large 0.88. In few-shot training, 10 to 25 random labeled documents are often enough. The base model, however, failed the bespoke COVID threat-minimization task and could not match a supervised classifier (MCC 0.66) even at 100 samples, while the large model matched it at 10 (0.67). The authors therefore recommend the large model whenever feasible, short single-condition hypotheses, and supervised training when labels need meta-knowledge or a bespoke concept. The labels were validated with GPT-4o, so GPT-4o is excluded from the benchmark. For Paul, this is the actual checkpoint behind the Melange CU press stance reader. The system fine-tunes the base model on 552 labeled releases. Its own history follows the paper's pattern: base zero-shot reached 53% accuracy with oppose F1 0.08, and fine-tuning raised it to 87% agreement with Claude. Its valence-hop bottleneck matches the paper's warning about bespoke concepts. The bearings are on the model choice (base, not large), hypothesis design (a compound neutral hypothesis), the evaluation metric (accuracy and kappa against an LLM reference rather than MCC against humans), and the planned ACU speaker-mode branching. Nothing here touches the SNA or LDA rules.",
+  "category": "Machine Learning & Sentiment Analysis",
+  "bearings": [
+    {
+      "component_id": "melange-stance.debate-nli-classifier",
+      "relation": "method-source",
+      "paper_claim": "Political DEBATE base and large are DeBERTa V3 NLI models trained on PolNLI (201,691 documents, 852 hypotheses). Classification is framed as binary entail or not-entail against a templated hypothesis. Base training used learning rate 2e-5; few-shot runs used the default rate for 5 epochs with no tuning.",
+      "paper_location": "p.4-8 (NLI framing, PolNLI, training); p.12 (few-shot setup); Appendix C.1 (base hyperparameters)",
+      "system_side": "The CU stance reader starts from mlburnham/Political_DEBATE_base_v1.0. It builds three premise-hypothesis pairs per release from the template 'This text is {}', with entailment for the true label and contradiction for the others. It fine-tunes at lr 2e-5 for 3 epochs.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/finetune_debate.py:23-36",
+      "transfer_conditions": "This is direct provenance: the system uses the paper's released checkpoint and training framing. Epochs differ (3 here, 5 in the paper's few-shot runs), and that difference is untested on the CU gold.",
+      "strength": "strong"
+    },
+    {
+      "component_id": "melange-stance.debate-nli-classifier",
+      "relation": "qualifies",
+      "paper_claim": "Authors recommend the large model for zero-shot and most few-shot use. On COVID threat minimization the base model largely failed zero-shot and did not match the supervised Electra classifier (MCC 0.66) at 100 samples. The large model matched it at 10 samples (MCC 0.67) and exceeded it at 25 (0.69). On the hardest stance set, base scored MCC 0.62 and large 0.88.",
+      "paper_location": "p.10 (Polistance quote tweets); p.13-14 (COVID few-shot); p.15-16 section 8.1",
+      "system_side": "Both training and inference default to the base checkpoint. The brain note records that base was chosen because the machine is CPU-only, a large fine-tune takes about 3 hours and carries memory risk, and the plan originally named the large model. Base zero-shot reached 53% accuracy with oppose F1 0.08, and fine-tuned base reached 0.796 on the 760-row gold frame and 0.571 on the adversarial frame.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:38",
+      "transfer_conditions": "This applies if CU stance with sign-flip targets counts as a bespoke task in the paper's sense, as the zero-shot oppose F1 of 0.08 suggests. The paper reports MCC on binary tasks, while the system task is 3-class. The base-versus-large gap on the adversarial frame is unmeasured here.",
+      "strength": "strong"
+    },
+    {
+      "component_id": "melange-stance.debate-nli-classifier",
+      "relation": "qualifies",
+      "paper_claim": "Hypotheses should be short, simple and close to the training templates. Tasks needing long or multi-condition hypotheses call for few-shot training. During training, neutral and contradiction were merged into not-entail, so neutral is not a trained positive concept.",
+      "paper_location": "p.4 footnote 1; p.16-17 section 8.3; p.17-18 section 8.4",
+      "system_side": "The neutral hypothesis is the compound 'neutral toward or not about credit unions'. Inference scores three hypotheses independently (multi_label=True) and takes the argmax, then truncates documents to 3000 characters. Training uses a 1600-character lede within a 384-token window.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:26-31",
+      "transfer_conditions": "Fine-tuning on 552 rows partly offsets the template mismatch. Whether splitting neutral into 'not about credit unions' plus an explicit neutral rule beats the compound hypothesis has not been tested. Press releases are longer than the paper's short-document zero-shot condition.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-stance.debate-nli-classifier",
+      "relation": "measurement-source",
+      "paper_claim": "MCC is the primary metric because it is robust on imbalanced binary tasks. The authors also exclude GPT-4o from the benchmark because GPT-4o validated the PolNLI labels, which would inflate its agreement.",
+      "paper_location": "p.9 (MCC choice); p.6-7 and p.10 (GPT-4o label validation and exclusion)",
+      "system_side": "The headline 87.2% accuracy, macro-F1 0.833 and kappa 0.771 were measured against the Claude reference on the 156-row held-out test. In training, Claude pre-labels each row and human labels override it. Separately, about 85% and kappa 0.76 are reported on a member-grouped human gold. No MCC is reported.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/finetune_debate.py:40-48",
+      "transfer_conditions": "The paper's own logic says agreement with the LLM that generated the labels is not accuracy against humans. The human-gold figures, not the 87.2%, are the quotable ones, and each should name its window and denominator (156, 87 or 760 rows).",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-stance.two-hop-decomposition",
+      "relation": "supports",
+      "paper_claim": "NLI classifiers perform best zero-shot on commonly understood concepts, such as support for a person or policy. They are weaker on bespoke concepts that need specialized domain knowledge, where few-shot or supervised training is advised.",
+      "paper_location": "p.16 section 8.2",
+      "system_side": "CU alignment is split into a stance hop (speaker toward a named target; model accuracy 0.915 on 400 tweet golds) and a valence hop (whether the target is good for credit unions; 0.689). The valence hop is answered by a curated registry. The brain note records that zero-shot DEBATE could not infer that CUs oppose the targets of 'fighting Wall Street banks' releases.",
+      "code_ref": "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:19-33",
+      "transfer_conditions": "The paper offers a qualitative rationale, not a test of decomposition. It explains why the NLI-friendly stance hop scores near ceiling while the bespoke valence hop does not.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-stance.acu-speaker-mode",
+      "relation": "qualifies",
+      "paper_claim": "NLI zero-shot works best when labels can be derived from the text alone, without meta-knowledge of who wrote it. Quote tweets, which carry two opinions from two people, were the hardest stance set: Claude 0.29, base 0.62, large 0.88 MCC, and DeBERTa large NLI was negatively correlated with the correct labels.",
+      "paper_location": "p.10; p.16 section 8.2",
+      "system_side": "The planned Phase 2 branches the NLI hypothesis by speaker_source, so ACU-authored rows get 'advocacy group praising/criticizing this member', and then retrains. The plan is blocked on labels, and its gate is held-out accuracy of at least 0.851.",
+      "code_ref": "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md:134",
+      "transfer_conditions": "Speaker-dependent labels fall under the paper's meta-knowledge condition, so the retrain step in the plan is needed, and zero-shot branching alone should not be trusted. ACU texts about a member are two-voice texts like quote tweets, where the base model is notably weaker than the large one.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-stance.supervised-stance-stack",
+      "relation": "qualifies",
+      "paper_claim": "With 10 to 25 samples, the large DEBATE model matches or beats a supervised classifier. The base model did not reach the supervised MCC of 0.66 on a bespoke task even at 100 samples.",
+      "paper_location": "p.13-14",
+      "system_side": "In the press stack, DEBATE alone scores 0.796 on the 760-row gold frame and 0.571 on the adversarial frame, against 0.837 and 0.765 for the stacked meta-reader. Elsewhere a LinearSVC reached 83.9% on an 87-row test, against 0.757 reported for a transformer.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/build_media_blend.py:327-330",
+      "transfer_conditions": "The paper's claim that small NLI beats supervised classifiers is a claim about the large model. A fine-tuned base model losing to a stack or an SVM on a bespoke CU target is consistent with the paper and is not a refutation of NLI readers.",
+      "strength": "moderate"
+    }
+  ],
+  "gaps_exposed": [
+    "No head-to-head of DEBATE base against DEBATE large, fine-tuned on the same 552 rows and scored on the member-grouped human gold and the adversarial frame.",
+    "No MCC (overall or per class) is reported for the stance reader. The headline 87.2% is agreement with the Claude reference, not with human labels.",
+    "The compound neutral hypothesis has not been tested against split hypotheses (not about CUs, versus neutral) or against a binary per-label setup.",
+    "Training epochs (3, against 5 in the paper's few-shot runs) and the lede-only 1600-character input have no recorded sensitivity check on the human gold.",
+    "The ACU speaker-mode plan has no test of base against large on two-voice (advocacy-group-about-member) texts."
+  ],
+  "flags": [
+    "No conflict with the brain rules: the paper has no SNA, LDA, reciprocity or influence-edge content.",
+    "The headline 87.2% / kappa 0.771 is agreement with an LLM (Claude) pre-labeller. By the paper's own reasoning about GPT-4o, it should not be quoted as human accuracy; quote the member-grouped human-gold figures and name their denominators.",
+    "The paper's comparisons are author-run on author-built data whose labels were LLM-validated. Per-model aggregate MCC values appear only in figures and were not extracted.",
+    "The paper's results come from binary entailment tasks. The system's 3-class CU stance is outside the reported test conditions, so the transfer is UNVERIFIED until a base-versus-large run on CU gold reproduces it."
+  ],
+  "paul_alignment": "Paul has no entry for this work, though the deployed CU stance reader is its base checkpoint. His DEBATE position cites Kim, Birkenmaier, Peng and Taherdoost, not Burnham, so it is stale. He calls SVM outdated next to LLMs. The paper partly agrees, but mainly for the large model: base lost to a supervised classifier on a bespoke task. The system's figures fit that (DEBATE 0.796 vs stack 0.837; LinearSVC 83.9% vs transformer 0.757). His noted weakness with ambiguous statements matches the hard two-voice quote-tweet result.",
+  "related": [
+    {
+      "slug": "burnham-2023-stance-detection-practical-guide",
+      "relation": "builds-on",
+      "why": "Same first author. The paper defers to this guide for NLI best practice and cites its finding that larger NLI models generalize better to unseen tasks."
+    },
+    {
+      "slug": "b-2025-comparing-fine-tuned",
+      "relation": "complements",
+      "why": "It compares fine-tuned RoBERTa with traditional ML for political-tweet stance, the same transformer-versus-SVM question that the system's supervised stack and DEBATE reader raise."
+    },
+    {
+      "slug": "kim-2025-measuring-interest-group",
+      "relation": "complements",
+      "why": "This is Paul's cited anchor for LLM position labels (GPT-4 against human). DEBATE is the small open alternative that the system actually runs."
+    },
+    {
+      "slug": "birkenmaier-2025-measuring-politicians-public",
+      "relation": "complements",
+      "why": "Paul cites its result that GPT-4o beats SVM and XLM-R. DEBATE adds a small NLI encoder as a third option between those two."
+    },
+    {
+      "slug": "ornstein-2024-train-your-stochastic",
+      "relation": "complements",
+      "why": "It covers using LLMs to label political text, the pre-labelling step that both PolNLI (GPT-4o) and the CU stance set (Claude) rely on."
+    },
+    {
+      "slug": "dai-2025-large-language-model",
+      "relation": "same-method",
+      "why": "It is another approach to target stance detection, LLM-enhanced logic networks, and can serve as a benchmark comparator for the NLI reader."
+    }
+  ]
+}

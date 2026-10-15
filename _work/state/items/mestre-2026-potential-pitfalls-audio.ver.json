@@ -1,0 +1,103 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-audio-speech.identity-two-check-design",
+      "relation": "method-source",
+      "paper_claim": "Section 4.3 and footnote 9 (p.321): one neural layer over 768-dimensional facebook/wav2vec2-base embeddings for each sentence (no pooling method stated), Adam with learning rate 0.001, cross-entropy loss, batch size 8 for wav2vec2, early stopping with patience 3. Section 4.1 (p.318): aeneas MFCC/dynamic-time-warp forced alignment. The MFCC CNN baseline is far weaker in the paper's speaker-ID results.",
+      "paper_location": "Section 4.3 p.321 with footnote 9 p.321; Section 4.1 p.318; sentence-level 768-dim embeddings p.321",
+      "system_side": "b5_audio_neural_head.py implements batch 8, patience 3, Adam 0.001 and cross-entropy with no search, and is labelled RESEARCH_CANDIDATE_NOT_CONSUMED. Its docstring says the paper mean-pools embeddings, which the paper text does not state. The section 4.3 and footnote 9 citation is in b5_audio_neural_pilot.py line 225, not in the head file. ECAPA is a labelled comparator in b5_audio_embed.py. Pilot and prereg record production_consumers 0.",
+      "code_ref": "fec/members/b5_audio_neural_head.py:1-33; fec/members/b5_audio_neural_pilot.py:213-225; fec/members/b5_audio_embed.py:5-16; fec/members/b5_audio_align_turns.py module docstring and lines 319-320",
+      "transfer_conditions": "The recipe transfers as a method. The paper gives no split protocol and no pooling detail, so mean pooling and max_epochs 200 with seed 0 in HYPERPARAMETERS are Melange choices. Paul position-table claim of No annotated literature was not located in Project Brain or the vault and stays UNVERIFIED.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Hyperparameters and Aeneas use verified against paper text. The citation location and the mean-pooling attribution are corrected. The position-table claim was not found."
+    },
+    {
+      "component_id": "melange-audio-speech.identity-two-check-design",
+      "relation": "qualifies",
+      "paper_claim": "Test accuracy across all 156 speakers 0.913568 (0.914) and across 34 candidates 0.945769 (0.946); MFCC CNN 0.081 and 0.134. Per-debate wav2vec2 0.974 (+/-0.024) vs MFCC 0.888 (+/-0.085). Section 4.2 (p.319) warns that cross-speaker acoustic comparisons are confounded by microphone placement, compression and sampling. The paper does not describe its train/test split.",
+      "paper_location": "Section 4.3 p.321 text; Table 3 on p.322; confound warning Section 4.2 p.319",
+      "system_side": "Pilot docstring and prereg line 198: fresh cohort of 21 members in six distinct sources (three train, one early-stopping, one calibration, one untouched test), caption-derived MACHINE_CAPTION_HARD_SIGNAL labels. Calibration EER .226 and FAILED_WEAK_LABEL_SMOKE verified. Earlier 30-member multinomial-logistic head EER .317 (prereg line 192). The 11/30 cosine attempt was not located.",
+      "code_ref": "fec/members/b5_audio_neural_pilot.py:1-9,26-30,187-213; big5_audio_identity_prereg.md lines 190-202; fec/audio_rules.py:28-39",
+      "transfer_conditions": "The paper's 0.914 sets no expected level for congressional audio. The paper's confound warning concerns cross-speaker acoustic comparisons, not classifier accuracy, so the channel-leakage explanation for the EER gap is analyst hypothesis, UNVERIFIED (DE-062). Pilot wording is source-disjoint, not event-disjoint.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers and the EER .226 figure verified. The paper does not link its accuracy to channel leakage, so that link is recast as an open hypothesis. Earlier-attempt wording corrected."
+    },
+    {
+      "component_id": "melange-audio-speech.identity-two-check-design",
+      "relation": "supports",
+      "paper_claim": "Aeneas alignment validated on 500 utterances x 5 crowd ratings: PA 85.26% and DA 95.76% (Section 4.1, p.318). Only 5% of pairs rated not aligned at all, concentrated in short or interrupted sentences (Figure 2b). The paper proposes no word floor and no ASR word-match threshold.",
+      "paper_location": "Section 4.1 p.318; Figure 2a/2b p.318",
+      "system_side": "audio_rules.py: MIN_CLIP_TARGET_SEC 30 (line 15), MIN_CLIP_TARGET_WORDS 50 (line 16), ALIGN_MIN_TURN_WORD_MATCH 0.80 (line 38), ALIGN_MIN_HEARING_WORD_MATCH 0.70 (line 39) verified. The align_turns docstring says any Aeneas structural mismatch fails the hearing closed (verified). No calibration artifact for the 0.80/0.70 bars and no record of the 150-clip coding packet were located in the repo.",
+      "code_ref": "fec/audio_rules.py:14-16,38-39; fec/members/b5_audio_align_turns.py module docstring steps 3-4",
+      "transfer_conditions": "The paper supports only that short sentences align poorly. It does not support a 50-word floor or an ASR word_match bar. Vault note concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md line 60 lists the 50-word floor as a paper method, which is wrong. The claim that debate transcripts are cleaner than hearings is analyst reasoning, UNVERIFIED.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Numbers and code constants verified. 'Paper supports a word floor' is an overstatement. Calibration and coding-packet claims are UNVERIFIED in the repo."
+    },
+    {
+      "component_id": "melange-audio-speech.prosody-and-disfluency",
+      "relation": "supports",
+      "paper_claim": "Three of the top five candidates by average pitch are women (Palin, Harris, Clinton; 34 candidates, four women; Section 4.2 p.319). Authors suggest within-speaker deviation from each speaker's own baseline (Figure 3c, 5-s windows, p.319) or speaker-dependent human validation (p.325). The paper reports no effect size for the gender pattern and does not say pitch comparisons reflect speaker and voice.",
+      "paper_location": "Section 4.2 p.319 (Figure 3a, 3c); p.325 for speaker-dependent validation and within-speaker shifts (analyst cited p.324)",
+      "system_side": "b5_audio_descriptors_candidate.py converts eGeMAPS semitones to Hz (lines 209-212) and standardizes within speaker. MIN_MEMBER_SPEECH_UNITS 5 and MIN_MEMBER_DISTINCT_TOPICS 2 verified (audio_rules.py lines 20-21). Commit 4193f0140 replaced stddevNorm with stddevNorm times amean, quoting r(sex=F, stddevNorm) -.266 vs -.065 for plain semitone SD. The 1,324 clips, 309 members and +.551 figures were not located in the repo.",
+      "code_ref": "fec/members/b5_audio_descriptors_candidate.py:26-27,209-216,369,480; fec/audio_rules.py:20-21; git commit 4193f0140 diff of b5_audio_descriptors_candidate.py",
+      "transfer_conditions": "Carrying the direction to congressional speech rests on analyst reasoning (F0 sex differences are physiological), not paper text, and is UNVERIFIED. The paper's cross-speaker caution (p.319) says comparisons are confounded by recording factors, so the speaker-and-voice wording is not the paper's.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Women-in-top-five claim verified. Page cite corrected to p.325. The -.266 figure verified in commit message. Speaker-and-voice gloss and the 1,324/309/+.551 figures are not supported."
+    },
+    {
+      "component_id": "melange-audio-speech.prosody-and-disfluency",
+      "relation": "qualifies",
+      "paper_claim": "Energy is normalized by each debate's average loudness (Section 4.2, p.319). Comparisons across speakers and time are subject to confounding by microphone placement, compression and sampling (p.319). The paper recommends normalization or comparison with baselines where possible and does not say normalization leaves residual confounding. Naive cross-speaker interpretation is cautioned (p.325). The paper's own Figure 3a ranks candidates by raw cross-speaker average pitch.",
+      "paper_location": "Section 4.2 pp.319 (normalization, confound warning) and p.325 (naive interpretation); analyst cited p.324",
+      "system_side": "b5_audio_build.py lines 85-104: duration-weighted means per member, z-score over all pooled members (mu and sd across members), clipped at +/-5. No loudness or channel normalization appears in b5_audio_build.py. The cache note on line 104 says z-within-source, which contradicts the pooled code. volume_dynamics_raw uses loudness stddevNorm (a mean-normalized within-clip functional), so it is partly level-invariant; the blanket statement should say so.",
+      "code_ref": "fec/members/b5_audio_build.py:85-104; fec/members/b5_audio_descriptors_candidate.py:28 and 209-216",
+      "transfer_conditions": "Applies to cross-member readings of volume dynamics, pitch level and strain. Within-member and ICC uses are less exposed. Whether pause and pace are less channel-sensitive is not tested in the paper and remains UNVERIFIED.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Code claim verified for the pooled z-score and absence of loudness normalization in the build file. Paper claim that normalization is insufficient is not in the text. Page cite corrected. Stale z-within-source note flagged."
+    }
+  ],
+  "related": [
+    {
+      "slug": "dietrich-2019-pitch-perfect-vocal",
+      "relation": "same-method",
+      "why": "Melange's topic_emotional_intensity code credits Dietrich, Hayes and O'Brien for the within-speaker deviation design (b5_audio_descriptors_candidate.py lines 209-210, verified). Mestre and Ryan cite that paper only for pitch tracking emotional state (p.316), not for the deviation design. Dietrich studies congressional speech (verified from item title)."
+    },
+    {
+      "slug": "joo-2022-image-data-automated",
+      "relation": "complements",
+      "why": "Item exists. It is an image-only methods paper on politicians' Facebook photographs, not images and video. The shared validation and bias caution is analyst framing and was not checked against the Joo extraction."
+    },
+    {
+      "slug": "salam-2022-learning-personalised-models",
+      "relation": "complements",
+      "why": "Item exists; its title is about personalised models for self-reported personality recognition. No extraction is on file, so the prosody and sex-confound-test claims are UNVERIFIED. Mestre and Ryan do not cite it."
+    },
+    {
+      "slug": "marrero-2022-evaluating-voice-samples",
+      "relation": "complements",
+      "why": "Item exists; its research question asks how much trait information voice features carry, which parallels the caution about inferring traits from voice. Mestre and Ryan do not cite it, so the link is analyst framing."
+    }
+  ],
+  "summary_issues": [
+    "Summary says the authors call emotion models biased by gender and pitch. Paper (p.324-325) says they can encode and amplify such biases and mentions potential gender and racial bias; it reports no measured bias. Softened.",
+    "Summary says the 0.914 accuracy is confounded by microphone placement and compression. The paper's confound warning (p.319) concerns cross-speaker and cross-time acoustic comparisons, not classifier accuracy.",
+    "Summary says the paper backs the fix for the sex confound in pitch variability and cautions against pooled eGeMAPS z-scores. Neither is in the paper: it never mentions eGeMAPS or z-scores, and the sex-confound fix is Melange's own (commit 4193f0140). Refuted.",
+    "Summary says b5_audio_neural_head.py cites section 4.3 and footnote 9. That citation is in b5_audio_neural_pilot.py line 225. The head docstring names the experiment only and says the paper mean-pools; p.321 says only 768-dimensional embeddings for each sentence.",
+    "Page locations to correct: Table 3 is on p.322 not p.321; speaker-dependent validation and within-speaker shifts are on p.325 not p.324; the Dietrich pitch-emotion citation is p.316.",
+    "Paper counts to avoid quoting without denominators: 47,150 sentences (p.314) vs 44,559 sentences and 36,833 candidate sentences (p.321) vs 38,649 candidate sentences (p.314). Section 4.4 (p.325) refers to Figure 3d, which the Figure 3 caption does not contain.",
+    "Vault note concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md line 60 lists the 50-word floor and within-speaker F0 z as paper methods. The paper specifies neither. Note for Paul to correct; not changed here.",
+    "Position-table claim No annotated literature for identity-two-check-design was not located in Project Brain or Documents/brain searches. Treat as UNVERIFIED.",
+    "Verified: calibration EER .226 and FAILED_WEAK_LABEL_SMOKE (prereg line 198). The earlier EER .317 head is a 30-member multinomial-logistic head (prereg line 192), not a plain linear head. The 11/30 cosine attempt was not located.",
+    "Unverified numbers: 1,324 clips, 309 members and r(F, F0 mean) +.551 are not in the repo. Only r(sex=F, stddevNorm) -.266 vs -.065 for plain semitone SD appears (commit 4193f0140 message).",
+    "Repo inconsistency: b5_audio_build.py line 104 says z-within-source but the code at lines 96-98 z-scores across all pooled members. The analyst's B4 reading follows the code.",
+    "Not located in the repo: the 150-clip annotation packet never being coded, and the claim that the 0.80/0.70 bars were never calibrated. Both UNVERIFIED.",
+    "Paper-exact holds for the listed hyperparameters. HYPERPARAMETERS also sets max_epochs 200 and seed 0, which the paper does not specify.",
+    "Pilot wording is source-disjoint (six distinct sources), not event-disjoint. Prefer source-disjoint in later text.",
+    "Ext metadata verified: Political Analysis 34: 312-328, DOI 10.1017/pan.2025.10031, authors Rafael Mestre and Matt Ryan (hint 'Mestre, Ryan' corrected), 45 videos, 243,023 s, 47,150 sentences, 1960-2020."
+  ]
+}

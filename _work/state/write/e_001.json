@@ -1,0 +1,916 @@
+[
+ {
+  "slug": "mairesse-2007-automatic-recognition-personality",
+  "note": false,
+  "meta": {
+   "title": "Using Linguistic Cues for the Automatic Recognition of Personality in Conversation and Text",
+   "authors": [
+    "Francois Mairesse",
+    "Marilyn A. Walker",
+    "Matthias R. Mehl",
+    "Roger K. Moore"
+   ],
+   "year": "2007",
+   "venue": "Journal of Artificial Intelligence Research 30 (2007) 457-500",
+   "doi": "",
+   "sha12s": [
+    "27d675bc4570"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "Using Linguistic Cues for the Automatic Recognition of Personality in Conversation and Text",
+   "authors": [
+    "Francois Mairesse",
+    "Marilyn A. Walker",
+    "Matthias R. Mehl",
+    "Roger K. Moore"
+   ],
+   "year": "2007",
+   "venue": "Journal of Artificial Intelligence Research 30 (2007) 457-500",
+   "doi": "",
+   "document_type": "journal article",
+   "coverage": "Full text read from the text file (4169 lines, 129548 chars) in three chunks: front matter, abstract, Sections 1-8, all Tables 1-27, and references. Page images were not rendered. No annotation files exist for this item (annot_sha12s is empty), so paul_markup is empty and nothing was dropped. Metadata hint corrected: venue was 'JAIR 30', now the full journal line from the text. Title, authors and year hints were confirmed. DOI is not printed in the text and was not looked up. Lobbying, networks, path-finding, allocation, elections, turnout, persuasion and legislators are not subjects of this paper. Text measurement (LIWC, MRC and prosody feature extraction, Sec 3.2) and the dialogue-adaptation remarks (Sec 8) were read in full.",
+   "research_question": "Can the Big Five personality traits be recognised automatically from linguistic cues in written essays and in conversation, using self-reports and observer ratings, and which model type (classification, regression or ranking) and feature set performs best? Sec 1.",
+   "data": "Two corpora. (1) Essays corpus: 2479 stream-of-consciousness essays by psychology students (1.9 million words, about 766 words per subject), written in 20 minutes, with Big Five Inventory self-reports; from Pennebaker and King (1999), Sec 3.1, p.463-464. (2) EAR corpus: 96 participants, 97468 words and 15269 utterances (about 1015 words per subject), random snippets of conversation captured by an Electronically Activated Recorder; only participant utterances transcribed; audio also available. Personality by self-report and by 18 observers who rated audio on a 7-point scale, averaged per participant; mean inter-observer ICC r = 0.84 (Mehl et al. 2006), Table 4 p.465. Unit: individual author or speaker. Period: data from 1999 and 2006 studies; paper submitted 05/07. Language: English.",
+   "method": "Supervised learning with Weka and 10-fold cross-validation. Classification: each trait split into two equal-size bins; six learners (J48, 1-NN, Naive Bayes, JRip, AdaBoostM1, linear SVM SMO) vs majority-class baseline (Sec 4). Regression: linear regression, M5' regression tree, M5' model tree, REPTree, SVM regression vs mean baseline, scored by relative absolute error (Sec 5). Ranking: RankBoost with 100 boosting rounds trained on ordered pairs from two individuals, indicator functions from thresholded feature values, loss = share of misordered pairs; random baseline 0.50 (Sec 6). Feature-set ablations for each model type; interpretation via decision trees, rules and regression trees (Sec 4.3, 5.3, 6.3). Pearson correlations of features with ratings (p<0.05) in Sec 3.3, Tables 8-11. Speech acts tagged by heuristic parse rules (Sec 3.2.2).",
+   "scope": "Population: psychology students (essays) and 96 EAR participants; the EAR sample is not otherwise described. Language: English. Era: data from 1999 and 2006 studies; paper 2007. Applications argued: dialogue system adaptation, meeting analysis, dating, tutoring, opinion mining (Sec 1). No generalisation test across corpora was run (Sec 8).",
+   "key_findings": [
+    "Essays, self-reports, binary (two equal bins), 10-fold CV: SMO best. Openness 62.1 percent vs 50.3 baseline; emotional stability 57.4 percent; conscientiousness hardest, about 55 percent with only two classifiers significant. Table 12, p.475.",
+    "EAR, observer ratings, binary: Naive Bayes reaches 73.0 percent for extraversion (baseline 47.8), 73.9 percent for emotional stability (baseline 51.1), 67.7 percent for conscientiousness and 61.3 percent for agreeableness. Openness not significant. Table 14, p.476-477.",
+    "EAR, self-reports: no classifier significantly beats the baseline (Table 14), and no regression self-report model does either (Sec 5.2, p.482).",
+    "EAR observer feature sets, Naive Bayes: prosody alone 67.6 percent for extraversion and LIWC alone 68.9 percent, both below the full-set 73.0 percent; MRC alone best for conscientiousness (66.8 percent); prosody alone best for openness (64.6 percent). Table 15, p.477.",
+    "Essays, binary: LIWC features beat MRC features for every trait; LIWC alone gives 62.5 percent for openness, and LIWC alone performs slightly better than the full feature set. Table 13 and Sec 4.1, p.476.",
+    "Essays, regression, self-reports: openness relative error 93.3 percent (M5 model tree, Pearson r 0.33) and emotional stability 96.4 percent (r 0.24); other traits not significant. Table 17, p.480.",
+    "EAR, regression, observer ratings: extraversion relative error 79.9 percent (REPTree, r 0.54), emotional stability 86.8 percent (M5, r 0.47), conscientiousness 82.7 percent (M5R, r 0.44). Agreeableness and openness do not beat the mean baseline. Table 19, p.481-482.",
+    "Table 20 feature ablations (EAR observer regression): LIWC alone gives extraversion 76.4 percent (REPTree) and conscientiousness 82.1 percent (M5R); prosody alone gives emotional stability 85.3 percent (M5). Table 20, p.482-483.",
+    "Essays, ranking (loss; random 0.50): openness 0.39 (best), emotional stability 0.42, conscientiousness 0.44, extraversion 0.44, agreeableness 0.46. LIWC carries all gains and adding MRC never reduces loss. Tables 21, p.483-484.",
+    "EAR, ranking, observer ratings: extraversion with prosody only 0.26 (best overall; the text gives a 74 percent chance of ordering two unseen extracts correctly); agreeableness with all features 0.31; conscientiousness with all features 0.33; openness with LIWC 0.37; emotional stability best with MRC only (0.39), full set 0.41 not significant. Table 22, p.485.",
+    "Ranking vs classifier (Naive Bayes, 5 equal bins, EAR observer): RankBoost loss significantly lower on four of five traits. 5-bin accuracy is higher for ranking on agreeableness (37.8 vs 28.4) and openness (26.8 vs 19.8); Naive Bayes is higher on conscientiousness (34.7 vs 30.3); extraversion 32.3 vs 32.1 and emotional stability 21.9 vs 21.9 are ties. Table 26, p.489.",
+    "Observer vs self: the authors conclude observed personality may be easier to model than self-reports in conversational data, with a hypothesis that high-visibility traits are better assessed by observers. Sec 8, p.492; not tested directly."
+   ],
+   "limitations": [
+    "The EAR corpus is small (96 participants); the authors expect more data to help and note linear regression and SVMs perform poorly there. Sec 5.2, p.482; Sec 8.",
+    "Self-report models on EAR never beat the baseline, and openness is not significant for any EAR observer model. Table 14, Sec 5.2.",
+    "Prosodic features were computed without filtering out other speakers picked up by the head microphone; the authors state this assumption is untested. Sec 3.2.3, p.468-469.",
+    "Speech recognition noise was not tested; models used human transcripts. Sec 8, p.492.",
+    "Utterance-type tagger: 88 percent accuracy on 100 utterances, command class accuracy 0.50; utterance-type features never beat the baseline on their own. Table 7, Sec 3.2.2, Sec 8.",
+    "Learner parameters were left at Weka defaults and not optimised; the authors say optimisation may change which model wins. Sec 3.4, Sec 8, p.491.",
+    "Gender was not used as a feature although the authors say language correlates depend on gender. Sec 8, p.492.",
+    "Only one feature family per corpus on essays (LIWC and MRC, 102 features); no test that the feature sets generalise to another dataset. Sec 8, p.491.",
+    "Internal inconsistencies: Sec 5.2 gives a 14.3 percent improvement for observed conscientiousness, but Table 19 M5R 82.68 implies about 17.3 percent. Sec 7 gives 63 percent SMO accuracy for EAR emotional stability, but Table 14 shows 60.33 percent. Both are reported as stated in the text and should be checked against the tables before reuse.",
+    "Essay correlations are weak (Sec 3.3); the authors say it was not obvious that these features would improve accuracy on unseen subjects. Sec 8, p.491.",
+    "The authors state it is unclear whether the accuracies are high enough to be useful in practice. Sec 8, p.492."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "modelling personality using continuous models is more accurate",
+    "observed personality may be easier to model than self-reports, at least in conversational data",
+    "ranking models perform best overall"
+   ],
+   "theory": "Lexical Hypothesis and Big Five structure (Sec 1). Psycholinguistic links between language and traits (Sec 2, Table 1): extraversion with verbosity, implicit style and positive emotion; neuroticism with self-reference and negative emotion; conscientiousness with avoiding negation. Hogan (1982) observer vs agent perspective and the Brunswikian lens model are used to justify observer ratings (Sec 8). Hypotheses: observed personality is easier to model than self-report (Sec 3.1); personality varies continuously, so regression or ranking should beat classification (Sec 7-8).",
+   "identification": "No causal identification. Predictive accuracy on held-out data from 10-fold cross-validation, framed as recognising unseen subjects. The text does not say whether folds were grouped by speaker; this is unclear and matters for the EAR corpus. Significance from two-tailed paired t-tests at p < .05 across folds (Sec 4-6).",
+   "measures": "LIWC 2001 word categories (88 counts, Table 6; Pennebaker et al. 2001). MRC psycholinguistic database features (14: imageability, concreteness, familiarity, frequency, age of acquisition, etc.; Coltheart 1981). Four speech-act ratios (command, prompt, question, assertion) from heuristic tagging of EAR utterances. Prosody (Praat): pitch, intensity, voiced time and words per second. Personality: Big Five Inventory self-reports (essays, EAR) and averaged 7-point observer ratings (EAR, 18 observers).",
+   "references_of_note": [
+    "Pennebaker and King 1999, Linguistic styles: language use as an individual difference (essays corpus and LIWC markers).",
+    "Mehl, Gosling and Pennebaker 2006, Personality in its natural habitat (EAR corpus and observer ratings).",
+    "Argamon et al. 2005, Lexical predictors of personality type (essays, function words and appraisal; compared in Sec 7).",
+    "Oberlander and Nowson 2006, Whose thumb is it anyway? Classifying author personality from weblog text (n-grams; compared in Sec 7).",
+    "Freund, Iyer, Schapire and Singer 1998, RankBoost (ranking model used here).",
+    "Heylighen and Dewaele 2002, contextuality and formality measure (Sec 2.1).",
+    "Mairesse and Walker 2006a, Automatic recognition of personality in conversation (the authors' earlier work).",
+    "Hogan 1982, socioanalytic theory of personality (observer vs agent perspective, Sec 8)."
+   ]
+  },
+  "summary_md": "Mairesse, Walker, Mehl and Moore (JAIR 30, 2007) is the source of the SMOreg personality models that Ramey, Klingler and Hollibaugh ran on congressional floor speech. Those RKH estimates are the targets the lexical Big Five weights are now fitted to. The paper trains classifiers, regressors and RankBoost rankers on LIWC, MRC, speech-act and prosody features. It uses two corpora: 2,479 student essays with self-reports, and 96 EAR speakers with self-reports plus averaged ratings from 18 observers. Three results bear on the system. (1) On essays the signal is weak. In regression, only openness (r 0.33) and emotional stability (r 0.24) beat the mean baseline, and SMOreg is significant only for openness (Table 17). The system's 07-03 essays refit landed in the same weak band and was later replaced by the RKH refit. (2) Ramey footnote 4 says RKH used the observer-trained models, which are the EAR models with n = 96. In Table 19, SMOreg on EAR observer ratings is worse than predicting the mean for every trait, with relative errors from 131.75 to 213.20 percent. The reference instrument behind the held-out r of .350 against RKH therefore had no demonstrated out-of-sample accuracy in its own paper. (3) Observer-rated personality is easier to model than self-report in conversation, and emotional stability has the lowest inter-observer agreement (pair r .29). This fits the system's choice of observer gold panels and its weak N results. Prosody helps extraversion most. In self-reports, neuroticism goes with low, constant voice intensity, which supports the 2026-07-09 finding that the audio ES composite was mis-signed. No result here was reproduced by a second path, so the bearings are UNVERIFIED (DE-062).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "contradicts",
+    "paper_claim": "SMOreg trained on EAR observer ratings (96 speakers, 10-fold CV) has relative absolute error above the mean baseline for all five traits: E 140.05, ES 162.05, A 173.97, C 131.75, O 213.20 percent (baseline 100). The authors say linear regression and SVMs perform poorly and suggest they need a bigger dataset.",
+    "paper_location": "Table 19 p.482 (Sec 5.2 starts p.481); Ramey et al. 2016 footnote 4 (text line 122)",
+    "system_side": "fit_smoreg_rkh.py takes Ramey per-member trait averages as targets. big5_traits.py loads liwc/mairesse_smoreg.json as ACTIVE weights when the file exists, replacing the published-correlate weights.",
+    "code_ref": "fec/members/fit_smoreg_rkh.py:3-11; fec/members/big5_traits.py:186-189; fec/liwc/mairesse_smoreg.json",
+    "transfer_conditions": "Holds as a statement about the Mairesse observer model and Ramey fn 4. The paper never says what data the distributed observer model was fit on, so the claim that it was fit on all 96 speakers is an assumption. Ramey line 191 calls the training sample the essay sample, so Ramey is internally inconsistent on provenance.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers and Ramey fn 4 verified. Softened: the all-96 fit claim is not in the paper. The claim that the active JSON now holds the RKH refit is unverified: fit_smoreg_rkh.py writes liwc/rkh_calibrated.json.candidate (line 89-90), that file is absent from the repo, and the essays script writes mairesse_smoreg.json.candidate. No code path read promotes RKH weights into the active file.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "qualifies",
+    "paper_claim": "On the essays corpus with self-reports, SMO binary accuracy is 54.9 to 62.1 percent (openness 62.1 vs 50.3 baseline). SMOreg relative error is E 100.65, ES 98.35, A 100.28, C 99.30 (none significant) and O 94.19 (significant). Best Pearson r is 0.33 for openness and 0.24 for emotional stability.",
+    "paper_location": "Table 12 p.475; Table 17 p.481 (Sec 5.1 p.480); Pearson r in Sec 5.1 p.481",
+    "system_side": "fit_smoreg_essays.py refits a LinearSVR on binary y/n labels (0/1 targets) and searches 12 settings on the same folds.",
+    "code_ref": "fec/members/fit_smoreg_essays.py:4-12; fec/members/fit_smoreg_essays.py:104-110; fec/members/fit_smoreg_essays.py:121-131",
+    "transfer_conditions": "Paper figures verified. Table 12 SMO values are E 54.93, ES 57.35, A 55.78, C 55.29, O 62.11, so the 55 to 62 range is rounded. The grid search picks the best of 12 settings on the same folds, so its CV figure is optimistic, as stated. The paper's binary accuracies are not comparable to the system's refit since the features differ (Empath-augmented).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper side holds with rounding (E 54.9 not 55). Page for Table 17 is p.481 not p.480. The system-side code description matches the cited lines. Unverified: the 53 to 58 percent CV figure (no output log was checked) and the claim that these weights were active on 07-03; the script writes mairesse_smoreg.json.candidate, not the active file.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.gold-panel-validation",
+    "relation": "supports",
+    "paper_claim": "On EAR, observer-rated Naive Bayes beats baseline for E 73.00 vs 47.78, ES 73.89 vs 51.11 and C 67.67 vs 47.78. No self-report classifier or regressor significantly beats baseline. Mean inter-observer pair r is 0.54 for E, 0.29 for ES and 0.51 for C (18 observers, 31 to 33 pairs).",
+    "paper_location": "Table 14 p.476-477; Sec 4.2 p.476; Table 19 and pair r in Sec 5.2 p.482; Sec 8 is p.490-491 (rel says p.492)",
+    "system_side": "b5_gold_multitrait_validate.py evaluates predictions separately against the senate_insiders and academic_experts panels; the E and N pass results are system outputs, not checked here.",
+    "code_ref": "fec/members/b5_gold_multitrait_validate.py:6; fec/members/b5_gold_multitrait_validate.py:28; fec/members/b5_gold_multitrait_validate.py:211",
+    "transfer_conditions": "The EAR design is verified: observers rated audio only, without knowing the participants, in three groups, and the ratings were averaged (EAR description p.464-465). The Senate known-figure reputation point is outside the paper, and the paper never discusses Senate panels. Linking the ES observer agreement to the system's N gate is the verifier's inference.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Table 14 values, self-report nulls and pair r values verified. Softened: the Sec 8 page cite is wrong (p.490-491), and the paper does not address the system's panel choice. The claim that E and A pass both panels and N passes insiders only is a system result that was not checked.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Big Five validation against Senate gold panels and criteria|Big Five validation against Senate gold panels and criteria]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-audio-speech.prosody-and-disfluency",
+    "relation": "supports",
+    "paper_claim": "Prosody-only RankBoost gives extraversion ranking loss 0.26 (random 0.50), the best single feature set in ranking. Prosody-only Naive Bayes gives 67.56 percent for E, but LIWC alone (68.89) and MRC alone (68.78) are higher. Self-assessed neurotics show low and constant voice intensity (Int-mean, Int-stddev) that observers do not use.",
+    "paper_location": "Table 22 p.485; Table 15 p.478 (rel says p.477); Sec 3.3 p.469-470 (Table 11)",
+    "system_side": "b5_audio_eval.py defines ES_acoustic as minus the mean of the stability columns (line 97), and a 2026-07-09 note marks the composite as mis-signed.",
+    "code_ref": "fec/members/b5_audio_eval.py:5; fec/members/b5_audio_eval.py:8; fec/members/b5_audio_eval.py:12-14; fec/members/b5_audio_eval.py:97",
+    "transfer_conditions": "The 0.26 and 67.56 figures and the self-report intensity result are verified. The strongest-single-feature-set claim holds only for ranking; in classification LIWC and MRC are higher. EAR observers rated audio, so prosody gains are partly shared-channel, as the paper does not test. The sign correction is supported only for self-reported neuroticism, which the rel states.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Numbers verified. Softened: prosody is the strongest single set for extraversion only in ranking (Table 22), not in Naive Bayes classification (Table 15). The system code (line 97) makes low variability ES-positive, which matches the 07-09 note; the paper's self-report result is consistent with that note being wrong.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-audio-speech#eGeMAPS prosody and Whisper disfluency rates|eGeMAPS prosody and Whisper disfluency rates]]",
+    "system": "melange-audio-speech"
+   },
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "supports",
+    "paper_claim": "In conversation only a high word count and a low mean pitch mark ES in both self and observer reports. Observed ES tracks swearing and anger words but self-assessed ES does not. Self-references and negative-emotion words mark neuroticism in essays, citing Pennebaker and King.",
+    "paper_location": "Sec 3.3 p.469-470, Tables 8-11",
+    "system_side": "emit_affective_n.py keeps the LIWC i + negemo - posemo term only as a convergent anchor (r +.24), not as a component.",
+    "code_ref": "fec/members/emit_affective_n.py:38-43",
+    "transfer_conditions": "The paper compares essays and student conversation, not political genres, so the link to floor speech is an analogy. The genre-transfer rho values (.050, .161) are not checked here and are not in the paper.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Paper claim verified in Sec 3.3. The anchor role matches the comment at emit_affective_n.py lines 41-43. The rho values and the claim about the LIWC term being dropped from the component were not re-run.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Paper figures and table cites in the rel summary largely check out against the text. Page cites are off: Table 17 is p.481, Section 8 is p.490-491, Table 15 is p.478.",
+   "Unverified: that the active mairesse_smoreg.json holds the RKH refit for all five traits. fit_smoreg_rkh.py writes liwc/rkh_calibrated.json.candidate, which is absent; the essays script writes mairesse_smoreg.json.candidate. The 'replaced trait by trait' history is not in code read here.",
+   "Overstated: the claim that big5_traits.py:13-16 describes the model as essays-trained. Those lines describe a pre-trained standardized SMOreg and say nothing about essays; essays wording is only in fit_smoreg_essays.py:4-5, which matches Mairesse's own setup. Ramey is itself inconsistent (fn 4 observer models, line 191 essay sample), so calling this a factual code error is not established.",
+   "Wrong: prosody as the strongest single feature set for extraversion holds only in ranking (Table 22). In Table 15 LIWC (68.89) and MRC (68.78) beat prosody (67.56). The summary line that prosody helps extraversion most needs the same qualification.",
+   "Unverified: the essays CV range of 53 to 58 percent and the claim that the essays weights were active on 07-03.",
+   "Unsupported in the paper: that the distributed observer model was fit on all 96 speakers; that the paper itself warns no cross-corpus test was run (search found no such statement); and that the EAR observer design is the gold standard for the system's N gate.",
+   "paul_alignment is unverifiable: paul_entries is empty, so statements about Paul's notes and position have no source here.",
+   "Outside this paper, not verified here: held-out r values vs RKH (.510 for E, .350 mean) and the acquaintance-level accuracy label, which come from brain records."
+  ],
+  "gaps_exposed": [
+   "The docstrings at big5_traits.py:13-16 and fit_smoreg_essays.py:4-5 describe the RKH/Mairesse model as essays-trained SMOreg, but Ramey fn 4 says RKH used the observer-trained (EAR) models. The essays refit replicated the wrong arm, and the docstring still describes published-correlate linear weights that the active JSON overrides.",
+   "No external check of RKH itself: the held-out r vs RKH (mean .350) is reported as accuracy, but the source model's own CV error on EAR observer ratings was above the mean baseline for every trait.",
+   "fit_smoreg_essays.py regresses on binary y/n labels and reports the best of 12 grid settings on the same folds, with no nested CV.",
+   "The component card for affective-n still lists the LIWC term as a component; the code at emit_affective_n.py:41-43 says it is now an anchor only.",
+   "Ranking loss (pairwise order) is never used as an evaluation metric, although the paper finds ranking models best overall and the system's consumers use ranks."
+  ],
+  "flags": [
+   "Brain wording conflict: the v6 note calls held-out r vs RKH congressional ground truth and calls E .51 acquaintance-level accuracy. Per this paper (Table 19) and Ramey fn 4, RKH is the output of a model with no demonstrated out-of-sample accuracy, so the figure is method agreement on n = 146, not accuracy. It needs an UNVALIDATED or method-shared label.",
+   "Provenance error: system docstrings say Ramey used Mairesse's essays SMOreg; Ramey fn 4 says observer-trained models. This is an actual factual error in the code documentation.",
+   "Ramey p.2 says SMOreg best recovers personality in written trials, but this paper's Table 17 shows SMOreg significant only for openness on essays and Table 19 shows it worse than baseline on EAR. The citation chain overstates the source."
+  ],
+  "paul_alignment": "Paul has no annotated entry for this paper. His position on the lexical component (Ramey is dated but foundational, and each venue needs its own framework) is reinforced. The model RKH inherits was trained on 96 student conversations and never shown to generalise beyond them, and the paper itself warns that no cross-corpus test was run. His notes do not mention that the RKH targets now drive all five active weights. The system's move from essays weights to an RKH refit replaced weak but real signal with agreement with an unvalidated instrument. That point is newer than his notes.",
+  "related": [
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "builds-on",
+    "why": "Ramey et al. apply the pre-trained Mairesse SMOreg to floor speech (text lines 130 and 183-190). Their footnote 4 says observer-trained models; footnote 8 says SMOreg versus M5 made little difference. Their line 191 calls the training sample essay, so the provenance is inconsistent within Ramey."
+   },
+   {
+    "slug": "pennebaker-2003-psychological-aspects-natural",
+    "relation": "complements",
+    "why": "Review of LIWC and personality language. It shares the LIWC dictionary with this paper but does not supply the essays data, which is Pennebaker and King 1999 (cited, not in this review)."
+   },
+   {
+    "slug": "koutsoumpis-2024-kernel-truth-text",
+    "relation": "complements",
+    "why": "Meta-analysis of 52 LIWC categories against the Big Five that reports small effect sizes. This supports the point about small closed-vocabulary signal; the paper does not cite Mairesse 2007."
+   },
+   {
+    "slug": "mondak-nd-online-appendix-personality",
+    "relation": "complements",
+    "why": "Online appendix to expert evaluations of senators. The link to this paper is conceptual (observer or expert ratings); the appendix does not mention Mairesse 2007."
+   },
+   {
+    "slug": "salam-2022-learning-personalised-models",
+    "relation": "complements",
+    "why": "Personalised models for self-reported personality recognition. It does not cite Mairesse 2007, so the link is topical only; the rel labelled it extends, which is not supported."
+   },
+   {
+    "slug": "celli-nd-twenty-years-personality",
+    "relation": "cites",
+    "why": "Cites Mairesse 2007 as reference 179 and calls it the foundation of personality computing with accuracy below 62 percent. Celli discusses threats in general, not Mairesse-specific validity threats."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "kempe-2015-maximizing-spread-influence",
+  "note": false,
+  "meta": {
+   "title": "Maximizing the Spread of Influence through a Social Network",
+   "authors": [
+    "David Kempe",
+    "Jon Kleinberg",
+    "Eva Tardos"
+   ],
+   "year": "2015",
+   "venue": "Theory of Computing 11(4), 2015, pp. 105-147 (extended version of KDD 2003 and ICALP 2005 papers)",
+   "doi": "10.4086/toc.2015.v011a004",
+   "sha12s": [
+    "901ecb91b6dc"
+   ],
+   "category": "Adaptive Influence Maximization",
+   "category_slug": "adaptive-influence-maximization"
+  },
+  "extraction": {
+   "slug": "kempe-2015-maximizing-spread-influence",
+   "title": "Maximizing the Spread of Influence through a Social Network",
+   "authors": [
+    "David Kempe",
+    "Jon Kleinberg",
+    "Eva Tardos"
+   ],
+   "year": "2015",
+   "venue": "Theory of Computing 11(4), 2015, pp. 105-147 (extended version of KDD 2003 and ICALP 2005 papers)",
+   "doi": "10.4086/toc.2015.v011a004",
+   "document_type": "journal article (theoretical computer science; extended journal version of two conference papers)",
+   "coverage": "Read the full extracted text (2166 lines, about 125k chars) in chunks, including abstract, introduction, all models, all theorems and proofs, experiments in Section 8, conclusions, and references. Metadata hints corrected: DOI was blank and is 10.4086/toc.2015.v011a004 (from the article header and the online record). Paul markup: none, because annot_sha12s is empty and no _annots file is linked. Paul entries: none. Page images were not rendered; locations are printed page numbers. Online scan: one web search confirmed the DOI, dates (received 2014-04-17, published 2015-04-22), and keywords. Downloaded the published PDF (397821 bytes, sha256 446f5dc5...) to _sources; it matches the existing _raw copy.",
+   "research_question": "How should a k-node seed set be chosen to maximize the expected final number of active nodes when influence spreads through a social network under threshold or cascade diffusion models? The paper asks whether the NP-hard influence maximization problem admits efficient approximation guarantees, and which model generalizations keep such guarantees.",
+   "theory": "Progressive diffusion models from mathematical sociology (Granovetter and Schelling threshold models) and interacting particle systems (independent cascade). Influence is submodular under these models, so greedy hill-climbing gives a (1-1/e-eps) guarantee via Nemhauser-Wolsey-Fisher. Triggering-set equivalence (Lemma 4.4) is the main proof device. Generalizations: general threshold, general cascade, decreasing cascade, submodular threshold, non-progressive, and multi-action marketing with diminishing returns.",
+   "data": "No empirical influence data. Experiments use a co-authorship graph built from the high-energy physics theory section of arXiv as of winter 2002: 10748 nodes (researchers with at least one coauthored paper), about 53000 node pairs with edges, parallel edges kept as tie strength. Single-author papers ignored. Unit of analysis: researcher. Influence parameters are set by simple rules, not estimated (Section 8.2). Each targeted set is evaluated with 10000 simulations; target set size k runs from 1 to 30.",
+   "method": "Theory: NP-hardness reductions (vertex cover, maximum coverage, set cover), monotone and submodular proofs via triggering sets, the Decreasing Cascade coupling argument (Theorem 5.1), a layered-graph reduction for non-progressive models (Theorem 6.1), and a hill-climbing analysis for budgeted marketing actions (Theorem 7.1). Empirics: greedy Monte Carlo hill-climbing compared with high-degree, distance-centrality, and random seed selection under Linear Threshold, weighted Cascade, and Independent Cascade with p = 1% and p = 10%.",
+   "identification": "Not applicable. This is a worst-case algorithm analysis and a simulation comparison on a fixed graph. No causal identification strategy is claimed.",
+   "scope": "Population: abstract diffusion models on directed graphs, tested on one collaboration network. Institution: theoretical computer science. Era: conference versions 2003 and 2005, journal version 2015, with 2014 revisions. Claims are about model-based seeding, not about real-world marketing outcomes.",
+   "measures": "Influence sigma(A) is the expected number of active nodes at quiescence, and weighted sigma uses node weights. Heuristic baselines are degree centrality (node degree) and distance centrality (smallest average shortest-path distance, with n used for disconnected pairs). Approximate sigma is estimated by simulation.",
+   "key_findings": [
+    "Greedy hill-climbing gives a (1-1/e-eps) approximation for influence maximization in the Linear Threshold and Independent Cascade models (Theorem 1.1, p.106; proof Section 4, pp.118-122).",
+    "Influence sigma(A) is monotone and submodular for every triggering-set model (Lemma 4.4, pp.119-120), including Independent Cascade (Theorem 4.5, p.121) and Linear Threshold with in-weights summing to at most 1 (Theorem 4.6, pp.121-122).",
+    "Decreasing Cascade is submodular (Theorem 5.1, p.124) even though no triggering-set equivalent exists (example, pp.123-124); the proof uses a residual-process coupling.",
+    "Exact influence maximization is NP-hard for Linear Threshold (Theorem 2.1, p.111), and for Independent Cascade it is hard to approximate better than 1-1/e (Theorem 2.2, p.113).",
+    "For general threshold models, influence maximization cannot be approximated within n^(1-eps) for any eps > 0 under P not equal NP (Theorem 3.3, pp.116-117).",
+    "Non-progressive influence maximization over horizon tau reduces exactly to progressive maximization on a layered graph with tau*|V| nodes (Theorem 6.1, p.127), so the guarantees carry over.",
+    "For budget split across marketing actions with diminishing returns, hill-climbing gives 1 - exp(-gamma k/(k+delta m)) of optimum (Theorem 7.1, pp.128-130).",
+    "Linear Threshold experiment on the hep-th co-authorship graph: greedy beats high-degree by about 18% and distance centrality by over 40% (Section 8.4, p.134; Figure 1).",
+    "Weighted Cascade curves have the same shape as Linear Threshold, with values about 25% smaller (Section 8.4, p.135; Figure 2).",
+    "Independent Cascade with p = 1%: each targeted node adds on average about three activations, so network effects are much weaker; random seeds do relatively better (Section 8.4, pp.135-136; Figure 3).",
+    "Independent Cascade with p = 10%: beyond about 12 targets, random seeds beat both high-degree and distance-centrality heuristics; those heuristics reach about 2415 activations and then barely grow (Section 8.4, pp.136-137; Figure 4).",
+    "Greedy keeps growing the active set in every experiment because it accounts for overlap of earlier seeds' reach (Section 8.4, pp.136-137); the paper says a local search step would likely improve results further (p.137)."
+   ],
+   "limitations": [
+    "Influence probabilities and thresholds are not inferred from data; the experiments use simple uniform or weighted settings (Section 8.2, p.133; Conclusions, pp.138-139).",
+    "The co-authorship graph is a proxy for social influence, with name-aliasing errors only partly corrected (Section 8.1, p.133).",
+    "Models are progressive in the main analysis; the non-progressive extension is a reduction, not a full experimental study (Section 6, pp.126-128).",
+    "No approximation hardness is known for Linear Threshold, so the optimal tight ratio there is open (Conclusions, p.138).",
+    "Sigma(A) is only estimated by Monte Carlo; the paper notes exact evaluation is #P-complete (Section 4, p.118), and weighted sampling can be inaccurate for exponentially large weights (footnote 3, p.119).",
+    "Experiments stop at k = 30 for computational reasons, and only one network is studied (Section 8.3, pp.134-135).",
+    "The paper leaves competing cascades, negative opinions, and a consistent timing-free competition model open (Conclusions, pp.137-138)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "'a natural greedy strategy obtains a solution that is provably within 63% of optimal' (abstract, p.105)"
+   ],
+   "references_of_note": [
+    "Domingos and Richardson, Mining the network value of customers, KDD 2001 (p.106-107)",
+    "Richardson and Domingos, Mining knowledge-sharing sites for viral marketing, KDD 2002 (p.107)",
+    "Nemhauser, Wolsey, and Fisher, analysis of approximations for maximizing submodular set functions, 1978 (p.119)",
+    "Mossel and Roch, Submodularity of influence in social networks: from local to global, SIAM J. Comput. 2010 (p.108, p.126)",
+    "Salek, Shayandeh, and Kempe, WINE 2010 (characterization of Triggering-model equivalence, p.124)",
+    "Leskovec et al., Cost-effective outbreak detection in networks, KDD 2007 (CELF, p.108)",
+    "Borgs, Brautbar, Chayes, and Lucier, Maximizing social influence in nearly optimal time, SODA 2014 (p.109)",
+    "Granovetter, Threshold models of collective behavior, 1978 (p.107)",
+    "Goldenberg, Libai, and Muller, word-of-mouth and complex systems models, 2001 (p.106)",
+    "Wasserman and Faust, Social Network Analysis, 1994 (degree and centrality measures, p.108, p.133)"
+   ]
+  },
+  "summary_md": "Kempe, Kleinberg and Tardos give the founding result of influence maximization. Under the Independent Cascade and Linear Threshold models, expected spread sigma(A) is monotone and submodular. The proof goes through live-edge or triggering-set worlds (Lemma 4.4). Greedy hill-climbing therefore reaches (1-1/e-eps) of the optimal k-seed set, and eps shrinks as the Monte Carlo estimate of sigma improves. The guarantee has hard edges. LT needs thresholds drawn uniformly on [0,1] and in-weights summing to at most 1. General threshold models cannot be approximated within n^(1-eps) (Theorem 3.3). Competing cascades are left open. Experiments run on one 10,748-node hep-th co-authorship graph, with 10,000 simulations per evaluation and k up to 30. Under LT, greedy beats high-degree seeds by about 18% and distance centrality by over 40%. Under IC with p = 10%, the centrality heuristics plateau near 2,415 activations, and random seeds beat them beyond about 12 targets. Edge parameters are set by rule, not estimated. For Melange, the paper is the method source for the edge-keyed common-random-number draws, which are live-edge worlds, and for the lazy-greedy frontier. It also marks where the system sits outside the guarantee. The frontier greedy runs on a two-colour race, scales marginals by a leverage factor and averages only 20 worlds. LT priming uses a fixed threshold ladder. The coalition allocator ranks by singleton marginals, which is the overlap-blind pattern the paper's experiments penalize. All of this is model-based expected activation under assumed parameters. None of it is a closeness, access or persuasion probability (D-025).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-allocation.budget-frontier",
+    "relation": "qualifies",
+    "paper_claim": "Greedy on a monotone submodular sigma reaches 1-1/e-eps of optimum (Thm 1.1). Submodularity follows from triggering-set (live-edge) worlds (Lemma 4.4; Thm 4.5 for IC; Thm 4.6 for LT). Each estimate uses 10000 simulations (Sec 8.3). Competing cascades are left open (Conclusions).",
+    "paper_location": "Thm 1.1 p.106; Lemma 4.4 p.119; Thm 4.5 p.120; Thm 4.6 p.121; Sec 8.3 text p.133; Conclusions p.137-138",
+    "system_side": "Cascade draws one splitmix key per (iteration, directed edge), i.e. a live-edge world. Lazy greedy adds up to MAXSEEDS=60 seeds. Departures: pro-A vs anti-B first-to-reach race with bystander B seeds; marginal = max(0, delta) times fac, where fac is REPFAC x lev for contest seeds, 1.0 for defend seeds, lev otherwise; sigma is averaged over MC=20 worlds.",
+    "code_ref": "fec/engine/budget_frontier.py:83-94 (cascade), 118-135 (spread), 153-170 (marg and lazy loop); defaults MC and MAXSEEDS line 7, CRN line 43, REPFAC line 67",
+    "transfer_conditions": "With CRN, greedy is exact greedy on the 20-world sample objective, which is submodular only for a single cascade. The two-colour race needs a separate argument whose tie order differs from this BFS (A queued first). fac-weighted, clamped marginals optimize no stated set function. The (1-1/e) bound is context, not a certificate, unless fac = 1 and race submodularity is shown.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Thm 1.1, Lemma 4.4, Thm 4.5 and the 10000-simulation statement hold. Thm 4.5 is on p.120 and the simulation text on p.133, not as cited. Code verified: one splitmix key per (iteration, directed edge), MAXSEEDS 60, MC 20, REPFAC 0.6, max(0, .) clamp. Fix the fac description: defend seeds get 1.0, not c. Live-edge equivalence is the paper's; common random numbers are project practice and are not in the paper.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Budget frontier with knee and electoral modes|Budget frontier with knee and electoral modes]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.lt-priming",
+    "relation": "qualifies",
+    "paper_claim": "LT is submodular when in-weights sum to at most 1 (Thm 4.6). The LT model draws each threshold uniformly on [0,1] (Sec 2). Thm 3.3, for the general threshold model, shows NP-hardness of approximation within n^(1-eps) for any eps > 0. Fixed-threshold models are only stated to admit no non-trivial approximation factor (p.117).",
+    "paper_location": "Thm 4.6 p.121; LT definition p.110; Thm 3.3 p.116; fixed-threshold remark p.117",
+    "system_side": "LT priming uses fixed per-tier resistance THETA from 0.6 to 3.0. Pressure is the sum over pro neighbours of P[u][v] times xf, with P the shared build_P kernel and no normalization to at most 1. Per target, recruits are taken by greedy sort on recruit_cost/add and money closes the residual. It maximizes no seed set and claims no guarantee.",
+    "code_ref": "fec/engine/lt_priming.py:19-21 (THETA), 103 (pressure), 131-140 (cheapest tip); fec/moneyball_core.py:556-563 (build_P)",
+    "transfer_conditions": "Deterministic thresholds are the regime the paper excludes, so the greedy guarantee does not transfer. A future joint multi-target priming optimizer would inherit the n^(1-eps) hardness for general thresholds. Per-target cheapest tip remains a heuristic.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Thm 4.6 and Thm 3.3 exist as cited, but Thm 3.3 is the general model. The fixed-threshold statement is weaker: no non-trivial factor, not n^(1-eps). Code verified: fixed THETA ladder and unnormalized pressure. The lean and Opponent add-ons were not located in the cited lines, so UNVERIFIED.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Linear-threshold priming (cheapest tip)|Linear-threshold priming (cheapest tip)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.per-topic-allocators",
+    "relation": "qualifies",
+    "paper_claim": "Seeds picked by individual degree or distance centrality ignore clustering and overlap. On the hep-th graph under LT, greedy beats high-degree by about 18% and distance centrality by over 40%. Under IC with p=10%, the centrality heuristics level off near 2415 activations and random seeds beat them beyond about 12 targets. Greedy keeps rising because it prices overlap.",
+    "paper_location": "Sec 8.4 pp.134-136; Fig 1 p.134; IC 10% text p.135-136",
+    "system_side": "Shortlist of the top 45 neutrals by engagement priority, each scored by singleton spread({n}) minus base, boosted by (1 + 0.8 bpf), and water-filled into a 2000000 budget. Overlap is computed only afterwards, as the joint spread of the funded set.",
+    "code_ref": "fec/engine/per_topic_coalition.py:114-119 (shortlist, singleton marginal, boost, water-fill), 125-126 (joint spread); BUDGET line 6; BETA_C line 30",
+    "transfer_conditions": "Evidence is one 10748-node co-authorship graph under uniform p, window winter 2002. Whether singleton ranking loses comparably on the 533-member cosponsor kernel is unverified; a check would compare the joint spread of the water-fill seed set against lazy greedy at equal seed count and the same CRN. The allocator is labelled diagnostic, which limits the harm.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "The 18 percent, over 40 percent, 2415 and 12-target figures are confirmed. The paper's stated mechanism is clustering and first-node coverage, which matches the overlap framing. Page cites in the bearing are off by up to one page. Code verified: top-45 shortlist, singleton marginal, BETA_C 0.8, BUDGET 2000000, joint spread reported after selection.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-allocation#Per-topic flip and coalition allocators|Per-topic flip and coalition allocators]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.cascade-kernel",
+    "relation": "qualifies",
+    "paper_claim": "Edge probabilities are set by rule, not estimated: LT weights from co-authorship multiplicity, IC uniform p of 1 or 10 percent, and weighted cascade p = 1/d_v with no multiplicity term (Sec 8.2, p.133). At p=1% each targeted node adds about three activations, so random seeds do relatively better (Sec 8.4, p.135). Estimating parameters from data is left open (Conclusions, p.138).",
+    "paper_location": "Sec 8.2 p.133; Sec 8.4 pp.135-136; Conclusions p.138",
+    "system_side": "Shared kernel p = x/(x+6) with x = w times cpf times edge_mult. The saturation constant 6 is a literal design choice, not estimated. budget_frontier, per_topic_coalition and lt_priming each build their P through MBC.build_P. The scenario engine and others were not checked.",
+    "code_ref": "fec/moneyball_core.py:543-548 (cpf factors), 556-563 (build_P); fec/engine/budget_frontier.py:77, fec/engine/per_topic_coalition.py:37, fec/engine/lt_priming.py:55 (all MBC.build_P)",
+    "transfer_conditions": "Seed rankings are sensitive to the activation level, so a sweep of the constant 6 (for example 3, 6, 12) should accompany any claim that frontier seed order is stable. This is not validation of the constant.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Kernel formula and single shared build are confirmed in code. Softened: the paper does not show a flip in which heuristic wins. It shows random seeds gain relative to centrality heuristics as activation rises, and it never tests greedy against heuristics at p=1%. The flags text writing the weighted cascade as c_uv/d_v is wrong; the paper has 1/d_v.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Cascade activation kernel build_P and partisan edge factors|Cascade activation kernel build_P and partisan edge factors]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.joint-optimizer",
+    "relation": "supports",
+    "paper_claim": "Thm 7.1 (p.128): hill climbing with total budget k, taken in pieces of size delta, on a non-negative monotone non-decreasing g with diminishing returns, ends with g(x) >= (1 - exp(-k gamma/(k + delta m))) times g of the optimum under sum <= k. Each step picks a direction with gamma-approximately largest gradient.",
+    "paper_location": "Sec 7, Thm 7.1 p.128",
+    "system_side": "Joint CU optimizer allocates $500 increments (INC default) by lazy greedy on the largest next marginal. A concavity check verifies per-member equal-cost chunks are non-increasing in the fixed state. Code comments claim the exact grid optimum; the 1-1/e floor is printed as context only. A modeled money-triggered conversion triggers replanning and drops the certificate.",
+    "code_ref": "fec/engine/optimize.py:3-12 (docstring), 26 (BUDGET 2.5M, INC 500), 70-74 (concavity check), 120-151 (greedy loop), 170-193 (certificate and floor print)",
+    "transfer_conditions": "Holds only in the fixed stance state where concavity is checked. Once money crosses a defection threshold, returns are non-concave steps and neither Thm 7.1 nor the exact certificate applies. The code states this scope.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Thm 7.1 and its conditions are confirmed on p.128. The bound is approximate, so supports is the right relation. Code claims verified: INC default 500, concavity check runs before the greedy loop, exact-grid comment, 1-1/e floor printed only as context, certificate dropped after a modeled conversion. The exact-grid claim rests on separability and concavity, not on Kempe.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-allocation#Joint CU budget optimizer|Joint CU budget optimizer]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+    "relation": "context",
+    "paper_claim": "Under LT, greedy beats high-degree seeding by about 18 percent and distance-centrality seeding by over 40 percent (Sec 8.4, p.134). The base of these percentages is not stated, so high-degree is not 18 percent below greedy; it is about 15 percent below greedy if 18 is measured against greedy. Under IC with p=10%, random seeds beat both centrality heuristics beyond about 12 targets (p.135).",
+    "paper_location": "Sec 8.4 pp.134-135",
+    "system_side": "Base centrality InfluenceScore = 0.60 normalized weighted out-degree + 0.25 betweenness + 0.15 normalized eigenvector (formula string in the audit script). The rank weight of 0 since 2026-06-25 is not verified because the workbook cells were not opened.",
+    "code_ref": "fec/audit/audit_legislation_downstream_readiness.py:1057 (formula string); workbook congress_centrality_*.xlsx cells AB12/AB13 not opened",
+    "transfer_conditions": "Paper evidence comes from one physics co-authorship graph, window winter 2002, denominator 10748 researchers, k = 1 to 30. Under D-025 centrality scores are heuristic outputs, not influence or access probabilities.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper figures and the random-beats-centrality claim verified. The sign of the 18 percent comparison was misstated. The formula weights are confirmed in the audit string; the rank weight of 0 is not verified.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/moneyball-rank-pillars#Cosponsor-network InfluenceScore (computed, weight 0)|Cosponsor-network InfluenceScore (computed, weight 0)]]",
+    "system": "moneyball-rank-pillars"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Page cites in the item are off for several claims: Thm 2.2 is on p.112 not p.113; Thm 4.5 is on p.120 not p.121; the 10748-node graph description is on p.132 not p.133; the 10000-simulation text is on p.133 not pp.134-135; the weighted-cascade 25 percent comparison is on p.134 not p.135; the 2415 plateau and random-beats-centrality-past-12 text are on p.135 not pp.136-137; the local-search remark is on p.136 not p.137.",
+   "Thm 3.3 is stated for the general threshold model (n^(1-eps) hardness). The key finding and bearing that carry this bound over to fixed-threshold models overreach; p.117 says only that fixed-threshold models admit no non-trivial approximation factor.",
+   "Flags text writes weighted cascade as p(u,v) = c_uv/d_v. The paper defines it as 1/d_v with no multiplicity term (Sec 8.2, p.133). The graph is undirected, so degree is the right word, not in-degree.",
+   "Summary says the paper is the method source for edge-keyed common-random-number draws. The paper gives only the live-edge (triggering) equivalence and does not discuss common random numbers. Attribute CRN to project practice and cite the paper only for live-edge worlds.",
+   "Summary says the coalition allocator's singleton ranking is the overlap-blind pattern the paper's experiments penalize. The paper penalizes degree and distance-centrality seeding, not singleton-marginal ranking. Present it as an analogy, not a tested result.",
+   "The cascade-kernel bearing says which seeding heuristic wins flips with activation level. The paper shows only that random seeds gain relative to centrality heuristics as activation rises; it does not show a flip in greedy's rank and never tests greedy against heuristics at p=1%.",
+   "Item says the 18 percent LT margin is 18 percent below greedy. The paper says greedy outperforms high-degree by about 18 percent, with no stated base; the direction of the statement must be corrected in the centrality bearing.",
+   "All eleven related slugs exist as item files in the research state folder. Relation labels were re-read only for chen-2023 (relabelled complements) and the Kempe-side claims; the other nine labels are carried forward unverified against those papers' text.",
+   "Not checked here: paul_alignment and Paul's note claims (no Paul entries exist and annotations are empty), the Sadeh et al. 2019 sample-complexity reference from the online scan, the sha256 of the downloaded PDF, and the scenario.py coalition-side claim.",
+   "Not returned: the StructuredOutput schema has bearings, related and summary_issues only, so the requested key_findings and paul_markup arrays were not produced. Dropped items: none of the bearings were dropped; all six were verified and returned."
+  ],
+  "gaps_exposed": [
+   "The 20-world Monte Carlo average has no stated error bound. The paper used 10,000 simulations, and sample-complexity results (Sadeh et al. 2019, from the online scan) scale with n, seed count and eps^-2. The frontier knee and seed order may move between MC 20 and MC 1000. mc_stability_check.py exists, but whether it bounds seed-order stability was not checked here.",
+   "No greedy-vs-degree-vs-random benchmark in the style of Section 8 has been run on the live 533-member kernel, so the gain from greedy over cheap centrality seeding is unmeasured for this system.",
+   "The coalition-side (1-1/e) claim in scenario.py rests on Bharathi-Kempe-Salek. Whether the BFS first-to-reach race with fixed A-first queue order is submodular in pro seeds has not been shown or tested numerically (for example, by random diminishing-returns probes on the 20 CRN worlds).",
+   "The fac-weighted, max(0, .)-clamped marginals in the frontier greedy optimize no explicitly defined set function, so no approximation statement attaches to the frontier path.",
+   "Kernel edge probabilities are not estimated from data. Kempe flags parameter estimation as open, and the saturation constant 6 has no sensitivity sweep reported against frontier seed order."
+  ],
+  "flags": [
+   "Weighted Cascade (Section 8.2) sets p(u,v) = c_uv / d_v, a per-edge normalization by receiver in-degree. Per-edge volume normalization was measured and REJECTED in this project, so do not adopt the weighted cascade kernel on that basis.",
+   "The paper's 'influence' and sigma are expected activations under an assumed diffusion model. Any Melange spread, frontier or InfluenceScore output must not be described as a closeness, access, introduction or persuasion probability (D-025). The cosponsor_refinement report already words Kempe this way correctly.",
+   "Kempe's experimental margins (18%, 40%, 2,415 activations) come from one hep-th graph, window winter 2002, denominator 10,748 researchers with k = 1..30. Quote them with that window and denominator, never as transferable effect sizes.",
+   "Paper markup: none. annot_sha12s is empty and paul_entries is empty, so no annotation conflicts exist."
+  ],
+  "paul_alignment": "Paul has no annotation or bibliography entry on this paper. His component positions agree with it. His Chen 2023 margin note, that pressure from high-ranking members is not diminishing, matches Kempe's boundary: submodularity needs random thresholds, and fixed thresholds break it (Theorem 3.3). LT priming sits in exactly that non-submodular regime. His view of greedy plus CELF as the operational layer is grounded here. It is not stale, but the built optimizer has moved past the (1-1/e) framing to an exact fixed-state certificate. His wish for cheap Monte Carlo (Viral Centrality) is sharpened by the gap between the paper's 10,000 simulations and the system's 20 CRN worlds.",
+  "related": [
+   {
+    "slug": "bharathi-nd-competitive-influence-maximization",
+    "relation": "extends",
+    "why": "Competitive follower-vs-fixed-opponent extension of Kempe IC submodularity. Kempe leaves competing cascades open (Conclusions pp.137-138). Item exists; the cited paper text was not re-read here."
+   },
+   {
+    "slug": "golovin-2011-adaptive-submodularity-theory",
+    "relation": "extends",
+    "why": "Adaptive analogue of the greedy guarantee. Item exists; the cited paper text was not re-read here."
+   },
+   {
+    "slug": "chen-2021-contingency-aware-influence",
+    "relation": "extends",
+    "why": "Adds seed take-up probability to Kempe-style IM. Kempe has no take-up step. Item exists; not re-read here."
+   },
+   {
+    "slug": "chen-2023-complex-contagion-influence",
+    "relation": "complements",
+    "why": "Relabelled from contradicts. Complex contagion leaves the submodular regime that Kempe proves for triggering models, a different model, so it does not contradict Kempe's theorems."
+   },
+   {
+    "slug": "almazaydeh-2026-heuristic-centrality-methods",
+    "relation": "contradicts",
+    "why": "Claims centrality heuristics can rival greedy, which conflicts with Sec 8.4 only as an empirical finding on other graphs. Item exists; the relation was not checked against that paper's text here."
+   },
+   {
+    "slug": "fink-2023-congressional-social-network-dataset",
+    "relation": "complements",
+    "why": "Supplies estimated pairwise influence probabilities, the parameter-estimation step Kempe leaves open (Conclusions p.138). Item exists; not re-read here."
+   },
+   {
+    "slug": "manchanda-2020-gcomb-learning-budget-constrained",
+    "relation": "builds-on",
+    "why": "Learned budget-constrained replacement for Kempe-style greedy. Item exists; not re-read here."
+   },
+   {
+    "slug": "trivedi-2020-efficient-influence-maximization",
+    "relation": "builds-on",
+    "why": "Speeds up Kempe-style greedy under Independent Cascade. Item exists; not re-read here."
+   },
+   {
+    "slug": "zareie-2023-influence-maximization-social",
+    "relation": "cites",
+    "why": "Survey of behaviour-aware IM methods that build on the Kempe models. Item exists; not re-read here."
+   },
+   {
+    "slug": "kamarthi-2020-influence-maximization-unknown",
+    "relation": "builds-on",
+    "why": "IM on a sampled, unknown graph, which relaxes Kempe's known-graph assumption. Item exists; not re-read here."
+   },
+   {
+    "slug": "cai-2025-competitive-influence-maximization",
+    "relation": "complements",
+    "why": "Competitive IM under voter dynamics, where timing matters; Kempe lists competition and timing as open (Conclusions pp.137-138). Item exists; not re-read here."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "dai-2017-learning-combinatorial-optimization-graphs",
+    "relation": "complements",
+    "why": "Dai cites the classical Kempe et al. influence maximization paper as reference [20] (text line 796). The item year 2015 may differ from the 2003 KDD original; link kept as a conceptual complement."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "burnham-2023-stance-detection-practical-guide",
+  "note": false,
+  "meta": {
+   "title": "Stance Detection: A Practical Guide to Classifying Political Beliefs in Text",
+   "authors": [
+    "Michael Burnham"
+   ],
+   "year": "2023",
+   "venue": "arXiv preprint arXiv:2305.01723v2 (Nov 2023), Penn State. The PSRM 2025 venue hint is not supported by the text",
+   "doi": "",
+   "sha12s": [
+    "bbbd7016da74"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "slug": "burnham-2023-stance-detection-practical-guide",
+   "title": "Stance Detection: A Practical Guide to Classifying Political Beliefs in Text",
+   "authors": [
+    "Michael Burnham"
+   ],
+   "year": "2023",
+   "venue": "arXiv preprint arXiv:2305.01723v2 (Nov 2023), Penn State. The PSRM 2025 venue hint is not supported by the text",
+   "doi": "",
+   "document_type": "working paper (arXiv preprint; methods guide with replication)",
+   "coverage": "Full text read: front matter, Sections 1-6, Appendix A (method summaries), Appendix B (testing data and hypothesis lists) and the reference list, in 3 chunks of about 450 lines (1339 lines, 72,948 chars). Figures 1-4 are referenced but not rendered (no page images on this machine); figure content comes from surrounding text only. Paul annotation files: none (annot_sha12s is empty, n_annots is 0), so paul_markup is empty. p.note is not true, so this is not a Paul research note. Metadata check: title, author and year match the text; the venue hint PSRM 2025 does not appear in the text, which shows arXiv:2305.01723v2 dated November 2023.",
+   "research_question": "How should political scientists define and operationalize stance detection (the position a document expresses toward a proposition), and which classification approach (supervised, NLI zero-shot, or in-context generative LLM) should they choose given document context, compute, reproducibility and human labor constraints? A secondary aim is to show that NLI and in-context classifiers can replicate a supervised-classifier finding on COVID-19 mitigation stance (Block Jr et al. 2022).",
+   "theory": "Stance is an individual's attitudes, feelings, judgments or commitment toward a proposition (Biber and Finegan 1988), defined here as how an individual would answer a proposition (Definition 1). Sentiment is positive or negative emotional valence and is treated as a separate dimension (Definition 2). Stance detection is recast as textual entailment (Dagan et al. 2005; AlDayel and Magdy 2021): text T entails stance S when a human reading T with context C would infer that T supports S (Definition 4, pp.3-4). Context (information in the document plus the classifier's knowledge) governs ambiguity and therefore accuracy (Sections 2.2-2.3, pp.3-5).",
+   "data": "Trump-approval test set: public tweets (n = 1,135 per text on p.5; Table 6 Twitter sources sum to 1,134, a small internal mismatch) plus 1,000 random sentences containing 'Trump' from 117th Congress congressional e-newsletters (DC Inbox; Cormack 2017). Human coded twice with third-annotator adjudication. Total test set about 2,135 short documents (p.17). Table 6 (p.32): MTSD 398, ConStance 98, KE-MLM 380, SemEval2016 97, Titling 161, Newsletters 1,000. Replication data (Section 5, pp.21-23): 862,923 COVID-19 tweets from 23,476 users, 1 Sep 2020 to 28 Feb 2021; user ideology from tweetscores (Barbera 2015); 2,000 hand-labeled training tweets with coding rules for non-compliant tweets; 300 randomly sampled labeled tweets used as the NLI validation sample.",
+   "method": "Three classifier families compared. (1) Supervised: bag-of-words logistic regression, random forest and SVM (grid search) versus RoBERTa, BERTweet, PoliBERTweet and DeBERTaV3 base (Bayesian hyperparameter sweep, 10 runs each; MCC primary metric; pp.11-12). (2) NLI zero-shot: DeBERTaV3 Large NLI model; each tweet paired with hypothesis templates (single versus multi-hypothesis; keyword matching of hypotheses to documents; 9 synonymous hypotheses for sensitivity; pp.14-15). (3) In-context: GPT-4, GPT-3.5 Turbo and Zephyr 7B with system and user prompts, temperature 0, zero-shot, few-shot, chain-of-thought and logit bias variants (Table 5, pp.19-20). Replication: negative binomial regression of count of threat-minimizing tweets on ideology, county COVID death rate, their interaction, county demographics, political lean and state fixed effects, following Block Jr et al. (2022) (pp.21-22).",
+   "identification": "No causal identification strategy. The replication is an observational negative binomial regression with county and state controls and state fixed effects; the paper compares coefficient direction and size across three label sources (original supervised labels, two NLI hypothesis sets) rather than claiming causal effects.",
+   "measures": "Matthews correlation coefficient (MCC) is the primary metric (Chicco and Jurman 2023), with F1, accuracy, bootstrapped 95% confidence intervals (Figure 2), inference time on GPU and CPU, and API cost per run. Intercoder reliability between NLI and supervised labels is MCC = 0.84. Ambiguity is defined as conflicting human codes; relevance is the presence of the term Trump. Ideology is a uni-dimensional left-right score (tweetscores).",
+   "scope": "English-language US political text: Trump approval in tweets and congressional newsletters (117th Congress newsletters; tweets from several stance projects) and COVID-19 mitigation stance on Twitter (Sep 2020 to Feb 2021). Guidance is presented for political text in general, but the evidence rests on one target (Trump), one replication case, and models available as of 2023-2024.",
+   "key_findings": [
+    "Stance is distinct from sentiment and should be measured independently; sentiment can inform intensity but does not replace stance (Section 2.1, pp.2-3).",
+    "Ambiguity is higher when the document does not mention Trump: 34.0% of non-Trump documents versus 19.5% of Trump-mentioning documents had conflicting human codes (Section 3.3, p.10).",
+    "NLI classifiers degrade most when Trump is not mentioned; supervised and in-context classifiers adapt better to low-context documents (Figure 2, p.10).",
+    "Supervised results (Table 3, p.12, Twitter only): logistic regression MCC 0.51, random forest 0.49, SVM 0.49, RoBERTa 0.60, BERTweet 0.63, PoliBERTweet 0.68 (best); DeBERTaV3 base without domain adaptation 0.63.",
+    "Laurer et al. (2024), cited on p.12: 500 training examples let language models consistently beat other algorithms trained on several thousand.",
+    "NLI results (Table 4, p.14): DeBERTaV3 Small MCC 0.15, Base 0.40, Large 0.65 (83% accuracy); only the Large model is described as comparable to supervised classifiers and human-level.",
+    "Test-set cost and performance (Table 5, pp.19-20; cost text p.17): GPT-4 standard prompt MCC 0.78 at $12.52 for 2,135 documents; GPT-3.5 Turbo MCC 0.58 at $0.68; Zephyr 7B MCC 0.59 with no API cost but about 2.5 min on a consumer GPU.",
+    "Logit bias raised GPT-4 MCC to 0.80 and GPT-3.5 to 0.63 at no extra cost (Table 5). Chain-of-thought gave no perceptible accuracy benefit for GPT-4 and tripled its cost ($38.62 versus $12.52), and Zephyr 7B failed template compliance (p.19).",
+    "Scaling cost: classifying 1,000,000 tweets with the cheapest in-context approach would cost $6,260 (p.17), so in-context models are recommended mainly for small sets, training data expansion or validation.",
+    "Hypothesis sensitivity: nine synonymous NLI hypotheses gave average MCC 0.64, range 0.62 to 0.66 (p.15).",
+    "Replication (Section 5.2, pp.22-23): NLI hypothesis set 1 MCC 0.70 (89% accuracy), set 2 MCC 0.75 (91%), original supervised classifier MCC 0.66 (86%) on 300 labeled tweets; NLI and supervised labels agree at MCC 0.84, and regression direction and size are consistent across the three models (Figure 3, p.22).",
+    "Threat-minimizing tweets concentrate at the conservative pole in all three label sets (Figure 4, p.23); average author ideology -0.66 overall, and disagreement samples average -0.11 (set 1) and -0.07 (set 2).",
+    "Author's conclusion: when document information is sufficient, NLI classifiers reach performance comparable to supervised classifiers without training; when outside context is needed, supervised or in-context classifiers are better (Section 6, pp.23-24)."
+   ],
+   "limitations": "Author notes there are no NLI datasets or benchmarks for stance detection, and NLI models are trained on computer-science data (Section 6, p.24). In-context models are proprietary and cannot be archived for replication, and their cost grows with corpus size (Section 4.3.1, p.16). Few-shot prompts are unstable and can overfit (p.19). Open models such as Zephyr 7B are much slower than NLI classifiers. Evidence comes from one target (Trump) and one replication. Twitter test count is 1,135 in the text but 1,134 in Table 6, a minor inconsistency. The 300-tweet NLI validation sample is small (about 5% margin of error per the author). Some sources had labelers with no context (SemEval, newsletters). The paper states there is no best approach; choices depend on resources and context.",
+   "paul_markup": [],
+   "references_of_note": [
+    "Laurer, Van Atteveldt, Casas and Welbers (2024), Less annotating, more classifying, Political Analysis 32, 84-100 (500-example result; NLI transfer)",
+    "Block Jr, Burnham, Kahn, Peng, Seeman and Seto (2022), Perceived risk, political polarization, and COVID-19 mitigation, Social Science and Medicine (replicated here)",
+    "AlDayel and Magdy (2021), Stance detection on social media: state of the art and trends, Information Processing and Management 58 (entailment definition)",
+    "Bestvater and Monroe (2022), Sentiment is not stance: target-aware opinion classification, Political Analysis",
+    "Dagan, Glickman and Magnini (2005), PASCAL recognising textual entailment challenge (entailment definition)",
+    "Chicco and Jurman (2023), MCC should replace ROC AUC, BioData Mining 16 (metric choice)",
+    "Denny and Spirling (2018), Text preprocessing for unsupervised learning, Political Analysis 26 (preprocessing risks)",
+    "Nguyen, Vu and Nguyen (2020), BERTweet; Kawintiranon and Singh (2022), PoliBERTweet (domain-adapted models in Table 3)",
+    "Mohammad et al. (2016), SemEval-2016 Task 6 (source of Table 1 examples)",
+    "Tornberg (2023a), ChatGPT-4 outperforms experts and crowd workers in annotating political Twitter messages; Spirling (2023), open-source generative AI for science (reproducibility argument)",
+    "Barbera (2015), Birds of the same feather tweet together (tweetscores ideal point estimation used in the replication)",
+    "Barbera, Boydstun, Linn, McMahon and Nagler (2021), Automated text classification of news articles, Political Analysis 29 (sentence versus segment classification)"
+   ],
+   "short_quotes": [
+    "Stance detection is entailment classification and determines how a document responds to a proposition.",
+    "NLI classifiers are a good default approach for their accuracy, scalability, and reproducibility.",
+    "Using non-reproducible models as the primary source of labels should be discouraged."
+   ]
+  },
+  "summary_md": "Burnham's methods guide treats stance as textual entailment: a document's stance is how its author would answer a stated proposition. Stance is kept separate from sentiment. The guide compares three ways to classify it on about 2,135 human-coded Trump-approval tweets and newsletter sentences, scored by MCC. Supervised models: bag-of-words gets 0.49 to 0.51 and transformers 0.60 to 0.68. Zero-shot NLI: DeBERTaV3 Base gets 0.40 and Large 0.65. In-context LLMs: GPT-4 gets 0.78, or 0.80 with logit bias, but costs $12.52 per run and cannot be archived. The main practical finding is about context. Human coders disagree more when the target is not named (34.0% versus 19.5%), and NLI degrades most in that case. When outside knowledge is needed, supervised or in-context classifiers do better. The guide recommends NLI as the reproducible default. LLMs are fine for expanding training data or for validation, but not as the main source of labels. The arXiv text is v2. An online check confirms the published version in PSRM 13 (2025), 611-628, online September 2024. This bears directly on Paul's CU press-stance stack, which runs Burnham's own Political DEBATE base model (a later, politics-trained NLI model) as its main reader. The system's own history repeats the paper's context finding. Zero-shot DEBATE missed implicit anti-CU stances (oppose F1 0.08), and fine-tuning on 552 labels fixed this. The paper also highlights three things the system has not settled: model size (base versus large), labels that fall back to Claude pre-labels, and the lack of an MCC or hypothesis-wording check. All system-side figures are the project's own reports, measured on small held-out sets (n = 87 or 156). They are UNVERIFIED by a second path.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "supports",
+    "paper_claim": "Ambiguity is 34.0 percent when Trump is not mentioned versus 19.5 percent when he is. NLI classifiers degrade most in low-context documents, while supervised and in-context classifiers adapt better.",
+    "paper_location": "Section 3.3 p.10; Figure 2; Section 6 pp.23-24",
+    "system_side": "Zero-shot DEBATE base read 53 percent accuracy and oppose F1 0.08 on the 156-row test. Fine-tuning on CU labels gave 87.2 percent accuracy and oppose F1 0.78 against the Claude reference. Figures trace to the vault note debate-stance-model and the 2026-06-22 topic note, not to code.",
+    "code_ref": "stage5_debate.py:26-31 (labels and hypothesis template) and finetune_debate.py:62-68 (NLI pairs) verified. The 53 percent and 0.08 figures are in the vault note only.",
+    "transfer_conditions": "The paper measured Trump approval with generic DeBERTaV3 NLI, not Political DEBATE on CU press releases. Transfer to CU is by analogy.",
+    "strength": "strong",
+    "verdict": "reproduced",
+    "verifier_note": "Section 3.3 re-opened and the 34.0 and 19.5 figures match. System figures match the vault. The 87.2 headline is agreement with the Claude reference, not human gold.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "qualifies",
+    "paper_claim": "Zero-shot MCC for DeBERTaV3 Small is 0.15, Base 0.40 and Large 0.65 (83 percent accuracy). Performance comparable to supervised classifiers emerges only in larger models.",
+    "paper_location": "Table 4 p.14; Section 4.2.1 p.14",
+    "system_side": "Production runs the Political DEBATE base model fine-tuned on 552 labeled rows for 3 epochs. The large model was never fine-tuned or scored on the same member-grouped test; the vault lists the large fine-tune as a next step.",
+    "code_ref": "stage5_debate.py:38 (base default) and finetune_debate.py:32 (base default) verified.",
+    "transfer_conditions": "The paper gap is for generic zero-shot NLI. Political DEBATE is a politics-trained model not studied in this paper, so the size gap may differ.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Table 4 re-opened and matches. The claim that Political DEBATE was trained on political data comes from the code docstring, not from this paper.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "qualifies",
+    "paper_claim": "In-context LLMs are useful for expanding training data and for validation, but not as the primary label source because proprietary models cannot be archived. The paper reports GPT-4 MCC 0.78 in Table 5 and recommends temperature zero in Section 4.3.4.",
+    "paper_location": "Section 4.3.1 pp.16-17; Table 5 pp.19-20; Section 4.3.4 p.20",
+    "system_side": "The fine-tune label is human_label when valid, otherwise the Claude pre_label. The Claude rater uses claude-sonnet-4-6 with no temperature argument. The 87.2 percent headline is agreement with Claude.",
+    "code_ref": "finetune_debate.py:40-48 (label choice), claude_stance.py:32 (model default), claude_stance.py:84-86 (no temperature), claude_stance.py:95-97 (ERR fallback) verified.",
+    "transfer_conditions": "Applies to any training row whose human_label is empty. The share of Claude-only rows is not counted in the analysis.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Table 5 gives GPT-4 0.78 but does not state the temperature used for it. The paper recommends temperature zero, so attributing 0.78 to temperature 0 is a paraphrase. Drop that attribution. The non-archivability and primary-label caution are stated in the paper.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.supervised-stance-stack",
+    "relation": "qualifies",
+    "paper_claim": "Bag-of-words LR, RF and SVM reach MCC 0.49-0.51 and RoBERTa, BERTweet and PoliBERTweet reach 0.60, 0.63 and 0.68 on Twitter. Laurer et al. 2024 found 500 training examples let language models outperform algorithms trained on several thousand.",
+    "paper_location": "Table 3 p.12; p.12 citing Laurer et al. 2024",
+    "system_side": "Production is a LinearSVC on word plus char TF-IDF. Vault notes give 83.9 percent accuracy, but the 0.816 macro-F1 is a leak-free figure paired with an 84.7 percent headline, and other notes give 0.792 and 0.835 for the same model. The NLI-fine-tuned DEBATE reached 0.839 accuracy and 0.835 macro-F1 on n=87, which matches the vault. A distilroberta macro-F1 of 0.757 was not located.",
+    "code_ref": "train_stance_domain.py:24 (distilroberta default), :74-77 (word plus char union) and :68 (LinearSVC import) verified.",
+    "transfer_conditions": "With 456 training rows and an 87-row test all readers fall within each other's intervals. The paper's ordering is for larger training sets and for MCC, not macro-F1.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Table 3 re-opened and matches. The Laurer 500-example point is stated but the phrase NLI-style transfer is not in the paper. The system macro-F1 pairing is inconsistent across vault notes and needs a single source before it is quoted.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Supervised and stacked stance readers|Supervised and stacked stance readers]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.press-value-aggregate",
+    "relation": "qualifies",
+    "paper_claim": "Stance and sentiment are distinct dimensions to be measured independently. Sentiment may inform intensity but cannot stand in for stance. Integrating sentiment to scale stance intensity is named as a future direction needing more research.",
+    "paper_location": "Section 2.1 Definitions 1-2 pp.2-3; Section 6 p.24",
+    "system_side": "press_value = stance sign times LSD intensity (|net| per word). The sign comes from DEBATE or the human overlay, never from the dictionary.",
+    "code_ref": "run_stage5.R:9 (comment) and run_stage5.R:141-143 (formula) verified.",
+    "transfer_conditions": "This is a conceptual endorsement of separating the two dimensions only. The paper does not test whether multiplying sign by intensity improves measurement; it calls that open.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Definitions re-opened and match. Relation changed from supports to qualifies because the paper does not endorse sign-times-intensity; it lists it as an open research direction.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#press_value aggregate and human-label overlay|press_value aggregate and human-label overlay]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.two-hop-decomposition",
+    "relation": "context",
+    "paper_claim": "Stance is entailment relative to context C. When the target is absent, ambiguity rises (34.0 versus 19.5 percent) and accuracy depends on outside knowledge. The paper flags outside-knowledge inference as the hard step.",
+    "paper_location": "Definition 4 pp.3-4; Sections 2.2-2.3 pp.3-5; Section 3.3 p.10",
+    "system_side": "CU alignment = stance toward named target times target CU valence. Valence hop 0.689 versus stance hop 0.915 per the module docstring. A curated registry composed with the stance hop reached 0.782 accuracy under honest 5-fold CV on 400 tweet golds.",
+    "code_ref": "apply_two_hop_stance.py:15 and :27 verified. The 0.782 CV figure comes from derive_valence_registry.py:130-151, which the analyst output does not cite.",
+    "transfer_conditions": "The paper never decomposes stance into a stance hop and a valence hop. The decomposition is the system's own design; the paper only explains why outside-knowledge steps are hard.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Relation changed from supports to context because the paper does not state the two-hop factorization. The 0.782 CV claim is correct but its source is derive_valence_registry.py.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Two-hop stance x valence decomposition with curated registry|Two-hop stance x valence decomposition with curated registry]]",
+    "system": "melange-stance"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Venue confirmed by online scan: PSRM 13 (2025) 611-628, published online 19 September 2024. The summary's September 2024 wording is correct.",
+   "Version date conflict: the paper header says November 2023 but the arXiv stamp on v2 reads 3 May 2024. The ext note's v2 Nov 2023 mixes the two.",
+   "Misattribution: 'The paper also highlights three things the system has not settled' is wrong. The paper does not discuss this project's gaps (model size, Claude labels, MCC check); those are the analyst's own observations.",
+   "Unsupported attribution: 'Burnham's own Political DEBATE base model (a later, politics-trained NLI model)' does not appear in the paper; the authorship and model description come from the code docstring.",
+   "gaps_exposed item: 'Reports use accuracy, macro-F1 and Cohen's kappa (train_stance_domain.py:61-64)' is wrong. Lines 61-64 compute classification_report and macro-F1 only; kappa does not appear there.",
+   "Temperature attribution: 'GPT-4 MCC 0.78 at temperature 0' is not stated in the paper; Table 5 does not give the temperature used.",
+   "SVM figures: '83.9 percent accuracy, macro-F1 0.816' conflicts with other vault notes (0.792, 0.835, and 84.7 percent with 0.816 leak-free). The distilroberta 0.757 figure was not located.",
+   "Two-hop source: the 0.782 CV figure is correct, but it comes from derive_valence_registry.py:130-151, not from apply_two_hop_stance.py, which only runs an in-sample eval."
+  ],
+  "gaps_exposed": [
+   "No MCC anywhere in the stance stack. Reports use accuracy, macro-F1 and Cohen's kappa (train_stance_domain.py:61-64). With class imbalance (support 2,323 / neutral 1,151 / oppose 224 in production), MCC with bootstrapped CIs is the metric the paper argues for.",
+   "Hypothesis wording is fixed and was never sensitivity-tested (stage5_debate.py:26-31). The paper's 9-synonym test gave an MCC range of 0.62-0.66, which is a cheap check to run on the 87-row test.",
+   "Fine-tuned DEBATE large has never been scored against base on the same member-grouped human-gold test. The paper's base-to-large zero-shot gap is 0.40 to 0.65 MCC.",
+   "The share of fine-tune train rows labelled only by Claude is uncounted. Also, claude_stance.py:80 and 95-97 write neutral with an ERR reason after 4 failed API attempts. Whether those rows can enter training as pre_label is UNVERIFIED.",
+   "The Claude rater runs at the API default temperature (claude_stance.py:84-86, no temperature argument). The paper's in-context protocol uses temperature 0 for reproducibility."
+  ],
+  "flags": [
+   "Venue correction: the stage-1 extraction says the PSRM 2025 venue is not supported by the text. An online scan shows the published version in Political Science Research and Methods 13 (2025), 611-628, online 19 September 2024. The arXiv v2 text is the pre-publication version.",
+   "No conflict with the SNA, LDA or reciprocity brain rules. The paper is about text classification only and argues for neither rejected SNA proposal.",
+   "The system's headline 87.2% is agreement with the Claude reference (distillation). Quote the member-grouped human-gold figures (about 85%, kappa 0.76) instead, with n stated."
+  ],
+  "paul_alignment": "Paul has no annotation entry for this paper. His position on the DEBATE reader (component literature) endorses transformer and LLM stance extraction and flags trouble with ambiguous statements. Burnham agrees, and locates that ambiguity in low-context documents where the target is not named, which is the system's implicit-oppose failure. Paul's view that bag-of-words SVMs are outdated matches Burnham's Table 3 in general. But here the production reader is a LinearSVC that ties fine-tuned NLI within CI, so that note is partly stale.",
+  "related": [
+   {
+    "slug": "b-2025-comparing-fine-tuned",
+    "relation": "same-method",
+    "why": "Title matches: fine-tuned RoBERTa versus traditional ML for stance in political tweets. The Khan attribution in the analyst note is not verified; the Khan reference in code is a different Roman Urdu study."
+   },
+   {
+    "slug": "kim-2025-measuring-interest-group",
+    "relation": "complements",
+    "why": "Title matches. Text reports accuracy 96.93 and F1 97.19, which the analyst rounds to 96.9; the versus-human comparison was not checked."
+   },
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Title matches. XLM-RoBERTa and GPT-4o are confirmed in the text; the SVM comparison was not verified."
+   },
+   {
+    "slug": "dai-2025-large-language-model",
+    "relation": "complements",
+    "why": "Title matches a logic tensor network stance paper with LLM enhancement. The claim that it extends the in-context family Burnham benchmarks was not verified, so relation is softened from extends."
+   },
+   {
+    "slug": "haselmayer-2017-sentiment-analysis-political",
+    "relation": "complements",
+    "why": "Title matches a dictionary-plus-crowdcoding sentiment study. Neither text cites the other; Burnham's sentiment-is-not-stance argument bears on it indirectly, so contradicts was softened."
+   },
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "complements",
+    "why": "Title matches corpus-based sentiment dictionaries for specialized vocabularies. The intensity-side link is the analyst's design choice, not a claim in Burnham."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "bouton-2022-small-campaign-donors",
+  "note": false,
+  "meta": {
+   "title": "Small Campaign Donors",
+   "authors": [
+    "Laurent Bouton",
+    "Julia Cagé",
+    "Edgard Dewitte",
+    "Vincent Pons"
+   ],
+   "year": "2022",
+   "venue": "NBER Working Paper 30050 (May 2022, revised June 2026; no journal version found in online scan)",
+   "doi": "",
+   "sha12s": [
+    "6b1c738e4575"
+   ],
+   "category": "Campaign Politics",
+   "category_slug": "campaign-politics"
+  },
+  "extraction": {
+   "slug": "bouton-2022-small-campaign-donors",
+   "title": "Small Campaign Donors",
+   "authors": [
+    "Laurent Bouton",
+    "Julia Cagé",
+    "Edgard Dewitte",
+    "Vincent Pons"
+   ],
+   "year": "2022",
+   "venue": "NBER Working Paper 30050 (May 2022, revised June 2026; no journal version found in online scan)",
+   "doi": "",
+   "document_type": "working paper (NBER); JEL D72, M37, P16",
+   "coverage": "Read the full extracted text (6405 lines): front matter, abstract, introduction, Sections 2-6, conclusion and references in full; Appendix A (data construction, A.1-A.4.2) read in full; Appendix C (TV ad validation, turnout and vote shares) read in excerpts; Appendix tables F.1-F.20 and figures E.1-E.13 scanned by heading and notes only, values not transcribed beyond those quoted in the main text. No Paul annotations exist (no _annots file; annot_sha12s empty), so paul_markup is empty. Not Paul's own note. Lobbying: not studied in the paper (only mentioned as a literature point). Network analysis and path-finding: none. Allocation and candidate targeting: yes (Section 4). Elections and outcomes: yes (Appendix C). Persuasion and turnout: yes (TV and social media ads; turnout null). Legislators: not directly; candidate ideology and seniority only. Text measurement: none. Online scan (one web search) found no journal publication; the search snippet gave a July 2024 revision date that conflicts with the June 2026 date printed in the PDF, so the PDF was trusted. Metadata hints checked: title, authors, year 2022 correct; venue corrected to NBER WP 30050; doi left blank per instructions.",
+   "research_question": "Are small campaign donors (giving at most 200 dollars to any committee per two-year cycle) a new force that could transform U.S. elections, in terms of their number, sociodemographic profile, candidate and race targeting, and responsiveness to events and ads?",
+   "theory": "Contrasts strategic and expressive motives: large donors are often expressive, while strategic giving would favor close races. Small donors may be a passive response to campaign solicitations and external events rather than active policy agency. Cites Ansolabehere et al. (2003), Grossman and Helpman (1994, 1996), Coate (2004), and Bouton, Castanheira and Drazen (2024) for the passive-response view. Hypotheses are not formally modeled in this paper.",
+   "data": "FEC individual contribution records, 2005-2020: about 340 million contributions, 42.9 million donor-cycles (23.2 million small, 19.7 million large), 30 million unique donors. Unit is the donor-cycle, and donor-candidate pair for targeting. Main sample is donations to congressional Democratic candidates, 2012-2020 (11.3 million donor-cycles, 4.4 billion dollars). Coverage relies on conduits such as ActBlue and WinRed, which report earmarked contributions; conduits account for 76.4 percent of individual contributions 2006-2020 and 91.1 percent in 2020. Candidate-donor pairs number 2.7 billion (general) and 4.8 billion (primary). Also county-level TV ad data (Wesleyan Media and Wisconsin Advertising Projects, border county pairs in 204 DMA clusters) and Meta/Facebook and Instagram ad data for 2020 (20,579 events, 402 candidates). Census, ACS, Zillow ZTRAX home values, BLS SOC occupations and wages, Bonica CFscores.",
+   "method": "Section 2: descriptive counts with imputed unobserved unitemized totals. Section 3: descriptive comparison of gender, ethnicity, occupation, wage, home value and geography. Section 4: OLS linear probability model of the share of a donor's contributions going to a candidate (equation 1), with election year, state, House/Senate and donor fixed effects, two-way clustered at seat and donor. Section 4.5: Herfindahl-Hirschman index by donor decile. Section 5.1: weekly timing and abnormal-week flags. Section 5.2: TV ads via border-county pairs in different DMAs (Spenkuch and Toniatti 2018 design), OLS with county-pair-by-year and county-by-office fixed effects, clustered at DMA. Section 5.3: social media ads event study with the heterogeneity-robust de Chaisemartin and D'Haultfoeuille (2024) estimator, week-state fixed effects, clustered at candidate-week.",
+   "identification": "Donor fixed effects compare a given donor's support for same-gender, same-race or same-district candidates against other candidates. TV ads: differences in ad volume across adjacent counties in different media markets, argued to be as-good-as-random because DMAs cover many counties and candidates set ads at DMA level; validated by replicating Spenkuch and Toniatti (2018) for 2012. Social media: staggered-adoption event study, with parallel trends assessed with pre-event placebo estimates (pre-trends not visible in Figure 8 for three weeks before ads).",
+   "scope": "U.S. federal campaign finance, individual donors to presidential, House, Senate and party committees, 2005-2020 cycles. Main targeting and timing analysis is congressional Democratic candidates 2012-2020 general and primary elections. Republican analysis is limited to 2020 (WinRed era). TV ad effects estimated for Democratic ads only; Republican ad effects on Republican races not estimated. Social media analysis covers 2020 only.",
+   "key_findings": [
+    "Small donors rose from 5.0 million (2006 cycle) to 21.8 million (2020); large donors rose from 2.3 million to 7.0 million (Section 2.2, p. 9).",
+    "Small donor contributions were 12.8 percent of all contributions in the 2020 cycle and 14.9 percent for Democratic congressional candidates; small contributions grew from 362 million to 1.664 billion dollars 2006-2020 versus large from 2.084 to 11.307 billion (Section 2.2, p. 10).",
+    "Unitemized contribution totals overstate small donor contributions by a factor of 1.8 to 3.1 (Section 2.2, p. 8).",
+    "Among Democratic congressional donors 2012-2020, 23.1 percent of small donors are non-white, about 13 percent more than large donors, but 42.1 percent less than the voting-age population; small donors are 56.9 percent female versus 47.2 percent for large donors (Section 3, p. 12, Table 2).",
+    "Median 2020 home value is 289,900 dollars for small donors, 419,910 for large donors and 176,838 for the population; 44.5 percent of small donors have high-SOC occupations versus 54.1 percent for large donors (Table 2, p. 13).",
+    "About 88 percent of small-donor contributions go to out-of-district candidates; same-district matching raises small donor shares by 16.8 percentage points versus 20.4 for large donors (Section 4.1-4.3, p. 17-18).",
+    "Close races do not attract more small-donor money: the close-seat coefficient is 0.11 (not significant) for small donors versus 0.18 for large donors (Table 3, p. 16-17; Section 4.3).",
+    "Small donors give 135 and 52 percent more (relative to mean) to left and center ideology tercile candidates than to right tercile candidates (Section 4.3, p. 18).",
+    "Small donor shares are concentrated in a few candidates: 12.2 percent of candidates receive more than one quarter of donations from small donors; bottom deciles show higher concentration (HHI) (Sections 4.1 and 4.5, p. 15, 23-24).",
+    "Timing: 13.0 percent of 2020 small-donor contributions fell in the week of Justice Ginsburg's death versus 5.9 percent for large donors; 30 of 31 large-donor abnormal weeks coincide with quarterly deadlines versus 27 of 43 for small donors (Section 5.1, p. 25).",
+    "TV ads: 1,000 additional Democratic ads raise small-donor contributions by 10.86 dollars per 10,000 adults (6.3 percent of mean, significant at 1 percent), with large-donor effect 27.87 (not significant); Republican ads have no significant effect (Table 4, p. 28). Turnout effects of TV ads are null, while congressional vote shares rise about 0.55 percentage points per 1,000 net ads (Appendix C, Table C.1, p. 18).",
+    "Social media: an event of Democratic Meta ads raises weekly small-donor contributions by 3.0 dollars per 10,000 (8.3 times mean) in general elections but not significantly; in primaries small donors rise 1.3 times mean and large donors 0.5 times, both significant (Section 5.3, p. 30-31)."
+   ],
+   "limitations": "Authors note that donor grouping relies on conservative rules, and that FEC committee totals mismatch in 42.8 percent of committee-cycles (Appendix A.2.1). Race is imputed from surname and census geography, with a 26 percent false-positive rate for White individuals (Appendix A.4.2); gender is imputed from first names. Unitemized small-donor estimates rely on weighted averages across cycles. Donor-candidate regressions cannot study the non-donor population and do not observe donor ideology (footnotes 20 and 24). Donor fixed effects leave candidate-level confounders partly uncontrolled, and electoral race fixed effects drop race-level covariates (footnote 29). TV-ad sample excludes Republican-race outcomes due to power. Social media effects are significant only in primaries. Subsamples defined by impressions may be endogenous to ad quality (footnote 45). The paper is an NBER working paper with revisions through June 2026.",
+   "paul_markup": [],
+   "short_quotes": [
+    "small donors appear to occupy the passenger seat rather than the driver's seat.",
+    "they are unlikely to transform U.S. elections.",
+    "Small donors do not target close races to a greater extent than large donors."
+   ],
+   "references_of_note": [
+    "Bouton, Castanheira and Drazen (2024), A theory of small campaign contributions, The Economic Journal 134(662).",
+    "Spenkuch and Toniatti (2018), TV ad effects design used for the county-pair strategy.",
+    "de Chaisemartin and D'Haultfoeuille (2024), event-study estimator for the social media analysis.",
+    "Imai and Khanna (2016), ethnicity inference from voter registration and census data.",
+    "Ansolabehere, de Figueiredo and Snyder (2003), expressive versus strategic donor motives.",
+    "Cagé (2018), The Price of Democracy.",
+    "Fowler et al. (2021), political advertising online and offline.",
+    "Culberson, McDonald and Robbins (2019), small donors in congressional elections."
+   ],
+   "measures": "Small donor: maximum contribution to any single committee in a cycle at or below 200 dollars. Donor-candidate share of total contributions. Same district, same state, same gender and same race dummies. Close seat (mean Democratic winning margin within 10 points), safe Republican seat, incumbency, seniority, left and center CFscore terciles. Imputed gender, ethnicity, occupation (SOC), wage (BLS state median), home value (Zillow 2020). Abnormal week flags. Contributions per 10,000 adults; ads per county; weekly contributions per 10,000 state inhabitants. Herfindahl-Hirschman index of candidate shares."
+  },
+  "summary_md": "Bouton, Cage, Dewitte and Pons (NBER WP 30050, revised June 2026) build a contribution-level panel of about 340 million FEC individual contributions (2005-2020) by parsing ActBlue and WinRed earmark memos, which makes sub-200-dollar donors visible. Their main finding is that small donors are a passive force. They tripled to 21.8 million by 2020 but supplied only 12.8 percent of 2020 money. They back the same kinds of candidates as large donors, send about 88 percent of their money out of district, and do not concentrate on close races (close-seat coefficient +0.11 pp, not significant, versus +0.18 pp for large donors; Democratic congressional candidates 2012-2020). Their giving spikes on salient events, while large donors spike at quarterly deadlines. TV ads raise small-dollar giving by 6.3 percent of the mean per 1,000 ads, and Meta ads do so only in primaries. For Paul's systems the substantive results are background. The data appendix matters more for Mentat. First, it documents that an earmarked gift from a donor above the 200-dollar aggregate appears in both the conduit report and the recipient committee report. The authors pair and drop 87 percent of these duplicates, whereas Mentat counts both legs under ruling R8; this is flagged, not recommended. Second, the donor-grouping rules always require a street address and reject employer and occupation as grouping keys. Mentat's identity ladder auto-accepts on exact name plus ZIP alone. Third, conduit coverage changes over time (76.4 percent of contributions 2006-2020, 91.1 percent in 2020, WinRed only from 2019), so cross-cycle partisan comparisons of employee giving carry a visibility artifact. The paper says nothing about whether dollars buy access or alignment.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "mentat-fec-attribution.dedup-and-versions",
+    "relation": "qualifies",
+    "paper_claim": "A recipient committee must itemize an earmarked contribution when the donor's cycle aggregate to it exceeds 200 dollars, so the same gift appears in both the conduit report and the committee report. The authors coupled 87 percent of earmarked committee-itemized donations to their conduit twin and dropped the committee leg. The remaining committee-itemized donations are 3 percent of all contributions.",
+    "paper_location": "Appendix A.3.1 Earmarked contributions (Processing), appendix pp. 5-6",
+    "system_side": "Code comment at export_guards.R:110-113 says a conduit leg is a real row that counts, and that guard G3 against conduit double counting was removed 2026-07-27 under the R5/R8 recipient-as-shown ruling. report.R:1566-1568 keeps the downstream-earmark mask as an analytical flag only. report.R:1601-1606 is a sub_id duplicate guard. Not shown in code: that the two legs carry different sub_ids, and that the committee leg is counted. A report.R:2775-2786 comment says the receipt counts once, to the row's recipient.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/R/export_guards.R:110-113; C:/Users/pgoff/Mentat/mentat/R/report.R:1566-1568,1601-1606,2775-2786",
+    "transfer_conditions": "Paper population is employees whose cycle aggregate to the recipient exceeds 200 dollars. Sub-200 gifts are visible only through the conduit (paper Appendix A.4.3). The size of the double count in Mentat books is unmeasured. Money collection is frozen; any change needs Paul's per-change OK.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper figures reproduced: 87 percent coupled, 3 percent remainder, Appendix A.3.1. Code side softened to what the comments state: G3 removal and the analytical-only mask are confirmed. The sub_id claim and the 'counts both legs' reading are not shown in code.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-fec-attribution#Conduit legs, memo dedup, filing-version identity and transfer rule|Conduit legs, memo dedup, filing-version identity and transfer rule]]",
+    "system": "mentat-fec-attribution"
+   },
+   {
+    "component_id": "mentat-fec-attribution.identity-ladder",
+    "relation": "method-source",
+    "paper_claim": "Donor grouping uses explicit rules. Two records are one person if they match exactly on three of first name, surname, full street and ZIP and fuzzily on the fourth (first-name variant index, fuzzy surname, fuzzy street, or city-state in place of ZIP). Occupation and employer are too inconsistent to use as grouping variables. The authors expect a very small false-positive rate but do not measure it.",
+    "paper_location": "Appendix A.4.1 Grouping, Steps 1-2 and footnote 4",
+    "system_side": "collect.R:2087-2157 (identity_match_ladder) returns AUTO on exact name plus same ZIP with no street check, and HIGH on exact name plus same city or nickname plus same ZIP. Employer contradiction only changes the grade (collect.R:2120-2134). AUTO and HIGH are kept (collect.R:2896). Street fields are collected (collect.R:1415-1416) but this ladder does not read them.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:2087-2157,2120-2134,2896; C:/Users/pgoff/Mentat/mentat/R/collect.R:7,1415-1416",
+    "transfer_conditions": "The paper groups across all committees; Mentat links same-name rows to a seed within a company run (seed logic not traced in this check). A false merge adds a stranger's money to a company total, so the cost is higher. The paper's rules have no measured precision, so they are a design benchmark, not a validated standard.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper rules and footnote 4 match the text. Code grades match the analyst's description exactly for the ladder function. The seed-linkage sentence was not traced.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-fec-attribution#Contributor identity match ladder|Contributor identity match ladder]]",
+    "system": "mentat-fec-attribution"
+   },
+   {
+    "component_id": "mentat-fec-attribution.collection-completeness",
+    "relation": "measurement-source",
+    "paper_claim": "Conduits must report every contribution they collect, whatever its amount. Conduit contributions were 76.4 percent of individual contributions 2006-2020 and 91.1 percent in 2020, and processing them more than doubles observed contributions. WinRed launched in 2019. Committee-reported unitemized totals overstate small-donor contributions by a factor of 1.8 to 3.1.",
+    "paper_location": "Introduction, Section 2.1 (rise of conduit contributions), Section 2.2 (unitemized totals), Appendix Figure E.1a",
+    "system_side": "collect.R:1452-1454 sets is_conduit_leg for the two conduit committee IDs. export_guards.R:447-449 treats an empty Conduit category as a real zero for industries or cycles with no earmark-platform giving. No cycle- or party-varying coverage adjustment was found in the cited lines.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:1452-1454; C:/Users/pgoff/Mentat/mentat/R/export_guards.R:447-449",
+    "transfer_conditions": "Matters for cross-cycle or partisan splits of individual employee giving that span the 2019 WinRed launch. The paper limits its Republican analysis to 2020. It does not affect PAC-to-candidate totals. Direct gifts under 200 dollars stay invisible in itemized data (paper footnote 12).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper figures and code lines confirmed. Removed the WinRed petition (REG 2022-05) reference: the paper does not contain it and the online-scan status was unconfirmed. The no-adjustment statement is an absence claim limited to the cited lines.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-fec-attribution#Collection completeness (zero provenance, count reconciliation, key pool)|Collection completeness (zero provenance, count reconciliation, key pool)]]",
+    "system": "mentat-fec-attribution"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.seats-weekly-test",
+    "relation": "suggests-extension",
+    "paper_claim": "Weekly giving is dominated by calendar and event shocks. 30 of 31 abnormal weeks for large donors coincide with quarterly deadlines, against 27 of 43 for small donors. The week of Justice Ginsburg's death carried 13.0 percent of 2020 small-donor contributions versus 5.9 percent for large donors.",
+    "paper_location": "Section 5.1 Timing (Figure 6)",
+    "system_side": "sgs_seats.R:511-515 builds a formula of the form y on a focal term plus a base term. For multi-cycle level models the base is cycle fixed effects plus cycle-specific linear week-of-cycle trends. Single-cycle models use one common week trend. Change and lag variants exist. No quarter-end or salient-event term appears in these lines. The outcome definition (D share of giving) was not traced.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:511-515",
+    "transfer_conditions": "Relevant only if the weekly series includes individual employee receipts and if deadline or event surges differ by party. Dobbs in 2022 is an example event. A quarter-end and event-week sensitivity is a candidate check, not a demonstrated bias. Unverified agent analysis (DE-062).",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper figures match. Model description corrected: cycle-specific week trends in multi-cycle level models, plus change and lag variants. The absence of deadline or event terms is confirmed in these lines.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#SEATS-W weekly seat-gain test (2022 House)|SEATS-W weekly seat-gain test (2022 House)]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "melange-influence-engine.competitiveness-multiplier",
+    "relation": "context",
+    "paper_claim": "Relative to safe Democratic seats, close races (mean Democratic winning margin between -10 and 10 percent over the last two elections) receive 0.11 pp more of a small donor's giving (48 percent of mean, not significant) and 0.18 pp more of a large donor's (75 percent of mean, significant at the 5 percent level). Sample is Democratic congressional candidates 2012-2020 with donor fixed effects.",
+    "paper_location": "Section 4.3, pp. 16-18; Table 3",
+    "system_side": "moneyball_core.py:74-93 implements c = 1 + AMPLITUDE times exp(minus max(lean,0) over SCALE), with AMPLITUDE 1.0 and SCALE 5.0. The header calls these Paul's uncalibrated judgment constants and says the reciprocity they encode is not validated. c scales effective dollars on both money legs (cu and ind).",
+    "code_ref": "fec/moneyball_core.py:74-93",
+    "transfer_conditions": "The paper measures where individual donors send money, not what a dollar buys from a legislator, so it neither supports nor refutes c. Quote the close-seat figures only as Democratic candidates only, UNSTRATIFIED by party.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper figures and the code formula match. The analyst's phrase 'competitor dollars' does not match the code comment (cu and ind legs), so it was rewritten.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Competitiveness multiplier c (COMPET_MULT)|Competitiveness multiplier c (COMPET_MULT)]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary says small donors 'tripled' to 21.8 million. The paper gives 5.0 million (2006 cycle) to 21.8 million (2020 cycle), a rise of about 4.4 times. Correct to more than four-fold.",
+   "Author name misspelled: 'Cage' should be Cagé (Julia Cagé).",
+   "'The paper says nothing about whether dollars buy access or alignment' is too strong. The paper discusses access as theory (intro, citing Grossman and Helpman and Kalla and Broockman) and tests no access or alignment outcome. Reword to 'does not estimate access or alignment'.",
+   "TV-ad figure lacks its window and units. The 6.3 percent of mean is for general elections only (primaries 3.7 percent), per 1,000 additional Democratic ads, with dollars expressed per 10,000 adults (10.86 dollars). Add the general-election qualifier.",
+   "'Send about 88 percent of their money out of district' should read 88 percent of their contributions, a count share from the paper's introduction and Section 4 (paper p. 17).",
+   "'Mentat counts both legs under ruling R8' is stronger than the code shows. Code comments say the conduit leg counts and that G3 was removed, and the committee leg is expected to appear. A report.R comment says the receipt counts once to the recipient. Reword as expected, not verified end to end.",
+   "'Re-ratified 2026-07-27' attaches that date to R8. The code gives 2026-07-27 only for removal of G3 (export_guards.R:110-113). The ratification date was not verified here.",
+   "Meta-ad summary should add that the paper finds the small-donor and large-donor primary effects both significant (1.3 and 0.5 times mean) and the difference between them not significant.",
+   "The 'passive force' framing is the authors' theory and metaphor (passenger seat), not a measured finding. Attribute it as such.",
+   "Bearing transfer_conditions named a pending WinRed petition (REG 2022-05). The paper does not mention it and the status was unconfirmed. Removed.",
+   "Related link bonica-2025-money-campaign-finance removed. That work (Bonica and Grumbach, Old money, Journal of Public Economics 2025) is not cited by Bouton et al., and the shared-data claim is not shown in the Bouton text.",
+   "Related link cagala-2021 kept as a vault-level complement only; it is not cited by Bouton et al.",
+   "Coverage note: the ext file reports the paper as fully read; this verifier read the claimed sections and tables by search and excerpt, and did not transcribe Appendix F tables."
+  ],
+  "gaps_exposed": [
+   "Mentat has no measured estimate of how many employer-matched dollars appear twice (conduit leg plus earmark-target leg) under R8. A read-only count pairing conduit rows with committee rows that carry an EARMARKED THROUGH memo, by company and cycle, would size it.",
+   "The identity ladder has no street-address tier. It auto-accepts exact name plus ZIP and keeps exact name plus city, and its precision against a hand-coded sample is unmeasured (component question still open).",
+   "No cycle-varying coverage note on individual-giving partisan splits across the 2019 WinRed launch. Direct sub-200 gifts stay invisible.",
+   "SEATS-W has no quarter-end or salient-event indicators in its weekly specification."
+  ],
+  "flags": [
+   "The paper's both-legs evidence sits against Paul's ruling R8 (conduit legs COUNT, re-ratified 2026-07-27, G3 deleted). It is reported as evidence only. Money collection is frozen, so nothing changes without Paul's per-change OK.",
+   "The close-seat coefficients are pooled over Democratic candidates only and do not test whether money buys access or alignment. They must not be cited as validating reciprocity or the competitiveness multiplier (D-104..D-108).",
+   "The paper's donor-grouping rules are described as conservative, but no precision or recall is reported, so they are a design benchmark, not a validated standard.",
+   "All bearings are new agent analysis and remain UNVERIFIED until a second path reproduces them (DE-062)."
+  ],
+  "paul_alignment": "No Paul entry or markup exists for this work, so there is no takeaway to check and nothing stale. Identity ladder: he highlighted false-positive-limiting matching, and the paper requires a street address where the ladder accepts name plus ZIP. Dedup: he flagged duplicate filings as a hazard; the paper shows the two conduit legs are one gift, against his R8 ruling (flagged only). Competitiveness: Bouton finds only modest close-race overweighting by individual donors and says nothing on what dollars buy.",
+  "related": [
+   {
+    "slug": "bonica-2013-mapping-ideological-marketplace",
+    "relation": "same-data",
+    "why": "Bouton et al. use Bonica's CFscores for candidate ideology terciles and describe them as built from contribution records. The paper cites Bonica 2014 (AJPS); the vault note dates the work 2013 (SSRN draft), so the year label differs. Their close-race result is Democratic-only, so it bears on Bonica's donor-steering account only for Democratic individual donors 2012-2020."
+   },
+   {
+    "slug": "kalla-nd-campaign-contributions-facilitate",
+    "relation": "complements",
+    "why": "Bouton et al. cite Kalla and Broockman (2016), a randomized field experiment titled Campaign Contributions Facilitate Access to Congressional Officials, in their introduction on elite responsiveness. Bouton et al. study where donor money goes, not whether it buys access."
+   },
+   {
+    "slug": "cagala-2021-optimal-targeting-fundraising",
+    "relation": "complements",
+    "why": "Bouton et al. describe small donors as responding to candidate fundraising requests and external events. Cagala et al. (2021, arXiv, Optimal Targeting in Fundraising) study the supply side of solicitation. Bouton et al. do not cite this work, so the link is a vault-level complement."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ }
+]

@@ -1,0 +1,96 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-pathfinding.member-recruitment-path",
+      "relation": "suggests-extension",
+      "paper_claim": "Step 6 replans when the next node is more than r = 20 m away or the target has moved. The search runs backward from the goal (step 2). Plain D* Lite is suited to short-range or local planning with little environmental change.",
+      "paper_location": "Sec. II.B steps 2 and 6 (p.4235); Sec. III.A final paragraph (p.4236)",
+      "system_side": "buildPath calls distToTarget, a goal-rooted max-product field, then tracePath. distToTarget does not check the dropped set. tracePath skips dropped nodes only when choosing the next step, so its greedy descent reads field values that may route through dropped members.",
+      "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:734 (distToTarget, no dropped check); :740 (tracePath skips dropped at the step choice); :753-757 (buildPath); :677 (dropped set)",
+      "transfer_conditions": "Only the idea of refreshing a goal-rooted field after the graph changes transfers. The paper's speed numbers do not (3D grids of about 1M cells vs a 533-node graph). At this size a recompute that skips dropped nodes is enough; incremental D* Lite is not needed.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper claims confirmed: step 6 text at lines 275-277 of the text file, p.4235; the quote 'suitable for short-range or local path planning with little environmental changes' is exact, p.4236. Code lines confirmed by reading the template. The consequence 'can return a worse chain or reached=false' is an untested inference: reword as 'may', and keep UNVERIFIED under DE-062."
+    },
+    {
+      "component_id": "melange-pathfinding.cosponsor-route-pareto",
+      "relation": "qualifies",
+      "paper_claim": "Plain D* Lite is adequate for short-range planning where the map changes little. The paper's speed gains come from shrinking 100x100x100 m and 120x120x100 m grids, with path lengths differing by up to about 8 percent (Env4, 337 vs 311 m).",
+      "paper_location": "Sec. III.A, Table 1 and text, p.4236",
+      "system_side": "cosponsor_route.py builds a recruitment route greedily with out-degree budget K=5, once for each risk weight lambda in 0, 0.5, 1, 2, 4, then filters a Pareto front. MOPBD* appears in the docstring as a concept only. Nothing is replanned incrementally; each run rebuilds.",
+      "code_ref": "fec/engine/cosponsor_route.py:3-5 (docstring, MOPBD* concept); :9 (K default 5); :41 (build_route greedy heap); :70 (lambda sweep); :77 (Pareto filter)",
+      "transfer_conditions": "The paper's own scale result argues against adding D* Lite to a 533-node graph where full recomputation is cheap. Map zooming trades optimality for speed, which the cosponsor objective does not want. Revisit only if routes are recomputed live on a much larger graph.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "System side confirmed: lambda list, K default 5, greedy heap, no incremental search. Paper side: Env3 12.6 s vs 0.25 s and the improved method's 13.3 percent growth (0.15 to 0.17 s, Env5 to Env6) reproduce from Table 1. The 27 percent D* Lite growth does not reproduce from table cells, and the paper has no ablation attributing speed to map shrinking. Present that attribution as the analyst's inference."
+    },
+    {
+      "component_id": "melange-pathfinding.staffer-closeness-routes",
+      "relation": "qualifies",
+      "paper_claim": "Speed comes from a geometric heuristic (max absolute coordinate difference) and from coarsening the map to a quarter of its size. Path lengths differ by up to about 8 percent between the two methods in Table 1.",
+      "paper_location": "Sec. II.B steps 1-3 and heuristic definition (p.4234-4235); Table 1 (p.4236)",
+      "system_side": "staffer_closeness_routes.py runs bidirectional Dijkstra with heuristic 0 and exact tie-breaking at 1e-12, with Yen loopless alternatives. The routing layer caches up to 64 results in an OrderedDict and evicts the oldest entry with no recency update on a hit, so it is FIFO, not LRU. The 4.66M overlap-pair figure was not checked.",
+      "code_ref": "fec/surfaces/staffer_closeness_routes.py:14-21 (docstring); :79 (ALGORITHM label); :861 (heuristic 0 in output). fec/surfaces/staffer_routing.py:65 (OrderedDict); :380-390 (_base, heuristic 0); :569-570 (hit returns without move_to_end); :670-672 (popitem oldest while over 64)",
+      "transfer_conditions": "Neither speed lever transfers. A person-tie graph has no coordinates, so there is no admissible geometric heuristic, and map coarsening would break the proven-optimal contract. The only analog is hierarchical search, which would need its own correctness proof. Route costs remain heuristic outputs, not closeness or introduction probabilities (D-025).",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Heuristic 0 and the 1e-12 tie rule are confirmed in code. The paper does not say coarsened paths are non-optimal. In Table 1 the improved method is shorter than D* Lite only in Env4 (311 vs 337 m) and longer in the other rows, so 'not optimal' is an analyst inference. 'LRU' is wrong: the cache is FIFO. The paper's heuristic is worded as max absolute value from the starting grid to two current grids, so 'Chebyshev-type' is an interpretation."
+    },
+    {
+      "component_id": "terrier-canvass.street-presets-and-turf",
+      "relation": "context",
+      "paper_claim": "Multiple targets are visited greedily, each time taking the nearest remaining target by Euclidean distance (Eq. 3). Multiple static targets took 0.23 to 0.91 s on 394.8 to 752.6 m paths (Table 2). No comparison to an ordering optimizer is reported.",
+      "paper_location": "Sec. III.B, Eq. 3, Fig. 6, Table 2 (p.4237)",
+      "system_side": "walk_route.py solves up to 8 runs exactly. Larger groups use 20 nearest-next starts, then 2-opt with direction flips and or-opt, with double-bridge kicks under a deterministic evaluation cap. Groups are joined by A* on the walk road network with a straight-line heuristic.",
+      "code_ref": "Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/walk_route.py:1-13 (docstring); :31 (ARTERIAL_FACTOR); :34 (EXACT_TASKS=8); :35 (STARTS=20); :37 (EVALS_PER_MS); :176 (dijkstra); :200 (_astar straight-line estimate)",
+      "transfer_conditions": "Nothing to adopt directly. The paper's single greedy pass is weaker than the ordering already built. A geometric heuristic is valid for street routing, and the system already uses one.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers confirmed in Table 2 (Env1-4: 0.34, 0.23, 0.91, 0.72 s; 418.8, 394.8, 752.6, 734 m) and the Eq. 3 greedy rule. System ordering features confirmed by the docstring and constants. 'TIGER network' does not appear in walk_route.py, which uses walk.sqlite3 road tables; that phrase was removed."
+    }
+  ],
+  "related": [
+    {
+      "slug": "xu-2024-improved-lite-based",
+      "relation": "same-method",
+      "why": "Title is an improved D* Lite for dynamic route planning of ships in Arctic waters. The relation is title-level only; the body was not re-read here."
+    },
+    {
+      "slug": "ren-2022-multi-objective-path",
+      "relation": "same-method",
+      "why": "Title is Multi-Objective Path-Based D* Lite, matching the MOPBD* concept that cosponsor_route.py cites in its docstring."
+    },
+    {
+      "slug": "abdelrahman-2025-conflict-based-search",
+      "relation": "same-method",
+      "why": "Title shows D*Lite used for dynamic re-planning in multi-agent path planning. Relation is title-level only."
+    },
+    {
+      "slug": "chen-2016-most-reliable-path",
+      "relation": "complements",
+      "why": "Title is most-reliable path-finding for maximizing on-time arrival probability. The product-of-probabilities form that the dashboard uses is cited to Chen in code comments, not stated in the title."
+    },
+    {
+      "slug": "lawande-2022-systematic-review-analysis",
+      "relation": "complements",
+      "why": "Systematic review of intelligence-based pathfinding in video games. Paul's 'Very interesting' annotation sits on its p.12 re-planning passage, not on the Luo paper."
+    },
+    {
+      "slug": "duan-2025-breaking-sorting-barrier",
+      "relation": "complements",
+      "why": "Title is breaking the sorting barrier for directed single-source shortest paths, an exact algorithm. It bears on the exact-optimality contract of the staffer router, not on map coarsening."
+    }
+  ],
+  "summary_issues": [
+    "Env3 is said to be a grid of about a million cells. Table 1 gives only the 100x100x100 m map size and no cell resolution, so the cell count is not stated in the paper.",
+    "The paul_alignment text says Paul marked D* replanning 'Very interesting'. The annotation (_annots f585bac36b56, p.12) sits on the Lawande 2022 review, on a generic re-planning passage, not on the Luo paper. The attribution is wrong.",
+    "The 'Env5 to Env6 +27 percent for D* Lite' claim does not reconcile. Table 1 speed and length columns imply about 17 s for Env5 and about 13.6 s for Env6 on the D* Lite side, which is a decrease. The improved method's 13.3 percent growth (0.15 to 0.17 s) reproduces, though the text says 0.2 s.",
+    "The staffer routing cache is described as an LRU. staffer_routing.py evicts the oldest insertion (popitem with last=False) and does not move entries on hit, so it is FIFO.",
+    "The 'about 4.66M guaranteed overlap pairs after v6' figure in the staffer-closeness bearing was not verified in any file read here.",
+    "The claim that coarsening returns non-optimal paths is not in the paper. The paper reports length differences, which go both ways in Table 1: the improved path is shorter in Env4 (311 vs 337 m) and longer elsewhere. Attribution of the speed gains to map shrinking is the analyst's inference, since the paper has no ablation.",
+    "The Terrier bearing names a TIGER network. walk_route.py loads road tables from walk.sqlite3 and does not name TIGER. Corrected in the ver bearing.",
+    "The dropped-member replanning defect is supported by static reading of make_dashboard_html_00.tpl (lines 734, 740, 753-757). The consequence in the summary (worse chain or false not-reached) is not tested and must be marked UNVERIFIED under DE-062.",
+    "Claims that the staffer router is already stronger than the paper's methods, and that no incremental replanning exists because Paul's addendum anticipated it, are evaluative. No benchmark supports the first, and the addendum (line 65, Adaptative addendum) names D Lite and LPA* as the operational layer without saying absence was anticipated.",
+    "The Chen 2016 related link is described as the source of the max-product objective. Its title concerns on-time arrival probability; the product form is the dashboard's assumption, cited to Chen only in code comments."
+  ]
+}

@@ -1,0 +1,113 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "method-source",
+   "paper_claim": "The exact two-group frustration index comes from a binary program (Eq. 8: n+m binary variables, 2m+1 constraints) warm-started from party labels and bounded below by an LP relaxation with triangle constraints (Eq. 7). Heuristic partitioning is 'not guaranteed to provide the optimal solution'. Senate instances average 4 s (SD 6 s). The 113th House (m = 75,771) takes 48,823 s: 5,300 s for the LP (28,486,271 constraints) and 43,523 s for the binary solve.",
+   "paper_location": "Methods Eqs 4-8 (pp 3-5); Results Computation (pp 5-6)",
+   "system_side": "Single-node best-move local search from a party seed plus 60 random restarts for k=2, then k=3 from the k=2 answer plus 60 random restarts. Reports upper bounds only: F(1)=1,092.3, F(2)<=1,040.8 (15.31% of weight), F(3)<=1,039.8. Artifact data/lobbying/signed_coalitions.json has 520 nodes and 7,153 edges, matching the rel figures.",
+   "code_ref": "fec/network/signed_coalitions.py:41-79,111-118 (local_search, solve, output write; line ranges approximate)",
+   "transfer_conditions": "The paper says the LP bound is not theoretically required, so Eq. 8 alone is exact. The LP is not the cost driver in the paper's own instance (5,300 s vs 43,523 s). The rel figure of about 23M triangle constraints at n=520 is C(520,3), the complete-graph triangle count. A read-only recount of the live mention graph on the 520-node set gives about 23.5k triangles, so Eq. 7 has about 100k rows (m+4T), not 23M. Solve times remain UNVERIFIED (DE-062).",
+   "strength": "strong",
+   "verdict": "softened",
+   "verifier_note": "The quoted phrase is altered from the paper's wording. The claim that the LP bound is the costly step is contradicted by the paper's numbers and by the live graph size. Eq. 8 counts (about 7.7k variables, 14.3k constraints) check out. A fresh recount gives 6,242 unique signed pairs, not the 7,153 in the Jul 19 artifact, so the current file differs from the artifact snapshot and its edge count is not reproduced."
+  },
+  {
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "qualifies",
+   "paper_claim": "Edges come from a significance-tested SDSM cosponsorship backbone (two-tailed alpha 0.05), built per chamber and per Congress. The near-party partition and the coalition-partisanship effect hold for the House and not the Senate. The paper reports F(G)=1-2L/m so networks can be compared.",
+   "paper_location": "Data and Methods pp 8-9; Results pp 5-7; Eq. 6",
+   "system_side": "Substrate is member_references.json mention valence: edge sign=sign(net), weight=|net|, about 84% of weight positive. House and Senate members go into one partition. k=2 gives a single bloc plus a 14-member splinter. Raw weighted frustration is reported as a percent of total weight; F(G) is not computed.",
+   "code_ref": "fec/network/signed_coalitions.py:24-31,74-77,92-107",
+   "transfer_conditions": "The paper's findings rest on cosponsorship backbones within one chamber and session. A pooled mention partition crosses the House/Senate fault line, where the paper finds a House effect and none in the Senate, so any coalition reading needs an UNSTRATIFIED label. The splinter is a heuristic partition output, not measured antagonism.",
+   "strength": "strong",
+   "verdict": "softened",
+   "verifier_note": "Code matches the rel on sign, weight and pooling. The 83% positive-weight figure recomputes to about 84% (1 - 1,092.3/6,799.2). 'Opposite results' overstates the paper, which finds an effect in the House and none in the Senate, not an opposite effect."
+  },
+  {
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "supports",
+   "paper_claim": "Both chambers show high partial balance that rose over 1979-2016, which the paper reads as rising polarization that largely mirrors party lines. Triangle and normalized frustration indices correlate at 0.95 (House) and 0.91 (Senate).",
+   "paper_location": "Results Partial balance (p 5) Fig 2; Fig 3 (p 6); Summary (p 7)",
+   "system_side": "Workbook lane ran sdsm(alpha=.05, signed=TRUE, mtc='BH') on member by (vote, side) for 205 roll calls (117th-119th), reporting the backbone about 95% party (93% of positive edges same-party, 99% of negative edges cross-party) and calling it useless as-is. Those counts are not printed by the script.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/_vote_backbone.R:21-31",
+   "transfer_conditions": "Different substrate (roll-call agreement, not cosponsorship) and different era (2021-2026, not 1979-2016). The paper gives no numeric party-alignment statistic for its optimal partition; the party link is qualitative. The paper does not discuss the project's vote backbone at all.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "The SDSM call with BH correction is confirmed at lines 21-24. The 205 count and the 95, 93 and 99 percentages do not appear in _vote_backbone.R, and a search of the Draft Systems notes for the 'useless as-is' phrase returned nothing, so those figures are UNVERIFIED here. The paper does not say the optimal partition aligns with party as a number."
+  },
+  {
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "qualifies",
+   "paper_claim": "A tie is positive or negative according to whether joint cosponsorships are significantly many or few against an SDSM null that preserves each legislator's cosponsorship volume and each bill's cosponsor count. Raw co-cosponsorship counts are not used as tie strengths. The authors note inferred ties may reflect avoidance.",
+   "paper_location": "Materials and Methods, Inferring signed networks from co-sponsorship data (pp 8-9)",
+   "system_side": "Edge weight = role (1.0 original, 0.5 regular) x success factor (3.0 if the bill passed its origin chamber, else 1.0) x 0.8^(119 minus congress) x size factor (1/sqrt C by default), summed per directed pair. No significance test. The load path averages the two directions when symmetrized.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/congress_member_scraper.R:1774-1782 and 1912-1936; fec/moneyball_core.py:461-542",
+   "transfer_conditions": "SDSM answers whether a tie is significant, not how strong it is. Because it conditions on member volume it works as a degree-corrected filter. The project's rejected per-edge volume normalization is the nearest analogue, so the paper does not argue for re-weighting the cascade graph. Any significance-filtered signed overlay would need its own validation.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The rel formula omits the 3.0 success factor and says 'summed' and 'symmetrized' without noting that symmetrization averages the two directions. The paper_location 'Limitations (p.8)' is wrong: the paper has no limitations section, and the inference and avoidance remark sits in Materials and Methods on pp 8-9. No sign assignment appears in the weighting code, which is consistent with the claim."
+  },
+  {
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "supports",
+   "paper_claim": "House bill passage rate fell 0.11 pp per session (beta -0.528, p<0.05); Senate fell 0.35 pp per session (beta -0.852, p<0.01). What mediates passage differs by chamber.",
+   "paper_location": "Results Mediation in bill passage (pp 6-7); Fig 5(A)",
+   "system_side": "Shadow normalizes stage credit as population/5 within each originating chamber and Congress, then applies a Congress decay (policy default 0.8) to chamber-term results.",
+   "code_ref": "fec/engine/legislative_effectiveness.py:29,158-204,354,500-504",
+   "transfer_conditions": "The paper's passage rate is a chamber-session share of bills. It does not discuss normalization, stage weights or decay, so it supports within-chamber normalization only by analogy. Its measure is chamber-level, covers 1979-2016, and is association rather than cause.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Numbers and betas match the paper text. The 'supports' relation is overstated because the paper makes no normalization claim. The 0.8 default and the normalize-then-decay order check out in code."
+  }
+ ],
+ "related": [
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "relation": "extends",
+   "why": "Real item; same authors and title lineage (generalized balance, k groups). This 2020 paper does not mention it, so the extends link rests on the code docstring and the item itself."
+  },
+  {
+   "slug": "sotoudeh-2024-network-based-measure",
+   "relation": "complements",
+   "why": "Real item. Not cited by this paper; the complements link is analyst judgment on House cosponsorship structure and passage."
+  },
+  {
+   "slug": "porter-2005-network-analysis-committees",
+   "relation": "cites",
+   "why": "Verified: the paper cites Porter et al. 2005 (ref 47) as a committee-network substrate it sets aside in favor of cosponsorship."
+  },
+  {
+   "slug": "poole-1999-nominate-after-years",
+   "relation": "complements",
+   "why": "Real item. Not cited by this paper; the link to the project's NOMINATE decision is a project claim this check did not verify."
+  },
+  {
+   "slug": "leskovec-2010-predicting-positive-negative",
+   "relation": "complements",
+   "why": "Real item. Not cited by this paper; the link-level balance counterpart is analyst judgment."
+  },
+  {
+   "slug": "ringe-nd-pinpointing-powerful-voting",
+   "relation": "complements",
+   "why": "Real item. Not cited by this paper; the co-voting substrate comparison is analyst judgment."
+  },
+  {
+   "slug": "bucchianeri-2025-legislative-effectiveness-american",
+   "relation": "complements",
+   "why": "Real item. Not cited by this paper (a 2025 work cannot be cited by a 2020 paper); the state-level extension of the effectiveness framing is analyst judgment."
+  }
+ ],
+ "summary_issues": [
+  "The summary says the paper gives an outside reading of the project's 95 percent party vote-backbone result. The paper never mentions that result; this is analyst inference from the paper's qualitative polarization finding.",
+  "The summary and bearing 1 say the lower bound is the costly step and cite about 23M triangle constraints at n=520. 23.3M is C(520,3). A read-only recount gives about 23.5k triangles and about 100k LP rows. The paper's own House run has the binary solve as the cost driver.",
+  "The summary's 'session-level bivariate mediation models' is loose: the paper uses two structural equation mediation models, each built from bivariate regressions.",
+  "The paul_alignment section quotes Paul's readings (computationally efficient, no tracking over time, undervaluation-lens reading). The item has empty paul_entries and no annotation files, so these readings cannot be checked from the item.",
+  "The live artifact figures (520 nodes, 7,153 edges, F values, 14-member splinter) match data/lobbying/signed_coalitions.json dated Jul 19. A fresh unique-pair recount of member_references.json gives 6,242 signed pairs, so the current file differs from the artifact snapshot and the edge count should be dated.",
+  "The docstring in fec/network/signed_coalitions.py says about 3.7k edges and cites Aref and Neal 2021 for generalized balance. The current artifact has 7,153 edges, so the docstring is stale. This is a code-doc issue, not a paper claim.",
+  "The summary's 83 percent positive-weight figure recomputes to about 84 percent from the artifact (1 - 1,092.3/6,799.2).",
+  "The direct effect beta -1.038 is printed in the paper text (p<0.01), not an extraction error. The request to verify it against Fig 5(C) is reasonable caution, but the number itself is in the text.",
+  "All seven related slugs exist as items. Porter 2005 is verified as cited. The Aref 2021 link is real but not stated in this paper. The other five are real items that this paper does not cite; their relations are analyst judgments and are kept but not supported by this paper.",
+  "Bearing 1 system_side says k=3 is seeded from the k=2 answer; the code also runs 60 random restarts for k=3."
+ ]
+}

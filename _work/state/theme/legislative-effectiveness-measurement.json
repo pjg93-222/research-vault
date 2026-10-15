@@ -1,0 +1,96 @@
+{
+ "name": "Legislative Effectiveness Measurement",
+ "slug": "legislative-effectiveness-measurement",
+ "paul_notes": [
+  {
+   "doc": "Paul's annotation file (sha12 4b53f8cc145e) is short: six cited works, each with a citation line and a commentary paragraph, and no reviewer comments. The annotation JSON at C:\\Users\\pgoff\\Documents\\research\\_annots\\4b53f8cc145e.json does not exist, so there are no comments or highlights to add. The file does not name Moneyball, Mentat, Terrier, or path-finding; the only system-facing language is \"social network analysis vector graph\" and \"future allocation models\". Taken together, the commentary argues four things. Lobbying pays: firms that lobby for beneficial legislation see large returns (Alexander), lobbying lifts revenue and concentration (Huneeus and Kim; Bickmore), with the revenue gain partly at the expense of the wider economy. Access and influence are bought through donations, and the effect is strongest for committee-related activity and fades unless renewed (Kim, In Song et al.). Information is filtered by staffers' ideology, so advocacy should be routed through ideologically aligned think tanks; Paul proposes treating think-tank funding like venture capital in allocation models. Existing position-mapping pipelines (Kim, Jiseon et al.) are useful for SNA but reactive and blind to inter-industry conflict over a bill, which Paul calls vital for political intelligence. The implied research questions are: does lobbying pay, and for whom (size, industry); do donations buy legislative involvement, and how durable is it; does the information source matter; and can position data be used predictively. Stated gaps: no predictive capability, no conflict detection, and no link yet from these findings to specific Melange, Moneyball, or Mentat components.",
+   "doc_level_notes": [
+    "Source-file issue: the annotation JSON at C:\\Users\\pgoff\\Documents\\research\\_annots\\4b53f8cc145e.json does not exist, so no reviewer comments or highlights were available.",
+    "Citation/annotation mismatch: the entry cited as Kalla and Broockman (2015, randomized field experiment on contributions and access) is annotated with a summary of Furnas, LaPira et al. (400-staffer survey). Paul should confirm which paper he meant before the entry is used. The Kalla and Broockman paper itself is not discussed in the annotation.",
+    "Verification flag: Paul's claim that donation effects fade after about 6 months (Kim, In Song et al.) is not in the quoted text and needs checking against the paper.",
+    "Quotes: several entries open with quoted findings from the papers. The anchors above are Paul's own commentary, not the quoted passages.",
+    "Overarching arguments: (1) lobbying yields large private returns, but partly at economy-wide misallocation cost; (2) influence is channelled through donations, and the effect is strongest for committee work and is time-limited without renewal; (3) staffers' ideological filtering shapes which information gets through, so advocacy should route through aligned think tanks; (4) current position-mapping pipelines are useful but reactive and miss inter-industry conflict.",
+    "Research questions implicit in the file: does lobbying pay, and does firm size or industry drive returns; do donations buy legislative involvement, and how long does it last; does the information source change receptivity; can position data be made predictive and conflict-aware.",
+    "Syntheses: Alexander, Bickmore and Huneeus/Kim form one cluster on lobbying returns (ROI, concentration, misallocation). Kim (donations) and Kalla/Furnas form a second cluster on access and information channels. Kim, Jiseon is the data-pipeline entry that Paul says could feed the SNA graph.",
+    "Stated gaps: no predictive capability; no explicit conflict detection between industries over a bill; no explicit mapping from these findings to named Melange, Moneyball, Mentat or Terrier components. The file itself does not mention those systems or path-finding, so any link to them is inference, not Paul's stated claim.",
+    "Nothing in the file is labelled with a folder or category, so the folder field is set to unspecified for every entry."
+   ]
+  }
+ ],
+ "works": [
+  {
+   "slug": "bucchianeri-2025-legislative-effectiveness-american",
+   "title": "Legislative Effectiveness in the American States",
+   "year": "2025",
+   "summary": "Bucchianeri, Volden and Wiseman adapt the congressional Legislative Effectiveness Score to state legislatures. The result is the SLES: 80,344 legislator-term scores across 97 chambers, 1987-2018, built from about 1.8 million bills. Each score is a weighted average of 15 indicators: the share of a member's sponsored bills that reach each of five stages (introduced, action in committee, action beyond committee, passed chamber, law), at three significance levels weighted 1, 5 and 10. Scores are normalized to mean 1 within each chamber-term. The authors stress that absolute scores should not be compared across chambers or eras.\n\nThey check validity three ways. A hand audit found 95.2% of 49,037 sampled bills correctly coded. In North Carolina (2005-2012), SLES alone explains about half the variance in subjective effectiveness rankings and beats simple hit rates. Scores also persist from term to term (rho 0.38-0.66, highest when majority control does not change). In pooled OLS, majority status adds 0.370 (0.362 lower chamber, 0.387 upper) and a committee chair adds 0.507 (0.609 lower vs 0.307 upper). Moderates are more effective. Two exploratory chamber-level studies find that majority advantage grows with polarization, majority-party cohesion and professionalism. All results are associational.\n\nWhat this means for Paul's system: the paper is the direct method source for the unactivated effectiveness shadow (fec/engine/legislative_effectiveness.py), which copies the five stages, the 1/5/10 weights and per-chamber-term normalization. The shadow departs from SLES in two ways: it credits cosponsors, and it measures significance by CU mention frequency. The paper's validation evidence therefore does not carry over to those changes. The paper also exposes three weak spots in the live rank:\n- Leg% and Influence% are pooled across the House and Senate.\n- The efficiency term is the hit-rate kind of measure the paper outperforms.\n- Nothing controls for majority status, which the paper finds is the largest structural driver of advancement.\n\nThe brain already records that CEL LES is roughly orthogonal to the live score (+0.10 Spearman).",
+   "question": "Can individual state legislators' lawmaking effectiveness be measured comparably across 97 state legislative chambers and over time, and does the measure validly capture effectiveness? Two illustrative questions follow: (1) how does the majority-party advantage in lawmaking vary with ideological polarization, majority-party cohesion, and seat-share imbalance? (2) how do institutional designs (pay, professionalism, session length, staff, agenda-control and gatekeeping rules, committee-appointment votes, chamber size, term limits) shape the relative lawmaking power of majority vs minority, chairs vs rank-and-file, and senior vs freshman legislators? (pp. 21-22, 30-34)",
+   "method": "Measure: a weighted average of 15 indicators. These are the shares of a legislator's bills that reach each of five stages (introduced, action in committee, action beyond committee, passed home chamber, became law) at each of three significance levels (commemorative weight 1, substantive weight 5, substantive and significant weight 10). Scores are normalized so each chamber-term has mean 1 (Eq. 1, pp. 23-24). Validity checks: hand-coding audit, North Carolina criterion validation, and construct validation via lagged correlations and OLS. Table 1 is OLS with fixed effects by term and chamber (or state), with standard errors clustered by legislator. Tables 2 and 3 are chamber-level OLS with standard errors clustered by state chamber. Outcomes are the median majority-minus-minority SLES gap, the share of majority members above the minority median, and median differences for chairs vs rank-and-file and non-freshmen vs freshmen. Tests are two-tailed (+p<0.1, *p<0.05, **p<0.01).</method>\n<parameter name=\"identification\">No causal identification strategy. Results are associational. Fixed effects absorb state, chamber and term differences. The authors state that endogeneity is unaddressed: rules may be chosen by strong parties, and term limits or professionalism may respond to entrenched power (p. 34). Study 2 is framed as illustrative and exploratory.",
+   "findings": [
+    {
+     "finding": "Hand-coding audit of the bill-coding pipeline: research assistants found 46,693 of 49,037 sampled bills (95.2%) accurately coded; after fixes, alignment exceeded 99%.",
+     "location": "p. 24, Validity Explorations, first check",
+     "numbers": "46,693 / 49,037 = 95.2%; >99% after revision"
+    },
+    {
+     "finding": "Criterion validity: SLES tracks North Carolina's subjective NCCPPR effectiveness rankings and outperforms hit-rate metrics.",
+     "location": "p. 24; Figure 1; Table A4 in Supplementary Appendix",
+     "numbers": "SLES alone explains about half the variance in NCCPPR rankings (2005-2012)"
+    },
+    {
+     "finding": "Construct validity over time: lagged SLES correlates positively with current SLES, strongest when majority control is unchanged.",
+     "location": "p. 25; Figure 2",
+     "numbers": "rho = 0.38 (entered majority), 0.40 (entered minority), 0.66 (no change in control)"
+    },
+    {
+     "finding": "Seniority, chairs, and majority status predict higher SLES in the pooled OLS (Model 1.1).",
+     "location": "p. 25-26; Table 1 (p. 27)",
+     "numbers": "Seniority 0.032 per term (about 3% of mean 1); Committee chair 0.507; Majority party 0.370, which is 58% above the minority mean of 0.636 (p. 26)"
+    },
+    {
+     "finding": "Ideological moderates are more effective (distance from chamber median is negative), and women and African American and Hispanic legislators score lower on average.",
+     "location": "p. 26-27; Table 1; Figure 4 (p. 28)",
+     "numbers": "Distance from Median -0.114 (p<0.01); Female -0.034 (p<0.05) in full sample; African American -0.101 (p<0.01); Hispanic -0.078 (p<0.01)"
+    },
+    {
+     "finding": "Institutional positions matter more in lower chambers; the Table 1 advantages of leadership, chairs and power committees are larger in the lower chamber.",
+     "location": "p. 27 and Figure 6 (p. 30)",
+     "numbers": "Committee chair 0.609 (lower) vs 0.307 (upper); Majority party 0.362 vs 0.387 (similar)"
+    }
+   ],
+   "related": [
+    {
+     "slug": "sotoudeh-2024-network-based-measure",
+     "relation": "complements",
+     "why": "Sotoudeh measures cosponsorship-network influence on bill passage in the House, contrasting it with Volden-Wiseman LES. This paper supplies the stage-based LES construct that Sotoudeh contrasts with."
+    },
+    {
+     "slug": "fouirnaies-2022-electoral-incentives-affect",
+     "relation": "same-data",
+     "why": "Both study U.S. state legislators' lawmaking behavior from state bill-sponsorship records. Fouirnaies & Hall look at effort under electoral incentives; this paper measures effectiveness and its institutional correlates."
+    },
+    {
+     "slug": "aref-2021-identifying-hidden-coalitions",
+     "relation": "complements",
+     "why": "Aref & Neal use LES-style effectiveness to characterize a hidden effective bloc. This paper supplies the measurement design and validity evidence for that kind of score."
+    },
+    {
+     "slug": "ramey-2016-measuring-elite-personality",
+     "relation": "complements",
+     "why": "Ramey's ceremonial-bill finding is scored in lep_criterion.py on CEL data. The commemorative tier (weight 1) of this paper's significance scheme is the same construct."
+    },
+    {
+     "slug": "porter-2005-network-analysis-committees",
+     "relation": "complements",
+     "why": "Porter maps House committee structure. This paper quantifies how chairs and committee institutions translate into lawmaking advantage, and how that varies by chamber."
+    }
+   ],
+   "bearings": [
+    "melange-legislative-data.effectiveness-shadow:method-source:UNVERIFIED",
+    "moneyball-rank-pillars.legislative-pillar:qualifies:UNVERIFIED",
+    "moneyball-rank-pillars.committee-pillar:qualifies:UNVERIFIED",
+    "moneyball-rank-pillars.score-blend:qualifies:UNVERIFIED",
+    "melange-labels-and-tiers.say-do-gate:qualifies:UNVERIFIED"
+   ]
+  }
+ ]
+}

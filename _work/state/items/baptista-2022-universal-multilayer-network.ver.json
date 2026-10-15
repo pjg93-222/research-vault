@@ -1,0 +1,98 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-staffer-network.layer-balanced-pagerank",
+      "relation": "qualifies",
+      "paper_claim": "Top-ranked nodes can shift as walk parameters change, so stability must be measured for each network rather than assumed. The 125-parameter-set exploration was run on the biological gene and disease network only. Airport top-rankings were highly variable in a supplementary figure (Fig S15) with no parameter-set count stated.",
+      "paper_location": "Parameter space exploration p.6-8, Eqs 17-18, Fig. 4a-c; airport result stated p.8 citing Supplementary Fig S15",
+      "system_side": "Confirmed: a bidirectional row-stochastic walk where each node gives 1/active_layers of its mass to each active layer, split by weight within the layer. Teleport is equal across node kinds. PageRank runs at damping 0.70, 0.85 and 0.95 with L1 distance and top-1000 overlap against 0.85. The equal-layer split is labelled an explicit modeling prior in graph_build.py, not in network_math.py.",
+      "code_ref": "fec/staffer_network/network_math.py:91-167 (layer_balanced_transition, confirmed); network_math.py:253-262 (group_balanced_teleport, confirmed); network_math.py:264 onward (connectedness_pagerank); fec/staffer_network/graph_build.py:258-275 (damping sweep, confirmed); graph_build.py:405 (modeling prior label)",
+      "transfer_conditions": "The operator transfers because both are stochastic walks over typed layers and node kinds. The stability result does not transfer by itself: the paper says stability depends on the network, so the same allocation and teleport sweep must be run on the staffer graph. The paper gives no guidance on which allocation is correct. Outputs remain descriptive connectedness, never access or introduction probabilities (D-025).",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Code claims verified. The paper claim as written attributes airport instability to the same 125-set exploration, which the paper does not say. The label location is graph_build.py, not network_math.py."
+    },
+    {
+      "component_id": "melange-sna.multilayer-social-press-edges",
+      "relation": "qualifies",
+      "paper_claim": "Adding a layer helped in the airport case where bipartite overlap was high (German layer) and did not help in the biological case where the drug layer had low overlap (23% of genes and 5% of diseases shared). The paper says overlap might explain this. Randomizing the boosted bipartite links pushed LOOCV back to the two-network baseline. The authors conclude that more network data is not always better.",
+      "paper_location": "Evaluations p.4-7, Fig. 3a-d, Fig S13; Discussion p.7",
+      "system_side": "Confirmed: engagement, HCoI, social and co-appearance (holistic only) layers are merged into one edge weight in fec/network/build_multilayer_network.py. Under the CU config (MEDIA_ADMIT untied) media edges are admitted only for untied pairs and HCoI only for cosponsor-isolated members. Under the holistic config (dominance) a tied pair takes the max weight and its layer tag gains the channel. Social reinforcement of existing ties (factor 1 + 0.3 times min(1, p/0.10)) applies under both configs, not only CU. Layer tags are written to a Provenance sheet (build_multilayer_network.py:200). That sheet is read by fec/legislation/leg_evidence_recompute.py and fec/surfaces/build_dashboard_bundle.py, so the claim that the engine never reads it is wrong. A repo search of fec/network, fec/stance and fec/staffer_network found no LOOCV, link-prediction or held-out test of layer gain.",
+      "code_ref": "fec/network/build_multilayer_network.py:73-81 (admit, confirmed); :111-170 (layer branches, confirmed); :200 (Provenance sheet); fec/stance/stance_dynamics.py:94-121 (co-movement test); fec/legislation/leg_evidence_recompute.py:2415 (Provenance reader); fec/surfaces/build_dashboard_bundle.py:226 and :299 (Provenance reader)",
+      "transfer_conditions": "The design principle transfers: test each layer's held-out gain and report its overlap with the base graph. The 23% and 5% figures are biology-specific. Melange's builder merges layers into one weight, so the paper's per-layer jump parameters have no counterpart in the code. Gains and losses remain UNVERIFIED until measured on congressional data (DE-062).",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "The paper says overlap might explain the pattern and does not say a layer helps only when overlap is high. The 52% and 49% co-movement figures appear in no file checked, so they are not reproduced. The 1.5% and 28.8% admission shares and the zero-HCoI-edges statement come from code comments and were not re-derived."
+    },
+    {
+      "component_id": "melange-stance.stance-dynamics",
+      "relation": "suggests-extension",
+      "paper_claim": "RWR propagates proximity from seeds over several hops and across layers and is validated by LOOCV. Combining layers helped in the gene-disease task: gene multiplex plus disease monoplex beat PPI alone and the gene multiplex alone. The drug layer with low bipartite overlap added nothing, while the airport layer with high overlap helped. The paper does not state that layers help only when overlap is high in the gene-disease case.",
+      "paper_location": "Results Eqs 1-16 p.2-4; LOOCV p.4-5, Fig. 3a-b",
+      "system_side": "Confirmed: imputation is the mean tier score of a member's direct neighbours on the cosponsor graph only (adjacency built at fec/stance/stance_dynamics.py:90), with at least 5 neighbours (MINNB) and absolute estimate at least 0.75 (CONF). HCoI is used only for the co-movement test. The proposal file data/stance/stance_imputation_proposals.csv has 308 lines including the header, so 307 proposals is reproduced. The 77% masking sign agreement was not reproduced.",
+      "code_ref": "fec/stance/stance_dynamics.py:90 (single-layer adjacency, confirmed); :131-148 (imputation and masking check, confirmed); :94-121 (co-movement test)",
+      "transfer_conditions": "A per-member RWR seeded on known stances could replace the one-hop mean, and the existing masking protocol already has the form of LOOCV. Neighbour co-movement was null, so a multi-hop walk may not help either. This is a candidate needing a prereg and a single look, not evidence. Stance labels are Paul's domain: proposals only, and the matrix is never edited.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "The phrase 'only for layers with high overlap' overstates the paper and is removed. The 307 count is reproduced. The 77% figure is not reproduced. The paper contains no gene-disease overlap measure."
+    },
+    {
+      "component_id": "melange-pathfinding.member-recruitment-path",
+      "relation": "suggests-extension",
+      "paper_claim": "RWR scores proximity by summing over walks rather than taking a single path, and RWR has been shown to outperform local distance measures for gene-disease prioritization (Kohler et al. 2008, ref 21). The paper defines RWR as steady-state proximity from all nodes to the seed but does not use the phrase summing over all walks.",
+      "paper_location": "Introduction p.2 (ref 21); Results p.2-4 for the RWR definition",
+      "system_side": "Confirmed: the template uses a max-product Dijkstra (distToTarget multiplies passive probabilities and keeps the maximum), which orders paths the same way as a shortest path on -log p, though not literally on -log p. ASKM=0.07 and chainHold as the product of activeP along the chain are confirmed. bestSponsors ranks by chainHold, then cost, as stated.",
+      "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:734 (distToTarget); :740 (tracePath); :748-751 (ASKM, activeP, chainHold); :760-766 (bestSponsors)",
+      "transfer_conditions": "An RWR score seeded at the target, or at the pro-sponsor set, would add a multi-route robustness measure beside the single best chain. The paper's support comes from biological prioritization, not recruitment, and gives no congressional estimate. Any such score is a heuristic proximity, never an ask-success or access probability (D-025).",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Summing over all walks is a standard gloss of RWR but not the paper's wording. The -log p wording is corrected to max-product. The recommendation is a suggestion only."
+    }
+  ],
+  "related": [
+    {
+      "slug": "malaterre-2024-inferring-social-networks",
+      "relation": "complements",
+      "why": "Item exists. Baptista does not cite Malaterre. Analyst link only: the HCoI layer's added value is the kind of layer Baptista's overlap and ablation logic would test."
+    },
+    {
+      "slug": "steinertthrelkeld-2018-twitter-data",
+      "relation": "complements",
+      "why": "Item exists. Baptista does not cite it. Analyst link only: the social repost and mention layer is the kind of layer Baptista's per-layer test would cover."
+    },
+    {
+      "slug": "zareie-2020-similarity-based-link",
+      "relation": "same-method",
+      "why": "Item exists. Baptista does use link prediction to score RWR (LP protocol, p.6), so the method overlap is real. Baptista does not cite Zareie."
+    },
+    {
+      "slug": "ardekani-2026-computational-graph-theoretic",
+      "relation": "complements",
+      "why": "Item exists. Baptista defines RWR as personalized PageRank (p.1), so the PageRank versus Katz comparison applies. Baptista does not discuss Katz."
+    },
+    {
+      "slug": "hargittai-2015-bigger-always-better",
+      "relation": "complements",
+      "why": "Item exists. Baptista's Discussion (p.7) makes the same more-data-is-better intuition point about network layers. The domain differs and Baptista does not cite Hargittai."
+    },
+    {
+      "slug": "kim-nd-mapping-political-communities",
+      "relation": "complements",
+      "why": "Item exists. Baptista's central claim that bipartite connectivity decides whether a heterogeneous walk adds information (p.5-6) applies to a lobbying-to-legislator bipartite. Analyst link, not a Baptista citation."
+    }
+  ],
+  "summary_issues": [
+    "Summary says the 125 parameter sets showed airport instability. The 125-set exploration was run on the biological network only; airport variability appears in Supplementary Fig S15 with no set count stated.",
+    "Summary states bipartite overlap as the cause of both the drug-layer failure and the German-layer gain. The paper says overlap might explain these.",
+    "Claim that layer identity sits on a Provenance sheet the engine never reads is wrong. fec/legislation/leg_evidence_recompute.py (about line 2415) and fec/surfaces/build_dashboard_bundle.py (lines 226 and 299) read that sheet.",
+    "Social-edge reinforcement by multiplication applies under both CU and holistic configs, not only under CU.",
+    "paul_alignment says Paul's one substantive position is a highlight attached to melange-sna.multilayer-social-press-edges. The item file shows that highlight has an empty note and no component link, so the attachment is unsupported. The 'since he read it' timeline is not in the record.",
+    "Co-movement figures of 52% and 49%, masking agreement of 77%, admission shares of 1.5% and 28.8%, and the zero-HCoI-edges statement are not reproduced. They come from run outputs or code comments.",
+    "Reproduced: 307 imputation proposals (CSV has 308 lines with header); the layer-balanced operator, teleport split, and damping sweep; the ASKM and chainHold code; and the bestSponsors ordering.",
+    "Pathfinding bearing: the template uses max-product Dijkstra, not literally -log p. Ordering is equivalent.",
+    "Dropped related link chen-2016-most-reliable-path (contradicts): Baptista does not discuss Chen or most-reliable-path, so the contradiction relation is unsupported.",
+    "Dropped related link azaiez-2025-hypergraph-analysis-european: Baptista does not discuss lobbying or hypergraphs, so no grounded link remains.",
+    "ext.references_of_note cites Choobdar et al. 2019 as the source of not-always-better. In Baptista, Choobdar appears only as ref 11 for community detection.",
+    "Coverage: the extracted text has 1277 lines, matching ext.coverage. Paul markup has 34 highlights, none with a note; not separately verified beyond that count."
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-psychometrics.behavioral-dispositions",
+      "relation": "qualifies",
+      "paper_claim": "Extraversion is positive and significant in the pooled OLS: b = 0.129 (SE 0.052), beta .117, p < .05 (Model 1, n = 306, R2 = .483, country dummies and controls). Also significant on news websites (Model 3, b = 0.117, p < .05).",
+      "paper_location": "Table 1 p. 14 (lines 626-634 and 785-795); text p. 15 (lines 590-592 and 800-801)",
+      "system_side": "visibility_z in fec/members/behavioral_dispositions.py is the mean of within-chamber z-scores of log interview count and log interview-program count, computed only for members with at least 3 interviews (others neutral). Documented as the extraversion-sociability role. Committee and leadership sit in dominance_z.",
+      "code_ref": "fec/members/behavioral_dispositions.py:18-19,111-114",
+      "transfer_conditions": "The extraversion direction holds in the paper, but the effect is small (beta .117). The paper's outcome is earned mentions by journalists, not interviews a member gives. The sample is MPs in Belgium, Canada and Israel, 2011-2015, with self-reported TIPI. Office is the dominant predictor there, so a US interview count needs office controls before it reads as temperament. Any claim that visibility_z double-counts dominance_z is an untested inference, not a paper finding.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Coefficients, p-levels, sample design and media windows match Table 1 and the Method section. Softened: the paper does not say visibility double-counts leadership; that is the analyst's inference and is now labeled untested. The extraversion label is supported in direction only."
+    },
+    {
+      "component_id": "melange-influence-engine.receptivity-layer",
+      "relation": "qualifies",
+      "paper_claim": "More visible MPs are less agreeable (beta -.116, p < .05) and more emotionally stable (neuroticism beta -.111, p < .05). The authors read this as media competition requiring psychological resilience (Discussion).",
+      "paper_location": "Table 1 Model 1 p. 14 (lines 617-625 and 653-661); Discussion p. 18 (lines 912-916)",
+      "system_side": "Default basis is behavioral (RECEPT_TRAITS defaults to behavioral, receptivity_layer.py:65). There seed_prob = clip(0.60 + .10 coop + .06 breadth_z + .04 visibility_z, 0.30, 0.90) and susc_trait = .40 coop + .30 Nn - .20 dil - .10 dom, where Nn is affective-content N with missing set to 0. The lexical fallback susc = .40A + .30N - .20C - .10E and seed = 0.60 + .10A + .06O + .04E apply only when the basis is not behavioral.",
+      "code_ref": "fec/members/receptivity_layer.py:65,186,212-214,179,189,216",
+      "transfer_conditions": "On the default path the tension is real but indirect. Visible MPs in the paper have lower A and lower N. Lower cooperation and lower affective N both lower susc_trait, while visibility_z raises seed_prob. Inside seed_prob, the visibility term (+.04) and the cooperation term (+.10) can pull in opposite directions if visible members are less cooperative. This is not a measured US result: the paper's betas are small, self-reported and cross-national, and seed_prob is not an access or introduction probability (D-025). Check corr(visibility_z, coop_v2) and corr(visibility_z, affective N) on the roster; not yet run (DE-062).",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Table 1 and Discussion quotes verified. The analyst's cited weights describe the lexical fallback, not the default path, so the bearing is restated on the active formula. The tension still exists on the default path through coop and affective N."
+    },
+    {
+      "component_id": "melange-psychometrics.affective-n",
+      "relation": "suggests-extension",
+      "paper_claim": "Net of office, activity, Facebook output and controls, MPs who are more neurotic (beta -.111) and more agreeable (beta -.116) appear less in national news (Table 1 Model 1). The authors attribute this to temperament, not to interview selection, which they do not test.",
+      "paper_location": "Table 1 p. 14 (lines 617-625 and 653-661); Results text pp. 13-15 (lines 585-592 and 807-811)",
+      "system_side": "affective_n is the default N-slot (RECEPT_N defaults to affective, receptivity_layer.py:74; read at lines 83-89). Its base is LIWC counts from the interview corpus plus LLM affective facets, party-controlled (fec/members/emit_affective_n.py lines 2-7). Members without a row get neutral 0 (receptivity_layer.py:179). visibility_z sets members with fewer than 3 interviews to neutral (behavioral_dispositions.py:111-114).",
+      "code_ref": "fec/members/receptivity_layer.py:74,83-89,179; fec/members/emit_affective_n.py:2-7; fec/members/behavioral_dispositions.py:111-114",
+      "transfer_conditions": "The paper finds airtime selects on temperament among MPs, which would make interview-derived N range-restricted. Whether US interview coverage selects this way is untested. The paper concerns earned news coverage, not interviews a member gives. Test: correlate interview coverage with non-text proxies such as reactivity_z after chamber-leadership controls. The affective N is also residualized on text-E and party, which the paper does not discuss.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Paper coefficients and the system's missing-to-neutral rule both verified as written. The selection-bias concern is conditional on the paper's finding and remains untested, as the bearing now states."
+    },
+    {
+      "component_id": "moneyball-rank-pillars.undervaluation-lens",
+      "relation": "qualifies",
+      "paper_claim": "Holding office is the strongest predictor of visibility: minister beta .369 (b 3.122), about three times the trait betas. Party leader beta .195 is only slightly stronger than the personality effects. Office here means minister, party leader and house speaker; committee position is not tested.",
+      "paper_location": "Table 1 Model 1 p. 14 (lines 698-715); Results text (lines 819-829)",
+      "system_side": "Underdog = Intrinsic (0.5 Leg% + 0.5 Centrality%) minus Visibility (0.5 Press% + 0.5 Committee%), per the brain workbook note (actors/moneyball-workbook.md line 137). Press% is normalized by signed positive and negative extrema per domain in press_matrix (fec/moneyball_core.py lines 214-237). The code confirms that normalization on workbook press columns, not the stance-by-tone composition or the restriction to .house.gov and .senate.gov statements.",
+      "code_ref": "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md:137; fec/moneyball_core.py:214-241",
+      "transfer_conditions": "The paper's evidence is MPs in three parliamentary systems, not US House members. Its visibility construct is press mentions, which Press% does not capture. Committee% is a visibility input the paper never tests. Any reading of personality as part of the underdog residual is an inference, not a finding.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Table 1 numbers verified. Softened: 'about one third as large' applies to minister, not party leader. The argument that committee position fits the paper's finding is not in the paper, which uses minister, party leader and speaker."
+    },
+    {
+      "component_id": "melange-psychometrics.lexical-big5",
+      "relation": "qualifies",
+      "paper_claim": "Extraversion appears in observable media presence (beta .117 pooled; b = 0.117, p < .05 on websites; p < .1 for newspapers and TV). TIPI Cronbach alphas are .75 extraversion, .39 openness, .53 neuroticism, .40 conscientiousness and .15 agreeableness. The agreeableness item pair correlates r = .09, p > .1.",
+      "paper_location": "Note 7 (lines 1063-1064); Table 1 Models 1-4 p. 14; Measures (lines 514-522); TIPI adequacy (line 538)",
+      "system_side": "The receptivity layer comment reads lexical E as broadcast talkativeness and replaces it with behavioral dispositions (receptivity_layer.py:59-60). The lexical Big Five in big5_traits.py is scored by default from social posts, floor speech (CREC) and INTERVIEW text (lines 30-40), and lowconf traits are shrunk by token count with LOWCONF_TOKENS defaulting to 1500 (lines 20 and 28).",
+      "code_ref": "fec/members/receptivity_layer.py:59-60; fec/members/big5_traits.py:20,28,30-40",
+      "transfer_conditions": "The paper does not say an E-broadcast-volume link is partly expected for real extraverts. It says extraversion reflects need for interaction and public recognition (lines 884-887). Overlap between text-E and interview volume is possible but not shown. Lexical E also draws on posts and floor speech, so the circularity point applies only in part. The paper calls the TIPI sufficiently valid overall (line 538), so the claim that elite self-report is not usable for A, O or C is the analyst's inference.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Alphas, significance levels and the agreeableness item correlation verified. The claim that system E is read from the same interview text is only partly right: interviews are one of three default sources. The expected-overlap statement is not in the paper."
+    }
+  ],
+  "related": [
+    {
+      "slug": "ramey-2016-measuring-elite-personality",
+      "relation": "complements",
+      "why": "Item title confirms Ramey measures elite Big Five from floor speech text. Amsalem uses self-reported TIPI and links it to media visibility, an outcome text-based traits could be checked against."
+    },
+    {
+      "slug": "mondak-nd-online-appendix-personality",
+      "relation": "complements",
+      "why": "Item title confirms expert evaluations of US senators' traits. These are an alternative to the low-reliability TIPI self-report (agreeableness alpha .15) that Amsalem depends on."
+    },
+    {
+      "slug": "birkenmaier-2025-measuring-politicians-public",
+      "relation": "complements",
+      "why": "Item title confirms measurement of politicians' public agency and communion from text. Amsalem's finding that low agreeableness and high extraversion go with coverage is relevant to the persona channel."
+    },
+    {
+      "slug": "byrne-2014-chokes-under-pressure",
+      "relation": "complements",
+      "why": "Item confirms neuroticism was the a priori focus of a pressure-decision study. Amsalem's negative neuroticism-visibility link points the same way, and both bear on the receptivity N-slot."
+    },
+    {
+      "slug": "lechner-2025-mapping-political-personality",
+      "relation": "complements",
+      "why": "Item confirms PoliPers as a facet-level inventory of ideal and actual politician personality. It is a measurement alternative, but nothing in the item shows it addresses TIPI brevity or social desirability as Amsalem's limitations do."
+    }
+  ],
+  "summary_issues": [
+    "summary_md, Model 1 n: the paper partly explains the drop from 339 to 306. Note 11 (lines 1076-1080) says log-transforming visibility drops MPs with zero mentions because log of zero is undefined. The paper does not report the per-model count dropped, so the 306 figure is not fully explained.",
+    "summary_md, office claim: 'Office matters far more' holds for minister (beta .369, about three times the trait betas, lines 821-823). For party leader (beta .195) the paper says only slightly stronger than personality (lines 824-825). Office should not be presented as uniformly three times personality.",
+    "summary_md point 2 and bearing 2: the lexical susceptibility and seed formulas are the fallback path. The default basis is behavioral (receptivity_layer.py:65), with susc_trait built from coop, affective N, breadth and dominance (line 186) and seed_prob from coop, breadth and visibility (lines 212-214). The sign tension is restated on that path.",
+    "summary_md point 3: interview-derived N is used on the default path, and the neutral-for-missing rule is verified (receptivity_layer.py:179; behavioral_dispositions.py:111-114). The selection-bias concern is conditional on the paper's finding and untested.",
+    "summary_md and bearing 5: the lexical Big Five is scored by default from social posts, CREC floor speech and INTERVIEW text (big5_traits.py:30-40), not interview text alone. The circularity point is therefore only partial.",
+    "bearing 5 transfer: the paper does not say an E-broadcast link is partly expected for real extraverts; it attributes extraversion to need for interaction and recognition (lines 884-887). The paper also calls the TIPI sufficiently valid (line 538), which undercuts the claim that elite self-report is unusable.",
+    "bearing 4 and summary: committee position is not in the paper's model; its office variables are minister, party leader and house speaker (lines 555-556). The statement that committee counts fit the paper's finding is unsupported. Press% composition (signed stance times LSD tone, own-domain statements only) is only partly verified; the code confirms signed-extrema normalization of workbook press columns and nothing more in the cited lines.",
+    "paul_alignment: paul_entries is empty and Paul's own notes were not consulted in this check. Statements about his receptivity notes, his press-pillar stance and his Ramey citations are unverified and should be checked against his entries or removed.",
+    "related lechner-2025-mapping-political-personality: the item confirms the framework but not that it addresses TIPI brevity or social desirability. Relation kept as complements with a weaker reason.",
+    "coverage gap: Online Appendices A-E are not in the text. The Canada and Israel conscientiousness results and the Belgian regional n = 137 result are checked only against the main text and Discussion (lines 866-870 and 930-933).",
+    "coverage: all 1253 lines of the text were read, including Table 1 (lines 597-795), Method and measures (lines 403-545), results and robustness (lines 578-876), Discussion and limitations (lines 877-1011) and notes (lines 1022-1086). Related code checked: receptivity_layer.py, behavioral_dispositions.py, big5_traits.py, emit_affective_n.py and moneyball_core.py press_matrix. Page images were not checked. Dropped items: none."
+  ]
+}

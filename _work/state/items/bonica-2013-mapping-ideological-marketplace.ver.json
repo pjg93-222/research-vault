@@ -1,0 +1,105 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-influence-engine.competitiveness-multiplier",
+   "relation": "qualifies",
+   "paper_claim": "Table 2 (printed p.20, PDF p.21), individual donors (5,000 random donors with 25+ federal gifts, 2004-2012): LogLik ideological -1334200, partisan electoral -1405855, investor -1504601, baseline -1520312. Ideological fits best of these. Paper says partisanship is a coarsened ideology measure, so party vs ideology variance is hard to separate. Largest shifts in period-specific CFscores from candidate covariates are 0.03 to 0.05, about a twentieth of an SD (supplement Table 1 text). Paper models donor allocation and does not estimate a dollar's effect on the recipient.",
+   "paper_location": "Table 2 PDF p.21; text PDF pp.19-22; sensitivity text after Table 2 (PDF p.22) and supplement Table 1",
+   "system_side": "compet_c(lean) = 1 + COMPET_AMPLITUDE*exp(-max(lean,0)/COMPET_SCALE), AMPLITUDE 1.0, SCALE 5.0. Applied to effective dollars on both money legs. Code calls AMPLITUDE and SCALE uncalibrated owner judgment; reciprocity NOT validated (D-104..D-108).",
+   "code_ref": "fec/moneyball_core.py:74-95",
+   "transfer_conditions": "Paper supports neither c nor its calibration: its dependent variable is where individual donors send money, not what a dollar buys in a competitive seat. Sample is individuals 2004-2012 only. Any use of the partisan-electoral result must note that party and ideology are collinear.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "All Table 2 log-likelihoods reproduced exactly. Softened: the 0.03-0.05 shift is the largest effect across all candidate covariates, not a competitive-seat effect specifically, and the paper says competitive races move members toward extremes only at the margins. Code_ref confirmed."
+  },
+  {
+   "component_id": "melange-influence-engine.flip-model",
+   "relation": "qualifies",
+   "paper_claim": "Table 2 (PDF p.21): individuals investor -1504601 vs baseline -1520312 and ideological -1334200. Corporate and trade PACs (N=1312): unconstrained investor -1687949 vs ideological -1694458, so the investor form is ahead by about 6,500 log-lik units. Paper says corporate and trade PACs combine ideological and strategic motives and excludes them from scaling as a precaution. Paper does not measure vote-buying, access or any effect of money.",
+   "paper_location": "Table 2 PDF p.21; text PDF pp.10, 18-22",
+   "system_side": "pflip = a/(a+b) when a+b > 0 (flip_model.py:97). a = WM*pm*(c*cu+1)/((c*cu+1)+HALFF*R) + WP*nA/mAt; b has the same form on bank plus finserv money. WM 0.35 and WP 0.65 are labelled CALIBRATED in code with the comment that money buys access and effort more than votes. HALFF default 0.10.",
+   "code_ref": "fec/engine/flip_model.py:21 (WM,WP) and :92-97 (pflip)",
+   "transfer_conditions": "Both money legs are corporate or trade PAC money, the class the paper finds mixed-motive, so the individual-donor ideology result cannot be borrowed to call these dollars purely expressive. Paper provides no calibration of WM, HALFF or MAXSHIFT, so it gives no support for the CALIBRATED label on WM.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Table 2 numbers reproduced. Softened: code_ref line numbers were off (WM is on line 21, not 20; lines 34-36 are the HALFF guard). The point that the paper calibrates nothing here holds, and the CALIBRATED label on WM is unsupported by this paper."
+  },
+  {
+   "component_id": "melange-influence-engine.electoral-plays",
+   "relation": "qualifies",
+   "paper_claim": "Text PDF p.20: the partisan electoral model's main implication is that donors fund competitive races to maximize party seat share. Table 2 (PDF p.21): for individuals partisan -1405855 vs ideological -1334200, so the partisan electoral model fits worse. Paper also says the ideological model significantly improves fit over a partisan model.",
+   "paper_location": "PDF p.20 text; Table 2 PDF p.21",
+   "system_side": "comp = round(1 - security, 3) from Ballotpedia security. Defend value = comp times the mean positive stance gap vs cross-party challenger. Contest general route is multiplied by comp; contest primary route is not. No money term in the play formula.",
+   "code_ref": "fec/engine/build_electoral_plays.py:23-35",
+   "transfer_conditions": "The paper states a hypothesis it rejects for individual donors; it neither supports nor refutes the comp weighting. It describes donor allocation, not the payoff of a play.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper numbers reproduced. Softened: the code does not assume that CU money matters more in less safe seats. comp scales stance-gap values, and only the defend and contest-general routes are scaled. The p.20 highlight is the hypothesis, as the bearing says."
+  },
+  {
+   "component_id": "melange-allocation.stance-money-gate",
+   "relation": "supports",
+   "paper_claim": "Text PDF p.18 (printed p.17): of 49,418 individuals with 25+ federal contributions (2004-2012), only 167 (0.3 percent) have money-weighted SD above the 0.577 random-giving baseline. Mean money-weighted SD is 0.20 for the sample. Descriptive evidence that active individual donors give on ideology.",
+   "paper_location": "Text PDF p.18 (printed p.17)",
+   "system_side": "STANCE_GATE_BLOCKED = Skeptic, Highly Skeptical, Opponent, tested on overall tier. Members in this set are excluded as money targets. The gate fails open: a member with no matrix row gets tier dash and stays eligible.",
+   "code_ref": "fec/moneyball_core.py:713-729",
+   "transfer_conditions": "Descriptive only: donors are ideological, but the paper does not test whether funding opponents converts them. Window is individual donors 2004-2012; PAC behavior differs (Table 2).",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper numbers reproduced. Softened: the gate excludes members as money targets rather than giving zero money in every allocator, and it fails open for members with no matrix row. The bearing omits both."
+  },
+  {
+   "component_id": "mentat-fec-attribution.identity-ladder",
+   "relation": "measurement-source",
+   "paper_claim": "Supplement record-linkage section (text lines about 5315-5350, approx PDF p.51): on corporate board-member cases, 57 percent got a single ID, 42 percent split (type 1 errors), and in 13 percent of the split cases the algorithm failed to put 90 percent of records under one ID. Two type 2 errors (wrong merges), both family members at the same employer (Gates Sr and Jr; Walton family). Address and occupation disclosure was significantly lower in the 1980s and early 1990s. Method is fuzzy matching plus supervised machine learning.",
+   "paper_location": "Supplement, Record Linkage section, approx PDF p.51",
+   "system_side": "identity_match_ladder: suffix_mismatch (any suffix difference, including a suffix present on one record only) returns REVIEW first. Exact name plus same zip returns AUTO unless the employer contradicts the company, which gives HIGH. No name-frequency weighting.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:2087-2124",
+   "transfer_conditions": "The paper's type 2 errors were same-employer family members (the Gates Jr and Sr pair differs by a suffix). Mentat sends any suffix difference to REVIEW, so a missing-suffix pair does not get AUTO under the current rule. The split rates come from a different linker and are a reference point, not an error-rate estimate for Mentat.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper numbers reproduced, with the 13 percent restated as a share of split cases. Refuted sub-claim: that a missing Jr/Sr suffix returns AUTO; the code returns REVIEW. Not in the paper: same household, a probabilistic linker, and the claim that Bonica's linker traded recall for precision as Mentat does; those are analyst inferences."
+  },
+  {
+   "component_id": "mentat-sector-growth-study.seats-weekly-test",
+   "relation": "supports",
+   "paper_claim": "Table 2 (PDF p.21) and text PDF p.22: labor PACs ideological -231022 vs investor -252936; corporate and trade PACs unconstrained investor -1687949 vs ideological -1694458. Text says the investor model stays on par with the ideological model for these PACs, which is why they are excluded from scaling. Individuals are best fit by the ideological model.",
+   "paper_location": "Table 2 PDF p.21; text PDF p.22; exclusion text PDF p.10",
+   "system_side": "sgs_seats.R header defines SEATS-W estimand A: weekly Democratic share of giving on the prior week's change in expected Democratic seats, pp per seat, residual block bootstrap. The stated result (-3.47 pp per seat, p .0086-.0174, 2022; Senate null) was not found in the .md, .json or .csv files under sector_growth_study. The header marks SEATS-W NOT BUILT until 09 exists.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:2-24",
+   "transfer_conditions": "Bonica's tests are cross-sectional over 2004-2012 with static covariates, not within-cycle forecast movement. The paper is consistent with strategic re-allocation for corporate and trade PACs and not for individuals. The 2022 result is one election and stays UNVERIFIED until a second path reproduces it. If the giving series mixes individual employee gifts with PAC money, the paper predicts dilution.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper side reproduced. Softened: the -3.47 result and the Senate null could not be located in the result files searched, so the system-side numbers are unverified, and the header says SEATS-W is NOT BUILT until 09 exists. Strength lowered to weak."
+  }
+ ],
+ "related": [
+  {
+   "slug": "bonica-2025-money-campaign-finance",
+   "relation": "same-data",
+   "why": "Same campaign-finance contributor data family. The 2013 text does not cite the 2025 work, so builds-on runs the wrong direction; the later work builds on this data."
+  },
+  {
+   "slug": "poole-1999-nominate-after-years",
+   "relation": "complements",
+   "why": "The paper uses Poole and Rosenthal common-space DW-NOMINATE as the roll-call benchmark (r = 0.92 pooled, text PDF p.10). Table 1 is classification rates, not that correlation."
+  },
+  {
+   "slug": "kalla-nd-campaign-contributions-facilitate",
+   "relation": "complements",
+   "why": "Not cited in this paper. Conceptual pairing only: the investor model tests access-type motives without measuring access. Kalla's content is not verified against this text."
+  }
+ ],
+ "summary_issues": [
+  "summary_md non-incumbent claim: r = 0.96 is the correlation between non-incumbent and incumbent CFscores (text PDF p.11), not with later DW-NOMINATE scores. Non-incumbent scores predict later roll-call scores about as well as incumbent scores for Senate and most House candidates, except Democratic House challengers (somewhat weaker).",
+  "summary_md says CU and bank PAC money is exactly the mixed-motive class. The paper names corporate and trade PACs as mixed-motive; banks and credit unions are not named in the text, so this is an analyst mapping and should be marked as inference.",
+  "summary_md says the investor model barely beats the baseline. That holds for the constrained investor model (-1504601 vs -1520312). The unconstrained investor model (-1468435) does better, as the text says; the summary should say which form it means.",
+  "summary_md pooled r = 0.92 is unstratified, as stated, and the within-party values (0.56 to 0.72) are correct. The 96th-112th window applies to the roll-call classification comparison (text PDF p.13); the DW-NOMINATE common-space scores cover the 1-112th Congresses (footnote 4).",
+  "gaps_exposed says the non-incumbent scores are publicly available as DIME. The text does not name DIME; it gives a Dataverse replication link and promises public release of data and code. The DIME name is an outside fact.",
+  "flags: the Table 3 inconsistency holds. Coefficients 7.44 and 1.71 times the stated 0.28 SD shift give about 2.1 and 0.5 points, not the text's 4 and 1.96. Cite table values.",
+  "flags: the Paul positions list claim (grounding for the competitiveness multiplier and electoral plays) is not in the item files and was not verified. The p.7 margin note and the p.20 highlight were verified in the annotation file.",
+  "paul_alignment and Paul's entry cite Bonica 2014, AJPS. The text names no journal (SSRN June 2013 draft), so the AJPS venue is not verifiable from the text.",
+  "related: the poole parenthetical attributes r = 0.92 to Table 1; it is in the External Validity text, and Table 1 is classification rates. furnas-nd-conflating-lobbying-pacs and kim-2020-strategic-sequential-links were dropped because the paper text does not discuss lobbying-PAC overlap or donor identity graphs. kalla kept as a complement only.",
+  "The output schema has only bearings, related and summary_issues; the key_findings and paul_markup fields named in the task do not exist in this schema and were not produced."
+ ]
+}

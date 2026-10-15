@@ -1,0 +1,69 @@
+{
+ "slug": "callaway-2025-difference-differences-continuous",
+ "title": "Difference-in-Differences with a Continuous Treatment",
+ "authors": [
+  "Brantly Callaway",
+  "Andrew Goodman-Bacon",
+  "Pedro H. C. Sant'Anna"
+ ],
+ "year": 2025,
+ "venue": "arXiv 2107.02637v8 (econ.EM); working paper, peer-review status not stated in text",
+ "doi": "",
+ "document_type": "working paper (arXiv preprint, v8 dated 2025-12-31; first arXiv draft July 2021)",
+ "coverage": "Read the full text file (2646 lines, 127621 chars) in chunks: front matter and abstract, Sections 1 to 6 with all figure notes, references, Appendix A proofs, Appendix B CCK adaptation, and Appendix C staggered extension. The Supplementary Appendix (SA to SE) is not in the file, so its results are covered only as summarized in the main text. No separate conclusion section exists; Section 6 closes with a summary (p.32). Lobbying, networks, path-finding, allocation, elections, persuasion/turnout, legislators and text measurement do not appear in this paper, so nothing was extracted on them. Paul markup: none (annot_sha12s is empty and no _annots file exists for 22e43da4fc06). No ext/rel override files existed; base ext and rel were null. Metadata: year 2025 kept as the latest draft year (first posted 2021); document_type corrected from academic-article to working paper. Key findings capped at 12; Theorem 3.4 (c), (d), Section 5 extension details and the staggered TWFE decompositions were summarized rather than itemized. Figures were read from captions, notes and labels only, since page images cannot be rendered.",
+ "research_question": "How should difference-in-differences designs with a continuous or multi-valued dose be identified, interpreted and estimated? Which causal parameters are identified under standard parallel trends versus stronger assumptions, and what does the common two-way fixed effects (TWFE) regression with a dose-by-post interaction actually estimate?",
+ "theory": "Potential outcomes indexed by dose (Robins 1986). Distinguishes level treatment effects Y(d)-Y(0) from causal responses, the marginal derivative in dose (Angrist and Imbens 1995). Generalizes Fricke (2017) from two doses to continuous and multi-valued doses. Uses Yitzhaki (1996) linear-projection decomposition of regression slopes. The empirical interpretation of the derivative as an elasticity of substitution comes from a homothetic two-factor hospital production model following Acemoglu and Finkelstein (2008).",
+ "data": "Application: Acemoglu and Finkelstein (2008) AHA Annual Survey Database hospital panel. Balanced panel of 5881 hospitals; pre period averaged over 1980-1983 and post period over 1984-1986 (Sec 6, p.25). Dose M is the 1983 Medicare inpatient share; among treated hospitals mean 0.45, SD 0.15 (Sec 2, p.5). 4987 hospitals have a positive dose; 57 above 0.75, 20 above 0.80, 3 above 0.90 (Sec 6.2, p.28). Outcome is the depreciation share of total operating expenses as a capital-labor proxy; 1983 mean 4.5; untreated mean change 0.37 (Fig 4 note, p.27). Figure 1 uses 1980-1986 annual data and drops 860 of 6741 hospitals with missing outcomes. Policy: 1983 PPS set the labor subsidy to zero and left the capital subsidy unchanged.",
+ "method": "Two-period DiD with continuous dose, identified under parallel trends (PT, Assumption PT) and strong parallel trends (SPT, Assumption SPT). Estimators: (i) binarized DiD regression of the outcome change on an indicator for positive dose (eq 4.6), which recovers ATT_glob under SPT; (ii) saturated regression with dose dummies for discrete doses (eq 4.1); (iii) quadratic parametric regression among treated units (eq 4.2); (iv) nonparametric sieve regression with cubic B-splines and a data-driven Lepski-type sieve dimension (Chen, Christensen and Kankanala 2025), with honest uniform confidence bands (Appendix B). ACRT_glob is the sample mean of estimated ACRT(D_i) over treated units. TWFE is decomposed (Theorem 3.4) into causal response, levels, scaled levels and scaled 2x2 representations with explicit weights (Table 1). Extensions: staggered timing (Appendix C), relaxing SPT through bounds, sub-regions and covariate-conditional SPT (Sec 5). Pre-trend checks use event-study versions ATT_loc(e) and ACRT_loc(e). Inference clusters at the hospital level.",
+ "identification": "Under PT, ATT(d|d) = E[dY|D=d] - E[dY|D=0] and ATT_loc = E[dY|D>0] - E[dY|D=0] are identified, but comparisons across dose groups mix causal responses with selection bias (Thm 3.1, 3.2). Under SPT, ATT(d) and ACRT(d) are identified, and ATT_glob = E[dY|D>0] - E[dY|D=0] and ACRT_glob = E of the dose-density-weighted derivative of E[dY|D=d] (Thm 3.3, Cor 3.1). Without untreated units, the dose-group comparison to the lowest dose recovers differences only, and interpreting them causally requires strengthening PT (Remark 3.1). Pre-period data cannot test SPT (p.13-14).",
+ "measures": "Outcome: depreciation share of total operating expenses (capital-labor ratio proxy). Dose: 1983 Medicare inpatient share M. Causal parameters: ATT(d|d), ATT(d), ACRT(d|d), ACRT(d), ATT_loc, ATT_glob, ACRT_loc, ACRT_glob, event-study ATT_loc(e) and ACRT_loc(e). TWFE coefficient beta_twfe from Equation 1.1 with hospital and year fixed effects.",
+ "scope": "Population: US hospitals in the Acemoglu and Finkelstein balanced panel subject to the 1983 Medicare PPS labor-subsidy change. Era: 1980-1986. The identification and estimation results apply to any two-period DiD with a continuous or multi-valued dose, and to staggered designs in Appendix C. The empirical content is a single application, not a general estimate.",
+ "key_findings": [
+  "Under PT, ATT(d|d) and ATT_loc = E[dY|D>0] - E[dY|D=0] are identified (Thm 3.1, p.10). The main text makes clear that ATT(d) is not identified under PT alone.",
+  "Under PT alone, comparing outcome paths across dose groups mixes a causal response with a selection bias term ATT(l|h) - ATT(l|l); causal responses are not identified (Thm 3.2, p.11).",
+  "Under SPT, ATT(d), ACRT(d), ATT_glob and ACRT_glob are identified; ACRT_glob equals the average derivative weighted by the dose density among treated (Thm 3.3, Cor 3.1, p.12-14).",
+  "The TWFE coefficient is a weighted integral of ATT(d|d) whose weights integrate to zero, with negative weights below the mean dose and positive above (Thm 3.4(b), p.16-17).",
+  "Under PT, the TWFE causal-response decomposition is a convex average of ACRT(d|d) plus selection bias, with positive weights integrating to one (Thm 3.4(a), p.16). Positive weights do not make TWFE a natural target.",
+  "Equation 3.1 writes beta_twfe as a Wald-type ratio with distance weights; in the application the numerator is 0.60 and the denominator 0.53 (p.17, p.28).",
+  "Nonparametric ATT_loc = 0.80 (s.e. 0.05), about 18 percent of the 1983 mean outcome of 4.5; reject zero for doses 0.05 to 0.78, covering 96 percent of treated hospitals (Sec 6.2, p.27).",
+  "Static TWFE coefficient is 1.14 (s.e. 0.099, Fig 1); it is close to ATT_loc only because two biases offset. Dropping untreated units shrinks TWFE by 78 percent while causal responses are unchanged (p.3, p.28, p.30).",
+  "ACRT_glob = -0.08 (s.e. 0.19), not significantly different from zero; estimated ACRT(m) is negative for m above 0.41, covering 71 percent of treated hospitals (Sec 6.3, p.30).",
+  "Post-period average of the ATT event study is 0.755 (s.e. 0.048) (Fig 8, p.30); post-period average of the ACRT event study is 0.220 (s.e. 0.170) (Fig 10, p.32).",
+  "Pre-treatment ACRT event-study estimates reject the zero implied by no-anticipation plus parallel trends in 1981, though the violation is small relative to post-period effects (p.32).",
+  "Implied average elasticity of substitution point estimates do not fit the positive-elasticity prediction, although the uniform bands do not reject zero; the authors treat this as evidence against SPT or the two-factor model (p.31-32)."
+ ],
+ "limitations": [
+  "SPT is described as strong and perhaps implausible in many applications; the authors do not propose it as a default (p.13).",
+  "Pre-trend tests cannot distinguish PT from SPT, because pre-period outcomes are untreated potential outcomes (p.13-14).",
+  "Event-study pre-trend tests may miss PT violations; aggregate PT allows violations that average to zero across dose groups, and whether that should count as evidence against the design is debated (p.24-25).",
+  "Quadratic parametric estimates are precise only if the functional form is correct; pretesting parametric against nonparametric fits can mislead, so the authors use honest nonparametric bands (p.28-29).",
+  "Nonparametric precision is limited where doses are sparse, with only 57 treated hospitals above dose 0.75 (p.28).",
+  "Footnote 12: the sieve dimension used for ACRT_glob is treated as non-random; the randomness of the Lepski-type selection is left for future research (p.30).",
+  "A Neyman-orthogonal representation for ACRT_glob suggests double machine learning, which the paper leaves for future research (p.22).",
+  "Without untreated units, ATT(d|d) and the levels decompositions are not identified; only dose-group differences are identified (Remark 3.1, Remark 3.2, p.14-15).",
+  "The 1983 pre-PPS event-study coefficient may reflect partial 1983 PPS effects and fiscal-year reporting (footnote 11, p.29).",
+  "The elasticity interpretation assumes no anticipation and a homothetic two-factor production model; the authors note alternatives such as a three-factor or non-homothetic model could rationalize the negative ACRT (p.31-32).",
+  "Formal estimation for the staggered case is not provided; the authors say disaggregated results apply directly and that binarized event-study procedures can be used when ATT_loc(e) is the target (Remark C.1, p.42).",
+  "TWFE beta depends on the unit of dose: recoding the dose from 0 to 100 shrinks beta from 1.14 to 0.0114 while ATT_loc is unchanged (p.28)."
+ ],
+ "paul_markup": [],
+ "short_quotes": [
+  "Strong parallel trends may not be plausible in many applications.",
+  "comparing these parameters across treatments is challenging because parallel trends does not rule out selection bias.",
+  "a researcher confusing a small ACRT for an ATT would mistakenly conclude that a policy was ineffective."
+ ],
+ "references_of_note": [
+  "Chen, Christensen and Kankanala (2025), Review of Economic Studies 92.1: sieve estimator and uniform bands used in the application",
+  "Fricke (2017), Oxford Bulletin of Economics and Statistics 79.3: two-period multi-dose DiD, the closest prior paper",
+  "Acemoglu and Finkelstein (2008), Journal of Political Economy 116.5: source of the application data and original TWFE analysis",
+  "de Chaisemartin and D'Haultfoeuille (2020), American Economic Review 110.9: TWFE weights with heterogeneous effects, discrete analogue",
+  "Yitzhaki (1996), Journal of Business and Economic Statistics 14.4: regression slope as weighted average of local slopes",
+  "Callaway and Sant'Anna (2021), Journal of Econometrics 225.2: staggered binary DiD used for the extensions",
+  "Callaway, Goodman-Bacon and Sant'Anna (2024), AEA Papers and Proceedings 114: event studies with a continuous treatment",
+  "Blandhol, Bonney, Mogstad and Torgovitsky (2025), Review of Economic Studies: positive weights make TWFE weakly causal",
+  "de Chaisemartin, D'Haultfoeuille, Pasquier, Sow and Vazquez-Bare (2025): continuous-treatment DiD with stayers (working paper)",
+  "Mogstad and Torgovitsky (2024), Handbook of Labor Economics: forward engineering of target parameters",
+  "Baker et al. (2025), Journal of Economic Literature forthcoming: DiD practitioner guide",
+  "Angrist and Imbens (1995), Journal of the American Statistical Association: causal response with variable treatment intensity"
+ ]
+}

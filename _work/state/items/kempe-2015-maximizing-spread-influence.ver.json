@@ -1,0 +1,145 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-allocation.budget-frontier",
+      "relation": "qualifies",
+      "paper_claim": "Greedy on a monotone submodular sigma reaches 1-1/e-eps of optimum (Thm 1.1). Submodularity follows from triggering-set (live-edge) worlds (Lemma 4.4; Thm 4.5 for IC; Thm 4.6 for LT). Each estimate uses 10000 simulations (Sec 8.3). Competing cascades are left open (Conclusions).",
+      "paper_location": "Thm 1.1 p.106; Lemma 4.4 p.119; Thm 4.5 p.120; Thm 4.6 p.121; Sec 8.3 text p.133; Conclusions p.137-138",
+      "system_side": "Cascade draws one splitmix key per (iteration, directed edge), i.e. a live-edge world. Lazy greedy adds up to MAXSEEDS=60 seeds. Departures: pro-A vs anti-B first-to-reach race with bystander B seeds; marginal = max(0, delta) times fac, where fac is REPFAC x lev for contest seeds, 1.0 for defend seeds, lev otherwise; sigma is averaged over MC=20 worlds.",
+      "code_ref": "fec/engine/budget_frontier.py:83-94 (cascade), 118-135 (spread), 153-170 (marg and lazy loop); defaults MC and MAXSEEDS line 7, CRN line 43, REPFAC line 67",
+      "transfer_conditions": "With CRN, greedy is exact greedy on the 20-world sample objective, which is submodular only for a single cascade. The two-colour race needs a separate argument whose tie order differs from this BFS (A queued first). fac-weighted, clamped marginals optimize no stated set function. The (1-1/e) bound is context, not a certificate, unless fac = 1 and race submodularity is shown.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Thm 1.1, Lemma 4.4, Thm 4.5 and the 10000-simulation statement hold. Thm 4.5 is on p.120 and the simulation text on p.133, not as cited. Code verified: one splitmix key per (iteration, directed edge), MAXSEEDS 60, MC 20, REPFAC 0.6, max(0, .) clamp. Fix the fac description: defend seeds get 1.0, not c. Live-edge equivalence is the paper's; common random numbers are project practice and are not in the paper."
+    },
+    {
+      "component_id": "melange-influence-engine.lt-priming",
+      "relation": "qualifies",
+      "paper_claim": "LT is submodular when in-weights sum to at most 1 (Thm 4.6). The LT model draws each threshold uniformly on [0,1] (Sec 2). Thm 3.3, for the general threshold model, shows NP-hardness of approximation within n^(1-eps) for any eps > 0. Fixed-threshold models are only stated to admit no non-trivial approximation factor (p.117).",
+      "paper_location": "Thm 4.6 p.121; LT definition p.110; Thm 3.3 p.116; fixed-threshold remark p.117",
+      "system_side": "LT priming uses fixed per-tier resistance THETA from 0.6 to 3.0. Pressure is the sum over pro neighbours of P[u][v] times xf, with P the shared build_P kernel and no normalization to at most 1. Per target, recruits are taken by greedy sort on recruit_cost/add and money closes the residual. It maximizes no seed set and claims no guarantee.",
+      "code_ref": "fec/engine/lt_priming.py:19-21 (THETA), 103 (pressure), 131-140 (cheapest tip); fec/moneyball_core.py:556-563 (build_P)",
+      "transfer_conditions": "Deterministic thresholds are the regime the paper excludes, so the greedy guarantee does not transfer. A future joint multi-target priming optimizer would inherit the n^(1-eps) hardness for general thresholds. Per-target cheapest tip remains a heuristic.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Thm 4.6 and Thm 3.3 exist as cited, but Thm 3.3 is the general model. The fixed-threshold statement is weaker: no non-trivial factor, not n^(1-eps). Code verified: fixed THETA ladder and unnormalized pressure. The lean and Opponent add-ons were not located in the cited lines, so UNVERIFIED."
+    },
+    {
+      "component_id": "melange-allocation.per-topic-allocators",
+      "relation": "qualifies",
+      "paper_claim": "Seeds picked by individual degree or distance centrality ignore clustering and overlap. On the hep-th graph under LT, greedy beats high-degree by about 18% and distance centrality by over 40%. Under IC with p=10%, the centrality heuristics level off near 2415 activations and random seeds beat them beyond about 12 targets. Greedy keeps rising because it prices overlap.",
+      "paper_location": "Sec 8.4 pp.134-136; Fig 1 p.134; IC 10% text p.135-136",
+      "system_side": "Shortlist of the top 45 neutrals by engagement priority, each scored by singleton spread({n}) minus base, boosted by (1 + 0.8 bpf), and water-filled into a 2000000 budget. Overlap is computed only afterwards, as the joint spread of the funded set.",
+      "code_ref": "fec/engine/per_topic_coalition.py:114-119 (shortlist, singleton marginal, boost, water-fill), 125-126 (joint spread); BUDGET line 6; BETA_C line 30",
+      "transfer_conditions": "Evidence is one 10748-node co-authorship graph under uniform p, window winter 2002. Whether singleton ranking loses comparably on the 533-member cosponsor kernel is unverified; a check would compare the joint spread of the water-fill seed set against lazy greedy at equal seed count and the same CRN. The allocator is labelled diagnostic, which limits the harm.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "The 18 percent, over 40 percent, 2415 and 12-target figures are confirmed. The paper's stated mechanism is clustering and first-node coverage, which matches the overlap framing. Page cites in the bearing are off by up to one page. Code verified: top-45 shortlist, singleton marginal, BETA_C 0.8, BUDGET 2000000, joint spread reported after selection."
+    },
+    {
+      "component_id": "melange-influence-engine.cascade-kernel",
+      "relation": "qualifies",
+      "paper_claim": "Edge probabilities are set by rule, not estimated: LT weights from co-authorship multiplicity, IC uniform p of 1 or 10 percent, and weighted cascade p = 1/d_v with no multiplicity term (Sec 8.2, p.133). At p=1% each targeted node adds about three activations, so random seeds do relatively better (Sec 8.4, p.135). Estimating parameters from data is left open (Conclusions, p.138).",
+      "paper_location": "Sec 8.2 p.133; Sec 8.4 pp.135-136; Conclusions p.138",
+      "system_side": "Shared kernel p = x/(x+6) with x = w times cpf times edge_mult. The saturation constant 6 is a literal design choice, not estimated. budget_frontier, per_topic_coalition and lt_priming each build their P through MBC.build_P. The scenario engine and others were not checked.",
+      "code_ref": "fec/moneyball_core.py:543-548 (cpf factors), 556-563 (build_P); fec/engine/budget_frontier.py:77, fec/engine/per_topic_coalition.py:37, fec/engine/lt_priming.py:55 (all MBC.build_P)",
+      "transfer_conditions": "Seed rankings are sensitive to the activation level, so a sweep of the constant 6 (for example 3, 6, 12) should accompany any claim that frontier seed order is stable. This is not validation of the constant.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Kernel formula and single shared build are confirmed in code. Softened: the paper does not show a flip in which heuristic wins. It shows random seeds gain relative to centrality heuristics as activation rises, and it never tests greedy against heuristics at p=1%. The flags text writing the weighted cascade as c_uv/d_v is wrong; the paper has 1/d_v."
+    },
+    {
+      "component_id": "melange-allocation.joint-optimizer",
+      "relation": "supports",
+      "paper_claim": "Thm 7.1 (p.128): hill climbing with total budget k, taken in pieces of size delta, on a non-negative monotone non-decreasing g with diminishing returns, ends with g(x) >= (1 - exp(-k gamma/(k + delta m))) times g of the optimum under sum <= k. Each step picks a direction with gamma-approximately largest gradient.",
+      "paper_location": "Sec 7, Thm 7.1 p.128",
+      "system_side": "Joint CU optimizer allocates $500 increments (INC default) by lazy greedy on the largest next marginal. A concavity check verifies per-member equal-cost chunks are non-increasing in the fixed state. Code comments claim the exact grid optimum; the 1-1/e floor is printed as context only. A modeled money-triggered conversion triggers replanning and drops the certificate.",
+      "code_ref": "fec/engine/optimize.py:3-12 (docstring), 26 (BUDGET 2.5M, INC 500), 70-74 (concavity check), 120-151 (greedy loop), 170-193 (certificate and floor print)",
+      "transfer_conditions": "Holds only in the fixed stance state where concavity is checked. Once money crosses a defection threshold, returns are non-concave steps and neither Thm 7.1 nor the exact certificate applies. The code states this scope.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Thm 7.1 and its conditions are confirmed on p.128. The bound is approximate, so supports is the right relation. Code claims verified: INC default 500, concavity check runs before the greedy loop, exact-grid comment, 1-1/e floor printed only as context, certificate dropped after a modeled conversion. The exact-grid claim rests on separability and concavity, not on Kempe."
+    },
+    {
+      "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+      "relation": "context",
+      "paper_claim": "Under LT, greedy beats high-degree seeding by about 18 percent and distance-centrality seeding by over 40 percent (Sec 8.4, p.134). The base of these percentages is not stated, so high-degree is not 18 percent below greedy; it is about 15 percent below greedy if 18 is measured against greedy. Under IC with p=10%, random seeds beat both centrality heuristics beyond about 12 targets (p.135).",
+      "paper_location": "Sec 8.4 pp.134-135",
+      "system_side": "Base centrality InfluenceScore = 0.60 normalized weighted out-degree + 0.25 betweenness + 0.15 normalized eigenvector (formula string in the audit script). The rank weight of 0 since 2026-06-25 is not verified because the workbook cells were not opened.",
+      "code_ref": "fec/audit/audit_legislation_downstream_readiness.py:1057 (formula string); workbook congress_centrality_*.xlsx cells AB12/AB13 not opened",
+      "transfer_conditions": "Paper evidence comes from one physics co-authorship graph, window winter 2002, denominator 10748 researchers, k = 1 to 30. Under D-025 centrality scores are heuristic outputs, not influence or access probabilities.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper figures and the random-beats-centrality claim verified. The sign of the 18 percent comparison was misstated. The formula weights are confirmed in the audit string; the rank weight of 0 is not verified."
+    }
+  ],
+  "related": [
+    {
+      "slug": "bharathi-nd-competitive-influence-maximization",
+      "relation": "extends",
+      "why": "Competitive follower-vs-fixed-opponent extension of Kempe IC submodularity. Kempe leaves competing cascades open (Conclusions pp.137-138). Item exists; the cited paper text was not re-read here."
+    },
+    {
+      "slug": "golovin-2011-adaptive-submodularity-theory",
+      "relation": "extends",
+      "why": "Adaptive analogue of the greedy guarantee. Item exists; the cited paper text was not re-read here."
+    },
+    {
+      "slug": "chen-2021-contingency-aware-influence",
+      "relation": "extends",
+      "why": "Adds seed take-up probability to Kempe-style IM. Kempe has no take-up step. Item exists; not re-read here."
+    },
+    {
+      "slug": "chen-2023-complex-contagion-influence",
+      "relation": "complements",
+      "why": "Relabelled from contradicts. Complex contagion leaves the submodular regime that Kempe proves for triggering models, a different model, so it does not contradict Kempe's theorems."
+    },
+    {
+      "slug": "almazaydeh-2026-heuristic-centrality-methods",
+      "relation": "contradicts",
+      "why": "Claims centrality heuristics can rival greedy, which conflicts with Sec 8.4 only as an empirical finding on other graphs. Item exists; the relation was not checked against that paper's text here."
+    },
+    {
+      "slug": "fink-2023-congressional-social-network-dataset",
+      "relation": "complements",
+      "why": "Supplies estimated pairwise influence probabilities, the parameter-estimation step Kempe leaves open (Conclusions p.138). Item exists; not re-read here."
+    },
+    {
+      "slug": "manchanda-2020-gcomb-learning-budget-constrained",
+      "relation": "builds-on",
+      "why": "Learned budget-constrained replacement for Kempe-style greedy. Item exists; not re-read here."
+    },
+    {
+      "slug": "trivedi-2020-efficient-influence-maximization",
+      "relation": "builds-on",
+      "why": "Speeds up Kempe-style greedy under Independent Cascade. Item exists; not re-read here."
+    },
+    {
+      "slug": "zareie-2023-influence-maximization-social",
+      "relation": "cites",
+      "why": "Survey of behaviour-aware IM methods that build on the Kempe models. Item exists; not re-read here."
+    },
+    {
+      "slug": "kamarthi-2020-influence-maximization-unknown",
+      "relation": "builds-on",
+      "why": "IM on a sampled, unknown graph, which relaxes Kempe's known-graph assumption. Item exists; not re-read here."
+    },
+    {
+      "slug": "cai-2025-competitive-influence-maximization",
+      "relation": "complements",
+      "why": "Competitive IM under voter dynamics, where timing matters; Kempe lists competition and timing as open (Conclusions pp.137-138). Item exists; not re-read here."
+    }
+  ],
+  "summary_issues": [
+    "Page cites in the item are off for several claims: Thm 2.2 is on p.112 not p.113; Thm 4.5 is on p.120 not p.121; the 10748-node graph description is on p.132 not p.133; the 10000-simulation text is on p.133 not pp.134-135; the weighted-cascade 25 percent comparison is on p.134 not p.135; the 2415 plateau and random-beats-centrality-past-12 text are on p.135 not pp.136-137; the local-search remark is on p.136 not p.137.",
+    "Thm 3.3 is stated for the general threshold model (n^(1-eps) hardness). The key finding and bearing that carry this bound over to fixed-threshold models overreach; p.117 says only that fixed-threshold models admit no non-trivial approximation factor.",
+    "Flags text writes weighted cascade as p(u,v) = c_uv/d_v. The paper defines it as 1/d_v with no multiplicity term (Sec 8.2, p.133). The graph is undirected, so degree is the right word, not in-degree.",
+    "Summary says the paper is the method source for edge-keyed common-random-number draws. The paper gives only the live-edge (triggering) equivalence and does not discuss common random numbers. Attribute CRN to project practice and cite the paper only for live-edge worlds.",
+    "Summary says the coalition allocator's singleton ranking is the overlap-blind pattern the paper's experiments penalize. The paper penalizes degree and distance-centrality seeding, not singleton-marginal ranking. Present it as an analogy, not a tested result.",
+    "The cascade-kernel bearing says which seeding heuristic wins flips with activation level. The paper shows only that random seeds gain relative to centrality heuristics as activation rises; it does not show a flip in greedy's rank and never tests greedy against heuristics at p=1%.",
+    "Item says the 18 percent LT margin is 18 percent below greedy. The paper says greedy outperforms high-degree by about 18 percent, with no stated base; the direction of the statement must be corrected in the centrality bearing.",
+    "All eleven related slugs exist as item files in the research state folder. Relation labels were re-read only for chen-2023 (relabelled complements) and the Kempe-side claims; the other nine labels are carried forward unverified against those papers' text.",
+    "Not checked here: paul_alignment and Paul's note claims (no Paul entries exist and annotations are empty), the Sadeh et al. 2019 sample-complexity reference from the online scan, the sha256 of the downloaded PDF, and the scenario.py coalition-side claim.",
+    "Not returned: the StructuredOutput schema has bearings, related and summary_issues only, so the requested key_findings and paul_markup arrays were not produced. Dropped items: none of the bearings were dropped; all six were verified and returned."
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "bearings": [
+    {
+      "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+      "relation": "method-source",
+      "paper_claim": "Six core tests: Spending(sector, year) = sector baseline + b x Growth(sector, year-k) + c PresidentialYear + d MidtermYear + e ExpectedDemHouse + f ExpectedDemSenate, with k = 0 or k = 1, plus two predicted-growth tests; each run for contributions and lobbying; 72 sector-years (4 sectors x 2008-2025); no regressions run yet.",
+      "paper_location": "Text lines 5, 26, 42-56 (opening paragraph; Simple calculations and model)",
+      "system_side": "sgs_registry.R encodes the same growth variables (growth_previous_year_pct, growth_same_year_pct, predicted_growth_pct), the same four core controls (pres_year, midterm_year, exp_dem_house, exp_dem_senate) and sector fixed effects. The lobbying specification adds cur_dem_house and cur_dem_senate (SGS_L_CONTROLS, line 34), which the note treats as optional rather than core.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:31-36",
+      "transfer_conditions": "The built study is not the note's scope. The primary sector-year window is 2020-2025 with at least 6 distinct years (SGS_WINDOW_RULE, sgs_registry.R lines 17-18; ruling R8 per sgs_config.R line 34), with a fallback of 10 consecutive years inside 2008-2025 only if the primary fails. The LobbyView tests use the 2008-2025 fallback. The claim that same-year growth is outside a real forecast's information set is not in the note and could not be verified, so it is removed.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Six-test structure, variables and controls reproduced from text lines 42-56 and the registry. Analyst window 2020-2026 is wrong; code says 2020-2025. Unsupported k=0 forecast-set claim removed. Lobbying control set is wider than the note's four."
+    },
+    {
+      "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+      "relation": "measurement-source",
+      "paper_claim": "Real growth = 100 x (rev_t / rev_t-1 - 1) on IBISWorld constant-price revenue with no further CPI adjustment. Spending in 2025 dollars = nominal x 321.9 / CPI_year. Democratic share = D / (D + R) by chamber, missing when the denominator is zero. Blanks stay missing, never zero.",
+      "paper_location": "Text lines 20, 32, 36-40, 58",
+      "system_side": "sgs_run.R lines 281-287 build the dollar-base text for dem-share tests from the base_usd and base_real_m columns, so the denominator is carried explicitly per sector-year. Those lines do not show the zero-denominator missing rule, the growth formula or the CPI multiplier; those were not confirmed in this pass.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_run.R:281-287",
+      "transfer_conditions": "IBISWorld covers whole industries while Mentat contributions cover a roster of companies, a population mismatch the note does not state. The attribution of this mismatch to ruling 6 is not in the note and was not verified. IBISWorld historical values may include estimates and later revisions (text line 38).",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Formulas and blank-handling rules reproduced from text lines 20, 32, 36-40 and 58. Ruling-6 attribution removed as unsupported by the note. The code check covered only the dem-share base lines."
+    },
+    {
+      "component_id": "mentat-giving-forecast.cycle-model",
+      "relation": "measurement-source",
+      "paper_claim": "IBISWorld U.S. Key Statistics revenue is in constant prices, so growth ratios need no CPI adjustment. Previous-year growth (k = 1) is one of two actual-growth timings. Predicted growth uses the prior-year forecast for year t; 55 sector-year values, 53 passing the main checks.",
+      "paper_location": "Text lines 7, 36-38",
+      "system_side": "giving_forecast.py lines 1393-1398 comments describe M = B exp(phi dP + d_h)(1 + x/2), with x taken from the IBISWorld real growth path over the lag window c-3 to c-1, and company PACs exempt (x = 0, D-116). These comments confirm the lagged real-growth input but do not show how the 50/50 weight is derived.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:1393-1398",
+      "transfer_conditions": "The note supplies only the measurement and lag convention. It says nothing about forecasting giving. The analyst's backtest figures (MAE 3.63 vs 3.99; growth beats naive in 45 percent of targets; LobbyView 2014-2023) were not found in the sector_growth_study folder and are removed. The D-113 attribution for the 50/50 weight is unverified.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Measurement claims reproduced from text lines 7 and 36-38 and the code comment. Backtest figures could not be located and were dropped. The 50/50 weighting was not traced to a ruling."
+    },
+    {
+      "component_id": "melange-lobbying.finance-client-classification",
+      "relation": "context",
+      "paper_claim": "Melange holds bank and CU lobbying aggregates for 1999-2023 and cached annual series for 2021-2025 plus partial 2026 (bank, CU, crypto, fintech). Life insurance and auto are not cached. Organizations still need alignment to the research sectors under one expenditure definition.",
+      "paper_location": "Text line 16 (readiness table row 2); line 22",
+      "system_side": "fec/lobbying/sector_spend.py line 49 sets DEFAULT_YEARS to 2021-2026, consistent with the cached 2021-2025 plus partial 2026 window. The analyst's claim that LobbyView finance classification is name-regex based with coverage reliable through 2021 (vintage 2024-10-25) was not checked.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/lobbying/sector_spend.py:49",
+      "transfer_conditions": "DEFAULT_YEARS covers the LDA sector-spend build, not the 1999-2023 bank and CU aggregates the note cites. Using LDA spend as an outcome per organization is an identity-source use consistent with D-021; no edge or weight use is implied.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Inventory claims reproduced from text line 16. Only the 2021-2026 default year window was checked on the system side. Classification-method and vintage claims remain unverified."
+    }
+  ],
+  "related": [
+    {
+      "slug": "kim-2018-lobbyview-firm-level",
+      "relation": "complements",
+      "why": "LobbyView is a firm-level LDA database. The note does not name LobbyView as its source for the bank and CU aggregates, so this is background for the LDA measure, not confirmed same-data."
+    },
+    {
+      "slug": "goff-nd-cross-industry-finance",
+      "relation": "complements",
+      "why": "Paul's unpublished client report on financial-services political money covers bank and credit-union sections, overlapping the note's sectors. The note does not cite it."
+    },
+    {
+      "slug": "furnas-nd-conflating-lobbying-pacs",
+      "relation": "complements",
+      "why": "Its title reports low overlap between lobbying and PAC spending, which is consistent with running contributions and lobbying as separate outcomes. The note does not state this reasoning; it is the analyst's inference."
+    },
+    {
+      "slug": "kim-2020-strategic-sequential-links",
+      "relation": "complements",
+      "why": "Its title covers strategic and sequential links between donations and lobbying, a lead-lag framing the note does not use."
+    },
+    {
+      "slug": "bickmore-2025-corporate-lobbying-political",
+      "relation": "complements",
+      "why": "Its title covers corporate lobbying, PAC spending and market concentration, a related economic-driver design."
+    },
+    {
+      "slug": "chohan-2025-crypto-oligarchy-cryptocurrency",
+      "relation": "complements",
+      "why": "Its title and tags cover the cryptocurrency lobby and PAC spending, the sector the note handles only through a proxy."
+    }
+  ],
+  "summary_issues": [
+    "Window misstated: the summary says the built study runs a 2020-2026 window. sgs_registry.R and sgs_config.R set the primary window to 2020-2025 (R8), with a fallback inside 2008-2025.",
+    "Sector count not established: the summary says nine sectors. sgs_registry.R lines 242 and 463 describe seven study sectors plus community_banks. Treat nine as unverified.",
+    "Misattributed quote in paul_alignment: the phrase seems to confirm does not appear in the note. The trend-over-significance rule is not stated in the note either. The note contains no regression results to comment on.",
+    "Unlocated figures: MAE 3.63 vs 3.99, growth beating naive in 45 percent of targets, 264 tests with 72 estimable, and retrospective 2023 expected-control fill were not found in the sector_growth_study folder by grep. Unverified.",
+    "Numbers present in the study's own review file: sgs_review.R lines 33-35 hold L3-LV base 0.352 and yearfe -0.477, with Holm p moving 0.0375 to 0.1125; lines 237-238 hold adjusted R2 0.884717 vs 0.884690. This is the study's own Codex review, not an independent second path, so it stays UNVERIFIED under DE-062.",
+    "Partisan-shift result -0.04 (p 0.76, 2021-25) only partly confirmed: coefficients near -0.0428 and -0.0405 appear in build_receipt_08_contributions_by_chamber.json, but the p-value and window were not located.",
+    "Design fidelity overstated: the lobbying tests add cur_dem_house and cur_dem_senate (sgs_registry.R line 34), which the note treats as optional, so the built design is not exactly the note's design.",
+    "Giving-forecast link: the 50/50 budget term fed by the IBISWorld lagged real-growth path is supported by code comments (giving_forecast.py lines 1393-1398). The no-out-of-sample-support point rests on the backtest figures, which could not be located."
+  ]
+}

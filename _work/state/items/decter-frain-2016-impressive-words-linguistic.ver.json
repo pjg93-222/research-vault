@@ -1,0 +1,62 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-psychometrics.persona-agency-communion",
+      "relation": "qualifies",
+      "paper_claim": "Broad communion correlates r = -0.36 with monthly Gallup approval (Model 3 beta +0.04, n.s.) while the prosocial helping facet correlates r = +0.55 (Model 3 beta +0.14, p < 0.05). Agency r = -0.16 and Model 3 beta -0.11 (p < 0.05). Window Jan 1996 to Nov 2014, N = 206 House months. Pooled over the whole chamber, not stratified.",
+      "paper_location": "Tables 2-3, pp.7-8; Discussion pp.9-10",
+      "system_side": "The persona channel forms a z blend of two LLM cue shares from agency_communion_llm.py: persona z = 0.60 z(communion) - 0.40 z(agency). It is blended into susceptibility at PERSONA_W 0.30 for members with at least 15 classified sentences (510 of the 526 rows in agency_communion.json meet this). The communion share uses the Empathy and Compassion codebook: STRONG cues name concrete disadvantaged people, while WEAK cues include empathic focus on communities and states. Group-intimacy or belonging talk has no dedicated cue.",
+      "code_ref": "fec/members/agency_communion_llm.py:35-60; fec/members/receptivity_layer.py:139-156",
+      "transfer_conditions": "The paper is about an aggregate chamber-month audience outcome (approval of Congress), not member-level susceptibility to lobbyists. The facet lesson transfers only as a construct-definition check: a pooled communion score can mix facets with opposite signs. Ecological inference from chamber months to individual members is not licensed.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers checked against the text: Table 2 (p.7) and Table 3 (p.8) match exactly. Code checked: persona formula, PERSONA_W default 0.30, 15-sentence floor, and the codebook cue tiers. Corrections: 526 is the total row count and 510 meet the threshold; the channel uses agency as well as communion; the belonging gap holds only as dedicated-cue absence, since community-focused empathy is a WEAK communion cue. The brain ruling about a failed panel of 3 or more raters was not checked."
+    },
+    {
+      "component_id": "melange-psychometrics.persona-agency-communion",
+      "relation": "suggests-extension",
+      "paper_claim": "Agency and communion indexes are built from coder-weighted LIWC category densities: five blind coders, ICC agency 0.82 and communion 0.90, averaged into category weights (weights independent, r = -0.03). A 127-word prosocial dictionary is scored alongside. Robustness to the coding is reported only in the Supplement.",
+      "paper_location": "Method pp.2-4, Table 1; Limitations p.3",
+      "system_side": "The persona shares come from one instrument: Claude few-shot cue classification of self-referential floor and hearing sentences, cached per model. agency_communion_llm.py codes no second instrument for the same shares, so a dictionary path would have to be added as a second path.",
+      "code_ref": "fec/members/agency_communion_llm.py:3-12,123-140,239",
+      "transfer_conditions": "A dictionary path would be a convergence check (DE-062 second path), not a validity test. The coder weights were set on chamber aggregates, so member-level densities on short self-referential samples would be noisy. The paper's ICCs describe agreement on category weights, not on member-level scores.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "ICCs, five coders, the 127-word dictionary and Table 1 are confirmed in the text. Removed the analyst claim that the paper gives stable chamber-level series: it reports correlations, and robustness appears only in the Supplement. The code side is confirmed: one LLM instrument with per-model caches. The brain-side claim about functional-gate and party-signature validations was not checked."
+    },
+    {
+      "component_id": "melange-psychometrics.lexical-big5",
+      "relation": "qualifies",
+      "paper_claim": "Chamber-level LIWC densities in House floor speech co-move with monthly approval. Exploratory stepwise standardized betas, UNSTRATIFIED: tentativeness +0.46, prepositions +0.41, humans +0.25, anxiety +0.24, positive emotion +0.24, numbers +0.15; second person -0.18, conjunctions -0.26 (8 of 63 categories kept, N = 206 months).",
+      "paper_location": "Table 5, p.8; discussion pp.10-11",
+      "system_side": "big5_traits.py standardizes per-1000-word category rates (posemo and tentat are among the CAT categories) within the corpus. The corpus pools each member's social posts with floor speech and interview text (CREC and INTERVIEW sources; CHRG excluded by default), not floor speech alone. BIG5_BEFORE and BIG5_AFTER are validation hooks that default to off, so no period slicing or de-trending applies by default.",
+      "code_ref": "fec/members/big5_traits.py:33-35,64,84,94,220",
+      "transfer_conditions": "Inference, not tested: if category rates drift by period at the chamber level, members whose speech is concentrated in different years could pick up period variance in their trait z. The paper shows co-movement, not the size of the drift. A per-year de-meaning test on Paul's corpus would check it.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Table 5 values match the text exactly. The paper's discussion labels tentativeness as r = 0.46, but Table 5 reports standardized betas, so the beta label is the right one. Code confirmed: per-1000 rates at line 220, posemo and tentat categories, default-off hooks, and no de-trending found. Softened because the pooled corpus includes social posts and interview text, not only floor speech."
+    }
+  ],
+  "related": [
+    {"slug": "birkenmaier-2025-measuring-politicians-public", "relation": "complements", "why": "Same agency and communion constructs for politicians. Birkenmaier and Lechner use LLM cue prompting, the instrument Melange runs; this paper uses coder-weighted LIWC dictionaries. Together they give two measurement paths."},
+    {"slug": "ramey-2016-measuring-elite-personality", "relation": "same-data", "why": "Both score Congressional Record House floor speech over 1996 to 2014 with closed-vocabulary categories. Ramey does it at member level for traits, and this paper does it at chamber-month level for approval. Verified in the Ramey item."},
+    {"slug": "pennebaker-2003-psychological-aspects-natural", "relation": "same-method", "why": "LIWC word-category densities as psychological indicators are the measurement basis of this paper."},
+    {"slug": "koutsoumpis-2024-kernel-truth-text", "relation": "complements", "why": "Meta-analysis of how far LIWC categories carry Big Five signal. It bounds how much the coder-weighted LIWC agency and communion indexes can mean."},
+    {"slug": "lechner-2025-mapping-political-personality", "relation": "complements", "why": "The PoliPers framework for politicians' agency and communion profiles is the source of the codebook Melange uses, per the agency_communion_llm.py docstring. This paper adds the belonging versus helping split."},
+    {"slug": "osnabrugge-2021-playing-gallery-emotive", "relation": "complements", "why": "Also treats parliamentary rhetoric as aimed at an outside audience, but works on emotive language where this paper works on agentic and communal language."},
+    {"slug": "aroyehun-2026-politics-of-feelings", "relation": "complements", "why": "Emotional expression in congressional speech linked to legislative effectiveness at member level; this paper links language to chamber-level approval."},
+    {"slug": "amsalem-2018-effect-politicians-personality", "relation": "complements", "why": "Politician personality and media visibility relate to this paper's finding that media tone mediates the language-approval link."}
+  ],
+  "summary_issues": [
+    "Summary says moderation flips some signs. The paper shows the communal effect reverses sign by chamber make-up, agency goes from negative to null when Congress is less male-dominated, and the prosocial effect changes size but not sign.",
+    "Summary says the persona channel uses one communion share. It blends communion (weight 0.60) and agency (weight 0.40) z-scores.",
+    "Bearing 1 and the code cite 526 members with at least 15 sentences. 526 is the total row count; 510 meet the threshold.",
+    "Bearing 2 says the paper gives a stable chamber-level series. The paper reports correlations and places robustness checks only in the Supplement.",
+    "Conjunction correlations are reported as r(215) while N is 206 months. Ext and rel did not flag this df mismatch.",
+    "Count inconsistency confirmed: 22 excluded plus 206 retained is 228 transcripts against 227 months (pp.2-3). Rel's flag is correct.",
+    "Ext key finding 4 says the authors read the communion-versus-agency difference as support for H3b. The paper uses the prosocial-versus-agency comparison (z = 7.89) for H3b and says the negative communion comparison complicates the reading.",
+    "paul_alignment attributes a position to Paul (Birkenmaier and Lechner, the trait-to-node worry). There is no Paul entry or markup for this work and no source was checked, so treat it as unverified.",
+    "Bearing 1 and bearing 2 rely on brain rulings (failed panel of 3 or more raters; functional-gate and party-signature records). Those were not checked here.",
+    "The paper's discussion labels Table 5 betas as r (for tentativeness, r = 0.46). Quote Table 5 values as standardized betas, not correlations."
+  ]
+}

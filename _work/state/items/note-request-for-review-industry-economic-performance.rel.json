@@ -1,0 +1,112 @@
+{
+  "summary_md": "Paul's September 24, 2026 design memo to a secondary advisor (Astra) asks whether a sector's year-over-year economic performance predicts its federal campaign giving and lobbying, and how expected partisan control shapes the amount and direction of that money. It reports no estimates. It sets out five hypotheses (deep pockets, distress, access-seeking, stakes, lobbying tracks current power) and three pooled sector fixed-effects models. Model 1 is log contributions on prior- and same-year growth together (a distributed lag), a negative-growth dummy, Midterm/Pres, a Tossup term and a trend. Model 2 is Republican two-party share on Shift = P minus RMajNow. Model 3 is log lobbying with a lagged dependent variable and Unified control. Inference is a wild sector-cluster bootstrap with Driscoll-Kraay errors. The proposed panel is 2008-2025 with five sectors, about 9 elections and 6 chamber flips. The memo is the method source for the Mentat sector growth study, and the Codex ORIGINAL_MODEL_CONTRACT transcribes it. The R build diverges from it. Each growth timing enters its own model (C1/C2/C3) rather than one distributed lag. Totals carry a signed exp_dem control where the memo calls for Tossup. There is no negative-growth dummy, trend or lagged lobbying term. The primary window is 2020-2025 (three elections), not 2008-2025. Results so far are null or fragile: no stable partisan shift (-0.04, p .76), and the lobbying growth lead flips sign under year FE. The memo's leverage worries therefore apply to the build with more force. The only within-cycle access-seeking signal, SEATS-W (-3.47 pp per expected D seat, House 2022), comes from one election and uses expected seats, the measure the memo demoted to a robustness check. All agent readings here are UNVERIFIED (DE-062).",
+  "category": "Paul's Research Notes",
+  "bearings": [
+    {
+      "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+      "relation": "method-source",
+      "paper_claim": "Three pooled sector-FE models: (1) log Contrib on G(t-1), G(t), Neg(t-1), Midterm, Pres, Tossup, Trend; (2) RShare by chamber on growth, Shift = P - RMajNow, RMajNow; (3) log Lobby on lagged log Lobby, growth, Neg, Unified. Growth is z-scored within sector, dollars are CPI-deflated, inference is a wild cluster bootstrap by sector, and the sample is 2008-2025 across 5 sectors.",
+      "paper_location": "Sections 4.1-4.3 and 5",
+      "system_side": "The study's frozen registry builds core contribution tests C1-C3 and lobbying tests L1-L3, all with sector FE and wild cluster restricted bootstrap by sector (Webb six-point weights). The brain note's ORIGINAL_MODEL_CONTRACT transcribes this memo's three equations as the original-study contract.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:112-120; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:1-10",
+      "transfer_conditions": "Direct: this memo is the design source. It holds only where the build actually follows the memo's specification; see the contradicts bearing for where it does not.",
+      "strength": "strong"
+    },
+    {
+      "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+      "relation": "contradicts",
+      "paper_claim": "Both growth timings belong in one regression, because separate models would each pick up part of the other's effect. Totals get Tossup = 1 - abs(2P - 1), not a signed Republican-gains term, because a signed term assumes direction. A Neg dummy, a Trend and lagged log lobbying (Kerr et al. 2014 persistence) are included. Lobbying uses Unified control.",
+      "paper_location": "Section 4.1 items 1, 7 and 8; Section 4.3; Section 5 equations 1 and 3",
+      "system_side": "Registry runs each growth timing as its own model (C1 prior-year, C2 same-year, C3 predicted). Contribution controls: pres_year, midterm_year, exp_dem_house, exp_dem_senate (signed levels; no Tossup variable in the R code). Lobbying adds cur_dem_house/senate, no lagged DV. DV defaults to real $M levels, logs only as robustness. Decline years use the ASYM g_pos/g_neg split, not Neg. Primary window 2020-2025 (R8).",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:30-34; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:112-114; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:313-316; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:38-41",
+      "transfer_conditions": "Applies to every CORE C and L result. Rulings R4-R8 and the 2026-09-26 rulings may legitimately supersede parts of the memo. Even so, results from separate-timing, signed-control models should not be reported as tests of the memo's H1 or H3.",
+      "strength": "strong"
+    },
+    {
+      "component_id": "mentat-sector-growth-study.seats-weekly-test",
+      "relation": "qualifies",
+      "paper_claim": "Probability of majority control is the preferred projected-control measure because access comes with majority status (Cox and Magar 1999, about 36,000 USD per member, cited and not verified here). Expected seat change is kept only as a robustness check. Q4 asks how quickly PAC giving tracks changing expectations within a cycle, and Q7 asks about an event study around expected flips.",
+      "paper_location": "Section 4.3; Section 8B questions 4 and 7",
+      "system_side": "SEATS-W regresses weekly Democratic share of giving on 538 Lite expected Democratic seats with an as-of gate: -3.47 pp per +1 expected D seat (House, 2022, 17 weeks; block-bootstrap p .0086/.0174, Holm .034/.070). The Senate result is null, and the whole test rests on ONE election. It answers the memo's within-cycle question, but with the seat-count measure the memo demoted rather than majority probability.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:13-20; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:278; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:199-203",
+      "transfer_conditions": "Holds only for the 2022 House, as an exploratory reading. The memo's majority-probability logic predicts that seat gains matter mainly near the control threshold. A test of that would need a P-based or threshold-interacted variant and the 2018/2020 cycles.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "mentat-giving-forecast.cycle-model",
+      "relation": "supports",
+      "paper_claim": "Election-cycle controls use Pres and Midterm dummies with odd years as the baseline. Industry forecasts (IBISWorld, trade outlooks) are used only to predict 2026 spending after estimation and are never mixed into the estimated growth variable.",
+      "paper_location": "Section 4.1 item 6; Section 4.2",
+      "system_side": "The live cycle model fits presidential vs midterm phase log models. The IBISWorld real growth path, with a one-year lag, enters the projection step (the 50/50 growth). This matches the memo's split between estimation and prediction for the forecast product. The sector study, however, uses predicted_growth_pct as an estimation regressor (C3/L3) under ruling R6.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:1391-1397; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:30",
+      "transfer_conditions": "Supports the forecast pipeline's phase structure and its use of IBIS growth only at projection. It does not cover C3/L3, which put forecast growth on the right-hand side in estimation; that departure needs its own label.",
+      "strength": "moderate"
+    }
+  ],
+  "gaps_exposed": [
+    "No distributed-lag core model: the build never enters G(t-1) and G(t) jointly in one regression, which the memo's main argument (Section 4.1 item 1) requires; C1 and C2 each risk absorbing the other's effect.",
+    "No Tossup (stakes, H3) term exists anywhere in the R study code; contribution totals carry signed exp_dem controls, which the memo argues against for total-dollar outcomes.",
+    "Lobbying models lack the lagged dependent variable the memo specifies (Kerr et al. persistence), and the memo's open question Q13 on Nickell bias with FE plus a lagged DV over about 18 years is unaddressed.",
+    "Driscoll-Kraay errors for year-level terms are not implemented; the build uses two-way cluster SE as its sensitivity check instead (contract: neither may be silently replaced).",
+    "The primary window of 2020-2025 gives about 3 elections against the memo's 9, so the projected-control leverage the memo already calls weak is thinner still; SHIFT House is SATURATED at 2 years.",
+    "The Shift x RLean interaction, which the memo calls the stronger test because it survives year FE, is not among the registry tests located here.",
+    "Majority probability P is used as exp_dem levels; the memo's Shift = P - RMajNow appears only as the derived exp_shift reparametrisation, not as the primary SHIFT focal term.",
+    "C3/L3 regress spending on IBISWorld predicted growth in estimation, contrary to the memo's rule that forecasts never enter the growth variable; this is ruled (R6) but not labelled as a departure from the memo."
+  ],
+  "flags": [
+    "Pooled coefficients across sectors with incomparable growth sources (crypto market cap vs bank assets) cross a known fault line; quote them with per-sector strata (the SLOPES family) or label them UNSTRATIFIED.",
+    "Every figure from the build must name its window (2020-2025 primary, 2021-2025 preview, 2022-only SEATS-W) and its denominator (sector-years or unit-weeks); the memo's 2008-2025 framing does not describe the built results.",
+    "Cox and Magar's 36,000 USD per member figure and Cook's 94/97/100 percent accuracy figures are cited and were not verified against sources on disk.",
+    "LDA spending as a dependent variable is consistent with D-021, since it is not an edge or weight; the memo's issue-code alternative (Q8) would still be a measurement choice and must not become a member-level lobbying edge.",
+    "No conflict with the rejected SNA proposals or the reciprocity rule; the memo does not touch networks.",
+    "This reading is new agent analysis and stays UNVERIFIED until a second path reproduces it (DE-062)."
+  ],
+  "paul_alignment": "No annotations; this is Paul own design memo. Evidence so far does not back his deep-pockets or access-seeking hypotheses: growth adds no adjusted R2, L3-LV +0.352 flips to -0.477 under sector plus year FE, SHIFT shows no stable partisan move (-0.04, p .76), matching the memo own caution (no causal claims, few elections, 5 clusters). The memo is stale against the build: window moved to a 2020-2025 primary (R8), scope grew to nine sectors, and joint timings, Tossup, Neg, lagged lobbying and Driscoll-Kraay are not what the R registry runs.",
+  "related": [
+    {
+      "slug": "imai-2021-fixed-effects-regression",
+      "relation": "complements",
+      "why": "It bears on the memo's Q13 and its plan to use year fixed effects: two-way FE with a lagged dependent variable and few units is exactly the setting Imai and Kim caution about, and the build's L3 sign flip under year FE illustrates it."
+    },
+    {
+      "slug": "kim-2020-strategic-sequential-links",
+      "relation": "complements",
+      "why": "It links campaign donations to subsequent lobbying at the firm level, informing H4 and the memo's choice to model contributions and lobbying separately with different control timing."
+    },
+    {
+      "slug": "furnas-nd-conflating-lobbying-pacs",
+      "relation": "complements",
+      "why": "It shows low overlap between organizations that lobby and those that give, which bears on the memo's Q2 and Q8 about what counts as a sector's strategic spending."
+    },
+    {
+      "slug": "anon-2019-partisan-ties-lobbying",
+      "relation": "complements",
+      "why": "It finds partisan-tied lobbying firms lose value when their party loses the House, which is direct evidence for the access-with-majority logic behind the memo's H2 and H4."
+    },
+    {
+      "slug": "huneeus-2018-effects-firms-lobbying",
+      "relation": "complements",
+      "why": "Its firm-level lobbying returns motivate the deep-pockets hypothesis (H1) that the memo tests at the sector level."
+    },
+    {
+      "slug": "bonica-2013-mapping-ideological-marketplace",
+      "relation": "complements",
+      "why": "It underlies DIME, which the memo names as a contribution source with CFscores for the RShare outcome."
+    },
+    {
+      "slug": "bacik-2025-measuring-dynamical-evolution",
+      "relation": "complements",
+      "why": "It documents election-cycle periodicity in lobbying, which the memo's Pres and Midterm controls in the lobbying model assume."
+    },
+    {
+      "slug": "chohan-2025-crypto-oligarchy-cryptocurrency",
+      "relation": "complements",
+      "why": "It covers the concentrated crypto lobby and Fairshake outside spending that the memo flags as a reason to analyze crypto separately."
+    },
+    {
+      "slug": "anon-2025-cross-industry-political",
+      "relation": "same-data",
+      "why": "This cross-industry political spending memo covers the same sector-level giving and lobbying comparison the study panel is built on."
+    }
+  ]
+}

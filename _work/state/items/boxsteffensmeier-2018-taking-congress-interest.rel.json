@@ -1,0 +1,93 @@
+{
+  "summary_md": "Box-Steffensmeier, Christenson and Craig (AJPS 63(1), 2019; online 2018) study 6,633 House bills that were the subject of supportive Dear Colleague letters, 106th to 111th Congresses (1999-2010; regression N = 6,597). They code the interest groups named as endorsers in each letter and measure two signals: Interest Group Social Power, the highest standardized eigenvector centrality of any endorser in the amicus curiae co-signing network, and Interest Group Count, the number of endorsers. In a negative binomial model of cosponsor counts with Congress fixed effects, both are positive (0.055 and 0.007, p<.001). Predicted cosponsors rise from 33 with no endorsement to 51 with a top-centrality endorser; 61 average-centrality endorsers are needed to match that. Logit models of committee reporting and House passage show no direct social-power effect. Count predicts passage (0.013) but not reporting. Cosponsor count predicts both later stages (0.002, 0.004). Majority-party sponsorship (1.353) and hot-bill status (2.428) are the largest passage predictors. The paper has no causal design. Endorsements may be solicited by the sponsor's office, and estimates are pooled across six Congresses and both parties. For Paul's systems, the paper is mainly a source of features and a set of caveats. No built component uses endorsement or group-signal data. The cosponsor forecaster has only member-dyad features, so bill-level outside-support signals are a possible addition. Any LDA-based substitute must respect D-021, however. The legislative pillar's efficiency term credits raw advancement rates without the majority-party adjustment that this paper's passage model shows matters. The solicitation ambiguity matches the system's finding that the lobbied-member link is circular.",
+  "category": "Lobbying",
+  "bearings": [
+    {
+      "component_id": "melange-lobbying.cosponsor-forecaster",
+      "relation": "suggests-extension",
+      "paper_claim": "Bill-level endorsement signals predict cosponsor counts: max endorser eigenvector centrality coef 0.055 (SE 0.011) and endorser count coef 0.007 (SE 0.001), both p<.001, negative binomial with Congress FE, N = 6,597 House bills with supportive Dear Colleague letters, 106th-111th Congresses; predicted cosponsors 33 (no endorser) vs 51 (top-centrality endorser).",
+      "paper_location": "Table 3 and Figures 3-4, pp. 175-176",
+      "system_side": "The ridge-logistic forecaster predicts (bill, member) joins from member-dyad features only: prior sponsor affinity, prior member cosponsorships, prior network degree and eigenvector, NOMINATE distances, party, state, seniority, committee, referrals, sponsor majority, bill type and policy area. It has no bill-level outside-support or endorsement feature. The frozen 265,396-row forecast is unscored.",
+      "code_ref": "fec/lobbying/cosponsor_forecast.py:117-142",
+      "transfer_conditions": "Dear Colleague endorsements are public pro-bill signals sent to members. LDA filings record lobbying activity on a bill with no position, and per D-021 LDA is an identity source, not an edge or weight source, so a count of LDA clients per bill is not this paper's measure and should not be wired in as a substitute. The paper's outcome is a bill-level count, not a dyad join. The estimates are pooled across Congresses and parties (UNSTRATIFIED). Any added feature must be dated before introduction to keep the forecaster's temporal honesty.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "moneyball-rank-pillars.legislative-pillar",
+      "relation": "qualifies",
+      "paper_claim": "House passage is driven most by bill and sponsor context. The Passed House logit gives hot bill 2.428 and majority-party sponsor 1.353 (both p<.001), versus endorser count 0.013 and cosponsors 0.004. Endorser social power has no direct effect on reporting (0.020 ns) or passage (-0.035 ns). N = 6,597 letter bills, 1999-2010.",
+      "paper_location": "Table 4 and Figure 5, pp. 177-178",
+      "system_side": "Efficiency per category is the decay-weighted signed share of a member's sponsored or original-cosponsored bills that advanced, divided by the max across members. There is no adjustment for majority-party status, hot-bill status or bill salience before it is percentile-blended into Leg%.",
+      "code_ref": "fec/engine/live_legislative_pillar.py:60-81",
+      "transfer_conditions": "The paper's majority effect is an association over letter-bearing House bills only, pooled across 106th-111th Congresses. It is not a per-member efficiency model. It shows that a raw advancement rate partly rewards majority status and bill salience rather than member effort. Any adjustment would be a methodology change that is Paul's call.",
+      "strength": "moderate"
+    },
+    {
+      "component_id": "melange-legislative-data.effectiveness-shadow",
+      "relation": "supports",
+      "paper_claim": "Signals matter differently by stage: a well-connected endorser predicts early cosponsorship, endorser breadth predicts passage but not committee reporting, and cosponsor count predicts reporting (0.002, p<.01) and passage (0.004, p<.001). This supports modelling progression as distinct stages rather than a single success flag.",
+      "paper_location": "Tables 3-4, pp. 175-178; conclusion pp. 178-179",
+      "system_side": "The shadow scores five stages separately (BILL, AIC, ABC, PASS, LAW) with role weights and a cosponsor timing decay. It is a shadow candidate and has not been activated.",
+      "code_ref": "fec/engine/legislative_effectiveness.py:17-28",
+      "transfer_conditions": "The paper measures bill-level outcomes, not member credit. It does not test cosponsor timing, so it gives no support for the 180-day half-life. Its sample is limited to bills with supportive Dear Colleague letters.",
+      "strength": "weak"
+    },
+    {
+      "component_id": "melange-lobbying.lobbied-member-link",
+      "relation": "supports",
+      "paper_claim": "The authors cannot tell whether an endorsement was solicited by the member's office or initiated by the group (footnote 11). Endorsers listed together may never have interacted (p. 172). So a group named on a bill's letter is not shown to have influenced the cosponsors.",
+      "paper_location": "Footnote 11, p. 171; p. 172",
+      "system_side": "The lobbied-member link joins LDA clients to the sponsor and cosponsors of the bills they lobbied. P(joined given lobbied) = 1 by construction, so the link was refuted as influence evidence. LD-2 filings never name members, and the bill sidecar ships only bill-level interaction totals.",
+      "code_ref": "fec/lobbying/bill_lobbying_sidecar.py:16-20",
+      "transfer_conditions": "The paper uses an endorsement channel that the member has observed, which is stronger than an LDA bill mention. Even so, its authors leave direction unresolved, and that reinforces the system's refusal to treat bill co-occurrence as contact or influence.",
+      "strength": "moderate"
+    }
+  ],
+  "gaps_exposed": [
+    "No component ingests outside-group support signals on bills (endorsements, coalition letters, Dear Colleague letters). The only bill-level organization data are LDA interaction totals, which are display-only and, under D-021, cannot serve as a weight.",
+    "The legislative pillar's efficiency rate has no control for majority-party sponsorship or bill salience, which this paper finds are the largest passage predictors (1.353 and 2.428, House 1999-2010).",
+    "The cosponsor forecaster has no bill-level covariates beyond type, policy area and referrals. Bill attractiveness to cosponsors is left to dyad features. The forecast is still unscored against a history baseline.",
+    "No component uses a network of organizations (as opposed to members) to rank the standing of groups. Building one would need an identity-resolved organization graph and D-025-compliant wording."
+  ],
+  "flags": [
+    "Eigenvector centrality in the amicus network is called social power and influence by the authors. If reused in Melange, it is a heuristic model output, never closeness, access or influence (D-025).",
+    "All coefficients are pooled across the 106th-111th Congresses (Congress FE) and both parties. No strata by party or majority status are reported for the social-power or count effects, although majority status is a strong passage predictor. Quote them as UNSTRATIFIED.",
+    "Transferring endorser count as a count of LDA clients lobbying a bill would use LDA as a weight or feature source, which conflicts with D-021. LDA bill mentions carry no position and are not endorsements.",
+    "Solicited versus group-initiated endorsements cannot be distinguished (footnote 11). The direction of association is unresolved, as with the system's circular lobbied-member link.",
+    "Metadata hint says 2018; the article is AJPS 63(1), January 2019, published online in 2018.",
+    "The paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization, so neither rejected SNA proposal is raised."
+  ],
+  "paul_alignment": "Paul has no bibliography entry for this work; its 78 annotations carry no notes. The highlights track the core argument: members cue-take under scarce information, one well-connected endorser builds cosponsors, breadth matters at passage. The evidence agrees with those highlights. component_literature cites the paper under 4 components. Only the forecaster and legislative-pillar links hold against the code. The centrality citation is a mismatch: the paper ranks groups in an amicus network, not members. Nothing built uses endorsement signals, so this is an unbuilt feature, not a stale note.",
+  "related": [
+    {
+      "slug": "sotoudeh-2024-network-based-measure",
+      "relation": "complements",
+      "why": "Both model how cosponsorship relates to House bill passage. Sotoudeh measures member-level cosponsor-network influence on passage. This paper treats the cosponsor count as an intermediate stage driven by outside-group cues."
+    },
+    {
+      "slug": "kim-2025-measuring-interest-group",
+      "relation": "complements",
+      "why": "Kim et al. infer interest-group positions on bills from LDA reports. This paper takes positions directly from endorsements listed in Dear Colleague letters. The two are alternative sources for group support on a bill."
+    },
+    {
+      "slug": "kim-2018-lobbyview-firm-level",
+      "relation": "complements",
+      "why": "LobbyView links firms to bills through lobbying reports, which record activity rather than endorsement. This shows why LDA bill links cannot stand in for the endorsement signals this paper uses."
+    },
+    {
+      "slug": "pritoni-2025-lobbying-coalitions-determinants",
+      "relation": "complements",
+      "why": "Reviews why groups lobby in coalitions. This paper's endorser-count result (breadth predicts passage, 0.013) is evidence that coalition breadth matters late in the process."
+    },
+    {
+      "slug": "kim-nd-mapping-political-communities",
+      "relation": "complements",
+      "why": "Maps lobbying networks of organizations and legislators. This paper ranks organizations by centrality in a separate amicus network to measure their signal value."
+    },
+    {
+      "slug": "bakker-nd-understanding-partisan-receptivity",
+      "relation": "complements",
+      "why": "Both rest on cue-taking under bounded rationality. Bakker studies partisan cues to voters, while this paper studies interest-group cues to legislators."
+    }
+  ]
+}

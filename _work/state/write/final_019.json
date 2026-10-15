@@ -1,0 +1,1573 @@
+[
+ {
+  "slug": "kim-2018-lobbyview-firm-level",
+  "note": false,
+  "meta": {
+   "title": "LobbyView: Firm-level Lobbying & Congressional Bills Database",
+   "authors": [
+    "In Song Kim"
+   ],
+   "year": "2018",
+   "venue": "Working paper, MIT Department of Political Science (draft dated August 30, 2018). No journal or series named in the text.",
+   "doi": "",
+   "sha12s": [
+    "68dd7ab2a4fc"
+   ],
+   "category": "Lobbying",
+   "category_slug": "lobbying"
+  },
+  "extraction": {
+   "title": "LobbyView: Firm-level Lobbying & Congressional Bills Database",
+   "authors": [
+    "In Song Kim"
+   ],
+   "year": "2018",
+   "venue": "Working paper, MIT Department of Political Science (draft dated August 30, 2018). No journal or series named in the text.",
+   "doi": "",
+   "document_type": "Working paper / technical database documentation (partial; the text says the full methods description will come later)",
+   "coverage": "Full text read: all 378 lines of C:\\Users\\pgoff\\Documents\\research\\_text\\68dd7ab2a4fc.txt (front matter, Abstract, Sections 1 through 5.5, including references). The text is a technical manual, so there are no statistical results, regressions or network estimates to read. Metadata hint corrected: the title, author, date and \"working paper (MIT)\" label match the text; no DOI is given. No Paul markup file was supplied (the task listed none), so paul_markup is empty.",
+   "research_question": "No explicit research question. The document describes and documents the LobbyView database, which links congressional bill sponsorship with lobbying reports filed under the Lobbying Disclosure Act of 1995, and the API used to bulk-download it (Abstract; Section 1).",
+   "theory": "No theory section. The Abstract gives the motivation only: lobbying by special interest groups matters for policymaking, and empirical studies of political representation have been limited by the difficulty of observing a direct link between politicians and interest groups.",
+   "data": "Source: the universe of lobbying reports filed under the Lobbying Disclosure Act of 1995 (Abstract). Units named in the text: lobbying reports, lobbying issue sections (\"specific issues\"), bills (ids of the form \"110_HR7311\", Section 5.2), firms/clients, and industries (NAICS2 groupings, Section 5.5). Sample size N: not reported. Time period: not stated as a single range; the CONGRESSES setting in general.py sets the range and its default values are not given (Section 4.1). Example years used in the text are illustrative (2002 Mattel report, 2011 filter example, 2013 Google report). Firm financials come from Compustat (Section 5.5.2), and industry codes from NAICS and SIC. The 52,418 count in Section 5.3 is a query result over all loaded reports that carry the TRADE (DOMESTIC/FOREIGN) issue; the text gives no year restriction for it.",
+   "method": "Descriptive data construction, not statistical estimation. Bills in reports are found by regular-expression search for bill numbers (Section 2, step 1). The Congress is assigned by maximizing the cosine similarity between a bag-of-words vector of each candidate bill and a vector of the text around the bill mention, over the candidate Congresses (Section 2, step 2, Eq. 1). Congress numbers propagate across a report, with majority vote where bills disagree (step 3). Bill titles are matched to report text (step 4). Bill ranges are expanded (step 5). Storage uses SQLite with SQLAlchemy and Elixir, and full-text search uses Whoosh over CRS summaries and specific issues (Sections 3.1, 5.4). Herfindahl indices are computed per industry (herfindahl.py), then augmented with a trade-issue indicator and Compustat data (herfindadd.py) (Section 5.5).",
+   "identification": "None. The paper makes no causal claim and presents no identification strategy.",
+   "scope": "Population: lobbying reports and firms/clients under the LDA (1995 onward). Institution: US Congress bills and their sponsorship. Era: post-1995 LDA filings, with the Congress range set in configuration. Stated purpose: enable systematic research on lobbying and merging with external datasets (Abstract).",
+   "key_findings": [
+    {
+     "finding": "LobbyView is built from the universe of LDA lobbying reports and links bill sponsorship to reported lobbying, with firm- and industry-level identifiers and an API for bulk download.",
+     "location": "Abstract",
+     "numbers": "not reported"
+    },
+    {
+     "finding": "Naive assignment of a bill to the filing-year Congress fails. The Google 2013 report cites H.R. 2577, which is from the 112th Congress, not the 113th.",
+     "location": "Section 2, Figure 1 discussion",
+     "numbers": "113th naive guess vs 112th correct"
+    },
+    {
+     "finding": "Congress identification considers the three preceding Congresses by default and picks the candidate bill with the highest cosine similarity to the report text. If no same-numbered bill exists, the filing-year Congress is used.",
+     "location": "Section 2, steps 2 and Eq. 1",
+     "numbers": "default 3 preceding Congresses"
+    },
+    {
+     "finding": "Congress assignment propagates to other bills in the same report, since reports cover a single Congress. Majority vote is used if bills disagree, and the text says this rarely occurs in practice.",
+     "location": "Section 2, step 3",
+     "numbers": "not quantified"
+    },
+    {
+     "finding": "Bill range expansion treats close bill numbers as lobbied together. The default takes numbers with the same prefix that differ by at most 10 and expands the range. The Mattel 2002 example expands H.R.4182-4186 into five bills.",
+     "location": "Section 2, step 5, Figure 2",
+     "numbers": "default difference <=10; 5 bills in example"
+    },
+    {
+     "finding": "The trade-issue filter on the lobbying reports returns 52,418 reports that include the TRADE (DOMESTIC/FOREIGN) issue.",
+     "location": "Section 5.3 (query example)",
+     "numbers": "52,418 reports"
+    },
+    {
+     "finding": "The Herfindahl index measures competition among firms (clients) within an industry. Output is per year per classification system (NAICS or SIC), and the example run covers 1996 to 2011 with NAICS.",
+     "location": "Sections 5.5, 5.5.1, 5.5.2 (example)",
+     "numbers": "example years 1996-2011"
+    }
+   ],
+   "limitations": [
+    "The author says the document contains only some technical details and that the full methods description (NLP disambiguation of interest group names, collaborative filtering, PostgreSQL/Elasticsearch storage, scalability, descriptive and statistical analyses) will follow (Section 1).",
+    "Sample size, the period covered, and the default CONGRESSES range are not reported.",
+    "TEST MODE for bill detection is described as incomplete, and the text warns against enabling it (Section 4.1).",
+    "Setup from scratch may take up to several days (Section 4.2).",
+    "Setup is tied to the author's Della/tigress environment and paths (Sections 4.1, 4.2).",
+    "If no bill number matches in the Congress range, the code guesses the filing-year Congress, which can be wrong (Section 2, step 2).",
+    "Bill-title and range matching are heuristic and their error rates are not reported."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "This document currently contains only some technical details of the database.",
+     "location": "Section 1 (Introduction)"
+    }
+   ],
+   "measures": [
+    "Cosine similarity between bag-of-words vectors of candidate bills and report text (Eq. 1)",
+    "Herfindahl index of firm competition within an industry (NAICS2 or SIC groupings)",
+    "Trade-issue indicator per firm (lobbied on at least one trade issue)",
+    "Counts of lobbying reports matching a filter (e.g., 52,418 with the TRADE issue)",
+    "Compustat firm-level financial data merged to firms"
+   ],
+   "references_of_note": [
+    "Kim, In Song. 2017. \"Political Cleavages within Industry: Firm-level Lobbying for Trade Liberalization.\" American Political Science Review 111 (1): 1-20. (Firm-level lobbying data that the database supports.)",
+    "Kim, In Song, and Dmitriy Kunisky. 2018. \"Mapping Political Communities: A Statistical Analysis of Lobbying Networks in Legislative Politics.\" Working paper (network.pdf). (Lobbying networks in legislative politics; the closest network-analysis companion work.)",
+    "Compustat firm financial data, named in Section 5.5.2 as the source merged into herfindadd.py output.",
+    "NAICS and SIC industry classifications, used as the industry grouping (Section 5.5)."
+   ],
+   "research_question_placeholder": "n/a"
+  },
+  "summary_md": "Kim's 2018 LobbyView note is a partial technical manual, not an empirical study. It has no estimates, no N and no stated coverage window. It documents how LDA lobbying reports get linked to congressional bills. First, a regex finds bill numbers. Then each mention is assigned to a Congress by taking the argmax of cosine similarity between the candidate bill text and the text around the mention, looking back three Congresses by default; if nothing matches, the code falls back to the filing-year Congress. The Congress is then propagated across the report by majority vote, titles are matched, and close bill numbers (gap of 10 or less) are expanded into ranges. Industries are grouped by NAICS2/SIC for per-industry Herfindahl indices, with Compustat merged in. The note names one failure case: Google's 2013 report cites H.R. 2577, which is a 112th-Congress bill, so the naive filing-year rule gets it wrong. It gives no error rates for any heuristic.\n\nThis matters for Paul's lobbying lane in three ways:\n1. **Every LobbyView-derived member link is a bill-roster join, not a contact record.** That backs the system's finding that the lobbied-member link is circular.\n2. **Paul's own LDA rebuild uses a different bill-resolution rule than the LobbyView pipeline.** A citation without an \"of 20XX\" suffix binds to the filing-year Congress, which is the naive rule this paper says fails. Hyphenated ranges are not expanded. So the network.csv vintage (2000-2022) and the 2021+ rebuild are different instruments with an unmeasured seam between them.\n3. **The paper uses NAICS as an industry grouping.** The system has ruled NAICS to be linkage metadata only.\n\nNone of this is a validation of anything. The heuristics' accuracy is unreported, and the argmax always returns an answer.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-lobbying.lobbied-member-link",
+    "relation": "supports",
+    "paper_claim": "The abstract says LobbyView bridges politicians' sponsorship of bills with reported lobbying by interest groups. Section 2 steps 1-5 describe only matching report text to bill identities (number, Congress, title, range). No step describes a legislator link or any contact. The word sponsor appears once in the paper, in the Abstract.",
+    "paper_location": "Abstract; Section 2 steps 1-5",
+    "system_side": "The system's join is stated in code. lobby_interactions.py docstring says the network answers whether an organization lobbied a bill the member sponsored or cosponsored. build_network_2021_rebuild.py line 13 says each lobbied bill credits every sponsor and cosponsor. So the member link is a bill-roster join, not a contact record. The paper does not describe this join itself.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/lobbying/lobby_interactions.py:4-6 and build_network_2021_rebuild.py:13",
+    "transfer_conditions": "Holds for the system join. The paper's sponsorship wording is only the abstract phrase, and the system's join is wider: sponsor plus all cosponsors. collect_lobbyview.py line 446 records a 2026-08-01 check that BECU 2021 has 181 edges equal to 1 sponsor plus 180 cosponsors of H.R. 1996. That is a code comment; it was not re-run here.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "The paper does not describe a sponsorship join in its method. The bill-roster join and the join-by-construction point rest on the system's code docstrings, and the member-link attribution belongs to the system, not the paper. Wording should say sponsored or cosponsored.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#Lobbying member-year network and circular lobbied-member link|Lobbying member-year network and circular lobbied-member link]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "melange-lobbying.lobbied-member-link",
+    "relation": "suggests-extension",
+    "paper_claim": "Filing-year Congress assignment fails. Google's 2013 report cites H.R. 2577 (Safe Data Act), a 112th Congress bill, not the 113th. LobbyView considers the three preceding Congresses by default, picks the candidate with highest cosine similarity to surrounding text (Eq. 1), falls back to the filing-year Congress if no number matches, and propagates a Congress across the report by majority vote.",
+    "paper_location": "Section 2 (Figure 1; steps 1-3; Eq. 1; fallback sentence)",
+    "system_side": "The 2021+ rebuild binds each formal citation to the filing Congress unless an 'of 20XX' suffix in the same segment resolves to an earlier Congress (_resolve_mention_congress; current mentions set the resolved Congress to filing_congress). The rebuild has no cosine-similarity lookback and no report-level propagation. A search for cosine, propagate, majority and argmax returned no hits.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/lobbying/build_network_2021_rebuild.py:3698-3721 and 4482-4492",
+    "transfer_conditions": "Paper side reproduced. Under the rebuild rule, the paper's own example would bind to the 113th Congress. Risk concentrates in filings made early in a new Congress (odd-year first sessions). The paper gives no rate, so the size of the error in the rebuild is UNVERIFIED.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper claims checked against the text (lines 43-88, Eq. 1, Figure 1 text). Both code ranges checked. The system side matches the analyst's description, including the absence of lookback and propagation.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-lobbying#Lobbying member-year network and circular lobbied-member link|Lobbying member-year network and circular lobbied-member link]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "melange-lobbying.finance-client-classification",
+    "relation": "qualifies",
+    "paper_claim": "Firms (clients) are grouped into industries by NAICS2 (or SIC) to compute per-industry Herfindahl indices. The example run is NAICS for 1996-2011. Output is then merged with Compustat firm data and a trade-issue indicator (Sections 5.5, 5.5.1, 5.5.2).",
+    "paper_location": "Sections 5.5, 5.5.1, 5.5.2",
+    "system_side": "collect_lobbyview.py classifies clients by name rules first (credit-union and bank rules). NAICS is used only as a fallback and yields a low-confidence side. A '+naics-conflict' suffix is recorded when a validated NAICS code disagrees with a name rule (classify_client, lines 213-263). The paper uses NAICS2 as its industry key and does not validate NAICS codes.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/lobbying/collect_lobbyview.py:12-19 and 213-263",
+    "transfer_conditions": "The procedure claim holds. The paper does not say NAICS is usable for research aggregates; it only uses NAICS2 as the grouping key. The reason given for the system's rule (codebook gives NAICS no provenance) is not in the code checked, so it is UNVERIFIED. The system ruling that NAICS is linkage metadata was not checked here. Herfindahl outputs are industry descriptors and must not be edge or weight sources (D-021, not re-checked).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper side reproduced for the procedure and the example run. Softened because the paper neither validates NAICS nor says it is usable for aggregates. Code side verified for name-first classification, NAICS fallback, and the conflict suffix.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#LDA finance-client classification and report join|LDA finance-client classification and report join]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "melange-lobbying.fec-lda-bridge",
+    "relation": "qualifies",
+    "paper_claim": "Close bill numbers with the same prefix and numbers differing by at most 10 are expanded into ranges. The Mattel 2002 citation H.R.4182-4186 becomes five bills (H.R. 4182 to 4186). Bills are also matched by title and the Congress is propagated across the report. No error rates are reported.",
+    "paper_location": "Section 2 steps 3-5; Figure 2",
+    "system_side": "The rebuild's continuation parser (CONTINUATION_RE) accepts only comma, semicolon, ampersand and 'and' separators, so a hyphenated range is not expanded. No hyphen-range expansion was found in the rebuild. Congress binding differs (see the Congress bearing).",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/lobbying/build_network_2021_rebuild.py:575-580",
+    "transfer_conditions": "Paper side reproduced. The claim that the bridge used the LobbyView network.csv vintage for 2021-2022 was dropped, since no source for it was checked. Whether the rule difference is measured on an overlap year is UNVERIFIED.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper claims hold. The parser claim holds for the separator set. The speculative vintage-use sentence in the original was removed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#FEC to LDA bridge test|FEC to LDA bridge test]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "melange-lobbying.contact-inference",
+    "relation": "supports",
+    "paper_claim": "The Congress assignment takes an argmax over candidate Congresses (Eq. 1) and falls back to the filing-year Congress when no bill matches. The paper says filing-year guessing often leads to erroneous matches (Section 2). It says the full methods description is still to come, with the quoted sentence 'This document currently contains only some technical details of the database' (Introduction).",
+    "paper_location": "Section 1 Introduction; Section 2 opening paragraph, step 2 and Eq. 1",
+    "system_side": "The brain memo on the contact-inference design, Claims discipline bullet (line 55), requires a mandatory caveat that LDA does not require disclosure of contacts and that scores are inferences. It bars LobbyView-as-validation and lobbied-member wording for inferred rows. The memo does not mention argmax or any cautionary lineage.",
+    "code_ref": "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-data-collection-lanes-contact-inference-design-and-evaluation.md:55",
+    "transfer_conditions": "Paper claims hold, with two corrections. The paper never calls title or range matching heuristic. The methods-deferred quote sits in the Introduction (Section 1), not Section 4.1. The claim that Paul's memos treat LobbyView as a cautionary chain because argmax always returns an answer was not found in the brain vault and is dropped.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Original location for the quote was wrong. The memo supports the caveat and the validation ban, but not the cautionary-lineage characterization.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#Contact inference (activity to member)|Contact inference (activity to member)]]",
+    "system": "melange-lobbying"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Dropped related links: kim-2025-measuring-interest-group (text mentions LobbyView once and never mentions lob_id, so the lob_id keying claim is unsupported) and harrison-2018-application-data-mining (text has no LobbyView mention, and the claim that Paul treats it as an intro guide next to LobbyView is unsupported).",
+   "summary_md point 1 says every LobbyView-derived member link is a bill-roster join. The paper describes no member link at all; the join is the system's own construction, as the lobby_interactions.py docstring states.",
+   "summary_md point 2 says network.csv covers 2000-2022 and that an unmeasured seam exists between the vintage and the 2021+ rebuild. The 2000-2022 range and the seam were not verified in the code or the paper. The rebuild's unsuffixed-citation rule does differ from the paper's, which is verified.",
+   "summary_md point 3 says the system has ruled NAICS linkage metadata only. The code supports name-first classification with NAICS fallback, but the ruling itself was not checked.",
+   "paul_alignment quotes Paul calling LobbyView the 'fundamental data source' for lobbying classification. That phrase was not found anywhere in the brain vault, and the Paul entry carries no takeaways. The quote and the cautionary-chain characterization are unsupported and should be removed.",
+   "paul_alignment says network linkage collapses after 2021 with 2022 = 2,101 rows. No 2,101 figure was found in the lobbying code, so it is UNVERIFIED. The code does show issue-code coverage collapsing after filing_year 2021 (collect_lobbyview.py line 34 coverage note).",
+   "paul_alignment says Paul's rebuild uses the naive filing-year Congress rule for unsuffixed citations. Verified at build_network_2021_rebuild.py lines 4482-4492 and docstring lines 15-18.",
+   "Coverage: all 5 bearings and all 6 related links were checked against the text and code. ext and rel were read from the item JSON itself, since no separate ext.json or rel.json exists. ext key findings beyond the Congress example and the 52,418 count were not separately verified. The 52,418 count is in the paper (Section 5.3) with no year restriction."
+  ],
+  "gaps_exposed": [
+   "The 2021+ LDA rebuild has no prior-Congress lookback for unsuffixed bill citations. They bind to the filing Congress, which is the failure case the paper documents (H.R. 2577, 112th Congress, cited in a 2013 report). The system has never measured how often this happens in the finance rebuild.",
+   "Hyphenated bill ranges (e.g., H.R.4182-4186) are not expanded or counted as a diagnostic, so it is unknown how many lobbied bills the rebuild drops compared with the LobbyView vintage.",
+   "No overlap-year (2021) reconciliation between LobbyView network.csv dyads and the system's strict rebuild was found in the notes I read. A future bridge successor would cross an unmeasured instrument seam (UNVERIFIED).",
+   "The paper reports no error rates for any linkage heuristic. Both instruments, LobbyView and the rebuild, lack a hand-labelled precision/recall sample for bill-to-Congress resolution."
+  ],
+  "flags": [
+   "The paper describes the link as bill 'sponsorship', but the system measured that LobbyView network edges are the sponsor plus all cosponsors. Any wording that inherits the paper's description understates the join and should say 'sponsored or cosponsored'.",
+   "D-021: the paper's design turns lobbying reports into member-linked edges and industry Herfindahl weights. Adopting either as an edge or weight source in the Melange graphs would conflict with D-021, which allows LDA as an identity source only (lob_id, client names).",
+   "Nothing in the paper licenses influence or contact language about lobbied members. The link is a bill-roster join, so P(joined | lobbied) = 1 by construction.",
+   "The 52,418 TRADE-issue report count has no window or year restriction in the text. It must not be quoted without stating that it covers 'all loaded reports, period unstated'.",
+   "The paper's argmax-plus-fallback Congress assignment always returns an answer. Copying it as-is would break the system's never-guess, fail-closed resolution style. Any adoption should flag ambiguous citations instead."
+  ],
+  "paul_alignment": "The paper agrees with Paul's annotation, which cites it only in the contact-inference memos as a cautionary chain where an argmax always returns an answer. The paper itself says it assigns a Congress by argmax, guesses the filing year as a fallback, and reports no error rates. His broader position that LobbyView is the 'fundamental data source' for lobbying classification is stale against the system now, for three reasons. First, the system found that LobbyView NAICS is linkage metadata, not an industry classifier. Second, network linkage collapses after 2021 (2022 = 2,101 rows). Third, the member link is circular by construction. One more thing is not recorded in any note: Paul's own rebuild uses the naive filing-year Congress rule for unsuffixed citations, which is exactly what this paper warns against.",
+  "related": [
+   {
+    "slug": "bacik-2025-measuring-dynamical-evolution",
+    "relation": "same-data",
+    "why": "Item exists; its text mentions LobbyView 37 times, so it uses LobbyView data. The 1999-2023 range and the shared disambiguation lineage were not checked."
+   },
+   {
+    "slug": "huneeus-2018-effects-firms-lobbying",
+    "relation": "same-data",
+    "why": "Item exists; its text mentions LobbyView 3 times and Compustat 9 times, so it uses firm-level LobbyView data with Compustat. The exact merge against herfindadd.py was not checked."
+   },
+   {
+    "slug": "kim-2020-strategic-sequential-links",
+    "relation": "complements",
+    "why": "Item exists; its text mentions LobbyView 3 times and FEC 22 times, so it pairs lobbying with donations. The LobbyView-to-FEC pairing was not checked in detail."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "bombardini-2020-empirical-models-lobbying",
+    "relation": "cited-by",
+    "why": "The review cites Kim (2018) LobbyView as the state-of-the-art Compustat-linked lobbying data set used by Huneeus and Kim."
+   },
+   {
+    "slug": "harrison-2018-application-data-mining",
+    "relation": "complements",
+    "why": "LobbyView cleans and links the same LDA reports at full scale, the database Paul says supersedes Harrison. The is_self_filer field that allows the expense-vs-income split is in the LobbyView data the collector reads; it is not described in the LobbyView paper extract."
+   },
+   {
+    "slug": "furnas-2019-partisan-ties-lobbying",
+    "relation": "same-data",
+    "why": "Both build on Lobbying Disclosure Act filings; this paper uses the registrant-versus-client split to isolate contract firms."
+   },
+   {
+    "slug": "kim-2025-measuring-interest-group",
+    "relation": "same-data",
+    "why": "Both rest on LDA reports organised in LobbyView. The paper maps MapLight onto lobbying pairs organised in LobbyView."
+   },
+   {
+    "slug": "kim-2020-mapping-political-communities",
+    "relation": "same-data",
+    "why": "The paper's lobbying dataset is distilled from LobbyView (cited as Kim 2018) and shares its NLP bill-identification pipeline."
+   },
+   {
+    "slug": "bickmore-2025-corporate-lobbying-political",
+    "relation": "complements",
+    "why": "Not same data: Bickmore uses CRP lobbying matched to Compustat by company name, not LobbyView. Relation changed from same-data to complements because the enum has no context value."
+   },
+   {
+    "slug": "alexander-2009-lobbying-analysis-under",
+    "relation": "same-data",
+    "why": "Item exists. Both rest on firm-level LDA filings; the claim that LobbyView is the processed form of the same Senate records was not checked."
+   },
+   {
+    "slug": "boxsteffensmeier-2018-taking-congress-interest",
+    "relation": "complements",
+    "why": "Real item (verified). LobbyView links firms to bills through lobbying reports, as the analyst said."
+   },
+   {
+    "slug": "goff-nd-cross-industry-finance",
+    "relation": "same-data",
+    "why": "LobbyView bill-level LDA data is the likely source of the bill-roster join behind the per-member counts. The report does not name its source, so this link is inferred."
+   },
+   {
+    "slug": "delano-2025-bicam-congressional-lobbying",
+    "relation": "complements",
+    "why": "Real item, a 2018 working paper. BICAM cites LobbyView as a 2024 technical report (ref 15). Likely the same lineage but a different version, so the link holds only as a version link."
+   },
+   {
+    "slug": "defigueiredo-2013-advancing-empirical-research",
+    "relation": "complements",
+    "why": "LobbyView firm-level lobbying and bill database. The essay calls for bill-level linkage of transaction data but does not name this source. The claim that the system uses it as its fundamental source is not from the essay."
+   },
+   {
+    "slug": "kerr-2014-dynamics-firm-lobbying",
+    "relation": "complements",
+    "why": "Corrected from same-data. Kerr uses CRP and SOPR LDA filings (pp.5-6), not the LobbyView database. LobbyView is the source of Mentat's sector-year series, so the link is by data family only."
+   },
+   {
+    "slug": "note-sector-growth-and-political-spending-source",
+    "relation": "complements",
+    "why": "LobbyView is a firm-level LDA database. The note does not name LobbyView as its source for the bank and CU aggregates, so this is background for the LDA measure, not confirmed same-data."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "ringe-nd-pinpointing-powerful-voting",
+  "note": false,
+  "meta": {
+   "title": "Pinpointing the Powerful: Co-voting Network Centrality as a Measure of Political Influence (Online Appendix)",
+   "authors": [
+    "Nils Ringe",
+    "Steven L. Wilson"
+   ],
+   "year": "",
+   "venue": "Legislative Studies Quarterly (supplementary online appendix; article DOI not visible in the text)",
+   "doi": "",
+   "sha12s": [
+    "172f9f14d970"
+   ],
+   "category": "Social Network Analysis",
+   "category_slug": "social-network-analysis"
+  },
+  "extraction": {
+   "title": "Pinpointing the Powerful: Co-voting Network Centrality as a Measure of Political Influence (Online Appendix)",
+   "authors": [
+    "Nils Ringe",
+    "Steven L. Wilson"
+   ],
+   "year": "",
+   "venue": "",
+   "doi": "",
+   "document_type": "Online appendix (supplementary material to a journal article; the main article is referred to as \"the published article\" but is not included)",
+   "coverage": "Full text read in one pass: all 353 lines of C:\\Users\\pgoff\\Documents\\research\\_text\\172f9f14d970.txt (10,942 chars), covering Table 1, Table 2, Figures 1-6 and the complete proof section. The text file has no page numbers, so locations are given as table/figure/section names plus line numbers. Metadata correction: the text shows no year, journal, or DOI. The hint's \"Legislative Studies Quarterly\" attribution cannot be confirmed from this text, so venue and year are left blank. Paul's markup: none found in this file (no highlights, underlines, or sticky notes were present in the extracted text).",
+   "research_question": "Can network centrality computed from co-voting records (correlations between members' voting records) identify the actual cue-provider or leader in a legislature, and in particular does a proposed absolute-value centrality measure separate cue-providers from followers and majoritarians where the traditional centrality approach cannot? (Inferred from the appendix; the main question is stated in the published article, which is not in this text.)",
+   "theory": "Leader or cue-provider theory: a leader whose followers vote with her some percentage of the time (ally followers, opponent followers, or others at other rates). The appendix argues the leader should have the highest network centrality in a co-voting network built from phi correlations of voting records (lines 318-353). Majoritarians are members who vote with the majority; the traditional centrality approach can rank majoritarians above the actual cue-provider (Figure 4 text, line 303).",
+   "data": "Empirical data (Table 1, line 12-120): 940 MEP observations (centrality N = 897 after network construction; left-right distance to EP median N = 868; pro/anti-EU distance to EP median N = 872). Unit is the MEP. Variables include centrality (mean .283, SD .138, range .006-.502), party leader (mean .05), committee leader (.09), EP leader (.03), coordinator (.23), reports drafted (mean 1.05), reports amended (6.73), opinions (.72), motions (6.82), speeches (29.07), questions (20.07), declarations (.58), tenure (1.58), party size (172.01), female (.30). Period of the European Parliament data is not stated in the appendix text. Simulated data (Figures 1-6, lines 289-313): 1000 simulated networks per network class (simple, moderate, complex); 1000 simulations; 100 legislators; 1000 rounds of voting in the Figure 5 runs. Figure 6 uses three parameterizations: US (1 cue-provider, 1 majoritarian, 40 allies, 40 opponents, 20 others at 50%), Supermajority (1 cue-provider, 1 majoritarian, 67 allies, 33 opponents), and EP (1 cue-provider, 1 majoritarian, 37 allies, 25 opponents, 38 others at varied rates, roughly the seven-party EP seat allotment).",
+   "method": "Centrality is built from pairwise phi correlations of binary voting records (Table 1 is the 2x2 contingency table underlying phi, lines 331-341). The appendix uses an absolute-value version of this centrality, referred to as the \"posterior\" measure, which is compared with the traditional (signed) centrality calculation. Analytic method: Hypothesis 1 (leader centrality >= follower centrality) is proved algebraically for a three-voter legislature (leader plus two followers) with follow probabilities q2 and q3 and leader Yes-probability p; the condition reduces to q2 < 1 and q3 < 1 (lines 319-345). The result is extended to n voters by a term-by-term comparison, arguing that each phi term depends only on p and the relevant follow probabilities, so it is unchanged as voters are added (lines 347-353). Simulation method: Monte Carlo generation of cueing networks in three complexity classes, computing the posterior centrality from simulated voting records and correlating it with betweenness, closeness, and weighted degree (Figure 5); and t-tests of cue-provider centrality against the maximum follower and a majoritarian across rounds of voting (Figure 6). Figures 1-4 show cue-provider centrality as a function of follow probabilities.",
+   "scope": "Population: members of the European Parliament (party groups named in Table 2: EPP, EPP-ED, PES, ALDE, G/EFA, EUL/NGL, IND/DEM, UEN), plus stylized simulated legislatures (US, supermajority, and EP-style). Institution: European Parliament (empirical) and abstract legislatures (theory). Era: not stated in the appendix text. The theoretical result is stated for single-party legislatures under the stated assumptions.",
+   "key_findings": [
+    {
+     "finding": "Under the assumptions, in a three-voter legislature the leader's centrality is greater than or equal to each follower's centrality; the condition reduces to q2 < 1 and q3 < 1, which hold by inspection.",
+     "location": "Complete Proof of Leader Centrality, Hypothesis 1 proof (lines 318-345)",
+     "numbers": "Conditions: q2 < 1 and q3 < 1 (follow probabilities are probabilities)."
+    },
+    {
+     "finding": "The three-voter result is extended to n voters for the single-party case: the cue-provider has greater or equal centrality than any follower regardless of exogenous parameter values. The text states 'greater' for n = 4 but the inequalities derived are weak (>=).",
+     "location": "Generalization to n-voters (lines 347-353)",
+     "numbers": "Proof given for 3, 4, and arbitrary n voters."
+    },
+    {
+     "finding": "Posterior absolute-value centrality recovers the true network centralities of simulated cueing networks; it is highly correlated with closeness and weighted degree even in complex networks, and only weakly correlated with betweenness.",
+     "location": "Figure 5 text (line 308); Figure 5 caption (line 307)",
+     "numbers": "Betweenness correlation about 0.25; closeness and weighted degree described as 'highly correlated' (no coefficient reported); 1000 simulations, 100 legislators, 1000 rounds of voting; 1000 networks per class."
+    },
+    {
+     "finding": "Simple networks are recovered most accurately; moderate and complex networks less so, because network structure is lost when networks are converted to voting data.",
+     "location": "Figure 5 text (line 308)",
+     "numbers": "No coefficients reported by class."
+    },
+    {
+     "finding": "Cue-provider centrality is significantly higher than the maximum follower and the majoritarian; significance grows with the number of voting rounds, and is described as comparable to available EP data at 1,000 rounds.",
+     "location": "Figure 6 text (line 309)",
+     "numbers": "Three parameterizations (US, Supermajority, EP); t-scores are described as significant but no t-values are given in the text."
+    },
+    {
+     "finding": "With allies and opponents following at 65% and 35%, cue-provider centrality is clearly higher than majoritarians and followers across the 35%-65% range, though the gap is less pronounced than at 80%/20%.",
+     "location": "Figure 2 text (line 296)",
+     "numbers": "Parameterization 65%/35% versus 80%/20% in the published article."
+    },
+    {
+     "finding": "With allies at 80% and opponents at 35%, the absolute-value centrality yields systematically higher cue-provider centrality, while the traditional approach cannot distinguish the cue-providers.",
+     "location": "Figure 3 text (line 297)",
+     "numbers": "Allies 80%, opponents 35%."
+    },
+    {
+     "finding": "With a third group following at 35%, the traditional calculation makes majoritarians systematically more central than the actual cue-provider; the absolute-value measure corrects this.",
+     "location": "Figure 4 text (line 303)",
+     "numbers": "Allies 80%, opponents 20%, others 35%."
+    },
+    {
+     "finding": "Cue-provider centrality is maximized when follow probabilities approach 0 or 1 and minimized when both are 50%.",
+     "location": "Figure 1 text (line 291)",
+     "numbers": "Follow probabilities on the x and y axes; minimum at (50%, 50%)."
+    },
+    {
+     "finding": "Descriptive: the top-ranked MEP overall is Braghetto (EPP) at centrality 0.5019; the top 17 are from the EPP; the 18th is Sakalas (PES) at 0.475. Group leaders: PES Sakalas 0.475; ALDE Duff 0.4441; G/EFA Onesta 0.2046; EUL/NGL Svensson 0.1737; IND/DEM Wojciechowski 0.3248; UEN Masiel 0.3893.",
+     "location": "Table 2 (lines 125-286)",
+     "numbers": "Overall mean centrality .283 (Table 1); EPP-ED block lists 5 ranks with the second entry labelled '5' (apparent labeling error in the table, lines 157-171)."
+    }
+   ],
+   "limitations": [
+    "Results are described as highly dependent on parameterization; three sample parameterizations are used (lines 309).",
+    "Betweenness centrality correlates only about 0.25 with the posterior measure, so the measure does not recover betweenness well (line 308).",
+    "Moderate and complex cueing networks lose network structure when converted to voting data, reducing recovery accuracy (line 308).",
+    "The proof gives weak inequalities (greater than or equal to), not strict inequalities, although the n-voter text concludes 'greater' (lines 344-353).",
+    "The proof is restricted to a single-party legislature and to the stated assumptions (independent follow probabilities, fixed p); multi-party extensions are not proved here (line 352).",
+    "No t-scores or correlation coefficients are reported for closeness and weighted degree; significance is asserted, not quantified (lines 308-309).",
+    "The empirical sample period, the Parliament term, and the construction of the co-voting network are not stated in this appendix text.",
+    "The appendix refers to a published article for the main figures and the 80%/20% parameterization, which is not in this text; claims beyond the appendix cannot be checked here.",
+    "Table 2 contains a rank-label error (the second EPP-ED entry is labelled '5')."
+   ],
+   "paul_markup": [],
+   "references_of_note": [],
+   "short_quotes": [
+    {
+     "quote": "The results are highly dependent on parameterization",
+     "location": "Figure 6 text (line 309)"
+    }
+   ]
+  },
+  "summary_md": "This is the online appendix to Ringe and Wilson's paper on co-voting centrality. It holds a proof, simulations and descriptive tables from the European Parliament. The authors build a network from pairwise phi correlations of members' binary voting records. They score each member by an absolute-value (sign-blind) centrality: a member followed reliably by allies (positive phi) or reliably opposed by opponents (negative phi) both count toward that member's centrality.\n\n**Proof.** For a single-party legislature, they show the leader's centrality is at least as high as any follower's. The condition reduces to q2 < 1 and q3 < 1. The inequalities are weak (greater than or equal), although the n-voter text says \"greater\".\n\n**Simulations.** There were 1,000 networks per complexity class, with 100 legislators and 1,000 voting rounds.\n- The absolute-value measure separates the cue-provider from followers and from \"majoritarians\" (members who usually vote with the majority).\n- The traditional signed measure can rank majoritarians above the true cue-provider when a third group follows at 35% (Figure 4).\n- The measure correlates highly with closeness and weighted degree (no coefficient reported), but only about 0.25 with betweenness.\n- Moderate and complex networks lose structure when converted to voting data.\n- The authors say the results are \"highly dependent on parameterization\".\n\n**Empirical side.** The data cover 897 MEPs with centrality scores (mean .283). The parliamentary term is not stated in the appendix.\n\n**Why it matters here.**\n- Melange has one co-voting layer: the signed vote backbone in the Draft Systems R script, plus its party-controlled Option C. That layer found the raw signed backbone was about 95% party, then dropped the negative side. The paper offers a mechanism for the first finding (the signed measure rewards majoritarians) and an argument against the second (negative ties carry cue-provider information).\n- The paper also clarifies the June 2026 retirement of cosponsor centrality from the Influence pillar. The paper treats sign-blindness as a property of a leadership measure, not as a flaw. That supports the system's two-axis rule, which keeps influence and alignment as separate axes.\n- None of this transfers directly. The evidence is analytic and simulated, with European Parliament data, and it concerns co-voting, not cosponsorship.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-sna.signed-coalitions",
+    "relation": "qualifies",
+    "paper_claim": "Signed (traditional) co-voting centrality cannot separate the cue-provider from majoritarians; with a third group following at 35 percent it makes majoritarians systematically more central than the actual cue-provider. The absolute-value measure corrects this. In simulation, cue-provider centrality is lowest when both follow probabilities are 50 percent and highest as they approach 0 or 1.",
+    "paper_location": "Figure 4 text (line 303); Figure 3 text (line 297); Figure 1 text (line 291)",
+    "system_side": "Vote backbone built with R backbone sdsm(signed=TRUE, alpha 0.05, BH) on a member by (vote,side) bipartite matrix, so the projection counts agreements. Brain vote-edges section (2026-06-25): the raw signed backbone is about 95 percent party-aligned (positive edges 93 percent same-party, negative edges 99 percent cross-party). Option C kept cross-party positive edges only and fed Vote Affinity into the Signed Coalitions sheet as a 30 percent booster. fec/network/signed_coalitions.py partitions the signed mention layer (member_references.json), not votes.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/_vote_backbone.R:2,23; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/network/signed_coalitions.py:6-8,24; C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md:52-57",
+    "transfer_conditions": "Paper is single-party cue-taking with simulated independent follow probabilities plus European Parliament MEP data, not US House or party-aligned backbones. The paper gives no account of why signed backbone edges cluster on party, so the majoritarian explanation is the analyst hypothesis and stays UNVERIFIED for US data and the 117th-119th Congresses until a second path reproduces it (DE-062). That dropping negative ties loses cue-provider information is an inference from the paper's use of negative correlations, not a paper critique of Melange.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper claims confirmed at lines 291, 297 and 303 and the Figure 3 and 4 captions. Code and brain claims confirmed. Softened because the majoritarian explanation of the backbone's party clustering appears only in the analyst's summary, not in the paper, and the paper never discusses party or backbone construction.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-sna#Signed-network coalition partition|Signed-network coalition partition]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+    "relation": "qualifies",
+    "paper_claim": "In a three-voter single-party legislature the leader's centrality is at least each follower's, with the condition reducing to q2 below 1 and q3 below 1; the result is extended to n voters by a term-by-term argument. In simulation, absolute-value centrality correlates highly with closeness and weighted degree (no coefficients reported) and about 0.25 with betweenness.",
+    "paper_location": "Complete Proof of Leader Centrality, lines 318-345; n-voter generalization, lines 347-353; Figure 5 text, line 308",
+    "system_side": "InfluenceScore = 0.60 weighted out-degree + 0.25 betweenness + 0.15 eigenvector on the cosponsor network (brain line 25). Its centrality weight was set to 0 on 2026-06-25 (AB13 0.65 to 0) as direction-blind; Influence is now committee-only (AB12 set to 1.0). compute_pillars.py defines Influence as committee influence divided by the cross-member maximum.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/compute_pillars.py:11,210,250; C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md:25,65-67",
+    "transfer_conditions": "The proof is in signed phi terms (leader-follower correlation at least follower-follower), while simulations use the absolute-value measure; the appendix does not show the inequality holds for that version. The algebra is omitted (line 344). The result concerns co-voting correlations, not cosponsorship weights. The paper's 0.25 is a simulated correlation with betweenness, not a weight, so it says nothing about InfluenceScore's 0.25 betweenness weight. Any revived centrality rank is a heuristic model output, never a closeness, access or influence probability (D-025).",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The q2 below 1 and q3 below 1 conclusion and the n-voter argument are confirmed as stated in the text, but the algebra is absent, so the proof is asserted rather than checked. The analyst's claim that the paper implies the 0.25 betweenness weight is least recoverable conflates a correlation with a weight and is removed. System-side weights, the 2026-06-25 retirement and committee-only Influence are confirmed against the brain and compute_pillars. The claim that direction-blindness is a design property and not a defect is the analyst's argument, not the paper's.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/moneyball-rank-pillars#Cosponsor-network InfluenceScore (computed, weight 0)|Cosponsor-network InfluenceScore (computed, weight 0)]]",
+    "system": "moneyball-rank-pillars"
+   },
+   {
+    "component_id": "melange-influence-engine.cascade-kernel",
+    "relation": "qualifies",
+    "paper_claim": "Converting cueing networks into voting data loses network structure: simple networks are recovered best, moderate and complex networks less well, and betweenness recovery is only about 0.25 correlation.",
+    "paper_location": "Figure 5 text and caption, lines 307-308",
+    "system_side": "build_P computes p(u to v) = w times cpf times sigma_v divided by (w times cpf times sigma_v + 6), a saturation kernel over cosponsorship-weighted adjacency with partisan factors cpf_diffusion and cpf_pressure. The kernel does not infer edges from roll-call co-voting, so the paper's conversion loss does not apply directly.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/moneyball_core.py:543-562",
+    "transfer_conditions": "The paper's result concerns recovering node centralities from simulated voting records; it says nothing about cascade edge probabilities or the saturation constant 6. The analyst's claim that kernel edges come from cosponsorship weights was not checked, because load_network was not opened in this pass. Relevance is only as a caution against calibrating kernel edges from roll-call agreement. The evidence is simulation, not US data.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper text at lines 307-308 confirmed. Kernel formula confirmed at moneyball_core.py:556-562 and the cpf functions at 543-548. The source of kernel edges was not opened, and the unestimated status of the constant 6 was not checked.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Cascade activation kernel build_P and partisan edge factors|Cascade activation kernel build_P and partisan edge factors]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "ext says Table 1 is the 2x2 contingency table underlying phi. In the extracted text Table 1 is descriptive statistics; the 2x2 table referred to at line 331 is missing from the extraction.",
+   "ext and rel describe Hypothesis 1 as proved algebraically. The appendix omits the algebra (line 344: we won't replicate that algebra), so the proof cannot be checked from this text.",
+   "The proof inequality (lines 327-329) is stated in signed phi terms. The absolute-value posterior measure used in simulation is not shown to satisfy it; neither ext nor rel flags this.",
+   "rel summary_md says the paper offers a mechanism for the raw signed backbone's 95 percent party clustering. The paper never discusses party clustering or backbone construction; that link is the analyst's hypothesis.",
+   "rel summary_md and paul_alignment say the paper supports the June 2026 retirement and the two-axis rule. The paper does not address influence versus alignment axes or Melange's rules; this is analyst interpretation.",
+   "rel bearing 2 transfer_conditions says the paper implies the 0.25 betweenness weight is least recoverable. The paper's 0.25 is a simulated correlation with betweenness, not a weight; removed.",
+   "rel related entries for aref-2021 and aref-2020 are labelled same-data with roll-call networks. Both Aref and Neal papers use bill cosponsorship networks; relations corrected to complements.",
+   "rel related entry for battaglini says Katz-Bonacich; the paper says Bonacich centrality and never uses the term Katz.",
+   "ext key_finding says the text states greater for n = 4. Line 352 says greatest for four voters, and lines 344-345 give greater than or equal for three voters; the wording is inconsistent in the text itself.",
+   "rel summary_md says the measure tracks closeness and weighted degree closely; the text reports no coefficients for them, only high correlation in words (line 308).",
+   "paul_alignment cites a Sotoudeh highlight. The quoted sentence is in the Sotoudeh text, but that item has no paul_entries, so whether Paul highlighted it was not verified.",
+   "Figure 5 caption reads completeness where closeness is meant (typo in the paper); the analyst's bearing correctly uses closeness, matching the body text at line 308."
+  ],
+  "gaps_exposed": [
+   "No component computes a leadership or cue-provider score from roll-call co-voting. The roll-call ledger exists (fec/legislation/collect_official_rollcall_events.py), but nothing turns it into a co-voting network apart from the June workbook-era Draft Systems _vote_backbone.R affinity layer.",
+   "The vote-backbone affinity layer discards negative (reliable-opposition) ties. Per the paper these carry cue-provider information, so the system cannot tell a reliable cross-pressure leader from a maverick, a confound the brain itself records (the Massie/Gosar/Roy negatives).",
+   "Nothing tests whether the raw signed backbone's collapse onto party is a majoritarian artifact, as the paper's Figure 4 mechanism predicts, rather than true party cueing.",
+   "The centrality retirement was judged on CU alignment (opponents rising), not on any leadership or effectiveness criterion. No test checks whether sign-blind centrality predicts effectiveness (CEL LES, bill advancement) on the influence axis."
+  ],
+  "flags": [
+   "The paper's title frames co-voting centrality as 'a measure of political influence'. If adopted, any centrality rank must be worded as a heuristic model output, never as closeness, access or an influence probability (D-025).",
+   "The paper does not argue for either REJECTED SNA proposal (dropping regular cosponsorship edges, or per-edge volume normalization). Phi correlation is a per-pair standardized agreement on votes, not a reweighting of cosponsor edges, so it must not be cited as support for per-edge volume normalization.",
+   "The component description for melange-sna.signed-coalitions says 'signed backbone' (vote-based), but fec/network/signed_coalitions.py:6-8 partitions the signed mention layer (member_references.json). The vote backbone lives only in Draft Systems/_vote_backbone.R and the workbook. The component inventory conflates the two.",
+   "The empirical evidence comes from European Parliament MEPs (term not stated) and the rest is simulation. Any claim transferred to the US House or Senate is UNVERIFIED (DE-062). The proof gives weak inequalities only and is restricted to a single-party legislature.",
+   "The empirical leader ranking pools 897 MEPs across party groups. Table 2 gives within-group leaders, but the overall rank is UNSTRATIFIED across the party fault line (the top 17 are all EPP)."
+  ],
+  "paul_alignment": "Paul has no annotation on this paper. His centrality-component position is that more research on forms of centrality is needed (Ardekani), that directionality matters (Haythornthwaite), and that eigenvector centrality is not a strong indicator of bill passage (Sotoudeh highlight). The paper partly cuts against reading 'direction-blind' as a defect: it argues that sign-blindness is what lets centrality find cue-providers, which fits the system's own influence-versus-alignment two-axis rule. It agrees with Paul's call for more centrality forms, offering co-voting absolute-value centrality as a candidate he has not considered. His notes are not stale. However, the system's June decision to keep only positive cross-party vote-backbone edges is a choice his notes never address, and this paper bears on it directly.",
+  "related": [
+   {
+    "slug": "aref-2021-identifying-hidden-coalitions",
+    "relation": "complements",
+    "why": "Corrected from same-data: Aref and Neal (Sci Rep 2021) partition signed House networks whose edges come from bill cosponsorship, not roll-call votes. Both treat signed ties as informative for coalitions; Ringe and Wilson score nodes from signed voting correlations."
+   },
+   {
+    "slug": "aref-2020-detecting-coalitions-optimally",
+    "relation": "complements",
+    "why": "Corrected from same-data: Aref and Neal (Sci Rep 2020) partition signed House and Senate networks built from bill cosponsorship, not co-voting. It is a coalition-level partition, while Ringe and Wilson score individual nodes."
+   },
+   {
+    "slug": "sotoudeh-2024-network-based-measure",
+    "relation": "complements",
+    "why": "Sotoudeh reports on cosponsorship networks that eigenvector centrality is not a strong indicator of bill passage (text confirmed). Ringe and Wilson validate centrality only against simulated ground truth, so together they bound what centrality shows."
+   },
+   {
+    "slug": "boxsteffensmeier-2018-taking-congress-interest",
+    "relation": "complements",
+    "why": "Both ground cue-taking in legislatures. Box-Steffensmeier measures cues from Dear Colleague letters, while Ringe and Wilson infer the cue-provider from voting correlations."
+   },
+   {
+    "slug": "poole-1999-nominate-after-years",
+    "relation": "same-data",
+    "why": "Both use roll-call matrices: NOMINATE scales ideology and Ringe and Wilson extract leadership centrality from binary votes. Melange rejected DW-NOMINATE vote edges (brain vote-edges section)."
+   },
+   {
+    "slug": "battaglini-2016-influencing-connected-legislators",
+    "relation": "complements",
+    "why": "Battaglini and Patacchini (NBER w22739) use Bonacich centrality of connected House legislators, not the term Katz-Bonacich. Melange has fec/engine/kb_benchmark.py. Ringe and Wilson recover closeness and weighted degree well in simulation."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "porter-2005-network-analysis-committees",
+    "relation": "same-data",
+    "why": "Verified item (online appendix): co-voting network centrality from House roll calls, a different measure from Porter's SVD."
+   },
+   {
+    "slug": "ringe-2013-pinpointing-powerful-voting",
+    "relation": "same-data",
+    "why": "Item title confirmed as co-voting network centrality in the EP (same first author). Relation to this paper outcome is plausible. Content of that item not re-verified."
+   },
+   {
+    "slug": "christopher-2016-mathematical-modeling-analysis",
+    "relation": "complements",
+    "why": "Item file exists. Ringe et al. treat network centrality as a candidate measure of political influence, a contrast case for this paper, which assumes rather than tests that centrality stands for power. Content not re-read here."
+   },
+   {
+    "slug": "battaglini-2018-effectiveness-connected-legislators",
+    "relation": "complements",
+    "why": "Item exists, but it is the online appendix (supplementary) to the co-voting centrality paper, not the article. It is an alternative influence measure, as the rel says."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "anon-2025-cross-industry-political",
+  "note": false,
+  "meta": {
+   "title": "Cross-Industry Political Spending -- Analysis (Overview memo)",
+   "authors": [],
+   "year": "2025",
+   "venue": "Unattributed internal memo, dated 12/10/2025 (TO, FROM and CC names redacted). Not a peer-reviewed or published academic work.",
+   "doi": "",
+   "sha12s": [
+    "0fa83eb451a5"
+   ],
+   "category": "Campaign Politics",
+   "category_slug": "campaign-politics"
+  },
+  "extraction": {
+   "title": "Cross-Industry Political Spending -- Analysis (Overview memo)",
+   "authors": [],
+   "year": "2025",
+   "venue": "Unattributed internal memo, dated 12/10/2025 (TO, FROM and CC names redacted). Not a peer-reviewed or published academic work.",
+   "doi": "",
+   "document_type": "Unattributed internal analysis memo (unpublished). Metadata hint confirmed: memo, names redacted, dated 12/10/2025.",
+   "coverage": "Full text read (51 lines, about 14.4k chars, single chunk). Redactions: all personal and some organization names are blacked out as BBBB. The entire Case Study section (lines 29-33) is redacted and gives no findings. One sentence in the Charles Schwab paragraph (line 26) is partly redacted. No annotation or markup files were listed for this item, so paul_markup is empty.",
+   "research_question": "Whether executive and corporate political spending in four industries (life insurance, mutual funds, credit unions, commercial banking; top 10 by revenue each) is offloaded onto company executives, and whether these industries adapt their giving to executive-branch pressure and scrutiny \"regardless of party\" (Overview, line 11).",
+   "theory": "No formal theory is stated. The memo's framing is that firms adapt campaign finance to risk and scrutiny from the executive branch (lines 11, 20, 40, 43). Centralized coordination is presented as a way to avoid a prisoner's dilemma (line 36, mentioned without citation). Splitting donations across opposing candidates is described as risk mitigation (line 47).",
+   "data": "Top 10 companies by revenue in each of four industries (about 40 firms, implied; the memo does not give an explicit N). Units: individual CEO and executive contributions, company PACs, trade associations (ACLI, American Credit Union trade association \"ACU\", American Bankers Association), and the four biggest Super PACs (House Majority PAC and Senate Majority PAC are named). Period: \"cyclical\" averages over unspecified election cycles (\"both cycles\" in the insurance section, \"past 3 election cycles\" for credit unions, \"several cycles\" for banks). Dated references run from 2021 to Nov 2025 (Schwab charity investments 2021-2024; JPMorgan memos June 2024 and June 2025; Dimon interview Nov 2025). Sources are described only as \"publicly available\" and \"publicly disclosed\" (lines 18, 22). No database, filing source, or contribution-level N is named.",
+   "method": "Descriptive only. Per-industry averages of CEO and executive spending in dollars. Trade association average donations and cumulative industry PAC totals. Ratios of outside giving to PAC giving (life insurance, line 16). Share of Super PAC money originating from the company rather than individuals (JPMorgan, +90%, line 21). Qualitative characterization of year-to-year volatility (line 25) and partisan split (lines 24, 40-42). Qualitative review of internal memos, employee communications, interviews, and news reports of DOJ and executive-order actions.",
+   "identification": "None. No comparison group, statistical test, or design that supports causal claims. The link between executive-branch scrutiny and giving rests on timing and narrative (lines 19, 26-28), with hedged wording such as \"most likely\" (lines 22, 28).",
+   "measures": [
+    "Average annual CEO spending in dollars, by industry",
+    "Average annual executive spending in dollars, by industry",
+    "Average trade association donation in dollars (ACLI, ACU, ABA)",
+    "Cumulative industry PAC spending in dollars",
+    "Annual average Super PAC spending in dollars (insurers, mutual funds)",
+    "Outside-to-PAC spending ratio (CEO and executive, life insurance)",
+    "Partisan split of spending (qualitative)",
+    "Share of Super PAC donations originating from the company rather than individuals"
+   ],
+   "scope": "Population: top 10 companies by revenue in life insurance, mutual funds, credit unions, and commercial banking. Institutions: US federal political giving through company PACs, trade associations, Super PACs, and candidate contributions. Era: the current Trump administration as described in the memo (DOJ investigations, executive orders), with reference to the prior Biden administration (line 28) and 2021-2025 events.",
+   "key_findings": [
+    {
+     "finding": "Memo states that spending is offloaded onto executives and that industries respond to executive-branch pressure regardless of party. Stated as confirmation of an 'original assumption'. No numbers in this paragraph.",
+     "location": "Overview, line 11",
+     "numbers": ""
+    },
+    {
+     "finding": "Life insurance: CEO average spending and executive average spending across the top 10 firms. Ranked 3rd of four industries in raw spending.",
+     "location": "Life Insurance section, line 13",
+     "numbers": "CEO avg $16,536; executive avg $64,034"
+    },
+    {
+     "finding": "Life insurance donations to the trade association ACLI are called disappointing and rank lowest in PAC size.",
+     "location": "Life Insurance, line 14",
+     "numbers": "ACLI CEO avg $3,000; executive avg $1,166; ACLI PAC avg $911,470"
+    },
+    {
+     "finding": "Insurers rank 2nd in Super PAC spending. Memo says the figure includes health and other insurance, and that most money comes from individuals tied to companies, not the companies.",
+     "location": "Life Insurance, line 15",
+     "numbers": "annual avg $16.5M"
+    },
+    {
+     "finding": "Life insurance giving is drifting toward individual outside donations, not company PAC or trade association. CEOs give $1.15 outside per $1 to PAC; executives give $1.54 to PAC per $1 outside.",
+     "location": "Life Insurance, line 16",
+     "numbers": "CEO outside:PAC 1.15:1; executive PAC:outside 1.54:1 (memo's wording)"
+    },
+    {
+     "finding": "Commercial banking: CEOs rank 1st in raw spending per the memo, but most of it goes to company PACs. Several CEOs give nothing directly to candidates, including Moynihan (Bank of America) and Masrani (TD Bank).",
+     "location": "Commercial Banking, line 18",
+     "numbers": "CEO avg $16,781; executive avg $125,925"
+    },
+    {
+     "finding": "Bank of America shows rising PAC spending and a more balanced partisan split, which the memo ties to Moynihan's silence after the debanking dispute and the DOJ investigation.",
+     "location": "Commercial Banking, line 19",
+     "numbers": ""
+    },
+    {
+     "finding": "JPMorgan: internal memos pushed PAC giving, and the company streamlined PAC donations. More than 90% of donations to House Majority PAC and Senate Majority PAC come from the company, not individuals.",
+     "location": "Commercial Banking, lines 20-21",
+     "numbers": "+90% of House and Senate Majority PAC donations originate from the organization"
+    },
+    {
+     "finding": "American Bankers Association is 2nd in overall spending among trade-association giving named in the banking section. Memo concludes banks are avoiding direct contributions and taking a nonpartisan route.",
+     "location": "Commercial Banking, lines 21-22",
+     "numbers": "ABA cyclical avg $2,402,499"
+    },
+    {
+     "finding": "Mutual funds: CEO and executive averages and a trade association average, ranked 3rd in trade association investment. Memo says the apparent average spending is a facade, with the real spending channeled into Super PACs.",
+     "location": "Mutual Funds, lines 24 and 28",
+     "numbers": "CEO avg $17,882; executive avg $83,990; trade association avg $966,875"
+    },
+    {
+     "finding": "Mutual fund industry PACs total about $13M, while the four biggest Super PACs receive an annual average of about $261M, mostly to GOP-aligned groups. Memo calls this a vast reservoir of partisan spending.",
+     "location": "Mutual Funds, line 25",
+     "numbers": "industry PACs cumulative $13M; four biggest Super PACs annual avg $261M"
+    },
+    {
+     "finding": "Mutual fund year-to-year spending is the most volatile of the four industries.",
+     "location": "Mutual Funds, line 25",
+     "numbers": ""
+    },
+    {
+     "finding": "Charles Schwab: the company PAC and executives halted donations, but Chairman Schwab and his wife redirected giving to a charity fund that the memo says invested over $250M (2021-2024) in conservative causes and gave to Republican Super PACs. The memo links this to later Trump-administration roles and a $250M+ investment in a Trump-branded startup.",
+     "location": "Mutual Funds, line 26",
+     "numbers": "over $250M invested 2021-2024; $250M+ startup investment (memo's figures)"
+    },
+    {
+     "finding": "Credit unions: lowest CEO and executive averages of the four industries, which the memo attributes to smaller industry revenue. Coordination through the ACU trade association (news bulletin board, member outside-giving allowance, in-state restriction for non-member PACs) is presented as offsetting this.",
+     "location": "Credit Union, lines 36-40 and 45-47",
+     "numbers": "CEO avg $5,147; executive avg $3,009"
+    },
+    {
+     "finding": "Credit unions report $0 dark money to the four biggest Super PACs and a near-perfect bipartisan ratio (no figure given). Behaviour includes big donations to open seats and special elections and hedging by giving to the opposing candidate when maxed out on a challenger.",
+     "location": "Credit Union, lines 41-42 and 46-47",
+     "numbers": "$0 dark money to four biggest Super PACs"
+    },
+    {
+     "finding": "Case Study section is fully redacted and yields no findings.",
+     "location": "Case Study, lines 29-33",
+     "numbers": ""
+    }
+   ],
+   "limitations": [
+    "Data sources, sample sizes, cycle years, and data-collection method are not stated. The memo relies on 'publicly available' and 'publicly disclosed' spending (lines 18, 22) without citation.",
+    "The memo itself says displayed spending 'reveals an incongruence with the true scale' of industry spending (line 25), so the disclosed figures are acknowledged as incomplete.",
+    "Life insurance Super PAC figure includes health and other insurance, so it is not specific to life insurers (line 15).",
+    "Causal claims (executive-branch pressure drives giving) rest on timing and news narrative, with hedged language ('most likely', lines 22, 28). No test or control group.",
+    "Internal ranking inconsistencies: commercial banking is called 1st in CEO raw spending at $16,781 (line 18), while mutual funds' CEO average is $17,882 (line 24) and is described as '1nd' (likely a typo for 1st). Life insurance is ranked 3rd in raw spending (line 13). The rankings are not reconciled.",
+    "The 'regardless of party' claim (line 11) sits uneasily with the memo's own finding of GOP-aligned Super PAC money in mutual funds (line 25). The memo does not reconcile this.",
+    "Several quantities are approximate or unsupported: 'near perfect' bipartisan ratio (line 42) has no figure, 'many CEOs' and 'several CEOs' give no counts, and the life insurance trajectory toward outside giving is described but not quantified (line 16).",
+    "The 'original assumption' and 'original hypothesis' (lines 11, 13) are referenced but never stated in the text.",
+    "The Case Study section and parts of the Schwab paragraph are redacted, so claims that depend on them cannot be checked.",
+    "The memo cites no academic literature. The prisoner's dilemma (line 36) and the 'hive mind' analogy (line 36, drawn from a TV show) are used without citation."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "spending is being offloaded onto company executives",
+     "location": "Overview, line 11"
+    },
+    {
+     "quote": "we have to be very careful about how anything is perceived",
+     "location": "Commercial Banking, line 20 (Dimon, Nov 2025 interview)"
+    },
+    {
+     "quote": "we have to be emotionally disciplined, and recognize that we will not win divided",
+     "location": "Credit Union, line 36 (ACU CEO, as quoted in memo)"
+    }
+   ],
+   "references_of_note": []
+  },
+  "summary_md": "An unsigned internal memo dated 12/10/2025. Names are redacted and it is not peer-reviewed. It profiles federal political giving by the top 10 firms by revenue in four industries: life insurance, mutual funds, credit unions and commercial banking. It splits that giving across CEOs, other executives, company PACs, trade associations (ACLI, ACU, ABA) and the four largest Super PACs. Its headline claim is that firms push political spending onto executives and adjust their giving to executive-branch scrutiny \"regardless of party\". The evidence is per-industry dollar averages, which carry no cycle years, source or N, plus news-driven case stories: Bank of America after the DOJ probe, JPMorgan's PAC memos, and the Schwab charity fund. There is no comparison group and no test. The memo reports its own ranking contradictions, and it uses \"dark money\" to mean Super PAC money.\n\nFor Paul's systems the memo is a descriptive input, not evidence. Its unit of analysis is the same one Mentat's spending-statistics sheet already builds. That sheet has role tiers (Chief, Middle Management, Employee, Corporate) and channel columns (Super PAC, Company PAC, Trade Association, Candidate, Company PAC to Super PAC, each with a partisan split). Mentat also ingests a \"Credit Union Cross Industry Spending.xlsx\" template. The memo may therefore come from the same product line, and if it does it is not an independent check. Two parts are useful. First, the bank, mutual-fund and CU stories show giving moving into channels that per-member models never see: trade associations, Super PACs, and family or charity vehicles. That bears on how Melange's flip model measures competitor money. Second, its partisan readings of Super PAC money ignore whether the money supported or opposed a candidate, which Mentat already separates. Every figure in the memo should be treated as UNVERIFIED, with no window or denominator.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.flip-model",
+    "relation": "qualifies",
+    "paper_claim": "Bank CEOs give little directly to candidates; several, including Moynihan and Masrani, gave nothing across recent cycles. Bank money flows mainly through company PACs and the ABA (cyclical average $2,402,499, memo wording). Mutual-fund Super PAC spending (about $261M annual average to the four biggest Super PACs; industry PACs about $13M cumulative; memo figures, no source or window) is described as channeled by the industry. CU giving runs through ACU coordination, with $0 dark money to the four biggest Super PACs (memo wording).",
+    "paper_location": "Commercial Banking lines 18-22; Mutual Funds lines 24-25; Credit Union lines 36-42",
+    "system_side": "flip_model.py line 39 builds cu0 from C[n]['cu'] and ind0 from banks plus finserv; the flip formula at lines 4-7 uses cu as the a-term and ind as the b-term. Only those two columns are read in this file. Whether the upstream cu and banks columns include trade-association or Super PAC money was not checked.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/flip_model.py:4-7,39",
+    "transfer_conditions": "Structural caution only. The memo's dollar figures have no source, window, N or denominator, so they cannot calibrate WM, HALFF or the b-term. Before any engine change, Mentat's trade-association and Super PAC columns would need mapping to members.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Memo figures match lines 18, 21, 25 and 41. The cited code line for ind0 is 39, not 37. The claim that trade-association, Super PAC and executive money never enter a or b is broader than what flip_model.py shows; it holds only for the inputs this file reads.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Flip - winnability model|Flip - winnability model]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+    "relation": "qualifies",
+    "paper_claim": "Mutual-fund Super PAC money goes particularly to PACs aligned with the GOP (memo wording; the memo does not say mostly). The memo calls this a vast reservoir of partisan spending. House and Senate Majority PAC donations linked to JPMorgan are +90% from the company rather than individuals (memo wording, no denominator). Credit unions report $0 dark money to the four biggest Super PACs.",
+    "paper_location": "Mutual Funds line 25; Commercial Banking line 21; Credit Union lines 41-42",
+    "system_side": "report.R lines 32-34 define 527 and 501c as supplementary categories. Lines 55-77 define the channel columns, including Super PAC, Trade Association and Company PAC: To Super PAC, each with a partisan split. spending_title_role at line 2528 onward and spending_contributor_tier assign Corporate to entity contributors. fec_transfer_graph.R lines 30-42 hold the F12 date-walk rule. The brain note that 89 percent of beneficiary dollars were oppose-coded was not found in the Project Brain melange-systems-brain folder searched.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/R/report.R:32-34,55-77,2528-2563; C:/Users/pgoff/Mentat/mentat/R/fec_transfer_graph.R:30-42",
+    "transfer_conditions": "Quote the memo's partisan and dark-money readings only after recomputing with the support/oppose split and the 501c and 527 separation. The attributed-estimate producer status claimed by the analyst was not checked.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Misquote: the memo says particularly, not mostly. The +90 percent is written as +90 with no denominator. The 89 percent oppose-coded figure is not in the brain folder searched. Code references hold for the channel columns and supplementary categories.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-fec-attribution#PAC transfer graph and beneficiary direction partition|PAC transfer graph and beneficiary direction partition]]",
+    "system": "mentat-fec-attribution"
+   },
+   {
+    "component_id": "mentat-fec-attribution.employer-match",
+    "relation": "suggests-extension",
+    "paper_claim": "Charles Schwab's company PAC and executives halted giving. Per the memo, Chairman Schwab and his wife moved giving to a charity fund that invested over $250M in conservative causes in 2021-2024 and gave to Republican Super PACs (memo figures, partly redacted). The memo's thesis is that spending is offloaded onto company executives, measured as CEO and executive averages per industry.",
+    "paper_location": "Overview line 11; Mutual Funds line 26 (partly redacted)",
+    "system_side": "collect.R company_cross_reference_people (lines 1009-1035) builds the trusted name set from roster executives and from contributions whose match reason is verified_employer_alias or verified_roster_alias. report.R spending_title_role (line 2528 onward) assigns Chief to CEO, CFO, general counsel, founder, owner, chairman and president titles, and Middle Management to vice president, director, partner, head and manager titles. The 501c category is supplementary at report.R line 32.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:1009-1035; C:/Users/pgoff/Mentat/mentat/R/report.R:32-34,2528-2563",
+    "transfer_conditions": "An extension would link executive-controlled vehicles (foundations, donor-advised funds, family entities) to roster people. That needs a verified-affiliation rule consistent with the strict-names policy, not a fuzzy guess. The memo never defines executive, so its averages cannot be reconciled with the Chief or Middle Management tiers.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The analyst says charity or family routing is attributed only when the vehicle's filings name the employer. No such rule appears in the cited collect.R range, and a search of collect.R found no family, foundation or 501 handling. The title-role mapping holds, except the memo's VP shorthand is not in the pattern, which matches VICE PRESIDENT only.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-fec-attribution#Employer-string roster matching and overrides|Employer-string roster matching and overrides]]",
+    "system": "mentat-fec-attribution"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "qualifies",
+    "paper_claim": "The memo says industries adapt giving to executive-branch pressure regardless of party. Examples: Bank of America PAC spending rose and its partisan split became more balanced after the debanking dispute and DOJ probe; JPMorgan streamlined PAC giving after internal memos. The causal link is hedged ('most likely', lines 22 and 28). No counterfactual or test is given.",
+    "paper_location": "Overview line 11; Commercial Banking lines 19-22; Mutual Funds line 28",
+    "system_side": "sgs_estimate.R lines 172-179 label the expected-minus-current House and Senate control terms and the presidential-year term. Lines 1-10 and 299-359 describe a wild cluster restricted bootstrap by sector. The Holm adjustment is not found in sgs_estimate.R. The SHIFT result of -0.04 with p .76 was not found in the sector growth study text searched, so that number is not confirmed here.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:1-10,172-179,299-359",
+    "transfer_conditions": "The memo concerns executive-branch pressure, while SHIFT concerns congressional control, so the two do not test the same thing. The memo offers firm-level anecdote with no counterfactual and cannot be cited as a finding. At most it motivates a pre-registered event study around dated enforcement actions.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper side holds at lines 19, 22 and 28. Code side labels check out, but the Holm adjustment and the -0.04 SHIFT figure are not confirmed in the code or outputs searched. Drop the number, or give its source, before citing.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+    "relation": "context",
+    "paper_claim": "Credit unions have the lowest CEO and executive averages of the four industries (CEO $5,147, executive $3,009). Their giving is coordinated through the ACU trade association, with a near-perfect bipartisan balance (memo gives no figure), emphasis on open seats and special elections, and hedging across opposing candidates.",
+    "paper_location": "Credit Union lines 36-47 (figures at line 40; bipartisan claim at line 42; hedging at lines 46-47)",
+    "system_side": "giving_forecast.py lines 1741-1757 state that the credit-union company-PAC measure uses the published PAC panel's 16-PAC cohort (D-117), with the D/R split pinned to the same cohort. The comment contrasts this with the anchors' single committee and does not discuss executive giving.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:1741-1757",
+    "transfer_conditions": "Supports treating credit-union political money as PAC- and association-led, so the panel cohort is the right unit. The near-perfect ratio and the volatility claims have no figures, so they cannot check the pinned split.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Memo figures match line 40. The code comment matches the stated 16-PAC cohort and D-117 reference. The split file referenced in the comment was not opened.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-giving-forecast#Calculator rules, company-PAC nowcast and BLEND|Calculator rules, company-PAC nowcast and BLEND]]",
+    "system": "mentat-giving-forecast"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Misquote: the memo says Super PAC money goes particularly to GOP-aligned PACs (line 25), not mostly. The ext key finding and rel bearing both quote mostly.",
+   "The summary says the memo reports its own ranking contradictions. It does not; the contradiction between the bank CEO figure and the mutual-fund CEO figure is the analyst's observation and is not acknowledged in the memo.",
+   "The +90 figure for House and Senate Majority PAC donations is written in the memo as +90 with no denominator, not as over 90 percent.",
+   "paul_alignment cites a Paul note on conflicting industries and a Bacik agreement. paul_entries is empty and n_annots is 0, so no Paul notes exist in this item, and the Bacik link is not in the memo.",
+   "The brain claim that 89 percent of beneficiary dollars were oppose-coded was not found in the Project Brain melange-systems-brain folder searched.",
+   "The SHIFT result of -0.04 with p .76 and the Holm adjustment were not found in the sector growth study text or in sgs_estimate.R.",
+   "flip_model.py line 37 is cited, but ind0 is at line 39.",
+   "The flag that the memo may come from the Mentat product line rests only on a layout resemblance; the item holds no evidence of lineage and it should stay an open question.",
+   "The summary's no cycle years point is fair, but the memo does use cyclical and both cycles wording; the cycle window is simply unstated.",
+   "The memo ranks the mutual-fund CEO average of $17,882 as 1nd (likely typo for 1st); the summary does not mention this typo."
+  ],
+  "gaps_exposed": [
+   "Melange's flip and break-even money legs see only direct PAC-to-member dollars (cu, banks + finserv). Trade-association and Super PAC independent-expenditure money targeted at a member is absent, and the memo argues those are the main bank and mutual-fund channels.",
+   "Mentat has no linkage from roster executives to their personal or charitable vehicles (foundations, donor-advised funds, family entities). Giving that an executive redirects off the employer field goes unattributed.",
+   "No study variable captures executive-branch enforcement or scrutiny events (DOJ probes, executive orders). The sector-growth SHIFT tests cover congressional control only.",
+   "No figure for within-industry volatility of giving by channel. The memo calls mutual funds the most volatile, which bears on forecast interval width, but the forecast reports no per-industry dispersion."
+  ],
+  "flags": [
+   "UNVERIFIED (DE-062): every dollar figure in the memo lacks a source, cycle window, N and denominator, which breaks the rule that every figure names its window and denominator. Quote none of them without that label.",
+   "The memo may not be independent of the system. Its channel and role layout matches Mentat's spending-statistics sheet (report.R:64-80), and Mentat ingests a 'Credit Union Cross Industry Spending.xlsx' template (ingest.R:1294). If it was built from Mentat output, it cannot serve as a second path that reproduces Mentat.",
+   "Terminology conflict: the memo calls Super PAC donations 'dark money'. Mentat keeps Super PAC money (FEC-disclosed) separate from 501(c) and 527 money. Do not import the memo's wording.",
+   "The memo's partisan readings of Super PAC money ignore support/oppose direction, and the brain records that 89% of beneficiary dollars were oppose-coded. 'GOP-aligned' destinations do not equal pro-GOP spending.",
+   "The causal claim (executive-branch pressure drives giving 'regardless of party') rests on narrative and timing. It sits uneasily with the memo's own GOP-tilted mutual-fund finding, and its ranking contradictions are unreconciled (bank CEO $16,781 called 1st, below the mutual-fund CEO's $17,882)."
+  ],
+  "paul_alignment": "Paul has not annotated this memo. It loosely agrees with his reading of strategic, cycle-aware giving (Bacik: more money in election years; Furnas: party-tied firms lose when that party loses). It also agrees with his wish to map rival industries (banks and funds against CUs). But it supplies only industry averages and anecdotes, with no member-level allocation. It cannot answer his 'conflicting industries' note for the industry boards or the flip model. The system's own SHIFT result found no stable partisan shift with expected control. That cuts against generalizing the memo's 'adapt to whoever holds power' story, though the memo concerns the executive branch, which SHIFT does not test. If Paul or his team wrote this memo, its framing of channel substitution is now better covered by Mentat's role and channel columns and the support/oppose partition than the memo's own figures. The memo should be read as a framing document, not as evidence.",
+  "related": [
+   {
+    "slug": "goff-nd-cross-industry-finance",
+    "relation": "complements",
+    "why": "Paul-authored cross-industry finance and lobbying report (author Goff) covering credit unions and community banks. Overlap with this memo may be real, but the memo names are redacted, so shared data lineage is unverified."
+   },
+   {
+    "slug": "furnas-nd-conflating-lobbying-pacs",
+    "relation": "complements",
+    "why": "Furnas, LaPira and Brock find low overlap between organizational lobbying and PAC spending. That supports the memo's premise that money moves across channels and warns against treating one channel as total effort."
+   },
+   {
+    "slug": "irvin-2023-dark-investigation-dark",
+    "relation": "complements",
+    "why": "Irvin (2023) studies dark-money vehicles among 501(c)(4) advocacy groups, using dark money for nonprofit non-disclosure. The memo instead uses the term for disclosed Super PAC donations."
+   },
+   {
+    "slug": "christopher-2016-mathematical-modeling-analysis",
+    "relation": "complements",
+    "why": "Couch, Fox and Everton (2016) model a single dark-money network and rank nodes with AHP/TOPSIS. It is a network view of dark money, not a model of the memo's reservoir claim, so the link to Mentat's transfer graph is loose."
+   },
+   {
+    "slug": "kim-2020-strategic-sequential-links",
+    "relation": "complements",
+    "why": "Kim, Stuckatz and Wolters (2020) link donations to lobbying for interest group-politician pairs and report firm-level executive and employee giving in Appendix C. That is a more rigorous version of the executive-giving question, not the same design."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "note-industry-growth-and-political-spending-research",
+    "relation": "same-data",
+    "why": "Item record exists (Cross-Industry Political Spending memo, 2025). Authorship unknown; the same-data claim was not re-read."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "merkley-nd-party-cues-news",
+  "note": false,
+  "meta": {
+   "title": "Party Cues in the News: Democratic Elites, Republican Backlash and the Dynamics of Climate Skepticism",
+   "authors": [
+    "Eric Merkley (Munk School of Global Affairs & Public Policy, University of Toronto)",
+    "Dominik A. Stecula (Annenberg Public Policy Center, University of Pennsylvania; Simon Fraser University)"
+   ],
+   "year": "",
+   "venue": "British Journal of Political Science (marked \"Forthcoming\" in the PDF; no volume, issue or DOI given)",
+   "doi": "",
+   "sha12s": [
+    "049ac0d19237"
+   ],
+   "category": "Campaign Politics",
+   "category_slug": "campaign-politics"
+  },
+  "extraction": {
+   "title": "Party Cues in the News: Democratic Elites, Republican Backlash and the Dynamics of Climate Skepticism",
+   "authors": [
+    "Eric Merkley (Munk School of Global Affairs & Public Policy, University of Toronto)",
+    "Dominik A. Stecula (Annenberg Public Policy Center, University of Pennsylvania; Simon Fraser University)"
+   ],
+   "year": "",
+   "venue": "British Journal of Political Science (marked \"Forthcoming\" in the PDF; no volume, issue or DOI given)",
+   "doi": "",
+   "document_type": "Journal article, forthcoming (pre-print PDF)",
+   "coverage": "Full text read: all 1,068 lines of C:\\Users\\pgoff\\Documents\\research\\_text\\049ac0d19237.txt (title, abstract, introduction, theory, data and methods, aggregate results, experiment, discussion, references). The supplementary information (sections A-B, Tables C/D/E, Figures C1-C2, E1-E2) is referenced but not in the file, so it was not evaluated. Annotation file C:\\Users\\pgoff\\Documents\\research\\_annots\\049ac0d19237.json read in full: 51 Highlight items, no sticky notes, every note field empty. Metadata hint corrected: authors are Merkley and Stecula; the PDF gives no year or DOI.",
+   "research_question": "Does out-group cueing from Democratic elites, delivered through news coverage, drive the rise of climate skepticism in the US public, especially among Republicans, and can that effect be shown to be causal rather than a by-product of confounders?",
+   "theory": "Elite cueing and out-group backlash. Partisans use party elites as cognitive shortcuts and affective anchors (Cohen 2003; Kam 2005; Lenz 2012; Lodge and Taber 2013). Out-group cues can repel rather than persuade partisans, plausibly via affective polarization (Iyengar et al. 2012). The authors contrast this with motivated-reasoning and ideology accounts, which they say cannot easily explain the over-time dynamics, since Republicans once matched Democrats on climate beliefs. News media carry elite cues to the mass public (pp. 2-6). Hypotheses: H1, Democratic elite cues lead aggregate skepticism; H2, a positive contemporaneous correlation holds after controls; H3, exposure to a Democratic cue raises skepticism among Republicans (pp. 5-8).",
+   "data": "Aggregate opinion: about 172 Roper Center poll questions (the abstract says \"nearly 200 polls\") combined into a latent skepticism index. Quarterly 2001-2014 (N=55 in Table 2 Model 1; N=54 for the Republican series) and annual 1986-2014 (N=28). Republican-only series is the Partisan Climate Change Threat Index of Carmichael and Brulle, reverse-coded (correlation 0.48 with the authors' quarterly series). News: climate coverage in the New York Times and Washington Post (LexisNexis), with 1,000+ articles hand-screened for relevance. Validation: 700 party-referencing articles (about 80% contain a cue); 3,000 articles coded for stance (97% of Democratic-cue articles fully pro-consensus); 2,179 newspaper articles coded for economic-cost and uncertainty frames (classifier training sets of 1,878 and 1,179). Experiment: MTurk, 2019, N=2,970 analysed (condition sizes 471-534), with 85% passing screeners and 130 (4%) dropped for failing both (p. 19 and fn 10).",
+   "method": "Text-as-data pipeline: Lexicoder plus a custom dictionary of party names, office titles and leaders to flag elite cues. Share of articles with Democratic cues and Republican cues. Republican cue measure is the cue share multiplied by the share of hostile Republican messages (validated against LCV scores, r=0.72). Frames via SVM (80% accuracy for cost frames, recall 0.76 and precision 0.80; 77% accuracy for uncertainty frames, recall 0.70 and precision 0.68). Time series: reduced-form VAR with lags up to four quarters (higher lag chosen when tests disagree; stability checked) and Granger causality tests, with controls for NOAA climate index, oil prices, unemployment and quarter dummies (pp. 11-13). Contemporaneous models: lagged-dependent-variable OLS with robust SEs (Eq. 1), controls for Republican cues, uncertainty and cost frames, salience (NYT plus WaPo volume), climate, oil, unemployment (Table 2). Experiment: OLS (Eq. 2) interacting five treatment dummies (Democratic cue; opposing GOP cue; polarized cues; supporting GOP cue; consensus cues) with 7-point partisanship and with controls (trust in scientists, political interest) and their interactions with treatment. Outcome is a 7-point agree/disagree item on human-caused warming, rescaled 0-1 (pp. 18-21).",
+   "identification": "Time series: Granger tests establish temporal precedence only, and the authors state the design is not causal (pp. 6, 12, 17). Contemporaneous models add controls for in-group cues, frames, salience, and lagged skepticism, but remain observational. Experiment: random assignment to six conditions (control; Democratic cue; opposing GOP cue; polarized; supporting GOP cue; consensus), so the cue effect is identified within the randomized conditions. Partisanship is not randomized and enters as a moderator (p. 19). The effects reported are conditional on strong partisanship. Effects are estimated through the PID-by-treatment interaction, not a simple randomized mean difference.",
+   "scope": "Population: US public (aggregate polls) and a US online MTurk sample (2019) that the authors say matches the public on gender, race, partisanship and ideology but skews younger, wealthier and more educated (p. 18). Institution: national newspaper coverage (NYT and WaPo) only. Era: 1986-2014 for annual opinion and 2001-2014 for quarterly series; experiment in 2019. Issue: climate change science and mitigation.",
+   "key_findings": [
+    {
+     "finding": "Democratic elite cues Granger-cause aggregate climate skepticism; the reverse does not hold.",
+     "location": "Results, Table 1, p. 15",
+     "numbers": "Dem cues -> skepticism chi2 6.96, p=0.01 (1 lag); skepticism -> Dem cues chi2 1.01, p=0.32"
+    },
+    {
+     "finding": "Democratic cues Granger-cause skepticism among Republicans; the reverse does not hold.",
+     "location": "Table 1, p. 15",
+     "numbers": "Dem cues -> GOP skepticism chi2 7.35, p=0.03 (2 lags); GOP skepticism -> Dem cues chi2 0.29, p=0.86"
+    },
+    {
+     "finding": "Republican cues show weak and inconsistent cue-taking: no effect on aggregate skepticism, weak effect on Republican skepticism.",
+     "location": "Table 1, p. 15",
+     "numbers": "GOP cues -> aggregate chi2 0.00, p=0.94; GOP cues -> GOP skepticism chi2 2.94, p=0.09; skepticism -> GOP cues p=0.82 and p=0.99"
+    },
+    {
+     "finding": "Contemporaneous association: Democratic cues correlate with aggregate skepticism after controls, weaker in the quarterly model.",
+     "location": "Table 2 Model 1 and text p. 16",
+     "numbers": "Quarterly coefficient 0.02 (SE 0.01), p~0.07; 10-point rise in Dem cue share = 0.2 SD in skepticism; N=55"
+    },
+    {
+     "finding": "Annual aggregate model shows the same association.",
+     "location": "Table 2 Model 2 and text p. 17",
+     "numbers": "Coefficient 0.02 (p~0.09); 10-point rise = 0.2 SD; R2=0.89; N=28. Republican cues not significant (p~0.60)"
+    },
+    {
+     "finding": "Republican-specific skepticism responds to Democratic cues (H2 support) and to Republican cues.",
+     "location": "Table 2 Model 3 and text p. 17",
+     "numbers": "Dem cues 0.03 (p<0.01) = 0.3 SD per 10 points; GOP cues 0.04 (p~0.02) = 0.4 SD per 10 points; N=54"
+    },
+    {
+     "finding": "Unemployment and salience also correlate with Republican skepticism; more coverage is associated with lower Republican skepticism after controls.",
+     "location": "Table 2 Model 3 and text p. 17",
+     "numbers": "1-point unemployment rise = 0.3 SD (p<0.001); +100 articles per quarter = -0.4 SD (p~0.03)"
+    },
+    {
+     "finding": "Descriptive: Democratic cues track salience; Republican cues track economic-cost framing more than uncertainty framing.",
+     "location": "p. 14-15",
+     "numbers": "Dem cues vs salience 0.57 quarterly and 0.57 annual; Rep cues vs salience -0.45 and 0.11; Rep cues vs cost frames 0.64 quarterly and 0.55 annual; vs uncertainty 0.34 and -0.07"
+    },
+    {
+     "finding": "Democratic-cue articles are almost uniformly pro-consensus; Republican hostility to climate action is measured via a composite.",
+     "location": "p. 10-11, fn 5",
+     "numbers": "97% of Democratic-cue articles fully supportive of consensus (3,000-article hand-coded sample); cue screen validated at about 80% (700 articles); Rep composite correlates 0.72 with LCV scores; coder agreement alpha 0.98 (Dem), 0.83 (GOP)"
+    },
+    {
+     "finding": "Survey experiment: a Democratic elite cue polarizes strong Republicans toward skepticism (H3 support).",
+     "location": "Experimental Results, Figure 3, p. 20",
+     "numbers": "Strong Republicans +0.06 on 0-1 scale (about 0.2 SD, p~0.03); interaction p~0.05. Strong Democrats: no significant effect"
+    },
+    {
+     "finding": "Opposing GOP cue and polarized cues (Democratic plus opposing Republican) raise Republican skepticism; polarized effect is largest.",
+     "location": "p. 20-21, Figure 3 Panels B-C",
+     "numbers": "Opposing GOP: +0.06 (p~0.02; interaction p~0.02). Polarized: +0.09 (about 0.3 SD, p~0.002; interaction p~0.003); strong Democrats +0.04 (p~0.09)"
+    },
+    {
+     "finding": "Supporting GOP cue and consensus cue (Democratic plus supportive Republican) produce no polarization; the consensus cue attenuates the Democratic backlash.",
+     "location": "p. 21 and discussion p. 22-23",
+     "numbers": "No significant effect for supporting GOP or consensus conditions; no depolarizing effect reported"
+    },
+    {
+     "finding": "Control condition baseline: 80% of respondents agree with the consensus at some level and 13% disagree.",
+     "location": "p. 19",
+     "numbers": "80% agree at some level; 13% disagree; scale rescaled 0-1"
+    }
+   ],
+   "limitations": [
+    "VAR and Granger analyses cannot speak to contemporaneous relationships or causality; authors say so (pp. 6, 12, 16).",
+    "Aggregate evidence is described as only suggestive; unmeasured confounders over time remain (p. 17).",
+    "Results are sensitive to lag length; the authors pick the higher lag when tests disagree and note the sensitivity (fn 6, p. 12).",
+    "Small time series (N=28 annual, 54-55 quarterly) with many controls.",
+    "Cue measure is a share of articles from dictionary-based classification, not message volume; volume robustness is only in supplementary Table D1 (p. 10).",
+    "Republican hostility measure is a composite built from a 3,000-article coding and an LCV correlation (0.72); the authors call the stance indicator valid but it is not directly measured for every period (pp. 10-11).",
+    "Only NYT and WaPo are used; the authors acknowledge partisan online and social media are excluded (fn 3, p. 9).",
+    "Inconsistent counts: the abstract says nearly 200 polls, the body uses 172 poll questions (p. 8). The abstract says about 3,000 respondents; 2,970 were analysed.",
+    "Experimental sample is MTurk, skewing younger, wealthier and more educated; screeners address bot and VPN concerns (pp. 18-19, fn 10).",
+    "Partisanship is not randomized; treatment effects are moderated by PID, which may carry confounding (p. 19).",
+    "No effect among Democrats, possibly from a ceiling effect (p. 22).",
+    "Treatments are thin and the outcome is a single 7-point item (pp. 18-21).",
+    "Consensus cue did not depolarize; the authors suggest a stronger treatment from respected Republicans may be needed (p. 23).",
+    "Table 2 layout is hard to read: the text reports Model 1 Republican cues as non-significant, while the table marks Dem cues only with stars; p-values are reported as approximate (p~)."
+   ],
+   "paul_markup": [
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Paraphrase: thesis that backlash to Democratic elite out-group cues drove the shift in climate skepticism. (Exact passage at index 1 of annotation file.)",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Paraphrase: plan to build time-series measures of possible contributors to skepticism.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Paraphrase: measures come from automated media content analysis.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Paraphrase: Republicans once held climate beliefs comparable to Democrats (1997 gap example).",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Paraphrase: Republican skepticism may have grown from polarizing party cues carried by news media.",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "Paraphrase: news-media dynamics of cues plus frames (economic cost, scientific uncertainty) as contributors.",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "Paraphrase: contribution claim, combining text analysis, time series and experiments on a high-salience issue.",
+     "note": ""
+    },
+    {
+     "page": "5",
+     "type": "Highlight",
+     "text": "Paraphrase: elite cueing theory passes a placebo test, with no effect where elites are not divided.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "Paraphrase: H1 is tested with a vector autoregression.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "Paraphrase: VAR limitation, no contemporaneous relationships.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "Paraphrase: the key variable is the prevalence of Democratic Party elite cues.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "Paraphrase: the outcome is aggregate levels of skepticism toward climate science.",
+     "note": ""
+    },
+    {
+     "page": "7",
+     "type": "Highlight",
+     "text": "Paraphrase: H2 predicts a positive contemporaneous correlation, holding other factors constant.",
+     "note": ""
+    },
+    {
+     "page": "7",
+     "type": "Highlight",
+     "text": "Paraphrase: the holding-constant clause of H2.",
+     "note": ""
+    },
+    {
+     "page": "7",
+     "type": "Highlight",
+     "text": "Paraphrase: gap, out-group cueing is little studied and climate change has rarely been a test case.",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight",
+     "text": "Paraphrase: opinion measures are standardized for interpretability.",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight",
+     "text": "Paraphrase: NYT and WaPo chosen as high-circulation agenda-setting papers.",
+     "note": ""
+    },
+    {
+     "page": "10",
+     "type": "Highlight",
+     "text": "Paraphrase: definition of a party cue as a stance on climate science or policy attributed to party elites.",
+     "note": ""
+    },
+    {
+     "page": "10",
+     "type": "Highlight",
+     "text": "Paraphrase: Lexicoder plus a dictionary of key terms is used to find cues.",
+     "note": ""
+    },
+    {
+     "page": "10",
+     "type": "Highlight",
+     "text": "Paraphrase: the dictionaries are in supplementary section B.",
+     "note": ""
+    },
+    {
+     "page": "10",
+     "type": "Highlight",
+     "text": "Paraphrase: 97% of Democratic-elite articles were wholly supportive of the consensus.",
+     "note": ""
+    },
+    {
+     "page": "13",
+     "type": "Highlight",
+     "text": "Paraphrase: regression equation (1), lagged skepticism, Democratic cues and controls.",
+     "note": ""
+    },
+    {
+     "page": "13",
+     "type": "Highlight",
+     "text": "Paraphrase: coding rule for the uncertainty frame (questioning elements of the IPCC consensus).",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "Paraphrase: SVM classifier used on manually coded articles.",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "Paraphrase: definition of SVM as a hyperplane separating classes.",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "Paraphrase: classifier and manual coding agree reasonably closely.",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "Paraphrase: Republican cues correlate with economic-cost frames (0.64 quarterly, 0.55 annual).",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "Paraphrase: Republican cues correlate only weakly with uncertainty frames (0.34 and -0.07).",
+     "note": ""
+    },
+    {
+     "page": "15",
+     "type": "Highlight",
+     "text": "Paraphrase: Democratic cues correlate highly with salience (0.57, quarterly and annual).",
+     "note": ""
+    },
+    {
+     "page": "15",
+     "type": "Highlight",
+     "text": "Paraphrase: Republican cues do not show that salience correlation (-0.45 and 0.11).",
+     "note": ""
+    },
+    {
+     "page": "15",
+     "type": "Highlight",
+     "text": "Paraphrase: Republican cues weakly Granger-cause Republican skepticism (p~0.09).",
+     "note": ""
+    },
+    {
+     "page": "15",
+     "type": "Highlight",
+     "text": "Paraphrase: skepticism does not Granger-cause Republican cues.",
+     "note": ""
+    },
+    {
+     "page": "16",
+     "type": "Highlight",
+     "text": "Paraphrase: earlier analyses do not show contemporaneous relationships.",
+     "note": ""
+    },
+    {
+     "page": "17",
+     "type": "Highlight",
+     "text": "Paraphrase: Republicans become less skeptical as salience rises, after controlling for party cues.",
+     "note": ""
+    },
+    {
+     "page": "17",
+     "type": "Highlight",
+     "text": "Paraphrase: 100 more articles per quarter linked to a 0.4 SD drop in Republican skepticism.",
+     "note": ""
+    },
+    {
+     "page": "18",
+     "type": "Highlight",
+     "text": "Paraphrase: the MTurk sample skews younger, wealthier and more educated.",
+     "note": ""
+    },
+    {
+     "page": "18",
+     "type": "Highlight",
+     "text": "Paraphrase: control condition received no cue.",
+     "note": ""
+    },
+    {
+     "page": "18",
+     "type": "Highlight",
+     "text": "Paraphrase: description of the Democratic, opposing Republican and polarized cue conditions.",
+     "note": ""
+    },
+    {
+     "page": "19",
+     "type": "Highlight",
+     "text": "Paraphrase: possible moderation by trust in scientists, independent of partisanship.",
+     "note": ""
+    },
+    {
+     "page": "20",
+     "type": "Highlight",
+     "text": "Paraphrase: claim that results provide strong support for H3.",
+     "note": ""
+    },
+    {
+     "page": "21",
+     "type": "Highlight",
+     "text": "Paraphrase: supporting Republican and consensus cues did not polarize respondents.",
+     "note": ""
+    },
+    {
+     "page": "21",
+     "type": "Highlight",
+     "text": "Paraphrase: effects modest but notable given decades of polarization and thin treatments.",
+     "note": ""
+    },
+    {
+     "page": "22",
+     "type": "Highlight",
+     "text": "Paraphrase: scholars should study over-time dynamics in the news environment.",
+     "note": ""
+    },
+    {
+     "page": "22",
+     "type": "Highlight",
+     "text": "Paraphrase: Democratic out-group cues caused attitudinal backlash among Republican voters.",
+     "note": ""
+    },
+    {
+     "page": "22",
+     "type": "Highlight",
+     "text": "Paraphrase: claim of central importance of out-group cues, using text, time series and experiments.",
+     "note": ""
+    },
+    {
+     "page": "22",
+     "type": "Highlight",
+     "text": "Paraphrase: Democratic elite cues are the most consistent predictor of skepticism, especially among Republicans.",
+     "note": ""
+    },
+    {
+     "page": "22",
+     "type": "Highlight",
+     "text": "Paraphrase: Democratic-supporter null may reflect a ceiling effect.",
+     "note": ""
+    },
+    {
+     "page": "23",
+     "type": "Highlight",
+     "text": "Paraphrase: party elites must weigh the costs of aggressively communicating their stance in media.",
+     "note": ""
+    },
+    {
+     "page": "23",
+     "type": "Highlight",
+     "text": "Paraphrase: consensus cue did not depolarize; a stronger cue from respected Republicans may work.",
+     "note": ""
+    },
+    {
+     "page": "23",
+     "type": "Highlight",
+     "text": "Paraphrase: mobilizing an elite consensus across partisan lines is needed.",
+     "note": ""
+    },
+    {
+     "page": "24",
+     "type": "Highlight",
+     "text": "Paraphrase: cross-partisan elite consensus is the most promising strategy for bringing opinion in line with science.",
+     "note": ""
+    }
+   ],
+   "short_quotes": [
+    {
+     "quote": "Republicans are repelled, rather than persuaded by Democratic elite cues",
+     "location": "p. 17 (Results, contemporaneous models; Merkley and Stecula)"
+    }
+   ],
+   "measures": [
+    "Aggregate climate skepticism: latent, standardized index from about 172 Roper Center poll questions (annual 1986-2014; quarterly 2001-2014).",
+    "Republican climate skepticism: reverse-coded Partisan Climate Change Threat Index (Carmichael and Brulle 2017), quarterly from 2001.",
+    "Democratic elite cue share: share of NYT/WaPo climate articles with Democratic cues (Lexicoder plus dictionary).",
+    "Republican cue measure: share of cue articles x share of hostile Republican messages (composite; LCV r=0.72).",
+    "Uncertainty frame share and economic-cost frame share: SVM classifiers on hand-coded articles.",
+    "Salience: combined NYT and WaPo climate article volume.",
+    "Controls: NOAA climate index, oil prices, unemployment rate, quarter dummies, lagged dependent variable.",
+    "Experiment outcome: 7-point agreement that Earth is warming mostly due to human activity, rescaled 0-1.",
+    "Experiment moderator: 7-point partisanship (strong Democrat to strong Republican) and political interest and trust in scientists."
+   ],
+   "references_of_note": [
+    "Berinsky AJ (2009) In Time of War. Out-group cue-taking on the Iraq War (Democratic partisans and mixed in-group cues).",
+    "Nicholson SP (2012) Polarizing Cues, AJPS. Out-group cues produce backlash among partisans; experimental basis for the paper.",
+    "Goren P, Federico CM, Kittilson MC (2009) Source Cues, Partisan Identities, and Political Value Expression, AJPS. Out-group party cues more powerful.",
+    "Bischof D and Wagner M (2019) Do Voters Polarize When Extreme Parties Enter Parliament? AJPS. Out-group polarization in comparative setting.",
+    "Feddersen A and Adams J (2018) APSA paper on Swiss party press releases and backlash to out-group parties.",
+    "Carmichael JT and Brulle RJ (2017) Elite Cues, Media Coverage, and Public Concern, Environmental Politics. Source of the PCCTI series.",
+    "Tesler M (2017) Elite Domination of Public Doubts about Climate Change, Political Communication. Elite cues and the placebo test.",
+    "Merkley E and Stecula DA (2018) Party Elites or Manufactured Doubt? Science Communication. Authors' earlier cue-coding work.",
+    "Farrell J (2016a) Corporate Funding and Ideological Polarization about Climate Change, PNAS. Funding network and polarization; relevant to lobbying and money.",
+    "Farrell J (2016b) Network Structure and Influence of the Climate Change Counter-Movement, Nature Climate Change. Network structure of counter-movement; relevant to networks.",
+    "Dalton RJ, Beck PA, Huckfeldt R (1998) Partisan Cues and the Media, APSR. Media as channel for partisan cues.",
+    "Erikson RS, MacKuen MB, Stimson JA (2002) The Macro Polity. Policymakers respond to opinion; basis for the reverse-causality argument.",
+    "Stimson JA (1999) Public Opinion in America. Latent aggregate-opinion method.",
+    "Grimmer J and Stewart BM (2013) Text as Data, Political Analysis. Supervised classification of political text.",
+    "Iyengar S, Sood G, Lelkes Y (2012) Affect, not Ideology, POQ. Affective polarization mechanism.",
+    "Lenz GS (2012) Follow the Leader? Elite cues and voter response.",
+    "Zaller J (1992) The Nature and Origins of Mass Opinion. Top-down elite influence on opinion."
+   ],
+   "sample": "Not applicable as a single sample. Aggregate series: about 172 poll questions over 1986-2014. Survey experiment: N=2,970 US MTurk respondents in 2019 (six conditions, 471-534 each)."
+  },
+  "summary_md": "Merkley and Stecula ask whether climate skepticism in the US public grew because people reacted against Democratic elites, with news coverage carrying those cues. They combine three methods. First, a Lexicoder dictionary flags party cues in NYT and WaPo climate coverage. Second, they run time-series models on a latent skepticism index built from about 172 poll questions. Third, they run a 2019 MTurk experiment with N=2,970.\n\nIn the time series, the share of articles carrying Democratic cues Granger-causes skepticism, both in the aggregate (chi2 6.96, p=0.01) and among Republicans (chi2 7.35, p=0.03). The reverse direction does not hold. Republican cues have no aggregate effect (p=0.94). In the experiment, a single Democratic cue moves strong Republicans +0.06 toward skepticism on a 0-1 scale (about 0.2 SD). A polarized cue, Democrats for and Republicans against, moves them +0.09. A consensus cue, with Republicans joining Democrats, produces no movement and does not depolarize. More coverage alone, with cues held fixed, goes with lower Republican skepticism (-0.4 SD per +100 articles a quarter). The Granger tests show only which series moves first, not causation. The causal evidence is one MTurk experiment on mass partisans, not legislators.\n\nFor Melange, the paper's value is about direction. An out-party cue is not a weaker positive cue. Among mass partisans it pushes the other way. Three parts of the engine encode out-party cues differently:\n- The cascade kernel's cpf_pressure gives an out-party source 0.5x pull, a weaker push in the same direction.\n- The LT-priming cross-cue is clamped at 0 and never goes negative.\n- The salience shock already has a Retreat regime that moves out-partisans -1, but its Rally regime still gives bridge-builders +0.5. The paper's consensus condition found no movement at all.\n\nThe paper does not supply a legislator-level backfire magnitude. Every transfer runs from the mass public to members of Congress and from climate to credit-union issues, so any recalibration is UNVERIFIED and remains Paul's decision.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.salience-shock",
+    "relation": "qualifies",
+    "paper_claim": "A polarized cue (Democrats for, Republicans against) moves strong Republicans +0.09 points on the 0-1 scale (about 0.3 SD, p~0.002). It is numerically the largest cue effect, but the authors do not report it as significantly different from the single Democratic cue or opposing-GOP cue effects. A single Democratic cue moves them +0.06 (p~0.03). Supporting-GOP and consensus cues show no polarizing effect and no de-polarizing effect. Observationally, +100 articles a quarter with cues held fixed goes with -0.4 SD in Republican skepticism (Model 3, PCCTI, N=54; p~0.03).",
+    "paper_location": "Experimental results and Figure 3 Panels A-C, pp. 20-21; Table 2 Model 3, p. 17; discussion pp. 22-23",
+    "system_side": "Going public is three regimes. Retreat moves co-partisans +1 and out-partisans -1, matching the paper's polarized-cue backlash direction. Rally moves out-partisans +0.5 only when bpf is at least 0.30, which the paper's consensus null does not support. Regime probabilities p and q come from the D-R tier gap z in salience_issue_params, and the advisory actor party defaults to R.",
+    "code_ref": "fec/engine/salience_shock.py:99-111 (steps_for); fec/engine/salience_shock.py:185 (party default R); fec/moneyball_core.py:736-750 (salience_issue_params)",
+    "transfer_conditions": "Carries over only as a direction-of-effect prior. The paper studies mass partisans reacting to elite cues in national newspapers on climate; the engine moves legislators' stance tiers on credit-union issues. The rally result rests on one thin MTurk treatment, so it weakens but does not refute out-partisan rally movement. Treating z as endogenous to going public is the analyst's inference, not the paper's; the Granger results concern cue shares and skepticism, not the partisan stance gap.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Numbers, panels, pages and the Retreat/Rally code verified at the cited lines. Softened: 'largest effect' should read numerically largest, since no significant difference is reported; 'no movement at all' overstates the consensus null. The claim that z is a snapshot the campaign never changes was not verified.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Salience shock (Noble-Turner going public)|Salience shock (Noble-Turner going public)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-influence-engine.lt-priming",
+    "relation": "supports",
+    "paper_claim": "Out-group (Democratic) elite cues move Republicans away from the cued position rather than toward it. Experiment: strong Republicans +0.06 toward skepticism (about 0.2 SD, p~0.03), with a party-ID interaction p~0.05. Time series: Democratic cues Granger-cause Republican skepticism (chi2 7.35, p=0.03, 2 lags); the reverse has p=0.86.",
+    "paper_location": "Table 1, p. 15; Figure 3 Panel A and text, p. 20",
+    "system_side": "The Bakker cross-cue factor xf passes a cross-party pro-cue through sqrt(bpf_u*bpf_v), so a non-bridge out-party cue falls to about 0. The priming term is clamped at 0 and never goes negative; the code comment says backfire magnitude is not invented.",
+    "code_ref": "fec/engine/lt_priming.py:56-64 (comment and xf at line 64)",
+    "transfer_conditions": "The paper supports that out-party cues do not persuade and reads as backlash, so a negative sign is consistent with it. But the +0.06 effect is measured on mass Republicans and one climate item, not on legislators reading cosponsorship signals, so it cannot set a backfire magnitude for the priming term. Keeping the zero clamp remains defensible.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "All numbers and pages match the text and Table 1. The clamp and cross-cue factor are confirmed at the cited lines. The paper does not itself say the sign can be negative; that is the bearing's reading of 'repelled, rather than persuaded' (p. 17).",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Linear-threshold priming (cheapest tip)|Linear-threshold priming (cheapest tip)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-influence-engine.cascade-kernel",
+    "relation": "qualifies",
+    "paper_claim": "Democratic cues move Republicans toward skepticism, away from the cued position, in both the experiment and the time series (backlash rather than attenuated persuasion). Republican cues have no aggregate effect (chi2 0.00, p=0.94) and only a weak effect on Republican skepticism (chi2 2.94, p~0.09). The authors say co-partisan sources dominate.",
+    "paper_location": "Table 1, p. 15; Figure 3, p. 20; discussion p. 22",
+    "system_side": "cpf_pressure gives an out-partisan source a 0.5x pull and a co-partisan source 1.7x; cpf_diffusion keeps a 0.4 cross-party floor. Both keep out-party influence positive and weaker, not negative.",
+    "code_ref": "fec/moneyball_core.py:543-548 (cpf_diffusion, cpf_pressure); fec/moneyball_core.py:9-12 (physics note)",
+    "transfer_conditions": "The paper supports co-partisan sources dominating, which fits the 1.7 versus 0.5 ordering. It reports backlash, meaning movement away from the cued position, but estimates no multiplier relative to co-partisan influence, so it cannot show the out-partisan sign should be at or below zero rather than 0.5. Cosponsorship ties are observed behaviour rather than cues, so transfer is weak. The paper gives no support for the 1.7/0.5 ratio itself.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Table 1 numbers verified. The original bearing used Republican cues, which are in-party for Republicans, as evidence of out-party backlash; the paper_claim is rewritten to attribute backlash to Democratic cues. Code lines verified. The 'at or below zero' reading is the analyst's extrapolation, not the paper's estimate.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Cascade activation kernel build_P and partisan edge factors|Cascade activation kernel build_P and partisan edge factors]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-stance.lsd-tone",
+    "relation": "qualifies",
+    "paper_claim": "The authors use Lexicoder with a custom dictionary of party names, office titles and party leaders to detect party cues, not sentiment or tone. They validate detection against hand coding of a random 700 articles (about 80% contain a cue by their definition). Stance is hand-coded on a separate random sample of 3000 articles (97% of articles with Democratic messages are wholly pro-consensus). Frames come from SVM classifiers (77-80% accuracy).",
+    "paper_location": "Data and methods, pp. 10-11 (dictionary, 700-article validation, 3000-article stance coding); fn 5, pp. 10-11; pp. 13-14 (SVM frames); fn 9, p. 14 (accuracy)",
+    "system_side": "stage5_lsd.R runs the LSD2015 dictionary in lsd_tone (lines 49-60), returning net tone and charge per word. Live run_stage5.R defaults the intensity to the absolute net tone per word (INTENSITY default net_norm, line 45), with charge only as an option, and press_value equals final_sign times that intensity at lines 141-143. The bearing's earlier statement that charge per word is the intensity used in press_value was wrong.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:49-60; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:45 and 141-143",
+    "transfer_conditions": "The paper is a method precedent only: a dictionary for detecting actors plus hand-coded validation. It never uses or validates sentiment or tone as an intensity measure, so it is no evidence that LSD tone intensity is valid on congressional press releases.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper pages and numbers verified (700 articles, about 80%, 97%, 77-80%). A text search found no tone or sentiment measure in the paper. The system_side and code_ref were wrong: the live default intensity is net tone per word, not charge, and press_value is computed in run_stage5.R, not stage5_lsd.R.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Lexicoder LSD2015 tone intensity|Lexicoder LSD2015 tone intensity]]",
+    "system": "melange-stance"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Consensus cue wording overstates the null: summary says it 'produces no movement and does not depolarize'; the paper reports no polarizing effect and no de-polarizing effect found for the consensus and supporting-GOP conditions (pp. 21-23).",
+   "Summary says 'the paper's consensus condition found no movement at all'; the paper reports no polarizing effect, not zero movement, and the Democratic-cue effect is described as attenuated by the supporting GOP cue (p. 21).",
+   "Summary calls the Rally regime's +0.5 'bridge-builders'; the code gives +0.5 to out-partisans whose bpf is at least 0.30 (cross-pressured out-partisans, salience_shock.py:99-111).",
+   "The -0.4 SD per +100 articles a quarter figure comes from Model 3 (Republican skepticism, PCCTI, N=54), not aggregate skepticism; the summary should say so.",
+   "Summary is otherwise accurate on the Granger statistics (6.96/0.01; 7.35/0.03; reverse 0.32 and 0.86; GOP cues 0.00/0.94), the experiment effects (+0.06 single cue, +0.09 polarized, about 0.2 and 0.3 SD), N=2,970, 172 poll questions, and the 2019 MTurk design.",
+   "Paul's highlight claims in paul_alignment were not checked against the annotation file (_annots/049ac0d19237.json); they are outside summary_md but the alignment text is unverified.",
+   "The LSD bearing's system_side and code_ref were corrected in this verification (default intensity is net tone per word; press_value is in run_stage5.R)."
+  ],
+  "gaps_exposed": [
+   "The engine never lets a source's party identity produce a negative cue. The cascade kernel, LT priming and the rally regime all keep out-party influence at zero or above. The only negative out-party movement is the salience shock's Retreat and Backfire regimes, and it never feeds the cascade kernel.",
+   "The salience shock takes partisan polarization (z) as a fixed snapshot of the stance matrix. Nothing models a CU campaign led by one party creating or widening the partisan gap over later quarters, which is the dynamic the Granger results describe.",
+   "Message attribution, meaning which party's elites are seen as owning a CU issue in press and news, is not measured. The frame-alignment and press layers measure duplication and stance, not attribution of party cues in third-party coverage.",
+   "The salience shock has no consensus regime. The paper's consensus condition (both parties supportive) is a distinct case with a null effect, not a rally that moves out-partisans +0.5."
+  ],
+  "flags": [
+   "The paper's aggregate contemporaneous coefficient (0.02, p~0.07 quarterly; p~0.09 annual) pools Democrats and Republicans across the partisan fault line the paper is about. If quoted, label it UNSTRATIFIED and pair it with the Republican-only Model 3 (0.03, p<0.01, N=54, quarterly 2001-2014).",
+   "The Granger results depend on lag choice (the authors take the higher lag when tests disagree, fn 6). Quote them as evidence of which series moves first, never as causal.",
+   "Any proposal to give out-partisan pressure a negative sign, or to set a backfire magnitude in lt_priming, from the +0.06 or +0.09 MTurk effects would be new agent analysis, UNVERIFIED (DE-062). Those effects are mass-public climate effects and say nothing about legislators.",
+   "No conflict with the rejected SNA proposals, D-021 or D-025. The paper argues for neither dropping cosponsorship edges nor per-edge volume normalization."
+  ],
+  "paul_alignment": "Paul's highlights match the paper's core claim (Democratic cues, Republican backlash, consensus cues fail). His component notes list Merkley and Stecula as support for treating party as a filter on receptiveness (cascade kernel) and as a companion to Noble and Turner (salience shock). The evidence agrees on direction but is stronger than the system as built. The paper finds that out-party cues backfire. In the code, out-party influence is attenuated but positive in cpf_pressure and the rally regime, and clamped at 0 in LT priming. So Paul's note is consistent with the system but understates the gap: the system handles backfire only through the salience shock's Retreat and Backfire regimes. His highlight of the Lexicoder method under lsd-tone is a loose fit. The paper used Lexicoder to detect party actors, not to measure tone, so it does not validate the LSD intensity the system uses. His closing highlights on cross-partisan elite consensus are tempered by the paper's own null for the consensus condition.",
+  "related": [
+   {
+    "slug": "noble-2024-presidential-leadership-legislative",
+    "relation": "complements",
+    "why": "Noble and Turner's item covers going-public structure (Prop. 1, p. 13: going public widens the gridlock region), which the salience shock implements. Merkley and Stecula give mass-public evidence that the out-partisan retreat direction is real (polarized-cue backlash). Their consensus null is not a test of Noble's rally regime, so it does not show a rally fails to move out-partisans."
+   },
+   {
+    "slug": "bakker-nd-understanding-partisan-receptivity",
+    "relation": "complements",
+    "why": "Bakker et al. (Study 1: out-party cue -0.06 on a 0-1 scale, p<.01) is the cited basis for the LT-priming cross-cue clamp. Merkley and Stecula independently find out-party cues move Republicans against the cue, on climate and in news coverage."
+   },
+   {
+    "slug": "boxsteffensmeier-2018-taking-congress-interest",
+    "relation": "complements",
+    "why": "Box-Steffensmeier et al. study legislators taking cues from interest-group Dear Colleague letters; Merkley and Stecula study the mass public taking cues from party elites in news. Together they mark the legislator versus voter boundary for cue parameters."
+   },
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "same-method",
+    "why": "Rice and Zorn's item shows corpus-based dictionaries beat standard ones (LIWC, AFINN) on specialized vocabulary, which bears on applying LSD2015 to congressional releases. Merkley and Stecula use Lexicoder with a custom party-cue dictionary validated against hand coding."
+   },
+   {
+    "slug": "haselmayer-2017-sentiment-analysis-political",
+    "relation": "same-method",
+    "why": "Haselmayer and Jenny pair a dictionary with crowdcoding validation (480 coders, 92% mean accuracy). Merkley and Stecula pair a dictionary with hand-coded validation of 700 articles. Whether the LSD tone layer has an equivalent validation sample was not checked (validate_stage5.R was not read)."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "vanderdoes-2022-strategic-identity-signaling",
+    "relation": "complements",
+    "why": "Merkley and Stecula show outgroup backlash to overt partisan elite cues in news. This paper explains why senders facing mixed audiences shift to covert cues to avoid that backlash."
+   },
+   {
+    "slug": "rheault-2016-measuring-emotion-parliamentary",
+    "relation": "complements",
+    "why": "Uses Lexicoder plus a custom dictionary of party names and leaders to detect party cues, not sentiment, and validates that dictionary against hand-coded articles. Verified in the Merkley item; the link is about dictionary practice, not about tone measurement."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "zeng-nd-multi-agent-reinforcement",
+  "note": false,
+  "meta": {
+   "title": "Multi-Agent Reinforcement Learning-Based Extended Boid Modeling for Drone Swarms",
+   "authors": [
+    "Qingli Zeng",
+    "Farid Nait-Abdesselam"
+   ],
+   "year": "2024",
+   "venue": "IEEE International Conference on Communications (ICC) 2024, IoT and Sensor Networks Symposium, pp. 1551-1556",
+   "doi": "10.1109/ICC51166.2024.10622479",
+   "sha12s": [
+    "995e0e0b27e3"
+   ],
+   "category": "Adjacent",
+   "category_slug": "adjacent"
+  },
+  "extraction": {
+   "title": "Multi-Agent Reinforcement Learning-Based Extended Boid Modeling for Drone Swarms",
+   "authors": [
+    "Qingli Zeng",
+    "Farid Nait-Abdesselam"
+   ],
+   "year": "2024",
+   "venue": "IEEE International Conference on Communications (ICC) 2024, IoT and Sensor Networks Symposium, pp. 1551-1556",
+   "doi": "10.1109/ICC51166.2024.10622479",
+   "document_type": "Conference paper (6 pages, simulation study)",
+   "coverage": "Full text read: all of _text/995e0e0b27e3.txt (lines 0-660, PDF pages 1551-1556, including abstract, introduction, related work, method, simulation results, conclusion and references). Metadata hint corrected: authors are Qingli Zeng and Farid Nait-Abdesselam (both University of Missouri-Kansas City); venue is IEEE ICC 2024; DOI is in the text. No Paul markup files existed (none), so paul_markup is empty. Content check: the paper contains no lobbying, legislators, elections, persuasion/turnout, allocation, text-measurement or social-network material. The only network-like element is distance-based neighbour interaction among drones. Those topics are therefore absent, not thin. The paper's own references to networks are to UAV communication surveys, not social networks.",
+   "research_question": "Can drones trained with multi-agent reinforcement learning (Q-learning with function approximation) reproduce bird-flock behaviour (cohesion, alignment, separation, following) more adaptively than rule-based Boid models? The text states the aim as this comparison rather than as a formal question.",
+   "theory": "Reynolds' Boid model (cohesion, separation, alignment) extended with a leader-follow rule and connectivity band, with reinforcement learning as the adaptive mechanism. Framework is an MDP tuple (S, A, P, R) solved by Q-learning, with linear Q-value approximation Q(s,a)=w·phi(s,a) and Bellman updates (Eqs. 2-6). Rewards are the sum of four terms (Eqs. 7-14).",
+   "data": "No empirical data. Simulated drone swarm built in Python with Pygame. Unit: UAV (drone). Sample: N = 17 UAVs in the simulation parameters (Table I); training uses three designated UAVs (V1 leader on a predefined trajectory, V2 follower, V3 learner). Period: 3,500 simulation steps per method (Table II). Working area 600 x 800 units, maximum speed 4, distance thresholds d1=20, d2=40, d3=80 (Table I). Number of independent runs and random seeds are not reported.",
+   "method": "Simulation comparison of two controllers: (a) Q-learning/MARL-trained drones with linear function approximation (learning rate initialised at alpha=0.1 and said to adapt across iterations; discount gamma=0.75) and (b) a rule-based Boid baseline. Reward weights from Table I: collision -20, connectivity +1, alignment with leader +5 (closer) and -1 (farther), cohesion +2. Sequential training: follower V2 learns to trail the leader at about 30 units; learner V3 learns to trail V1 while staying near V2 and avoiding collisions. Performance is reported as four counts or averages over the run: proximity advances, ideal-range tracking (20-40 units), near-collision events (within 20 units), and heading consistency (mean heading-angle difference, Eqs. 15-16). The rule-based baseline is not specified in the text beyond being a Boid-type rule model.",
+   "identification": "None. The comparison is a single descriptive contrast of two controllers on one simulated scenario. No statistical test, confidence interval, replication, or ablation is reported.",
+   "scope": "Population: simulated drones in a 2D Pygame environment (dimensionality is implied by the working-area dimensions but not stated). Institution: University of Missouri-Kansas City. Era: 2024. Results apply only to the single simulated scenario in Table I.",
+   "key_findings": [
+    {
+     "finding": "Abstract claims the MARL Boid surpasses rule-based models in cohesion, alignment and separation, and shows robustness to perturbations. Section IV reports only the Table II comparison; no perturbation experiment is reported in the text.",
+     "location": "Abstract, p.1551; contributions, p.1552",
+     "numbers": "Not applicable (qualitative claim)"
+    },
+    {
+     "finding": "Both methods completed the task over the same horizon.",
+     "location": "Table II, Section IV-B, p.1556",
+     "numbers": "Steps 3,500 for RL and rule-based"
+    },
+    {
+     "finding": "RL drones recorded more proximity advances than rule-based drones.",
+     "location": "Table II, Section IV-B, p.1556",
+     "numbers": "2,097 vs 1,976 (+121, about +6.1%)"
+    },
+    {
+     "finding": "RL drones spent more instances within the ideal 20-40 unit range.",
+     "location": "Table II, Section IV-B, p.1556",
+     "numbers": "3,176 vs 2,764 (+412, about +14.9%)"
+    },
+    {
+     "finding": "RL drones had far fewer near-collision events, which the authors read as improved safety.",
+     "location": "Table II and text, Section IV-B, p.1556",
+     "numbers": "45 vs 108 (-63, about -58.3%)"
+    },
+    {
+     "finding": "RL heading consistency is reported as better (lower average heading deviation, assuming the metric is a deviation, as defined on p.1556).",
+     "location": "Table II, Section IV-B, p.1556",
+     "numbers": "14.3 vs 21.1 (-6.8, about -32.2%)"
+    },
+    {
+     "finding": "Conclusion: RL can minimise collisions, keep consistent headings and keep proximity, and may suit dynamic scenarios that hard-coded rules handle poorly. These are the authors' interpretations of the single comparison, not tested in the text.",
+     "location": "Conclusion, p.1556",
+     "numbers": "Not applicable"
+    }
+   ],
+   "measures": [
+    "Distance between UAVs, d = ||u_i - u_j||_2 (Eq. 1)",
+    "Distance to flock centroid and change in it (Eqs. 8-10)",
+    "Distance to leader and change in it (Eqs. 11-12)",
+    "Heading angle folded to [0,180] and absolute heading difference, follower vs leader (Eqs. 15-16)",
+    "Proximity advances: count of steps in which distance to leader falls",
+    "Ideal range tracking: count of steps with distance between 20 and 40 units",
+    "Near-collision events: count of steps with distance under 20 units",
+    "Heading consistency: average heading deviation from leader (lower is better, per the definition)"
+   ],
+   "limitations": [
+    "Stated by the authors (Conclusion, p.1556): future research could explore more intricate behaviours, enhanced real-world applicability, and other advanced learning paradigms.",
+    "Not stated in the text but visible in it: a single simulated scenario; no reported seeds, replicates or variance; no description of the rule-based baseline's parameters; no perturbation experiment despite the robustness claim; the Table II counts are not normalised for the number of drones or area."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "[5] C. W. Reynolds, 'Flocks, herds and schools: A distributed behavioral model' (1987). The Boid rules the paper extends. Neighbour-based local rules are the closest link to network-style interaction, but the paper does not treat drones as a network.",
+    "[7] L. Busoniu, R. Babuska, B. De Schutter, 'A comprehensive survey of multiagent reinforcement learning' (IEEE SMC-C, 2008). Cited as the MARL background.",
+    "None of the references bear on lobbying, legislators, elections, persuasion, turnout or social-network analysis. Reference [3] (Zeng, Nait-Abdesselam, Chen, GLOBECOM 2023) is a self-citation on human-in-the-loop ML for drone networks, not social networks."
+   ],
+   "short_quotes": [
+    {
+     "quote": "Empirical evaluations showcase that our MARL Boid not only surpass traditional rule-based models in cohesion, alignment, and separation",
+     "location": "Abstract, p.1551"
+    },
+    {
+     "quote": "Our foundational belief was rooted in the notion that the essence of flocking could be imbibed by training a singular UAV agent.",
+     "location": "Section III-D, p.1555"
+    },
+    {
+     "quote": "the RL approach considerably enhanced safety, evidenced by a reduction in near-collision events to 45, in contrast to the Rule-based strategy's 108.",
+     "location": "Section IV-B, p.1556"
+    }
+   ]
+  },
+  "summary_md": "Zeng and Nait-Abdesselam (IEEE ICC 2024) train simulated drones with Q-learning and linear function approximation to reproduce Reynolds' Boid flocking rules: cohesion, alignment and separation, plus a leader-follow rule and a connectivity band. They compare this controller with an unspecified rule-based Boid baseline. The setup is one Pygame scenario with 17 UAVs and 3,500 steps. Training is sequential: one leader, one follower and one learner. Reward weights are fixed by hand (collision -20, alignment +5/-1, cohesion +2, connectivity +1).\n\nTable II favours the RL controller on every count:\n- proximity advances: 2,097 vs 1,976\n- steps within the 20-40 unit ideal range: 3,176 vs 2,764\n- near-collision events: 45 vs 108\n- mean heading deviation: 14.3 vs 21.1\n\nThe evidence is thin. There is one scenario, with no seeds, replicates, variance or test. The baseline is never described. The counts are not normalised for swarm size. The abstract claims robustness to perturbations, but no perturbation experiment is reported.\n\nFor Paul's systems the paper is essentially out of scope. It contains no legislators, lobbying, money, text, elections or social-network structure. Its only network-like element is distance-based neighbour interaction among physical agents. The one thin link is methodological. It is another case of a learned policy beating a hand-set rule baseline, which is the kind of claim Paul's notes make when they expect GCOMB or contingency-aware RL to replace greedy allocation. On its own evidence the paper cannot support that expectation. A single uncontrolled, unreplicated comparison would not pass the project's single-look discipline, so it should be read only as an example of the claim type. It is not evidence for it. No component's assumptions, constants or code paths are tested, supported or contradicted by this work.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-allocation.joint-optimizer",
+    "relation": "context",
+    "paper_claim": "An RL controller (Q-learning, linear function approximation, alpha 0.1, gamma 0.75) beats a rule-based Boid baseline on one simulated drone scenario: near-collisions 45 vs 108 (-58%), ideal-range steps 3,176 vs 2,764 (+15%), heading deviation 14.3 vs 21.1, all over 3,500 steps with N = 17 UAVs. No seeds, replicates, variance or baseline specification are given.",
+    "paper_location": "Table I (p.1555) and Table II with Section IV-B (p.1556)",
+    "system_side": "The built optimizer uses deterministic CELF lazy greedy over per-member concave chunks ($500 steps, PMAX $10k cap, stance-gated members excluded). It has no learned policy. Paul's notes expect a learned policy (GCOMB) to replace greedy at scale.",
+    "code_ref": "fec/engine/optimize.py:3-7,27,71,126-151",
+    "transfer_conditions": "Carries over only as an analogy: a learned policy versus hand-set rules in a multi-agent setting. Nothing transfers to political allocation. The agents are physical drones, the reward is hand-specified geometry, and there is no budget, submodularity, money or legislator response. The evidence is one unreplicated simulation, so it cannot show that RL would outperform greedy anywhere, let alone on the cosponsor kernel.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-allocation#Joint CU budget optimizer|Joint CU budget optimizer]]",
+    "system": "melange-allocation"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "None specific to the system. The paper's topic (drone swarm control) is absent from every component. The only general point is a reminder: if a learned allocation or seeding policy (GCOMB, contingency-aware RL) is ever built, its comparison with CELF greedy needs replicates, seeds and a fully specified baseline. This paper provides none of the three."
+  ],
+  "flags": [
+   "Out of scope: the paper contains no lobbying, legislators, elections, persuasion, money, text-measurement or social-network material. Do not cite it as support for any Melange component.",
+   "Its RL-beats-rules claim rests on a single unreplicated simulation with no reported variance, and the robustness claim in the abstract has no experiment behind it. If it is ever cited for 'learned policies beat greedy/rule baselines', label the claim UNVERIFIED in line with the project's single-look and DE-062 standards.",
+   "Its distance-based neighbour interaction is not a social tie. It should not be read as support for neighbour-based stance imputation or cascade edges, whose co-movement test was null in this project."
+  ],
+  "paul_alignment": "Paul has no annotation of this paper, and none of his component positions cite it. Its one point of contact is his expectation that a learned policy (GCOMB, Chen et al. 2021 contingency-aware RL) will eventually replace greedy allocation and seeding. The paper repeats the general claim that RL beats hand-set rules, but on evidence too thin to strengthen that expectation. It neither confirms nor dates any of his notes. The system as built (CELF greedy, the SGATE table) is unaffected.",
+  "related": [
+   {
+    "slug": "chen-2021-contingency-aware-influence",
+    "relation": "complements",
+    "why": "Both use reinforcement learning to replace a hand-set rule policy. Chen et al. do it for seeding legislators-as-nodes under take-up uncertainty, which is the literature actually behind the SGATE seed gate. Zeng applies RL only to physical swarm control."
+   },
+   {
+    "slug": "luo-2020-path-planning-algorithm",
+    "relation": "complements",
+    "why": "Same UAV application domain. Luo plans paths for single drones with D* Lite, while Zeng controls a swarm with RL. Both are engineering simulations relevant to Paul's pathfinding reading only by analogy."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "sutton-2018-reinforcement-learning-introduction",
+    "relation": "complements",
+    "why": "Paper exists. Adjacent multi-agent RL with no direct bearing on Melange; the builds-on relation is not confirmed."
+   }
+  ],
+  "evidence_status": "unverified"
+ }
+]

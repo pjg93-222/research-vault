@@ -1,0 +1,2186 @@
+[
+ {
+  "slug": "lawande-2022-systematic-review-analysis",
+  "note": false,
+  "meta": {
+   "title": "A Systematic Review and Analysis of Intelligence-Based Pathfinding Algorithms in the Field of Video Games",
+   "authors": [
+    "Sharmad Rajnish Lawande",
+    "Graceline Jasmine",
+    "Jani Anbarasi",
+    "Lila Iznita Izhar"
+   ],
+   "year": "2022",
+   "venue": "Applied Sciences 12(11), 5499 (MDPI). Received 25 Mar 2022; accepted 24 May 2022; published 28 May 2022.",
+   "doi": "10.3390/app12115499",
+   "sha12s": [
+    "f585bac36b56"
+   ],
+   "category": "Path-Finding Algorithms",
+   "category_slug": "path-finding-algorithms"
+  },
+  "extraction": {
+   "title": "A Systematic Review and Analysis of Intelligence-Based Pathfinding Algorithms in the Field of Video Games",
+   "authors": [
+    "Sharmad Rajnish Lawande",
+    "Graceline Jasmine",
+    "Jani Anbarasi",
+    "Lila Iznita Izhar"
+   ],
+   "year": "2022",
+   "venue": "Applied Sciences 12(11), 5499 (MDPI). Received 25 Mar 2022; accepted 24 May 2022; published 28 May 2022.",
+   "doi": "10.3390/app12115499",
+   "document_type": "Journal article (open access, CC BY). Titled a systematic review, but the body is a single-environment benchmark of four pathfinding algorithms plus a descriptive literature comparison. No review protocol (databases, search strings, inclusion rules, paper counts) is reported.",
+   "coverage": "Full text read: the entire extracted text file (1,811 lines, journal pages 1-30 including references 1-95), in chunks of about 400 lines. Annotation file read in full: 68 entries (67 highlights, 1 free-text note). Metadata hint confirmed against the PDF header; authors' full names added. No parts skipped.",
+   "identification": "None. Descriptive benchmark: the same grids are fed to each algorithm and the outputs are ranked. There is no causal design, no controls for hardware or run-to-run variance, and no repeated trials. Theory section is a taxonomy (uninformed / informed-heuristic / metaheuristic), not a tested hypothesis.",
+   "theory": "Taxonomy only. Pathfinding is split into uninformed (BFS, Dijkstra), informed/heuristic (A*, Greedy Best First, D* Lite, HPA*, JPS) and metaheuristic (GA, ACO) families, and static vs dynamic. The paper argues heuristic methods save time by pruning the search space (Sections 2, 3.2). No formal model is stated beyond the cost functions F(n)=G(n)+H(n) and the Table 2 complexity expressions.",
+   "research_question": "Which of four pathfinding algorithms (Dijkstra, A*, Breadth First Search, Greedy Best First) performs best on 2D square grids of size 4x4 to 32x32, with and without obstacles, in terms of execution time, total iteration blocks, computed blocks and shortest path length, so that game developers can choose one? Secondary: how do the families compare in the literature on memory and time (Table 5).",
+   "data": "Synthetic game-style grids generated in the Unity engine: 2D square (octile) grids of 4x4, 8x8, 16x16 and 32x32 cells, each run with and without obstacles. Unit = one algorithm run on one grid configuration. Reported cells: 4 algorithms x 4 sizes x 2 conditions = 32 algorithm-by-grid results (16 rows in each of Tables 3 and 4). Not reported: number of repetitions, start and goal placement, obstacle layout or density, the iteration count k, hardware, and run dates. Literature input for Section 3 and Table 5: 95 references, span 1959 to 2022 (count of papers actually screened not stated). No real-world dataset.",
+   "method": "Implemented BFS, Dijkstra, A* and Greedy Best First in Unity (Algorithms 1-4; the \"GRIN_PF\" Algorithm 6 is a harness that loops over these four). Per run recorded: total iteration blocks, total computed blocks excluding the shortest path, execution time in ms, and shortest path length in blocks (Section 5, p.19-20). Results compared as within-size rankings and narrative (Section 6, p.23-26). Theoretical side: asymptotic time/space table (Table 2, p.14) and a pairwise literature comparison table with category, time, memory, implemented yes/no, and cited source (Table 5, p.26-27). No statistical tests, confidence intervals, or repeated timings. Memory was not measured.",
+   "identification_note_placeholder": "none",
+   "scope": "Population: single-agent pathfinding on regular 2D square grids in a game-style environment. Dynamic obstacles and 3D, hexagonal, triangular or irregular (waypoint, visibility graph, navmesh) grids are discussed but not tested. Institutions: VIT Chennai (India) and Universiti Teknologi PETRONAS (Malaysia); funded by YUTP grant 015LC0-134. Era: article 2022; cited literature 1959-2022. Not related to lobbying, elections, legislators, persuasion/turnout or text measurement.",
+   "key_findings": [
+    {
+     "finding": "Without obstacles, Greedy Best First is fastest at every grid size; Dijkstra is slowest at every size.",
+     "location": "Section 6, p.23-24; Table 3 p.20-21; Figure 15 p.24",
+     "numbers": "GBF / Dijkstra execution time (ms): 4x4 14.38 / 39.70; 8x8 36.01 / 177.08; 16x16 97.90 / 899.27; 32x32 346.60 / 7500.14"
+    },
+    {
+     "finding": "The Dijkstra-to-GBF time gap widens with grid size (computed from Table 3 values, not stated by the authors).",
+     "location": "Table 3 p.20-21 (reviewer ratio)",
+     "numbers": "Dijkstra/GBF ratio: 2.8x (4x4), 4.9x (8x8), 9.2x (16x16), 21.6x (32x32)"
+    },
+    {
+     "finding": "Without obstacles, GBF returns the same shortest path length as the other three algorithms at every size, yet the text calls GBF 'not optimal'. The open-grid table shows no length penalty.",
+     "location": "Table 3 p.20-21; text p.24 and p.25-26",
+     "numbers": "Shortest path length (blocks) for all four algorithms: 5, 13, 29, 61 for 4x4, 8x8, 16x16, 32x32"
+    },
+    {
+     "finding": "GBF expands almost no nodes without obstacles; BFS and Dijkstra have identical iteration counts at every open-grid size.",
+     "location": "Table 3 p.20-21",
+     "numbers": "Computed blocks without SPL, GBF: 1, 1, 1, 1. Dijkstra: 9, 49, 225, 961. BFS: 9, 49, 225, 961. Total iterations for Dijkstra and BFS both 14, 62, 254, 1022"
+    },
+    {
+     "finding": "Dijkstra and BFS execution times differ by only 0.7% to 15% despite identical iteration counts; no repeated trials are reported, so these gaps cannot be separated from timing noise.",
+     "location": "Table 3 p.20-21 (reviewer computation); text p.23-24 says 'almost similar'",
+     "numbers": "Dijkstra vs BFS (ms): 4x4 39.70 vs 33.76 (15%); 8x8 177.08 vs 164.49 (7.1%); 16x16 899.27 vs 868.56 (3.4%); 32x32 7500.14 vs 7449.17 (0.7%)"
+    },
+    {
+     "finding": "With obstacles, GBF is fastest at 8x8, 16x16 and 32x32; A* is fastest at 4x4, where all four are within about 2 ms.",
+     "location": "Table 4 p.22-23; Section 6 p.24-26",
+     "numbers": "4x4: A* 12.92, BFS 13.90, GBF 14.25, Dijkstra 15.17 ms. 8x8: GBF 40.19, A* 91.35, Dijkstra 102.60, BFS 120.54 ms. 16x16: GBF 298.61, A* 512.45, BFS 663.76, Dijkstra 743.47 ms. 32x32: GBF 1396.73, A* 3975.34, BFS 5316.65, Dijkstra 5678.25 ms"
+    },
+    {
+     "finding": "With obstacles, GBF path length is longer at 16x16 and 32x32, but shorter than the optimal-family result at 8x8; the 8x8 result is not discussed and is inconsistent with Dijkstra and A* returning optimal lengths on unit-cost grids.",
+     "location": "Table 4 p.22-23",
+     "numbers": "Shortest path length: 8x8 GBF 13 vs Dijkstra/A*/BFS 15; 16x16 GBF 37 vs 31; 32x32 GBF 81 vs 75"
+    },
+    {
+     "finding": "With obstacles, A* expands fewer nodes than Dijkstra at 16x16 and 32x32 but more at 8x8.",
+     "location": "Table 4 p.22-23",
+     "numbers": "Total iterations A* vs Dijkstra: 8x8 32 vs 30; 16x16 140 vs 177; 32x32 587 vs 754"
+    },
+    {
+     "finding": "The memory conclusions in Section 6 and Table 5 are not measured. Memory is inferred from computed-block counts or taken from cited literature. Section 5 lists the measured parameters and memory is not among them.",
+     "location": "Section 5 p.19-20; Section 6 p.24-26; Table 5 p.26-27",
+     "numbers": "Measured: iterations, computed blocks, time (ms), path length. Memory: none"
+    },
+    {
+     "finding": "The headline ranking (GBF fastest and least memory; A* second; BFS third; Dijkstra worst, with 'on average' used without weighting) rests on one run per cell.",
+     "location": "Section 6 p.24-26; Conclusion p.27",
+     "numbers": "Single run per algorithm-grid cell reported in Tables 3-4"
+    },
+    {
+     "finding": "Table 5 cites sources whose reference-list entries do not match the claims. Examples: the D* Lite vs A* memory claim cites [93] (a 2017 ambulance-routing paper) but gives 2009; BFS vs DFS cites [90] (a 2022 healthcare Q-learning paper); Dijkstra vs GA cites [91] (a 2021 Mars-landing paper). The text dates A* to 1986 but cites [38], a 1968 IEEE paper.",
+     "location": "Table 5 p.26-27; Section 3.2.1 p.11; reference list p.28-30",
+     "numbers": "Refs [90]-[95] are not about pathfinding (healthcare, Mars landing, UAV, ambulance routing, metabolic pathfinding, vehicle routing)"
+    },
+    {
+     "finding": "The 'GRIN_PF outperforms existing approaches' claim is not tested. Algorithm 6 is a loop running the four existing algorithms; no GRIN_PF-specific result appears in Sections 5-6.",
+     "location": "Section 4 p.18-19; Conclusion p.27",
+     "numbers": "No GRIN_PF timing or path numbers in any table or figure"
+    },
+    {
+     "finding": "Authors' remark on the open problem: dynamic obstacles and realistic movement remain unsolved; they suggest sensor-equipped agents and runtime algorithm switching, without testing either.",
+     "location": "Section 6 p.26 (pre-processing and splines); Conclusion p.27",
+     "numbers": "None"
+    }
+   ],
+   "limitations": [
+    "Stated by authors: dynamic obstacles would need 'much effort' to handle reactively (Conclusion, p.27); the study uses a 2D square grid only (Abstract; Section 2.1, p.4); the authors say GBF is 'not optimal' (p.24, p.26); realism of movement and pre-processing issues are discussed (p.26) but not tested.",
+    "Observed: no repetitions, variance, or timing protocol; hardware and Unity version unreported; start/goal placement, obstacle layout and density, and iteration count k are not specified.",
+    "Observed: memory is never measured, though Section 6 and Table 5 rank algorithms by memory.",
+    "Observed: the 'systematic review' has no reported search protocol, databases, inclusion or exclusion criteria, or paper counts.",
+    "Observed: Table 5 mixes implemented comparisons with literature-derived comparisons and cites sources that do not match the claims (see key findings).",
+    "Observed: GRIN_PF is presented as the proposed method, but it is only a harness; the conclusion's claim that it outperforms existing approaches is untested.",
+    "Observed: the 8x8 with-obstacle path-length anomaly (GBF 13 vs optimal-family 15) is unexplained, which raises a question about how path length is counted."
+   ],
+   "measures": [
+    "Execution time (ms) per algorithm per grid",
+    "Total iteration blocks (Table 3-4)",
+    "Total computed blocks without shortest path length",
+    "Shortest path length (blocks)",
+    "Asymptotic time T(n) and space S(n) (Table 2)",
+    "Memory usage: claimed in Table 5 and Section 6, not measured"
+   ],
+   "paul_markup": [
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "informed, uninformed, and metaheuristic.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "s Dijkstra’s, A-star, Breadth First Search, and Greedy Best First.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "pathfinding; Breadth First Search; A-star; Dijkstra’s; Greedy Best First; Unity",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Enemy game-objects may use AI for developing a mechanism to outsmart the player and win the game.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Pathfinding refers to the concept of finding the optimal path from source node to destination node in the least time.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "They may also use AI for pathfinding.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Moreover, since often they need to compute paths for multiple components and the resources allocated to these Algorithms are limited, there is a demand for Algorithms with high performance in less execution time.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "two groups: static and dynamic",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Some of these pathfinding Algorithms may take various obstacles into consideration and some may not.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Another example of uninformed Algorithms is the Dijkstra’s Algorithm which can be also used in graphs to find the shortest path but only for positive costs",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Informed search Algorithms are better optimized as compared to uninformed search Algorithms.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Heuristic function tries to search for a solution that is most near to the best solution in the shortest time [",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "hereby saving significant amount of time. Some examples include A*, D*, HPA*, etc.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Behavior Tree, Decision Tree,",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "static and dynamic pathfindin",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "0 form a graph A grid i form a graph",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "A grid is a connection or a network of vertices or points through edges in order to A grid is a connection or a network of vertices or points through edges in order to",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "Waypoints, mesh navigation, and visibility graph come under irregular system. In this paper, pathfinding Algorithms in gaming have been patterns can be of triangular, hexagonal, square, or cubic falling under ries.",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "patterns of grid system. experimented and analyz 2D or 3D categories. Way ular patterns of grid syst experimented and analyz",
+     "note": ""
+    },
+    {
+     "page": "5",
+     "type": "Highlight",
+     "text": "These grids are the least popular when it comes to pathfinding in games.",
+     "note": ""
+    },
+    {
+     "page": "5",
+     "type": "Highlight",
+     "text": "Here, the smallest unit is an equilateral triangle connected using one side and vertices.",
+     "note": ""
+    },
+    {
+     "page": "5",
+     "type": "Highlight",
+     "text": "These are the most widely used grids to represent graphs",
+     "note": ""
+    },
+    {
+     "page": "5",
+     "type": "Highlight",
+     "text": "The graphs formed using this grid system requires less search time and memory complexities as compared to those formed from the octile system.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "nt types and its categories of grid along with its smallest unit such as equi- : Waypoints have a number of applications mainly in robotics as well as The different al triangle, sq Waypoints: W pathfinding.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "qui- dge that The different types and its categories of grid along with its smallest unit such as lateral triangle, square, regular hexagon, cube, navigation marker, graph node, and",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "have been applied to Euclidean distance calculations for shortest paths when obstacles are present",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "A mesh can be formed from different shapes, commonly triangles and other polygons.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "Most of the applications of this graph are present in games",
+     "note": ""
+    },
+    {
+     "page": "7",
+     "type": "Highlight",
+     "text": "The main objective of these Algorithms was to only get the least distance within a graph without taking into consideration the performance optimization to reduce execution time and avoid obstacles.",
+     "note": ""
+    },
+    {
+     "page": "7",
+     "type": "Highlight",
+     "text": "All the Algorithms present in this category work on the concept of blind search, i.e., they try to reach the goal using brute force by not knowing anything about the search space.",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight",
+     "text": "sed in a variety of applications such as digital mapping services such phone networks, IP routing for finding Open Shortest Path First, ro- Then, vertex 5 will be visited which is the remaining node of vertex in a graph [26].",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight",
+     "text": "drawbacks of this Algorithm is that it cannot be ding to acyclic graphs and therefore the correct t was also used in traffic information systems in",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight",
+     "text": "used for negative value costs, thereby leading to acyclic graphs and therefore the corr hortest path cannot be found [32,33]. For each node in a graph, a label is assigned wh order to track source and destinations from another specific source",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight",
+     "text": "other nodes of the ecreases; that is, the There is no heuristic",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight",
+     "text": "Algorithm runs sequentia of the heuristic function",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight",
+     "text": "graph [34]. After each step, the value of the label of the graph nodes decreases; that is, the Algorithm runs sequentially [35]. function used in this Algorithm, but it is extended to the A-star Algorithm by making use",
+     "note": ""
+    },
+    {
+     "page": "10",
+     "type": "Highlight",
+     "text": "Therefore, the shortest path will be A to D to E to C with minimum cost of 7 n’, and heuristic value H(n), which is the acceptable cost to move from pre- arget node, are assigned to 0 for Dijkstra’s Algorithm 2.",
+     "note": ""
+    },
+    {
+     "page": "10",
+     "type": "Highlight",
+     "text": "Informed Search or Heuristic Approach Algorithms Heuristic Algorithms are basically optimized techniques that are used to find the",
+     "note": ""
+    },
+    {
+     "page": "10",
+     "type": "Highlight",
+     "text": "vertices S_DJK[] Heuristic Algorithms are basically optimized techniques that are used to find the solution to a particular problem more speedily and efficiently as compared to the basic",
+     "note": ""
+    },
+    {
+     "page": "10",
+     "type": "Highlight",
+     "text": "vertices S_DJK[] [] = ϕØ, where s is the sou conventional Algorithms",
+     "note": ""
+    },
+    {
+     "page": "11",
+     "type": "Highlight",
+     "text": "of the most famous Algorithms used in the gaming industry due to its Published in 1986 by Hart, Nilsson, and Raphael, the main objective of this search for the most efficient solution from start node to the end node [44].",
+     "note": ""
+    },
+    {
+     "page": "11",
+     "type": "Highlight",
+     "text": "generally make use of this Algorithm due to its accuracy and high ng to various categories, such as racing, real-time strategy, RPG (role- enerally make use of this Algorithm due to its accuracy and high",
+     "note": ""
+    },
+    {
+     "page": "11",
+     "type": "Highlight",
+     "text": "F(n) = H(n) + G(n) F(n) = H(n) + G(n)",
+     "note": ""
+    },
+    {
+     "page": "12",
+     "type": "Highlight",
+     "text": ". As the name suggests, the Algorithm 4 will always try to pick the best track at that particular moment",
+     "note": ""
+    },
+    {
+     "page": "12",
+     "type": "Highlight",
+     "text": "where the environment maybe unknown or partially unknown.",
+     "note": ""
+    },
+    {
+     "page": "12",
+     "type": "Highlight",
+     "text": "here the environment model was considered to be accurate and complet",
+     "note": ""
+    },
+    {
+     "page": "12",
+     "type": "FreeText",
+     "text": "(no covered text; free-text box placed in the D* node-state passage)",
+     "note": "Very interesting"
+    },
+    {
+     "page": "12",
+     "type": "Highlight",
+     "text": "environment would change suddenly without any warnings or there exists information which may be incomplete or even non-existent",
+     "note": ""
+    },
+    {
+     "page": "12",
+     "type": "Highlight",
+     "text": "require a method that has the capability of fast and efficient re-planning helping them to move more intelligently in a time of critical situations or difficult terrains",
+     "note": ""
+    },
+    {
+     "page": "12",
+     "type": "Highlight",
+     "text": "There are several different states of nodes such as NEW, RAISE, LOWER, OPEN, and CLOSED",
+     "note": ""
+    },
+    {
+     "page": "12",
+     "type": "Highlight",
+     "text": "D* or “Dynamic A*”",
+     "note": ""
+    },
+    {
+     "page": "13",
+     "type": "Highlight",
+     "text": "The RAISE state refers to the fact that the cost of the node was higher than the previous time it was kept on the open list",
+     "note": ""
+    },
+    {
+     "page": "13",
+     "type": "Highlight",
+     "text": "f (q) = minq′∈Pred(q)(g(q′) + c(q′, q)) if q = s otherwise",
+     "note": ""
+    },
+    {
+     "page": "13",
+     "type": "Highlight",
+     "text": "0",
+     "note": ""
+    },
+    {
+     "page": "13",
+     "type": "Highlight",
+     "text": "The Algorithm makes use of the concept of divide and conquer approach in order to reduce the memory usage and complexity",
+     "note": ""
+    },
+    {
+     "page": "13",
+     "type": "Highlight",
+     "text": "The technique used by JPS is based on avoiding useless searches of symmetrical paths that A* searches, saving lots of time with the same memory load.",
+     "note": ""
+    },
+    {
+     "page": "13",
+     "type": "Highlight",
+     "text": "To keep going with JPS, it is important to understand the concept of “pruning”, which is the elimination of nodes to expand",
+     "note": ""
+    },
+    {
+     "page": "13",
+     "type": "Highlight",
+     "text": "“natural neighbors”, which are the only ones that we want to conside",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "consider one or two nodes that are not natural. Those are called In Jump Point Search, our objective is to avoid symmetric paths by",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "A-star",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "F(n) = H(n) + G(n)",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "T(n) = O(bd)",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "S(n) = O(bd)",
+     "note": ""
+    },
+    {
+     "page": "14",
+     "type": "Highlight",
+     "text": "meta and heuristic.",
+     "note": ""
+    },
+    {
+     "page": "15",
+     "type": "Highlight",
+     "text": "Unlike the heuristic Algorithms em. In general, they are not gree In general, they are not gree n of the solution (example, the ore more thoroughly the solu",
+     "note": ""
+    },
+    {
+     "page": "15",
+     "type": "Highlight",
+     "text": "Their main objective a nearly good soluti ey are much better",
+     "note": ""
+    },
+    {
+     "page": "15",
+     "type": "Highlight",
+     "text": "solution (that sometimes will coincide with the global optimum) [73]. Their main objective is to make use of the search space as much as possible to discover a nearly good solution to",
+     "note": ""
+    },
+    {
+     "page": "15",
+     "type": "Highlight",
+     "text": "is to make use of the searc an optimization problem. o an optimization prob erms of performance and",
+     "note": ""
+    }
+   ],
+   "references_of_note": [
+    "[6] Panda & Mishra 2018, survey of shortest-path algorithms; cited for graph shortest-path background (p.2-3). Network-relevant.",
+    "[7] Graham, McCabe & Sheridan 2003, Pathfinding in computer games; cited for the claim that graph algorithms targeted least distance, not performance (p.7).",
+    "[8] Zafar & Agrawal 2018, HPA* for strategic gaming setup; cited for routing-protocol use of graph algorithms (p.3).",
+    "[27] Jadeel 2013, Understanding Dijkstra Algorithm; source for Dijkstra's use in IP routing (OSPF) and digital mapping (p.9).",
+    "[86] Panahi & Delavar 2008, GIS-based dynamic shortest path for emergency vehicles; network-routing relevance, cited in the dynamic-environment discussion (p.26).",
+    "[87] Cordeau et al. 2005, new heuristics for the vehicle routing problem; cited for dynamic-obstacle discussion (p.26).",
+    "[88] Ryan 2008, exploiting subgraph structure in multi-robot path planning; cited for dynamic-obstacle limits (p.26).",
+    "[50] Stentz 1997 (D*) and [53] Stentz 1995 (focussed D*); [57] Koenig & Likhachev 2005 (fast replanning); origin of replanning claims in Section 3.2.3 (p.12-13).",
+    "[69] Botea, Muller & Schaeffer 2004, near-optimal hierarchical path-finding (HPA*) (p.14).",
+    "No reference on lobbying, elections, legislators, persuasion/turnout or text measurement. Refs [90]-[95] are unrelated to pathfinding and are misattributed in Table 5 (see key findings)."
+   ],
+   "short_quotes": [
+    {
+     "quote": "The Algorithms are implemented on 4 × 4, 8 × 8, 16 × 16, and 32 × 32 grid systems.",
+     "location": "Section 5, p.19"
+    },
+    {
+     "quote": "However, this Algorithm is not optimal.",
+     "location": "Section 6, p.24"
+    },
+    {
+     "quote": "The worst Algorithm for without obstacles requiring most memory usage was Dijkstra’s Algorithm.",
+     "location": "Section 6, p.24"
+    }
+   ]
+  },
+  "summary_md": "Lawande et al. (2022) call the paper a systematic review, but it is really a benchmark of four algorithms on one setup: BFS, Dijkstra, A* and Greedy Best First (GBF), each run once on Unity square grids from 4x4 to 32x32, with and without obstacles. It reports no search protocol, no repeated trials, no hardware details and no measured memory, so its memory rankings and the Table 5 citations (several of which do not match the claims) cannot be relied on. The usable results are narrow. With no obstacles, GBF is fastest at every size; Dijkstra is 2.8x to 21.6x slower than GBF, and all four find the same path length. With obstacles, GBF stays fastest from 8x8 up, but its paths get longer (37 vs 31 at 16x16, 81 vs 75 at 32x32). A* expands fewer nodes than Dijkstra on the larger grids (587 vs 754 iterations at 32x32) and still returns the optimal length. D* and D* Lite are only described, never tested. The proposed GRIN_PF is just a loop that runs the four existing algorithms.\n\nWhat this means for the system as built is mostly a check on design choices, not new evidence. The one sharp bearing comes from the paper's GBF-with-obstacles result. The dashboard's recruitment path first runs an exact max-product Dijkstra backward from the target (`distToTarget`), then walks forward greedily, choosing at each hop the neighbour with the highest edge probability times its precomputed reliability to the target. That walk is optimal only while the precomputed reliabilities are exact. Once a user drops members, the walk skips them but the reliabilities are still computed through them. The walk then becomes a greedy best-first search on an out-of-date estimate, which is the case where the paper shows longer, non-optimal paths. Terrier's walk router already does textbook A* with an admissible straight-line estimate, which is the setting where the paper's A* result applies best. For the non-spatial social graphs, the paper offers no usable heuristic.",
+  "paul_entries": [
+   {
+    "doc": "Path-Finding Algorithums - Path-Finding Algorithums - Annotated Bibliography.md",
+    "citation": "Lawande, Sharmad Rajnish, et al. “A systematic review and analysis of intelligence-based pathfinding algorithms in the field of video games.” *Applied Sciences*, vol. 12, no. 11, 28 May 2022, p. 5499, [https://doi.org/10.3390/app12115499](https://doi.org/10.3390/app12115499).",
+    "text": "Lawande, Sharmad Rajnish, et al. “A systematic review and analysis of intelligence-based pathfinding algorithms in the field of video games.” *Applied Sciences*, vol. 12, no. 11, 28 May 2022, p. 5499, [https://doi.org/10.3390/app12115499](https://doi.org/10.3390/app12115499)."
+   }
+  ],
+  "bearings": [
+   {
+    "component_id": "melange-pathfinding.member-recruitment-path",
+    "relation": "qualifies",
+    "paper_claim": "Table 4 (with obstacles, single run): GBF is fastest from 8x8 up but its reported path is longer than the other three at 16x16 (37 vs 31 blocks) and 32x32 (81 vs 75). At 8x8 the table shows the reverse (GBF 13 vs 15 for the other three), an unexplained anomaly. Without obstacles all four report the same length (5/13/29/61, Table 3). The paper calls GBF 'not optimal'; it does not state the general rule that a greedy walk is optimal only when its estimate is exact (that is the analyst's inference).",
+    "paper_location": "Table 3 p.19-21; Table 4 p.21-23; Section 3.2.2 p.12; Section 6 p.23-26",
+    "system_side": "distToTarget (line 734) runs an exact max-product Dijkstra from the target over the full PE graph and does not consult the dropped set. tracePath (line 740) walks forward greedily by argmax PE[cur][v]*dT[v], skipping seen and dropped nodes. With drops, dT can still reflect routes through excluded members, so the walk can return a less reliable chain or stop short ('unreachable') when a route exists. buildPath (753-757) and bestSponsors (760-764) reuse the same dT. The comment at line 735 says 'PROVABLY-OPTIMAL'; dropped is set at line 1165. Single-path code reading, UNVERIFIED per DE-062.",
+    "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:734,735,740,753-757,760-764,1165",
+    "transfer_conditions": "Only the algorithmic point carries over (greedy choice on an inexact estimate loses optimality); grid timings and lengths do not. Cheap remedy is to exclude dropped members inside distToTarget. Needs a second-path reproduction (e.g. a test that drops a bridging member) before any claim.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Numbers 37/31, 81/75, 5/13/29/61 confirmed in the text. Corrected: the 'optimal only when estimate is exact' sentence is not in the paper; added the 8x8 anomaly (GBF 13 vs 15) that the analyst omitted; fixed table page ranges (Table 3 starts p.19, Table 4 starts p.21). Code reading confirmed at the cited lines.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Sponsor-to-target max-product path and chain hold|Sponsor-to-target max-product path and chain hold]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "terrier-canvass.street-presets-and-turf",
+    "relation": "supports",
+    "paper_claim": "With obstacles (Table 4, single run), A* expands fewer blocks than Dijkstra at 16x16 (140 vs 177) and 32x32 (587 vs 754) with the same path length (31, 75); at 8x8 A* expands more (32 vs 30). Execution times at 32x32 are 3975.34 vs 5678.25 ms. A* uses F(n)=G(n)+H(n).",
+    "paper_location": "Table 4 p.21-23; Section 3.2.1 p.11",
+    "system_side": "walk_route._astar searches the street graph with estimate max(0, straight-line distance to nearest goal - NODE_SLACK_M); when any goal lacks coordinates (or a node lacks a position) the estimate is 0, i.e. Dijkstra, so it stays admissible. A plain dijkstra() helper sits at lines 176-197.",
+    "code_ref": "C:/Users/pgoff/Documents/Terrier/outputs/cu-geography-v3/server/research/walk_route.py:45,176-197,200-234",
+    "transfer_conditions": "Closest match in the system (spatial graph, metric estimate). Road networks are not uniform grids; paper figures are single runs with unreported hardware; gains appear only from 16x16 up. Supports the design choice, gives no measured speedup for street networks.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "All numbers confirmed in Table 4. Code confirmed; minor: 'TIGER' does not appear in walk_route.py itself (it appears in sibling road_views.py), so the street-graph source is not shown at the cited ref.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/terrier-canvass#Street-plan presets, turf planner and walk routing|Street-plan presets, turf planner and walk routing]]",
+    "system": "terrier-canvass"
+   },
+   {
+    "component_id": "melange-pathfinding.staffer-closeness-routes",
+    "relation": "qualifies",
+    "paper_claim": "Informed (A*) search cuts expansions via an estimate H(n); the paper's estimates are grid/geometric. Dijkstra is described as using no heuristic (H(n)=0, F(n)=G(n)) and as extended to A* by adding a heuristic.",
+    "paper_location": "Section 3.1.3 p.9-10 (Dijkstra, H(n)=0); Table 2 p.14; Section 3.2.1 p.11; Table 4 p.21-23",
+    "system_side": "The staffer router is bidirectional Dijkstra with terminal costs and heuristic 0, plus Yen loopless alternatives and exact-arithmetic tie resolution. A one-directional Dijkstra to a virtual sink (_search_reference) is kept only as a test oracle that no server path can select. Route metadata records 'heuristic': 0.",
+    "code_ref": "fec/surfaces/staffer_closeness_routes.py:12-21,79,264-298,511,861",
+    "transfer_conditions": "No spatial embedding, so the paper's Euclidean estimates do not apply. A* gains would need an admissible non-metric estimate (e.g. ALT landmarks, deferred), which the paper does not test. Supports keeping h=0, not adding A* by name.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Corrected two errors: the analyst said 'the default search is one-directional to a virtual sink' but the docstring at 264-271 says that search is a test oracle only and the live search is bidirectional (_search_bidirectional, line 511); and the Dijkstra section is 3.1.3, not 3.1.2. The paper does not literally derive Dijkstra from A*; it lists H(n)=0 for Dijkstra.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Staffer closeness route search|Staffer closeness route search]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.cosponsor-route-pareto",
+    "relation": "context",
+    "paper_claim": "GBF 'will always try to pick the best track at that particular moment' (F(n)=H(n)); it is fastest of the four implemented but not optimal. D*/D* Lite is described with pseudocode in Section 3.2.3 but is not among the four algorithms implemented or benchmarked.",
+    "paper_location": "Section 3.2.2 p.12; Section 3.2.3 p.12-13; Tables 3-4 p.19-23",
+    "system_side": "build_route is a greedy construction: a heap orders candidate edges by (gain - lam*(1-p))/cost with an out-degree cap K (env default 5); the script keeps non-dominated points across lam in (0,0.5,1,2,4). The header names MOPBD* as a roadmap concept; there is no incremental replanning code.",
+    "code_ref": "fec/engine/cosponsor_route.py:3,9,40-63,70-76",
+    "transfer_conditions": "Analogy only: the route finder solves a budgeted coverage problem, not point-to-point shortest path. The paper has no D* Lite measurements, so it cannot justify building the replanning layer.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Quote confirmed verbatim at p.12. Code lines confirmed. Added K default and MOPBD* header line to the ref.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Cosponsor recruitment route finder (Pareto front)|Cosponsor recruitment route finder (Pareto front)]]",
+    "system": "melange-pathfinding"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "The summary says that with obstacles GBF 'paths get longer', but Table 4 at 8x8 shows GBF reporting a SHORTER path than Dijkstra/A*/BFS (13 vs 15). This anomaly is unmentioned and undercuts the implicit claim that the other three always return the optimal length; the obstacle results are internally inconsistent at 8x8.",
+   "'A* ... still returns the optimal length' holds only relative to Dijkstra/BFS within this single run (equal lengths at 16x16 and 32x32); the paper never verifies optimality independently, and the 8x8 row casts doubt on it.",
+   "The recruitment-path drop finding is stated in the summary as fact ('The walk then becomes a greedy best-first search on an out-of-date estimate'); it is a single-path code reading and must carry the UNVERIFIED (DE-062) label in the summary too.",
+   "Bearing (not summary) error carried into the record: the staffer router's default search is bidirectional, not one-directional; the one-directional search is a test oracle only.",
+   "Other summary figures verified: Dijkstra/GBF time ratio without obstacles 39.7/14.38=2.76x to 7500.14/346.60=21.6x; 37 vs 31 and 81 vs 75; 587 vs 754; no protocol, no repeated trials, no hardware details (the paper itself says hardware performance is unknown), memory never measured."
+  ],
+  "gaps_exposed": [
+   "The dashboard recruitment path (distToTarget at make_dashboard_html_00.tpl:734) computes target reliabilities without excluding dropped members, while tracePath (line 740) skips them. With drops, the 'provably optimal' chain becomes a greedy walk on an out-of-date estimate. No test covers the case where a dropped member was on the route. Single-path observation, UNVERIFIED (DE-062).",
+   "There is no admissible estimate for the non-spatial social graphs (cosponsor, staffer), so A*-family speedups are not available there. ALT landmarks remain deferred. The paper's grid heuristics do not fill this gap.",
+   "No component replans incrementally (D*/D* Lite/LPA*) when the graph changes. For N=533 a full recompute is cheap enough. It would matter only for the multi-million-pair staffer graph, and the paper gives no evidence on that."
+  ],
+  "flags": [
+   "The paper's memory rankings (GBF 'least memory', Dijkstra 'most memory usage') were never measured. Section 5 lists no memory metric. Do not cite this paper for memory claims.",
+   "The paper is not a systematic review (no protocol, databases or counts), and Table 5 cites references [90]-[95] that do not support the claims attached to them. Cite only the Table 3-4 counts, and label them single-run.",
+   "The GRIN_PF 'outperforms existing approaches' claim is untested. Do not cite it.",
+   "Wording: the dashboard comment calls the chain 'PROVABLY-OPTIMAL ... mathematical certainty ... exact, maximal probability' (make_dashboard_html_00.tpl:735-737). That holds only for the modeled kernel with no drops, and chainHold is a modeled output that depends on ASKM, not an empirical probability (D-025 spirit). The UI tooltip at line 1119 is already correctly hedged.",
+   "The paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization, and says nothing about LDA or reciprocity. No conflict with the rejected SNA proposals."
+  ],
+  "paul_alignment": "Paul files this paper in his Path-Finding folder as a citation only, with no takeaways. His only mark is the free-text note 'Very interesting' beside the D* node-state passage. The component positions also cite it as grounding for D*/D* Lite replanning (cosponsor-route-pareto) and as indirect support for Terrier's street routing. The evidence only partly supports that reading. The paper describes D* but never runs it, so it cannot ground the replanning layer Paul names in his addendum. Its tested contribution is narrower: A* beats Dijkstra on node expansions on larger grids when it has an admissible geometric estimate, and greedy search loses optimality once obstacles appear. Paul's note is not stale, since the system still has no incremental replanning. But the paper points somewhere more practical than D* Lite: the 533-node dashboard path should simply recompute its exact backward pass once members are dropped. His 'A* heuristics that cope with unstable information' goal (Rongkuan, Oropeza-Martinez) gets nothing from this paper for non-spatial graphs. The only place its A* evidence applies cleanly is Terrier's street router, which already uses an admissible straight-line estimate.",
+  "related": [
+   {
+    "slug": "chen-2016-most-reliable-path",
+    "relation": "complements",
+    "why": "Chen 2016 is the most-reliable-path work cited in the dashboard comment (tpl:739) for the max-product objective; Lawande supplies the greedy-vs-exact search contrast relevant to where that walk can lose optimality."
+   },
+   {
+    "slug": "duan-2025-breaking-sorting-barrier",
+    "relation": "complements",
+    "why": "Both concern single-source shortest-path cost: Duan gives worst-case asymptotic improvements over Dijkstra on directed graphs; Lawande gives only single-run grid timings."
+   },
+   {
+    "slug": "ren-2022-multi-objective-path",
+    "relation": "complements",
+    "why": "Multi-Objective Path-Based D* Lite (MOPBD*), which cosponsor_route.py names as a roadmap concept; Lawande describes the D* family but tests none of it."
+   },
+   {
+    "slug": "luo-2020-path-planning-algorithm",
+    "relation": "complements",
+    "why": "An improved D* Lite evaluated in simulated 3D grid environments (UAV forest firefighting), supplying D* Lite results that Lawande leaves untested."
+   },
+   {
+    "slug": "xu-2024-improved-lite-based",
+    "relation": "complements",
+    "why": "A D* Lite variant with a dynamic route-planning simulation benchmark, filling the replanning-evidence gap that Lawande only discusses."
+   },
+   {
+    "slug": "abdelrahman-2025-conflict-based-search",
+    "relation": "complements",
+    "why": "Multi-agent CBS with D* Lite replanning (advantages largely qualitative), extending past Lawande's single-agent static-grid scope."
+   },
+   {
+    "slug": "ahmad-nd-shortest-path-algorithms",
+    "relation": "complements",
+    "why": "Applies shortest-path algorithms to social-network tie strengths, the non-spatial setting where Lawande's grid heuristics do not carry over."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "zeller-2016-step-path-selection",
+    "relation": "complements",
+    "why": "Lawande covers grid and waypoint path-finding algorithms on a given cost surface. Zeller covers how such a cost surface is estimated and how sensitive the resulting routes are to it."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "kumar-2022-influence-maximization-social",
+  "note": false,
+  "meta": {
+   "title": "Influence maximization in social networks using graph embedding and graph neural network",
+   "authors": [
+    "Sanjay Kumar",
+    "Abhishek Mallik",
+    "Anavi Khetarpal",
+    "B.S. Panda"
+   ],
+   "year": "2022",
+   "venue": "Information Sciences, vol. 607, Aug. 2022, pp. 1617-1636",
+   "doi": "10.1016/j.ins.2022.06.075",
+   "sha12s": [
+    "af01c359270d"
+   ],
+   "category": "Adaptive Influence Maximization",
+   "category_slug": "adaptive-influence-maximization"
+  },
+  "extraction": {
+   "title": "Influence maximization in social networks using graph embedding and graph neural network",
+   "authors": [
+    "Sanjay Kumar",
+    "Abhishek Mallik",
+    "Anavi Khetarpal",
+    "B.S. Panda"
+   ],
+   "year": "2022",
+   "venue": "Information Sciences, vol. 607, Aug. 2022, pp. 1617-1636",
+   "doi": "10.1016/j.ins.2022.06.075",
+   "document_type": "academic journal article (method proposal with experiments; model name SGNN)",
+   "coverage": "Read the full accessible text (24,677 chars; single read). The source is a ScienceDirect preview. It contains the title block, abstract, full introduction (contributions list included), section headings with short snippets (Related Work, Preliminaries, Proposed Work, Datasets and Evaluation Metrics, Experimental Results and Analysis, Conclusion), author contribution statement, reference list (43 titles, no years for most), and citing-article list. The body text of Related Work, Preliminaries, Proposed Work, Datasets and Evaluation Metrics, Experimental Results and Analysis and Conclusion is NOT in the accessible text; only their headings and one-sentence snippets are. Methods details, datasets, N, metrics, numbers and limitations therefore could not be extracted and are left empty. Paul's markup: no _annots sidecar exists for sha12 af01c359270d (n_annots 0), so paul_markup is empty. Paul's two bibliography documents (6f4e1c72fa73, d963fd8719df) list this work as citation-only with no takeaways. Lobbying, path-finding, allocation, elections, persuasion/turnout, legislators and text measurement: not discussed in the accessible text.",
+   "research_question": "Can influence maximization be recast as a pseudo-regression task, in which a GNN regressor predicts each node's influence (computed under SIR and IC diffusion) from struc2vec node embeddings, so that the top-k predicted nodes form the seed set?",
+   "theory": "Structural identity of nodes (struc2vec embeddings) as features; message-passing graph neural networks with an LSTM neighborhood aggregator; influence maximization as seed selection under SIR and IC diffusion. The introduction contrasts centrality-based heuristics (cheap but network-specific) with greedy methods (accurate with guarantees but computationally intensive).",
+   "data": "Synthetic networks are used for training (a training network is selected by parametric analysis on synthetic test networks). Several real-life networks are used as target networks for evaluation. Network names, node and edge counts, sample sizes and period are not in the accessible text (dataset section body not accessible). Unit of analysis: network nodes (users or entities in an online social network).",
+   "method": "(1) Compute struc2vec embeddings for every node of the network. (2) Label each node with its influence under SIR and IC diffusion. (3) Train a GNN-based regressor (LSTM as neighborhood aggregator) mapping embeddings to influence, minimizing error between calculated and predicted influence. (4) Choose the training network by parametric analysis on synthetic networks. (5) Apply the trained model to predict node influence on the target network and take the top-k nodes as seeds. Comparison is against classical and recently proposed IM methods under SIR and IC.",
+   "identification": "No causal identification strategy. Evaluation is out-of-sample: a model trained on a chosen synthetic training network is applied to separate real-life target networks (per abstract). Specific validation split details are not in the accessible text.",
+   "scope": "Population: static social-network graphs (online social networks such as Twitter, Facebook and Instagram are named as motivating examples in the introduction). Application: viral marketing and information spread under SIR and IC models. Era: published 2022. Not about lobbying, legislators, elections, persuasion or text measurement.",
+   "key_findings": [
+    {
+     "finding": "The proposed SGNN approach is reported to outperform several classical and recently proposed influence maximization methods on several real-life networks across various evaluation metrics (author claim, not verifiable from accessible text).",
+     "location": "Abstract",
+     "numbers": ""
+    },
+    {
+     "finding": "Influence maximization is reframed as a pseudo-regression task predicting continuous node influence values, enabling deep learning and machine learning regressors to be used.",
+     "location": "Introduction, contribution (ii); Proposed Work section opening",
+     "numbers": ""
+    },
+    {
+     "finding": "Greedy IM methods are described as generally more accurate with a theoretical performance guarantee but computationally intensive; centrality methods are cheap but network-specific.",
+     "location": "Introduction, paragraph 2",
+     "numbers": ""
+    },
+    {
+     "finding": "Influence labels for regression are computed under the SIR and IC models; a parametric analysis on synthetic networks is used to select the training network.",
+     "location": "Abstract; Introduction; Experimental Results and Analysis section heading",
+     "numbers": ""
+    }
+   ],
+   "measures": [
+    "Node influence under SIR diffusion (training labels and evaluation)",
+    "Node influence under IC diffusion (training labels and evaluation)",
+    "Expected number of influenced users for a seed set (objective sigma(S))",
+    "Evaluation metrics named in Section 5 heading only; names not in accessible text"
+   ],
+   "limitations": [],
+   "paul_markup": [],
+   "references_of_note": [
+    "Kempe, Kleinberg and Tardos, 'Maximizing the spread of influence through a social network' (cited as [8]; proof of NP-hardness of IM under the classical model, and source of greedy approach)",
+    "Li et al., 'Influence maximization on social graphs: A survey', IEEE TKDE, 2018",
+    "Wu et al., 'A comprehensive survey on graph neural networks', IEEE TNNLS, 2020",
+    "Kumar et al., 'Modeling information diffusion in online social networks using SEI epidemic model', Procedia Computer Science, 2020 (same first author)",
+    "Zhang et al., 'Identifying influential nodes in complex networks with community structure', Knowledge-Based Systems, 2013"
+   ],
+   "short_quotes": [
+    {
+     "quote": "the results are network-specific that cannot be generalized effectively to other networks",
+     "location": "Introduction, paragraph 2 (on centrality-based approaches)"
+    }
+   ]
+  },
+  "summary_md": "Kumar, Mallik, Khetarpal and Panda (Information Sciences 607, 2022) propose SGNN, which treats influence maximization as a pseudo-regression task. Each node gets a struc2vec structural-identity embedding. A GNN regressor with LSTM neighbourhood aggregation is trained on labels made by simulating every node's individual spread under SIR and IC diffusion. The training network is chosen by a parametric sweep over synthetic graphs. The trained model then predicts node influence on an unseen target network, and the top-k predicted nodes become the seed set. The authors report that SGNN beats classical and recent IM baselines on several real networks under SIR and IC. The local text is only a ScienceDirect preview, so datasets, network sizes, metrics, effect sizes and limitations cannot be checked. Every performance claim here is the authors' own and is UNVERIFIED. The paper's stated motivation is cost: greedy IM is accurate and has a guarantee but is expensive, while centrality heuristics are cheap but network-specific. For Melange the cost argument mostly does not apply. The budget frontier already runs lazy (CELF-style) greedy with common random numbers on a single 533-member chamber graph and caps at 60 seeds, so the expensive side of the trade-off is affordable. Three features of SGNN also clash with choices Melange made on purpose. Seeds are ranked by each node's standalone spread, which ignores overlap between seeds. The embedding has no stance or direction, the same reason InfluenceScore was retired. And the labels come from single-colour diffusion, not the competitive two-colour race the engine models. The paper is best read as a scale-motivated alternative that Melange does not need, and as a caution against top-k standalone ranking.",
+  "paul_entries": [
+   {
+    "doc": "Path-Finding Algorithums - Path-Finding Algorithums - Annotated Bibliography.md",
+    "citation": "Kumar, Sanjay, et al. “Influence maximization in social networks using graph embedding and graph neural network.” *Information Sciences*, vol. 607, Aug. 2022, pp. 1617–1636, [https://doi.org/10.1016/j.ins.2022.06.075](https://doi.org/10.1016/j.ins.2022.06.075).",
+    "text": "Kumar, Sanjay, et al. “Influence maximization in social networks using graph embedding and graph neural network.” *Information Sciences*, vol. 607, Aug. 2022, pp. 1617–1636, [https://doi.org/10.1016/j.ins.2022.06.075](https://doi.org/10.1016/j.ins.2022.06.075)."
+   }
+  ],
+  "bearings": [
+   {
+    "component_id": "melange-allocation.budget-frontier",
+    "relation": "qualifies",
+    "paper_claim": "Introduction says greedy IM methods are generally more accurate with a theoretical performance guarantee but computationally intensive, while centrality methods are cheap but network-specific. SGNN replaces the greedy step with a learned per-node influence regressor and top-k selection. No SGNN numbers appear in the accessible preview.",
+    "paper_location": "Introduction, the paragraph citing Kempe [8] and refs [20] and [21]. The flattened preview text has no reliable paragraph numbers, so the label paragraph 2 is approximate.",
+    "system_side": "budget_frontier.py runs a lazy greedy: a heap of stale marginals, where each candidate marginal is spread(S+c) minus spread(S), clipped at zero and multiplied by a per-candidate factor fac. MC defaults to 20 edge-keyed CRN cascades. It stops at MAXSEEDS (default 60) or at zero marginal and reports a knee.",
+    "code_ref": "fec/engine/budget_frontier.py:153-170",
+    "transfer_conditions": "The submodular guarantee is not shown for this two-colour engine with leverage factors, so the claim that the greedy carries a guarantee here should not be made. A learned surrogate would trade away the marginal accounting for speed. Speed matters only if per-candidate MC greedy is infeasible, and the 533-member, 60-seed setting is not shown to be infeasible.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper claim confirmed at the cited Introduction location. Code confirmed: heap loop at lines 159-170, MC default 20 and MAXSEEDS default 60 at line 7, knee at line 172. Softened because the marginal is multiplied by fac and clipped at zero, and no submodular guarantee is established for this engine. Paragraph number 2 cannot be confirmed from flattened text.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Budget frontier with knee and electoral modes|Budget frontier with knee and electoral modes]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.competitive-cascade-crn",
+    "relation": "qualifies",
+    "paper_claim": "Training labels are each node's individual influence computed under SIR and IC diffusion, and the seed set is the top k nodes by predicted influence. The preview does not say the simulations are single-source, and the paper does not model competition between seed sets.",
+    "paper_location": "Abstract; Introduction contribution (ii) and the sentence stating that the seed set is the top k nodes by predicted influence",
+    "system_side": "The cascade is a two-colour first-to-reach race: a node takes the colour of the first neighbour that reaches it, and spread counts only A-coloured activations. Pro seeds (Aseed) are A and anti seeds form the opposing set. Neutral bystanders are activated with probability min(0.9, ind/400000), which is a money-tied activation rather than a fixed-probability cascade.",
+    "code_ref": "fec/engine/budget_frontier.py:83-94",
+    "transfer_conditions": "Single-colour standalone-spread labels do not encode competition or seed overlap. A surrogate would need retraining on competitive-race marginal labels before standing in for this engine, and the paper never tests that case.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "The cascade logic at lines 83-94 is confirmed as a first-to-reach two-colour race counting only A. Pro seed set confirmed at line 114. Bystander activation confirmed at line 133. Softened because the paper does not say single-source, and the relation is qualifies rather than contradicts: the paper does not contradict the engine, it simply does not model competition.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Competitive independent cascade with common random numbers|Competitive independent cascade with common random numbers]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+    "relation": "qualifies",
+    "paper_claim": "SGNN features come from struc2vec structural identity, and labels come from SIR and IC diffusion simulations. The regressor therefore predicts diffusion-based influence on structure, not purely structural spreading power.",
+    "paper_location": "Abstract (struc2vec features and diffusion labels); Introduction paragraph describing structural identity of nodes",
+    "system_side": "The cosponsor InfluenceScore (0.60 weighted out-degree, 0.25 betweenness, 0.15 eigenvector) had its centrality weight set to 0 in the Influence pillar on 2026-06-25 (AB13 from 0.65 to 0.0), with the stated reason that centrality is direction-blind. It still feeds the underdog lens at 0.5 weight.",
+    "code_ref": "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md:133",
+    "transfer_conditions": "Applies only if someone proposes learned structural embeddings as an influence signal. Any such signal would need stance gating and would remain a heuristic model output, never closeness or access (D-025).",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The cited file moneyball-workbook-lineage-and-june-audit.md line 62 does not say weight 0 or direction-blind; it records the 0.35/0.65 delivery blend, which line 26 of that file marks as superseded. The correct source is moneyball-workbook.md line 133 (weight change and direction-blind reason) and line 137 (underdog lens). Paper side softened because labels are diffusion simulations, not structure alone.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/moneyball-rank-pillars#Cosponsor-network InfluenceScore (computed, weight 0)|Cosponsor-network InfluenceScore (computed, weight 0)]]",
+    "system": "moneyball-rank-pillars"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Overstated performance claim: summary says SGNN beats classical and recent IM baselines on several real networks. The abstract says it outperforms some of the classical and recently proposed methods on several real-life networks. Author claim, unverified.",
+   "Overstated InfluenceScore status: summary says InfluenceScore was retired. Its centrality weight was set to 0 in the Influence pillar (committee-only) on 2026-06-25 and it is kept at 0.5 in the underdog lens.",
+   "Wrong citation: the InfluenceScore bearing cites moneyball-workbook-lineage-and-june-audit.md line 62, which does not state the weight-0 change. Correct source is moneyball-workbook.md lines 133 and 137.",
+   "Unsupported detail: summary and bearing 2 describe the paper's labels as single-source diffusion. The preview only says influence is computed under SIR and IC; single-source is not stated.",
+   "Unsupported guarantee: summary and bearing 1 imply the greedy frontier carries a submodular guarantee for this engine. Not established for the two-colour engine with leverage factors.",
+   "Paragraph numbers in the bearings (paragraph 2, paragraph 3) cannot be confirmed from the flattened preview text; locators are approximate.",
+   "Coverage note in ext.json: says the text is 24,677 chars, while the item metadata n_chars is 24,620. The file is 24,677 bytes; the difference is encoding, not missing text. Dataset, N, metrics and limitations are absent from the preview, so all SGNN numbers remain UNVERIFIED."
+  ],
+  "gaps_exposed": [
+   "Melange has no test of whether any structural or learned node ranking, such as KB centrality, InfluenceScore or an embedding regressor, recovers the greedy frontier's seed order. A rank comparison against the lazy-greedy path would show how much the greedy step adds over a cheap heuristic.",
+   "The frontier's seed-set stability at MC=20 is checked by mc_stability_check, but its accuracy gap against an exhaustive or higher-MC greedy is not reported."
+  ],
+  "flags": [
+   "Only a ScienceDirect preview is available locally. Datasets, N, metrics and effect sizes were not readable, so every SGNN performance claim is UNVERIFIED and the authors' own.",
+   "Influence language: SGNN's predicted influence is a diffusion-model output on a structural graph. If carried into Melange it must be framed as a heuristic model output, never as closeness, access or introduction probability (D-025).",
+   "The paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization, so neither rejected SNA proposal is triggered."
+  ],
+  "paul_alignment": "Paul's two bibliography entries list this work with no takeaways. It sits in the Path-Finding folder and is cross-referenced only by title to Zareie's link-prediction work. There is no annotation to agree or disagree with. The evidence suggests the work belongs with influence maximization rather than path-finding, since it has no routing content. It is not stale relative to the system, because no component was built on it. Its main use is as a foil: the system's lazy greedy on a 533-node graph already makes SGNN's cost motivation unnecessary.",
+  "related": [
+   {
+    "slug": "almazaydeh-2026-heuristic-centrality-methods",
+    "relation": "complements",
+    "why": "Both papers weigh cheap node rankings against greedy optimization in IM. Kumar builds a learned ranker; Almazaydeh tests whether centrality heuristics can match greedy. Item exists and title matches."
+   },
+   {
+    "slug": "trivedi-2020-efficient-influence-maximization",
+    "relation": "complements",
+    "why": "Both address efficient IM under the Independent Cascade model, which Kumar uses for labels alongside SIR. Relation changed from same-method because the methods differ (GNN regression versus a sampling or search method)."
+   },
+   {
+    "slug": "ma-2022-adversarial-attack-graph",
+    "relation": "complements",
+    "why": "Both join graph neural networks with influence maximization from opposite directions: Ma frames a GNN attack as IM, while Kumar uses a GNN to solve IM. Item exists and title matches."
+   },
+   {
+    "slug": "zareie-2023-influence-maximization-social",
+    "relation": "complements",
+    "why": "Survey of behaviour-aware IM methods, which places a structure-only learned ranker against methods that model user behaviour. Item exists; survey content not re-read in this verification."
+   },
+   {
+    "slug": "bharathi-nd-competitive-influence-maximization",
+    "relation": "complements",
+    "why": "Bharathi et al. model competitive IC, which the Melange engine follows in spirit. Kumar's single-colour labels do not model competition, so the two are not contradictory; Kumar simply does not cover the competitive case. Relation changed from contradicts."
+   },
+   {
+    "slug": "zareie-2020-similarity-based-link",
+    "relation": "complements",
+    "why": "Paul's annotation cross-references this social-graph learning work by title only. It shares the representation-learning theme but addresses link prediction, not seeding. Title matches."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "zhou-2026-measuring-stance-dynamics",
+    "relation": "complements",
+    "why": "Item exists (influence maximization with graph embedding and GNN). Both use graph embeddings on social graphs, but Kumar addresses seed selection and the Zhou paper addresses stance classification, so same-method overstates the link."
+   },
+   {
+    "slug": "arya-2025-relink-edge-activation",
+    "relation": "same-method",
+    "why": "Graph embedding and graph neural networks for influence maximization, a topical link to RELINK's embedding pipeline."
+   },
+   {
+    "slug": "chen-2021-contingency-aware-influence",
+    "relation": "same-method",
+    "why": "Verified title: influence maximization using graph embedding and graph neural networks. Shares the graph-embedding approach of the paper's structure2vec backbone."
+   },
+   {
+    "slug": "chen-2023-complex-contagion-influence",
+    "relation": "same-method",
+    "why": "Graph embedding and GNN encoders for IM. This paper does not cite it, so the same-method link is an analyst judgment, parallel to the GAT encoder here."
+   },
+   {
+    "slug": "kamarthi-2020-influence-maximization-unknown",
+    "relation": "same-method",
+    "why": "Graph embedding plus a GNN regressor for influence maximization. The embedding is struc2vec, not DeepWalk, and labels come from SIR and IC simulation, so the shared machinery is GNN-based embedding rather than DeepWalk and GCN."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "chen-2016-most-reliable-path",
+  "note": false,
+  "meta": {
+   "title": "Most Reliable Path-finding Algorithm for Maximizing On-Time Arrival Probability",
+   "authors": [
+    "Bi Yu Chen",
+    "Chaoyang Shi",
+    "Junlong Zhang",
+    "William H. K. Lam",
+    "Qingquan Li",
+    "Shujin Xiang"
+   ],
+   "year": "2016",
+   "venue": "Transportmetrica B: Transport Dynamics. Corrected from hint: the paper's own \"To cite\" line gives vol. 5, pp. 253-269, dated 2017 (print); online publication 13 Apr 2016. The hint's \"5(3), pp. 248-264\" does not appear in the text. Issue number not stated in text.",
+   "doi": "10.1080/21680566.2016.1169953",
+   "sha12s": [
+    "02aef4f22f93"
+   ],
+   "category": "Path-Finding Algorithms",
+   "category_slug": "path-finding-algorithms"
+  },
+  "extraction": {
+   "title": "Most Reliable Path-finding Algorithm for Maximizing On-Time Arrival Probability",
+   "authors": [
+    "Bi Yu Chen",
+    "Chaoyang Shi",
+    "Junlong Zhang",
+    "William H. K. Lam",
+    "Qingquan Li",
+    "Shujin Xiang"
+   ],
+   "year": "2016",
+   "venue": "Transportmetrica B: Transport Dynamics. Corrected from hint: the paper's own \"To cite\" line gives vol. 5, pp. 253-269, dated 2017 (print); online publication 13 Apr 2016. The hint's \"5(3), pp. 248-264\" does not appear in the text. Issue number not stated in text.",
+   "doi": "10.1080/21680566.2016.1169953",
+   "document_type": "Journal article, accepted manuscript (pre-published version), 25 pages; operations-research / transportation algorithm paper",
+   "coverage": "Read the entire extracted text (/_text/02aef4f22f93.txt, 63,850 chars, 3,598 lines) in six chunks, including the reference list and Appendices A and B. Paul markup: none. The manifest row for this file shows n_annots = 0, and no file in _annots or annotations matches the sha12 or the title, so paul_markup is empty. Page numbers are inferred from the page-number lines in the extracted text and may be off by one. Nothing in this paper concerns lobbying, elections, persuasion or turnout, legislators, text measurement, or resource allocation; the only related mentions are background citations to stochastic traffic assignment (Chang et al. 2005; Chen et al. 2011).",
+   "research_question": "How can the most reliable path, the path that maximizes the probability of arriving on time for a fixed travel-time budget, be found exactly and efficiently in large road networks with stochastic link travel times? (Abstract; Sec. 1, pp. 3-5.)",
+   "theory": "Travel-time reliability is defined as the on-time arrival probability, P(T <= b), with path travel times treated as normal, so maximizing reliability is equivalent to minimizing z = (b - mean)/SD. The objective is non-additive, so Dijkstra-type methods do not apply. Solution logic rests on first-order stochastic dominance (FSD, Prop. 1), Mean-Budget (M-B) dominance (Prop. 3, from Chen et al. 2013a), and monotonicity of the objective under path extension (Lemmas 1-3). Risk-taking regimes (risk-averse, neutral, seeking) are set by the z-value of the least expected time path (Prop. 2, p. 8). No behavioral theory is tested empirically.",
+   "data": "Case study on the Wuhan, China road network: 19,306 nodes and 46,757 links. Link travel times come from floating-car GPS data from 11,248 taxis reporting about every 40 seconds, map-matched with the MDP-MM algorithm, which the authors say reaches over 90% accuracy in prior work. Data cover five weekdays, 14-18 September 2009, 7-10 a.m. (Sec. 4.1, pp. 14-15). Unit of analysis: link and path travel times, and origin-destination (O-D) pairs. Link fits use chi-square tests at 5% across normal, lognormal and gamma distributions. Monte Carlo validation uses 100 randomly selected paths. Computational tests use 100 random O-D pairs per network, averaged over 100 runs, on four additional networks from Chen et al. (2013a): Chicago regional (12,982 nodes, 39,018 links), G1 (2,000 nodes, 7,820 links), G2 (5,000 nodes, 19,700 links), and G3 (10,000 nodes, 39,600 links). The paper does not report a count of O-D pairs for the single numerical example.",
+   "method": "Two-stage exact algorithm, MRP-TS. Stage 1: a deterministic A* or Dijkstra search finds the least expected time path, which gives an upper or lower bound on the optimal reliability and sets the risk regime (Prop. 2). Stage 2: a multi-criteria label-setting procedure, MRP-RS for risk-seeking (fixed confidence level, Sec. 3.1) and MRP-RA for risk-averse (adaptive confidence level starting at 0.999, z = 3.5, with an admissible heuristic h(i), Sec. 3.2). Risk-neutral cases return the least expected time path directly. Optimality is argued through Props. 4-5 and Lemmas 1-3. Complexity is analyzed in Sec. 3.3. Benchmarks: the authors' improved multi-criteria label-correcting BSP-LC (Nie and Wu 2009 extended with a bi-criteria method, Appendix B, valid only for normal times), and multi-criteria A* from Chen et al. (2013a) used to check that MRP-TS returns the same paths. Implemented in Visual C#, one core of a 2.0 GHz i7 laptop, Windows 7. Identification strategy: not applicable; this is an algorithmic and computational paper with no causal design.",
+   "scope": "Population: road travelers in a congested city network, modeled as a directed graph with stochastic link times. Institution: none. Era: data from 2009 morning peaks; paper published 2016. Geography: one Chinese city plus four synthetic or benchmark networks. Restrictions: road transport only; link travel times independent; O-D pairs randomly sampled; reliability computed in model terms, not validated against observed arrivals.",
+   "key_findings": [
+    {
+     "finding": "The most reliable path is non-additive, so deterministic shortest-path algorithms cannot solve it; FSD label-correcting (Nie and Wu 2009) generates an exponentially growing number of non-dominated paths.",
+     "location": "Sec. 2, p. 7; Sec. 1, p. 4",
+     "numbers": "none"
+    },
+    {
+     "finding": "A two-stage exact algorithm (MRP-TS) first estimates the reliability range from the least expected time path, then applies M-B dominance with multi-criteria label-setting. Optimality is proven under admissible heuristics.",
+     "location": "Sec. 3, pp. 7-13; Props. 4-5 on pp. 10-13",
+     "numbers": "Adaptive confidence level starts at 0.999 (z = 3.5) for the risk-averse procedure"
+    },
+    {
+     "finding": "Normal distributions fit only a minority of link travel times on their own, while lognormal fits best overall. No single distribution fits all links.",
+     "location": "Sec. 4.1, Table 1, p. 15",
+     "numbers": "Significant fit at 5%: normal 58.85%, lognormal 81.64%, gamma 67.19%. Best-fit shares: lognormal 50.29%, gamma 30.25%, normal 19.46%"
+    },
+    {
+     "finding": "Link travel times in the Wuhan network are highly variable, with 10.25% of links congested (below 20 km/h).",
+     "location": "Sec. 4.1, Fig. 1, p. 15",
+     "numbers": "Average coefficient of variation 0.37; 10.25% of links under 20 km/h"
+    },
+    {
+     "finding": "Normal approximation of path travel times is good enough for route guidance. Accuracy is higher at the 10th percentile than the 90th, because of positive skew, and improves with path length.",
+     "location": "Sec. 4.1, Fig. 2, p. 16; Conclusions p. 20",
+     "numbers": "Monte Carlo ground truth on 100 paths: 98.3% accuracy at 10th percentile, 94.9% at 90th percentile"
+    },
+    {
+     "finding": "A worked O-D example shows the chosen path changing with the budget b: a short budget selects a high-variance path, a budget equal to the least expected time selects the mean path, and a longer budget selects a low-variance path.",
+     "location": "Sec. 4.2, Figs. 3-4, p. 16",
+     "numbers": "b = 2301.4 s (Path 1, risk-seeking); b = 2630.9 s (Path 3, least expected time, reliability 50%); b = 2875.5 s (Path 2, risk-averse)"
+    },
+    {
+     "finding": "Runtime falls as the risk regime moves toward risk-neutral, because M-B dominance prunes more paths near alpha = 0.5.",
+     "location": "Sec. 4.3, Fig. 5, p. 17",
+     "numbers": "275.69 ms at alpha = 0.1 vs 162.47 ms at alpha = 0.4; 18,115 vs 11,087 non-dominated paths generated"
+    },
+    {
+     "finding": "MRP-TS returns the same optimal paths as multi-criteria A* on the same budgets, which supports the optimality claim empirically. Risk-averse MRP-RA runs faster than risk-seeking MRP-RS.",
+     "location": "Sec. 4.3, p. 17",
+     "numbers": "none"
+    },
+    {
+     "finding": "On the Wuhan network, the BSP-LC benchmark is invariant to budget and generates many unnecessary paths, while MRP-TS is far faster at high reliability.",
+     "location": "Sec. 4.3, p. 18",
+     "numbers": "BSP-LC 4,743.94 ms in total; MRP-TS 89.27 times faster at alpha = 0.9; BSP-LC generated 225,878 FSD non-dominated paths, of which 95.09% are M-B dominated relative to MRP-TS at alpha = 0.1"
+    },
+    {
+     "finding": "Scaling test at alpha = 0.9 across five networks: MRP-TS stays in milliseconds while BSP-LC grows steeply with network size. The text reports about 750x on Chicago.",
+     "location": "Sec. 4.3, Table 2, pp. 18-19",
+     "numbers": "Chicago 48.26 ms vs 36,251.40 ms (text: ~750x); G1 3.12 vs 201.64 ms; G2 11.31 vs 1,182.10 ms; G3 25.63 vs 3,208.12 ms. Ratios from the table (my arithmetic, not stated in text): ~751x, ~65x, ~105x, ~125x. Chicago MRP-TS time rises ~15.5x as nodes rise ~6.5x from G1; BSP-LC rises ~179.8x"
+    }
+   ],
+   "limitations": [
+    "Link travel-time correlations are omitted for simplicity; the paper proposes a two-level hierarchical model as a future extension (Sec. 5, p. 20).",
+    "Only road transport is modeled; multimodal networks are left to future work (p. 20).",
+    "The method is not extended to en-route traffic information updated during the trip (p. 20).",
+    "Normal approximation of path travel times is only approximate, with weaker accuracy at the 90th percentile due to skew (p. 16). It was validated on only 100 Monte Carlo paths.",
+    "Worst-case complexity is non-polynomial in theory (|P| grows exponentially); efficiency depends on the practical size of the non-dominated set in sparse networks (Sec. 3.3, p. 14).",
+    "The main benchmark, BSP-LC, is the authors' own improved variant (Appendix B, pp. 24-25), valid only for normal path times. Runtime comparisons come from one implementation on one laptop, reported in milliseconds.",
+    "The case study is one city, five weekday morning peaks in 2009, with floating-car data from taxis. Map-matching accuracy (over 90%) is taken from prior work. O-D pairs and budgets are randomly sampled or derived from alpha using A*.",
+    "Optimality of MRP-RA depends on an admissible heuristic; the Euclidean and least-expected-time heuristics are the examples given (pp. 12-13).",
+    "Reliability is an analytic probability under the model. The paper does not compare predicted on-time probabilities with observed arrivals.",
+    "Independence of link times is assumed, and the authors note the correlated-link case is handled only by reference to prior work (p. 5)."
+   ],
+   "measures": [
+    "On-time arrival probability (travel-time reliability) alpha = Phi((b - mean)/SD)",
+    "Standardized z-value, objective 2z for the most reliable path",
+    "Path mean and standard deviation of travel time (Eqs. 2-3)",
+    "Coefficient of variation of link travel time (mean 0.37 on Wuhan links)",
+    "Chi-square goodness-of-fit at 5% for normal, lognormal, gamma link distributions",
+    "Percentile accuracy (10th and 90th) of normal path approximation vs Monte Carlo",
+    "Runtime in milliseconds (average of 100 runs) and number of non-dominated paths generated"
+   ],
+   "identification": "Not applicable. This is an algorithm and computational-performance paper with no causal identification strategy. Its validity rests on model assumptions: independent links, normal path times (checked by Monte Carlo on 100 paths), and the admissibility of the heuristic.",
+   "references_of_note": [
+    "Nie and Wu (2009), Transportation Research Part B 43(6):597-613. FSD multi-criteria label-correcting baseline that this paper benchmarks against.",
+    "Chen et al. (2013a), Networks and Spatial Economics 13(2):123-148. M-B dominance and multi-criteria A* for alpha-reliable paths; MRP-TS builds on it.",
+    "Chen et al. (2012), International Journal of Geographical Information Science 26(2):365-386. Spatial correlation via a two-level hierarchical network; the suggested extension.",
+    "Chen et al. (2014b), International Journal of Geographical Information Science 28(1):22-38. MDP-MM map matching for low-frequency floating-car data, used to build the link distributions.",
+    "Frank (1969), Operations Research 17(4):583-599. Origin of the most reliable path concept.",
+    "Chen and Ji (2005), Journal of Advanced Transportation 39(1):19-37. Alpha-reliable path definition and genetic algorithm.",
+    "Xing and Zhou (2011), Transportation Research Part B 45(10):1660-1679. Lagrangian substitution approach with link correlations.",
+    "Brumbaugh-Smith and Shier (1989), European Journal of Operational Research 43(2):216-224. Bicriterion label-correcting method used in the BSP-LC benchmark.",
+    "Fredman and Tarjan (1987), Journal of the ACM 34:596-615. F-heap data structure used in the implementation.",
+    "Susilawati, Taylor and Somenahalli (2013), Journal of Advanced Transportation 47(8):720-736. Empirical skew of urban link travel-time distributions.",
+    "Chan, Lam and Tam (2009), Transportation Research Record 2121:102-109. Spatial covariance of arterial travel times, cited for the correlation caveat.",
+    "Carrion and Levinson (2012), Transportation Research Part A 46(4):720-741. Value of travel-time reliability review.",
+    "Relevance to networks, lobbying or elections: none. The paper's only network content is road-graph path search."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "Obviously, the most reliable path problem is non-additive and cannot be solved by existing",
+     "location": "Sec. 2, p. 7"
+    }
+   ]
+  },
+  "summary_md": "Chen, Shi, Zhang, Lam, Li and Xiang study a road-routing problem. Each link has a random travel time, and the goal is the path with the highest probability of arriving within a fixed time budget b, P(T <= b). They treat path times as normal, so this means minimizing (b - mean)/SD. Because path SD is the square root of summed variances, the objective is non-additive, and the authors state that Dijkstra-type methods cannot solve it. Their exact two-stage algorithm, MRP-TS, works as follows. A deterministic least-expected-time search first fixes the risk regime. Mean-Budget dominance with multi-criteria label-setting then finds the optimum. They check optimality by matching an independent multi-criteria A* on the same budgets. On Wuhan taxi data (19,306 nodes, 2009 morning peaks), the best path changes with b: a short budget picks a high-variance path and a long budget picks a low-variance one. MRP-TS runs in milliseconds, about 750x faster than the label-correcting benchmark on Chicago. Links are assumed independent, and the authors name correlation as the main open limitation.\n\nWhat this means for Paul's system is narrow. The dashboard's recruitment chain (`make_dashboard_html_00.tpl:735-757`) cites this paper as grounding for its max-product path. That path is a different problem: the classical product-of-independent-probabilities path, which is additive in -log p and correctly solved by Dijkstra. This paper is about deadline-reliability, which is the case Dijkstra cannot handle. So the citation supports the word 'reliable', not the method. The paper's useful lessons are elsewhere. Exact optimality claims should be checked against a second algorithm, as Chen et al. do. Products of independent per-hop probabilities overstate certainty when the hops are correlated. And a true deadline or variance penalty on a recruitment chain would need label-setting, not Dijkstra. Nothing here concerns lobbying, legislators or elections.",
+  "paul_entries": [
+   {
+    "doc": "Path-Finding Algorithums - Path-Finding Algorithums - Annotated Bibliography.md",
+    "citation": "Chen, Bi Yu, et al. “Most reliable path-finding algorithm for maximizing on-time arrival probability.” *Transportmetrica B: Transport Dynamics*, vol. 5, no. 3, 13 Apr. 2016, pp. 248–264, [https://doi.org/10.1080/21680566.2016.1169953](https://doi.org/10.1080/21680566.2016.1169953).",
+    "text": "Chen, Bi Yu, et al. “Most reliable path-finding algorithm for maximizing on-time arrival probability.” *Transportmetrica B: Transport Dynamics*, vol. 5, no. 3, 13 Apr. 2016, pp. 248–264, [https://doi.org/10.1080/21680566.2016.1169953](https://doi.org/10.1080/21680566.2016.1169953)."
+   }
+  ],
+  "bearings": [
+   {
+    "component_id": "melange-pathfinding.member-recruitment-path",
+    "relation": "qualifies",
+    "paper_claim": "The paper's 'most reliable path' maximizes on-time arrival probability Phi((b - mean)/SD) for a travel-time budget b. It states that this objective 'is non-additive and cannot be solved by existing' shortest-path methods, so it uses M-B dominance plus multi-criteria label-setting (MRP-TS) rather than Dijkstra.",
+    "paper_location": "Sec. 2, p. 6 (non-additivity, text line ~489); Sec. 3, pp. 7-13 (MRP-TS; Prop. 4 for MRP-RS, Prop. 5 for MRP-RA)",
+    "system_side": "The recruitment chain is a max-product path: distToTarget runs a Dijkstra-style max-product search and tracePath follows the argmax of PE*dT. Reliability is the product of per-hop kernel probabilities, and chainHold is the product of activeP(p) with ASKM 0.07. The code comment cites Chen, Shi, Zhang & Lam 2016 as grounding for 'maximize the probability the whole chain holds' and calls the result 'PROVABLY-OPTIMAL'. A product of independent edge probabilities is additive in -log p (the Frank / Bellman reliable-path case), so Dijkstra is the right tool. That object is not the one this paper solves.",
+    "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:734-757 (comment citing Chen 2016 at 735-739; ASKM/activeP/chainHold at 748-751)",
+    "transfer_conditions": "The paper supports the system's method only in name. Its deadline-reliability algorithm would carry over only if the system modeled a stochastic time-to-join per hop and asked for P(target joins before a deadline such as markup), which it does not. As built, the right grounding is the classical max-product or -log p shortest path, not this paper. Road data, 2009 Wuhan; no legislative content.",
+    "strength": "strong",
+    "verdict": "reproduced",
+    "verifier_note": "Paper: \"the most reliable path problem is non-additive and cannot be solved by existing deterministic shortest path algorithms (e.g., Dijkstra's algorithm)\" confirmed; Props. 4 and 5 exist in Sec. 3. Code: tpl:734 distToTarget is max-product Dijkstra; tpl:735-739 comment says PROVABLY-OPTIMAL and cites Chen, Shi, Zhang & Lam, Transportmetrica B 2016; ASKM=0.07, activeP, chainHold at 748-751. Page for non-additivity corrected 7 -> 6. Page numbers follow the page-number lines in the extracted text (approximate).",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Sponsor-to-target max-product path and chain hold|Sponsor-to-target max-product path and chain hold]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.member-recruitment-path",
+    "relation": "qualifies",
+    "paper_claim": "The method assumes independent link travel times. Sec. 2 notes the assumption can be relaxed with a two-level hierarchical network model (Chen et al. 2012); the Conclusions list correlation first among future directions, saying it is omitted \"for simplicity\" although urban link times are strongly correlated. Normal approximation of path travel time, checked against Monte Carlo ground truth on 100 randomly selected Wuhan paths, averages 98.3% accuracy at the 10th percentile and 94.9% at the 90th.",
+    "paper_location": "Sec. 2, p. 5 (independence + hierarchical relaxation, line ~282); Sec. 4.1, Fig. 2, p. 15; Sec. 5, p. 19-20 (for simplicity)",
+    "system_side": "chainHold multiplies per-hop activeP values as if every ask succeeds or fails independently, and the comment calls it a 'conservative floor' (rerouting only improves it). The asks in one chain share the same bill, issue salience, party context and ASKM lever, so their outcomes are likely positively correlated. Under positive correlation the product is not a floor on joint success. Paths are also ranked by passive pathReliability, while chainHold, which is shown to the user, is computed on the active-ask scale.",
+    "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:745-751",
+    "transfer_conditions": "Only the structural point transfers: path reliability built as a product or sum of independent per-link terms inherits an independence assumption that the source paper itself flags as its main limitation. The direction and size of correlation among legislator asks is untested. The UI already labels the figure as scenario output, not an empirical probability (tpl:1119, 1155).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Numbers 98.3% / 94.9% / 100 paths confirmed. Location \"Sec. 1, p. 5\" was wrong: the independence assumption sits in Sec. 2 (Problem statement), not the Introduction. Code side confirmed: chainHold multiplies activeP per hop and the comment calls it a conservative floor (tpl:751); tracePath ranks by passive PE while chainHold uses activeP; tooltips at tpl:1119 and 1155 say scenario output, not empirical probability. The claim that legislator asks are positively correlated is the analyst's reasoning, untested. Page numbers follow the page-number lines in the extracted text (approximate).",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Sponsor-to-target max-product path and chain hold|Sponsor-to-target max-product path and chain hold]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.member-recruitment-path",
+    "relation": "suggests-extension",
+    "paper_claim": "MRP-TS's optimality is proven (Props. 4-5, Lemmas 1-3) and also checked empirically: it returns the same optimal paths as an independent multi-criteria A* on the same budgets, across 100 O-D pairs.",
+    "paper_location": "Sec. 4.3, p. 16 (text line ~2606-2613)",
+    "system_side": "The chain is labelled 'PROVABLY-OPTIMAL', but no second algorithm reproduces it. Agent reading (UNVERIFIED, DE-062): distToTarget(t) propagates d[v] = d[u]*PE[u][v] outward from the target, which is the reliability of target -> v. tracePath then walks sponsor -> target scoring PE[cur][v]*dT[v]. PE is asymmetric because of the receiver edge_mult EMU[v] and the source_shock/target_resistance role priors, so dT is computed in the reverse direction from the one tracePath needs. Also, dT ignores the 'dropped' set while tracePath skips dropped nodes, so the greedy walk can stall (reached=false) even when a path that avoids them exists.",
+    "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:586,595-597,734,740",
+    "transfer_conditions": "Chen et al.'s validation design (exact algorithm vs an independent exact solver on the same inputs) transfers directly, since it is a software check, not an empirical claim. The direction mismatch matters only when PE is asymmetric. That happens when the bundle carries emult or the issue's role priors are non-unit; with neutral multipliers the walk is exact. The size of the effect is bounded by the EMU range [0.80, 1.20] and has not been measured.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper: averages over 100 random O-D pairs; with budgets from the multi-criteria A* alpha-reliable solver, MRP-TS \"can determine the same optimal paths as the multi-criteria A* algorithm\". Code re-read independently: distToTarget(t) sets d[t]=1 and relaxes d[v]=d[u]*PE[u][v] (reliability t->v); tracePath scores PE[cur][v]*dT[v] going sponsor->target; dT ignores dropped while tracePath skips dropped (tpl:734,740). ADJ is symmetrised (tpl:547), so asymmetry comes only from EMU[v] (tpl:586), and from source_shock/target_resistance role priors (tpl:595-597); edge_mult range [0.80,1.20] confirmed at fec/members/receptivity_layer.py:47. This verifier reproduced the code reading by a second read, but no executed comparison against an exact solver exists, so the finding stays UNVERIFIED in the DE-062 sense until run. Page numbers follow the page-number lines in the extracted text (approximate).",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Sponsor-to-target max-product path and chain hold|Sponsor-to-target max-product path and chain hold]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.cosponsor-route-pareto",
+    "relation": "suggests-extension",
+    "paper_claim": "Mean-Budget dominance with multi-criteria label-setting finds exact non-dominated path sets fast. 11,087-18,115 non-dominated paths are handled in 162-276 ms on Wuhan. The FSD label-correcting benchmark generates 225,878 paths, of which 95.09% are M-B dominated.",
+    "paper_location": "Sec. 4.3, Fig. 5, pp. 16-17",
+    "system_side": "The cosponsor route Pareto front is assembled from five scalarized greedy runs (lambda in {0, 0.5, 1, 2, 4}, value = (gain - lambda(1-p))/cost), then filtered for dominance. It is an approximate front over the points those runs visit, not an exact non-dominated set. Points in non-convex regions of the front cannot be reached by any lambda.",
+    "code_ref": "fec/engine/cosponsor_route.py:40-76",
+    "transfer_conditions": "This is a weak, conceptual transfer. Chen's dominance rule is specific to normal path times and a path objective. The cosponsor router grows a recruitment tree with a recruiter capacity cap K, so exact label-setting would need a different dominance relation. It is relevant only if Paul wants the front to be exact rather than illustrative.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Paper: 275.69 ms (alpha 0.1) and 162.47 ms (alpha 0.4); 18,115 and 11,087 non-dominated paths; BSP-LC generated 225,878 FSD non-dominated paths, 95.09% M-B dominated (vs MRP-TS at alpha 0.1). Code: cosponsor_route.py build_route uses val=(gain-lam*(1-p))/c in a greedy heap with out-degree cap K; lam in (0,0.5,1,2,4); front filtered by dominated() at lines ~40-76. Confirmed. Page numbers follow the page-number lines in the extracted text (approximate).",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Cosponsor recruitment route finder (Pareto front)|Cosponsor recruitment route finder (Pareto front)]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.staffer-closeness-routes",
+    "relation": "context",
+    "paper_claim": "Penalizing path variability through SD makes the path objective non-additive, so Dijkstra loses exactness. Exact solutions need multi-criteria labels such as mean and variance.",
+    "paper_location": "Sec. 2, p. 6; Sec. 3.1-3.2, pp. 8-13",
+    "system_side": "The staffer router adds uncertainty linearly per hop: cost = -ln(0.8 x strength) + w x u, with u explicitly 'not a probability'. Because the penalty is a per-hop sum, bidirectional Dijkstra with heuristic 0 stays exact, and the code backs this with exact-arithmetic tie handling.",
+    "code_ref": "fec/surfaces/staffer_closeness_routes.py:12-21,115-116,999; fec/staffer_network/closeness_math.py:20",
+    "transfer_conditions": "The paper serves as a boundary condition, not a criticism. The current additive design is correctly solved. If uncertainty were ever restated as an SD aggregated over the route, or as a probability of a usable introduction by a date, Dijkstra would no longer be exact and Chen-style label-setting would apply. Route costs remain heuristic outputs, never introduction or access probabilities (D-025).",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Paper non-additivity confirmed (Sec. 2). Code: staffer_closeness_routes.py docstring describes bidirectional Dijkstra with heuristic 0 and exact-arithmetic tie pass (lines 12-21); _hop_cost = -log(HOP_FACTOR*strength) + weight*u (115-116); provenance formula says u is not a probability (~999); HOP_FACTOR=.8 at closeness_math.py:20. Confirmed.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Staffer closeness route search|Staffer closeness route search]]",
+    "system": "melange-pathfinding"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary says the authors name correlation as \"the main open limitation\"; the paper lists it first among future research directions (\"omitted in this study for simplicity\"), not explicitly as the main limitation.",
+   "Bearing 2 location cited Sec. 1 for the independence assumption; it is in Sec. 2 and Sec. 5. Page numbers in several bearings were one page high relative to the extracted page-number lines (non-additivity p. 6 not 7; A* match p. 16 not 17).",
+   "Related link ren-2022 was described as the exact-front approach; Ren also presents a sub-optimal approximating variant. Related link lawande-2022 claimed Lawande reviews admissible heuristics; the word does not appear in its text. Both rewritten.",
+   "The distToTarget direction finding was re-read by this verifier and holds on code inspection, but it has not been executed against an exact solver; keep it UNVERIFIED (DE-062)."
+  ],
+  "gaps_exposed": [
+   "The recruitment chain has no time or deadline dimension. Chen shows that the best path depends on the budget b (risk-seeking at a short budget, risk-averse at a long one), but the system cannot express 'reach the target before markup or floor time' or choose a lower-variance chain when time is ample.",
+   "No second-path check backs the 'PROVABLY-OPTIMAL' recruitment-chain claim. Chen et al. validate MRP-TS against an independent multi-criteria A*; the dashboard has no exact solver to compare against (for example, a Dijkstra on -log p over directed PE with dropped nodes removed).",
+   "Agent finding, UNVERIFIED (DE-062): distToTarget propagates reliability from the target outward along forward edges, while tracePath needs v-to-target reliability. Under asymmetric PE (EMU receiver multipliers, role priors) the chain is not guaranteed optimal. The dropped set is also not applied in distToTarget, so a dropped node can make the walk stall when another path exists.",
+   "chainHold assumes the asks are independent. The source paper names independence as its main limitation, and recruitment asks along one chain are likely correlated, so the product is not a guaranteed floor.",
+   "The cosponsor-route Pareto front is approximate: five lambda scalarizations of a greedy, so non-supported Pareto points are missed. An exact dominance-based labeling is not built."
+  ],
+  "flags": [
+   "Mis-grounding in code: make_dashboard_html_00.tpl:735-739 cites Chen, Shi, Zhang & Lam (Transportmetrica B 2016) as grounding for the max-product Dijkstra-on--log-p chain. That paper solves the non-additive on-time-arrival problem and says Dijkstra cannot solve it. The algorithm the code runs is the classical product-reliability path. The citation should be re-pointed (for example to Frank 1969 or classical reliable-path theory) or reworded. It does not support the method.",
+   "Over-claiming comment: tpl:736-737 calls the chain 'the mathematical certainty ... the exact, maximal probability of the optimal recruitment route'. The UI tooltip correctly says it is scenario output, not an empirical probability (tpl:1119). The comment should match, since chain reliability is a heuristic model output (in the spirit of D-025) built on an unestimated ASKM.",
+   "Bibliographic discrepancy in Paul's annotation: the citation reads vol. 5, no. 3, pp. 248-264, 13 Apr. 2016. The paper's own 'To cite' line gives vol. 5, pp. 253-269, 2017 print, online 13 Apr 2016; the issue number is not stated in the text.",
+   "No conflict with the rejected SNA proposals: the paper argues neither for dropping regular cosponsorship edges nor for per-edge volume normalization. It does not touch LDA (D-021) or reciprocity (D-104..D-108)."
+  ],
+  "paul_alignment": "Paul lists this paper with no takeaways, both in the Path-Finding Algorithums bibliography (citation only) and in the d963fd8719df reading list, where the only cross-reference is a title-level link to path choice under instability (Rongkuan 2024). His position for member-recruitment-path ('the built chain uses most-reliable-path Dijkstra and no learned heuristic') accurately describes the system. It also repeats the system's conflation: the built chain is a max-product reliable path, not Chen's deadline-reliability path, which Dijkstra cannot solve. His interest in coping with unstable or uncertain information is closer to what this paper actually offers: a budget-dependent, variance-aware route choice. That would need a time-to-join model the system does not have. His note is not stale about the code, but it inherits the code comment's mis-citation.",
+  "related": [
+   {
+    "slug": "ahmad-nd-shortest-path-algorithms",
+    "relation": "complements",
+    "why": "Ahmad's 'strongest path' over social-tie strengths is the classical max-product or -log-weight path that the dashboard chain actually implements. It is a better-fitting grounding for tpl:735-757 than Chen 2016."
+   },
+   {
+    "slug": "duan-2025-breaking-sorting-barrier",
+    "relation": "complements",
+    "why": "Duan et al. speed up additive single-source shortest paths, which is the problem class the -log p chain and the staffer router belong to. Chen's objective is outside that class."
+   },
+   {
+    "slug": "ren-2022-multi-objective-path",
+    "relation": "same-method",
+    "why": "Both prune dominated partial paths with multi-criteria labels to get non-dominated path sets (MOPBD* path-based expansion vs M-B dominance label-setting). Ren also offers a sub-optimal variant that approximates the Pareto front, so it shows both the exact and approximate options relative to the lambda-scalarized front in cosponsor_route.py."
+   },
+   {
+    "slug": "lawande-2022-systematic-review-analysis",
+    "relation": "complements",
+    "why": "Lawande reviews heuristic pathfinding (A*, D*, HPA*). Chen's MRP-RA needs an admissible lower-bound heuristic for optimality (Prop. 5), which bears on Paul's wish for heuristic-augmented A* in the routers (both use heuristic 0). Lawande's text does not itself discuss admissibility."
+   },
+   {
+    "slug": "sotoudeh-2024-network-based-measure",
+    "relation": "complements",
+    "why": "It is co-cited with Chen 2016 in the same code comment (tpl:738-739) as the second grounding for the recruitment chain. Sotoudeh supplies the cosponsorship-influence edges and Chen is cited for the path objective."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "cao-2025-social-network-group",
+    "relation": "complements",
+    "why": "Most-reliable-path is the single-path multiplicative operator the review lists. Together they frame the choice between single-path and multi-path propagation for the recruitment chain."
+   },
+   {
+    "slug": "luo-2020-path-planning-algorithm",
+    "relation": "complements",
+    "why": "Title is most-reliable path-finding for maximizing on-time arrival probability. The product-of-probabilities form that the dashboard uses is cited to Chen in code comments, not stated in the title."
+   },
+   {
+    "slug": "xu-2024-improved-lite-based",
+    "relation": "complements",
+    "why": "Verified: most reliable path maximizes on-time arrival probability. The dashboard comment at make_dashboard_html_00.tpl:735-739 cites it for the max-product chain."
+   },
+   {
+    "slug": "zeller-2016-step-path-selection",
+    "relation": "complements",
+    "why": "The recruitment chain runs a most-reliable-path search (Dijkstra on -log p). Zeller shows that the probability-to-cost inversion behind such searches is an assumption whose route outputs depend on how the probabilities were estimated."
+   },
+   {
+    "slug": "abdelrahman-2025-conflict-based-search",
+    "relation": "complements",
+    "why": "The built recruitment chain runs most-reliable-path Dijkstra on -log p. That paper sets the reliability objective, while this one only addresses replanning compute."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "ahmad-nd-shortest-path-algorithms",
+  "note": false,
+  "meta": {
+   "title": "Shortest Path Algorithms for Social Network Strengths",
+   "authors": [
+    "Amreen Ahmad",
+    "Tanvir Ahmad",
+    "Harsh Vijay"
+   ],
+   "year": "Not stated in extracted text (data runs to Feb 2010; references include a 2010 item)",
+   "venue": "Not visible in extracted text (LNCS-style layout per metadata hint; not verified)",
+   "doi": "",
+   "sha12s": [
+    "fa6c2ee00be5"
+   ],
+   "category": "Path-Finding Algorithms",
+   "category_slug": "path-finding-algorithms"
+  },
+  "extraction": {
+   "title": "Shortest Path Algorithms for Social Network Strengths",
+   "authors": [
+    "Amreen Ahmad",
+    "Tanvir Ahmad",
+    "Harsh Vijay"
+   ],
+   "year": "Not stated in extracted text (data runs to Feb 2010; references include a 2010 item)",
+   "venue": "Not visible in extracted text (LNCS-style layout per metadata hint; not verified)",
+   "doi": "",
+   "document_type": "Research paper, 8 pages, Springer LNCS-style layout (venue and year not visible). Metadata hint corrected: the third author is Harsh Vijay; the hint's author list is shortened.",
+   "coverage": "Read the full extracted text (410 lines, about 18k chars) in one pass: front matter, abstract, Sections 1-6, both data sections, Tables 1-2, figure captions, and references. Nothing skipped. Topics touched: social search and path-finding, influence and tie strength in networks. Not present: lobbying, elections, legislators, persuasion/turnout, allocation, text measurement. Annotation file read in full: 42 Highlight items by Paul Goff on pages 1-8, all with empty note text, so there are no sticky-note comments. Highlight colors are not interpreted.",
+   "research_question": "Does using directed, weighted influence edges (capturing asymmetry and tie strength) make social-search paths from source to target more effective than the hop-count shortest path given by Dijkstra? (Sec. 1, p.1-2; Abstract)",
+   "theory": "Influence of X on Y is the proportion of X's investment (interaction effort, time or count) directed at Y, normalized over all of X's investments; influence is asymmetric and lies between 0 and 1 (Sec. 3.1-3.3, p.3-4, citing Hangal et al. 2010 [5]). Tie strength from Granovetter's weak-ties argument motivates the weighting (Sec. 1.1, p.2). Global social search is treated as routing along the most influential path (Sec. 3, p.3).",
+   "data": "Two datasets. (1) DBLP subset: about 38,942 unique author names and 16 data-mining conferences, January 2001 to February 2010; nodes are authors; undirected co-authorship edges weighted by co-authored papers (Sec. 5.1, p.6). (2) Twitter: 15 days of crawled tweets, about 23,491 unique users and 32,132 directed retweet edges; undated (Sec. 5.2, p.6). Experimental unit: 500 randomly selected source-destination pairs per dataset (Sec. 5.1, p.6). The Table 1 caption says \"500 total nodes in the network\", which conflicts with the stated network sizes; this is read here as the pair count, since the Table 1 counts sum to 500 per dataset.",
+   "method": "Descriptive comparison of two path algorithms on the same source-destination pairs. Baseline: Dijkstra shortest path, measured by hop count, ties broken at random (Sec. 4, p.5; Sec. 5.1). Comparator: influence-based strongest path (Algorithm 1, from [5]), which enumerates candidate paths, multiplies edge influences along each path, and returns the path minimizing log(1/D) + log(1/product of influences) with D = 0.95 (p.5). Edge influence: DBLP = Papers(vi,vj)/sum_k Papers(vj,vk) (Eq. 2, p.6); Twitter = Retweets(Y,X)/sum_Z Retweets(Y,Z) (Eq. 3, p.6); general form Eq. 1 (p.4). Outcome measures: path length in hops and mean influence. No significance tests.",
+   "identification": "None. No causal design, no randomized or quasi-experimental variation. The two algorithms are compared descriptively on the same sampled pairs.",
+   "scope": "Population: DBLP authors in 16 selected data-mining conferences (2001-2010) and Twitter users in a 15-day undated window. Institutions: none studied. Era: 2001-2010 DBLP data; Twitter window undated. Generalization is claimed to \"social networks\" and \"online social networks\" (Abstract; Sec. 6) from two datasets only.",
+   "key_findings": [
+    {
+     "finding": "Influence is asymmetric; most node-level influence values lie below one. DBLP influence is more evenly distributed, while highly influential Twitter nodes sit in the tail of the distribution.",
+     "location": "Sec. 5.3, p.6-7 and Fig. 2",
+     "numbers": "Mean influence: Twitter 0.67, DBLP 0.60"
+    },
+    {
+     "finding": "Twitter: the shortest path was smaller than the strongest path in most pairs; the two were equal in the rest.",
+     "location": "Sec. 5.3 and Table 1, p.7",
+     "numbers": "Strongest > shortest: 323 of 500 (64.6%); equal: 177 of 500 (35.4%)"
+    },
+    {
+     "finding": "DBLP: the strongest path was longer than the shortest in fewer pairs, and equal in a majority.",
+     "location": "Sec. 5.3 and Table 1, p.7",
+     "numbers": "Strongest > shortest: 225 of 500 (45.0%); equal: 275 of 500 (55.0%)"
+    },
+    {
+     "finding": "Average path lengths: strongest paths are longer by about 1.9 hops (Twitter) and 1.4 hops (DBLP) on average. The text says one or two hops (Twitter) and one hop (DBLP), which is looser than these means.",
+     "location": "Sec. 5.3 and Table 2, p.7",
+     "numbers": "Twitter: Avg |Pstrong| 6.8, Avg |Pshort| 4.9; DBLP: Avg |Pstrong| 4.7, Avg |Pshort| 3.3"
+    },
+    {
+     "finding": "The paper concludes that weighted influence search beats unweighted search and that influential paths beat random shortest paths. No path-quality or path-influence metric is reported, so 'better result' is asserted, not measured.",
+     "location": "Abstract p.1; Sec. 5.3 p.7; Sec. 6 Conclusion p.8",
+     "numbers": "None reported for path quality"
+    }
+   ],
+   "limitations": [
+    "No limitations section. The paper says only that DBLP and Twitter differ because of structural differences (Sec. 5.3, p.7).",
+    "'Better result' and 'it is proved' (Abstract; Sec. 6) rest on path-length comparisons over a 500-pair sample; no path-quality metric and no statistical tests.",
+    "Two datasets only: a 2001-2010 data-mining subset of DBLP and a 15-day Twitter window; generalization is untested.",
+    "Influence definitions are narrow: DBLP uses co-authored papers in 16 conferences, Twitter uses retweets only.",
+    "Shortest-path ties are broken at random, so the equal/unequal shares depend on that choice (Sec. 5.1, p.6).",
+    "The 500-pair sample size is not justified by a power or convergence analysis; the Table 1 caption conflicts with the network sizes.",
+    "Algorithm 1 enumerates all simple paths (exponential; scale not discussed). The decay constant D = 0.95 is unjustified. Algorithm 2 (Dijkstra) pseudocode appears to push the unextended path and to use edge cost, while experiments count hops, so the baseline as coded is ambiguous.",
+    "Figure 1 is an illustrative four-node example (supervisor X and students A, B, Y; seven co-authored papers for A-X), not evidence."
+   ],
+   "measures": [
+    "Influence(X,Y) edge weight in [0,1] (Eq. 1-3)",
+    "Path length in hops (Dijkstra and strongest path)",
+    "Total influence score log(1/D) + log(1/product of edge influences), D = 0.95",
+    "Share of pairs where strongest path length > shortest path length (Table 1)",
+    "Mean influence per dataset (Table 2)"
+   ],
+   "references_of_note": [
+    "Granovetter, M. (1973). The Strength of Weak Ties. American Journal of Sociology 78(6): 1360-1380. Ref [4]; basis for the tie-strength argument (Sec. 1.1).",
+    "Hangal, S., MacLean, D., Lam, M., Heer, J. (2010). All Friends are Not Equal: Using Weights in Social Graphs to Improve Search. SNA-KDD Workshop. Ref [5]; source of the influence measure and the strongest-path algorithm (Sec. 3.3, Sec. 4).",
+    "Dodds, P., Muhammad, R., Watts, D. (2003). An experimental study of search in global social networks. Science 301(5634): 827. Ref [1]; global social-search baseline. In-text 'Doddas' differs from the reference list spelling.",
+    "Adamic, L., Adar, E. (2005). How to search a social network. Social Networks 27(3): 187-203. Ref [3]; search and tie strength in email and online networks (Sec. 2).",
+    "Gilbert, E., Karahalios, K. (2009). Predicting tie strength with social media. CHI 2009. Ref [2]; listed but not cited in the body text.",
+    "Horowitz, D., Kamvar, S. (2010). The Anatomy of a Large-Scale Social Search Engine. Ref [7]; Aardvark and symmetric affinity (Sec. 2).",
+    "Leskovec, J., Huttenlocher, D., Kleinberg, J. (2010). Signed networks in social media. CHI 2010. Ref [9]; signed edges (Sec. 2). Leskovec and Horvitz (2008), WWW. Ref [8]; threshold-based edge weights (Sec. 2)."
+   ],
+   "paul_markup": [
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "The influence of a person X over person Y is defined as the ratio of Y's investment that Y makes on X.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "In this paper, it is proved that in social graph result can prove to be more effective by incorporating the concept of directed and weighted influence edges taking into account both asymmetry and tie strength.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "two algorithms-Dijkstra shortest path algorithm and Influence based strongest path algorithm.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "where the aim is to search for a “sequence” of people or search a particular person who will prove beneficial for person X in finding a job or introduce him to some particular person.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Hence, in these types of social networks the available shortest path is returned between the source and the target as a result of social search.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "A large number of relationships are maintained by people in real life with varying tie strength: family, work colleagues, friends, close friends etc.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "For capturing ties of varying strength, online social networks have proved to be beneficial.",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Here users and target person need not know each other. It was found that professional ties can vary from medium to weak in strength and successful social search depended a lot on it",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight",
+     "text": "Consideration of tie strength with different information such as homophily, geographical proximity is the common concept that has been used in the above research.",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "To find correlation between users symmetric measure of affinity is used internally by this site [7].",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "In signed networks, it is considered that edges can be either negative or positive or absent [9]. A lot of work has been done in social network domain for determining relationship strength [3].",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "As discussed above, if there exists a path where each node has considerable influence over other succeeding node, then global search problem can be successful.",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "such as co-authorship network in DBLP",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight",
+     "text": "Influence has asymmetric nature that is if Y is highly influenced by X, then it is not guaranteed that the reverse will be true.",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "Influence (X,Y) = Invest(Y,Z) In ",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "Invest(Y,X)",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": ". In Figure 1(a) an undirected weighted graph is shown where the edges represent the investments and the same graph is shown in Figure 1(b)where influence is represented by weighted edges.",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "non-directional interaction",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "Node X is supervisor,",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "Number of co-authorships between pair of nodes is represented by edge weights.",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight",
+     "text": "Shortest path between two nodes is computed using Dijkstra algorithm",
+     "note": ""
+    },
+    {
+     "page": "5",
+     "type": "Highlight",
+     "text": "Dijkstra(G,start,Dest)",
+     "note": ""
+    },
+    {
+     "page": "5",
+     "type": "Highlight",
+     "text": "Performance of global search on two large network",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "i j Influence(v , v ) = j k Papers(v , v )",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "i j Papers(v , v )",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "There are approximately 23,491 unique users and 32,132 retweet directed edges.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "DBLP and Twitter lies below one, this is due to the fact that influence has asymmetric nature in real life.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "S(Pshort)",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "number of hops",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "strength",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "so randomly one of them is chosen.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "S(Pstrong)",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight",
+     "text": "influenced based strongest path algorithm",
+     "note": ""
+    },
+    {
+     "page": "7",
+     "type": "Highlight",
+     "text": "strongest path in 64.6 % and 45 %",
+     "note": ""
+    },
+    {
+     "page": "7",
+     "type": "Highlight",
+     "text": "It is also seen that average influence of a node in Twitter is 0.67 and it is almost nearly same in DBLP, that is 0.6",
+     "note": ""
+    },
+    {
+     "page": "7",
+     "type": "Highlight",
+     "text": "|Pstrong| and |Pshort| denotes length of strongest and shortest path There are 500 total nodes in the network",
+     "note": ""
+    },
+    {
+     "page": "8",
+     "type": "Highlight",
+     "text": "the result is that inclusion of edge weights in social graph for performing social search gives better result than search performed on unweighted graph.",
+     "note": ""
+    },
+    {
+     "page": "8",
+     "type": "Highlight",
+     "text": "average one or two hops more than",
+     "note": ""
+    },
+    {
+     "page": "8",
+     "type": "Highlight",
+     "text": "proved that tie strength concept in weighted graph gave better result than unweighted graph.",
+     "note": ""
+    },
+    {
+     "page": "8",
+     "type": "Highlight",
+     "text": "The result from the experiment proved that shortest path was on an average one or two hops less than strongest path.",
+     "note": ""
+    },
+    {
+     "page": "8",
+     "type": "Highlight",
+     "text": "but the selection of an influential path based on strongest path would yield better result than a random path based on shortest path.",
+     "note": ""
+    },
+    {
+     "page": "8",
+     "type": "Highlight",
+     "text": "Influence based strongest path based on social interactions would boost the performance of social search algorithms in online social networks as compared to traditional Dijkstra algorithm.",
+     "note": ""
+    }
+   ],
+   "short_quotes": [
+    {
+     "quote": "tie strength concept in weighted graph gave better result than unweighted graph",
+     "location": "Sec. 6 Conclusion, p.8"
+    }
+   ]
+  },
+  "summary_md": "Ahmad, Ahmad and Vijay compare two ways of finding a social-search path between a source and a target. The first is plain Dijkstra, measured in hops. The second is the \"strongest path\" of Hangal et al. (2010). In that method, each directed edge carries an influence weight: the share of one node's total interaction investment that goes to the other node. The method then picks the path that minimises log(1/D) plus the log of 1 over the product of edge influences, with D = 0.95. The test uses 500 random source-target pairs in each of two networks: a DBLP co-authorship subset (2001-2010, about 38.9k authors) and a 15-day Twitter retweet graph (about 23.5k users, 32k directed edges). The strongest path was longer than the shortest in 64.6% of Twitter pairs and 45.0% of DBLP pairs. Mean lengths were 6.8 vs 4.9 hops on Twitter and 4.7 vs 3.3 on DBLP. The paper calls the weighted search \"better\", but it reports no measure of path quality, no outcome and no significance test. What it actually shows is only that the weighted route differs from the hop route and is longer. It is a method note, not evidence about legislatures.\n\nFor Paul's systems, it matters in three places:\n- **Staffer closeness router.** Its hop cost, -ln(0.8 x strength), has the same form as Hangal's per-hop log(1/D) + log(1/influence), with D = 0.8 instead of 0.95. So this paper is a method source for that router, but it gives no validation of it.\n- **Social interaction layer.** Its edge probability (events divided by the author's posting volume) is essentially the paper's Eq. 3 retweet influence. The layer then averages the two directions, which throws away the asymmetry the paper argues for.\n- **Dashboard recruitment path.** The path matrix PE is directed, because receiver edge multipliers and role priors make it so. But the backward Dijkstra (distToTarget) multiplies edges in the forward direction away from the target. So the chain labelled \"PROVABLY-OPTIMAL\" is exactly max-product only when PE is symmetric. This is UNVERIFIED (DE-062).",
+  "paul_entries": [
+   {
+    "doc": "Path-Finding Algorithums - Path-Finding Algorithums - Annotated Bibliography.md",
+    "citation": "*(PDF) Shortest Path Algorithms for Social Network Strengths*, 2025, [www.researchgate.net/publication/315330410_Shortest_Path_Algorithms_for_Social_Network_Strengths](http://www.researchgate.net/publication/315330410_Shortest_Path_Algorithms_for_Social_Network_Strengths).",
+    "text": "*(PDF) Shortest Path Algorithms for Social Network Strengths*, 2025, [www.researchgate.net/publication/315330410_Shortest_Path_Algorithms_for_Social_Network_Strengths](http://www.researchgate.net/publication/315330410_Shortest_Path_Algorithms_for_Social_Network_Strengths)."
+   }
+  ],
+  "bearings": [
+   {
+    "component_id": "melange-pathfinding.staffer-closeness-routes",
+    "relation": "method-source",
+    "paper_claim": "Algorithm 1 (from [5], Hangal et al.) enumerates all paths, multiplies edge influences along each, and returns the path minimizing Total_influence = log(1/D) + log(1/product of edge influences), with D = 0.95. As printed, log(1/D) is added once per path, not per hop, so it is a constant that cannot change which path wins. Table 2: average strongest vs shortest path length 6.8 vs 4.9 hops (Twitter) and 4.7 vs 3.3 (DBLP), over 500 random pairs per dataset. No path-quality metric is reported.",
+    "paper_location": "Sec. 4, p.5 (Algorithm 1); Sec. 5.3 and Table 2, p.7",
+    "system_side": "Hop cost = -ln(HOP_FACTOR x strength) + w x uncertainty_cost, with HOP_FACTOR = 0.8, i.e. ln(1/0.8) + ln(1/strength) per hop. The ln(1/strength) sum matches the paper's log(1/product) term. The per-hop ln(1/0.8) is a hop-length penalty with no counterpart in Algorithm 1 as printed, where log(1/D) is a per-path constant. Solved by bidirectional Dijkstra with heuristic 0, not by enumerating paths. Edges are undirected.",
+    "code_ref": "fec/surfaces/staffer_closeness_routes.py:115-116; fec/staffer_network/closeness_math.py:20; fec/surfaces/staffer_closeness_routes.py:3-21",
+    "transfer_conditions": "Only the log-inverse-product part of the objective carries over. The router's per-hop decay is its own design (possibly closer to Hangal's original paper, not checked here), not something Ahmad et al. print. The paper does not validate the objective: it never measures whether strongest paths succeed more often. Its influence is directed and normalized by investment; staffer strength is symmetric exposure. Route cost is a heuristic model output, not an introduction probability (D-025).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper text checked: D = 0.95, the Total_influence formula and the Table 2 numbers all match. But Algorithm 1 computes log(1/D) once per path, so calling the router's per-hop ln(1/0.8) 'the same per-hop decay' form is wrong for this paper. Code confirmed: lines 115-116 (_hop_cost), closeness_math.py:20 (HOP_FACTOR = .8), and the docstring at 3-21 (undirected edges, bidirectional Dijkstra, heuristic 0).",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Staffer closeness route search|Staffer closeness route search]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.member-recruitment-path",
+    "relation": "qualifies",
+    "paper_claim": "Influence is asymmetric: if Y is highly influenced by X, the reverse is not guaranteed, even for undirected interactions such as co-authorship (Sec. 3.2; Sec. 1.1). Asymmetry 'has to be considered' in social search; the paper does not say in so many words that edges must be directed. Average node influence is 0.67 (Twitter) and 0.60 (DBLP), and most node influence values lie below one (Sec. 5.3, Table 2).",
+    "paper_location": "Sec. 1.1, p.2; Sec. 3.2, p.3; Sec. 5.3 and Table 2, p.6-7",
+    "system_side": "ADJ is symmetric, but PEBASE[u][v] multiplies by the receiver's EMU[v], and configureIssueNetwork scales PE[u][v] by source_shock(u)/target_resistance(v), so PE is directed. distToTarget(t) relaxes d[v] = d[u] x PE[u][v] outward from t, so dT[v] is the best product along t -> ... -> v in the forward edge direction. tracePath scores sponsor -> target moves with PE[cur][v] x dT[v]. When PE is asymmetric, the chain the comment calls 'PROVABLY-OPTIMAL' is therefore not guaranteed to be the max-product sponsor-to-target chain. tracePath also skips 'dropped' nodes that distToTarget does not exclude, which is a second way the trace can depart from the optimum. UNVERIFIED single-path reading (DE-062).",
+    "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:547,586,594-597,734,735,740",
+    "transfer_conditions": "The paper's asymmetry point is enough to say edge direction matters for path search. The defect comes from reading the code, not from the paper. Its size depends on how far EMU (0.80-1.20) and the role priors push PE[u][v] away from PE[v][u], and on whether dropped nodes lie on the best chain. It may be small. A second path should confirm it (DE-062), for example by comparing Dijkstra on -log of the transposed PE with the traced chain.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "The asymmetry statement is in Sec. 3.2 (and 1.1), not Sec. 3.3, and the paper does not say edges 'must be directed'. Wording corrected. 0.67/0.60 and 'below one' confirmed. Code confirmed at the cited lines: 547 symmetric ADJ, 586 EMU[v] in PEBASE, 594-597 source/target role priors, 734 forward-direction relaxation from the target, 740 tracePath with the dropped-node skip. The asymmetry argument holds on reading. Added the dropped-node caveat.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Sponsor-to-target max-product path and chain hold|Sponsor-to-target max-product path and chain hold]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-sna.multilayer-social-press-edges",
+    "relation": "qualifies",
+    "paper_claim": "Twitter influence(X,Y) = Retweets(Y,X) / sum_Z Retweets(Y,Z): the share of Y's retweets that go to X. This is a directed weight normalized by the retweeter's total retweet volume (Eq. 3). The paper's reason for directed weights is that influence is asymmetric (Sec. 3.2).",
+    "paper_location": "Sec. 5.2 Eq. 3, p.6; Sec. 3.2, p.3",
+    "system_side": "p(a->b) = weighted events(a->b) / max(25, posts(a)), capped at 0.25 per direction. Events are reposts (1.0) and mentions (0.4); posts(a) counts all of a's Quorum posts, not only reposts, and excludes Bluesky. This is a per-author volume normalization like Eq. 3, but the denominator is total posts rather than total retweets. The pair weight is then the mean of the two directions, and only a 'symmetric' edge list is written, so direction is discarded.",
+    "code_ref": "fec/network/social_interaction_layer.py:14-18,54-58,60-61,67-69",
+    "transfer_conditions": "The paper's evidence is descriptive: a 15-day undated Twitter crawl in which strongest paths are longer, with no outcome. It does not show that directed retweet edges predict anything legislative. At most it gives weak support for keeping a directed variant of this layer alongside the symmetric one before path or recruitment use. Per-edge volume normalization was measured and REJECTED in this project's SNA tests: do not read this as support for wider volume normalization.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The form of Eq. 3 is confirmed. 'The same per-author volume normalization as Eq. 3' was overstated: the layer divides by all posts (floor 25) and mixes in 0.4-weighted mentions, while Eq. 3 divides by total retweets. The cap applies per direction before averaging (line 56). Mean of directions (line 61) and symmetric-only output (67-69) confirmed. Asymmetry is Sec. 3.2, not 3.3.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-sna#Social and press-engagement layers|Social and press-engagement layers]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-pathfinding.staffer-overlap-routes",
+    "relation": "context",
+    "paper_claim": "Hop-count shortest paths ignore tie strength and asymmetry (Abstract). Tie strength matters for social search (Granovetter motivation, Sec. 1.1). The strongest path uses the product of normalized influences (Sec. 4).",
+    "paper_location": "Abstract, p.1; Sec. 1.1, p.2; Sec. 4, p.5",
+    "system_side": "Overlap routes minimize summed integer distances plus one balanced unit (DISTANCE_SCALE) per introduction. There are two cost forms. Shared-background mode uses ceil(1e6 x 128 / strength), with strength = sum(weight x log2(1 + shared facts)). Work-time mode uses ceil(1e6 / strength), with strength = proximity x log2(1 + overlap days / 30). Both are additive inverse strengths, not -log of a bounded weight, so neither can be read as a product of per-hop reliabilities.",
+    "code_ref": "fec/surfaces/staffer_overlap_routes.py:27-34,37-39,211,303,331",
+    "transfer_conditions": "Context only. The paper does not compare inverse-strength costs with log-product costs, and the overlap router is a deliberate design choice. Shared work days and shared background are heuristic tie scores, not measures of closeness, access or introduction probability (D-025). Influence language is barred on revolving-door edges.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper side holds. The code side conflated two modes. The 128-scaled cost (line 34) goes with the shared-facts strength (line 331 provenance). The log2(1 + days/30) work-time strength (line 39) goes with ceil(1e6 / strength) at line 211. The conclusion (additive inverse strengths, not log-product) holds for both.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-pathfinding#Ordered person-overlap routes and employment-routing overlay|Ordered person-overlap routes and employment-routing overlay]]",
+    "system": "melange-pathfinding"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "The summary says the closeness router's hop cost -ln(0.8 x strength) 'has the same form as Hangal's per-hop log(1/D) + log(1/influence)'. In the paper's Algorithm 1, log(1/D) is added once per path, not per hop, so it cannot change which path wins. Only the log(1/product of influences) part is shared. The router's per-hop ln(1/0.8) is a length penalty the paper does not print.",
+   "The summary says the social layer's edge probability is 'essentially the paper's Eq. 3'. Eq. 3 divides by the retweeter's total retweets. The layer divides by the author's total Quorum posts (floor 25), adds 0.4-weighted mentions, and caps each direction at 0.25. It is a similar per-author volume normalization, not the same one.",
+   "The summary says the recruitment chain is exactly max-product 'only when PE is symmetric'. Symmetry is necessary but not sufficient: tracePath also skips 'dropped' nodes that distToTarget does not exclude. The finding stays UNVERIFIED (DE-062).",
+   "The related link to steinertthrelkeld-2018-twitter-data was removed. That item's own extraction says the book never discusses reposts, mentions, edge probabilities or normalization, so it does not cover the retweet-influence definition used here.",
+   "The related link to chen-2016-most-reliable-path claimed the same objective. Chen maximizes on-time arrival probability under stochastic travel times, not a product of edge probabilities. The link holds only through the dashboard's citation."
+  ],
+  "gaps_exposed": [
+   "The recruitment path's backward Dijkstra does not transpose a directed PE. Nothing checks that the 'provably optimal' chain is optimal when receiver and role multipliers make edges asymmetric (UNVERIFIED; needs a second path).",
+   "The social interaction layer computes directed probabilities but publishes only their mean. No directed social edge reaches path search or recruitment.",
+   "No router (member recruitment, staffer closeness or staffer overlap) has an outcome log against which 'strongest' and 'shortest' routes could be compared. The paper never measured this either, so the strongest-vs-shortest question stays open in both."
+  ],
+  "flags": [
+   "The paper's influence weight (an edge divided by the actor's total investment) is a volume normalization. Per-edge volume normalization was measured and REJECTED in this project's SNA tests: cite the paper as a method description only, never as grounds to extend volume normalization to the cosponsor or staffer graphs.",
+   "The paper's claims that 'it is proved' and 'better result' (Abstract; Sec. 6) rest only on path-length differences over 500 pairs, with no outcome or test. Do not quote them as validation of any router.",
+   "The Table 1 caption says '500 total nodes in the network', which conflicts with the stated network sizes; read it as 500 pairs. Any figure quoted from the paper must name the window (DBLP 2001-2010; Twitter 15 days, undated) and the denominator (500 pairs).",
+   "The dashboard-path asymmetry finding is new agent analysis and stays UNVERIFIED until a second path reproduces it (DE-062).",
+   "Route costs and strengths are heuristic model outputs, not introduction or access probabilities (D-025)."
+  ],
+  "paul_alignment": "Paul's highlights centre on the asymmetric definition of influence, the comparison between Dijkstra and the strongest path, and the conclusion that weighted search beats unweighted search. He left no notes, and his positions list Ahmad only under member-recruitment-path, as the strongest-path citation. The system partly matches that reading. The staffer closeness router uses the Hangal objective form, with D = 0.8. The recruitment path uses a most-reliable (max-product) Dijkstra, which follows Chen 2016 more closely than Ahmad. Where the system departs from the asymmetry Paul highlighted: the social layer averages away direction, and the recruitment path's backward pass does not respect PE's direction. Paul's highlighted line about \"better result\" goes further than the evidence, since the paper measures only path length. His takeaway should be held as a method preference, not as a validated finding.",
+  "related": [
+   {
+    "slug": "chen-2016-most-reliable-path",
+    "relation": "complements",
+    "why": "The dashboard recruitment path cites Chen et al. 2016 for its max-product ('most reliable') chain, the same objective Ahmad et al. call the strongest path. Chen's own objective is different: it maximizes on-time arrival probability under stochastic link travel times, not a product of edge probabilities."
+   },
+   {
+    "slug": "haythornthwaite-1996-social-network-analysis",
+    "relation": "complements",
+    "why": "Both treat tie strength (Granovetter) and direction as core tie properties. Paul cites Haythornthwaite for directionality, and in the staffer-closeness-routes and SNA components."
+   },
+   {
+    "slug": "duan-2025-breaking-sorting-barrier",
+    "relation": "same-method",
+    "why": "Directed single-source shortest paths with non-negative weights. An exact strongest-path search (Dijkstra on -log influence) could use this in place of Ahmad's exhaustive path enumeration. Both are cited for member-recruitment-path."
+   },
+   {
+    "slug": "lawande-2022-systematic-review-analysis",
+    "relation": "complements",
+    "why": "Compares Dijkstra with A*, BFS and greedy best-first on grids, which includes the Dijkstra baseline used here. Both are cited for member-recruitment-path."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "cao-2025-social-network-group",
+    "relation": "complements",
+    "why": "Strongest-path search over social tie strength corresponds to the review's trust-propagation operators and path-length decay concern."
+   },
+   {
+    "slug": "zeller-2016-step-path-selection",
+    "relation": "complements",
+    "why": "Both turn tie strength into path cost for shortest-path search. Zeller adds a way to fit that transform empirically (used vs available paths) rather than setting it by hand."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "zareie-2020-similarity-based-link",
+  "note": false,
+  "meta": {
+   "title": "Similarity-based link prediction in social networks using latent relationships between the users",
+   "authors": [
+    "Ahmad Zareie",
+    "Rizos Sakellariou"
+   ],
+   "year": "2020",
+   "venue": "Scientific Reports 10:20137 (received 2 Aug 2020, accepted 30 Oct 2020)",
+   "doi": "10.1038/s41598-020-76799-4",
+   "sha12s": [
+    "a6421bb84f3f"
+   ],
+   "category": "Social Network Analysis",
+   "category_slug": "social-network-analysis"
+  },
+  "extraction": {
+   "title": "Similarity-based link prediction in social networks using latent relationships between the users",
+   "authors": [
+    "Ahmad Zareie",
+    "Rizos Sakellariou"
+   ],
+   "year": "2020",
+   "venue": "Scientific Reports 10:20137 (received 2 Aug 2020, accepted 30 Oct 2020)",
+   "doi": "10.1038/s41598-020-76799-4",
+   "document_type": "Journal article, open access (CC BY 4.0), 11 pages",
+   "coverage": "Full text read in chunks, from title page through the author-contributions and licence page (text file 41,391 chars, 841 lines). Metadata hint is correct; no correction needed. All 38 items in the annotation file (_annots/a6421bb84f3f.json) were read. Every item is a Highlight by Paul Goff, with no sticky notes, typed comments or note text. Highlight colours: 1 green (0.49, 0.78, 0.41) and 37 yellow (0.98, 0.80, 0.35). Several highlights overlap and their covered text is interleaved, so fragments are marked [...]. Topic check: the paper covers networks, path-based (semi-local) similarity indices and link prediction. It contains no content on lobbying, allocation, elections, persuasion or turnout, legislators, or text measurement.",
+   "research_question": "Can similarity scores for link prediction that go beyond common first-order neighbours (through a latent relationship captured by the correlation of second-order neighbourhood profiles) predict missing or future links more accurately than eight established similarity baselines?",
+   "theory": "No named social theory. The premise is that structural similarity between two nodes predicts link formation (pp.1-2, citing Ke-ke et al. / Shang et al., ref 18). Common neighbours are treated as an incomplete measure, and a latent relationship is defined as indirect connectivity through second-order neighbours (p.2). Hypothesis 1: if two nodes with a future link have no common neighbour but a significant latent relationship, the link can be predicted. Hypothesis 2: latent relationships separate existing from non-existing links even when pairs share the same number of common neighbours (p.4).",
+   "data": "Nine static real-world networks, each treated as one snapshot with no time dimension (Table 1, p.8): KRT Zachary karate club (34 nodes, 78 edges, social); DLN dolphins (62, 159, animal); UAL US airline traffic (332, 2126, airport traffic); NSC NetScience co-authorship (379, 914); INF face-to-face contacts at an exhibition (410, 2765); EML Rovira i Virgili email (1133, 5451); YST yeast biological network (2284, 6646); HAM Hamsterster social network (2426, 16630); KHN co-authorship (3772, 12718). Unit of analysis: node pairs (existing edges and non-existing pairs). No collection period is stated. Each network's sample is the full network as published, with no sampling step described.",
+   "method": "Similarity-based link prediction. For each node i, a neighbourhood vector N_i (Eq. 10, p.6) has entries d_i at the node itself, CN_iz for second-order neighbours, CN_iz + 1 for first-order neighbours, and 0 otherwise. The union set UN_ij (Eq. 11) is the set of indices where either vector is positive. The indirect similarity Corr_ij is the Pearson correlation of N_i and N_j over UN_ij (Eqs. 12-13). The DICN score is DICN_ij = (1 + CN_ij)(1 + Corr_ij) (Eq. 14, p.7). Algorithm 1 (p.6) gives the pseudo-code. Evaluation: edges are randomly split into a training set (beta = 80% by default, 50-90% swept in Exp. 2) and a test set; the process is repeated 15 times and averaged. AUC (Eq. 15, pp.7-8) is computed by comparing every test edge with every non-existing pair, counting ties as 0.5. Eight baselines were implemented in Java: CN, PA, JC, HPI, CNDP, NCC, CCPA and SHOPI.",
+   "identification": "None in the causal sense. The design is out-of-sample link prediction using random edge holdout. Hypotheses 1 and 2 are tested by restricting test and non-existing pairs to subsets defined by common-neighbour status (Exp. 3 and Exp. 4, pp.9-10).",
+   "scope": "Population: nine public real-world networks of mixed type (social, animal, airline, co-authorship, contact, biological, email), all treated as static. The paper does not claim a broader population. Era: not stated; published 2020. The paper names directed and weighted networks as future work (p.10), which implies none were analysed.",
+   "key_findings": [
+    {
+     "finding": "Common neighbours miss many links: a share of existing edges have no common neighbour. Shares range from 3.1% (UAL) to 53.7% (YST).",
+     "location": "p.3, Observation 1",
+     "numbers": "YST 53.7%; KHN 28.2%; DLN 23.9%; EML 22.4%; KRT 14.1%; INF 4.9%; NSC 4%; HAM 3.8%; UAL 3.1%"
+    },
+    {
+     "finding": "Existing and non-existing links overlap heavily at the same common-neighbour count, so the count alone separates them poorly. Fig. 2 shows the overlap, with roughly an even split near 8 common neighbours for INF, EML and YST.",
+     "location": "pp.3-4, Observation 2 and Fig. 2",
+     "numbers": "around 8 common neighbours (INF, EML, YST); no tabulated values in the text"
+    },
+    {
+     "finding": "Proposed DICN score combines direct similarity (common neighbours) with indirect similarity (Pearson correlation of second-order neighbourhood vectors). Worked examples: Corr_25 about -0.74 gives DICN_25 = 0.26; Corr_38 about 0.32 and Corr_31 about 0.01 for the Fig. 3 pairs.",
+     "location": "pp.5-7, Eqs. 10-14; example pp.6-7",
+     "numbers": "DICN_25 = 0.26; Corr_25 about -0.74; Corr_38 about 0.32; Corr_31 about 0.01"
+    },
+    {
+     "finding": "Experiment 1 (beta = 80): DICN has the highest AUC in eight of nine networks. In UAL it is close to the best but not the best.",
+     "location": "p.9, Table 2 and Experiment 1 text",
+     "numbers": "DICN vs best other: KRT 0.7654 vs 0.7336 (CNDP); DLN 0.7943 vs 0.7570 (CCPA); UAL 0.9367 vs 0.9416 (NCC); NSC 0.9747 vs 0.9195 (CNDP); INF 0.9553 vs 0.9483 (CCPA); EML 0.8932 vs 0.8729 (SHOPI); YST 0.8278 vs 0.7892 (CCPA); HAM 0.9725 vs 0.9617 (CCPA); KHN 0.8839 vs 0.8509 (SHOPI)"
+    },
+    {
+     "finding": "Experiment 2 (beta swept 50-90): DICN is consistently best for beta of 70 or higher in seven of nine networks. It is not always best at small training fractions, which the authors attribute to weaker detectable correlation.",
+     "location": "pp.9-10, Experiment 2 and Fig. 5",
+     "numbers": "seven of nine networks at beta >= 70; Fig. 5 values not given in text"
+    },
+    {
+     "finding": "Experiment 3 (Hypothesis 1, pairs with no common neighbours and degree > 1): among PA, CCPA, SHOPI and DICN, DICN is best in five networks and close to the best in the other four.",
+     "location": "p.9-10, Table 3 and Experiment 3 text",
+     "numbers": "DICN best: KRT 0.8319, NSC 0.8471, EML 0.7595, HAM 0.7831, KHN 0.8001. Others: DLN 0.7028 vs CCPA 0.7211; UAL 0.7979 vs SHOPI 0.8091; INF 0.7979 vs SHOPI 0.8404; YST 0.7609 vs PA 0.7755"
+    },
+    {
+     "finding": "Experiment 4 (Hypothesis 2, pairs with equal common-neighbour counts; compared with NCC, CNDP, CCPA, SHOPI): DICN is best in five networks, near the best in three, and clearly worst in UAL.",
+     "location": "p.10, Table 4 and Experiment 4 text",
+     "numbers": "DICN best: NSC 0.7815, INF 0.7712, EML 0.7495, HAM 0.7483, KHN 0.7829. Near best: KRT 0.6728 vs SHOPI 0.6919; DLN 0.6508 vs CCPA 0.6510; YST 0.7595 vs CCPA 0.7613. UAL: DICN 0.5684 vs SHOPI 0.7921"
+    },
+    {
+     "finding": "AUC worked example: with five non-existing edges and one test edge (DICN_35 = 2.5), n1 = 3 and n2 = 1 give AUC = 0.7. The AUC formula is (n1 + n2/2)/n.",
+     "location": "pp.7-8, Eq. 15 and worked example (Fig. 4)",
+     "numbers": "n1 = 3, n2 = 1, n = 5, AUC = 0.7"
+    },
+    {
+     "finding": "Motivating example: CN gives S_24 = 1 > S_45 = 0, yet nodes 4 and 5 may share a latent relationship via their neighbours 2 and 3.",
+     "location": "pp.2-3, Fig. 1 example",
+     "numbers": "S_24 = 1; S_45 = 0"
+    }
+   ],
+   "measures": [
+    "AUC (Eq. 15, pp.7-8), the evaluation metric",
+    "Common Neighbours (CN, Eq. 1)",
+    "Preferential Attachment (PA, Eq. 2)",
+    "Jaccard Index (JC, Eq. 3)",
+    "Hub Promoted Index (HPI, Eq. 4)",
+    "Common Neighbours Degree Penalization (CNDP, Eq. 5)",
+    "Node-coupling Clustering (NCC, Eq. 6)",
+    "Parameterized Algorithm (CCPA, Eq. 7)",
+    "Significance of Higher-Order Path Index (SHOPI, Eqs. 8-9)",
+    "DICN (proposed): (1 + CN)(1 + Pearson correlation of neighbourhood vectors), Eq. 14",
+    "Neighbourhood vector N_i (Eq. 10) and union neighbourhood set UN_ij (Eq. 11)"
+   ],
+   "limitations": [
+    "Stated by the authors: when the training set is small, the latent relationship is harder to detect because the correlation is lower, so DICN may be less accurate (p.9).",
+    "Stated by the authors: in UAL, and in Exp. 4 more generally, NCC, CNDP and SHOPI significantly outperform DICN (p.10).",
+    "Stated by the authors: the latent relationship is restricted to second-order neighbours; extending it to path counts or node centrality is future work (p.10).",
+    "Stated by the authors: directed and weighted networks, and more varied networks, are future work (p.10).",
+    "Reviewer observation (not stated by the authors): AUC is the only metric. No standard deviation or significance test across the 15 random splits is reported, only averages.",
+    "Reviewer observation: the Experiment 3 text calls the four non-DICN-best networks 'very close' to the best, but the INF gap is 0.8404 vs 0.7979 (SHOPI vs DICN).",
+    "Reviewer observation: the self-entry d_i is part of the vector and therefore enters the Pearson correlation (Eq. 10). The effect of degree on Corr_ij is not separately examined.",
+    "Reviewer observation: the paper gives 8 MB memory for the test machine (p.7). This is probably a typo for GB, but the text reads 8 MB as printed."
+   ],
+   "paul_markup": [
+    {
+     "page": "1",
+     "type": "Highlight (green)",
+     "text": "(2020) 10:20137",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight (yellow)",
+     "text": ", related to the likelihood of having a link between two nodes of the network that are not connected",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight (yellow)",
+     "text": "the number of common neighbours may not be always sufficient to provide comprehensive information about structural similarity between a pair of nodes",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight (green)",
+     "text": "neighbourhood vector is first specified for each node",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight (green)",
+     "text": "correlation between the neighbourhood vectors of the nodes Experimental results",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight (yellow)",
+     "text": "partly as a result of the increased use [...] Social networks are getting [...] of social media platforms [...] research in a number of [...]",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight (yellow)",
+     "text": "large amount of data that may be associated with social networks has motivated [...] identification of missing links and prediction of future [...] likelihood of link formation between each pair of nodes",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight (yellow)",
+     "text": "arity tend to have a future relationship. Conversely, in pr [...] e, such as behaviour of users and link features are required [...] mation4 about such features has motivated researchers to",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight (yellow)",
+     "text": "and | V | the number of nodes. The set E is a set of links indic [...] If there is a link between two nodes vi and vj, it is denoted by the edge eij, [...] ours or friends. Here, we use [...] and (2) to denote the set of first- and seco[nd-order]",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight (yellow)",
+     "text": "1, v2, v3, v4, v5}, The problem is, the likelihood [...] |V| = 5, E = {e12, e23, e25, e34}. The set of non-existing edges is [...] of formation of a non-existing edge is estimated using a similarity s[core]",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight (yellow)",
+     "text": "limitation [...] of methods that rely on common first-order neighbours between the nodes as a similarity measure. To address this limitation, a measure is then proposed to take common second-order neighbours into account. Common second-order neighbours indicate a latent relationship between a pair of users. [...] correlation coefficient to capture the latent relationship between a pair of nodes",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight (yellow)",
+     "text": "es reveals structural [...] However, as already mentioned, the number of common neighbours may be a simple and time-efficient method for link prediction, but it suffers from low accuracy and cannot provide comprehensive information to estimate the likelihood of link formation between the nodes. [...] Zachary karate club (KRT)19, Ham[ster]",
+     "note": ""
+    },
+    {
+     "page": "2",
+     "type": "Highlight (yellow)",
+     "text": "in INF, NSC, UAL and HAM networks, [...] this percentage is rather small: 4.9%, 4%, 3.1% and 3.8%, respectively. The suggestion is that considering common first-order neighbours may not always be a good predictor of future links. Depending on the network, methods whose prediction relies on common first-order neighbours alone may result in low accuracy. Observation 2: Sorting all existing links [...]",
+     "note": ""
+    },
+    {
+     "page": "3",
+     "type": "Highlight (yellow)",
+     "text": "In general, it appears that many links may exist between nodes that share no common neighbours at all, while other nodes may share a large number of common neighbours without a direct link between them. Although it is true that various methods have been proposed to improve the accuracy of link prediction based [...]",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight (yellow)",
+     "text": "Common Neighbours (8) considered as their similarity score",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight (yellow)",
+     "text": "the number of common neighbours between each pair of nodes is [...] the common neighbour similarity score between the pair of nodes [...] Common Neighbours: In this method [...] considered as their similarity score and is calculated according to Eq.",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight (yellow)",
+     "text": "The degree of two nodes determines the likelihood of link formation. [...] similarity score between a pair of nodes vi and vj.",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight (yellow)",
+     "text": "the similarity score between a pair of nodes vi and vj is calculated with the Jaccard Index help of Eq. (3).",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight (yellow)",
+     "text": "ratio of the number of common neighbours to the minimum degree of nodes vi [...] larity measure. The similarity score of these nodes is calculated with the help of Hub Promoted Index: The ratio of the number of common neighbours to the minimum degree of nodes vi and vj is defined as the similarity measure. Eq. (4).",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight (yellow)",
+     "text": "Common Neighbours Degree Penalization: Penalization of common neighbours is considered in this [...] The number of common neighbours for each pair of common neighbours of the two nodes is taken into account for this purpose. Then, the similarity score of nodes vi and vj is calculated using Eq. (5), where",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight (yellow)",
+     "text": "method. The number of comm[on] [...] into account for this purpose. (2) = {Ŵ∩Ŵ∩Ŵ} ∪{,",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight (yellow)",
+     "text": "the clustering coefficient is used to determine the contribution [...] of each common neighbour and the similarity between each pair of nodes. The similarity score between vi and vj is calculated using Eq. (6), where Cz is the clustering coefficient of node vz. Node-Coupling Clustering: In this method, the clustering coefficient is used [...]",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight (yellow)",
+     "text": "Higher-Order Path Index is taken into account to p[ropose an iterative method]",
+     "note": ""
+    },
+    {
+     "page": "4",
+     "type": "Highlight (yellow)",
+     "text": "the significance of paths between two nodes [...] up the significance of the paths between two [...] Higher-Order Path Index: Based on the common neighbours, the significance of paths between two nodes determines the likelihood of link formation between them.",
+     "note": ""
+    },
+    {
+     "page": "5",
+     "type": "Highlight (yellow)",
+     "text": "[...] ps which we call Direct-Indirect [...] hips between nodes as will be [...] In this section, we propose a novel method for similarity-based link prediction, which we call Direct-Indirect Common Neighbours (DICN). The idea is first",
+     "note": ""
+    },
+    {
+     "page": "5",
+     "type": "Highlight (yellow)",
+     "text": "Greater correlation between the union neighbourhood set, UNij [...] uctural similarity between nodes i and j. Thus, the correlation coef[ficient]",
+     "note": ""
+    },
+    {
+     "page": "5",
+     "type": "Highlight (yellow)",
+     "text": "[...] n the union neighbourhood [...] We use Pearson correlation [...] set of the vectors [...] coefficient for this purpose is calculated using Eq. (12)",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight (yellow)",
+     "text": "likely. Direct [...] We combine [...] similarity between two nodes is calculated based on the number of common first-order neighbours. We combine indirect and direct similarity in Eq. (14) to calculate the Direct-Indirect Common Neighbours (DICN) similarity score of nodes i and j.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight (yellow)",
+     "text": "nificance of Higher-Order Path Index (SHOPI). Nine different real-world networks with a variety of features were used in the experiments. [...] Zachary karate club (KRT)19 and Hamsterster (HAM)20 are social networks. Dolphins (DLN)21 is an animal network.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight (yellow)",
+     "text": "[...] E. We randomly select beta percent of edges as E_T and [...] To increase the confidence of the obtained results, the process is repeated 15 times and the average of the obtained results is reported in each experiment. The metric Area Under the receiver operating characteristic Curve (AUC), widely applied in the relevant literature, is used to assess the accuracy of methods.",
+     "note": ""
+    },
+    {
+     "page": "6",
+     "type": "Highlight (yellow)",
+     "text": "[...] sting [...] edges, E_P, and calculating the similarity score between the [...] process is repeated n times and AUC is calculated using Eq. (15).",
+     "note": ""
+    },
+    {
+     "page": "7",
+     "type": "Highlight (yellow)",
+     "text": "eriment, we consider a value of beta equal to 80, as this is a value commonly used [...] Then, for each of the nine methods and each of the nine networks, we calculate the value of AUC. The results are shown in Table 2. It can be seen that in eight of the nine networks, DICN outperforms all other methods.",
+     "note": ""
+    },
+    {
+     "page": "8",
+     "type": "Highlight (yellow)",
+     "text": "As all networks tend to follow a similar trend where higher values of beta tend to increase accuracy [...] results in Fig. 5. Although, for small values [...] accuracy of different methods for each value of beta is calculated by AUC",
+     "note": ""
+    },
+    {
+     "page": "8",
+     "type": "Highlight (yellow)",
+     "text": "[...] ow results in Fig. 5. Although, for small values [...] his method is consistently best when the value [...] of beta is 70 or higher in seven of the nine networks. [...] when the training set is smaller it is harder to detect the latent relationship between the nodes [...]",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight (yellow)",
+     "text": "[...] ose edges that connect nodes that have no common neighbours and the degree of these nodes is greater than 1. Then we calculate the similarity score for each of these edges for our proposed method DICN and all other methods. We note that, with the exception of PA, CCPA and SHOPI, all other methods will result in a similarity score of zero.",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight (yellow)",
+     "text": "[...] ected are between nodes that have no common neighbour; hence, these methods are omitted for further analysis. The AUC of PA, CCPA, SHOPI and DICN methods is shown in Table 3. It can be seen that DICN is more accurate than other methods when distinguishing links between nodes with no common neighbours [...]",
+     "note": ""
+    },
+    {
+     "page": "9",
+     "type": "Highlight (yellow)",
+     "text": "Conclusion. The prediction of future links and the identification of missing links have attracted significant research in social networks analysis. Different methods have been proposed for it, many of which are based on the number of common neighbours. [...]",
+     "note": ""
+    },
+    {
+     "page": "10",
+     "type": "Highlight (yellow)",
+     "text": "Further work can look into more elaborate experimentation and networks with varying characteristics, including directed and weighted networks. In addition, the definition of latent relationship can be expanded beyond second-order relationships, for example including correlation with the number of paths between the nodes or global properties, such as centrality of the nodes.",
+     "note": ""
+    }
+   ],
+   "references_of_note": [
+    "Lu & Zhou 2011, Link prediction in complex networks: a survey, Physica A 390 (ref 1). General survey.",
+    "Liben-Nowell & Kleinberg 2007, The link-prediction problem for social networks, JASIST 58 (ref 11). Standard social-network link-prediction reference.",
+    "Newman 2001, Clustering and preferential attachment in growing networks, PRE 64 (ref 8). Source of the common-neighbour and PA baselines.",
+    "Lu, Jin & Zhou 2009, Similarity index based on local paths for link prediction, PRE 80 (ref 10). Local-path index, cited as a baseline family.",
+    "Adamic & Adar 2003, Friends and neighbors on the web, Social Networks 25 (ref 30). Local index listed among similarity methods.",
+    "Clauset, Moore & Newman 2008, Hierarchical structure and the prediction of missing links, Nature 453 (ref 6). Missing-link prediction in networks.",
+    "Martinez, Berzal & Cubero 2016, A survey of link prediction in complex networks, ACM Computing Surveys 49 (ref 7). Survey covering similarity-based methods.",
+    "Shang, Yan & Small 2016, Evolving networks: using past structure to predict the future, Physica A 455 (ref 18). Cited for the motivating claim that common neighbours track link formation.",
+    "Zhu et al. 2014, Predicting missing links via effective paths (ref 36) and significant paths (ref 37). Semi-local path-based indices.",
+    "Papadimitriou, Symeonidis & Manolopoulos 2012, Fast and accurate link prediction in social networking systems, J. Syst. Softw. 85 (ref 40). Social-network link prediction.",
+    "Wang, Satuluri & Parthasarathy 2007 (ref 12) and Yu et al. 2007 (ref 13). Probabilistic link-prediction models that need non-structural features, cited as the alternative the paper avoids."
+   ],
+   "short_quotes": [
+    {
+     "quote": "Common second-order neighbours indicate a latent relationship between a pair of users.",
+     "location": "p.2, Introduction"
+    }
+   ]
+  },
+  "summary_md": "Zareie and Sakellariou propose DICN, a link-prediction score that multiplies a direct term (1 + common neighbours) by an indirect term (1 + the Pearson correlation of two nodes' neighbourhood vectors, which include second-order neighbours). They motivate it with two observations. First, between 3.1% (UAL) and 53.7% (YST) of existing edges join nodes that share no common neighbour. Second, at the same common-neighbour count, linked and unlinked pairs overlap heavily. They test it on nine small, static, unweighted, undirected networks, holding out 20% of edges at random over 15 repeats and scoring with AUC only. DICN has the highest AUC in 8 of 9 networks. The margins over the best baseline range from about 0.01 (INF, HAM) to about 0.055 (NSC), and DICN loses on UAL. It also wins in 5 of 9 networks on pairs with no common neighbour, and in 5 of 9 on pairs with equal common-neighbour counts, where it is clearly worst on UAL (0.568 vs 0.792). No variances or significance tests are reported. Weighted and directed graphs are left to future work.\n\nFor Melange, the paper is a candidate source of dyadic features, not evidence about influence. The sharpest use is in the ridge-logistic cosponsor forecaster. Its only pair-level network signal is the direct prior sponsor-to-member affinity count. Every other network term describes a single node (degree, eigenvector), so common-neighbour and second-order similarity between the sponsor and the candidate are missing. The press HCoI layer already uses the correlation-of-profiles idea through Malaterre, but it uses correlation alone, without the direct term. Any DICN-style score in this system is a heuristic similarity output, not closeness, access or introduction probability (D-025). It stays UNVERIFIED until it is reproduced under the forecaster's own temporal split (DE-062).",
+  "paul_entries": [
+   {
+    "doc": "Path-Finding Algorithums - Path-Finding Algorithums - Annotated Bibliography.md",
+    "citation": "Zareie, Ahmad, and Rizos Sakellariou. “Similarity-based link prediction in social networks using latent relationships between the users.” *Scientific Reports*, vol. 10, no. 1, 18 Nov. 2020, [https://doi.org/10.1038/s41598-020-76799-4](https://doi.org/10.1038/s41598-020-76799-4).",
+    "text": "Zareie, Ahmad, and Rizos Sakellariou. “Similarity-based link prediction in social networks using latent relationships between the users.” *Scientific Reports*, vol. 10, no. 1, 18 Nov. 2020, [https://doi.org/10.1038/s41598-020-76799-4](https://doi.org/10.1038/s41598-020-76799-4)."
+   }
+  ],
+  "bearings": [
+   {
+    "component_id": "melange-lobbying.cosponsor-forecaster",
+    "relation": "suggests-extension",
+    "paper_claim": "DICN = (1 + CN)(1 + Corr), where Corr is the Pearson correlation of second-order neighbourhood vectors. At beta = 80% training it has the highest mean AUC (15 random splits) in 8 of 9 networks (e.g. NSC 0.9747 vs CNDP 0.9195; KHN 0.8839 vs SHOPI 0.8509). It loses on UAL (0.9367 vs NCC 0.9416). On test pairs whose nodes share no common neighbour (Exp. 3, compared only with PA, CCPA and SHOPI), it is best in 5 of 9 networks (e.g. KRT 0.8319, NSC 0.8471).",
+    "paper_location": "Eq. 14 p.7; Table 2 and Experiment 1 text p.9; Table 3 and Experiment 3 text pp.9-10",
+    "system_side": "The forecaster scores (bill, member) candidates with ridge logistic regression on prior-Congress HR/S features. The only dyadic feature drawn from the cosponsor graph is the direct prior member-to-sponsor affinity count and rate. The other dyadic terms are attribute-based: same party, state and chamber, NOMINATE distances, and an optional prior committee co-service term. Prior degree and eigenvector centrality are member-level and are computed on an undirected weighted sponsor-cosponsor projection. There is no common-neighbour, Jaccard, Adamic-Adar or second-order similarity feature between sponsor and candidate.",
+    "code_ref": "fec/lobbying/cosponsor_forecast.py:117-140, fec/lobbying/cosponsor_forecast.py:798-838, fec/lobbying/cosponsor_forecast.py:1148-1160",
+    "transfer_conditions": "The paper uses random edge holdout on nine static benchmark graphs (34-3,772 nodes) that it does not describe as weighted or directed; it lists those as future work. The forecaster is temporal (the Congress t-1 graph predicts Congress t joins) and bill-level. Its prior graph is an undirected weighted projection, and its affinity feature is ordered (member, sponsor). Paper margins over the best baseline run from about 0.007 to 0.055 AUC, with no variance reported. A sponsor-candidate CN or DICN feature on the prior-Congress graph is a cheap candidate to test against the affinity baseline. Exp. 3 concerns pairs with no common neighbour, which is a different subset from pairs with zero direct prior affinity, so it should not be read as evidence about zero-affinity pairs. Any lift is UNVERIFIED until shown on the forecaster's own temporal split (DE-062).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers match the text (Table 2 lines ~515-584 and Table 3 line ~635-650 of the text file; 'eight of the nine' p.9; 'five of the nine' Exp. 3). Code: CONTINUOUS_FEATURES at 117-140 confirmed. Corrections: (1) prior_committee_coservice is also a dyadic feature, though not graph-derived, and same_party/state/NOMINATE distance are dyadic attributes. (2) The prior network is an undirected weighted projection (network_definition string in compute_prior_statistics), not a directed graph. (3) The analyst equated Exp. 3 'no common neighbour' pairs with zero-affinity pairs; these are different subsets.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#Ridge-logistic cosponsor forecaster|Ridge-logistic cosponsor forecaster]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "melange-sna.press-hcoi-communities",
+    "relation": "qualifies",
+    "paper_claim": "Indirect similarity (Pearson correlation of neighbourhood vectors) is combined multiplicatively with direct common neighbours as (1 + CN)(1 + Corr), and the paper never evaluates the correlation term alone. In Exp. 4 (pairs with equal common-neighbour counts), DICN is clearly worst on UAL (0.5684 vs SHOPI 0.7921); the paper gives no structural reason. The authors say small training sets make the latent relationship harder to detect.",
+    "paper_location": "Eqs. 12-14 pp.6-7; Table 4 and Experiment 4 text p.10; Experiment 2 text p.9",
+    "system_side": "HCoI builds member-member edges purely from Pearson correlation of recency-weighted 19-category press-attention profiles (threshold HCOI_CORR = 0.6, minimum weight 3.0). It then runs Louvain with seed 7 and reports how many cosponsor-isolated members (D4) land in a community. It does not combine the correlation with any direct cosponsor tie.",
+    "code_ref": "fec/network/press_hcoi.py:22, fec/network/press_hcoi.py:52-64, fec/network/press_hcoi.py:85-101",
+    "transfer_conditions": "The analogy is loose. HCoI correlates topic-attention profiles, not neighbourhood vectors. The transferable point is a design point: in DICN the profile correlation is one factor, anchored on direct shared ties. Placing cosponsor-isolated members (D4) by correlation alone is loosely analogous to Exp. 3 (no common neighbours), but that is still a heuristic placement, not evidence of a relationship (D-025).",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Eqs. 12-14, the UAL Table 4 values (SHOPI 0.7921, DICN 0.5684) and the small-training-set remark are confirmed. 'Correlation-driven scoring underperforms where structure is hub-dominated' was removed: the paper never calls UAL hub-dominated or gives any cause for the UAL loss. The 'homophily replication at press resolution was null' clause was removed from system_side because press_hcoi.py does not show it. It appears only in the component list's Paul-position text, not in the cited code.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-sna#Press HCoI communities|Press HCoI communities]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-stance.stance-dynamics",
+    "relation": "suggests-extension",
+    "paper_claim": "Many existing edges join nodes with no common neighbour: 53.7% in YST, falling to 3.1% in UAL. Correlation of second-order neighbourhood vectors still separates test from non-existing edges for such pairs, and DICN is best in 5 of 9 networks there.",
+    "paper_location": "Observation 1 p.3; Experiment 3 and Table 3 pp.9-10",
+    "system_side": "The silent-member imputation proposal averages stance-tier scores over direct cosponsor-graph neighbours only. It needs at least SD_MINNB = 5 informative neighbours and |estimate| >= SD_CONF = 0.75. Members below that get no proposal. The masking check counts sign agreement only on confident estimates.",
+    "code_ref": "fec/stance/stance_dynamics.py:90, fec/stance/stance_dynamics.py:132-149",
+    "transfer_conditions": "The paper predicts edges, not node attributes, so at most it supports a second-order similarity weight for choosing which neighbours to average. Any second-order variant is a proposal that must beat a party-only baseline on masked cells. Weak.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers and the neighbour rule (MINNB 5, CONF 0.75, direct neighbours from the cosponsor Edges sheet) are confirmed. The '77% sign agreement' and 'co-movement was null' figures are run outputs that the cited code does not contain and that this pass did not reproduce, so they were removed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Stance dynamics and neighbour imputation|Stance dynamics and neighbour imputation]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-sna.co-appearance-and-references",
+    "relation": "context",
+    "paper_claim": "The paper defines link prediction on plain unlabelled edges (E is a set of links, U = V x V) and has no treatment of negative, signed or valenced ties. It lists directed and weighted networks as future work.",
+    "paper_location": "Problem definition p.1; Conclusion and future work p.10",
+    "system_side": "The member-reference layer scores directed (a->b) references with an LLM valence pass (positive, negative and neutral counts and a net value per edge). The co-appearance layer writes undirected pair counts, and the dashboard draws pairs with n >= 2. The component list cites Zareie & Sakellariou 2020 for this component.",
+    "code_ref": "fec/members/member_reference_layer.py:4-30, fec/network/co_appearance_layer.py:3-16, C:/Users/pgoff/Documents/research/_work/state/component_literature.json",
+    "transfer_conditions": "There is no transfer to the signed layer, because the paper offers nothing on negative ties or valence. At most it could score unsigned co-appearance pairs for missing-link candidates.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The component-list citation is confirmed in component_literature.json. The paper's lack of signed-tie content is confirmed. The '+0.15 / -0.15 green/red' thresholds are not in member_reference_layer.py or the network code checked. 'Co-appearance is display only' is not stated in co_appearance_layer.py, which says only that the dashboard draws n >= 2. Both were removed. The paper never states 'unsigned, unweighted, undirected' outright; this is inferred from the problem definition and the future-work line.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-sna#Co-appearance and signed member-reference layers (display only)|Co-appearance and signed member-reference layers (display only)]]",
+    "system": "melange-sna"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "The summary calls the nine networks 'unweighted, undirected'. The paper never states this directly; it lists directed and weighted networks as future work. Wording should say 'treated as static, with directed and weighted graphs left to future work'.",
+   "'Its only pair-level network signal is the direct prior sponsor-to-member affinity count' is slightly overstated. Affinity is the only cosponsor-graph dyadic feature, but the forecaster also has dyadic attribute features (same party, state and chamber, NOMINATE distances) and an optional prior committee co-service term. Degree and eigenvector come from an undirected weighted projection.",
+   "The margin range 'about 0.01 (INF, HAM)' is rounded. INF's actual margin is 0.007 (0.9553 vs CCPA 0.9483). The NSC figure (0.055) is correct.",
+   "Bearing text elsewhere attributes UAL's loss to hub-dominated structure. The paper gives no such reason, and the summary should not import it.",
+   "System facts cited in the bearings but absent from the cited code have been removed in verification: 77% masking sign agreement, null co-movement, null HCoI homophily, +/-0.15 valence colour thresholds, and co-appearance described as 'display only'. They remain UNVERIFIED (DE-062).",
+   "Relation to Malaterre was labelled 'same-method'. It is a shared technique (Pearson profile correlation) on different inputs, so it was downgraded to 'complements'."
+  ],
+  "gaps_exposed": [
+   "The cosponsor forecaster has no sponsor-candidate structural-similarity feature (common neighbours, Jaccard, Adamic-Adar, or second-order correlation). Its only dyadic network signal is direct prior affinity, so pairs with zero prior history get only node-level and ideology terms.",
+   "No link-prediction benchmark exists in the system. The engine kernel, recruitment paths and cascades treat a missing cosponsor tie as p = 0, with no estimate of how many ties are merely unobserved. The paper finds that up to 53.7% of edges lack common neighbours in some networks.",
+   "There is no evaluation of any system tie-inference layer (HCoI correlation edges, co-appearance) as a predictor of later cosponsor ties by AUC under a temporal holdout. The paper's evaluation protocol (AUC with ties counted as 0.5, Eq. 15) is a ready template, adapted to temporal rather than random splits."
+  ],
+  "flags": [
+   "D-025: any DICN or common-neighbour score added to the system is a heuristic similarity output. It must never be described as closeness, access or introduction probability.",
+   "Rejected SNA proposals: the paper argues for neither dropping regular cosponsorship edges nor per-edge volume normalization. However, DICN is defined only on unweighted graphs, so a naive port would binarize the cosponsor graph and erase the 1.0/0.5 original/regular distinction. Do not let a DICN port quietly re-introduce the rejected edge changes; compute it on the existing graph or a documented weighted extension.",
+   "Component list mismatch: Zareie & Sakellariou 2020 is listed as a citation for melange-sna.co-appearance-and-references, which concerns negative or signed ties. The paper is unsigned and gives no basis for negative-tie handling.",
+   "Paul filed the paper under 'Path-Finding Algorithums'. It is a link-prediction (similarity) paper with no path-finding content.",
+   "Evidence quality: the only metric is AUC, averaged over 15 random splits, with no variance or significance tests and static benchmark graphs. Any system use is UNVERIFIED until a second path reproduces it (DE-062)."
+  ],
+  "paul_alignment": "Paul left no takeaway for this paper. Both bibliography entries are citation-only, and his PDF markup is 38 plain highlights with no notes. The highlights focus on the claim that common neighbours alone are insufficient, the neighbourhood-vector and correlation construction, and the no-common-neighbour experiment. The paper supports that emphasis, but the gains are modest (about 0.01-0.05 AUC) and come from small, static, unweighted benchmarks. Filing it under path-finding understates its real use: it supplies dyadic similarity features for link and cosponsor prediction. The component list also cites it for negative ties in the co-appearance and reference layers, which it does not address. Nothing in his notes is stale against the built system, because the system never adopted this method. The closest built analogue is HCoI's profile correlation, which came from Malaterre, not from this paper.",
+  "related": [
+   {
+    "slug": "malaterre-2024-inferring-social-networks",
+    "relation": "complements",
+    "why": "Malaterre infers ties from Pearson correlation of LDA topic profiles at a 0.6 threshold and then runs Louvain, the recipe press_hcoi.py implements. Zareie also uses Pearson correlation, but on structural neighbourhood vectors, and multiplies it by a direct common-neighbour term. The overlap is technique-level, not the same method."
+   },
+   {
+    "slug": "leskovec-2010-predicting-positive-negative",
+    "relation": "complements",
+    "why": "Signed (positive and negative) link prediction covers the negative-tie question for the reference layer, which Zareie's unsigned similarity does not address."
+   },
+   {
+    "slug": "tang-2015-negative-link-prediction",
+    "relation": "complements",
+    "why": "Predicts negative links from positive links and interaction content (Epinions, Slashdot), which fills the signed-tie gap this method leaves open."
+   },
+   {
+    "slug": "sotoudeh-2024-network-based-measure",
+    "relation": "complements",
+    "why": "Builds undirected, weighted, time-decayed House cosponsorship graphs. A DICN-style dyadic feature would have to be adapted to that weighted setting, which Zareie leaves to future work."
+   },
+   {
+    "slug": "zareie-2023-influence-maximization-social",
+    "relation": "complements",
+    "why": "Same authors. A narrative survey of behaviour-aware influence-maximization methods, the downstream use of tie estimates in cascade models."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "kumar-2022-influence-maximization-social",
+    "relation": "complements",
+    "why": "Paul's annotation cross-references this social-graph learning work by title only. It shares the representation-learning theme but addresses link prediction, not seeding. Title matches."
+   },
+   {
+    "slug": "baptista-2022-universal-multilayer-network",
+    "relation": "same-method",
+    "why": "Item exists. Baptista does use link prediction to score RWR (LP protocol, p.6), so the method overlap is real. Baptista does not cite Zareie."
+   }
+  ],
+  "evidence_status": "verified"
+ }
+]

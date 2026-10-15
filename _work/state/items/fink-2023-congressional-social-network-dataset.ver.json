@@ -1,0 +1,64 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "contradicts",
+   "paper_claim": "Influence of i on j is the count of j's retweets, quote tweets, replies and mentions of i's tweets divided by the tweets i issued in the window. Members with fewer than 100 window tweets are excluded, leaving 475 of 530 active accounts (525 with window tweets).",
+   "paper_location": "Sec 3, p.4",
+   "system_side": "social_interaction_layer.py divides each weighted event count by max(25, posts of the ENGAGING member a), so the denominator is the reposter or mentioner volume, the reverse end of the dyad from Fink, which divides by the source i tweets. It uses a 25-post floor, not Fink's 100-tweet exclusion. Mentions are weighted 0.4. There is no separate quote or reply event type: RT-prefixed rows count as reposts, and any @handle in a non-RT post, including a reply or quote, counts as a 0.4 mention. The docstring claims the same Fink discipline as press_engagement_layer.",
+   "code_ref": "fec/network/social_interaction_layer.py:15-19,25,33-56",
+   "transfer_conditions": "The pair weight in code is (ev(a,b)/vol(a) + ev(b,a)/vol(b))/2 with vol floored at 25 and each direction capped at 0.25. A Fink-consistent version would divide by vol(b) and vol(a) respectively. This is a code-read finding and stays UNVERIFIED (DE-062) until social_interactions.json is recomputed both ways. The source data are X/Quorum post text and Bluesky interactions, not Fink's API fields, so the analogy is looser than the docstring implies.",
+   "strength": "strong",
+   "verdict": "softened",
+   "verifier_note": "Paper side reproduced: the formula, the 100-tweet exclusion and 475 of 530 match Sec 3 p.4. Code side verified: the denominator is the engaging member volume (line 56), the floor is 25 and mention weight 0.4 (line 25). The original claim that quotes and replies are skipped is wrong, because there is no quote or reply event type and their @mentions count at 0.4. system_side rewritten to say so."
+  },
+  {
+   "component_id": "melange-sna.multilayer-social-press-edges",
+   "relation": "method-source",
+   "paper_claim": "Edge weight is an empirical probability of influence: summed interactions of j on i divided by tweets issued by i. A minimum of 100 tweets per member is required so that the probabilities are meaningful.",
+   "paper_location": "Abstract; Specifications table p.2; Sec 3, p.4",
+   "system_side": "press_engagement_layer.py sets P(i to j) = mentions of i by j divided by items issued by i, capped at 1.0 (line 61), with MIN_ITEMS = 5 on the source (line 58, env ENG_MIN_ITEMS). A code comment calls this the analog of Fink's 100-tweet rule. The docstring says the layer validates cosponsor-edge probabilities.",
+   "code_ref": "fec/network/press_engagement_layer.py:3-11,56-61",
+   "transfer_conditions": "Naming a co-actor in a press title is an analogy for engagement, not a reply or retweet. A 5-item floor on the source is far below Fink's 100-tweet floor, so the rates are much noisier. Fink validates nothing, so the docstring claim of validating cosponsor-edge probabilities has no basis in this paper.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Paper quote and the 100-tweet requirement hold (Sec 3 p.4; specifications table p.2). Code matches the formula and the MIN_ITEMS default of 5. The original paper_location 'Value of the Data p.2' does not contain the normalization, so it was corrected to Abstract, Spec table and Sec 3. The layer caps probabilities at 1.0, which the bearing did not mention."
+  },
+  {
+   "component_id": "melange-influence-engine.cascade-kernel",
+   "relation": "method-source",
+   "paper_claim": "Fink offers the directed pairwise probabilities as empirical transmission probabilities that can vary across edges. The paper argues that Monte Carlo SIR-type benchmarks usually assume one homogeneous, arbitrarily chosen rate.",
+   "paper_location": "Value of the Data, p.2; Sec 3, p.4",
+   "system_side": "For untied pairs, engagement (build_multilayer_network.py lines 117-122) and social (lines 158-166) probabilities enter as w = 6p/(1-p), capped by ENG_CAP and SOC_CAP, both default 2.0. In moneyball_core.py build_P returns x/(x+6) with x = w times physics times edge_mult, so it returns p when those factors are 1. For tied pairs, social multiplies the weight by (1 + 0.3 min(1, p/0.10)). Engagement on tied pairs goes through admit(), which drops them unless MEDIA_ADMIT is dominance, the default only in holistic runs.",
+   "code_ref": "fec/network/build_multilayer_network.py:117-122,146-166,71; fec/moneyball_core.py:556-562",
+   "transfer_conditions": "The mapping holds only for untied pairs and only when physics and edge_mult equal 1. Fink rates are directed and normalized per source tweet, while the system symmetrizes them and reads them as per-campaign activation odds, which changes unit and meaning. The 2.0 cap gives p_max of 0.25. Fink covers one 2022 window and says the rates may not be stationary.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "The paper's homogeneous-rate sentence refers to SIR-type Monte Carlo benchmarks; ICM is not named there, so the paper claim was narrowed. Kernel algebra verified: with w = 6p/(1-p), w/(w+6) = p. Caps and social reinforcement verified in code. The original wording that all tied pairs get a multiplier is true only for the social layer."
+  }
+ ],
+ "related": [
+  {
+   "slug": "trivedi-2020-efficient-influence-maximization",
+   "relation": "complements",
+   "why": "Influence maximization under the Independent Cascade Model, the diffusion model whose edge probabilities Fink supplies. Checked against the item title and venue."
+  },
+  {
+   "slug": "almazaydeh-2026-heuristic-centrality-methods",
+   "relation": "same-method",
+   "why": "Heuristic centrality versus greedy optimization in influence maximization, the same cheap-heuristic-versus-simulation question as Viral Centrality. Checked against the item title only; it does not test Fink's measure."
+  },
+  {
+   "slug": "steinertthrelkeld-2018-twitter-data",
+   "relation": "complements",
+   "why": "Methods book on collecting and using Twitter data. Item exists and is titled Twitter as Data; topical match checked on title only."
+  }
+ ],
+ "summary_issues": [
+  "Summary says the social layer skips quotes and replies. The code has no quote or reply event type; @mentions inside replies and quotes count at 0.4.",
+  "Summary says the uniform-rate critique covers IC or SIR simulations. The paper's homogeneous-rate sentence refers to SIR-type Monte Carlo benchmarks and does not name ICM.",
+  "Summary says the companion Physica A paper shows the Viral Centrality approximation. That paper is not in the text file, so the claim is UNVERIFIED here, not confirmed.",
+  "Summary omits that the social layer inputs are an RT-prefix parse of X/Quorum post text plus Bluesky interactions, not Fink's API fields, so the analogy is looser than presented.",
+  "The flags gloss calling Fink's per-source normalization row-stochastic-like is loose: dividing by the source tweet count does not make outgoing weights sum to one. Drop the gloss or qualify it."
+ ]
+}

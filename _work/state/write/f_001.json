@@ -1,0 +1,1153 @@
+[
+ {
+  "slug": "cao-2024-language-models-personality",
+  "note": false,
+  "meta": {
+   "title": "Large language models know how the personality of public figures is perceived by the general public",
+   "authors": [
+    "Xubo Cao",
+    "Michal Kosinski"
+   ],
+   "year": 2024,
+   "venue": "Scientific Reports 14:6735",
+   "doi": "10.1038/s41598-024-57271-z",
+   "sha12s": [
+    "31ea20118bb8"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "Large language models know how the personality of public figures is perceived by the general public",
+   "authors": [
+    "Xubo Cao",
+    "Michal Kosinski"
+   ],
+   "year": 2024,
+   "venue": "Scientific Reports 14:6735",
+   "doi": "10.1038/s41598-024-57271-z",
+   "document_type": "journal article (empirical study, open access)",
+   "coverage": "Full text read in one pass (36,525 chars, 776 lines incl. references and author notes): front matter, abstract, introduction, methods, results, Table 1-3 and figure text, discussion, data availability, references. Text-measurement, persuasion-adjacent and election-adjacent passages read in full; lobbying, networks, path-finding, allocation and turnout are absent from the paper (only cited as background, e.g. politicians' perceived personality and electoral success, CEO perception and firm value). No page images rendered. Paul annotations: none; item lists no annot_sha12s and no _annots file exists for sha 31ea20118bb8, so paul_markup is empty. ext and rel sidecars: not present. Metadata hints corrected: doi was blank and is 10.1038/s41598-024-57271-z per the text header; title, authors, year and venue confirmed.",
+   "research_question": "Can the perceived personality of public figures (Big Five traits and likability) be predicted from the location of their names in GPT-3's semantic embedding space, and does this hold after controlling for likability and demographics?",
+   "theory": "Perceptions of others' personality are consequential and matter regardless of accuracy. Word embeddings act as a functional analogue of human semantic memory and encode word meanings, group stereotypes, and (per the authors) individual differences. The authors also invoke the personality halo effect, where likable people are perceived as having desirable personalities, as the reason likability and demographics explain part of the signal.",
+   "data": "Sample of 226 public figures (N = 226) drawn from the 300 most popular figures among 11,341 in the Pantheon 1.0 dataset, across 43 countries; born 1900 or later; artists capped at 100; popularity proxied by Wikipedia page views 2008-2013; 74 figures removed for fewer than 10 raters. Human ratings from 600 Prolific raters, each rating 10 random figures on likability (200-point scale) and Big Five traits via the 10-item TIPI; mean 18.89 ratings per figure (SD 10.38). Predictors are 12,288-dimensional GPT-3 embeddings of each name. Unit of analysis: public figure. Data and code on OSF (854w2).",
+   "method": "Ridge regression of mean human ratings on column-standardized GPT-3 name embeddings, with 20-fold cross-validation (each figure predicted by a model trained on all others) and alpha tuned in an inner 20-fold loop. Controlled models first regress each trait on likability plus demographics (birth year, gender) and then predict the residuals from embeddings. Correlations are corrected for attenuation by dividing by the square root of split-half reliability (0.79-0.88). Effect sizes converted to Cohen's d. Interpretation by projecting 525 person-descriptive adjectives onto the fitted regression lines.",
+   "identification": "None in the causal sense. The design is out-of-sample predictive validity (cross-validation) with face-validity checks (top and bottom figures, adjective extremes). No causal claim is made about embeddings producing perceptions.",
+   "measures": "Outcomes: mean human ratings per public figure of likability (200-point scale) and TIPI-based Big Five (openness, conscientiousness, extraversion, agreeableness, emotional stability). Reliability: split-half reliability 0.79-0.88 used as ceiling; ICC reported in supplement. Predictors: GPT-3 name embeddings (12,288 dims). Controls: likability, birth year, gender. Popularity: log Wikipedia page views (r = 0.16 with profile similarity).",
+   "scope": "Population: globally famous public figures in Pantheon 1.0 with sufficient rater coverage, born 1900 or later, from 43 countries. Era: the GPT-3 training corpus, whose date range the text does not state; the authors note predictions reflect only the training-data period. Not tested on private individuals or on people absent from the training data.",
+   "key_findings": [
+    "Without controls, cross-validated predictions correlate with human ratings r = 0.78 (extraversion) to 0.88 (openness) after attenuation correction; raw r 0.70-0.80. Results p.2 and Figure 1 green bars.",
+    "Translated to Cohen's d, the no-controls correlations give d = 2.49 to 3.75 (labelled huge effects). Results p.2.",
+    "Controlling for likability and demographics, accuracy falls to r = 0.53 (emotional stability) to 0.70 (extraversion) after correction; raw r 0.43-0.61 (d = 1.25-1.96). Results p.4 and Figure 1 red bars.",
+    "Benchmarks used by authors: no-controls accuracy compared with CT detection of head and neck metastases (r = 0.64) and ultrasound for peripheral artery disease (r = 0.83); controlled accuracy compared with dental X-ray cavity detection (r = 0.43) and ultrasound for deep venous thrombosis (r = 0.60). Results p.3-4.",
+    "Self-reported Big Five from language is cited as about r = 0.40 for comparison. Results p.4.",
+    "Embeddings predict aggregate human judgments better than individual judgments do: single-rater to aggregate correlation r = 0.56-0.66. Results p.3.",
+    "Accuracy is higher for more popular figures: profile similarity correlates with log Wikipedia page views at r = 0.16. Results p.3.",
+    "Face validity: top openness figures are mostly artists (Freddie Mercury, David Bowie, Michael Jackson, Lady Gaga, Jimi Hendrix, Quentin Tarantino); bottom openness includes Kim Jong-un, Kim Jong-il and conservative politicians. Results p.3-4, Table 1.",
+    "Adjective check across 525 person-descriptive adjectives: 'quiet', 'lonely', 'depressed' sit at the low extraversion pole and 'entertaining', 'hilarious', 'lively' at the high pole; 'alcoholic' ranks 3rd (of 525) for low conscientiousness and 3rd for low emotional stability. Results p.5, Table 3.",
+    "Birth year correlates with perceived extraversion: human ratings r = 0.35 and GPT-3 predictions r = 0.44 (text, p.4; Table 2). Women are perceived as more agreeable and are absent from the bottom of predicted agreeableness. Results p.4.",
+    "Perceived personality tracks likability: many of the least likable figures (Lee Harvey Oswald, Charles Manson, both Kims) sit at undesirable extremes of several traits. Results p.4.",
+    "Discussion argues that intimate traits of public figures can be extracted from widely available LLMs, framed as a privacy threat, and that the approach could extend to people absent from training data. Discussion p.6-7; the extension is not tested in the paper."
+   ],
+   "limitations": "Requires collecting human ratings to train the regression (authors suggest adjective-distance or LLM-description approaches as untested substitutes). Predictions reflect only the period in the training data, so changed public perceptions lag until retraining. Extension to people absent from the training data is untested. Sample is 226 public figures after dropping 74 with fewer than 10 raters and excluding those born before 1900; raters were Prolific workers recognising the names. Correlations concern perceived, not actual, personality. Demographic and likability controls are partial. Authors note Wikipedia-based popularity is a proxy. Supplementary materials hold the ICC and popularity details, not read here.",
+   "paul_markup": [],
+   "short_quotes": [
+    "We show that people's perceptions of public figures' personalities can be accurately predicted from their names' location in GPT-3's semantic space.",
+    "Even when controlling for demographics and likability, name embeddings allow for diagnosing public figures' perceived personalities.",
+    "Our models remained accurate even when controlling for public figures' demographics and overall likability."
+   ],
+   "references_of_note": [
+    "Brown et al. 2020, Language models are few-shot learners (GPT-3 source of embeddings); ref 23.",
+    "Yu et al. 2016, Pantheon 1.0 dataset of globally famous biographies; ref 28.",
+    "Gosling, Rentfrow and Swann 2003, very brief Big Five measure (TIPI); ref 29.",
+    "Richie, Zou and Bhatia 2019, predicting high-level human judgment with Word2Vec; ref 26, method precedent.",
+    "Garg et al. 2018 and Caliskan et al. 2017, word embeddings encode group stereotypes and human-like biases; refs 43-44.",
+    "Park et al. 2015, automatic personality assessment through social media language (r about 0.40 benchmark); ref 39.",
+    "Saucier 1997, person-descriptive adjectives used for the 525-item projection; ref 40.",
+    "Kosinski 2013 and Kosinski 2021, private traits predictable from digital records; refs 52-54, privacy framing.",
+    "Cao and Kosinski 2023 OSF preprint, ChatGPT predicts perceived personalities without training; ref 51, follow-up study."
+   ]
+  },
+  "summary_md": "Cao and Kosinski (Scientific Reports 14:6735, 2024) fit ridge regressions from 12,288-dimensional GPT-3 embeddings of public figures' NAMES to mean human ratings of perceived Big Five traits and likability (N = 226 Pantheon figures from 43 countries, 600 Prolific raters, about 19 ratings per figure, TIPI items). With 20-fold cross-validation, predictions correlate with aggregate perceptions at r = .78 to .88 after attenuation correction (raw .70 to .80). Controlling for likability and demographics (birth year, gender), accuracy falls to corrected r = .53 to .70 (raw .43 to .61). Accuracy rises with popularity (r = .16 with log Wikipedia views). The design is predictive, not causal, and concerns PERCEIVED, not actual, personality. For Melange the paper is the cited motivation for de-identifying text before the Pink LLM trait reader: a model that knows a politician's name carries a reputational prior that can stand in for reading the text. The paper shows the prior exists for famous names; it does not test whether stripping names, titles, party and states from congressional text removes it, and the repo's --named contamination probe has no output artifact in data/members. The likability result bears on the halo questions: a large evaluative factor runs through perceptions of public figures, yet trait-specific signal survives its removal, consistent with the CT-CM design of one halo method factor plus traits, and a caution that perception-based gold panels are not halo-free criteria. The code cites the work as PNAS Nexus 2024 with r = .76 to .87; the vault copy is Scientific Reports with corrected r = .78 to .88, so that citation needs checking.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+    "relation": "supports",
+    "paper_claim": "Perceived Big Five of public figures is predictable from the name embedding alone: cross-validated r = .78 (extraversion) to .88 (openness) after attenuation correction, raw .70-.80, N = 226 figures, 20-fold CV ridge on GPT-3 name embeddings; accuracy higher for more popular figures (r = .16 with log Wikipedia page views).",
+    "paper_location": "Abstract; Results p.2-3 (Figure 1 green bars); Methods p.2 (CV, attenuation); Results p.3 (popularity r = .16)",
+    "system_side": "fec/members/big5_llm.py de-identifies name parts, titles, party words and 50 state names before item scoring (deidentify, lines 196-204). The module docstring (lines 11-14) cites Cao and Kosinski as the reason, but gives the venue as PNAS Nexus 2024 and r = .76-.87, which match neither the paper's venue nor its figures.",
+    "code_ref": "fec/members/big5_llm.py:11-14; fec/members/big5_llm.py:196-204",
+    "transfer_conditions": "The paper uses GPT-3 name embeddings and lay ratings of globally famous figures, not a chat model reading congressional text. Transfer to the Pink reader is by analogy and untested.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers, popularity r and page locations verified against the text. Softened only because the code docstring has the wrong venue and r values, and the 'reputational prior' wording is the analyst's, not the paper's.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#LLM item-level reader (Pink), ridge hybrid and CT-CM latent model|LLM item-level reader (Pink), ridge hybrid and CT-CM latent model]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+    "relation": "qualifies",
+    "paper_claim": "The paper uses name embeddings only. It does not test whether removing names from surrounding text removes the signal. It notes predictions reflect only the period in the training data, and that extension to people absent from training data is untested.",
+    "paper_location": "Discussion p.6 (lines 624-635); the paper has no separate Limitations heading",
+    "system_side": "deidentify (big5_llm.py lines 196-204) blanks name parts longer than 2 characters, a fixed title list, party words and 50 state names, within 1,200-word chunks (CHUNK_WORDS = 1200 at line 51). Committee names, district cities and bill names are not removed. The --named probe (line 172, 30 members) is coded, but data/members holds only big5_llm_opus.json and big5_llm_sonnet.json plus caches, with no _named artifact. Name-part matching is case-insensitive, so common-word surnames also blank ordinary text.",
+    "code_ref": "fec/members/big5_llm.py:39-42; fec/members/big5_llm.py:51; fec/members/big5_llm.py:172; fec/members/big5_llm.py:196-204",
+    "transfer_conditions": "Matters only where Pink scores feed a validity claim. The de-identification rationale is the code docstring's, not the paper's; the paper discusses a privacy threat from extracting traits from data (Discussion p.6), not text de-identification. The rel's Pink display-only status and the +.064 diagonal figure were not found in the brain concepts folder and remain unverified.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Code claims verified at the cited lines and in the data folder listing. Softened because the paper is not the motivation for de-identifying text as the summary states. The paper's relevant passage is Discussion p.6, not a Limitations section.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#LLM item-level reader (Pink), ridge hybrid and CT-CM latent model|LLM item-level reader (Pink), ridge hybrid and CT-CM latent model]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+    "relation": "qualifies",
+    "paper_claim": "Controlling for likability plus birth year and gender lowers accuracy from corrected r = .78-.88 to r = .53-.70 (raw .43-.61). The paper attributes the likability-trait links to the personality halo effect and reports that the least likable figures sit at undesirable extremes of several traits.",
+    "paper_location": "Results p.4 (lines 280-294), Figure 1 red bars; Table 2 p.4; halo discussion p.4 and p.5-6",
+    "system_side": "big5_ctcm.py (lines 8-9) puts an orthogonal PINK METHOD factor over the five Pink indicators to absorb judge halo. big5_ctcm2.py (lines 3-8) repeats this with the embedding Blue as third indicator. The ct_p2 function in big5_improvements_eval.py (around line 223) removes the first principal component as the general evaluative factor. The paper contains no method factor and no single-factor model; the consistency with the CT-CM design is the analyst's inference.",
+    "code_ref": "fec/members/big5_ctcm.py:8-9; fec/members/big5_ctcm2.py:3-8; fec/members/big5_improvements_eval.py:223",
+    "transfer_conditions": "The paper's halo is in lay perceptions of famous people, with likability measured per figure. The rel says Melange has no per-member likability covariate; that was not checked here. The method factor is identified only by model structure, so the evidence bears on the halo's shape, not its size in congressional text.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers and the Results p.4 location verified. The paper's halo is a likability and demographics link, not a method factor, so the 'consistent with' sentence is inference. The ct_p2 PC1 removal is verified in code. The P2 MISS outcome was not verified: brain line 35 mentions P2 only in passing.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#LLM item-level reader (Pink), ridge hybrid and CT-CM latent model|LLM item-level reader (Pink), ridge hybrid and CT-CM latent model]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.gold-panel-validation",
+    "relation": "qualifies",
+    "paper_claim": "Perceptions of public figures track likability and demographics: birth year with extraversion, human r = .35 and model r = .44; women are perceived as more agreeable; an individual rater agrees with the aggregate at r = .56-.66.",
+    "paper_location": "Results p.3 (lines 115-116); Results p.4 (lines 267-276, 272-273); Table 2 p.4",
+    "system_side": "The brain file (single-look-holdout-discipline-case-1-moneyball-gate2.md, line 35) states A-ES is about .44 population-real (RKH benchmark .443 House, .393 Senate) plus about .21 text-tone halo. That line does not mention gold panels, expert or insider ratings, k=1 insiders or rater independence. The code_ref big5_improvements_eval.py:10 is a --p1 docstring line and does not discuss gold panels. The RKH benchmark appears to be the Ramey, Klingler and Hollibaugh text measure, not a rater panel.",
+    "code_ref": "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-case-1-moneyball-gate2.md:35; fec/members/big5_improvements_eval.py:10",
+    "transfer_conditions": "The paper's raters are lay Prolific workers rating world figures they recognise, not Hill insiders. The halo's size in Hill expert panels is untested by this paper. The gold-panel component is affected only if its raters use reputation and likability.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers and page locations verified. Softened because the system side is not supported at the cited locations: line 35 supports the .44 and .21 decomposition but not the gold-panel independence or k=1 insider assumptions, and the code citation is a CLI docstring line. Gold-panel rater counts were not confirmed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Big Five validation against Senate gold panels and criteria|Big Five validation against Senate gold panels and criteria]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Code citation mismatch: big5_llm.py line 12 cites Cao and Kosinski as PNAS Nexus 2024 with r = .76-.87. The paper is Scientific Reports 14:6735, with corrected r = .78-.88 and raw .70-.80. The summary flags this correctly; the code docstring needs fixing.",
+   "The summary says the paper is the cited motivation for de-identifying text. The paper does not discuss de-identifying text. The motivation comes from the code docstring; the paper's privacy argument concerns extracting traits from digital data (Discussion p.6).",
+   "The summary's statement that a large evaluative factor fits the CT-CM design is inference. The paper models no method or halo factor.",
+   "The summary's statement that the paper shows the prior lives in the name token overstates it. The paper shows name-embedding prediction of perceived traits, not that the signal is a reputational prior.",
+   "The summary's gold-panel link cites the brain file for k=1 insiders and independence, but line 35 of that file does not mention gold panels. The gold-panel link is unverified."
+  ],
+  "gaps_exposed": [
+   "The --named contamination probe in fec/members/big5_llm.py has no output in data/members, so how much reputational prior survives de-identification is unmeasured on this corpus.",
+   "No re-identification check: nothing tests whether an LLM can name the member from a de-identified 1,200-word chunk (committee, district cities, signature bills remain).",
+   "The embedding Blue (fec/members/b5_emb_build.py: LSA word and char n-grams, MiniLM) is built on raw text with no de-identification; LSA has no outside prior, but the pretrained MiniLM basis could carry name or state identity into A/C/O.",
+   "No likability or favorability covariate per member, so halo in Pink, persona and gold panels cannot be partialled out as the paper does.",
+   "Code citation (PNAS Nexus 2024, r = .76-.87) does not match the vault copy (Scientific Reports 14:6735, corrected r = .78-.88); the follow-up ChatGPT study (paper ref 51) is not in the vault."
+  ],
+  "flags": [
+   "Citation mismatch: fec/members/big5_llm.py:12 and the brain campaign record cite Cao and Kosinski as PNAS Nexus 2024 with r = .76-.87; the vault work is Scientific Reports 14:6735 (2024) with corrected r = .78-.88 (raw .70-.80). Verify which paper is meant before reusing the figure.",
+   "The component assumption that de-identification removes reputational priors (attributed to Cao and Kosinski) overstates the source: the paper motivates de-identification but does not show it suffices. UNVERIFIED until the --named probe or a re-identification test runs.",
+   "Paper correlations are corrected for attenuation; quote raw r (.70-.80; controlled .43-.61) beside corrected values, with the window N = 226 figures and mean 18.89 raters each."
+  ],
+  "paul_alignment": "No annotated-bibliography entry and no PDF markup from Paul for this work. The system's use of it (de-identify before LLM trait scoring) agrees with what the paper shows about a name-borne reputational prior, but the venue and numbers cited in code and brain do not match this copy, and the claim that de-identification removes the prior goes beyond the evidence; the named probe that would test it has no recorded result.",
+  "related": [
+   {
+    "slug": "mondak-nd-online-appendix-personality",
+    "relation": "complements",
+    "why": "Expert evaluations of senators' traits (Personality on the Hill) are a perception measure of public figures, the construct Cao and Kosinski predict from names, so reputation and halo can enter both. Cao does not cite it; the link is the analyst's."
+   },
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "LLM prompting for politicians' agency and communion from text. The coarse 3-point, cannot-tell-as-zero design in big5_llm.py cites Birkenmaier and Lechner. Cao does not cite it; the link is by topic and by that code citation."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Text-based measurement of elite Big Five from floor speech (Ramey, Klingler, Hollibaugh). Cao does not cite it. It marks the text route that a reputation prior must be kept separate from."
+   },
+   {
+    "slug": "koutsoumpis-2024-kernel-truth-text",
+    "relation": "complements",
+    "why": "Meta-analysis of LIWC-Big Five correlations, which are mostly small. Cao does not cite it, and it measures a different target (self and observer reports from text), so the rel's comparison of Cao's r with LIWC effects is not like for like."
+   },
+   {
+    "slug": "azucar-2017-predicting-personality-traits",
+    "relation": "complements",
+    "why": "Meta-analysis of Big Five prediction from digital footprints. Cao's about r = .40 language benchmark is cited to Park et al. 2015 (ref 39), not to this meta-analysis, so the same-method label is not supported."
+   },
+   {
+    "slug": "celli-nd-twenty-years-personality",
+    "relation": "complements",
+    "why": "Review of personality computing that lists data privacy among its threats. Cao's privacy framing (Discussion p.6) rests on Kosinski's work instead, so the two are complementary rather than sources for each other."
+   },
+   {
+    "slug": "amsalem-2018-effect-politicians-personality",
+    "relation": "complements",
+    "why": "Politicians' Big Five personality predicts national media coverage. Cao does not test popularity against it. The perceived-personality-drives-visibility gloss is the analyst's; the excerpt read does not establish that the traits are perceived."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "peters-2024-language-models-infer",
+    "relation": "complements",
+    "why": "Cao and Kosinski show that LLM-derived perceptions of public figures can be predicted from name embeddings alone (text check of the paper). That is the reputational-prior risk the de-identification step guards against, and it bears on how observer agreement is read."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "decter-frain-2016-impressive-words-linguistic",
+  "note": false,
+  "meta": {
+   "title": "Impressive Words: Linguistic Predictors of Public Approval of the U.S. Congress",
+   "authors": [
+    "Ari Decter-Frain",
+    "Jeremy A. Frimer"
+   ],
+   "year": 2016,
+   "venue": "Frontiers in Psychology 7:240",
+   "doi": "10.3389/fpsyg.2016.00240",
+   "sha12s": [
+    "fd2288224c1a"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "slug": "decter-frain-2016-impressive-words-linguistic",
+   "title": "Impressive Words: Linguistic Predictors of Public Approval of the U.S. Congress",
+   "authors": [
+    "Ari Decter-Frain",
+    "Jeremy A. Frimer"
+   ],
+   "year": 2016,
+   "venue": "Frontiers in Psychology 7:240",
+   "doi": "10.3389/fpsyg.2016.00240",
+   "document_type": "empirical journal article (open access, Personality and Social Psychology section)",
+   "coverage": "Read full text (64,859 chars, journal pp.1-13) in four chunks: front matter, abstract, intro, methods, Tables 1-6, results, discussion, conclusion, references. Nothing skipped. No annotation files exist (annot_sha12s empty), so paul_markup is empty and none dropped. Page images not rendered. Metadata: title, authors, year, venue correct; doi was blank, filled from text. Supplement not in text file, so its numbers are not extracted.",
+   "research_question": "Which demeanor makes the best impression in a professional setting: agentic (competent) language, communal (warm) language, or a specific linguistic category? Tested by predicting monthly public approval of the U.S. Congress from the words used in House floor debates, first theory-driven, then exploratory.",
+   "theory": "Agency and communion as the two primary dimensions of social cognition (Bakan 1966; Fiske et al 2002; Cuddy et al 2008). Communion is split into belonging (group intimacy) and prosociality (helping others), following Frimer et al 2011. H1: agentic and communal language both positively predict approval. H2: the prosocial facet, not communion broadly, predicts approval. H3a: communal language is a stronger predictor than agentic. H3b: agentic is stronger than communal. Exploratory: all 63 LIWC categories, to find blind spots in agency/communion theory.",
+   "data": "House floor-debate transcripts, Jan 1996 to Nov 2014 (Congressional Record via GPO API; extension of remarks excluded); 123,781,226 words. 22 transcripts under 5,000 words dropped; 206 monthly transcripts analysed (N = 206 months). Outcome: monthly mean of Gallup approval polls (198 of 227 months polled; gaps interpolated; mean 33%, SD 15%). Controls: President news conferences (411; 2,205,168 words); BLS unemployment; Michigan consumer sentiment; partisan vote share (mean 43%); bills passed; vetoes; female and Democratic member shares; media tone (Frimer et al 2015).",
+   "method": "Word density per LIWC 2007 category (63) plus a 127-word prosocial dictionary. Five blind coders scored each category +1, 0 or -1 for agency and communion (ICC communion 0.90, agency 0.82). Indexes = z-scored densities times weights, summed. Pearson correlations; OLS Models 1 to 3 (Model 3 adds controls); z tests comparing correlations; Hayes bootstrapped mediation via media tone; exploratory stepwise regression over 63 categories (entry p < 0.005, removal p > 0.01).",
+   "identification": "None. The authors state the design is correlational and cannot show that congressional language influences approval; reverse causation and third variables are acknowledged. The only strategy is adding exogenous and endogenous covariates to Model 3 (and a 6-month lag found in Frimer et al 2015, cited but not modelled here). The mediation test checks indirect paths via media tone, not causal identification.",
+   "scope": "Only the U.S. House of Representatives floor speech (not the Senate, committees or extension of remarks); public approval of Congress as a whole (not individual members); monthly aggregates over 1996 to 2014.",
+   "measures": "Approval: monthly average of Gallup approve or disapprove items (dichotomous). Language: LIWC 2007 densities; agency and communion indexes from coder weights; prosocial dictionary density. Media: quantity times valence of editorials (Factiva; 9-point tone). Presidential rhetoric: the same dictionaries applied to news-conference transcripts (prosocial mean 1.60 percent, SD 0.37).",
+   "key_findings": [
+    "Simple correlations with approval are negative for both agency (r = -0.16, p < 0.05) and communion (r = -0.36, p < 0.001). Hypothesis 1 not supported. Table 2, p.7.",
+    "With all controls (Model 3), agency is a significant negative predictor (beta -0.11, p < 0.05) and communion is not (beta +0.04). Table 2, p.7.",
+    "Prosocial language correlates r = +0.55 (p < 0.001) with approval and stays a positive predictor with controls (beta +0.14, p < 0.05). Table 3, p.8. Supports Hypothesis 2.",
+    "Prosocial and agency correlations differ significantly (z = 7.89, p < 0.001); communion and agency also differ (z = 2.18, p = 0.03), but both are negative. The authors read this as support for Hypothesis 3b. Results, p.8.",
+    "Media tone carries indirect effects: agency B = -0.11 [-0.30, -0.02], communion -0.06 [-0.16, -0.01], prosocial +1.82 [0.17, 5.26]. Direct effects of all three are also significant. Table 4, p.8.",
+    "Moderation (text only; numbers are in the Supplement): agency predicts disapproval only when Congress is male-dominated; communal language is approved when Congress is male-dominated and disapproved otherwise; prosocial effect is stronger with fewer men and more Republicans. Results, p.8. The authors call these results mixed.",
+    "Exploratory stepwise regression keeps 8 of 63 LIWC categories. Positive: tentativeness beta 0.46, prepositions 0.41, humans 0.25, anxiety 0.24, positive emotion 0.24, numbers 0.15. Negative: second-person pronouns -0.18, conjunctions -0.26 (p < 0.005 or better). Table 5, p.8.",
+    "Media tone mediates three of the eight: prepositions indirect B = 1.90 [0.30, 5.02], humans 2.40 [0.45, 6.03], conjunctions -3.51 [-8.77, -0.45]. Not significant for tentativeness, anxiety, positive emotion, numbers or second person. Table 6, pp.9-10.",
+    "Human words correlate with prosocial words r = 0.519 (p < 0.001). Conjunction density correlates with sentence length (r = 0.24) and negatively with six-letter word density (r = -0.38). p.11.",
+    "Headline claim: prosocial (helping) language predicts approval more strongly than agentic language, which the authors read as warmth outweighing competence even in a professional setting. Abstract; Discussion, p.9."
+   ],
+   "limitations": [
+    "Correlational design: no causal inference. Reverse causation is raised (for example members bonding more when approval falls). Discussion, pp.9-10.",
+    "Third variables: only the listed controls are used. Political orientation, public age and gender are not controlled, and unidentified variables may suppress an agency effect. p.10.",
+    "Approval is dichotomous (approve or disapprove), which may miss variation. p.3.",
+    "Gallup coverage is 198 of 227 months; the rest are linearly interpolated. p.3.",
+    "Agency and communion weights come from five coders at category level; robustness is claimed only in the Supplement. p.3.",
+    "No belonging dictionary was built, so the belonging-versus-helping split is tested only with Hart et al 2011 dictionaries, in the Supplement. p.10.",
+    "The 63-category stepwise analysis is exploratory with no out-of-sample test; the authors say each result is merely suggestive until replicated. p.10.",
+    "Conjunction and sentence-complexity results are described as inconclusive. p.11.",
+    "Count inconsistency: 22 excluded plus 206 retained is 228 transcripts, but the text says 227 months. Flagged, not resolved. pp.2-3.",
+    "Only the House is analysed; no Senate data; the window ends in November 2014.",
+    "Hypothesis 3 comparisons involve two negative correlations, which the authors acknowledge complicates the reading. p.8."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "We found that neither agentic nor communal language positively predicted public approval.",
+    "To be clear, our approach is correlational, precluding the possibility of causal inference.",
+    "The American public approved of Congress more when its members spoke about helping, but not when they spoke about belonging."
+   ],
+   "references_of_note": [
+    "Frimer, Aquino, Gebauer, Zhu and Oakes 2015, PNAS 112:6591 - prior study; prosocial language and approval of Congress, with a 6-month lag.",
+    "Cuddy, Fiske and Glick 2008 - warmth and competence universals (stereotype content model).",
+    "Frimer, Walker, Dunlop, Lee and Riches 2011 - agency and communion integration in moral personality; source of the belonging versus prosociality split.",
+    "Tausczik and Pennebaker 2010 - LIWC psychometrics and meaning of categories.",
+    "Ramirez 2009, American Journal of Political Science - partisan conflict and congressional approval; source of the control variables.",
+    "Abele and Brack 2013 - agency may matter more in professional settings.",
+    "Todorov et al 2005, Science - competence inferred from faces predicts elections.",
+    "Hayes 2013 - bootstrapped mediation procedure used for the media tone test."
+   ]
+  },
+  "summary_md": "Decter-Frain and Frimer (Frontiers in Psychology 2016) ask whether the language spoken on the House floor tracks public approval of Congress. They built a monthly series from January 1996 to November 2014 (N = 206 months, about 124 million words) and scored it with LIWC 2007. Agency and communion indexes come from five coders who weighted each category (ICC 0.82 and 0.90). A separate 127-word prosocial (helping) dictionary is scored alongside them. The outcome is monthly Gallup approval. Both broad indexes correlate negatively with approval: agency r = -0.16 and communion r = -0.36. With controls, agency stays negative (beta -0.11) and communion is null. Prosocial language correlates r = +0.55 and survives the controls (beta +0.14). Media tone partly mediates all three. An exploratory stepwise pass keeps 8 of 63 categories, and the authors call these only suggestive. Moderation by the gender and party make-up of the chamber flips some signs. The design is correlational, aggregate and chamber-level, and the authors rule out causal claims. For Paul's systems the sharpest point is about construct definition. Communion is not one thing. The helping facet and the broader communion or belonging facet behave in opposite directions against an audience-perception outcome. Melange's persona channel uses one communion share from an LLM cue codebook (empathy and compassion), and that share feeds receptivity at PERSONA_W 0.30. That codebook already sits close to the helping facet, which is reassuring. But the paper's outcome is public approval of the institution, not a member's openness to lobbying, so it neither validates nor undercuts the susceptibility mapping. It also offers a cheap dictionary-based second path for checking the LLM cue shares.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.persona-agency-communion",
+    "relation": "qualifies",
+    "paper_claim": "Broad communion correlates r = -0.36 with monthly Gallup approval (Model 3 beta +0.04, n.s.) while the prosocial helping facet correlates r = +0.55 (Model 3 beta +0.14, p < 0.05). Agency r = -0.16 and Model 3 beta -0.11 (p < 0.05). Window Jan 1996 to Nov 2014, N = 206 House months. Pooled over the whole chamber, not stratified.",
+    "paper_location": "Tables 2-3, pp.7-8; Discussion pp.9-10",
+    "system_side": "The persona channel forms a z blend of two LLM cue shares from agency_communion_llm.py: persona z = 0.60 z(communion) - 0.40 z(agency). It is blended into susceptibility at PERSONA_W 0.30 for members with at least 15 classified sentences (510 of the 526 rows in agency_communion.json meet this). The communion share uses the Empathy and Compassion codebook: STRONG cues name concrete disadvantaged people, while WEAK cues include empathic focus on communities and states. Group-intimacy or belonging talk has no dedicated cue.",
+    "code_ref": "fec/members/agency_communion_llm.py:35-60; fec/members/receptivity_layer.py:139-156",
+    "transfer_conditions": "The paper is about an aggregate chamber-month audience outcome (approval of Congress), not member-level susceptibility to lobbyists. The facet lesson transfers only as a construct-definition check: a pooled communion score can mix facets with opposite signs. Ecological inference from chamber months to individual members is not licensed.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers checked against the text: Table 2 (p.7) and Table 3 (p.8) match exactly. Code checked: persona formula, PERSONA_W default 0.30, 15-sentence floor, and the codebook cue tiers. Corrections: 526 is the total row count and 510 meet the threshold; the channel uses agency as well as communion; the belonging gap holds only as dedicated-cue absence, since community-focused empathy is a WEAK communion cue. The brain ruling about a failed panel of 3 or more raters was not checked.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Agency-communion persona channel|Agency-communion persona channel]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.persona-agency-communion",
+    "relation": "suggests-extension",
+    "paper_claim": "Agency and communion indexes are built from coder-weighted LIWC category densities: five blind coders, ICC agency 0.82 and communion 0.90, averaged into category weights (weights independent, r = -0.03). A 127-word prosocial dictionary is scored alongside. Robustness to the coding is reported only in the Supplement.",
+    "paper_location": "Method pp.2-4, Table 1; Limitations p.3",
+    "system_side": "The persona shares come from one instrument: Claude few-shot cue classification of self-referential floor and hearing sentences, cached per model. agency_communion_llm.py codes no second instrument for the same shares, so a dictionary path would have to be added as a second path.",
+    "code_ref": "fec/members/agency_communion_llm.py:3-12,123-140,239",
+    "transfer_conditions": "A dictionary path would be a convergence check (DE-062 second path), not a validity test. The coder weights were set on chamber aggregates, so member-level densities on short self-referential samples would be noisy. The paper's ICCs describe agreement on category weights, not on member-level scores.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "ICCs, five coders, the 127-word dictionary and Table 1 are confirmed in the text. Removed the analyst claim that the paper gives stable chamber-level series: it reports correlations, and robustness appears only in the Supplement. The code side is confirmed: one LLM instrument with per-model caches. The brain-side claim about functional-gate and party-signature validations was not checked.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Agency-communion persona channel|Agency-communion persona channel]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "qualifies",
+    "paper_claim": "Chamber-level LIWC densities in House floor speech co-move with monthly approval. Exploratory stepwise standardized betas, UNSTRATIFIED: tentativeness +0.46, prepositions +0.41, humans +0.25, anxiety +0.24, positive emotion +0.24, numbers +0.15; second person -0.18, conjunctions -0.26 (8 of 63 categories kept, N = 206 months).",
+    "paper_location": "Table 5, p.8; discussion pp.10-11",
+    "system_side": "big5_traits.py standardizes per-1000-word category rates (posemo and tentat are among the CAT categories) within the corpus. The corpus pools each member's social posts with floor speech and interview text (CREC and INTERVIEW sources; CHRG excluded by default), not floor speech alone. BIG5_BEFORE and BIG5_AFTER are validation hooks that default to off, so no period slicing or de-trending applies by default.",
+    "code_ref": "fec/members/big5_traits.py:33-35,64,84,94,220",
+    "transfer_conditions": "Inference, not tested: if category rates drift by period at the chamber level, members whose speech is concentrated in different years could pick up period variance in their trait z. The paper shows co-movement, not the size of the drift. A per-year de-meaning test on Paul's corpus would check it.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Table 5 values match the text exactly. The paper's discussion labels tentativeness as r = 0.46, but Table 5 reports standardized betas, so the beta label is the right one. Code confirmed: per-1000 rates at line 220, posemo and tentat categories, default-off hooks, and no de-trending found. Softened because the pooled corpus includes social posts and interview text, not only floor speech.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary says moderation flips some signs. The paper shows the communal effect reverses sign by chamber make-up, agency goes from negative to null when Congress is less male-dominated, and the prosocial effect changes size but not sign.",
+   "Summary says the persona channel uses one communion share. It blends communion (weight 0.60) and agency (weight 0.40) z-scores.",
+   "Bearing 1 and the code cite 526 members with at least 15 sentences. 526 is the total row count; 510 meet the threshold.",
+   "Bearing 2 says the paper gives a stable chamber-level series. The paper reports correlations and places robustness checks only in the Supplement.",
+   "Conjunction correlations are reported as r(215) while N is 206 months. Ext and rel did not flag this df mismatch.",
+   "Count inconsistency confirmed: 22 excluded plus 206 retained is 228 transcripts against 227 months (pp.2-3). Rel's flag is correct.",
+   "Ext key finding 4 says the authors read the communion-versus-agency difference as support for H3b. The paper uses the prosocial-versus-agency comparison (z = 7.89) for H3b and says the negative communion comparison complicates the reading.",
+   "paul_alignment attributes a position to Paul (Birkenmaier and Lechner, the trait-to-node worry). There is no Paul entry or markup for this work and no source was checked, so treat it as unverified.",
+   "Bearing 1 and bearing 2 rely on brain rulings (failed panel of 3 or more raters; functional-gate and party-signature records). Those were not checked here.",
+   "The paper's discussion labels Table 5 betas as r (for tentativeness, r = 0.46). Quote Table 5 values as standardized betas, not correlations."
+  ],
+  "gaps_exposed": [
+   "The persona channel has no facet split. Communion is one share, so helping or compassion talk and belonging or we-language cannot be separated, although the paper shows they can carry opposite signs against an audience outcome.",
+   "There is no second instrument for the agency and communion shares. A coder-weighted LIWC index or prosocial dictionary path would supply a DE-062 reproduction route.",
+   "Lexical Big Five rates are pooled across years with no period de-meaning by default. Whether chamber-level drift in categories like tentat and posemo leaks into member z is untested."
+  ],
+  "flags": [
+   "Pooled-over-fault-line: the paper's own moderation (Supplement) shows communal language helps approval when the chamber is male-dominated and hurts otherwise, and the prosocial effect varies with party share. The pooled communion and prosocial coefficients must be quoted as UNSTRATIFIED.",
+   "Do not read the negative agency and communion correlations as grounds to drop or reweight the persona channel. PERSONA_W 0.30 is an owner-ratified keep that reopens only on a failed panel of 3 or more raters to B&L standards. The paper's outcome (aggregate institutional approval) is also scope-mismatched to member susceptibility.",
+   "The headline claim that warmth beats competence rests on comparing two negative correlations, which the authors concede complicates the reading. The design is correlational, with possible reverse causation.",
+   "Count inconsistency in the source: 22 excluded plus 206 kept is 228 transcripts, against the 227 months stated.",
+   "Any new analysis that applies this dictionary path to Paul's corpus stays UNVERIFIED until a second path reproduces it (DE-062)."
+  ],
+  "paul_alignment": "Paul has no annotated-bibliography entry and no markup for this work, so there is no takeaway to check. His stated component position (from Birkenmaier and Lechner) stresses codebook-based cue design and worries about the step from trait to node. This paper supports that worry from another angle: how communion is defined, as helping versus belonging, changes the sign of its audience effect. Nothing here makes the current system stale, and the B&L communion codebook already leans toward the helping facet.",
+  "related": [
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Same agency and communion constructs for politicians. Birkenmaier and Lechner use LLM cue prompting, the instrument Melange runs; this paper uses coder-weighted LIWC dictionaries. Together they give two measurement paths."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "same-data",
+    "why": "Both score Congressional Record House floor speech over 1996 to 2014 with closed-vocabulary categories. Ramey does it at member level for traits, and this paper does it at chamber-month level for approval. Verified in the Ramey item."
+   },
+   {
+    "slug": "pennebaker-2003-psychological-aspects-natural",
+    "relation": "same-method",
+    "why": "LIWC word-category densities as psychological indicators are the measurement basis of this paper."
+   },
+   {
+    "slug": "koutsoumpis-2024-kernel-truth-text",
+    "relation": "complements",
+    "why": "Meta-analysis of how far LIWC categories carry Big Five signal. It bounds how much the coder-weighted LIWC agency and communion indexes can mean."
+   },
+   {
+    "slug": "lechner-2025-mapping-political-personality",
+    "relation": "complements",
+    "why": "The PoliPers framework for politicians' agency and communion profiles is the source of the codebook Melange uses, per the agency_communion_llm.py docstring. This paper adds the belonging versus helping split."
+   },
+   {
+    "slug": "osnabrugge-2021-playing-gallery-emotive",
+    "relation": "complements",
+    "why": "Also treats parliamentary rhetoric as aimed at an outside audience, but works on emotive language where this paper works on agentic and communal language."
+   },
+   {
+    "slug": "aroyehun-2026-politics-of-feelings",
+    "relation": "complements",
+    "why": "Emotional expression in congressional speech linked to legislative effectiveness at member level; this paper links language to chamber-level approval."
+   },
+   {
+    "slug": "amsalem-2018-effect-politicians-personality",
+    "relation": "complements",
+    "why": "Politician personality and media visibility relate to this paper's finding that media tone mediates the language-approval link."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "defigueiredo-2013-advancing-empirical-research",
+  "note": false,
+  "meta": {
+   "title": "Advancing the Empirical Research on Lobbying",
+   "authors": [
+    "John M. de Figueiredo",
+    "Brian Kelleher Richter"
+   ],
+   "year": 2013,
+   "venue": "NBER Working Paper 19698 (December 2013)",
+   "doi": "",
+   "sha12s": [
+    "dee4e24c7f60"
+   ],
+   "category": "Lobbying",
+   "category_slug": "lobbying"
+  },
+  "extraction": {
+   "slug": "defigueiredo-2013-advancing-empirical-research",
+   "title": "Advancing the Empirical Research on Lobbying",
+   "authors": [
+    "John M. de Figueiredo",
+    "Brian Kelleher Richter"
+   ],
+   "year": 2013,
+   "venue": "NBER Working Paper 19698 (December 2013)",
+   "doi": "",
+   "document_type": "NBER working paper; narrative review essay (not peer reviewed)",
+   "coverage": "Read the full text file (1346 lines, including references) in 2 chunks, lines 1-834 and 835-1346. No annotation files exist for this item (annot_sha12s empty, n_annots 0), so paul_markup is empty and 0 items were dropped. p.note absent, so this is not one of Paul research notes. Page refs are printed folio numbers. Page images not used. Metadata hints checked: title, authors, year and venue are correct; no DOI appears in the text, so doi is blank.",
+   "research_question": "What empirical facts about lobbying are broadly agreed, what challenges block causal inference on lobbying effects, which quasi-experimental and structural methods can overcome them, and which data sources and open questions should drive the next generation of research (essay has no original estimates).",
+   "theory": "Informational lobbying: lobbying is the transfer of information in private meetings between interest groups and politicians; politicians maximize re-election, promotion and ideological goals (p.4). Hannan-Freeman-Carroll population ecology (legitimation and competition) for counts of interest groups (pp.8-9). Expertise versus connections (who you know vs what you know) (pp.9-10). Counteractive lobbying (Austen-Smith and Wright) versus legislative subsidy (Hall and Deardorff) for targeting (p.11). Calls for empirical testing of formal models (EITM) (p.40).",
+   "data": "No sample of its own. Cited studies: Blanes i Vidal et al (2012) former congressional staffers who are contract lobbyists, 22 periods (pp.18-19); de Figueiredo and Silverman (2006) university earmarks 1997-1999 (pp.22-24); Richter et al (2009) public firms, tax rates, about 10 percent lobby (pp.24-26); de Figueiredo and Cameron (2012) 38 US states (p.8); Baumgartner et al (2009) 98 issues, 2,200 advocates (p.13); Kang (2012) energy groups (p.27); Jayachandran (2006) stock returns, 2001 Jeffords switch (pp.20-21).",
+   "method": "Narrative review and methods primer. Surveys the empirical facts on who lobbies, how much, and how it is organized (Sec II), then reviews five designs: difference-in-differences with exogenous shocks, event studies, instrumental variables (2SLS), two-step Heckman selection models, and structural modeling (Sec III.B). Also lists matching, regression discontinuity and synthetic control as untried for lobbying (p.29). Compares data classes: surveys, registries, transaction reports (Sec IV).",
+   "identification": "Difference-in-differences: politician exits (retirement or defeat) as exogenous shock to lobbyist revenue, with lobbyist and party-chamber-time fixed effects. Event study: Jeffords party switch as shock to firm abnormal returns. IV: university overhead rates as cost shifter instrument for lobbying, excluded from earmark equation. Selection: probit selection equation with liquid assets as excluded variable, inverse Mills ratio added to tax equation. Structural: all-pay contest model estimated on policy votes.",
+   "measures": "Lobbying expenditures from federal LDA and state transaction reports; counts of registered groups and lobbyists; lobbyist revenue; effective tax rates; earmark dollars; abnormal stock returns; soft money as party alignment; overhead rates as instrument; liquid assets as selection variable; inverse Mills ratio.",
+   "scope": "Mostly US federal and state lobbying (LDA federal data, US state transaction data), with brief mention of Japan, China, India, Mexico, Norway and other developed or transition economies (p.35-36). Literature reviewed through 2013; federal disclosure under the Lobbying Disclosure Act of 1995 (p.34). Excludes campaign finance, illegal lobbying and bribery, and bureaucratic lobbying (footnote 1, p.4).",
+   "key_findings": [
+    "Federal lobbying spending was about 3.5 billion dollars in 2012, against roughly 750 million a year in interest-group campaign contributions, about five times as large (Sec II.A, pp.5-6).",
+    "Corporations and trade associations account for over 84 percent of federal lobbying expenditures; issue-ideology membership groups about 2 percent (de Figueiredo 2004 as cited, Sec II.A, p.6).",
+    "Only about 10 percent of publicly traded firms lobby on their own behalf (Richter et al 2009; Kerr et al 2013); a firm lobbying last year lobbies this year with 92 percent probability (Sec II.A, p.7).",
+    "Budgeting periods are associated with a 19 percent increase in state interest-group lobbying expenditures across 38 states (de Figueiredo 2014; de Figueiredo and Cameron 2012) (Sec II.A, p.8).",
+    "Lobbyist revenue falls about 23 percent after the senator they formerly served is defeated or retires (Blanes i Vidal et al 2012) (Sec II.C, p.10); the essay attributes about 23 percent of lobbying services value to who you know (Sec III.B.1, p.20).",
+    "Richter et al (2009): a 1 percent increase in lobbying over baseline predicts a 1.07 percentage point lower effective tax rate in the next period, and the result survives a Heckman selection correction (Sec III.B.4, p.26).",
+    "de Figueiredo and Silverman (2006): lobbying raises earmarks only when the district legislator sits on an appropriations committee; no significant effect otherwise (Sec III.B.3, p.24).",
+    "Kang (2012) structural all-pay contest: expenditure effects on enactment are very small, but the marginal return in policy is about 140 percent (Sec III.B.5, p.28).",
+    "Jayachandran (2006): firms more aligned with the former Republican majority lost market value after the Jeffords switch (Sec III.B.2, p.21).",
+    "Baumgartner et al (2009): across 98 issues, both sides mobilize roughly equal resources; policies are stable and change, when it occurs, is substantial (Sec II.D, p.13).",
+    "Targeting: powerful, allied and marginal legislators are lobbied; staunch enemies are not. Counteractive and subsidy accounts give different predictions (Sec II.C, pp.10-11).",
+    "State interest-group counts follow an inverted-U over time from legitimation then competition, and rise with economy size and number of issues (Sec II.B, pp.8-9)."
+   ],
+   "limitations": [
+    "Essay itself reports no new estimates; its consensus claims are a synthesis of cited work (p.2-3, Sec II).",
+    "Lobbying panels show persistence and little within-group variation, so fixed effects need external shocks (Sec III.A, p.16).",
+    "Omitted variables are pervasive because some instruments of influence are unobserved (p.16-17).",
+    "Endogenous selection into lobbying is not random; about 10 percent of interests lobby, so returns may be biased upward (p.17).",
+    "Difference-in-differences can have inconsistent standard errors; event windows can be confounded; weak instruments and small selection samples can doom IV and selection models; structural assumptions may be unbelievable (footnote 3, p.28).",
+    "Survey data suffers from non-response, non-random samples, recall error and little verifiability (p.32).",
+    "Registries count groups, include zero-spend registrants, and mix rules across jurisdictions (p.33).",
+    "Transaction data gives spending and intensity but not message content and not which legislator was targeted (pp.34-35).",
+    "Outcome variables are often weakly linked to lobbying; authors call for institutional detail on the link (p.30)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "lobbying is defined as the transfer of information in private meetings and venues between interest groups and politicians",
+    "lobbying expenditures representing five times the dollar volume of interest group campaign contributions",
+    "they almost all share a quasi-experimental design structure that has advantages over more common empirical designs"
+   ],
+   "references_of_note": [
+    "Blanes i Vidal, Draca and Fons-Rosen 2012, Revolving Door Lobbyists, AER 102(7)",
+    "Richter, Samphantharak and Timmons 2009, Lobbying and Taxes, AJPS 53(4)",
+    "de Figueiredo and Silverman 2006, Academic Earmarks and the Returns to Lobbying, JLE 49(2)",
+    "Baumgartner et al 2009, Lobbying and Policy Change, University of Chicago Press",
+    "Jayachandran 2006, The Jeffords Effect, JLE 49(2)",
+    "Austen-Smith and Wright 1994, Counteractive Lobbying, AJPS 38(1); 1996 follow-up in AJPS 40(2)",
+    "Bertrand, Bombardini and Trebbi 2012, Is it whom you know or what you know, NBER WP 16765",
+    "Kerr, Lincoln and Mishra 2013, The Dynamics of Firm Lobbying (working paper)",
+    "Cameron and de Figueiredo 2013, Informational Lobbying: Theory and Empirical Evidence from the American States (working paper)",
+    "Kang 2012, Policy Influence and Private Returns from Lobbying in the Energy Sector (working paper)"
+   ]
+  },
+  "summary_md": "De Figueiredo and Richter (NBER WP 19698, 2013) is a narrative review with no new estimates. It sets out what the field agreed on about lobbying by 2013 and how to study it causally. The scale facts: federal lobbying was about 3.5 billion dollars in 2012, roughly five times interest-group campaign contributions. Corporations and trade associations account for over 84 percent of it. Only about 10 percent of public firms lobby, and a firm that lobbied last year lobbies this year with 92 percent probability. Its main argument is that lobbying panels are persistent, selected and confounded by unobserved channels. Fixed effects alone therefore cannot identify effects, and research should use exogenous shocks. The designs it reviews are difference-in-differences on legislator exits, event studies such as the Jeffords switch, cost-shifter instruments, Heckman selection, and structural all-pay contest models. It cites conditional returns: earmark gains only where the home legislator sits on Appropriations, a 1.07 percentage point lower tax rate per 1 percent more lobbying, and about 23 percent of lobbyist revenue lost when a former boss leaves office. It also notes that transaction (LDA) data record spending but not which legislator was targeted. For Paul's systems the essay mostly confirms choices already made. It agrees that the lobbied-member link is circular (LD-2 names no member) and explains why the sector-growth lobbying coefficient flips under year fixed effects. It also shows that the influence engine's money legs cover only PAC contributions, the smaller channel. Its shock-based designs point to tests the system has not run. Nothing in it argues for either rejected SNA proposal. Its revolving-door evidence must not be turned into influence language on staffer edges.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-lobbying.lobbied-member-link",
+    "relation": "supports",
+    "paper_claim": "Transaction (LDA) reports show lobbying intensity but not message content, and the US federal transaction data does not say which legislator is the target, so researchers cannot map lobbying efforts to individual legislators.",
+    "paper_location": "Sec IV.A.3 pp.34-35",
+    "system_side": "lobby_interactions.py docstring ON POSITION paragraph: LD-2 has no position field, so position ships as not_disclosed. Brain lobbyview-collector.md circular-link section: the member link is manufactured by joining lobbied bills to sponsor and cosponsor rosters, so P(joined given lobbied) = 1 by construction.",
+    "code_ref": "fec/lobbying/lobby_interactions.py docstring ON POSITION paragraph; C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md:139-146",
+    "transfer_conditions": "Holds for any federal LD-2 vintage because the form structure, not the sample, creates the gap. A member-level contact measure would need an independent source.",
+    "strength": "strong",
+    "verdict": "reproduced",
+    "verifier_note": "Paper text confirmed at lines 909-916 (pp.34-35). The circularity conclusion is the system's own inference from the join, not the essay's; the essay never uses the word circular. Brain line cites confirmed.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-lobbying#Lobbying member-year network and circular lobbied-member link|Lobbying member-year network and circular lobbied-member link]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "supports",
+    "paper_claim": "Kerr, Lincoln and Mishra as cited: a firm that lobbied last year lobbies this year with 92 percent probability (firm-level, federal). Within-group variation in lobbying is little, so fixed-effects designs need external shocks; omitted channels and endogenous selection into lobbying bias naive estimates.",
+    "paper_location": "Sec II.A p.7; Sec III.A pp.16-17",
+    "system_side": "Brain topic note: L3-LV coefficient +0.352 becomes -0.477 with sector and year fixed effects; growth adds no adjusted R2 (0.884717 vs 0.884690); first-difference with year effects -0.537 over 71 pairs.",
+    "code_ref": "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md:235,239; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_forecast.R:405 (LobbyView backtest call; the coefficient estimation code was not at this line)",
+    "transfer_conditions": "The 92 percent is a firm-level federal figure, not a sector-year figure. The essay gives no sign for any sector coefficient, so the sign reversal is a fixed-effects fragility the essay anticipates, not validation of either sign. Figures must name window and denominator.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper claims confirmed at p.7 and pp.16-17. Brain numbers confirmed at lines 235 and 239, but the first-difference figure was not re-derived. The brain regression formula has midterm, presidential and unified terms, so 'phase terms' is loose wording. Code cite points to the backtest call, not the estimation.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "melange-influence-engine.flip-model",
+    "relation": "suggests-extension",
+    "paper_claim": "Lobbying spending was about 3.5 billion dollars in 2012, roughly five times the approximately 750 million a year in interest-group campaign contributions (pp.5-6). Kang (2012) finds expenditure effects on enactment are very small but the marginal policy return is about 140 percent (p.28), and the value of lobbying depends on timing and targets (p.28). Selection into lobbying (about 10 percent of firms) biases naive return estimates upward only if non-lobbying interests expect no return (p.17).",
+    "paper_location": "Sec II.A pp.5-7; Sec III.A p.17; Sec III.B.5 pp.27-28",
+    "system_side": "flip_model.py takes cu and banks plus finserv PAC money (cu0, ind0) through a saturating receipts-relative term. Lobbying spend does not enter the per-member legs: a case-insensitive grep of flip_model.py for lobby returns no hits.",
+    "code_ref": "fec/engine/flip_model.py:4-7,39; fec/engine/money_response.py:16-31,69-75",
+    "transfer_conditions": "Lobbying cannot enter a per-member leg directly, because LD-2 names no member and LDA is an identity source, not an edge or weight source (D-021). Pooled return figures must carry an UNSTRATIFIED label. Kang's 140 percent is a policy return in a structural model, not a dollar ROI.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Original selection-bias claim was unconditional; the essay conditions it on non-lobbying interests expecting no return, so the claim is rewritten. Code cites confirmed for cu0, ind0 and the saturating term. Lobbying-free legs confirmed by grep.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Flip - winnability model|Flip - winnability model]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-lobbying.contested-bills",
+    "relation": "method-source",
+    "paper_claim": "Kang (2012) builds an all-pay contest model of counteractive lobbying, estimated on energy groups' support and opposition for policies in 110th Congress bills, and finds the expenditure effect on enactment is very small. Baumgartner et al. (98 issues) find both sides mobilize roughly equal resources and policy is usually stable.",
+    "paper_location": "Sec III.B.5 pp.27-28; Sec II.D p.13",
+    "system_side": "contested_bills.py docstring: per-bill registry ratified by Paul 2026-07-31; contested records supply a per-bill explicit counterparty set; standard mode is the default; advisory records are display-only; CONTESTED_V1 is a future dial and no consumer exists today.",
+    "code_ref": "fec/lobbying/contested_bills.py:2-15",
+    "transfer_conditions": "An all-pay contest needs bill-level spending by both sides. LDA issue codes and bill mentions may supply that at the bill level, not the member level. The equal-mobilization finding warns that relative spend may predict little. Admission must stay with Paul's ratification.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper claims confirmed at pp.13 and 27-28. Docstring confirmed. Not checked: whether LDA issue codes actually supply bill-level spend on both sides.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-lobbying#Contested-bills registry|Contested-bills registry]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.committee-pillar",
+    "relation": "supports",
+    "paper_claim": "De Figueiredo and Silverman (2006), academic earmarks 1997-1999: lobbying raises earmarks when the district legislator sits on an appropriations committee and has no statistically significant independent effect when not (pp.22-24). Powerful, allied and marginal legislators are the ones lobbied (pp.10-11).",
+    "paper_location": "Sec III.B.3 pp.22-24; Sec II.C pp.10-11",
+    "system_side": "committee_scores.py weights seats by CU-relevance tier (Highly 3.0, Moderately 1.8, Slightly 0.9) with Chair and Ranking multipliers and a subcommittee ratio of 1/6.",
+    "code_ref": "fec/engine/committee_scores.py:125-127 (BASE tiers); same file SUBF and KLEAD constants",
+    "transfer_conditions": "The evidence is from academic earmarks on appropriations and supports the conditioning logic only. It does not validate the tier weights or the 1/6 subcommittee ratio, which remain owner judgment.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Original 'only when' wording is stronger than the paper, which says no statistically significant independent effect otherwise; rewritten. Tier weights confirmed in code.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/moneyball-rank-pillars#Committee - Influence pillar|Committee - Influence pillar]]",
+    "system": "moneyball-rank-pillars"
+   },
+   {
+    "component_id": "melange-pathfinding.staffer-overlap-routes",
+    "relation": "qualifies",
+    "paper_claim": "Blanes i Vidal, Draca and Fons-Rosen (2012): lobbyist revenue of former Senate staffers falls about 23 percent when the senator they served is defeated or retires, in a 22-period panel with lobbyist and party-chamber-time fixed effects (pp.18-20). The essay reads this as the value of who you know (p.20).",
+    "paper_location": "Sec II.C p.10; Sec III.B.1 pp.18-20",
+    "system_side": "Staffer route cost uses shared-work and recency terms with a member-context modifier MEMBER_BETA 0.15. employment_history.py derives a revolving-door sidecar. Route cost is a heuristic model output, not closeness or access (D-025).",
+    "code_ref": "fec/staffer_network/closeness_math.py:21; fec/staffer_network/employment_history.py:2083-2092 (sidecar derivation function)",
+    "transfer_conditions": "The essay's evidence is a revenue effect for lobbyists, not a route-cost or access measure. Influence language stays barred on revolving-door edges.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "The 23 percent figure and page locations confirmed at p.10 and p.20. Log scaling of the shared-work term was not checked. MEMBER_BETA confirmed at line 21.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Ordered person-overlap routes and employment-routing overlay|Ordered person-overlap routes and employment-routing overlay]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-lobbying.fec-lda-bridge",
+    "relation": "qualifies",
+    "paper_claim": "Money is not transferred explicitly to politicians as campaign contributions are, so lobbying is a distinct channel (p.4). Lobbying expenditures are about five times interest-group campaign contributions (pp.5-6). The essay does not address whether campaign giving leads lobbying.",
+    "paper_location": "Sec I p.4 (channel definition); Sec II.A pp.5-6 (scale)",
+    "system_side": "Bridge round-3 look: raw rho +0.153 member-blocked p=.0146, but four-control partial -0.0002, tier UNCORROBORATED. The 42-month FEC lead is recorded as intact in the collector note and is a candidate heuristic only.",
+    "code_ref": "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md:137 (bridge result) and :124 (42-month lead); the original cite at :84 is a different bullet",
+    "transfer_conditions": "The paper gives no evidence that giving leads lobbying. A lead test would need an exogenous-shock design rather than more controls.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "The claim that lobbying persistence makes cross-sectional associations dominated by unit size and selection does not appear in the essay and was removed. Brain numbers confirmed at line 137; the original line cite 84 was wrong.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#FEC to LDA bridge test|FEC to LDA bridge test]]",
+    "system": "melange-lobbying"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Says the essay agrees the lobbied-member link is circular. The essay never argues or uses that idea; it only says disclosure rules do not require identifying targeted legislators (pp.11, 34-35). Circularity is the system's own finding in the brain.",
+   "Says the essay explains why the sector-growth lobbying coefficient flips under year fixed effects. The essay does not discuss that regression; it only says persistent panels need external shocks (pp.16-17).",
+   "Says the essay shows the influence engine's money legs cover only PAC contributions. The essay says nothing about the engine; that is a fact about the code, not an essay finding.",
+   "Says fixed effects alone cannot identify effects. The essay says they need exogenous shocks, a softer claim than cannot identify.",
+   "Says lobbyist revenue is lost when a former boss leaves office. The essay's design uses defeat or retirement of the senator served (pp.10, 18-19).",
+   "Says selection makes return estimates biased upward without condition. The essay conditions this on non-lobbying interests expecting no return (p.17).",
+   "Says the 1.07 point tax effect is per 1 percent more lobbying. The essay says per 1 percent over the firm's baseline, predicted in the next period (p.26).",
+   "Says the essay mostly confirms choices already made in Paul's systems. That is an analyst judgment beyond the text, not an essay finding."
+  ],
+  "gaps_exposed": [
+   "The influence engine's money legs (flip model and money response) model only PAC contributions, the smaller of the two money channels; the system states no explicit position on how sector lobbying, about five times larger, relates to member winnability.",
+   "No lobbying-return number used anywhere in the system is identified by the shock-based designs the essay recommends (member exits, party switches, cost shifters). Break-even and ROI floors rest on an assumed saturating form.",
+   "Selection into lobbying (about 10 percent of firms) is not modeled in the sector-growth lobbying regressions. Sector sums over registrants mix the extensive and intensive margins.",
+   "Legislator exits (retirement or defeat) are an available exogenous shock in the staffer and member data and could support a difference-in-differences test of route or engagement value. This has not been designed.",
+   "The break-even and ROI component's recorded code_ref (fec/templates/make_dashboard_html_00.tpl) does not exist at that path in the live tree, so the component card is stale."
+  ],
+  "flags": [
+   "Revolving-door evidence (23 percent revenue loss) is phrased in the paper as the value of who you know; it must not become influence or access language on staffer or revolving-door edges (brain rule; D-025).",
+   "Cited return estimates (Richter et al 1.07 percentage points per 1 percent lobbying; Kang 140 percent policy return) are pooled over firms and sectors. Quote them only with an UNSTRATIFIED label, and do not use them as dollar-ROI calibration.",
+   "The essay's call to link transaction data to targeted legislators would, if done through LDA bill rosters, recreate the circular lobbied-member link and conflict with D-021 (LDA is an identity source, not an edge or weight source).",
+   "The essay does not argue for dropping regular cosponsorship edges or for per-edge volume normalization; no rejected SNA proposal is involved.",
+   "The essay is a 2013 working paper, not peer reviewed, and reports no original estimates; every number is a secondary citation."
+  ],
+  "paul_alignment": "Paul left no annotation on this work (0 notes). By component, Paul frames lobbying as ROI, expects donations to lead lobbying, and read Kim and Kunisky as a way to identify champion members. The essay agrees with the system rather than with those notes on three points. Naive lobbying returns are biased upward by selection and persistence. Contributions and lobbying are distinct channels of very different scale, which fits the near-zero bridge partial. Disclosure data cannot say which legislator was lobbied, which fits the circular-link ruling. His ROI enthusiasm and his expectation of a donation lead are therefore stale relative to the system now. His wish for explicit inter-industry conflict on bills is supported by the contest-model literature the essay reviews.",
+  "related": [
+   {
+    "slug": "bombardini-2020-empirical-models-lobbying",
+    "relation": "extends",
+    "why": "Bombardini and Trebbi (2020, Annual Review of Economics) reviews empirical lobbying models and post-dates the essay. The item exists; the extends relation is loose."
+   },
+   {
+    "slug": "kerr-2014-dynamics-firm-lobbying",
+    "relation": "cites",
+    "why": "Same title as the Kerr, Lincoln and Mishra paper the essay cites as a 2013 working paper. The item is NBER WP 17577; calling it the published version was not verified."
+   },
+   {
+    "slug": "kim-2018-lobbyview-firm-level",
+    "relation": "complements",
+    "why": "LobbyView firm-level lobbying and bill database. The essay calls for bill-level linkage of transaction data but does not name this source. The claim that the system uses it as its fundamental source is not from the essay."
+   },
+   {
+    "slug": "huneeus-2018-effects-firms-lobbying",
+    "relation": "complements",
+    "why": "Huneeus and Kim (2018 draft) on firms' lobbying and resource misallocation. The committee-assignment instrument described in the rel was not verified against the item."
+   },
+   {
+    "slug": "alexander-2009-lobbying-analysis-under",
+    "relation": "complements",
+    "why": "Lobbying ROI under the American Jobs Creation Act of 2004 (Alexander, Scholz, Mazza). A single-policy return estimate, to which the essay's selection and omitted-channel warnings apply."
+   },
+   {
+    "slug": "furnas-nd-conflating-lobbying-pacs",
+    "relation": "complements",
+    "why": "Furnas, LaPira and Brock on low organizational overlap between lobbying and PAC spending. Matches the essay's point that the channels are distinct, though the essay does not cite it."
+   },
+   {
+    "slug": "imai-2021-fixed-effects-regression",
+    "relation": "complements",
+    "why": "Imai and Kim (2021) on two-way fixed effects for causal inference with panels. Formalizes the essay's warning about fixed effects on persistent panels."
+   },
+   {
+    "slug": "furnas-2019-partisan-ties-lobbying",
+    "relation": "complements",
+    "why": "The partisan ties of lobbying firms (Research and Politics, 2019). Connection-based evidence; the loss-of-ties-when-party-loses-control claim was not verified against the item."
+   },
+   {
+    "slug": "holyoke-2015-learnable-skills-unteachable",
+    "relation": "complements",
+    "why": "Holyoke, Brown and LaPira (2015) on what can and cannot be taught in lobbying. Addresses the expertise side of the essay's expertise-versus-connections question."
+   },
+   {
+    "slug": "kim-2020-mapping-political-communities",
+    "relation": "complements",
+    "why": "Kim and Kunisky on lobbying networks built from bill-level LDA links. The essay's targeting gap in transaction data applies to member edges built this way; the item's content was not re-read."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "ansolabehere-2002-little-money-politics",
+    "relation": "complements",
+    "why": "A co-author's later review of lobbying empirics. The claim that lobbying spending dwarfs PAC giving was not found in its text, so only the agenda link stands. Item exists."
+   },
+   {
+    "slug": "fremeth-2018-spillovers-regulating-corporate",
+    "relation": "cited-by",
+    "why": "Real item (title: Advancing the Empirical Research on Lobbying). Citation claim not re-read."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "fremeth-2018-spillovers-regulating-corporate",
+  "note": false,
+  "meta": {
+   "title": "Spillovers from Regulating Corporate Campaign Contributions",
+   "authors": [
+    "Adam Fremeth",
+    "Brian Kelleher Richter",
+    "Brandon Schaufele"
+   ],
+   "year": 2018,
+   "venue": "MPRA Paper 87612, Munich Personal RePEc Archive (posted 02 Jul 2018; dated June 2018)",
+   "doi": "",
+   "sha12s": [
+    "0dc33fec3429"
+   ],
+   "category": "Lobbying",
+   "category_slug": "lobbying"
+  },
+  "extraction": {
+   "title": "Spillovers from Regulating Corporate Campaign Contributions",
+   "authors": [
+    "Adam Fremeth",
+    "Brian Kelleher Richter",
+    "Brandon Schaufele"
+   ],
+   "year": 2018,
+   "venue": "MPRA Paper 87612, Munich Personal RePEc Archive (posted 02 Jul 2018; dated June 2018)",
+   "doi": "",
+   "document_type": "working paper",
+   "coverage": "Full text read in one pass (72,168 chars, 1,309 lines): front matter, abstract, introduction, conceptual framework, data, all results sections (4.1-4.3), conclusion, references, Tables 1-6, Figures 1-3 (text labels only; page images not rendered), and Appendix A (dataset construction, matching) and B (Table 7, RD placebo figures 4-6). Metadata hint corrected: co-author is Brian Kelleher Richter. Annotations: p.annot_sha12s is empty and no _annots file matches sha12 0dc33fec3429, so paul_markup is empty (0 items; 0 dropped). p.note is not set, so this is not one of Paul's own notes. Topic coverage: lobbying yes; allocation yes; elections yes; legislators only indirectly (candidate-level giving); networks no; path-finding no; persuasion or turnout no; text measurement no. Table 3 column alignment is ambiguous in the text extraction; column numbers follow the paper's own prose.",
+   "research_question": "Do statutory limits on corporate PAC campaign contributions generate spillover increases in other corporate political activity, namely CEO contributions to the same candidates and firm lobbying expenditures, at the regulated per-candidate contribution threshold?",
+   "theory": "Revealed-preference firm model (Section 2, pp.5-7): firms give to candidates until marginal benefit equals the dollar; a binding per-candidate cap creates a positive shadow price, so firms substitute toward other channels. Lobbying is also read as a legislative subsidy (Hall and Deardorff 2006) and as a possible cost of access. The authors state the design is theory-agnostic and is not a test of theories of firm political behavior (p.4).",
+   "data": "S&P 500 firms present at any point 1991-2008; 950 firms in contribution data. Contributions: FEC filings via Center for Responsive Politics bulk data; CEO identity and firm characteristics from COMPUSTAT/ExecuComp; PAC-to-firm mapping from Myers (2005). Unit for PAC and CEO models: firm-candidate-cycle, 6,803,661 observations over nine federal cycles, 1992-2008. Lobbying: LDA disclosures for engagements over 10,000 dollars, 2000-2008, firm-cycle unit; 2,796 firm-cycle observations stated in Section 3 (p.8); regression samples 2,783 observations and 787 firms (Table 3, p.29), 1,908 observations and 579 lobbying firms (Table 3 columns 4-6), 4,821 observations and 943 firms (placebos, Table 4), 2,200 or 2,191 observations and 700 or 693 firms (RD, Table 5).",
+   "method": "Linear probability and OLS. CEO model (eq. 3, p.10): binary CEO-to-candidate contribution on PAC contributed and PAC at-limit indicators with firm-by-cycle and candidate-by-cycle fixed effects. Lobbying model (eq. 4, p.13): firm-cycle aggregate lobbying on PAC contributed and at-limit indicators with firm fixed effects and Fama-French 49 industry-by-cycle fixed effects. One-sided regression discontinuity (eq. 5, p.16): polynomial (linear or quadratic) in PAC dollars with a jump at the limit, with and without industry-cycle fixed effects. Difference-in-differences around BCRA (post-2003 cycle indicator, Table 6, p.18). Standard errors clustered by firm. Altonji, Elder and Taber (2005) selection-on-unobservables ratio reported for the main lobbying model (p.14).",
+   "identification": "CEO model: within firm-cycle, cross-candidate variation across the statutory per-candidate limit, assuming firm-by-candidate-by-cycle factors are orthogonal to CEO giving (p.4). Lobbying model: firm and industry-cycle fixed effects, plus assumed smoothness of lobbying absent regulation, which the authors test on advertising, R&D and dividends in the appendix (p.4-5, p.A-4 to A-7). RD: assumes optimization frictions so firms cannot perfectly control PAC dollars around the limit; authors call this strong (p.17). BCRA 2002 soft-money ban is the only exogenous policy change; it leaves PAC limits intact. The authors say there is no exogenous variation in FEC limits, so results are partial correlations (p.14).",
+   "scope": "US federal elections; large publicly traded S&P 500 firms with PACs; contributions 1992-2008; lobbying 2000-2008, so only a single pre-BCRA lobbying cycle. Excludes state politics, super PACs (post-window), independent expenditures and in-kind or philanthropic channels (pp.19-20).",
+   "key_findings": [
+    "CEO supplementary giving (Table 2, p.28): at-limit PAC raises the probability a CEO gives to that candidate by 0.066 (SE 0.006). The text instead reports 7.7 percent (Section 4.1, p.11), a mismatch noted here.",
+    "CEO dollars (Table 2, p.28): at-limit PAC associated with 109.92 extra dollars (SE 10.05). Text reports 123 dollars (p.11); Table 7 (p.A-4) gives 123.88 (SE 10.55). Figure 2 shows 59.91 for the 4,500-4,999 bin versus the at-limit value.",
+    "Lobbying main estimate (Table 3 column 1, p.29; text p.14): firms whose PAC reaches the limit for any candidate spend 549,166 dollars more per cycle (SE 225,013; significant at 1 percent). Abstract gives a range of 549,000 to 1.6M dollars.",
+    "Lobbying firms only (Table 3 column 6, p.29; text p.15): at-limit coefficient 662,590 dollars (SE 305,066; significant at 5 percent).",
+    "Large-expenditure control (Table 3 columns 2-3, p.14-15): PAC-large-expenditure indicator is not significant; at-limit remains significant when both are included, about 250,000 dollars larger than the large-expenditure coefficient per text. Altonji-Elder-Taber ratio stated as 7.7 (p.14).",
+    "Placebo outcomes (Table 4, p.30; text p.15): at-limit coefficients are R&D 63.07 (SE 68.56), advertising 4.71 (SE 34.74), dividends -23.02 (SE 66.93), acquisitions 5.32 (SE 103.31); none significant. Units not stated in the paper.",
+    "One-sided RD on lobbying (Table 5, p.30; text pp.16-17): jump of 3,001,984 (linear, no industry-cycle FE), 2,427,612 (quadratic), 2,250,564 (linear, industry-cycle FE) and 1,630,744 (quadratic, industry-cycle FE), all significant at 1 percent. Figure 3 (p.26) plots the discontinuity.",
+    "BCRA difference-in-differences on lobbying (Table 6, p.31): at-limit times post-BCRA coefficient 539,008.1 (SE 220,949.6), significant at 1 percent. Text reports a 145 percent increase (p.18), with a caveat about the single pre-BCRA lobbying cycle.",
+    "BCRA on CEO giving (Table 6, p.31): at-limit times post-BCRA coefficient 16.54 (SE 11.77), not significant. Text reports a 16 percent increase (p.18), which does not match the dollar units of the table.",
+    "Descriptives (Table 1, p.27; text p.8): average PAC contribution to all candidates 68.48 dollars (SD 553.79); 2,266.53 among recipients; 14.4 percent of recipients receive the maximum. CEO average 2.00 overall and 1,323.98 among recipients. Mean lobbying 1,101,868 dollars for all firms and 2,898,788 for lobbying firms.",
+    "Authors' summary (Section 1, pp.3-5; Conclusion, p.19): statutory limits on corporate PACs are effectively non-binding, and spillovers into lobbying can exceed the contribution limit by more than 100 times.",
+    "Smoothness and placebo figures (Appendix B, Figures 4-6, pp.A-5 to A-7): advertising, R&D and tax-expenditure outcomes show no comparable jump at the PAC limit, supporting the smoothness assumption."
+   ],
+   "limitations": [
+    "No exogenous variation in FEC limits; estimates are partial correlations (p.14).",
+    "Lobbying is observed at firm-cycle level, so the at-limit indicator is coarser and identifying variation is reduced (Section 4.2, p.13).",
+    "RD needs optimization frictions so firms cannot perfectly control PAC dollars; the authors call this assumption strong (p.17).",
+    "CEO estimates are a lower bound because only CEOs are studied; other managers may also give (p.11).",
+    "LDA filings do not name candidates, so firm-candidate lobbying cannot be linked; the mapping rests on an approximation with a stepwise function (A.3-A.4, pp.A-1 to A-3).",
+    "Only one pre-BCRA lobbying cycle; the authors caution against over-interpreting the BCRA results (p.18).",
+    "Theory-agnostic design; no welfare or optimal-regulation counterfactual (pp.6, 19).",
+    "Excludes state politics, super PACs and independent expenditures outside the window (pp.19-20).",
+    "Reverse causality and joint determination of lobbying and at-limit giving acknowledged; firm and industry-cycle fixed effects mitigate but do not remove it (pp.13-14).",
+    "Internal inconsistencies between text and tables: CEO probability 7.7 percent versus 0.066 in Table 2; CEO dollars 123 versus 109.92; BCRA CEO 16 percent versus a dollar coefficient; Table 3 column labels in the prose do not match the printed layout."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "constraining specific corporate political activities often yields unintended effects (Fremeth, Richter and Schaufele 2018, abstract, p.1)"
+   ],
+   "measures": "PAC contributed (binary, any contribution to candidate, or any candidate in lobbying model); PAC contributed at limit (binary, maximum permitted amount, 5,000 dollars per primary and 10,000 per cycle per candidate, p.5); CEO contribution indicator and dollars; firm-cycle lobbying expenditures from LDA; PAC had large expenditures (binary, over 100,000 dollars per cycle, about the 90th percentile); placebo outcomes R&D, advertising, dividends, acquisition value; post-BCRA indicator for cycles after 2003.",
+   "references_of_note": [
+    "Tripathi, Ansolabehere and Snyder 2002, Business and Politics: PAC contributions and lobbying linked after LDA 1995 (closest prior paper).",
+    "Lake 2015, European Journal of Political Economy: decomposes LDA issues against PAC contributions.",
+    "Fremeth, Richter and Schaufele 2013, AEJ Applied Economics: campaign contributions over CEOs careers.",
+    "Hall and Deardorff 2006, APSR: lobbying as legislative subsidy.",
+    "Ellis and Groll 2014: lobbying as costly persuasion with legislative subsidies.",
+    "Altonji, Elder and Taber 2005, JPE: selection on observed and unobserved variables.",
+    "Lee and Lemieux 2010, JEL: regression discontinuity designs in economics.",
+    "Hahn, Todd and Van der Klaauw 2001, Econometrica: RD treatment effects identification.",
+    "Gelman and Imbens 2017: why high-order polynomials should not be used in RD designs.",
+    "Kalla and Broockman 2015, AJPS: campaign contributions facilitate access, randomized field experiment.",
+    "Chamon and Kaplan 2013, AEJ Economic Policy: iceberg theory of campaign contributions.",
+    "Myers 2005: PAC-to-firm identifier mapping used for the PAC data."
+   ]
+  },
+  "summary_md": "Fremeth, Richter and Schaufele (MPRA working paper, 2018) ask whether the federal per-candidate cap on corporate PAC gifts (5,000 dollars per election, 10,000 per cycle) pushes firms into other political channels. They use S&P 500 firms with PACs, 1992-2008 FEC data (6.8M firm-candidate-cycle rows) and LDA lobbying for 2000-2008 (about 2,800 firm-cycles). Within a firm-cycle, a candidate who receives the PAC maximum is 6.6 points more likely to also receive a gift from the firm's CEO (Table 2), about 110 dollars more on average. Firms whose PAC maxes out any candidate spend about 549,000 dollars more on lobbying per cycle, with firm and industry-by-cycle fixed effects. A one-sided regression discontinuity at the limit gives jumps of 1.6M to 3.0M dollars, but the authors call its frictions assumption strong. Placebo outcomes (R&D, advertising, dividends, acquisitions) show no jump. The authors say no exogenous variation in the limit exists, so the estimates are partial correlations. Some numbers in the text do not match the tables. For Paul's systems, the paper bears mainly on how money is bounded. The Melange optimizer treats the 10,000-dollar PAC limit as the ceiling on CU spend per member, and the flip model counts competitor money only as bank and finserv PAC dollars. The paper suggests firms at the cap shift resources into executive giving and lobbying, which neither ledger sees. Mentat already tiers Chief-level employee giving by company, so a PAC-at-limit by Chief-giving join is a cheap extension. The paper's firm-level link between giving and lobbying does not contradict the member-level FEC-LDA bridge null. That bridge asks a different question, and the paper itself notes that LDA filings name no candidates.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-allocation.joint-optimizer",
+    "relation": "qualifies",
+    "paper_claim": "Per-candidate PAC limits bind for 14.4 percent of candidates receiving any PAC money (text Section 3, p.8; not in Table 1). Firm-cycles at the limit show +549,166 dollars of lobbying per cycle (Table 3 col 1, SE 225,013; 2000-2008, 787 firms, 2,783 firm-cycles, pooled across the 2002 BCRA break). Firms at the limit show CEO giving 0.066 more likely (Table 2, 1992-2008, 950 firms). Authors say PAC limits are effectively non-binding and all estimates are partial correlations.",
+    "paper_location": "Section 3 p.8; Table 2 p.28; Table 3 p.29; Section 1 pp.3-5; Conclusion p.19",
+    "system_side": "The optimizer caps each member at PMAX = 10,000 dollars above existing CU money, read as one CU PAC per-candidate per-cycle limit (Paul 2026-09-30 ruling, quoted in the code comment). Nothing outside the PAC channel is modeled.",
+    "code_ref": "fec/engine/optimize.py:23-27 (PMAX and pot comment); fec/engine/optimize.py:71 (marg cap check)",
+    "transfer_conditions": "Cap mechanics transfer if the 10,000 per-cycle limit is the same. The paper does not say the limit is unindexed; that is an assumption not stated in the paper. Spillover magnitudes come from large S&P 500 for-profit firms, not CU PACs, and are partial correlations. Supports a caveat that PMAX bounds PAC dollars only; does not justify reweighting.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Code and table values verified. Fixes: the 14.4 percent figure is in the text at p.8, not Table 1; the paper says PAC limits are non-binding, not total corporate political activity; the 549,166 figure pools the BCRA break and needs an UNSTRATIFIED label; the unindexed claim is not in the paper.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Joint CU budget optimizer|Joint CU budget optimizer]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.flip-model",
+    "relation": "qualifies",
+    "paper_claim": "Firm-cycles whose PAC reaches the limit are associated with 549,000 to 1.6M dollars more lobbying per cycle (abstract; Table 3 col 1; Table 5) and with about 110 dollars more CEO giving per candidate at the limit (Table 2). CEO giving is candidate money outside the PAC channel. Authors describe these as partial correlations.",
+    "paper_location": "Abstract p.1; Table 2 p.28; Table 3 p.29; Table 5 p.30",
+    "system_side": "The b leg of pflip counts competitor money as bank plus finserv PAC dollars per member (ind0), loaded from data/engine/congestion.json, with median imputation for unobserved members. Executive giving and competitor lobbying are not in ind0.",
+    "code_ref": "fec/engine/flip_model.py:32 (congestion.json load); fec/engine/flip_model.py:39 (ind0); fec/engine/flip_model.py:92-97 (pflip)",
+    "transfer_conditions": "Hypothesis only: if competitor bank and finserv firms hit the cap as S&P 500 PAC firms do, ind0 undercounts competitor pressure on the members they max out. The paper does not test this. Does not license LDA dollars as a per-member weight (D-021).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Code references and median imputation verified. The paper reports co-occurrence with the limit, not that firms move resources, so reword as associated. The undercount is an inference, not a finding.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Flip - winnability model|Flip - winnability model]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "mentat-fec-attribution.employer-match",
+    "relation": "suggests-extension",
+    "paper_claim": "Within firm-cycle and candidate-cycle fixed effects, a candidate receiving the PAC maximum is 0.066 more likely (SE 0.006) to receive a CEO gift and receives about 110 dollars more (SE 10.05) (Table 2; 1992-2008; 950 firms; 6,803,661 observations). The text reports 7.7 percent and 123 dollars, which do not match Table 2. Table 7 gives 123.88.",
+    "paper_location": "Section 4.1 pp.10-12; Table 2 p.28; Table 7 p.A-4",
+    "system_side": "Mentat attributes individual Schedule A rows to roster companies by employer string and splits company totals into Chief, Middle Management and Employee tiers, with known executives forced to Chief.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/R/report.R:341-346 (tier loop); C:/Users/pgoff/Mentat/mentat/R/report.R:2528-2544 (spending_title_role, known executive to Chief)",
+    "transfer_conditions": "A per-candidate join of company PAC-at-limit status with Chief-tier gifts would test the CEO-substitution pattern in the industries Paul covers. Depends on executive employer-match recall and the PAC-to-candidate recipient table. Any result stays UNVERIFIED until a second path reproduces it (DE-062).",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Table 2 values and the text-table mismatch verified. Mentat tiering verified in report.R. The claim that company PAC giving is reported separately was not checked.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-fec-attribution#Employer-string roster matching and overrides|Employer-string roster matching and overrides]]",
+    "system": "mentat-fec-attribution"
+   },
+   {
+    "component_id": "melange-lobbying.fec-lda-bridge",
+    "relation": "qualifies",
+    "paper_claim": "Firm-cycles at the PAC limit associate with +549,166 dollars of LDA lobbying (firm FE and Fama-French 49 industry-by-cycle FE; 2000-2008; 787 firms; 2,783 firm-cycles). The at-limit by post-BCRA interaction is +539,008 (Table 6; 787 firms). LDA filings do not name candidates, so firm-candidate lobbying cannot be linked.",
+    "paper_location": "Section 3 p.8; Section 4.2 pp.13-15; Table 3 p.29; Table 6 p.31; Appendix A pp.A-1 to A-3",
+    "system_side": "Bridge round 3 tested member-level FEC exposure against LDA attention (2023-2026; credit_union, fintech, crypto). Raw rho +0.1525, four-control partial -0.0002, tier UNCORROBORATED, per the results block of the prereg. FEC framed as a target-side money prior only.",
+    "code_ref": "fec/lobbying/fec_lda_bridge3_look.py:57 (CONTROL_NAMES); fec/lobbying/fec_lda_bridge3_look.py:1490-1496 (_tier); results in C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec_lda_bridge3_prereg.md lines 285-290",
+    "transfer_conditions": "The unit is the firm, not the member, so the paper neither revives nor contradicts the member-level null. A transferable design would test an organization's giving at the cap against that organization's own LDA spend, with time fixed effects; that design is the analyst's suggestion, not the paper's.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Bridge numbers match the prereg results block. The cited lines 36-40 hold windows and industries, not the outcome, so the code_ref should point to the prereg lines. The 539,008 figure is the at-limit by post-BCRA interaction, not a plain DiD; relabel it.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#FEC to LDA bridge test|FEC to LDA bridge test]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "melange-lobbying.lobbied-member-link",
+    "relation": "supports",
+    "paper_claim": "LDA disclosures do not identify the candidates or members lobbied. The authors relate only firm-level lobbying totals to PAC behaviour and approximate the mapping with a stepwise function.",
+    "paper_location": "Section 3 p.8; Section 4.2 p.13; Appendix A.3-A.4 pp.A-1 to A-3",
+    "system_side": "The lobby interactions ledger links an organization to a member when it lobbied a bill that member sponsored or cosponsored (docstring lines 4-6). The paper does not say whether P(joined given lobbied) is 1 by construction; the REFUTED-as-influence verdict comes from the analyst and the brain, not this code or the paper.",
+    "code_ref": "fec/lobbying/lobby_interactions.py:4-6",
+    "transfer_conditions": "Confirms only that LDA rows do not name members, a measurement fact. The paper offers no contact measure to reuse.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Measurement fact verified in the paper. The docstring confirms the sponsor-or-cosponsor linkage but not the by-construction probability or the influence verdict; those are inference and should be labeled as such.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#Lobbying member-year network and circular lobbied-member link|Lobbying member-year network and circular lobbied-member link]]",
+    "system": "melange-lobbying"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "The 549,000 lobbying figure and the 1.6M to 3.0M RD range are pooled across the 2002 BCRA break (2000-2008; one pre-BCRA lobbying cycle). Under the stratification rule they need an UNSTRATIFIED label or stratified figures; the summary states them without one.",
+   "The summary says the CEO effect is about 110 dollars more on average. Table 2 is the dollar effect for a candidate at the PAC maximum, conditional on firm-cycle and candidate-cycle fixed effects, not an average across candidates.",
+   "Summary figures lack windows and denominators: the 6.6-point CEO effect (1992-2008, 950 firms), the 549,000 lobbying effect (2000-2008, 787 firms, 2,783 firm-cycles), and the 14.4 percent at-limit share (text p.8, of recipients). Only the flags carry them.",
+   "The summary and bearing 1 say limits are non-binding on total corporate political activity. The paper says corporate PAC limits are effectively non-binding and that spillovers can be economically meaningful.",
+   "Bearing text uses causal verbs (move, spend more) for estimates the authors call partial correlations. The summary's flags say partial correlation; the bearings should match.",
+   "The summary's claim that the limit is unindexed is not in the paper and is unverified.",
+   "The paul_alignment claim that Paul's component notes expect donations to lead lobbying cannot be checked: the item has no paul_entries and no annotations (n_annots 0). Treat as unverified.",
+   "The related-link rationales were checked only for existence and title (all nine slugs are real items); their content claims were not re-read. Table 3 columns 4-5 at-limit values do not print in the extraction; only columns 1, 2, 3 and 6 are verified."
+  ],
+  "gaps_exposed": [
+   "Neither the Melange allocator nor the flip model represents non-PAC channels (executive giving, lobbying) that firms use once PAC dollars hit the per-candidate cap. The PMAX ceiling and the ind0 competitor-money term are PAC-only.",
+   "Mentat tiers Chief-level giving by company but does not join it to company-PAC-at-limit status per candidate, so the substitution pattern this paper documents is unmeasured for Paul's industries.",
+   "No firm-level version of the FEC-LDA bridge (an organization's giving against the same organization's LDA spend) has been specified. All bridge rounds were member-level.",
+   "The flip model treats competitor PAC money at or near the cap the same as smaller gifts. No at-limit indicator exists anywhere in the engine."
+  ],
+  "flags": [
+   "The authors state the estimates are partial correlations (no exogenous variation in the limit). Do not quote the 549,000-dollar or 1.6M-3.0M RD figures as causal effects.",
+   "The paper's text and tables disagree: CEO probability is 7.7 percent in the text vs 0.066 in Table 2, CEO dollars 123 vs 109.92, and the BCRA CEO effect is reported as 16 percent against a dollar coefficient. Cite the table values.",
+   "Estimates pool S&P 500 industries (with industry-by-cycle FE) and span the 2002 BCRA break. The BCRA split appears only in a DiD with one pre-BCRA lobbying cycle, so treat the pre/post pooling as weakly stratified.",
+   "D-021 guard: the paper uses LDA spend as a firm-level outcome, not a member edge. It must not be used to justify LDA-weighted member edges or per-member lobbying weights.",
+   "For any reuse, state the windows and denominators: contributions 1992-2008 (950 firms), lobbying 2000-2008 (787 firms, 2,783 firm-cycles), S&P 500 firms with PACs only."
+  ],
+  "paul_alignment": "Paul has no annotated-bibliography entry or markup for this work. His component notes expect donations to lead lobbying. This paper shows same-cycle firm-level co-movement between maxed-out PAC giving and lobbying among S&P 500 firms, not a lead. That partly supports a money-lobbying link at the organization level and leaves the system's member-level bridge null (partial -0.0002, 2023-2026) standing. None of Paul's notes becomes stale. The paper adds a channel caveat to the 2026-09-30 PMAX ruling.",
+  "related": [
+   {
+    "slug": "kim-2020-strategic-sequential-links",
+    "relation": "complements",
+    "why": "Real item (title: Strategic and Sequential Links between Campaign Donations and Lobbying). Only existence and title checked; the content claim was not re-read."
+   },
+   {
+    "slug": "kim-2023-systemic-sequential-links",
+    "relation": "complements",
+    "why": "Real item (title: Systemic and Sequential Links between Campaign Donations and Lobbying). Only existence and title checked."
+   },
+   {
+    "slug": "furnas-nd-conflating-lobbying-pacs",
+    "relation": "complements",
+    "why": "Real item (title: Conflating Lobbying and PACs: The Surprisingly Low Overlap in Organizational Lobbying). Title consistent with the claim; body not re-read."
+   },
+   {
+    "slug": "bickmore-2025-corporate-lobbying-political",
+    "relation": "same-data",
+    "why": "Real item (title: Corporate lobbying, political action committees, and market concentration). Same-data claim not verified beyond title."
+   },
+   {
+    "slug": "kerr-2014-dynamics-firm-lobbying",
+    "relation": "same-data",
+    "why": "Real item (title: The Dynamics of Firm Lobbying). Persistence motivation not re-read."
+   },
+   {
+    "slug": "defigueiredo-2013-advancing-empirical-research",
+    "relation": "cites",
+    "why": "Real item (title: Advancing the Empirical Research on Lobbying). Citation claim not re-read."
+   },
+   {
+    "slug": "kalla-nd-campaign-contributions-facilitate",
+    "relation": "cites",
+    "why": "Real item (title: Campaign Contributions Facilitate Access to Congressional Officials: A Randomized Field Experiment). Citation claim not re-read."
+   },
+   {
+    "slug": "ansolabehere-2002-little-money-politics",
+    "relation": "complements",
+    "why": "Real item (title: Why Is There So Little Money in U.S. Politics?). Complement claim not re-read."
+   },
+   {
+    "slug": "goff-nd-cross-industry-finance",
+    "relation": "complements",
+    "why": "Real item (title: Cross Industry Finance and Lobbying Disclosure Report). Complement claim not re-read."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "harbridge-yong-2023-bipartisan-path-effective",
+  "note": false,
+  "meta": {
+   "title": "The Bipartisan Path to Effective Lawmaking",
+   "authors": [
+    "Laurel Harbridge-Yong",
+    "Craig Volden",
+    "Alan E. Wiseman"
+   ],
+   "year": 2023,
+   "venue": "Journal of Politics (per item metadata; the text itself is an August 2022 manuscript and names no journal)",
+   "doi": "",
+   "sha12s": [
+    "b269422428eb"
+   ],
+   "category": "Causal & Methodological",
+   "category_slug": "causal-methodological"
+  },
+  "extraction": {
+   "title": "The Bipartisan Path to Effective Lawmaking",
+   "authors": [
+    "Laurel Harbridge-Yong",
+    "Craig Volden",
+    "Alan E. Wiseman"
+   ],
+   "year": 2023,
+   "venue": "Journal of Politics (per item metadata; the text itself is an August 2022 manuscript and names no journal)",
+   "doi": "",
+   "document_type": "journal article manuscript (text dated August 2022; main text plus supplemental appendix tables A1-A16)",
+   "coverage": "Read the full text (5099 lines, 120479 chars) in chunks: front matter, abstract, intro, theory, data, all main results (Tables 1-4, Figures 1-2), conclusion, references, all appendix tables A1-A16. Metadata: title and authors match; year 2023 kept as journal year, manuscript dated August 2022; venue and DOI not in text. Topic sweep: lobbying only in footnote 2; networks only in literature review; no path-finding, allocation or persuasion. Paul markup: none linked, 0 dropped. Locations are printed page numbers.",
+   "research_question": "Why does bipartisanship persist in Congress despite polarization and primary threats? The paper asks whether legislators who attract a larger share of opposite-party cosponsors on their bills are more effective at advancing them, whether that holds across eras and party conditions, whether the effect has an optimum, and whether offering bipartisan cosponsorships in turn drives attracting them (reciprocity).",
+   "data": "Sample: all Representatives and Senators serving in the 93rd-114th Congresses (1973-2016); independents excluded. Unit: legislator by two-year Congress. Bills: all public bills introduced in the period. Cosponsorship data for 93rd-110th Congresses from Fowler (2006), updated by the authors for 111th-114th. N: House 8,997 to 9,202 legislator-Congress observations; Senate 2,167 to 2,192 (Table 1). Hitchhiker law sample (Table A11): 4,494 House observations, 1993-2014.",
+   "method": "Cross-sectional time-series least squares regressions with legislator fixed effects and robust standard errors (Tables 1-3, A2-A13); pooled OLS and fixed-effects OLS for reciprocity regressions (Table 4, clustered SEs in pooled models). Nonlinear models add a squared term. Robustness: commemorative-bill exclusion, normalization by Congress, cosponsorship-level controls, low-cosponsorship eras, binary alternative measures, Lugar index, no member FE, electoral safety interactions, later legislative stages, hitchhiker-inclusive law counts, and era splits (pre/post 1994).",
+   "scope": "US Congress, House and Senate, 1973-2016, public bills only. Population is all members in that window. The argument concerns individual lawmaking effectiveness, not chamber-level outcomes; the 60-vote cloture environment is offered to explain higher Senate levels.",
+   "key_findings": [
+    "Table 1 Model 1.2 (House, p.17): proportion bipartisan cosponsors attracted = 0.433 (SE 0.097), p<0.001; Model 1.5 (Senate, p.17) = 0.330 (SE 0.147), p<0.05. One SD increase = +0.08 LES in House and +0.06 in Senate, about 6-8 percent of mean LES of 1.0 (p.16).",
+    "Uncontrolled Models 1.1 (House 0.986) and 1.4 (Senate 0.538) are larger; the coefficient on proportion bipartisan cosponsorships offered is not significant with controls (Model 1.3 = -0.234; Model 1.6 = -0.420) (p.17-18).",
+    "Robust to excluding commemorative bills, normalizing by Congress, controlling for cosponsorship levels, binary alternative measures (Table A5 House 0.213, p<0.001) and the Lugar index (p.18-19).",
+    "Without member fixed effects coefficients are larger (Table A6 with controls: House 0.552, p<0.001; Senate 0.440, p<0.001) (p.18-19, Appendix p.10).",
+    "Table 2 (p.20-21): effect stays positive and significant (House 0.432 to 0.629; Senate 0.358 to 0.442) when interacted with a Congress counter, majority margin or party polarization; all interactions small and not significant.",
+    "Table 3 nonlinearity (p.22-23): House linear 1.828 and squared -1.844 peak at 0.496; Senate 1.666 and -1.626 peak at 0.512. A one-SD decline costs about 22 percent of LES in House and 16 percent in Senate; a one-SD rise adds about 8 and 4 percent (p.24).",
+    "Majority and minority subsamples show similar nonlinear shapes (Table 3 Models 3.2-3.3, 3.5-3.6). Authors read the larger majority coefficients as a scale artifact, since majority LES is about three times minority LES (p.24-25).",
+    "Reciprocity (Table 4, p.27): offering bipartisan cosponsorships predicts attracting them. House pooled 0.626 (SE 0.039); House with member FE 0.317; Senate pooled 0.739; Senate FE 0.547; all p<0.001.",
+    "Distance from median predicts fewer bipartisan cosponsors in pooled models (House -0.154, Senate -0.114) but the House effect disappears with member FE (0.005) (p.27).",
+    "Later stages (Table A8, House, Appendix p.12): bipartisan share predicts action in committee 0.894, beyond committee 0.853, passing chamber 0.800, and becoming law 0.485 (all p<0.001). Senate committee-stage model A9.2 is not significant (1.767); Senate law model A9.5 = 0.589 (p<0.05) (Appendix p.13).",
+    "Law production (Table A10, Appendix p.14): nonlinear House laws 1.685 with squared -1.586; Senate 2.342 with squared -2.135; output rises to about 50 percent bipartisan cosponsors and falls after. Hitchhiker-inclusive laws 1993-2014 (Table A11): linear 0.691, p<0.001.",
+    "Eras and electoral safety: House effect 0.470 (1973-94) and 0.380 (1995-2016); Senate 0.332 and 0.307 (Tables A12-A13, Appendix p.16-17). Electoral-safety interaction not significant (Table A7). Descriptives (Table A1): mean share 0.290 House (SD 0.194), 0.354 Senate (SD 0.190); median 30-40 percent in the 1970s-80s (Figure 1, p.12-13)."
+   ],
+   "limitations": [
+    "LES omits oversight, constituent service, obstruction and amendment success; authors note amendment-success research is a gap (p.8-9, footnote 5).",
+    "Cosponsorship treated as public endorsement; the authors concede it is debatable whether it implies effort to pass the bill (p.9-10).",
+    "No design-based identification. Legislator fixed effects and controls only; time-varying confounders not excluded. Authors call the coefficient a within-member marginal impact (p.15) and mostly use associational language.",
+    "House cosponsor cap of 25 before 1979 and low early cosponsorship rates (footnote 9, p.11); addressed in robustness Table A4 only.",
+    "Table notes report one-tailed significance tests. Supplemental appendix is stated as to be posted online; the appendix tables are included in the text file.",
+    "The Table A9 note claims greater success starting with passage out of committee, but Model A9.2 (committee action) is not significant, so the note overstates the Senate committee-stage result."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "bipartisanship unambiguously helps individual legislators who seek to advance their policy goals (abstract, p.1)",
+    "Holding the number of bill cosponsorships constant, as a legislator attracts more cosponsors from the opposite party to her bills, her value increases (p.11)",
+    "the effect of bipartisanship rises until about half of all of a member's cosponsors are from each party, and then falls again (p.22-23)"
+   ],
+   "theory": "Two competing hypotheses. Bipartisanship and Effectiveness: spatial models (Krehbiel 1998) imply successful bills need pivotal veto-player support; bipartisan support signals quality to gatekeepers (Koger 2003) and refines proposals (p.4-6). Partisanship and Effectiveness: leaders reward one-sided party support (Cox and McCubbins 2005; Hastert Rule), and policy specialists achieve more (Bernhard and Sulkin 2018) (p.6-7). Conditional hypotheses cover majority status, era and polarization (p.7-8). Reciprocity: offering cross-party cosponsorships generates reciprocal ones (p.25-26).",
+   "identification": "No instrument, natural experiment or design-based strategy. Identification relies on legislator fixed effects (within-member variation), a standard covariate set from the effectiveness literature, and robustness checks. Authors interpret coefficients as associations and separately test the offered-vs-attracted distinction (p.15-18). Reverse causation and time-varying confounds are not formally addressed.",
+   "measures": "DV: Legislative Effectiveness Score (LES; Volden and Wiseman 2014, 2018), mean 1.03 House and 1.01 Senate (Table A1). Main IV: Proportion Bipartisan Cosponsors Attracted, the mean across a member's bills with at least one cosponsor of the share of cosponsors from the other party (mean 0.29 House, 0.35 Senate). Also: Proportion Bipartisan Cosponsorships Offered; seniority; party and leadership; chairs; power committee; distance from median (DW-NOMINATE); delegation size; vote share; up for reelection (Senate); average cosponsors attracted; polarization; majority margin.",
+   "references_of_note": [
+    "Volden and Wiseman 2014 Legislative Effectiveness in the United States Congress: The Lawmakers (source of the LES outcome)",
+    "Volden and Wiseman 2018 Legislative Effectiveness in the United States Senate, Journal of Politics (Senate LES and electoral-cycle control)",
+    "Fowler 2006 Connecting the Congress, Political Analysis (cosponsorship data for 93rd-110th)",
+    "Krehbiel 1998 Pivotal Politics (spatial veto-player argument)",
+    "Koger 2003 Position Taking and Cosponsorship in the U.S. House (cosponsorship as signal)",
+    "Cox and McCubbins 2005 Setting the Agenda (party leader control of gatekeepers)",
+    "Curry and Lee 2020 The Limits of Party (most successful bills are bipartisan)",
+    "Harbridge 2015 Is Bipartisanship Dead? (bipartisan cosponsorship evidence)",
+    "Casas Denny and Wilkerson 2020 More Effective Than We Thought (hitchhiker laws, Table A11)",
+    "Treul et al. forthcoming on primary paths from effectiveness to electoral success (Journal of Politics)"
+   ]
+  },
+  "summary_md": "Harbridge-Yong, Volden and Wiseman ask whether bipartisanship pays for individual lawmakers. They use all House and Senate members in the 93rd-114th Congresses (1973-2016; about 9,000 House and 2,170 Senate legislator-Congress rows) and regress the Volden-Wiseman Legislative Effectiveness Score on the share of a member's cosponsors who come from the other party. The design uses legislator fixed effects. That attracted share predicts effectiveness: within member, the coefficient is 0.433 in the House and 0.330 in the Senate, so one SD is worth about 6-8 percent of mean LES. The share members offer to the other party's bills does not predict effectiveness once controls are in. The effect holds across eras, majority margins and polarization levels, and in majority and minority strata. It is an inverted U that peaks near a 50/50 cosponsor mix (0.496 House, 0.512 Senate). In the House the attracted share also predicts each later stage, from committee action to law. Offering cross-party cosponsorships predicts attracting them, at 0.317 within member in the House and 0.547 in the Senate. The evidence is observational, with one-tailed tests and no design-based identification. For Paul's system, the sharpest point concerns direction. bpf is an undirected, symmetrized cross-party tie share. Cooperation v2's directional component measures offered support. Nothing in the system measures attracted support, which is the side the paper ties to effectiveness. The flip model's (1+0.3 bpf) passage bonus and the coalition seed boost (1+0.8 bpf) are monotone, but the paper finds a peak and then a decline. The paper's reciprocity is cosponsorship exchange. It does not validate the money reciprocity in D-104..D-108. Any transfer is UNVERIFIED until it is reproduced on Paul's data.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-sna.bipartisanship-bpf",
+    "relation": "qualifies",
+    "paper_claim": "Within-member (legislator FE, one-tailed) coefficient on the attracted share, the per-bill mean of other-party cosponsor share: House 0.433 (SE 0.097) Model 1.2; Senate 0.330 (SE 0.147, p<0.05) Model 1.5. Offered share not significant with controls: House -0.234 (Model 1.3), Senate -0.420 (Model 1.6). Window 93rd-114th Congresses (1973-2016), about 9,000 House and 2,170 Senate legislator-Congress rows.",
+    "paper_location": "Table 1 Models 1.2, 1.3, 1.5, 1.6 (printed pp.16-17); Table A1 variable definitions",
+    "system_side": "bpf() in fec/moneyball_core.py reads bipartisan.json (default 0.24). The materialize script builds that file: each undirected pair takes the mean of its two directed rows when both directions exist, otherwise the single directed weight; member share = (cross + 6 x prior) / (same + cross + 6). Directed rows are kept only in audit fields, so bpf mixes offered and attracted ties. No attracted-direction share is computed in fec .py.",
+    "code_ref": "fec/legislation/materialize_legislation_base_and_bipartisan.py (pair symmetrization about 725-737; share about 786); fec/moneyball_core.py:68-72",
+    "transfer_conditions": "Paper variable is a mean over a member's own bills of other-party cosponsor share; bpf is a roster-snapshot weighted tie share with prior shrinkage, so window and denominator differ. Paper coefficients are by chamber, 1973-2016, one-tailed; quote by chamber only. Transfer to the current roster is UNVERIFIED until reproduced (DE-062).",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "All listed coefficients, SEs, offered-share nulls and the window reproduce in the text. Softened: the rel says offered and attracted ties cannot be recovered. The materialize output keeps source_directed_weights, so an attracted share is buildable from data already on disk, just not built. Symmetrization is the plain mean only when both directions exist. ALPHA 6 shrinkage confirmed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-sna#Bipartisanship (bpf)|Bipartisanship (bpf)]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-influence-engine.flip-model",
+    "relation": "qualifies",
+    "paper_claim": "Within-member quadratic in the attracted share: House linear 1.828 and squared -1.844 peak at 0.496 (Model 3.1); Senate 1.666 and -1.626 peak at 0.512 (Model 3.4). Effectiveness falls on both sides of the peak. A one-SD decline from the mean costs about 22 percent of LES in the House and 16 percent in the Senate; a one-SD rise adds about 8 and 4 percent. Mean LES about 1.0.",
+    "paper_location": "Table 3 Models 3.1 and 3.4; footnote 21; text p.24",
+    "system_side": "flip_model.py:142 multiplies the target by (1+0.3*bpf). The inline comment attributes a passage bonus of +8-14 percent to Volden-Wiseman. No 8-14 percent figure appears in the paper text; its figures are 6-8 percent of LES per SD and the 22/16 and 8/4 percent shape numbers. The bonus is +7.2 percent at bpf 0.24 and +30 percent at bpf 1.0, rising monotonically with no peak.",
+    "code_ref": "fec/engine/flip_model.py:142",
+    "transfer_conditions": "A linear bonus approximates the paper only below a share of about 0.5, where most members sit (paper mean 0.29 House, 0.35 Senate). The paper outcome is LES on a member's own sponsored bills, not the value of flipping a vote, and its share is the attracted share, not bpf. Any change to the functional form would move ranks and is not proposed here.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper coefficients reproduce and the peak values check (1.828/(2*1.844) = 0.496). Code line 142 confirmed as a monotone (1+0.3*bpf) factor. The +8-14 percent attribution to Volden-Wiseman is not in this paper. The component card text was not available to me, so the rel claim that the card is stale is unverified.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Flip - winnability model|Flip - winnability model]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-legislative-data.effectiveness-shadow",
+    "relation": "suggests-extension",
+    "paper_claim": "Stage models use a member's count of bills reaching each stage as the DV, with legislator FE and one-tailed tests. House: committee action (A8.2) 0.894 SE 0.204; beyond committee (A8.3) 0.853; passing chamber (A8.4) 0.800; law (A8.5) 0.485 SE 0.088; all p<0.001. Senate: committee action (A9.2) 1.767, not significant; law (A9.5) 0.589, p<0.05.",
+    "paper_location": "Appendix Table A8 (House, p.12); Table A9 (Senate, p.13)",
+    "system_side": "legislative_effectiveness.py defines STAGES BILL AIC ABC PASS LAW (line 17), role weights sponsor 3, original 2, cosponsor 1 (lines 18-19), a cosponsor timing multiplier of 2 to the power of minus delay over 180 (line 132), and compute_effectiveness (line 152). There is no cross-party term. I found no code that compares the shadow score with the Volden-Wiseman LES; verify_effectiveness_shadow.py checks internal consistency only.",
+    "code_ref": "fec/engine/legislative_effectiveness.py:17-19,132,152; fec/legislation/verify_effectiveness_shadow.py",
+    "transfer_conditions": "The paper DVs are counts of a member's own bills at each stage, not stage rates and not LES. A shadow-vs-LES check would need a per-Congress attracted share (not built) and a comparable LES series. It stays a diagnostic. Quote the coefficients as count-DV associations, House and Senate separately.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Stage names, role weights and the House coefficients reproduce. Corrected: the DVs are bill counts, so the rel line that the LES outcome is the CEL score mislabels them. The claim that the shadow is checked against CEL LES was not found in the code read. Senate committee result is not significant, and the Senate law result is p<0.05 one-tailed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-legislative-data#Five-stage legislative effectiveness shadow and CEL criterion|Five-stage legislative effectiveness shadow and CEL criterion]]",
+    "system": "melange-legislative-data"
+   },
+   {
+    "component_id": "melange-psychometrics.cooperation-v2",
+    "relation": "supports",
+    "paper_claim": "Offering cross-party cosponsorships predicts attracting them (Table 4; DV attracted share, IV offered share). House pooled Model 4.1 0.626 SE 0.039; House member FE Model 4.2 0.317 SE 0.036; Senate pooled Model 4.3 0.739 SE 0.045; Senate FE Model 4.4 0.547 SE 0.047; all p<0.001. Distance from median: House pooled -0.154, FE 0.005 (n.s.); Senate pooled -0.114, FE -0.096.",
+    "paper_location": "Table 4 Models 4.1-4.4, pp.25-27",
+    "system_side": "coop_v2_candidate.py composite = mean of z(c1) and z(c2). c1 is the bipartisan.json undirected cross-party share. c2 is the directional offered cross-party share from bills the member chose to join. c3 reciprocity is reported and never composited. receptivity_layer.py:183 records coop v2 as a near-duplicate of bpf (rho +0.888), a system-internal overlap, not paper evidence.",
+    "code_ref": "fec/members/coop_v2_candidate.py:9-17 and composite block about 108-118; fec/members/receptivity_layer.py:183",
+    "transfer_conditions": "The paper is a member-level aggregate over 1973-2016, by chamber. Pooled and FE coefficients differ: the House roughly halves under FE, the Senate falls by about a quarter, so quote by chamber with strata. The paper shows offered-to-attracted reciprocity only, not that the composite tracks any effectiveness outcome.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Table 4 coefficients and distance-from-median effects reproduce. Composite and offered-share definitions confirmed in code. Removed: the rel argument that the rho of .888 between composite and bpf fits the paper link is a non sequitur. The halving claim holds for the House only.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Cooperation v2 (share-based bridging)|Cooperation v2 (share-based bridging)]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-allocation.per-topic-allocators",
+    "relation": "qualifies",
+    "paper_claim": "Returns to bipartisan composition are nonlinear. One SD below the mean costs about 22 percent of LES in the House and 16 percent in the Senate; one SD above adds about 8 and 4 percent. Gains flatten and reverse past a 50/50 mix.",
+    "paper_location": "Table 3 and text p.24",
+    "system_side": "per_topic_coalition.py line 30 sets BETA_C = 0.8. Line 117 boosts each positive marginal spread by (1 + BETA_C*bpf) before the water-fill. The boost is monotone in bpf, and the code comment says bridges get a larger seed.",
+    "code_ref": "fec/engine/per_topic_coalition.py:30,117",
+    "transfer_conditions": "This holds only if the seed boost is meant to proxy a recruit's legislative effectiveness. The paper says nothing about diffusion seeding, so the link is an analogy and the allocators are diagnostic.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Paper percentages reproduce (text p.24). BETA_C and the boost formula confirmed in code. The relation is an analogy only, which the transfer condition already states.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-allocation#Per-topic flip and coalition allocators|Per-topic flip and coalition allocators]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.cascade-kernel",
+    "relation": "context",
+    "paper_claim": "Cross-party cosponsorship is exchanged: members who offer cross-party support attract it back, within member 0.317 House (Model 4.2) and 0.547 Senate (Model 4.4), p<0.001. The paper tests member-level aggregates only, with no dyadic diffusion or join timing.",
+    "paper_location": "Table 4 Models 4.2 and 4.4, p.27",
+    "system_side": "moneyball_core.py cpf_diffusion (line 543) returns 0.4 + 0.6*sqrt(bpf_n * bpf_u) for cross-party D/R pairs and 1.0 otherwise. The form is symmetric in the two members.",
+    "code_ref": "fec/moneyball_core.py:543-545",
+    "transfer_conditions": "The paper cannot test the sqrt-product form or the 0.4 floor. Context only.",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Coefficients reproduce. The formula and cross-party condition are confirmed in code. The verdict covers the paper claim only, which is member-level and does not test dyadic diffusion.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Cascade activation kernel build_P and partisan edge factors|Cascade activation kernel build_P and partisan edge factors]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "bpf symmetrization: the rel says every pair takes the mean of its two directed weights; the code uses the single directed weight when only one direction exists.",
+   "Offered and attracted ties cannot be recovered: overstated. The materialize output keeps source_directed_weights, so an attracted share is buildable from data on disk but is not built.",
+   "Later-stage effects: the Table A8-A9 DVs are counts of a member's bills at each stage, not stage rates, and not LES. The rel line that the LES outcome is the CEL score mislabels them.",
+   "Shadow checked against CEL LES: not found in the code read; treat as unsupported.",
+   "Majority/minority similar shapes: holds for the House. The Senate minority squared term (Model 3.6, -0.397) is not significant, so the Senate minority shape is not established.",
+   "Reciprocity halving: House pooled 0.626 to FE 0.317 roughly halves; Senate 0.739 to 0.547 does not. The rho .888 sentence is a non sequitur for the paper link.",
+   "Flip-model card: the claim that the component card says the code has no bonus was not checked, since the card text was not available. The 8-14 percent attribution to Volden-Wiseman is not in this paper.",
+   "Senate Table A9 note overstates the committee-stage result (A9.2 1.767 not significant). Confirmed as the rel flags.",
+   "Related links: aroyehun relation same-data changed to complements (shared LES outcome only). Dropped noble-2024-presidential-leadership-legislative: it models presidential going-public under polarization and does not study effectiveness, so the link is not genuine. Aref-2021 description reworded.",
+   "Paul alignment: the Bacik citation and the choice of LES for the shadow lane are not in this item (paul_entries is empty); unverified here.",
+   "Coverage: full text read for Tables 1, 3, 4, A1, A5, A6, A8-A13 and notes (Table 2 spot-checked); code read for all six code_refs plus the coop composite and shadow verifier. paul_markup empty, 0 dropped. key_findings not returned (schema has no field)."
+  ],
+  "gaps_exposed": [
+   "No ATTRACTED-direction bipartisan share exists anywhere in the system. bpf is undirected and symmetrized, and cooperation v2 c2 measures offered support. The paper ties only the attracted share to effectiveness.",
+   "Every bpf consumer is monotone: the flip passage bonus (1+0.3 bpf) and the coalition seed boost (1+0.8 bpf). The paper finds an inverted U peaking near a 0.5 share in both chambers.",
+   "The flip-model comment cites a Volden-Wiseman bonus of +8-14 percent, but this paper reports 6-8 percent of mean LES per SD. The component card says the code line has no bonus, yet flip_model.py:142 carries (1+0.3*bpf), so the card is stale.",
+   "bpf is a single current-roster snapshot. The paper's effects are within member across Congresses, and the system has no per-Congress bipartisan series to test them.",
+   "The effectiveness shadow has never been checked against bipartisan coalition composition, which is a ready convergent-validity test against CEL LES."
+  ],
+  "flags": [
+   "The paper's reciprocity is cosponsorship exchange between members. It does not validate the money or competitiveness reciprocity in D-104..D-108, which stays NOT validated. Do not cite this paper for it.",
+   "The paper controls for average cosponsors attracted in its regressions. That is not per-edge volume normalization and gives no support to the rejected per-edge normalization proposal.",
+   "The evidence is observational with legislator FE and one-tailed tests, and it has no design-based identification, so it supports associational language only. The Table A9 note overstates the Senate committee-stage result (A9.2 is not significant).",
+   "Coefficients are reported by chamber and by majority/minority strata. Quote them by chamber with the 1973-2016 window, never as one pooled number.",
+   "bpf and any attracted-share variant are heuristic model outputs, not closeness or access probabilities (D-025).",
+   "Transfer of any of these effects to Paul's current-roster data is UNVERIFIED until reproduced by a second path (DE-062)."
+  ],
+  "paul_alignment": "Paul has no annotated entry for this work. The evidence agrees in direction with his bpf position, which cites Bacik on bipartisan teams earning more, and with his choice of LES as the effectiveness criterion for the shadow lane. It refines rather than contradicts both. The payoff is to bipartisan support attracted, not offered, and it is nonlinear. No Paul note is stale because of this paper. The flip-model comment and the component card describing it are out of step with the code and with the paper's magnitudes.",
+  "related": [
+   {
+    "slug": "sotoudeh-2024-network-based-measure",
+    "relation": "complements",
+    "why": "Sotoudeh (2024) measures cosponsorship influence on House bill passage and contrasts it with the Volden-Wiseman LES. This paper uses LES as its outcome."
+   },
+   {
+    "slug": "battaglini-2018-effectiveness-connected-legislators",
+    "relation": "complements",
+    "why": "Battaglini, Leone Sciabolazza and Patacchini model LES as a Katz-Bonacich centrality of the cosponsorship network. This paper uses the cross-party composition of cosponsors instead."
+   },
+   {
+    "slug": "bucchianeri-2025-legislative-effectiveness-american",
+    "relation": "same-method",
+    "why": "Bucchianeri, Volden and Wiseman extend the Volden-Wiseman effectiveness framework to American state legislatures (SLES)."
+   },
+   {
+    "slug": "aroyehun-2026-politics-of-feelings",
+    "relation": "complements",
+    "why": "Aroyehun (2026) also regresses Congressional LES on a member-level predictor, emotional expression from floor speeches. The link is a shared outcome, not shared data."
+   },
+   {
+    "slug": "aref-2021-identifying-hidden-coalitions",
+    "relation": "complements",
+    "why": "Aref and Neal (2021) partition House cosponsorship signed networks; their third coalition, marked by negative same-party ties, is the most effective coalition in most sessions. Their coalitions are signed-network partitions, not cross-party by definition."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ }
+]

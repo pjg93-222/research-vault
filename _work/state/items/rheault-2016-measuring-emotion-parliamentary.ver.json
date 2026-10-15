@@ -1,0 +1,83 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-stance.legacy-regex-scorer",
+      "relation": "context",
+      "paper_claim": "Domain lexicon from 200 emotion seeds (100 positive, 100 negative lemmas) using GloVe vectors of 300 dimensions per lemma-PoS pair, symmetric window 15, 108,506 lemma types at frequency 10 or more. Each lemma score is its summed cosine to positive seeds minus summed cosine to negative seeds, scaled to [-1,1]. The top and bottom 2,000 are kept (4,200 words). Table 1 lists compound (verb) at -1.00.",
+      "paper_location": "Materials and Methods, Eq 1 and Table 1, pp.3-4",
+      "system_side": "Opt-in offline expand_tone_lexicon helper trains GloVe on the scraped CU press corpus and writes a CSV of cosine-nearest candidates to 10 positive and 10 negative seeds for analyst promotion. Live scoring stays on the curated TONE_LEXICON, per the helper's own comment.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R:2477-2496 (helper and seeds); TONE_LEXICON at :2323",
+      "transfer_conditions": "Parallel method, not the source: the helper header cites Rice and Zorn 2018 for the seed-to-vocabulary logic. Its GloVe settings differ from Rheault's (rank 50, skip-gram window 5, minimum count 5, at least 50 documents). Its seeds mix stance words (support, champion, protect) with affect words. The press corpus is far smaller than Hansard, so vectors will be noisier. Rheault's own odd top entries show the risk. The analyst review step is the safeguard; the top and bottom cut has no in-domain validation.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers verified in the text (200 seeds, Eq 1, 4,200 words, Table 1 compound at -1.00). Helper, opt-in status, CSV output and seed lists verified in code. The method-source relation is not true as written: the helper cites Rice and Zorn 2018 and uses different vector settings, so Rheault is a parallel method. Relation rewritten to context."
+    },
+    {
+      "component_id": "melange-stance.lsd-tone",
+      "relation": "qualifies",
+      "paper_claim": "The long-run trend reproduces with NRC, OpinionFinder and SentiWordNet (S1 Fig, text description only; figure not extracted). Polarity is a signed weighted sum over all lemmas. Film-review validation reaches up to 80 percent accuracy; no parliamentary validation is reported in the extracted text. Recession -0.198 (SE 0.062) and election +0.187 (SE 0.069) shift the annual polarity change, pooled over government and opposition, N=104 years, Table 2 Model 1 (UNSTRATIFIED). The yearly polarity series has a unit root.",
+      "paper_location": "pp.3-7; Table 2 p.9; stationarity pp.7-8; S1 Fig p.7",
+      "system_side": "LSD2015 is applied unchanged to congressional press releases. lsd_tone returns net/words and (pos+neg)/words. run_stage5 defaults INTENSITY to net_norm, so heat is abs(net/words), multiplied by the stance sign to form press_value.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:44-60; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:45,141-143",
+      "transfer_conditions": "Rheault measures direction; Paul uses tone only as an intensity multiplier. Under net_norm a release dense in both positive and negative words scores near zero heat, so the paper gives no support for reading abs(polarity) as intensity. The lsd_charge option is closer to an intensity construct. Period effects matter only if members' release windows differ in date coverage. Westminster debate text is not US press-release text.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Table 2 coefficients, the 80 percent film-review validation, the unit-root statement and the net and charge definitions verified. Code lines verified, including the net_norm default and the heat and press_value lines. Not checked: whether any period or date demeaning exists elsewhere in the pipeline, so the no-demeaning statement stays the analyst's reading."
+    },
+    {
+      "component_id": "melange-psychometrics.affective-n",
+      "relation": "qualifies",
+      "paper_claim": "Labor disputes Granger-cause opposition polarity (chi2 8.048, p=0.005) but not government polarity (chi2 0.092, p=0.761), from annual pairwise augmented VAR tests on the Westminster series (Table 4 bottom). The text says the labor-dispute impulse response appears greater for opposition (S5 Fig, not extracted). The authors frame these as associations and argue the mechanism from theory, not from an exogenous shock.",
+      "paper_location": "Table 4 bottom, p.13; pp.12-14 (impulse responses and discussion); S5 Fig",
+      "system_side": "affective_n is a z-score of E-residualized LLM facets (pessimism, anxiety, depression, volatility) from interview text, then residualized on a Republican dummy. A LIWC-style count (fps + negemo - posemo) is computed only as the convergent-validity anchor. Majority status and interview date or period are not controlled.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/emit_affective_n.py:28-38 (LIWC anchor), :39-43 (round-7b note), :52-57 (E then party residualization)",
+      "transfer_conditions": "The paper covers one Westminster chamber, aggregated over time, not individual-level US data. The extracted text does not state the frequency of the Table 4 tests, and S5 also has quarterly models. Within one Congress, party and majority status coincide, so the party control absorbs role; the chamber-flip window in the rel is the analyst's premise, not from this paper, and is untested here. Treat it as a possible confound only.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Granger chi2 and p-values verified in Table 4. Code path verified at the cited lines, including the LIWC anchor role and the E-then-party residualization. Softened: the opposition impulse-response claim rests on S5 Fig, which is not in the extracted text, and the annual-only frame is not stated for the Table 4 party split."
+    }
+  ],
+  "related": [
+    {
+      "slug": "rice-2018-corpus-based-dictionaries",
+      "relation": "same-method",
+      "why": "Minimally supervised corpus-based dictionary built from seed words plus GloVe similarity, the same seed-to-domain-vocabulary logic the legacy helper cites as Rice and Zorn 2018. Verified in the Rice item's method text."
+    },
+    {
+      "slug": "osnabrugge-2021-playing-gallery-emotive",
+      "relation": "builds-on",
+      "why": "Measures emotive rhetoric in UK Commons speeches 2001-2019, uses Rheault et al. 2016 data for 2001-2014, and cites Rheault as the earlier emotion measure. Verified in the Osnabrugge item."
+    },
+    {
+      "slug": "aroyehun-2026-politics-of-feelings",
+      "relation": "builds-on",
+      "why": "Its text cites Rheault et al. 2016 alongside Osnabrugge et al. 2021 for emotion varying with policy issues and speaker attributes, and it moves the measurement to US Congress. Verified at paper text lines 58-61 and 126-127; line 127 also cites a separate Rheault 2016 anxiety paper, so that citation is mixed."
+    },
+    {
+      "slug": "hargrave-2022-longer-conforming-stereotypes",
+      "relation": "complements",
+      "why": "UK Commons floor debate 1997-2019 on gendered speaking style. The rel's same-data label is dropped: the text does not name its data source, and its window differs from Rheault's 1909-2013."
+    },
+    {
+      "slug": "haselmayer-2017-sentiment-analysis-political",
+      "relation": "complements",
+      "why": "Builds a political sentiment dictionary validated by crowdcoding on Austrian political text, which speaks to Rheault's film-review-only validation gap. Verified in the Haselmayer item."
+    },
+    {
+      "slug": "merkley-nd-party-cues-news",
+      "relation": "complements",
+      "why": "Uses Lexicoder plus a custom dictionary of party names and leaders to detect party cues, not sentiment, and validates that dictionary against hand-coded articles. Verified in the Merkley item; the link is about dictionary practice, not about tone measurement."
+    },
+    {
+      "slug": "dietrich-2019-pitch-perfect-vocal",
+      "relation": "complements",
+      "why": "Measures emotional intensity of congressional speech from vocal pitch rather than words, a non-lexical check on the intensity construct. Verified in the Dietrich item."
+    }
+  ],
+  "summary_issues": [
+    "Overstated relation: the summary calls Rheault the method source for the opt-in GloVe helper, but the helper header cites Rice and Zorn 2018 and its GloVe settings (rank 50, window 5) differ from Rheault's 300 dimensions and window 15. Rheault is a parallel method.",
+    "Overstated validation claim: the summary says the lexicon is validated only on film reviews, never on parliamentary speech. The extracted text reports film-review validation and says it is not on Hansard, but S1 Appendix was not extracted, so never cannot be confirmed; use reported validation is on film reviews only.",
+    "Overstated causal verb: the summary says the work shows that negative-emotion language follows institutional role and economic shocks. The paper reports annual associations and says the cointegrating relation is not causal, so reports associations is the correct wording.",
+    "Figure-only claim: the statement that the rise holds under NRC, OpinionFinder and SentiWordNet rests on S1 Fig, which is not in the extracted text, so it is supported only by the paper's text description on p.7."
+  ]
+}

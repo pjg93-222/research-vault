@@ -1,0 +1,81 @@
+{
+ "summary_md": "Fremeth, Richter and Schaufele (MPRA working paper, 2018) ask whether the federal per-candidate cap on corporate PAC gifts (5,000 dollars per election, 10,000 per cycle) pushes firms into other political channels. They use S&P 500 firms with PACs, 1992-2008 FEC data (6.8M firm-candidate-cycle rows) and LDA lobbying for 2000-2008 (about 2,800 firm-cycles). Within a firm-cycle, a candidate who receives the PAC maximum is 6.6 points more likely to also receive a gift from the firm's CEO (Table 2), about 110 dollars more on average. Firms whose PAC maxes out any candidate spend about 549,000 dollars more on lobbying per cycle, with firm and industry-by-cycle fixed effects. A one-sided regression discontinuity at the limit gives jumps of 1.6M to 3.0M dollars, but the authors call its frictions assumption strong. Placebo outcomes (R&D, advertising, dividends, acquisitions) show no jump. The authors say no exogenous variation in the limit exists, so the estimates are partial correlations. Some numbers in the text do not match the tables. For Paul's systems, the paper bears mainly on how money is bounded. The Melange optimizer treats the 10,000-dollar PAC limit as the ceiling on CU spend per member, and the flip model counts competitor money only as bank and finserv PAC dollars. The paper suggests firms at the cap shift resources into executive giving and lobbying, which neither ledger sees. Mentat already tiers Chief-level employee giving by company, so a PAC-at-limit by Chief-giving join is a cheap extension. The paper's firm-level link between giving and lobbying does not contradict the member-level FEC-LDA bridge null. That bridge asks a different question, and the paper itself notes that LDA filings name no candidates.",
+ "category": "Lobbying",
+ "bearings": [
+  {
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "paper_claim": "Per-candidate PAC limits bind for 14.4 percent of recipients of S&P 500 PAC money (Table 1). Firms at the limit show +549,166 dollars per cycle in lobbying (Table 3 col 1, SE 225,013), and their CEOs are 6.6 points more likely to co-give (Table 2). The authors conclude the limits are effectively non-binding on total corporate political activity (partial correlations, 1992-2008).",
+   "paper_location": "Table 1 p.27; Table 2 p.28; Table 3 p.29; Sections 1 and 5 pp.3-5, 19",
+   "system_side": "The optimizer caps each member at PMAX = 10,000 dollars above existing CU money, read as the single CU PAC's per-candidate per-cycle limit (Paul 2026-09-30 ruling). The pot is one PAC's budget, and nothing outside the PAC channel (executive gifts, lobbying) is modeled.",
+   "code_ref": "fec/engine/optimize.py:23-27, fec/engine/optimize.py:71",
+   "transfer_conditions": "The nominal limit is the same (10,000 per cycle, unindexed), so the cap mechanics transfer. The spillover estimates come from large for-profit S&P 500 firms in 1992-2008, not CU PACs or trade associations, and they are partial correlations. They justify a caveat that PMAX caps PAC dollars only. They do not justify reweighting.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-influence-engine.flip-model",
+   "relation": "qualifies",
+   "paper_claim": "Firms whose PAC reaches the limit move additional resources into lobbying (549,000 to 1.6M dollars per cycle; abstract, Tables 3 and 5) and into CEO giving (about 110 dollars per capped candidate, Table 2). These flows sit outside PAC-to-candidate totals.",
+   "paper_location": "Abstract p.1; Tables 2, 3, 5 pp.28-30",
+   "system_side": "The b leg of pflip counts competitor money as bank plus finserv PAC dollars per member from congestion.json, with median imputation when unobserved. Executive giving and lobbying by competitor firms are not in ind0.",
+   "code_ref": "fec/engine/flip_model.py:39, fec/engine/flip_model.py:92-97",
+   "transfer_conditions": "This holds if competitor bank and finserv firms hit the cap the way S&P 500 PAC firms do. The resulting bias would undercount competitor pressure on exactly the members they max out. It does not license adding LDA dollars as a per-member weight (D-021: LDA is identity, not weight, and LDA names no candidates).",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "mentat-fec-attribution.employer-match",
+   "relation": "suggests-extension",
+   "paper_claim": "Within firm-cycle and candidate-cycle fixed effects, a candidate receiving the PAC maximum is 0.066 more likely (SE 0.006) to receive a CEO gift and gets about 110 dollars more (SE 10.05). The text reports 7.7 percent and 123 dollars, which do not match Table 2.",
+   "paper_location": "Section 4.1 pp.10-12; Table 2 p.28; Table 7 p.A-4",
+   "system_side": "Mentat attributes individual Schedule A rows to roster companies by employer string. It splits company totals into Chief, Middle Management and Employee tiers, with known executives forced to Chief. Company PAC giving is reported separately.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/R/report.R:341-346, C:/Users/pgoff/Mentat/mentat/R/report.R:2528-2544",
+   "transfer_conditions": "A per-candidate join of company-PAC-at-limit with Chief-tier gifts would test the CEO-substitution pattern in Paul's seven industries. It depends on employer-match recall for executives and on the PAC-to-candidate recipient table. Any result stays UNVERIFIED until a second path reproduces it (DE-062).",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-lobbying.fec-lda-bridge",
+   "relation": "qualifies",
+   "paper_claim": "At the firm-cycle level, PAC at-limit status goes with +549,166 dollars of LDA lobbying (firm FE plus Fama-French 49 industry-by-cycle FE, 2000-2008, N=2,783, 787 firms). The BCRA difference-in-differences gives +539,008 (Table 6). The authors note that LDA filings do not name candidates, so firm-candidate lobbying cannot be linked.",
+   "paper_location": "Section 4.2 pp.13-15; Table 3 p.29; Table 6 p.31; Appendix A pp.A-1 to A-3",
+   "system_side": "Bridge round 3 tested member-level FEC exposure against LDA attention (2023-2026; credit_union, fintech, crypto). Raw rho was +0.153, but the four-control partial was -0.0002, and the round closed UNCORROBORATED. FEC is framed as a target-side money prior only.",
+   "code_ref": "fec/lobbying/fec_lda_bridge3_look.py:36-40, fec/lobbying/fec_lda_bridge3_look.py:1066-1085",
+   "transfer_conditions": "The paper's unit is the firm (money and lobbying by the same organization), not the member. It neither revives the member-level bridge nor contradicts its null. The transferable design is a firm-level version (an organization's giving at the cap against that organization's LDA spend) with time fixed effects.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-lobbying.lobbied-member-link",
+   "relation": "supports",
+   "paper_claim": "LDA disclosures do not identify the candidates or members lobbied. The authors could therefore relate only firm-level lobbying totals to PAC behaviour, and they approximated the mapping with a stepwise function.",
+   "paper_location": "Section 3 p.8; Section 4.2 p.13; Appendix A.3-A.4 pp.A-1 to A-3",
+   "system_side": "The client-by-bioguide-by-year network links lobbying to sponsors and cosponsors of lobbied bills, so P(joined given lobbied) = 1 by construction. It is REFUTED as evidence of influence because LD-2 never names members.",
+   "code_ref": "fec/lobbying/lobby_interactions.py:4-6",
+   "transfer_conditions": "This independently confirms the measurement fact only. The paper offers no new contact measure.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "Neither the Melange allocator nor the flip model represents non-PAC channels (executive giving, lobbying) that firms use once PAC dollars hit the per-candidate cap. The PMAX ceiling and the ind0 competitor-money term are PAC-only.",
+  "Mentat tiers Chief-level giving by company but does not join it to company-PAC-at-limit status per candidate, so the substitution pattern this paper documents is unmeasured for Paul's industries.",
+  "No firm-level version of the FEC-LDA bridge (an organization's giving against the same organization's LDA spend) has been specified. All bridge rounds were member-level.",
+  "The flip model treats competitor PAC money at or near the cap the same as smaller gifts. No at-limit indicator exists anywhere in the engine."
+ ],
+ "flags": [
+  "The authors state the estimates are partial correlations (no exogenous variation in the limit). Do not quote the 549,000-dollar or 1.6M-3.0M RD figures as causal effects.",
+  "The paper's text and tables disagree: CEO probability is 7.7 percent in the text vs 0.066 in Table 2, CEO dollars 123 vs 109.92, and the BCRA CEO effect is reported as 16 percent against a dollar coefficient. Cite the table values.",
+  "Estimates pool S&P 500 industries (with industry-by-cycle FE) and span the 2002 BCRA break. The BCRA split appears only in a DiD with one pre-BCRA lobbying cycle, so treat the pre/post pooling as weakly stratified.",
+  "D-021 guard: the paper uses LDA spend as a firm-level outcome, not a member edge. It must not be used to justify LDA-weighted member edges or per-member lobbying weights.",
+  "For any reuse, state the windows and denominators: contributions 1992-2008 (950 firms), lobbying 2000-2008 (787 firms, 2,783 firm-cycles), S&P 500 firms with PACs only."
+ ],
+ "paul_alignment": "Paul has no annotated-bibliography entry or markup for this work. His component notes expect donations to lead lobbying. This paper shows same-cycle firm-level co-movement between maxed-out PAC giving and lobbying among S&P 500 firms, not a lead. That partly supports a money-lobbying link at the organization level and leaves the system's member-level bridge null (partial -0.0002, 2023-2026) standing. None of Paul's notes becomes stale. The paper adds a channel caveat to the 2026-09-30 PMAX ruling.",
+ "related": [
+  {"slug": "kim-2020-strategic-sequential-links", "relation": "complements", "why": "Kim et al. link firm donations and lobbying at the bill and legislator level over time. Fremeth et al. give a firm-cycle link triggered at the PAC cap."},
+  {"slug": "kim-2023-systemic-sequential-links", "relation": "complements", "why": "A later version of the donations-lobbying sequencing study. It pairs with this paper's account of substitution at the cap between the same two channels."},
+  {"slug": "furnas-nd-conflating-lobbying-pacs", "relation": "complements", "why": "Furnas et al. find low overlap between lobbying and PAC organizations overall. Fremeth et al. study only S&P 500 firms that already have PACs, where the two channels co-move, so the populations explain the contrast."},
+  {"slug": "bickmore-2025-corporate-lobbying-political", "relation": "same-data", "why": "Both relate the PAC activity of Compustat-linked public firms to their LDA lobbying spend."},
+  {"slug": "kerr-2014-dynamics-firm-lobbying", "relation": "same-data", "why": "Both use firm-level LDA lobbying by public firms. Kerr et al.'s persistence finding motivates the firm fixed effects used here."},
+  {"slug": "defigueiredo-2013-advancing-empirical-research", "relation": "cites", "why": "Cited as de Figueiredo and Richter 2014 for the fact that lobbying spend far exceeds campaign contributions."},
+  {"slug": "kalla-nd-campaign-contributions-facilitate", "relation": "cites", "why": "Kalla and Broockman's access experiment is cited as a reason contributions matter to firms."},
+  {"slug": "ansolabehere-2002-little-money-politics", "relation": "complements", "why": "Ansolabehere et al. argue contribution money is small relative to the stakes. Fremeth et al. show the cap is hit for 14.4 percent of recipients and that spending spills into lobbying, one answer to the small-money puzzle."},
+  {"slug": "goff-nd-cross-industry-finance", "relation": "complements", "why": "Paul's cross-industry finance and LDA report covers the same two channels for his industries. This paper supplies a design for linking them at the firm level."}
+ ]
+}

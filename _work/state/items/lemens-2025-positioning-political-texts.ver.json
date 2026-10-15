@@ -1,0 +1,111 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-stance.debate-nli-classifier",
+   "relation": "supports",
+   "paper_claim": "Asking an LLM directly for a 0-100 position score (JSON only, temperature 0, NA allowed) gives text-level positions. GPT-4o r=0.92 against crowd means, but on the 557 of 899 tweets that received a score (NA excluded). API cost about 1.5 USD for 900 tweets versus 1,626 GBP for human coding. Table A2 ENO for the LLMs in the table is 3 to 7 human raters.",
+   "paper_location": "Sec 2.1 (prompt, temperature 0, max 20 tokens, JSON); Sec 3.1 and Fig 1 (NAll=557); Sec 4 Discussion (1.5 USD vs 1,626 pounds); App E.3 Table A2",
+   "system_side": "claude_stance.py is a Claude API rater that returns JSON only (stance, confidence, reason). Its docstring says it pre-labels the ~400 hand-coding set and is the third ensemble member beside fine-tuned DEBATE and the bill signal. Code matches this description.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:3-9,19-25,84-91",
+   "transfer_conditions": "The paper tests GPT-4, GPT-4o, MiXtral and Llama 3 (Table 1 lists no Claude model) on left-right and subsidy dimensions against independent crowd and expert benchmarks. The system rater is categorical (support/oppose/neutral), not a 0-100 scale, and its gold labels were pre-labelled by the same rater. The paper's accuracy figures cannot be quoted as properties of the Claude rater.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Holds except the denominator. r=0.92 is over the 557 scored tweets, not all 899 (Fig 1, Table A1, Fig A2). Cost, ENO and the 0-100 prompt are reproduced. Reword as GPT-4o r=0.92 with crowd means on the 557 of 899 tweets it scored, NA excluded."
+  },
+  {
+   "component_id": "melange-stance.supervised-stance-stack",
+   "relation": "qualifies",
+   "paper_claim": "LLM direct query beats text classifiers on the paper's own benchmarks. Tweets: GPT-4o r=0.92 versus fine-tuned BERT 0.78, tf-idf 0.66, GloVe 0.63. Senators: GPT-4o 0.97 versus BERT 0.93, tf-idf 0.90. The paper says no classifier matches the best LLMs on within-party differences. Its classifiers are typicality readers (naive Bayes tf-idf, BERT, GloVe) trained on about 1 million party-labelled Congress tweets, not stance classifiers trained on human stance labels. No linear SVM is tested.",
+   "paper_location": "Abstract; Sec 3.1 and Fig 1 (text on naive Bayes TF-IDF and about 1 million training tweets); Sec 3.2 and Fig 2",
+   "system_side": "fec/stance/train_tweet_stance.py builds a LinearSVC on word and char_wb TF-IDF with a CV grid over C, so the system's best classical reader is the SVM as described. The 83.9% accuracy, macro-F1 0.816 (n=87), 0.757 transformer and 0.737 CV (399 golds) figures are not in the code and were not checked against outputs.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/train_tweet_stance.py:17,34-39",
+   "transfer_conditions": "The paper compares continuous left-right positions, scored by correlation, against party-typicality readers. The system compares three-class target stance, scored by accuracy, against a stance-trained SVM. The paper does not test a stance-trained linear model, so it cannot contradict the system's SVM-over-transformer result. Treat it as a head-to-head test to run.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The paper's comparators are not the system's kind of classifier. Its TF-IDF is naive Bayes on party typicality, and no LinearSVC is tested. Relation changed from contradicts to qualifies. The within-party claim and the tweet and senator numbers are accurate."
+  },
+  {
+   "component_id": "melange-stance.media-blend",
+   "relation": "suggests-extension",
+   "paper_claim": "Sec 2.1: a document's position is the average of the sentence or tweet scores for which the LLM returned a numeric score, so NA units are dropped from the average. App E, Table A1 (GPT-4o row): tweets that received a score had 18.7 human ratings on average versus 11.6 for unscored tweets, which the paper reads as NA marking low political content.",
+   "paper_location": "Sec 2.1; App E and Table A1 (GPT-4o row)",
+   "system_side": "SIGN maps neutral to 0.0 and build_media_blend adds sign times intensity times decay divided by len(hits) per post, so neutral posts contribute zero and are not removed from any count. claude_stance.py sets stance to neutral with confidence 0.0 when the API call fails or the reply cannot be parsed, so API failure and real neutrality look the same in the output.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/build_media_blend.py:54,130; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:80,89-91,96-99",
+   "transfer_conditions": "The paper validates averaging for left-right placement, not for CU advocacy intensity. Averaging measures position while the blend sums volume. Whether volume should count is Paul's policy call, not a recommendation to normalise. Any change needs Paul's ruling and zero-rank-delta or look discipline.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Paper numbers 18.7 and 11.6 confirmed in the Table A1 GPT-4o row. Code behaviour confirmed by reading the lines, not by running. The extension is the analyst's suggestion, not the paper's, and the transfer conditions already say so."
+  },
+  {
+   "component_id": "melange-stance.two-hop-decomposition",
+   "relation": "qualifies",
+   "paper_claim": "Sec 3.4 and Fig 5 (36 coal-subsidy speeches, 10 languages, six-language crowd mean): GPT-4o overall r=0.93, with Against 0.91 and For 0.80. Against-group r is 0.07 for GPT-4 Turbo, 0.04 for MiXtral 8X22B and 0.05 for Llama 3 70B, but GPT-4o is strong within Against. Tweets within party for GPT-4o: 0.68 Democrats and 0.66 Republicans (Fig 1).",
+   "paper_location": "Sec 3.4 and Fig 5; Sec 3.1 and Fig 1",
+   "system_side": "apply_two_hop_stance.py docstring states a model stance hop of 0.915 and a model valence hop of 0.689 on the 400 tweet golds, with a composed ceiling of 0.872. The curated-registry accuracy of 0.782 and the bottleneck reading are not in the file and were not checked against outputs.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/apply_two_hop_stance.py:3-5,15,61-62",
+   "transfer_conditions": "The paper tests one policy dimension (coal subsidy, 36 speeches) against crowd benchmarks. The weak within-Against cases belong to models other than GPT-4o, which is strong in both groups. The paper does not discuss within-camp weakness, so any link to the valence hop is the analyst's inference and suggestive only.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The three low Against values (0.07, 0.04, 0.05) and the 0.93 overall match Fig 5. The summary's every-model claim is wrong. The paper's top model shows 0.91 within Against, which undercuts the inference that direct queries are weak within a camp. Code path corrected to fec/stance/."
+  },
+  {
+   "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+   "relation": "qualifies",
+   "paper_claim": "Sec 3.3 and Figs 3-4: sentence-by-sentence then averaged GPT-4o scores track expert coding on manifestos at r=0.98 (economic) and 0.94 (social). GPT-4 gives 0.98 and 0.92. Single whole-manifesto prompts (App G.2, Figs A12-A13) give economic r 0.96 to 0.98, similar to sentence scoring, and social r 0.83 to 0.92 with weaker within-party fit. Sec 4 says the paper has no clear recommendation on chunk versus single prompt. Sentences with NA are dropped from the average, not coded 0.",
+   "paper_location": "Sec 3.3 and Figs 3-4; App G.2 and Figs A12-A13; Sec 4 (single prompt versus sentence paragraph)",
+   "system_side": "big5_llm.py de-identifies author name, state, party and title before scoring, codes cannot-tell as 0 among -1/0/+1 item responses, uses about 1,200-word chunks sampled across each corpus, and averages upward. The +0.064 versus 0.12 gate and the display-only status are not in this file.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/big5_llm.py:8-17,51,216-221",
+   "transfer_conditions": "The paper's units are single sentences from party manifestos and speeches, not chunks of member speech, and it drops NA rather than coding it 0. The paper does not discuss de-identification or name priors, so the claim that its senator r=0.97 reflects name priors is the analyst's speculation. The paper does not say whether names were removed from senators' tweets. The traits differ, so it cannot rescue the failed behavioural gate.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The 0.94 to 0.98 manifesto range holds only for the top two models. Single-prompt economic scoring is about as good as sentence scoring, so do worse applies to social only. The paper does not say texts are not de-identified; it does not discuss the topic. Supports chunk-then-average overstates the paper, which disclaims a general recommendation."
+  }
+ ],
+ "related": [
+  {
+   "slug": "ornstein-2024-train-your-stochastic",
+   "relation": "same-method",
+   "why": "This is the GPT-3 probability-based scaling the paper benchmarks against (its footnote 2 reports expert correlations of .92 and .8). Both position political texts with LLMs; this paper replaces token probabilities with a direct score query."
+  },
+  {
+   "slug": "burnham-2024-political-debate-zero",
+   "relation": "complements",
+   "why": "Political DEBATE is the NLI base model the system fine-tunes for CU stance. Le Mens offers the generative direct-query alternative for the same reader slot."
+  },
+  {
+   "slug": "burnham-2023-stance-detection-practical-guide",
+   "relation": "complements",
+   "why": "This guide covers target-specific stance classification. Le Mens covers continuous positioning; together they frame the categorical versus scaled choice for the CU rater."
+  },
+  {
+   "slug": "poole-1999-nominate-after-years",
+   "relation": "complements",
+   "why": "The senator benchmark is the first Nokken-Poole roll-call dimension, a period-specific NOMINATE variant."
+  },
+  {
+   "slug": "bonica-2013-mapping-ideological-marketplace",
+   "relation": "complements",
+   "why": "CFscores are the second actor-level benchmark (App A8). They correlate highly overall but less within party."
+  },
+  {
+   "slug": "birkenmaier-2025-measuring-politicians-public",
+   "relation": "same-method",
+   "why": "This also measures politicians from their text with GPT-4o, here for agency and communion. The Paul-usage part of the why text was not verified in this run; the shared method is real."
+  },
+  {
+   "slug": "b-2025-comparing-fine-tuned",
+   "relation": "complements",
+   "why": "This compares fine-tuned RoBERTa with classical ML for political-tweet stance, the same supervised-versus-classical contrast Le Mens extends to LLMs."
+  }
+ ],
+ "summary_issues": [
+  "Denominator error: the summary says GPT-4o reaches r=0.92 on 899 tweets, but r=0.92 is over the 557 tweets that received an LLM score (NA excluded). Fig 1, Table A1 and Fig A2 all give NAll=557.",
+  "Wrong range: the summary says the Against group drops to 0.04 to 0.07 for every model except GPT-4o. Only GPT-4 Turbo (0.07), MiXtral 8X22B (0.04) and Llama 3 70B (0.05) are in that range. GPT-3.5 Turbo is 0.56, Llama 3 8B 0.50, Aya 23 35B 0.35 and MiXtral 8X7Bq6 0.16 (Fig 5).",
+  "Overbroad claim: the summary says fine-tuned BERT, tf-idf and GloVe classifiers score lower. That holds for tweets and senators. On manifestos BERT gets 0.96 (economic) and 0.92 (social), close to GPT-4 levels (Figs 3-4). Restrict the claim to tweets and senators.",
+  "Overstated reading: the summary says the paper supports using an LLM as a stance rater. The paper scores left-right and pro/anti-subsidy positions and does not test stance classification. Reword as position scoring that may inform a rater.",
+  "Classifier description: the summary says the paper contrasts with classical TF-IDF readers. The paper's TF-IDF is a naive Bayes party-typicality reader, not a LinearSVC trained on stance labels, and no SVM is tested.",
+  "Strata missing: the lead quotes pooled overall correlations (0.92 tweets, 0.97 senators, 0.98 and 0.94 manifestos, 0.93 speeches) without within-party or within-camp strata. The rule requires the strata or an UNSTRATIFIED label next to them. Within-party figures are tweets 0.68 D and 0.66 R; senators 0.72 and 0.72.",
+  "ENO flag is inaccurate: the flag says ENO for GPT-4o is 7 in Table A2 but 5 to 7 in the text. The text gives 5 to 7 for GPT-4, MiXtral 8X22B and Llama 3 70B, which Table A2 lists as 5 each. GPT-4o's 7 is not mentioned in the text. The Discussion says about 4 or more raters, which is a third figure. Correct the flag to this three-way inconsistency.",
+  "Confirmed flags: the year hint 2025 conflicts with the text (dated September 6, 2024, arXiv v3), and the senator count is 98 in the Fig 2 caption but 97 in App A.2. Both flags are correct as written."
+ ]
+}

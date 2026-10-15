@@ -1,0 +1,63 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-influence-engine.money-response-defection",
+      "relation": "contradicts",
+      "paper_claim": "Loss aversion was NOT found in the MP sample (n=46) nor in the student sample; the authors suspect the loss-aversion tasks lack validity (participants may treat the endowment as house money, fn 4). The abstract's claim that MPs' deviations are 'somewhat smaller than those of other people' is not a formal statistical test in the main text: it rests on the authors' student comparison sample (n=176, Appendix E, not in the file; e.g. students showed the common ratio effect, MPs did not, p.106) plus prior literature.",
+      "paper_location": "p.105 and fn 4; Abstract p.101; p.106 (common ratio); conclusion p.114",
+      "system_side": "shift_lean multiplies competitor-source money by LOSSFRAME 1.10 so a competitor 'threat' moves lean more than an equal CU gift. The code comment cites K&T loss aversion 'elite-attenuated per Linde-Vis', and audit_full locks this asymmetry in as by design. Defection then moves floor(|shift|/DTHRESH) rungs.",
+      "code_ref": "fec/engine/money_response.py:26-31,68-75,76-83; fec/members/receptivity_layer.py:22-28; fec/audit/audit_full.py:62-63",
+      "transfer_conditions": "The paper is no basis for LOSSFRAME. (1) It reports no loss aversion in politicians, so the citation runs against the dial. (2) Its loss frame concerns outcomes for the decision-maker relative to a reference point; a competitor PAC donation to a member is not a loss to that member, so the 'threat frame' is a separate untested assumption. (3) 1.10 is not derived from any number in the paper. LOSSFRAME stands as owner judgment and should be cited as such.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Loss-aversion null and house-money explanation confirmed at p.105/fn 4. Code confirmed (money_response.py:28-31 comment and LOSSFRAME=1.10; line 74 applies it; defection at 76-83 uses int(|dlean|//DTHRESH); audit_full.py:62-63 locks it). Corrected the 'smaller than other people' attribution: the paper ran a student sample (n=176) and refers to it in the main text, so it is not only prior literature, though no formal MP-vs-student test is reported in the file."
+    },
+    {
+      "component_id": "melange-influence-engine.receptivity-layer",
+      "relation": "qualifies",
+      "paper_claim": "Strong reflection effect in the paid lottery task: risky choice 39.13% under gain vs 76.09% under loss (36.96 pp, binomial p=0.0002, n=46). In the four hypothetical scenarios (Table 4, Fisher tests): economic 45% vs 50% (p=0.774), votes 45.83% vs 40.91% (p=0.774), votes+economic 85% vs 69.23% (p=0.302), Asian disease 88.46% vs 30% (p<0.001). In a logistic regression over all four scenarios (n=164, covariates, clustered SEs) the scenario-specific loss-frame odds ratios are 0.860 (economic, p=0.827), 1.599 (votes, p=0.490), 8.684 (votes+economic, p=0.033) and 14.633 (Asian disease, p=0.001). Reflection thus appears in two of four scenarios; votes look like the reference point ('less strong but nevertheless suggestive'). Time in parliament does not predict risk-taking (OR 0.995, p=0.580).",
+      "paper_location": "Table 3 p.110; Tables 4-5 p.112; pp.111-114",
+      "system_side": "pt_domain = loss if the member has a defend or contest electoral play, or security < 0.45. pt_mult = 1.15 for loss ('gambles under threat, more movable') and 0.92 for gain. It enters pressure_mult = clip(susc_mult x incent x pt, 0.50, 1.60) (pressure_mult_compet when COMPET_MULT is on), which scales the money terms in shift_lean and in pflip. The docstring also says politicians are 'loss-averse overall'.",
+      "code_ref": "fec/members/receptivity_layer.py:22-28,200-209,226-227; fec/engine/flip_model.py:86-96,147; fec/engine/money_response.py:73",
+      "transfer_conditions": "Carries over: the reflection effect is real in politicians, and votes are the more plausible reference dimension, which fits keying the domain on a live race. Does not: (a) framing was randomly assigned in hypothetical scenarios, not inferred from seat security; (b) the sample is 46 Dutch MPs, 2014-2015, 76.2% right-wing; mapping onto US seat security is untested; (c) risk-seeking here means preferring higher-variance options, not greater responsiveness to money or pressure; (d) the 1.15/0.92 magnitudes and 'loss-averse overall' are unsupported (no loss aversion found). The votes+economic OR 8.684 is a scenario-specific interaction in a regression that pools scenarios; quote it with that label and alongside the non-significant Fisher test (p=0.302).",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "All numbers confirmed in Tables 3-5. Corrected two errors: (1) 'three of the four show no effect' is wrong; two of four (economic, votes) show no effect and Asian disease is strongly significant; (2) 8.684 is not a pooled loss-frame OR but the scenario-specific interaction term from the pooled regression, so it is already stratified by scenario. Code side confirmed at receptivity_layer.py:23,208-209,227 and flip_model.py:92-96,147."
+    },
+    {
+      "component_id": "melange-validation.sensitivity-and-mc",
+      "relation": "suggests-extension",
+      "paper_claim": "Outside the Asian disease problem, the political-scenario reflection effect is weak: only the votes+economic scenario shows it (85% vs 69.23%, Fisher p=0.302; significant only as a scenario interaction in the pooled regression, OR 8.684, p=0.033), and the paper reports no loss aversion. Effect direction for an electoral pt domain is therefore uncertain, and the size of LOSSFRAME is unsupported.",
+      "paper_location": "Tables 4-5 p.112; fn 4 p.105; pp.113-114",
+      "system_side": "The receptivity sensitivity sweep varies PT only from 1.15/0.92 to 1.10/0.95 (mild) and to 1.25/0.85 (strong). It has no PT-off (1.0/1.0) or reversed variant and does not sweep LOSSFRAME.",
+      "code_ref": "fec/members/receptivity_sensitivity.py:26-33,93-103",
+      "transfer_conditions": "Applies directly. Adding a pt = 1.0/1.0 arm and a LOSSFRAME = 1.0 arm to the existing top-20/50 overlap harness would show whether either constant changes targeting decisions. Diagnostic sweep, not a confirmatory look.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Code confirmed: VARIANTS at receptivity_sensitivity.py:93-103 has only the two PT arms listed and no LOSSFRAME arm. Paper claim reworded: 'limited to one scenario' is true only once the Asian disease scenario (strongly significant) is excluded."
+    }
+  ],
+  "related": [
+    {
+      "slug": "fouirnaies-2022-electoral-incentives-affect",
+      "relation": "complements",
+      "why": "The receptivity layer pairs the two papers as separate channels reading the same seat-security input (incent_mult from Fouirnaies & Hall, pt_mult from Linde & Vis); the code records the resulting security-squared component as a design choice (receptivity_layer.py:200-204)."
+    },
+    {
+      "slug": "noble-2024-presidential-leadership-legislative",
+      "relation": "complements",
+      "why": "salience_shock.py:56-60,104 amplifies members with a defend/contest play by 1.35 ('gambling for reelection', Noble A.4). Linde & Vis's suggestive finding that votes set the reference point is an individual-level prospect-theory analogue of the same electoral-stakes idea."
+    },
+    {
+      "slug": "byrne-2014-chokes-under-pressure",
+      "relation": "complements",
+      "why": "Byrne's choking-under-pressure composite (susc_mult) and Linde-Vis's pt domain are multiplied together in pressure_mult (receptivity_layer.py:227). Neither paper estimates the combined product."
+    }
+  ],
+  "summary_issues": [
+    "'That pooled figure combines scenario types, three of which show no effect' is wrong. Only two of four scenarios (economic, votes) show no effect; the Asian disease scenario is strongly significant (88.46% vs 30%, p<0.001). The OR 8.684 (p=0.033) is the scenario-specific loss-frame interaction for the votes+economic scenario in a logistic regression over all four scenarios (n=164), not a single pooled loss-frame OR.",
+    "'Smaller than other people rests on comparison with earlier literature, not on a test in the main text' is incomplete. The authors ran a student comparison sample (n=176, Appendix E, not in the file) and cite it in the main text (e.g. students show the common ratio effect, MPs do not, p.106). No formal MP-vs-student test is reported in the available text.",
+    "'Dutch MPs are elected from national party lists, not single-member seats' is not stated in the paper text; it is outside knowledge and should be marked as such.",
+    "The bibliographic year should note the issue is Political Psychology 38(1), 2017 (copyright line 2016)."
+  ]
+}

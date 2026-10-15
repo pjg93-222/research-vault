@@ -1,0 +1,93 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-influence-engine.competitiveness-multiplier",
+   "relation": "qualifies",
+   "paper_claim": "Cook's table separates PVI from race rating. Parsed per district row (435 rows), the 24 Toss Ups span R+8 (AK-AL) to D+5 (CA-22, NY-04). The six EVEN seats get five different ratings: FL-27 Solid R, PA-01 Likely R, NH-01 Likely D, PA-17 Lean D, CO-08 and NE-02 Toss Up. Seats at D+2 or D+3 are Solid D (AZ-04, CT-02, GA-02), Lean D (CT-05, NY-03) or Toss Up (OR-05, CA-45, NY-17; all three held by Republicans). Window: 2024 cycle as of 2024-09-12. Denominator: 435 districts.",
+   "paper_location": "Race rows: AK-AL lines 17-20; FL-27 lines 682-685; PA-01 lines 2070-2073; CO-08 lines 487-490; NE-02 lines 1570-1573; AZ-04 lines 117-120; OR-05 lines 2054-2057 (_text/546c919128d4.txt)",
+   "system_side": "c = 1 + 1.0*exp(-max(lean,0)/5), lean = Cook PVI oriented to the member's party (Cook 2026 district PVI for House). Any seat at EVEN or leaning against the member gets the maximum c = 2.0. Illustration with this table's 2024 PVIs: Salazar (EVEN, Solid R) and Bacon (EVEN, Toss Up) both get 2.0; Stanton (D, D+2, Solid D) gets about 1.67, whereas the table's D+2 Toss Up incumbents (Chavez-DeRemer OR-05, Steel CA-45) are Republicans, so lean = -2 and c = 2.0; Courtney (D+3, Solid D) and Suozzi (D+3, Lean D) both get about 1.55. Verifier arithmetic on 2024 PVIs, not the live 2026 artifact.",
+   "code_ref": "fec/moneyball_core.py:90-93; fec/engine/build_competitiveness.py:7-8",
+   "transfer_conditions": "The structural point carries over: PVI is a partisan baseline, while the rating adds incumbent and candidate factors. The numbers do not carry over: they use 2024 PVIs, which come from the 2016 and 2020 presidential results, and 2024 ratings, while the system reads Cook 2026 PVIs for the 119th Congress roster. It applies only to House members; senators use Paul's state PVI table. The table says nothing about whether money works better in competitive seats, so it neither validates nor refutes the reciprocity premise behind c.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Text re-parsed row by row: Toss Up = 24, not 25 (the extra substring hit is the header sentence 'Competitive races (Lean and Toss Up)'); EVEN carries five ratings, not four (PA-17 Lean D omitted). Analyst's 'Stanton 1.67 same as a D+2 Toss Up incumbent' is wrong for this table: both D+2 Toss Ups are R incumbents, c = 2.0. Code confirmed: moneyball_core.py:90-93 compet_c, build_competitiveness.py:6-8 docstring."
+  },
+  {
+   "component_id": "melange-influence-engine.receptivity-layer",
+   "relation": "qualifies",
+   "paper_claim": "Cook's rating differs from PVI for incumbents with personal electoral strength. Fitzpatrick is EVEN and Likely R. Salazar is EVEN and Solid R. Cuellar is D+3 and Likely D, while Hayes is D+3 and Lean D. A candidate-specific vulnerability signal therefore carries information that PVI lacks.",
+   "paper_location": "PA-01 lines 2070-2073; FL-27 lines 682-685; TX-28 lines 2473-2476; CT-05 lines 523-526",
+   "system_side": "The Fouirnaies-Hall incentive term 1+.30*(comp-0.5) takes comp = 1 - security from Ballotpedia vote results, so it is candidate-specific. With COMPET_MULT on (the default), this term is set to neutral (1.0) and the PVI-only c carries competitiveness instead. As a result, the engine path no longer sees candidate-specific vulnerability.",
+   "code_ref": "fec/members/receptivity_layer.py:129-137",
+   "transfer_conditions": "This is the clearest example of the PVI-versus-rating gap affecting a live dial. It holds as long as COMPET_MULT=1 neutralizes the Ballotpedia comp term. A 2024 snapshot cannot calibrate 119th-Congress values; it only shows that the two measures diverge.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "PA-01 EVEN Likely R (2070-2073), FL-27 EVEN Solid R (682-685), TX-28 D+3 Likely D (2473-2476), CT-05 D+3 Lean D (523-526) confirmed. receptivity_layer.py:133-138: incent_term uses comp=1-sec (Ballotpedia security); incent_term_compet returns 1.0 (0.60 retiring) when COMPET_ON."
+  },
+  {
+   "component_id": "melange-influence-engine.electoral-plays",
+   "relation": "suggests-extension",
+   "paper_claim": "The table gives a forward-looking expert risk category (Solid, Likely, Lean, Toss Up) for each seat, along with OPEN and VACANT flags: 41 OPEN lines and 4 VACANT seats as of 2024-09-12.",
+   "paper_location": "Header lines 4-7; OPEN rows such as MI-07 lines 1273-1276 and MI-08 lines 1279-1282",
+   "system_side": "build_electoral.py (writes electoral.json, not electoral_plays.json): security is a percentile of Ballotpedia's backward-looking Election_Average; leverage = 1 + LELEV*(1 - security), LELEV default 0.8; unmatched members get neutral security 0.5.",
+   "code_ref": "fec/engine/build_electoral.py:7,22-31",
+   "transfer_conditions": "Useful only as the design pattern for a dated, forward-looking risk input. Using it would require the current-cycle Cook ratings, dated before the decision, not this 2024 table. Open-seat retirees would also need the same retiring treatment the receptivity layer already gives them.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "41 OPEN lines and 4 VACANT seats (NJ-09, NJ-10, TX-18, WI-08) confirmed; MI-07/MI-08 OPEN Toss Up confirmed. Code lines 7, 24-31 confirmed, but the code_ref is the electoral-leverage builder, not the electoral-plays (prospect-theory) builder named by component_id."
+  },
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "measurement-source",
+   "paper_claim": "Dated Cook ratings for all 435 2024 House races on a four-step scale (Solid, Likely, Lean, Toss Up): per-row totals Solid D 174, Solid R 192, Likely D 16, Likely R 11, Lean D 13, Lean R 5, Toss Up 24 (sum 435). One source quirk: the MA-01 challenger slot (line 1120) holds a broken #REF! cell.",
+   "paper_location": "Whole table, lines 17-2782; #REF! at line 1120",
+   "system_side": "The champions models in the sector growth study use toughness_general, the mean competitiveness of the Cook, Inside Elections and Sabato ratings (0 safe to 3 toss-up), as a regressor with cycle and board fixed effects.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:173; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_champions.R:341,460",
+   "transfer_conditions": "Valid as the Cook input for the 2024 cycle only, and only for analysis windows after 2024-09-12. The #REF! cell should be handled before ingestion. Whether this table is the source the study actually used is not established.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "The '436 vs 435' overcount is an artifact of substring counting (header text contains 'Toss Up'); the table itself reconciles to 435. sgs_registry.R:170-174 base_note and sgs_champions.R:341/460 toughness_general definitions confirmed."
+  },
+  {
+   "component_id": "mentat-sector-growth-study.seats-weekly-test",
+   "relation": "measurement-source",
+   "paper_claim": "A single dated (2024-09-12) Cook rating per House race, which could serve as one rating observation in a 2024 extension.",
+   "paper_location": "Header line 3; race rows",
+   "system_side": "SEATS-W uses 538 probability classes, which it states are never Cook ratings. Expert ratings form a separate categorical path that admits only rows dated strictly before the window. Unrated races count as unknown, never safe.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats_race.R:14-15,27-30,37",
+   "transfer_conditions": "The live test covers the 2022 House only, so this 2024 snapshot applies only if the test is extended to 2024. Even then it gives one date per race, not the weekly series the test needs.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Header line 3 date confirmed. sgs_seats_race.R:14-15 (538 classes, never Cook/Inside/Sabato) and 27-30 (expert ratings separate path, strictly before window, unrated = unknown) confirmed; race level is 2022 only (lines 47-48, 1223)."
+  }
+ ],
+ "related": [
+  {
+   "slug": "gaynor-2022-financial-ties-bind",
+   "relation": "complements",
+   "why": "Gaynor uses Cook PVI as an electoral-vulnerability measure, and Paul cites that use to ground c. This table shows Cook's own ratings departing from PVI."
+  },
+  {
+   "slug": "bonica-2013-mapping-ideological-marketplace",
+   "relation": "complements",
+   "why": "Bonica finds that donors direct funds to competitive races. Cook's Lean and Toss Up categories are the standard way to mark which races those are."
+  },
+  {
+   "slug": "fouirnaies-2022-electoral-incentives-affect",
+   "relation": "complements",
+   "why": "The receptivity layer's code labels its candidate-specific competitiveness term 'Fouirnaies-Hall' (receptivity_layer.py:128-136); COMPET_MULT neutralizes that term. The paper itself studies term limits in state legislatures, not Cook ratings."
+  },
+  {
+   "slug": "linde-2016-politicians-take-risks",
+   "relation": "complements",
+   "why": "The receptivity layer's Linde-Vis pt_mult (loss-domain) term is the factor a Toss Up or Lean rating would mark; the paper is a prospect-theory experiment on MPs and does not use race ratings."
+  }
+ ],
+ "summary_issues": [
+  "'25 Toss Ups' is wrong: the row-level parse gives 24. The 25th substring hit is the header sentence 'Competitive races (Lean and Toss Up) are highlighted.'",
+  "'the rating totals come to 436 against 435 seats, so the table has a small error' is wrong: per-row ratings sum to 435 (174 Solid D, 192 Solid R, 16 Likely D, 11 Likely R, 13 Lean D, 5 Lean R, 24 Toss Up). The 436 comes from the analyst's substring method, not the table.",
+  "EVEN seats carry five ratings, not the four implied: PA-17 (EVEN, Lean D) is omitted.",
+  "AZ-04 (D+2, Solid D) vs OR-05 (D+2, Toss Up) is a valid raw-PVI contrast, but under the system's party-oriented lean OR-05's Republican incumbent has lean -2 (c = 2.0) vs Stanton's 1.67, so c does not treat them alike; the summary's broader point (EVEN incumbents Salazar and Bacon both get c = 2.0) holds only as an illustration on 2024 PVIs, since the live system uses Cook 2026 PVIs.",
+  "Related link to broockman-2026-should-moving-middle dropped: the paper concerns returns to ideological moderation and has no Cook PVI or rating content; the connection to this table is not real."
+ ]
+}

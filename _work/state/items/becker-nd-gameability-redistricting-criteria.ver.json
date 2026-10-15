@@ -1,0 +1,64 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-demographic-potential.census-cd-metrics",
+      "relation": "suggests-extension",
+      "paper_claim": "On the 10x9 grid, Plan 2 has the best People Change (9.5 percent, tied with Plan 3) but the second-worst Area Change (13.3 percent; Plan 1 is best at 7.8 percent). People, Area and Precinct Change first match each new district to an old one; Fowlkes-Mallows and Variation of Information are matching-free. The county-split measures in Table 1 disagree on the best plan (fewest counties split is Plan 2 with 1; lowest Shannon entropy is Plan 3 at 1.265; lowest Even Splits is Plan 4 at 2.485).",
+      "paper_location": "Table 2 (text lines 1429-1498, rel cites p.27); Sec. 5 matching discussion (text lines 834-857); Table 1 (text lines 640-702, rel cites p.13)",
+      "system_side": "census_cd_scraper.R sets ACS_YEAR 2024 (119th-Congress districts) and CBP_YEAR 2020 (116th-Congress CD boundaries) and notes a few new CDs are NA. redistricting_density.py weights counties by blocks-in-district over blocks-in-county (its receipt says the BEF file has no population weights), reports split_county_count, sets seat_changed = int(seat_117 != seat_119) from district labels, and also computes cu_share_old, cu_share_new and delta per member.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/census_cd_scraper.R:47-48,350; fec/district/redistricting_density.py:247-264,1127 (Melange repo)",
+      "transfer_conditions": "Measurement design transfers. A per-state matching-based or matching-free change measure on CD116 vs CD119 block assignments could size the CBP-ACS vintage error and could replace the label-only flag. Limits: the paper works in precinct or ward units on population, the system weights blocks, and the paper does not say which basis is right. Descriptive only, tested only on Minnesota and Wisconsin.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers and matching definitions confirmed against the text. Softened: (1) the scraper documents no open question about the vintage error; line 350 only says a few new CDs are NA, so that claim is dropped. (2) redistricting_density.py does not count change only through split_county_count and seat_changed; it also computes a per-member cu_share delta at lines 1127-1131."
+    },
+    {
+      "component_id": "melange-influence-engine.competitiveness-multiplier",
+      "relation": "suggests-extension",
+      "paper_claim": "Population-based change and incumbent-based change can diverge sharply. In Minnesota, Plan 8 and Plan 9 have almost the same People Change (1.93 percent vs 1.90 percent), yet Incumbent-People Pair Change is 1.93 percent vs 13.90 percent, because one incumbent precinct was moved. The text says Plan 9 moves 0.03 percent more people than Plan 8, which Table 3 contradicts.",
+      "paper_location": "Table 3 (text lines 1726-1735 and 1809-1819, rel cites p.29); Sec. 6.1 (text lines 1925-1935, rel cites p.33)",
+      "system_side": "build_competitiveness.py takes House lean from Cook 2026 district PVI and Senate lean from the state PVI table. The ten-state REDISTRICTED set (AL CA FL LA MO NC OH TN TX UT) is flagged and never altered, and |PVI2026 minus PVI2025| >= 5 is flagged. Placement precedence is ballot-district override, then Cook incumbent match, then district number. No field records how much of a member's constituency was redrawn.",
+      "code_ref": "fec/engine/build_competitiveness.py (docstring precedence near lines 15-27; REDISTRICTED and PVI_SHIFT_FLAG constants near lines 45-55; flag assignments near lines 271-280)",
+      "transfer_conditions": "Holds where a member's seat was redrawn between the 2025 and 2026 maps. A constituency-turnover measure would be a sharper diagnostic than a state flag or PVI delta, but it needs block assignments for both maps and would only inform Paul's override review. c stays PVI-defined. Reciprocity is not validated.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Paper numbers confirmed in Table 3 and the text. The text-vs-table inconsistency is confirmed: Table 3 gives Plan 9 at 1.90 and Plan 8 at 1.93, while the text says Plan 9 moves 0.03 percent more. The code-side facts (ten-state list, 5-point flag, precedence, no turnover field) are confirmed in build_competitiveness.py. Brain ruling IDs (D-107) and reciprocity status were not checked here."
+    },
+    {
+      "component_id": "moneyball-rank-pillars.score-blend",
+      "relation": "context",
+      "paper_claim": "When a criterion admits several defensible metrics, each metric favors a different plan, so stakeholders can cherry-pick the metric their plan wins on. The paper recommends that states clarify metric definitions rather than set hard numeric thresholds.",
+      "paper_location": "Introduction p.2 (text line 55); Table 1 discussion p.13 (text lines 736-738); Conclusion p.37 (text lines 2222-2240)",
+      "system_side": "fec/engine/pillar_policy.py PILLAR_WEIGHTS sets Legislative 0.45, Press 0.10, Influence 0.40, Demographic 0.05 and asserts they sum to 1. MATHEMATICAL_SPECIFICATION.md line 12 states 0.25 Leg, 0.30 Press, 0.40 Infl, 0.05 Demo, so the code and spec disagree. The analyst note cites a 30/25/40/5 set as ratified; that was not checked here.",
+      "code_ref": "fec/engine/pillar_policy.py:11-16; MATHEMATICAL_SPECIFICATION.md:12 (Melange repo)",
+      "transfer_conditions": "Analogy only. The paper studies redistricting metrics, not legislator rankings, and provides no evidence about these weights. It supports pinning one documented weight set and reporting rank sensitivity across the competing sets; it does not justify any particular weights.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper quotes and locations confirmed; the code and spec weights and their disagreement are confirmed. Softened: the claims that the S-5 review item is open and that top-133 sensitivity has not been measured cannot be verified from the code or text here and are dropped. The paper says states have room to clarify definitions; it does not say in advance."
+    }
+  ],
+  "related": [
+    {
+      "slug": "best-2022-redistricting-commissions-avoid",
+      "relation": "complements",
+      "why": "Both evaluate redistricting plans. Best et al. ask whether commissions avoid partisan gerrymanders; Becker and Gold show that procedural criteria such as county splits and least change can be gamed through metric choice. Item file title confirmed."
+    },
+    {
+      "slug": "deluca-2022-validating-applicability-bayesian",
+      "relation": "complements",
+      "why": "Both concern congressional district geography at block or precinct level. DeLuca and Curiel validate Bayesian surname-and-geocoding inference for congressional redistricting; the link is measurement validity for district-level inputs, not change metrics."
+    },
+    {
+      "slug": "report-2024-2024-house-glance",
+      "relation": "complements",
+      "why": "A 2024 Cook Political Report ratings piece in the same input family as the Cook district PVI that drives COMPET_MULT. The link is conceptual only: Becker and Gold measures say how far a district moved, which governs whether a PVI value carries over. Report content was not checked here."
+    }
+  ],
+  "summary_issues": [
+    "Internal contradiction in the summary: it calls the blend's three weight sets unratified, but bearing 3 cites the 30/25/40/5 set as ratified, and pillar_policy.py describes its policy as Ratified. The accurate statement is that code (0.45 Leg, 0.10 Press) and spec (0.25 Leg, 0.30 Press) disagree.",
+    "The summary says the paper has no bearing on the influence engine, stance, SNA or Mentat, yet bearing 2 maps it to the competitiveness multiplier (COMPET_MULT) and bearing 3 to the rank score blend. The summary should say the bearing is narrow: district change metrics and rank weights.",
+    "The summary says the census and density code uses single implicit change measures (seat label flag, block weighting). redistricting_density.py also computes a per-member cu_share delta (lines 1127-1131), so the change is not label-only.",
+    "The summary states that the paper's verdict is that a vague criterion lets each party pick the metric its own map wins on. The paper's wording is that stakeholders cherry-pick metrics (intro p.2); acceptable paraphrase but not the paper's own phrasing.",
+    "Extraction (ext, not rel) error to avoid carrying forward: key finding 4 names Plan 8 as best People Change at 1.93 percent. Table 3 (text lines 1726-1735) gives Plan 9 at 1.90 percent as best, with Plan 8 at 1.93 percent second."
+  ]
+}

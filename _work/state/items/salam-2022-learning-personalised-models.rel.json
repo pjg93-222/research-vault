@@ -1,0 +1,58 @@
+{
+ "summary_md": "Salam, Manoranjan, Jiang and Celiktutan (PMLR 173, 2022) ask whether one Big Five recognizer for everyone is worse than separate models for each user profile. They test this on UDIVA dyadic video (188 interactions, 147 participants, 90.5 hours, mostly Spanish speakers). For each profile (female/male; age 30 or under/over 30) and each modality, they run an Auto-Keras architecture search. Modalities are face/body landmarks, talk-turn duration, content, sentiment and speech rate, SBERT text and MFCC audio. Predictions are then fused at the decision level. The outcome is self-reported OCEAN, scored by mean squared error. Fusing the two best modalities within each gender gives an average MSE of 0.690. Age-wise fusion gives 0.796 and generic fusion 0.818. Dyadformer scores 0.722 and the authors' earlier challenge ensemble 0.769. Almost all of the gain comes from the gender split. Age adds little, and in the generic setting fusion barely beats the best single modality (0.818 vs 0.820). Turn-taking features beat face/body features (0.874 vs 1.325). The evidence is thin. There is one challenge test split, with no test N, subgroup sizes, intervals or seed variance. Gender is binary, the fairness claim is untested, and the text and Table 1 disagree on the headline number. For Paul's systems, the transferable lesson is narrow. Acoustic features whose signal partly is speaker sex need sex-conditioned comparison. The Melange audio lane already ran a Salam-style check: pace and volume are sex-clean, while pitch variability and jitter are not. But the semitone-SD fix sits on an unmerged branch. The paper gives no basis for building per-sex trait models for legislators, whose criteria are expert ratings, not self-reports. All transfer here is UNVERIFIED.",
+ "category": "Machine Learning & Sentiment Analysis",
+ "bearings": [
+  {
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "qualifies",
+   "paper_claim": "Training separate models for female and male profiles cuts the average MSE on self-reported Big Five from 0.818 (generic bimodal fusion) to 0.690. An age-30 split helps only slightly (0.796). This is one test split, with no test N, intervals or seed variance.",
+   "paper_location": "Table 1 p.65; Section 4.2.1 p.64; Table 2 p.66",
+   "system_side": "Within outlet+program cohorts, the live descriptor candidate assigns cross-member percentiles to pitch_variability_raw, which is eGeMAPS F0 stddevNorm, with men and women pooled. Only mean F0 is standardized within each speaker. The brain records a Salam 2022 test (r with female sex: pitch_variability -.266, jitter -.260; pace and volume sex-clean at +.06/-.05). The semitone-SD fix, commit 4193f0140, is NOT an ancestor of HEAD.",
+   "code_ref": "fec/members/b5_audio_descriptors_candidate.py:27,217,320-333; fec/members/b5_audio_descriptors_candidate.py:222-255; C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md:109,111",
+   "transfer_conditions": "This transfers only to features whose signal partly is speaker sex (pitch, jitter). The paper's gain is for trait prediction with self-report labels on a mostly Spanish general population, not congressional audio. The artifact is fail-closed at 0 accepted clips, so nothing live is affected until the review gate opens.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-psychometrics.lexical-big5",
+   "relation": "suggests-extension",
+   "paper_claim": "The best modality changes with trait and profile. Adding sentiment to talk-turn features hurts in the generic split (0.874 to 0.942) and the age split (0.883 to 1.074) but helps within gender (0.844 to 0.784). So which features carry trait signal can depend on the subgroup.",
+   "paper_location": "Table 1 p.65; Section 4.2.1 pp.64-65",
+   "system_side": "Lexical Big Five pools all members in one corpus-relative z-scoring, with token shrinkage at 1500 tokens. The only external check in the file is by party. There is no sex-stratified check or conditioning.",
+   "code_ref": "fec/members/big5_traits.py:20,28,265-275",
+   "transfer_conditions": "This calls for a diagnostic only: report text-trait correlations with the RKH target stratified by sex, or labelled UNSTRATIFIED. It is not a call for per-sex models, since the system has about 533 members, an expert-rating criterion rather than self-report, and closed-vocabulary features rather than NAS.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-psychometrics.behavioral-dispositions",
+   "relation": "supports",
+   "paper_claim": "Of the generic single modalities, talk-turn statistics without sentiment (duration, content, speech rate) reach an average MSE of 0.874, and the audio statistics 0.920. Face/body landmarks are the weakest at 1.325.",
+   "paper_location": "Table 1 p.65",
+   "system_side": "dominance_z is built from interaction-channel turn statistics (verbal output, floor-holding Gini, floor defense; per-program z) plus committee leadership. It cites turn statistics as the replicated dominance signal.",
+   "code_ref": "fec/members/behavioral_dispositions.py:15-17,83-87",
+   "transfer_conditions": "The paper's figure averages MSE over all five self-reported traits in dyadic lab tasks. It does not isolate extraversion or dominance, and it does not test broadcast interviews. It is indirect support for turn structure as a trait channel.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "The sex-deconfounding fix for pitch_variability_raw (commit 4193f0140, plain semitone SD) is on branch claude/melange-speech-recognition-cfa049 and not in HEAD. The live candidate still percentiles stddevNorm across pooled sexes, at b5_audio_descriptors_candidate.py:27,217,320-333.",
+  "Jitter showed a sex correlation of -.260 in the brain's Salam test, but no code path conditions it on sex.",
+  "Lexical Big Five has no sex-stratified validity check. Only party is checked, at big5_traits.py:265-275.",
+  "The system has no self-report Big Five criterion for legislators. So Salam-style personalisation gains, measured against self-report, cannot be scored against the expert and insider gold panels the system uses."
+ ],
+ "flags": [
+  "Internal inconsistency in the paper: the text on p.64 calls 0.796 the best fused average MSE, but Table 1 gives 0.690 for the gender split and 0.796 for the age split. Quote figures from Table 1.",
+  "The paper reports no test-set N, subgroup sizes, confidence intervals or repeated-seed variance. Under DE-062, any transfer to the system stays UNVERIFIED until it is reproduced on a second path.",
+  "A pooled-over-fault-line issue in the system, not the paper: pitch_variability percentiles pool men and women despite a measured sex correlation of -.266. Under the strata rule, any quote of them needs strata or an UNSTRATIFIED label.",
+  "The paper treats gender as binary and asserts, without testing, that personalisation beats debiasing on fairness. Do not cite it as fairness evidence.",
+  "No conflict with the SNA, LDA, reciprocity or D-025 wording rules. The paper has no network, lobbying or access content."
+ ],
+ "paul_alignment": "Paul has no annotated-bibliography entry or markup on this work. On prosody, Paul is interested in non-textual channels, and the system treats audio as display-only. The paper fits both. Non-verbal and turn-taking channels carry some self-reported trait signal, but the gains are modest and come mostly from conditioning on sex. That is no reason to promote audio into the engine. The system already uses the paper: a Salam benchmark and a Salam 2022 sex-confound test are on record. The one stale point is that the test's fix is not merged into HEAD.",
+ "related": [
+  {"slug": "ramey-2016-measuring-elite-personality", "relation": "complements", "why": "Ramey infers Big Five from legislators' speech with closed-vocabulary text features. Salam adds non-verbal and turn channels with subgroup-specific models on self-report labels in a general population."},
+  {"slug": "marrero-2022-evaluating-voice-samples", "relation": "complements", "why": "Both test whether voice and audio features carry personality information. Marrero focuses on voice samples, while Salam fuses audio with face, turn and text features."},
+  {"slug": "dietrich-2019-pitch-perfect-vocal", "relation": "complements", "why": "Dietrich uses within-speaker pitch deviation in congressional speech. That is the standardization the system applies to mean F0, and it sidesteps the between-speaker sex differences that Salam handles with per-gender models."},
+  {"slug": "celli-nd-twenty-years-personality", "relation": "complements", "why": "Celli's survey of threats in personality computing covers the bias and generalisation concerns Salam raises, such as demographic confounds and single-dataset evaluation."},
+  {"slug": "naz-2025-machine-deep-learning", "relation": "same-method", "why": "A survey of machine and deep learning for trait detection, including multimodal neural approaches of the kind Salam's NAS pipeline represents."},
+  {"slug": "mestre-2026-potential-pitfalls-audio", "relation": "complements", "why": "It covers alignment and feature pitfalls of audio as political data, which matter before any Salam-style audio trait model could apply to congressional recordings."}
+ ]
+}

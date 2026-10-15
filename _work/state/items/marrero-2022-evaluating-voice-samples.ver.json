@@ -1,0 +1,121 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-audio-speech.prosody-and-disfluency",
+      "relation": "method-source",
+      "paper_claim": "Averaged over Big Five traits (N=614 students, 100-fold CV, out-of-sample R-squared): vocal features 6.24 percent, LIWC 3.13 percent, joint set 10.67 percent. Joint set described as exceeding the sum of the two separate sets. E, C and N reach the 10-20 percent range with the joint set.",
+      "paper_location": "Abstract p.1; Results p.5 lines 568-571 and 586-588; Results p.5-6 lines 606-608; Conclusion p.9 lines 1176-1181",
+      "system_side": "Pre-registered Marrero-style audio test (big5_audio_faithful_prereg.md, N=90 legislators, Pink criterion). Recorded: full eGeMAPS-88 ridge to Pink-E held-out r +0.284 (perm-p 0.030), Pink-ES +0.298 (perm-p 0.017); A and C null; super-additivity bar missed, vocal adding +0.001 for E. Round 2: vocal to diligence r -0.081 (perm-p 0.73); super-additivity for C -0.046 (missed). Round 2 also records an unregistered context result, +0.119 for E against visibility, labelled a win. Pilot: text-vs-fused delta -0.004 against visibility.",
+      "code_ref": "big5_audio_faithful_prereg.md:61-68; big5_audio_round2_prereg.md:42-53; big5_audio_prereg.md:140-144; fec/members/b5_audio_faithful.py:39-70",
+      "transfer_conditions": "Paper criterion is self-report BFI-2 from 18-year-old students, one prompted smartphone sample per person, out-of-sample R-squared. System criterion is Pink (reliability about 0.67, text-derived, shares source with the linguistic block) or behavioral visibility and diligence; audio is edited broadcast and floor speech from 90 legislators and the metric is held-out r. Numbers are not directly comparable. Super-additivity failed its registered bars in three looks; the +0.119 context result is exploratory and not a registered test.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers and quoted sentences checked at the cited lines. Repo figures match the prereg lines. Softened because the bearing omits the +0.119 round-2 context result that the record calls a win, and because the pilot delta came from a design the faithful prereg calls a strawman. Scope of the verdict is the registered bars only."
+    },
+    {
+      "component_id": "melange-audio-speech.prosody-and-disfluency",
+      "relation": "supports",
+      "paper_claim": "Vocal features predicted gender with over 90 percent of variance explained (N=564; 374 female, 190 male). Gender was one of two tasks where the joint set was not best (the other was Agreeableness). The paper did not use predicted gender as a feature or control when predicting personality.",
+      "paper_location": "Results p.5 lines 577-579 and 610-613; Discussion p.8 lines 1009-1013; Discussion p.9 lines 1136-1149; Conclusion p.9 lines 1170-1173",
+      "system_side": "Sex-confound finding: pitch_variability_raw had r(sex=F) = -0.266 and Cohen d = -0.944 over 1,324 clips and 309 members (brain note melange-audio-pipeline). Commit 4193f0140 replaced it with plain semitone SD (stddevNorm times amean). The descriptor script converts eGeMAPS semitone F0 to Hz only for within-speaker standardization. A Salam-style test found pace and volume_dynamics sex-clean (r(F) +0.06 and -0.05).",
+      "code_ref": "fec/members/b5_audio_descriptors_candidate.py:26-28,209-216,367; git commit 4193f0140 (present in repo log); brain note actors/melange-audio-pipeline.md pitch and Salam sections",
+      "transfer_conditions": "The paper shows gender is recoverable from its own vocal features in 564 students. It does not show this holds in other corpora, so the claim that sex is near-deterministic in any adult speech corpus is not supported by this paper and should not be cited to it. The sex-conditioning lesson applies in general terms; the r -0.266 figure is the system's own evidence.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper lines checked. Figures r -0.266, d -0.944, 1,324 clips and 309 members match the brain note, and commit 4193f0140 exists. Softened because the transfer text generalizes beyond the paper. The bans-cross-speaker-absolute-F0 clause is consistent with the script comment but was not confirmed beyond line 367."
+    },
+    {
+      "component_id": "melange-psychometrics.lexical-big5",
+      "relation": "qualifies",
+      "paper_claim": "LIWC 2015 features alone explained 3.13 percent of out-of-sample variance in self-reported Big Five (N=614 students, average sample about 92 words). The authors call the estimates conservative because samples were brief, constrained and drawn from students. Text names pronoun as top LIWC feature for C and negate for E; feature-level explanations are called highly speculative.",
+      "paper_location": "Results p.5 lines 568-571; Discussion p.7 lines 838-847; Discussion p.8 lines 1020-1022 and 1031-1041; Table 2 p.6-7",
+      "system_side": "big5_traits.py builds z-scored Big Five from closed-vocabulary LIWC-style and Empath counts using a Ramey-synth linear model with published-correlate weights as default. It swaps in Mairesse SMOreg weights when liwc/mairesse_smoreg.json exists. Members under 1500 tokens get a lowconf flag, and the file says consumers shrink them; the script itself only sets the flag.",
+      "code_ref": "fec/members/big5_traits.py:2-26,28,96-120,186-189,251",
+      "transfer_conditions": "The paper's 3.13 percent is a self-report criterion in students with about 92 words per sample. It does not validate the system's fixed signed weights, which the paper did not test. Its small-sample caution supports a thin-corpus floor only by analogy, since Melange members have far more text than 92 words.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers checked. Softened because the code does not describe fixed published-correlate weights as the only mode (the SMOreg swap is conditional), and lowconf is a flag, not a shrinkage step. The held-out CV figures against RKH (.21 for O to .51 for E) claimed in the rel were not found in the code read or the brain notes and remain unconfirmed."
+    },
+    {
+      "component_id": "melange-psychometrics.affective-n",
+      "relation": "qualifies",
+      "paper_claim": "Neuroticism was predicted better by linguistic than by vocal features (out-of-sample R-squared about 0.15, about 0.56 after disattenuation; Table 3 best-model rows). Table 2 lists LIWC top-5 features for N as function words, anx, Tone, Analytic and negemo; the text names no single top LIWC feature for N, and first-person singular is not in the N top five.",
+      "paper_location": "Results p.5 lines 583-595 and 604-605; Discussion p.8 lines 1014-1019; Table 2 p.6-7; Table 3 p.8",
+      "system_side": "emit_affective_n.py builds an E-residualized, party-controlled z-score from LLM affective facets; the LIWC-style index is only the convergent-validity anchor. Genre tests of this affective-N measure failed (rho 0.050 pooled, rho 0.161 hearing-only), per the brain note on the N-genre question.",
+      "code_ref": "fec/members/emit_affective_n.py:16-19,39-59; brain actors/moneyball-workbook-rules-scoring-and-sublayer-surgery.md line 67",
+      "transfer_conditions": "The paper is student self-report with about 92-word samples; the system measure is an LLM affective-facet score on legislator text. The paper supports text over voice for N only in its own sample. Its top N predictors differ from the system anchor terms (i, negemo, posemo), so the paper does not validate the anchor index.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Rel says the top LIWC predictors of N were Analytic and Tone. Table 2 extraction is row-ambiguous, but the first LIWC row for N reads function, with Tone and Analytic at ranks 3 and 4; the claim is overstated. The r +.24 anchor figure and the claim that the voice-ES look is spent were not confirmed. The genre rho values were confirmed in the brain note."
+    },
+    {
+      "component_id": "melange-validation.single-look-discipline",
+      "relation": "qualifies",
+      "paper_claim": "No standard test fits the repeated model and feature selection; uncertainty is handled by assuming a generalizable model improves with 100-fold CV (about 9 percent more training data per fold). No permutation null is reported. Post-hoc reliability-performance correlation t(4)=2.65, r=0.80, p=.057, falls to r=0.309 under leave-one-out.",
+      "paper_location": "Method p.5 lines 528-557; Post-hoc p.7 lines 930-935",
+      "system_side": "The audio prereg used Marrero effect size (r about .25-.33) as the expected signal. A power check found the permutation 95th percentile at +0.267 for N=40 and 88 features, above the locked +0.15 bar. N was raised (fetch eligibility default 80) and a permutation-significance gate applied; audio-E r +0.228 against a permutation floor of +0.234 did not pass.",
+      "code_ref": "big5_audio_prereg.md:97-121 and 139-150",
+      "transfer_conditions": "The paper's effect sizes come from N=545 self-report students and have no null distribution, so they should not set a pass bar for an N=90, 88-feature legislator design without a permutation floor. This is consistent with the system's stricter rule.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Paper numbers and the absence of a permutation null checked at the cited lines. System figures match prereg lines 99-101, 117 and 140-142."
+    }
+  ],
+  "related": [
+    {
+      "slug": "rubio-2024-feasibility-data-analytics",
+      "relation": "complements",
+      "why": "Cited with Marrero in big5_audio_prereg.md Addendum 1 (2026-07-08) for the voice-trait range (r about .3-.5) and the extraversion-primary endpoint; the item file title confirms the topic."
+    },
+    {
+      "slug": "simchon-2024-persuasive-effects-political",
+      "relation": "complements",
+      "why": "Cited with Marrero in Addendum 1 as the payoff argument, conditioned on the voice pilot; the framing is the audio prereg's, not the paper's."
+    },
+    {
+      "slug": "salam-2022-learning-personalised-models",
+      "relation": "complements",
+      "why": "Self-reported personality recognition from audio; the system ran a Salam-style sex-cleanliness test on its prosody features (brain note melange-audio-pipeline)."
+    },
+    {
+      "slug": "dietrich-2019-pitch-perfect-vocal",
+      "relation": "complements",
+      "why": "Congressional pitch method supplied in big5_audio_prereg.md Addendum 6 (2026-07-15) and used as the domain-specific alternative to student self-report in the active audio profile."
+    },
+    {
+      "slug": "mestre-2026-potential-pitfalls-audio",
+      "relation": "complements",
+      "why": "Background on audio-as-data pitfalls (alignment, features, classifiers) relevant to edited political audio; the link to the non-replication is interpretive and not shown by either source."
+    },
+    {
+      "slug": "koutsoumpis-2024-kernel-truth-text",
+      "relation": "same-method",
+      "why": "Meta-analysis of Big Five and LIWC links; useful context for how small the paper's LIWC-alone figure of 3.13 percent is against published LIWC-trait associations."
+    },
+    {
+      "slug": "pennebaker-2003-psychological-aspects-natural",
+      "relation": "cites",
+      "why": "Cited by the paper as the basis for language-personality links (p.1-2)."
+    },
+    {
+      "slug": "soto-2017-next-five-inventory",
+      "relation": "cites",
+      "why": "The BFI-2 is the paper's self-report criterion (p.2); no equivalent self-report exists for legislators."
+    },
+    {
+      "slug": "ramey-2016-measuring-elite-personality",
+      "relation": "complements",
+      "why": "Measuring Elite Personality Using Speech; Ramey is the basis named in big5_traits.py (Ramey-synth). The paper itself does not cite it."
+    }
+  ],
+  "summary_issues": [
+    "Summary says the paper explains why audio is display-only. The paper never discusses display-only status; that decision is recorded in the audio prereg files (big5_audio_prereg.md, big5_audio_faithful_prereg.md).",
+    "Summary and paul_alignment say super-additivity missed every time. Three registered bars missed (+0.001 for E, -0.046 for C, and the -0.004 pilot which the faithful prereg calls a strawman design). Round 2 records +0.119 for E over linguistic against visibility as a win, though it is an unregistered context result.",
+    "Summary and paul_alignment attribute the make-psychology-load-bearing framing to the paper. The IF-the-pilot-proves-fruitful line is in big5_audio_prereg.md Addendum 1 (line 89), which cites Marrero and Simchon together; it is not the paper's framing.",
+    "paul_alignment quotes Paul as saying the system concluded audio is display-only and describes his interest in non-text channels. Neither the quote nor the stated interest was found in the audio prereg files or the brain audio note. Unverified; do not cite as Paul's position.",
+    "Summary says the disattenuation tool is never applied to the system's validity coefficients. Not verified in the code read; treat as unverified.",
+    "Summary says the three one-look audio tests ran in July 2026. The faithful prereg is locked 2026-07-08; the round-2 run date was not confirmed.",
+    "Summary and flags say the top LIWC predictors for N were Analytic and Tone. Table 2 extraction puts function words first in the LIWC column for N, and the paper text names no top LIWC feature for N. Corrected in the affective-N bearing.",
+    "Bearing 3 system-side figures for held-out RKH correlations (.21 for O to .51 for E) were not found in the code read or brain notes. Unconfirmed."
+  ]
+}

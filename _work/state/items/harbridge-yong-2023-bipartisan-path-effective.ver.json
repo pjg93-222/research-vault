@@ -1,0 +1,96 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-sna.bipartisanship-bpf",
+   "relation": "qualifies",
+   "paper_claim": "Within-member (legislator FE, one-tailed) coefficient on the attracted share, the per-bill mean of other-party cosponsor share: House 0.433 (SE 0.097) Model 1.2; Senate 0.330 (SE 0.147, p<0.05) Model 1.5. Offered share not significant with controls: House -0.234 (Model 1.3), Senate -0.420 (Model 1.6). Window 93rd-114th Congresses (1973-2016), about 9,000 House and 2,170 Senate legislator-Congress rows.",
+   "paper_location": "Table 1 Models 1.2, 1.3, 1.5, 1.6 (printed pp.16-17); Table A1 variable definitions",
+   "system_side": "bpf() in fec/moneyball_core.py reads bipartisan.json (default 0.24). The materialize script builds that file: each undirected pair takes the mean of its two directed rows when both directions exist, otherwise the single directed weight; member share = (cross + 6 x prior) / (same + cross + 6). Directed rows are kept only in audit fields, so bpf mixes offered and attracted ties. No attracted-direction share is computed in fec .py.",
+   "code_ref": "fec/legislation/materialize_legislation_base_and_bipartisan.py (pair symmetrization about 725-737; share about 786); fec/moneyball_core.py:68-72",
+   "transfer_conditions": "Paper variable is a mean over a member's own bills of other-party cosponsor share; bpf is a roster-snapshot weighted tie share with prior shrinkage, so window and denominator differ. Paper coefficients are by chamber, 1973-2016, one-tailed; quote by chamber only. Transfer to the current roster is UNVERIFIED until reproduced (DE-062).",
+   "strength": "strong",
+   "verdict": "softened",
+   "verifier_note": "All listed coefficients, SEs, offered-share nulls and the window reproduce in the text. Softened: the rel says offered and attracted ties cannot be recovered. The materialize output keeps source_directed_weights, so an attracted share is buildable from data already on disk, just not built. Symmetrization is the plain mean only when both directions exist. ALPHA 6 shrinkage confirmed."
+  },
+  {
+   "component_id": "melange-influence-engine.flip-model",
+   "relation": "qualifies",
+   "paper_claim": "Within-member quadratic in the attracted share: House linear 1.828 and squared -1.844 peak at 0.496 (Model 3.1); Senate 1.666 and -1.626 peak at 0.512 (Model 3.4). Effectiveness falls on both sides of the peak. A one-SD decline from the mean costs about 22 percent of LES in the House and 16 percent in the Senate; a one-SD rise adds about 8 and 4 percent. Mean LES about 1.0.",
+   "paper_location": "Table 3 Models 3.1 and 3.4; footnote 21; text p.24",
+   "system_side": "flip_model.py:142 multiplies the target by (1+0.3*bpf). The inline comment attributes a passage bonus of +8-14 percent to Volden-Wiseman. No 8-14 percent figure appears in the paper text; its figures are 6-8 percent of LES per SD and the 22/16 and 8/4 percent shape numbers. The bonus is +7.2 percent at bpf 0.24 and +30 percent at bpf 1.0, rising monotonically with no peak.",
+   "code_ref": "fec/engine/flip_model.py:142",
+   "transfer_conditions": "A linear bonus approximates the paper only below a share of about 0.5, where most members sit (paper mean 0.29 House, 0.35 Senate). The paper outcome is LES on a member's own sponsored bills, not the value of flipping a vote, and its share is the attracted share, not bpf. Any change to the functional form would move ranks and is not proposed here.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper coefficients reproduce and the peak values check (1.828/(2*1.844) = 0.496). Code line 142 confirmed as a monotone (1+0.3*bpf) factor. The +8-14 percent attribution to Volden-Wiseman is not in this paper. The component card text was not available to me, so the rel claim that the card is stale is unverified."
+  },
+  {
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "suggests-extension",
+   "paper_claim": "Stage models use a member's count of bills reaching each stage as the DV, with legislator FE and one-tailed tests. House: committee action (A8.2) 0.894 SE 0.204; beyond committee (A8.3) 0.853; passing chamber (A8.4) 0.800; law (A8.5) 0.485 SE 0.088; all p<0.001. Senate: committee action (A9.2) 1.767, not significant; law (A9.5) 0.589, p<0.05.",
+   "paper_location": "Appendix Table A8 (House, p.12); Table A9 (Senate, p.13)",
+   "system_side": "legislative_effectiveness.py defines STAGES BILL AIC ABC PASS LAW (line 17), role weights sponsor 3, original 2, cosponsor 1 (lines 18-19), a cosponsor timing multiplier of 2 to the power of minus delay over 180 (line 132), and compute_effectiveness (line 152). There is no cross-party term. I found no code that compares the shadow score with the Volden-Wiseman LES; verify_effectiveness_shadow.py checks internal consistency only.",
+   "code_ref": "fec/engine/legislative_effectiveness.py:17-19,132,152; fec/legislation/verify_effectiveness_shadow.py",
+   "transfer_conditions": "The paper DVs are counts of a member's own bills at each stage, not stage rates and not LES. A shadow-vs-LES check would need a per-Congress attracted share (not built) and a comparable LES series. It stays a diagnostic. Quote the coefficients as count-DV associations, House and Senate separately.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Stage names, role weights and the House coefficients reproduce. Corrected: the DVs are bill counts, so the rel line that the LES outcome is the CEL score mislabels them. The claim that the shadow is checked against CEL LES was not found in the code read. Senate committee result is not significant, and the Senate law result is p<0.05 one-tailed."
+  },
+  {
+   "component_id": "melange-psychometrics.cooperation-v2",
+   "relation": "supports",
+   "paper_claim": "Offering cross-party cosponsorships predicts attracting them (Table 4; DV attracted share, IV offered share). House pooled Model 4.1 0.626 SE 0.039; House member FE Model 4.2 0.317 SE 0.036; Senate pooled Model 4.3 0.739 SE 0.045; Senate FE Model 4.4 0.547 SE 0.047; all p<0.001. Distance from median: House pooled -0.154, FE 0.005 (n.s.); Senate pooled -0.114, FE -0.096.",
+   "paper_location": "Table 4 Models 4.1-4.4, pp.25-27",
+   "system_side": "coop_v2_candidate.py composite = mean of z(c1) and z(c2). c1 is the bipartisan.json undirected cross-party share. c2 is the directional offered cross-party share from bills the member chose to join. c3 reciprocity is reported and never composited. receptivity_layer.py:183 records coop v2 as a near-duplicate of bpf (rho +0.888), a system-internal overlap, not paper evidence.",
+   "code_ref": "fec/members/coop_v2_candidate.py:9-17 and composite block about 108-118; fec/members/receptivity_layer.py:183",
+   "transfer_conditions": "The paper is a member-level aggregate over 1973-2016, by chamber. Pooled and FE coefficients differ: the House roughly halves under FE, the Senate falls by about a quarter, so quote by chamber with strata. The paper shows offered-to-attracted reciprocity only, not that the composite tracks any effectiveness outcome.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Table 4 coefficients and distance-from-median effects reproduce. Composite and offered-share definitions confirmed in code. Removed: the rel argument that the rho of .888 between composite and bpf fits the paper link is a non sequitur. The halving claim holds for the House only."
+  },
+  {
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "qualifies",
+   "paper_claim": "Returns to bipartisan composition are nonlinear. One SD below the mean costs about 22 percent of LES in the House and 16 percent in the Senate; one SD above adds about 8 and 4 percent. Gains flatten and reverse past a 50/50 mix.",
+   "paper_location": "Table 3 and text p.24",
+   "system_side": "per_topic_coalition.py line 30 sets BETA_C = 0.8. Line 117 boosts each positive marginal spread by (1 + BETA_C*bpf) before the water-fill. The boost is monotone in bpf, and the code comment says bridges get a larger seed.",
+   "code_ref": "fec/engine/per_topic_coalition.py:30,117",
+   "transfer_conditions": "This holds only if the seed boost is meant to proxy a recruit's legislative effectiveness. The paper says nothing about diffusion seeding, so the link is an analogy and the allocators are diagnostic.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Paper percentages reproduce (text p.24). BETA_C and the boost formula confirmed in code. The relation is an analogy only, which the transfer condition already states."
+  },
+  {
+   "component_id": "melange-influence-engine.cascade-kernel",
+   "relation": "context",
+   "paper_claim": "Cross-party cosponsorship is exchanged: members who offer cross-party support attract it back, within member 0.317 House (Model 4.2) and 0.547 Senate (Model 4.4), p<0.001. The paper tests member-level aggregates only, with no dyadic diffusion or join timing.",
+   "paper_location": "Table 4 Models 4.2 and 4.4, p.27",
+   "system_side": "moneyball_core.py cpf_diffusion (line 543) returns 0.4 + 0.6*sqrt(bpf_n * bpf_u) for cross-party D/R pairs and 1.0 otherwise. The form is symmetric in the two members.",
+   "code_ref": "fec/moneyball_core.py:543-545",
+   "transfer_conditions": "The paper cannot test the sqrt-product form or the 0.4 floor. Context only.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Coefficients reproduce. The formula and cross-party condition are confirmed in code. The verdict covers the paper claim only, which is member-level and does not test dyadic diffusion."
+  }
+ ],
+ "related": [
+  {"slug": "sotoudeh-2024-network-based-measure", "relation": "complements", "why": "Sotoudeh (2024) measures cosponsorship influence on House bill passage and contrasts it with the Volden-Wiseman LES. This paper uses LES as its outcome."},
+  {"slug": "battaglini-2018-effectiveness-connected-legislators", "relation": "complements", "why": "Battaglini, Leone Sciabolazza and Patacchini model LES as a Katz-Bonacich centrality of the cosponsorship network. This paper uses the cross-party composition of cosponsors instead."},
+  {"slug": "bucchianeri-2025-legislative-effectiveness-american", "relation": "same-method", "why": "Bucchianeri, Volden and Wiseman extend the Volden-Wiseman effectiveness framework to American state legislatures (SLES)."},
+  {"slug": "aroyehun-2026-politics-of-feelings", "relation": "complements", "why": "Aroyehun (2026) also regresses Congressional LES on a member-level predictor, emotional expression from floor speeches. The link is a shared outcome, not shared data."},
+  {"slug": "aref-2021-identifying-hidden-coalitions", "relation": "complements", "why": "Aref and Neal (2021) partition House cosponsorship signed networks; their third coalition, marked by negative same-party ties, is the most effective coalition in most sessions. Their coalitions are signed-network partitions, not cross-party by definition."}
+ ],
+ "summary_issues": [
+  "bpf symmetrization: the rel says every pair takes the mean of its two directed weights; the code uses the single directed weight when only one direction exists.",
+  "Offered and attracted ties cannot be recovered: overstated. The materialize output keeps source_directed_weights, so an attracted share is buildable from data on disk but is not built.",
+  "Later-stage effects: the Table A8-A9 DVs are counts of a member's bills at each stage, not stage rates, and not LES. The rel line that the LES outcome is the CEL score mislabels them.",
+  "Shadow checked against CEL LES: not found in the code read; treat as unsupported.",
+  "Majority/minority similar shapes: holds for the House. The Senate minority squared term (Model 3.6, -0.397) is not significant, so the Senate minority shape is not established.",
+  "Reciprocity halving: House pooled 0.626 to FE 0.317 roughly halves; Senate 0.739 to 0.547 does not. The rho .888 sentence is a non sequitur for the paper link.",
+  "Flip-model card: the claim that the component card says the code has no bonus was not checked, since the card text was not available. The 8-14 percent attribution to Volden-Wiseman is not in this paper.",
+  "Senate Table A9 note overstates the committee-stage result (A9.2 1.767 not significant). Confirmed as the rel flags.",
+  "Related links: aroyehun relation same-data changed to complements (shared LES outcome only). Dropped noble-2024-presidential-leadership-legislative: it models presidential going-public under polarization and does not study effectiveness, so the link is not genuine. Aref-2021 description reworded.",
+  "Paul alignment: the Bacik citation and the choice of LES for the shadow lane are not in this item (paul_entries is empty); unverified here.",
+  "Coverage: full text read for Tables 1, 3, 4, A1, A5, A6, A8-A13 and notes (Table 2 spot-checked); code read for all six code_refs plus the coop composite and shadow verifier. paul_markup empty, 0 dropped. key_findings not returned (schema has no field)."
+ ]
+}

@@ -1,0 +1,51 @@
+{
+ "title": "An introduction to grf",
+ "authors": [
+  "Erik Sverdrup",
+  "Vitor Hadad",
+  "Susan Athey",
+  "Julie Tibshirani",
+  "Stefan Wager"
+ ],
+ "year": "2026",
+ "venue": "R package grf vignette (no journal)",
+ "doi": "",
+ "document_type": "R package vignette (applied methods tutorial), March 2026",
+ "coverage": "Full text read in one chunk (32068 chars, 694 lines): front matter, guided tour (ML for causal inference, random forest weighting, causal forest, AIPW, TOC, Qini, policy trees), both applied examples and references. No annotation files exist (n_annots 0, annot_sha12s empty), so paul_markup is empty and 0 items were dropped. Metadata corrected: authors were only Sverdrup, now five authors from the title page; year set to 2026 from the title page date; venue set to the grf vignette. Relevance to lobbying, networks, path-finding, elections, persuasion/turnout, legislators or text measurement: none present. Allocation and policy learning are covered (Qini curves, policy trees). Page numbers are approximate from printed page markers.",
+ "research_question": "Not a research paper: a tutorial showing how to use the grf R package for heterogeneous treatment effect (CATE) estimation, doubly robust ATE, best linear projection, TOC/AUTOC evaluation, Qini policy evaluation and interpretable policy learning.",
+ "theory": "Robinson (1988) partially linear model and residual-on-residual orthogonality; generalized random forests (Athey, Tibshirani, Wager 2019) using forest weights as adaptive neighborhoods; AIPW/doubly robust scores (Robins, Rotnitzky, Zhao 1994); orthogonal estimating equations and pseudo-outcomes; honesty and subsampling for pointwise asymptotics (Wager and Athey 2018). Section pp.1-6.",
+ "identification": "Unconfoundedness given covariates X is assumed, described as a domain-knowledge choice (p.2). Both applied examples use randomized treatment with known propensity W.hat = 0.5 (pp.6-7, 10-11). Missing covariates are assumed missing at random and handled by MIA splitting (p.6).",
+ "data": "Example 1: Bruhn et al. (2016) Brazil school-level randomized financial education program; about 17,000 students at 850 high schools; outcome post-treatment financial literacy score; 13 pre-treatment covariates (4-10 percent missing); clustering by school (pp.6-9). Example 2: Carvalho et al. (2016) payday experiment on low-income individuals tested before versus after payday; about 2,500 individuals and 24 pre-treatment covariates; outcome number of correct answers (variable outcome.correct.ans.per.second); 60/40 train/test split and top 10 covariates by variable importance (pp.10-12).",
+ "method": "causal_forest with W.hat and clusters; average_treatment_effect (AIPW); best_linear_projection with HC3 cluster-robust SEs; out-of-bag CATE predictions; rank_average_treatment_effect for TOC/AUTOC; variable_importance; double_robust_scores and policy_tree depth-1 for interpretable policies; regression_forest for nuisance Y.hat; maq sister package for Qini and budget policies (described, not run). Tutorial only, no new estimator.",
+ "scope": "Software vignette for the grf R package, 2026. Examples concern Brazilian high school students (RCT data from 2016 study) and low-income individuals in the Carvalho et al. payday sample. Generalization beyond these samples is not argued.",
+ "key_findings": [
+  "Financial education program ATE = 4.35 points (SE 0.52), about 0.3 SD of outcome (p.7); the text calls this roughly a quarter SD.",
+  "Best linear projection on financial.autonomy.index: coefficient -0.0329 (SE 0.0128, p = 0.0099); students with higher autonomy benefit less (p.7).",
+  "Other BLP terms: is.female -0.7268 (SE 0.5307, p = 0.17); family.receives.cash.transfer -1.1992 (SE 0.6526, p = 0.066); is.unemployed 0.3206 (SE 0.6277, p = 0.61) (p.7).",
+  "Whole-sample AUTOC using out-of-bag predictions: one-sided p = 0.65, so no reliable heterogeneity signal overall; authors call the evidence suggestive only (p.8).",
+  "TOC prioritizing low financial autonomy: AUTOC estimate 0.69, SE 0.22, t about 3.2; bottom 20 percent by autonomy have ATE about 1.1 points above average with CI excluding zero (p.9).",
+  "Depth-1 policy tree: assign training if financial.autonomy.index is 41 or below (p.10). Double robust mean scores: control 58, treated 62 (p.9).",
+  "Poverty experiment: CATE TOC AUTOC estimate 0.0061 (SE 0.0092), t = 0.67; no evidence of heterogeneity in the held-out test sample (p.11).",
+  "Poverty example histogram: most individuals have effects near the overall ATE with some variation (p.8).",
+  "The original Carvalho et al. study found no statistically significant average effect; the tutorial cites Farbmacher et al. (2021) for subgroup concerns (p.10)."
+ ],
+ "limitations": "Authors state the out-of-bag TOC test is a pragmatic heuristic without finite-sample guarantees, because the same data build and evaluate the CATE (p.8). Policy tree example is in-sample and the text says a held-out test set would be needed in practice (p.10). Poverty example is moderate in size relative to predictors and possibly underpowered (p.10). Missing data assumed missing at random (p.6). Identification rests on unconfoundedness, a modeling choice (p.2). Cited Wager (2024) book is in preparation.",
+ "measures": "Outcomes: financial proficiency score (ATE and SD units, financial literacy); number of correct answers per second in the attention test. Heterogeneity: CATE predictions, AUTOC/RATE (estimate, SE, t), BLP coefficients, variable importance, policy value (double robust mean scores).",
+ "references_of_note": [
+  "Athey, Tibshirani, Wager 2019, Generalized random forests, Annals of Statistics",
+  "Athey and Wager 2019, Estimating treatment effects with causal forests: an application, Observational Studies",
+  "Athey and Wager 2021, Policy learning with observational data, Econometrica",
+  "Bruhn et al. 2016, Impact of high school financial education in Brazil, AEJ Applied",
+  "Carvalho, Meier, Wang 2016, Poverty and economic decision-making at payday, AER",
+  "Nie and Wager 2021, Quasi-oracle estimation of heterogeneous treatment effects, Biometrika",
+  "Yadlowsky et al. 2025, Evaluating treatment prioritization rules via rank-weighted average treatment effects, JASA",
+  "Wager and Athey 2018, Estimation and inference of heterogeneous treatment effects using random forests, JASA",
+  "Sverdrup, Petukhova, Wager 2025, Treatment effect heterogeneity in psychiatry with causal forests, IJMPR"
+ ],
+ "paul_markup": [],
+ "short_quotes": [
+  "Assumptions 2) and 3) are modeling choices that we may wish to relax.",
+  "Robinson showed that this estimator is root-n consistent even if m(x) and e(x) are estimated more slowly.",
+  "This should be interpreted as suggestive evidence rather than a formally validated inference procedure."
+ ]
+}

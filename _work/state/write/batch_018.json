@@ -1,0 +1,1371 @@
+[
+ {
+  "slug": "cai-2025-competitive-influence-maximization",
+  "note": false,
+  "meta": {
+   "title": "Competitive Influence Maximization in Voter Dynamics",
+   "authors": [
+    "Zhongqi Cai",
+    "Enrico Gerding",
+    "Markus Brede"
+   ],
+   "year": "Not printed in the text (metadata hint says 2025; latest cited reference is 2024, Palermo et al.)",
+   "venue": "Preprint submitted to Elsevier (29 pages). No journal named in the text. Affiliations: Xiamen University of Technology (Cai); University of Southampton (Gerding, Brede).",
+   "doi": "\"\"",
+   "sha12s": [
+    "5630d0d41fa7"
+   ],
+   "category": "Adaptive Influence Maximization",
+   "category_slug": "adaptive-influence-maximization"
+  },
+  "extraction": {
+   "title": "Competitive Influence Maximization in Voter Dynamics",
+   "authors": [
+    "Zhongqi Cai",
+    "Enrico Gerding",
+    "Markus Brede"
+   ],
+   "year": "Not printed in the text (metadata hint says 2025; latest cited reference is 2024, Palermo et al.)",
+   "venue": "Preprint submitted to Elsevier (29 pages). No journal named in the text. Affiliations: Xiamen University of Technology (Cai); University of Southampton (Gerding, Brede).",
+   "doi": "\"\"",
+   "document_type": "Preprint manuscript (simulation and mean-field analysis; not empirical)",
+   "coverage": "Read all 2506 lines of the text file in three chunks (lines 1-955, 956-1755, 1756-2506), covering abstract, introduction, Sections 2-5, Appendices A-E, acknowledgements and references. Nothing omitted. Paul markup: none supplied (the task listed no markup files), so paul_markup is empty. Coverage is complete for the text as extracted; figure content is read only from axis labels and captions.",
+   "research_question": "How do the timing and distribution of a time-limited, budget-constrained influence campaign shape the final vote share in a voter model, and how does network degree heterogeneity change the optimal campaign timing? Two settings: (1) one controller (A) against a constant, fixed opponent (B); (2) two controllers choosing start times simultaneously in a zero-sum game (paper Sections 1, 2, abstract p.1).",
+   "theory": "Non-progressive voter model (reversible opinion changes; Masuda 2015) with heterogeneous mean-field theory and relaxation-time analysis (Son et al. 2008). Degree heterogeneity drives timescales. Competitive timing and budget allocation are analysed with interior-point optimization, stochastic hill climbing, and minimax-based iterative search for Nash equilibria in a zero-sum game. Partial zealotry (Masuda et al. 2010; Moreno et al. 2020) adds agent heterogeneity. Authors contrast their smooth zealotry with latency models (Palermo et al. 2024).",
+   "data": "Simulated and real networks, no empirical opinion or vote-outcome data.\n(a) Synthetic configuration-model scale-free networks. Main experiments: N = 10^4 nodes, target mean degree 10 (realized 10.5), degree exponent lambda in [1.6, 5], k_max = sqrt(N) (p.11, p.25). Individual-optimization experiments: N = 10^2, mean degree 6, k_max = 30, 10 realizations (p.17, p.25). Complete-network zealotry experiment: N = 10^2 (p.26). Each figure reports 100 or 10 realizations (see captions).\n(b) Real networks, Table 1 (p.11): Congress votes N=219, 764 edges, mean degree 7.0, lambda about 1.9 (text: mentions between US politicians with supportive or opposing edges). Facebook N=3862, 87324 edges, mean degree 45.2, lambda about 1.6 (users affiliated with one corporation). Advogato N=6541, 51127 edges, mean degree 15.6, lambda about 1.7 (trust network). Wikipedia Elections N=7118, 103689 edges, mean degree 29.1, lambda about 1.5 (positive/negative votes between users; these are Wikipedia admin-style votes, not political elections). Twitter N=22322, 31823 edges, mean degree 2.9, lambda about 4.3 (following network).\nUnit of analysis: individual node (agent). Time: simulated horizons T=16 (short) and T=256 (long), dimensionless model time, not calendar periods. Initial opinion share 0.5 for all nodes (or 0 in some experiments, p.18, p.26); one illustrative example uses S_A(0)=0.55 with N=10^4, T=30 (p.5).",
+   "method": "Analytical plus numerical simulation.\n- Model (Eq. 1, p.4): each node's opinion-A probability x_i(t) evolves under neighbour influence and two controllers with time-varying gains a_i(t), b_i(t). Budget constraints sum of integrals <= b_A, b_B (p.3-4). Vote share S_A(T) = mean of x_i(T) (Eq. 2).\n- Constant-opponent, uniform start (Sec 2.1, Eq. 3-5): A's gain is 0 until t_a, then b_A/((T-t_a)N); B's gain is constant b_B/(TN). Optimal t_a solved by interior-point method (p.5).\n- Individual optimization (Sec 2.2, Eq. 6-7): each node has its own start time and budget; stochastic hill climbing (Algorithm 1, p.7), with L_max = N^2 iterations (p.26). Budget moves between nodes keep the total fixed.\n- Heterogeneity extension (Sec 2.2.1, Eq. 8): partial zealots with probability q_i of resisting adoption of A when holding B.\n- Game (Sec 2.3, Eq. 9; Algorithm 2, p.8): simultaneous choice of start times t_a, t_b; iterative alternating best responses (A maximizes, B minimizes S_A(T)) with step size mu = 1/i, stopping threshold 1e-9 (p.8).\n- Mean-field (Sec 3, Eq. 10-11, derived in App. B): nodes grouped by degree k; closed-form x_k(t) and S_A(t).\n- Relaxation times (Eq. 12-14, 19): normalized order parameter r_k(t); tau_relax,k and tau_relax as degree-weighted averages; l-percentage relaxation time tau^l.\n- Taylor expansion (Eq. 15-18) to second order in 1/k, assuming (a_k+b_k)/k << 1.\n- Numerical integration: 4th-order Runge-Kutta, time step 0.01 (p.11).\n- Real-network experiments: Table 2 compares optimized t_a with t_a=0 at T in {16, 256} and b_A/b_B in {0.1, 1, 10}.\n- Appendix A: single-node case with fully flexible allocation via calculus of variations (Eq. 20-30), yielding a transcendental equation for start time.",
+   "identification": "None in a causal sense; model-based simulation. Mean-field and Taylor predictions are validated against Runge-Kutta integration (Fig. 2, 3, 4c-f; p.11-16). Optimality of the start time is checked by a convex vote-share peak (Fig. 4c-d, p.15-16). Within-model comparison is optimized start versus t_a=0 (Table 2, p.18).",
+   "scope": "Population: abstract simulated networks (configuration model) and five public network datasets; no sampled human population. Era: none stated. Opinions: binary (A or B), simple contagion, unit link weights, complete knowledge of network topology assumed (p.22-23). Applications named as motivation only (marketing, politics, public health; p.1-2, p.22); no application-specific calibration or validation is reported.",
+   "key_findings": [
+    {
+     "finding": "Constant-opponent, uniform start: optimal strategy is to delay. The controller lets the opponent dominate early, reserves budget, and then increases allocation sharply near the deadline.",
+     "location": "Sec 4.3.1, p.16-17; Fig. 5a; Sec 1 p.3 (main finding i)",
+     "numbers": "Example budgets: N=10^4, T=30, b_A=1.5e4, b_B=1.2e4; S_A(0)=0.55 (p.5). Optimal control time (T - t_a) plotted for T in {1,...,512} (Fig. 5a)."
+    },
+    {
+     "finding": "Network heterogeneity shifts optimal timing with horizon. For short horizons, highly heterogeneous networks (low lambda) should start later; for long horizons they should start earlier.",
+     "location": "Sec 4.3.1, p.16-17; Sec 1 p.3 (main finding i)",
+     "numbers": "Qualitative pattern from Fig. 5a (T=16 vs T=256 curves). Fig. 4e: at T=16 the degree of equilibrium l never exceeds 0.82 (p.16)."
+    },
+    {
+     "finding": "Relaxation time increases with node degree; higher-degree nodes equilibrate more slowly. Mean-field and Taylor estimates track Runge-Kutta.",
+     "location": "Sec 4.2, Fig. 2(a), p.11-12; Eq. 14, 17 p.10",
+     "numbers": "Fig. 2(a) relaxation time on a y-axis of about 52-56 across degree 2-92 (N=10^4, mean degree 10.5, lambda=1.6, 100 realizations). Uniform targeting: tau_relax,k approximately independent of initial state (p.10)."
+    },
+    {
+     "finding": "More heterogeneous networks (lower lambda) have longer overall equilibration times, driven by high-degree nodes.",
+     "location": "Sec 4.2, Fig. 2(b), p.12; Conclusion p.22",
+     "numbers": "Fig. 2(b) x-axis lambda in [1.6, 5]; y-axis tau_relax about 6.35-6.45. Text: more heterogeneous networks have longer timescales (quoted)."
+    },
+    {
+     "finding": "Degree of equilibrium l reverses the ranking of relaxation times. At low l, less heterogeneous networks (high lambda) take longer; near equilibrium, more heterogeneous networks take longer. Early changes are driven by low-degree nodes; late changes by high-degree nodes.",
+     "location": "Sec 4.2, Fig. 3(a)-(b), p.13-14",
+     "numbers": "Fig. 3 uses N=10^4, mean degree 10.5, lambda=1.6 and 5, 100 realizations. Low/high degree split at 80%/20% (Pareto). Fig. 3(a) tau^l axis about 1-6 (inset 5-6.5 near equilibrium)."
+    },
+    {
+     "finding": "Real networks: optimized start time beats t_a=0 in every dataset, both horizons, and all budget ratios tested.",
+     "location": "Sec 4.3.1, Table 2, p.18",
+     "numbers": "Congress votes T=16: b_A/b_B=1 gives opt t_a 12.533, S_A 0.705 vs 0.500 at t_a=0; b_A/b_B=0.1 gives 14.730, 0.248 vs 0.117; b_A/b_B=10 gives 10.476, 0.958 vs 0.909. Twitter T=256, b_A/b_B=1: opt t_a 250.157, S_A 0.973 vs 0.500. Facebook T=16, b_A/b_B=10: 7.897, 0.907 vs 0.889."
+    },
+    {
+     "finding": "Budget advantage means earlier start. A controller with more budget relative to its rival starts influence earlier; a disadvantaged controller starts later.",
+     "location": "Sec 4.3.1, Fig. 5b, p.17-18; Table 2; Appendix A Eq. 30, p.23-24",
+     "numbers": "Congress votes T=16: opt t_a falls from 14.730 (ratio 0.1) to 10.476 (ratio 10). Fig. 5b fixes T=16 with optimal start 9-15 across lambda and ratio 0.01-100 (axis)."
+    },
+    {
+     "finding": "Individual (node-specific) optimization improves vote share over a single uniform start, but absolute gains are small. Relative gains are largest for small budget ratios.",
+     "location": "Sec 4.3.2, Fig. 6(a)-(c), p.17-18; Appendix D p.26; Fig. 11(c) p.27",
+     "numbers": "Fig. 6(a) relative vote share S_indiv/S_const on axis 1.00-1.25 for b_A/b_B from 0.01 to 1 (N=100, mean degree 6, lambda=1.6, T=10, 10 realizations). Text: improvement very small in absolute numbers. Complete-network Fig. 11(c) relative axis 1.0-1.6."
+    },
+    {
+     "finding": "Under node-specific optimization, small budgets target only low-degree nodes. Control gains fall with degree and start times rise with degree when the budget ratio is small; the pattern reverses for large ratios.",
+     "location": "Sec 4.3.2, Fig. 6(b)-(c), p.18; Appendix D Fig. 10(b)-(c), p.26",
+     "numbers": "Fig. 6(b) control gains axis 0-8; Fig. 6(c) starting times 4-10. Appendix D (b_A=b_B): positive correlation between budget and degree; inverse relation between degree and start time; about N^2 iterations for convergence (p.26)."
+    },
+    {
+     "finding": "Zealotry: 20% of nodes are partial zealots. Normal agents receive more resources than zealots at every q, and zealot allocations depend on q.",
+     "location": "Sec 4.3.3, Fig. 7(a)-(d), p.19-20",
+     "numbers": "Lowest zealotry q=0.1: max allocation to zealots under 20 vs near 25 for normal agents (p.19). For medium and large q, zealots receive fewer resources and later starts as degree rises. Normal agents: larger degree, larger budget, earlier start."
+    },
+    {
+     "finding": "Complete-network zealotry (no degree structure, zealotry uniform on [0,1]): at large budget ratio, controller A starts earlier as zealotry rises up to a threshold near q=0.7, then reverses.",
+     "location": "Appendix E, Fig. 11(a)-(c), p.26-27",
+     "numbers": "Fig. 11(a) control gains axis 0-250 for b_A/b_B in {0.1,...,100}; threshold q around 0.7 (text, p.27)."
+    },
+    {
+     "finding": "Game with two controllers: the controller with the larger budget starts first, and the second mover concentrates its budget in the final stage to pull back the vote share.",
+     "location": "Sec 4.3.4, Fig. 8(a)-(b), p.19-20",
+     "numbers": "N=10^4, mean degree 10.5, T=16, b_B=N*T, b_A=10*b_B, 100 realizations per Fig. 8 setup (text: 'Calculations based on N=10^4'). Three stages: no control; first mover; both control."
+    },
+    {
+     "finding": "Nash starting times depend on degree exponent. For budget advantage, the advantaged controller starts at time 0 when lambda > 2.2; below 2.2 it starts later. Advantaged controller's per-node allocation is also larger, so the second mover can only offset, not overtake.",
+     "location": "Sec 4.3.4, Fig. 9(a)-(b), p.21-22",
+     "numbers": "Fig. 9(a) lambda from 1.6 to 5 at b_A/b_B in {0.1, 1, 10}; jump in optimal start near lambda about 2.2. Fig. 9(b) per-node resource axis 1-3.5 over budget ratio 0.2-8. N=10^4, mean degree 10.5, averaged over 10 realizations, T=16."
+    },
+    {
+     "finding": "Analytical single-node result: with fully flexible control against a constant opponent, the optimal start time satisfies a transcendental equation; a larger budget ratio pushes the start earlier.",
+     "location": "Appendix A, Eq. 29-30, p.23-24",
+     "numbers": "Equation: exp((T-t0)/2) - (T-t0)/2 = b_A/(2b) + 1 (as printed in the text, Eq. 30)."
+    }
+   ],
+   "limitations": [
+    "Binary opinions and simple contagion only; complex contagion and multi-state opinion models are not studied (p.22).",
+    "Assumes complete knowledge of network topology and of the opponent's strategy; partial visibility and uncertain opponent behaviour are flagged as future work (p.22-23).",
+    "Mean-field analysis assumes degree-uncorrelated networks (p.9); its accuracy is validated only on configuration-model networks and not on the five real datasets (no mean-field check reported for Table 2).",
+    "Taylor expansion valid only when (a_k+b_k)/k is small (p.10).",
+    "Individual optimization restricted to N=10^2 for computational reasons; absolute improvements described as very small (p.17-18).",
+    "Stochastic hill climbing and the iterative Nash algorithm are numerical heuristics; the text reports no optimality guarantee (p.7-8). Nash equilibria are approximated, not solved in closed form (p.8).",
+    "Individual optimization is not analysed in the game-theoretic setting because gains are small (p.22).",
+    "Integer k_min forces realized mean degree to deviate from target (target 10 gives 10.5) (p.25).",
+    "Degree exponent lower bound 1.6 chosen because lower values fail the k_min constraint (p.25).",
+    "Real datasets are not election outcome or lobbying data: Congress votes are mentions/support-oppose edges, Wikipedia Elections are user-to-user votes, Facebook and Twitter are social graphs. No validation against observed vote shares is reported.",
+    "Time horizons are abstract model units; no calendar mapping is given beyond the illustrative 30-day example (p.5)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "the best strategy for the active controller is to delay its influence",
+     "location": "Sec 1 Introduction, p.3 (main finding i)"
+    },
+    {
+     "quote": "resource-rich controllers tend to start campaigns early, while resource-limited controllers strategically delay to counter their opponent's advantage",
+     "location": "Abstract, p.1"
+    },
+    {
+     "quote": "networks with more heterogeneity have longer timescales to reach equilibrium",
+     "location": "Sec 4.2, p.12"
+    }
+   ],
+   "measures": [
+    "Vote share S_A(T): fraction of nodes holding opinion A at time T (Eq. 2, p.4).",
+    "Node opinion probability x_i(t) and degree-class x_k(t) (Eq. 1, 10).",
+    "Normalized order parameter r_k(t) and mean relaxation times tau_relax,k and tau_relax (Eq. 12-14, p.10-11).",
+    "Degree of equilibrium l = |S_A(T)-S_A(0)| / |S_A(inf)-S_A(0)| and l-percentage relaxation time tau^l (Eq. 19, p.13).",
+    "Relative budget b_A/b_B (ratios 0.01-100 across experiments).",
+    "Degree exponent lambda and mean degree <k> (Table 1, p.11).",
+    "Relative vote share S_indiv(T)/S_const(T) for individual versus uniform optimization (Fig. 6a, 11c).",
+    "Payoffs in game: u_A = S_A(T), u_B = 1 - S_A(T) (p.7)."
+   ],
+   "references_of_note": [
+    "Brede, Restocchi, Stein 2019, 'Effects of time horizons on influence maximization in the voter dynamics', J. Complex Networks 7:445-468 [10]: direct predecessor; time-constrained IM in voter model with fixed (non-time-varying) allocation, per the text (p.2).",
+    "Cai, Brede, Gerding 2020, 'Influence maximization for dynamic allocation in voter dynamics', COMPLEX NETWORKS 2020 [12]: authors' earlier conference version; this paper adds agent heterogeneity and the game setting (p.3, p.22).",
+    "Masuda 2015, 'Opinion control in complex networks', New J. Physics [39]: source of the mean-field rate-equation framework used (p.4).",
+    "Masuda, Gibert, Redner 2010, 'Heterogeneous voter models', Phys. Rev. E [40]: source of heterogeneous-voter framing used for zealotry (p.6).",
+    "Moreno, Manino, Tran-Thanh, Brede 2020, 'Zealotry and influence maximization in the voter model: When to target partial zealots?' [41]: partial zealotry model and degree-dependent allocation pattern compared in Sec 4.3.3 (p.19).",
+    "Ali, Wang, Chen 2019 [1] and 2022 [2]: only prior work the text identifies on inter-temporal competitive IM; reinforcement learning on progressive models with discrete timing (p.2).",
+    "Tong, Wang, Dong, Li 2021, 'Time-constrained adaptive influence maximization' [53]: single-controller adaptive timing (p.2).",
+    "Alshamsi, Pinheiro, Hidalgo 2017, 'When to target hubs? Strategic diffusion in complex networks' [3]: timing of targeting by connectivity; single influencer (p.2).",
+    "Lambiotte, Saramaki, Blondel 2009, 'Dynamics of latent voters' [30]: latency model contrasted with this paper's partial-zealotry formulation (p.6).",
+    "Wilder and Vorobeychik 2018, 'Controlling elections through social influence' [55]: election-control framing cited in the introduction (p.2).",
+    "Vendeville, Guedj, Zhou 2021, 'Forecasting elections results via the voter model with stubborn nodes' [54]: voter-model election forecasting cited as empirical relevance (p.2).",
+    "Fernandez-Gracia et al. 2014, 'Is the voter model a model for voters?' [19]: empirical grounding of the voter model in election outcomes (p.2).",
+    "Son, Jeong, Hong 2008, 'Relaxation of synchronization on complex networks' [51]: relaxation-time definition used (p.10).",
+    "Hegselmann et al. 2015, 'Optimal opinion control: the campaign problem' [26]: campaign-timing motivation cited for transient dynamics (p.2).",
+    "Catanzaro, Boguna, Pastor-Satorras 2005 [15] and Boguna et al. 2004 [7]: configuration-model generation and kmax cutoff used for the synthetic networks (p.11, p.25)."
+   ]
+  },
+  "summary_md": "Cai, Gerding and Brede study a time-limited, budget-constrained influence campaign in a non-progressive voter model, where opinions can flip back. They use heterogeneous mean-field theory, relaxation-time analysis, hill climbing and an iterative minimax search for Nash start times. Every result is a simulation on configuration-model scale-free graphs or on five public graphs. The paper uses no observed votes, lobbying or money data.\n\nFindings. Against a fixed opponent, the best strategy is to hold budget back and spend it late. Across all datasets, horizons and budget ratios in Table 2, an optimized start beat starting at t=0. One example is the 'Congress votes' mentions graph at T=16 with equal budgets: vote share 0.705 against 0.500. A richer controller starts earlier: on that graph the optimal start falls from 14.73 at budget ratio 0.1 to 10.48 at ratio 10. High-degree nodes take longer to settle, so on a short horizon the outcome stays far from equilibrium (degree of equilibrium never above 0.82 at T=16). In the two-controller game the side with more budget moves first, and the second mover can only offset its lead, not overtake it. Small budgets go to low-degree nodes. Partial zealots get fewer resources than normal agents.\n\nWhy it matters here. Melange's money engines have no time dimension at all. The flip model's pflip = a/(a+b) is a stationary share ratio with no time term, the optimizer allocates dollars with no timing, and the competitive cascades let a member who has been reached stay that colour. The paper is the clearest formal case in the vault that timing and reversibility change who wins under a fixed budget. Its evidence is abstract: model time units, unit edge weights, full knowledge of the network, and no calibration to any real campaign. Read it as a design critique and a source of hypotheses. It does not validate or refute any Melange constant, and any agent analysis built on it stays UNVERIFIED (DE-062).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.flip-model",
+    "relation": "qualifies",
+    "paper_claim": "Vote share at a finite horizon depends on when each controller starts and on degree heterogeneity. At T=16 the degree of equilibrium l never exceeds 0.82, and high-degree nodes relax more slowly. An optimized start beats t_a=0 in every real network and setting tested (Congress votes, T=16, b_A/b_B=1: S_A 0.705 vs 0.500).",
+    "paper_location": "Sec 4.2 Fig. 2-4 p.11-16; Sec 4.3.1 Table 2 p.18",
+    "system_side": "pflip = a/(a+b), where a and b add a saturating money pull to a peer-proximity share. It is a static, time-free share, structurally like a two-controller stationary opinion probability. Winnability is sum tgt x pflip, with no horizon, no start time and no relaxation lag.",
+    "code_ref": "fec/engine/flip_model.py:3-8,92-97",
+    "transfer_conditions": "The structural parallel holds: both are ratios of competing pulls. The magnitudes do not transfer. Paper time is dimensionless, edges have unit weight, and opinions are binary simple contagion. Nothing maps model time onto a Congress or an FEC cycle. The paper shows that an equilibrium-share model leaves out timing, not that pflip is miscalibrated.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Flip - winnability model|Flip - winnability model]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.joint-optimizer",
+    "relation": "suggests-extension",
+    "paper_claim": "Holding the budget fixed, choosing a start time (and, for N=100, a start time per node) raises final vote share over spending from t=0. A resource-limited controller should delay and spend heavily near the deadline; a resource-rich one starts early. Per-node optimization adds only small absolute gains (Fig. 6a relative axis 1.00-1.25).",
+    "paper_location": "Sec 1 p.3; Sec 4.3.1-4.3.2 Fig. 5-6 p.16-18; Appendix A Eq. 30",
+    "system_side": "CELF lazy greedy places a $2.5M pot in $500 chunks with a $10k per-candidate cap (PMAX). It chooses amount per member only, never when to spend within the cycle. The objective is time-free winnability.",
+    "code_ref": "fec/engine/optimize.py:3-12,23-25",
+    "transfer_conditions": "Only as a hypothesis. PAC dollars cannot be withdrawn, FEC per-cycle limits bind, and the paper's continuous gain a_i(t) has no clear counterpart in lump-sum contributions. The finding that per-node timing adds little absolute gain suggests a single campaign start time is the extension worth building first, if any. Untested on legislators.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-allocation#Joint CU budget optimizer|Joint CU budget optimizer]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-allocation.break-even-and-roi",
+    "relation": "qualifies",
+    "paper_claim": "In the game, the outcome depends on the budget ratio through timing as well as level. On Congress votes at T=16 the optimal start moves from 14.73 (b_A/b_B=0.1) to 10.48 (ratio 10), and the disadvantaged second mover can only offset the leader, not overtake it (Fig. 9b per-node resource axis 1-3.5).",
+    "paper_location": "Sec 4.3.1 Table 2, Fig. 5b p.17-18; Sec 4.3.4 Fig. 8-9 p.19-22",
+    "system_side": "The head-to-head panel solves a(CU)/(a(CU)+b(comp)) = baseline odds in closed form. It reports 'CU money alone can't fully offset' when q >= 1. The solve uses the CU-to-competitor money ratio at one instant, with no sequencing.",
+    "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:1096-1104",
+    "transfer_conditions": "The paper's conclusion that a disadvantaged controller can offset but not overtake agrees in spirit with the 'cannot offset' message. Its other claim, that a disadvantaged side does better by timing (delaying), has no counterpart in a static break-even. Transfer needs a model of within-cycle spending order, which the system does not have. Simulation-only evidence.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-allocation#Break-even CU spend and ROI floor|Break-even CU spend and ROI floor]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.competitive-cascade-crn",
+    "relation": "qualifies",
+    "paper_claim": "Competitive influence is analysed in a non-progressive model: opinions are reversible, and the opponent is a strategic controller choosing its own start time (Nash equilibrium). The second mover concentrates its budget in the final stage to pull vote share back.",
+    "paper_location": "Sec 2.3 Eq. 9, Algorithm 2 p.7-8; Sec 4.3.4 Fig. 8 p.19-20",
+    "system_side": "A two-colour first-to-reach independent cascade: a reached member keeps its colour for the rest of the run. Industry money enters only as non-strategic bystander activation, min(0.9, ind/400000). Nothing represents an opponent that responds in time.",
+    "code_ref": "fec/engine/budget_frontier.py:79-94,133; fec/engine/per_topic_coalition.py:40-53",
+    "transfer_conditions": "This is a difference in model class, not evidence that the IC choice is wrong. Cosponsorship is close to progressive: withdrawals are rare. Stance and votes are not. The paper's late-countermove result matters only if the system models stance, not cosponsor joins, as the contested state.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Competitive independent cascade with common random numbers|Competitive independent cascade with common random numbers]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-influence-engine.persuadability-table",
+    "relation": "supports",
+    "paper_claim": "With 20% partial zealots, normal agents receive more resources than zealots at every zealotry level q. At medium and large q, zealots get fewer resources and later starts as degree rises (lowest q=0.1: maximum zealot allocation under 20 vs about 25 for normal agents).",
+    "paper_location": "Sec 4.3.3 Fig. 7 p.19-20; Appendix E Fig. 11 p.26-27",
+    "system_side": "PERS gives committed or resistant tiers a low target multiplier: Opponent 0.08, Highly Skeptical 0.15, Champion 0.10. Middle tiers sit around 0.50-0.65. The F1 gate gives Skeptic, Highly Skeptical and Opponent members zero money.",
+    "code_ref": "fec/moneyball_core.py:564-568; fec/engine/optimize.py:44-52",
+    "transfer_conditions": "The direction agrees: resistant agents get less. The paper never allocates zero to zealots at low q, so it does not support a hard zero gate on its own. Its zealotry is one-sided resistance to adopting A, which maps loosely onto Skeptic and Opponent and not onto Champion. Simulated agents only.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Persuadability table PERS|Persuadability table PERS]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.per-topic-allocators",
+    "relation": "qualifies",
+    "paper_claim": "Under node-specific optimization, the budget ratio sets the degree pattern. With small budgets, control gains fall and start times rise with degree, so low-degree nodes are targeted. With large budgets the pattern reverses.",
+    "paper_location": "Sec 4.3.2 Fig. 6(b)-(c) p.18; Appendix D Fig. 10 p.26",
+    "system_side": "The coalition water-fill boosts candidates by (1 + 0.8 bpf), favouring bipartisan bridges, and ranks them by marginal spread. Budget size never changes which structural position is preferred.",
+    "code_ref": "fec/engine/per_topic_coalition.py:30,117",
+    "transfer_conditions": "bpf is a cross-party share, not degree, so the paper's degree result maps only indirectly. The paper's result rests on N=100 graphs with mean degree 6. Measuring the Melange cosponsor graph's degree exponent, and testing whether the seeds chosen by greedy spread move toward low-degree members at small budgets, would be new analysis and stays UNVERIFIED.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-allocation#Per-topic flip and coalition allocators|Per-topic flip and coalition allocators]]",
+    "system": "melange-allocation"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "No time dimension in any money or influence engine. optimize.py, flip_model.py, budget_frontier.py and scenario.py allocate amounts with no start time, horizon or spending schedule, although the paper shows timing alone shifts final share under a fixed budget.",
+   "No model of a strategic opponent. Competitor money is a fixed input or bystander noise (min(0.9, ind/400000)), never a best-responding player, so the system cannot represent a late countermove by banks.",
+   "No reversibility. Competitive cascades are first-to-reach and absorbing, while stance in the paper (and in reality) can revert. stance_dynamics measures trajectories, but the allocators do not consume them.",
+   "The degree heterogeneity (degree exponent) of the cosponsor graph is unmeasured, though the paper makes optimal timing and degree targeting depend on it, with a regime change near lambda 2.2.",
+   "The contested-bills registry has a schema for a counterparty but no consumer, so the paper's two-controller game framing has nowhere to land (fec/lobbying/contested_bills.py:1-20 says no consumer exists)."
+  ],
+  "flags": [
+   "The paper's 'Congress votes' dataset is a network of mentions between politicians with support/oppose edges. It is not roll calls or cosponsorship, and Table 2 'vote share' is model output, not observed votes. Never quote 0.705 vs 0.500 as an electoral or legislative effect.",
+   "'Influence' in the paper is a model-internal controller gain. Under D-025, no bearing here may be read as closeness, access or a probability of moving a member.",
+   "Every number in the paper is in dimensionless model time on unit-weight graphs. Any figure carried over must name that window and denominator (N, mean degree, lambda, T, realizations).",
+   "The paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization; it uses unit weights as a simplification. Neither rejected SNA proposal is implicated.",
+   "A degree-exponent measurement or timing test on Melange graphs would be new agent analysis. It stays UNVERIFIED until a second path reproduces it (DE-062).",
+   "The component list says contested-bills cites Romero Moreno 2021, but fec/lobbying/contested_bills.py contains no such citation. The link lives only in notes."
+  ],
+  "paul_alignment": "Paul has not annotated this paper. It speaks most directly to two of his positions. On competitive-cascade-crn, he wants rival industries modelled and scenarios simulated cheaply. The paper supports the first and goes further: a rival should be a strategic, time-aware player, which the system does not have. On joint-optimizer, he sees adaptive greedy plus CELF as the operational layer and expects learned policies to replace it at scale. The paper adds a missing axis, when to spend, that neither greedy nor GCOMB covers as built. His Kim J. 2025 margin note about conflicting industries is consistent with the two-controller game. His notes are not stale here; the system simply has no timing layer for them to describe. His ROI enthusiasm should be tempered by the paper's own result that per-node fine-tuning yields very small absolute gains.",
+  "related": [
+   {
+    "slug": "moreno-2021-shadowing-shielding-effective",
+    "relation": "builds-on",
+    "why": "Same Brede group and voter-model continuous IM framework. The paper compares its zealotry allocation pattern with this line of work (Moreno et al.), and the contested-bills component is linked to Romero Moreno 2021."
+   },
+   {
+    "slug": "bharathi-nd-competitive-influence-maximization",
+    "relation": "contradicts",
+    "why": "Bharathi's progressive competitive IC is the model class behind competitive-cascade-crn. Cai uses a non-progressive, reversible voter model with a strategic opponent, an alternative formalization with different optimal behavior."
+   },
+   {
+    "slug": "borodin-nd-threshold-models-competitive",
+    "relation": "complements",
+    "why": "Borodin's competitive threshold models (cited in flip_model for lacking submodularity) and Cai's timing game both show that competition breaks simple greedy guarantees."
+   },
+   {
+    "slug": "golovin-2011-adaptive-submodularity-theory",
+    "relation": "complements",
+    "why": "Golovin-Krause supports the optimizer's static greedy bound. Cai adds a temporal allocation dimension that the bound does not cover."
+   },
+   {
+    "slug": "chen-2021-contingency-aware-influence",
+    "relation": "complements",
+    "why": "Chen's contingency-aware seeding (SGATE) and Cai's partial zealotry both model agents who resist adoption. Cai finds such agents receive fewer resources."
+   },
+   {
+    "slug": "noble-2024-presidential-leadership-legislative",
+    "relation": "complements",
+    "why": "Salience-shock timing (going public) is the empirical analogue of a controller's start-time choice, which Cai studies only abstractly."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "madsen-2017-strategic-advantages-micro",
+    "relation": "extended-by",
+    "why": "A two-candidate competitive voter-dynamics model on networks. It adds the voter-to-voter interaction this paper leaves out and says targeting would benefit from."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "xu-2024-improved-lite-based",
+  "note": false,
+  "meta": {
+   "title": "An Improved D* Lite-Based Dynamic Route Planning Algorithm for Ships in Arctic Waters",
+   "authors": [
+    "Tie Xu",
+    "Haoran Yang",
+    "Jun Ma",
+    "Kun Xiong",
+    "Qinyou Hu"
+   ],
+   "year": "2024",
+   "venue": "Journal of Marine Science and Engineering, 12, 2323 (MDPI, Basel); published 18 Dec 2024",
+   "doi": "10.3390/jmse12122323",
+   "sha12s": [
+    "3a84bc118f9c"
+   ],
+   "category": "Path-Finding Algorithms",
+   "category_slug": "path-finding-algorithms"
+  },
+  "extraction": {
+   "title": "An Improved D* Lite-Based Dynamic Route Planning Algorithm for Ships in Arctic Waters",
+   "authors": [
+    "Tie Xu",
+    "Haoran Yang",
+    "Jun Ma",
+    "Kun Xiong",
+    "Qinyou Hu"
+   ],
+   "year": "2024",
+   "venue": "Journal of Marine Science and Engineering, 12, 2323 (MDPI, Basel); published 18 Dec 2024",
+   "doi": "10.3390/jmse12122323",
+   "document_type": "Journal article: algorithm design plus simulation benchmark (open access, CC BY 4.0)",
+   "coverage": "Full text read (all 1,126 extracted lines, pp. 1-22, including references and disclaimer). Metadata hint confirmed: title, year, venue, DOI correct. No Paul markup files were supplied (task listed none). Topical fit to the vault is low: the paper covers graph-search path planning only. It has no content on lobbying, elections, turnout, persuasion, legislators, text measurement, or social networks, beyond the general fact that the graph is a grid.",
+   "research_question": "How can D* Lite dynamic replanning be made cheap enough for real-time ship routing in Arctic waters, where ice conditions change over large areas, while keeping route distance and average risk close to full re-planning? The authors set the goal as cutting node updates and planning time without changing the heuristic.",
+   "theory": "No social-science theory. The basis is graph-search path planning: incremental replanning from LPA* and D* (Koenig and Likhachev 2002, ref. 26), a risk-weighted movement cost (cost = delta*r + d, Eq. 12), and a ship-specific icebreaking limit (maximum continuous ice-breaking thickness) used in place of ice-class rules.",
+   "data": "Sea ice thickness and related ice data from CryoSat-2 (European Space Agency), stated in Sec. 4 (data availability: NSIDC, accessed 29 April 2024). Study area 55-90 degrees N, grid 448 x 304 cells at 25 km x 25 km. Unit: grid cell (node) and route update. Two simulated voyages, one per period: freezing (October 2023 dataset, 26 route updates) and melting (mid-April to mid-May 2023, 24 route updates). No ship sample. Ship parameters are a single hypothetical vessel with icebreaking thickness 1.2 m (freezing) or 2.8 m (melting), risk threshold 1, and a fixed update distance of 8 grid units per update. Text says this is \"approximately 432 nautical miles\", which does not match the stated grid resolution (see limitations).",
+   "scope": "Population: one Arctic region, two ice periods (freezing October 2023; melting April-May 2023), one ship type parameterized by icebreaking thickness and safety coefficient. Institution: Shanghai Maritime University (Merchant Marine College). Era: 2023 ice data, paper published Dec 2024. Speed differences by ice condition are excluded (Sec. 4, p. 13).",
+   "method": "Improved D* Lite with three modified rules. (1) Local update (Sec. 2.2, Eq. 5, Algorithm 1): a node that becomes an obstacle takes its cost from the old data, and a node that becomes navigable takes its cost from the new data, so updates do not spread through the whole map. (2) Path extraction (Sec. 2.3, Eq. 6, Algorithm 2): the next node is the unexplored successor minimizing c + g, which avoids deadlocks at the boundary of updated regions. (3) Path optimization (Sec. 2.4, Eqs. 7-9): shortcut any segment where the direct connection costs less and has no obstacles. Risk r = h x C / Icemax (Eq. 10); cost = delta*r + d (Eq. 12); average route risk R = sum(r_i d_i)/sum(d_i) (Eq. 13). Non-navigable cells are land, cells with average ice thickness above Icemax, and cells with r above the threshold (Sec. 3.1). Benchmarks: global re-planning every update, and the original D* Lite. All three run on identical ice snapshots and ship positions.",
+   "identification_strategy": "None. This is a simulation benchmark, not a causal design. Validity rests on comparing against global re-planning, treated as optimal under the same heuristic (Sec. 4.1, p. 14-15), and against the original D* Lite. Parameter effects (Icemax, delta) are shown only by re-running the same voyage with different settings (Sec. 4.3, Table 5).",
+   "key_findings": [
+    {
+     "finding": "Freezing period, improved vs original D* Lite: nodes updated fell by 34.9% (18,468 vs 28,351); planning time fell by 46.2% (924 s vs 1,720 s). Voyage distance 2,558.7 vs 2,561.4 n mi; average risk identical at 0.076.",
+     "location": "Sec. 4.1, Table 3, p. 15",
+     "numbers": "18,468 vs 28,351 nodes; 924 vs 1,720 s; 2,558.747 vs 2,561.408 n mi; R = 0.076"
+    },
+    {
+     "finding": "Freezing period, improved vs global re-planning: nodes updated fell 74.6% and planning time fell 72.7%. Route quality matched global re-planning on risk, with distance within about 0.1%.",
+     "location": "Sec. 4.1, Table 3, p. 15",
+     "numbers": "18,468 vs 72,835 nodes; 924 vs 3,392 s; 2,558.747 vs 2,561.408 n mi"
+    },
+    {
+     "finding": "Melting period, improved vs original D* Lite: nodes updated fell 79.5% and planning time fell 85.7%. Voyage distance 2,419.1 vs 2,418.1 n mi; risk identical at 0.615.",
+     "location": "Sec. 4.2, Table 4, p. 17",
+     "numbers": "16,864 vs 82,210 nodes; 632 vs 4,409 s; 2,419.087 vs 2,418.146 n mi; R = 0.615"
+    },
+    {
+     "finding": "Melting period, improved vs global re-planning: nodes updated fell 85.3% and planning time fell 86.7%.",
+     "location": "Sec. 4.2, Table 4, p. 17",
+     "numbers": "16,864 vs 114,929 nodes; 632 vs 4,770 s"
+    },
+    {
+     "finding": "Sensitivity, freezing period: raising Icemax from 1.0 to 1.4 m shortens the route (2,654.5 to 2,459.9 n mi) and raises average risk (0.002 to 0.113). Raising delta from 1 to 3 at 1.2 m lengthens the route (2,558.7 to 2,645.5 n mi) and lowers risk (0.076 to 0.039).",
+     "location": "Sec. 4.3, Table 5, p. 18-19",
+     "numbers": "Icemax 1.0/1.2/1.4 m (delta 1): 2654.492/2558.747/2459.904 n mi; R 0.002/0.076/0.113; delta 1/2/3 (1.2 m): 2558.747/2576.925/2645.540 n mi; R 0.076/0.070/0.039"
+    },
+    {
+     "finding": "Sensitivity, melting period: delta 1 to 3 at 2.8 m lengthens the route (2,419.1 to 2,644.1 n mi) and lowers risk (0.615 to 0.468). Risk does not fall monotonically with Icemax: at delta 1 it is 0.625, 0.631, 0.615 for 2.4, 2.6, 2.8 m.",
+     "location": "Sec. 4.3, Table 5, p. 18-19",
+     "numbers": "delta 1/2/3 (2.8 m): 2419.087/2550.582/2644.126 n mi; R 0.615/0.510/0.468; Icemax 2.4/2.6/2.8 m (delta 1): R 0.625/0.631/0.615"
+    },
+    {
+     "finding": "Safety coefficient delta = 3 is adopted as sufficient on the basis of unpublished simulations: higher values did not change route outcomes much.",
+     "location": "Sec. 3.2, p. 12",
+     "numbers": "delta = 3"
+    },
+    {
+     "finding": "Discussion, single illustrative map (Icemax 0.8 m, PC-6-equivalent): the POLARIS-based route crosses non-navigable cells, while the proposed risk formula routes around them. Qualitative only, no numbers.",
+     "location": "Sec. 5, Fig. 16, p. 19",
+     "numbers": "Icemax 0.8 m"
+    },
+    {
+     "finding": "Conclusion claims planning-efficiency gains are directly proportional to ice-data completeness. Only two periods were tested, so this is an untested claim.",
+     "location": "Sec. 6, p. 20",
+     "numbers": "gains: 35% (freezing) and over 85% (melting)"
+    }
+   ],
+   "measures": [
+    "Total voyage distance (n mi), summed over the route",
+    "Average route risk R = sum(r_i d_i)/sum(d_i) (Eq. 13)",
+    "Cell risk r = h x C / Icemax (Eq. 10), where h is average ice thickness, C is ice density, Icemax is maximum continuous icebreaking thickness",
+    "Planning time (s) per full dynamic run",
+    "Number of nodes updated per run",
+    "Movement cost cost = delta*r + d (Eq. 12); d is 1 or 0.707 for 8-neighbour moves"
+   ],
+   "limitations": [
+    "Authors: ship speed varies with ice and is not modelled; the update distance is fixed at 8 grid units per update (Sec. 4, p. 13).",
+    "Authors: forecast uncertainty and floating-ice drift can make a route invalid, so local obstacle avoidance is future work (Sec. 5, p. 20).",
+    "Authors: POLARIS was not used because it works from ice type and ice class, not thickness and maximum icebreaking thickness (Sec. 5, p. 19).",
+    "Authors: ice thickness data are unreliable in rapidly changing months, and no average-thickness data were released June-September, so only two windows were studied (Sec. 4, p. 13).",
+    "Mine: one simulated voyage per period with no repetition, variance, or confidence intervals; timing claims rest on single runs.",
+    "Mine: no hardware or software specification is given for the timings in Tables 3-4.",
+    "Mine: the text's 0.07% voyage/risk error figures do not reproduce from Tables 3-4 (voyage deviation is 0.10% freezing vs original and 0.04% melting vs original; risk is identical).",
+    "Mine: the text says 8 grid units equal about 432 n mi, but 8 x 25 km = 200 km, about 108 n mi.",
+    "Mine: the text says risk rises with Icemax, but in the melting sweep at delta 1 risk goes 0.625, 0.631, 0.615, which is not monotone.",
+    "Mine: the conclusion's proportionality claim about ice-data completeness rests on two periods only.",
+    "Mine: the abstract's 'gradual and convergent' ice-change premise is asserted, not tested."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Koenig, S.; Likhachev, M. D* Lite (AAAI 2002), ref. 26: base algorithm being modified",
+    "Stentz, A.; Mellon, I.C. (1995), ref. 28: original D* dynamic replanning",
+    "Lee, H.-W.; Roh, M.-I.; Kim, K.-S. Ship route planning in Arctic Ocean based on POLARIS (2021), ref. 19: POLARIS-based routing that the paper compares against",
+    "An, L. et al. Navigation risk of the Arctic Northeast Passage based on POLARIS (2022), ref. 33",
+    "Choi, M. et al. Arctic sea route path planning based on an uncertain ice prediction model (2015), ref. 15",
+    "Lehtola, V. et al. Finding safe and efficient shipping routes in ice-covered waters (2019), ref. 18",
+    "Liu, Q. et al. Arctic weather routing: review of ship performance models and ice routing algorithms (2023), ref. 23",
+    "Zhao, W. et al. Multi-objective weather routing via hybrid PSO (2022), ref. 34: the distance-risk multi-objective framing"
+   ],
+   "short_quotes": [
+    {
+     "quote": "achieves planning results very similar to those of the original D* Lite algorithm",
+     "location": "Abstract, p. 1"
+    }
+   ]
+  },
+  "summary_md": "Xu et al. (2024) change D* Lite so that a ship's route can be re-planned cheaply as Arctic ice changes. The test grid is 448 x 304 cells at 25 km. They make three changes: (1) a local-update rule, where a cell that becomes blocked keeps its old cost and a cell that opens takes its new cost, so changes don't spread across the whole map; (2) a path-extraction rule that picks the unexplored successor with the lowest c+g, which avoids deadlocks at the edge of updated regions; (3) shortcut smoothing. Cost is a weighted sum, delta*risk + distance.\n\nCompared with the original D* Lite, nodes updated fell 34.9% in the freezing period (18,468 vs 28,351) and 79.5% in the melting period. Planning time fell 46% and 86%. Route length stayed within about 0.1%, and average risk was unchanged. Raising delta trades length for risk (freezing period: R 0.076 to 0.039, distance +3.4%). Each period is one simulated voyage, with no variance and no hardware stated. Some numbers in the text don't match the tables: 8 cells x 25 km is about 108 n mi, not 432, and the 0.07% error figure can't be reproduced.\n\nFor Paul's systems the paper is narrow. None of the router code (fec/) has D* Lite or LPA*. The gains need large graphs where repeated queries see small, local changes. The 533-node cosponsor graph is too small for incremental replanning to matter, and the staffer router serves many different origin/target pairs. Its approximate local update would also break Paul's 2026-10-03 rule that staffer routes must be exactly optimal. The paper's sharpest use is diagnostic. Its warning that extracting a path from stale cost-to-goal values can deadlock describes the dashboard's buildPath \"member dropped\" mode: distToTarget ignores dropped members, but tracePath skips them, so the chain labelled \"PROVABLY-OPTIMAL\" is not optimal once someone is dropped (UNVERIFIED, read from the code but not run). The paper also shows that scenario.py's D* Lite citation claims a reuse of earlier work that the code doesn't do.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-pathfinding.member-recruitment-path",
+    "relation": "qualifies",
+    "paper_claim": "If a path is extracted greedily from cost-to-goal (g) values that are out of date after cells become obstacles, it can deadlock or detour at the edge of the updated region. Their fix extracts the next node as the unexplored successor minimizing c+g, using values made consistent with the change (Sec. 2.3, Eq. 6, Algorithm 2). Without such fixes, the freezing-period run updated 28,351 nodes, against 18,468 for the improved method.",
+    "paper_location": "Sec. 2.3, Eq. 6, Algorithm 2, pp. 6-8; Table 3, p. 15",
+    "system_side": "buildPath runs one max-product Dijkstra from the target (distToTarget). distToTarget never checks the `dropped` set (scenario-removed members). tracePath then picks successors greedily by PE*dT and skips dropped and already-seen nodes. When members are dropped, dT still counts routes through them, so the chain can be suboptimal, or come back reached=false even though a path exists. This happens under a comment that says 'PROVABLY-OPTIMAL recruitment chain'. With nothing dropped, the extraction is exact.",
+    "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:734 (distToTarget, no dropped check); :735 (PROVABLY-OPTIMAL claim); :740 (tracePath skips dropped); :753-757 (buildPath)",
+    "transfer_conditions": "The mechanism is a general graph-search fact. It does not depend on ice data, so it holds for the 533-node cosponsor graph whenever the 'member out' scenario is active. The fix needed here is simpler than the paper's: at N=533, a full recompute that honors dropped costs almost nothing. The paper's own timing evidence (one voyage, no hardware stated) does not carry over. The finding is UNVERIFIED (DE-062): it comes from reading the code and has not been reproduced by running the dashboard. A related unchecked point: distToTarget propagates d[v]=d[u]*PE[u][v] outward from the target while tracePath walks PE forward, which only matches if PE is symmetric.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Sponsor-to-target max-product path and chain hold|Sponsor-to-target max-product path and chain hold]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.staffer-closeness-routes",
+    "relation": "qualifies",
+    "paper_claim": "The improved local-update rule cuts nodes updated by 34.9%-79.5% and planning time by 46%-86% compared with the original D* Lite, but it is approximate. Route length differs from full re-planning by up to about 0.1% (2,558.7 vs 2,561.4 n mi freezing; 2,419.1 vs 2,418.1 melting), and no optimality guarantee is given.",
+    "paper_location": "Sec. 2.2, Eq. 5; Tables 3-4, pp. 15-17",
+    "system_side": "The staffer router is an exact bidirectional Dijkstra (heuristic 0). Under Paul's 2026-10-03 ruling, routes whose costs fall within 1e-12 relative count as ties, broken by fewer steps. Results are cached under a key that includes the graph revision, so any revision change forces a full fresh search. The search is not reused incrementally.",
+    "code_ref": "fec/surfaces/staffer_closeness_routes.py:1-21 (exact search and tie contract), :79 (ALGORITHM); fec/surfaces/staffer_routing.py:386 (heuristic 0), :567-572 (revision-keyed LRU cache)",
+    "transfer_conditions": "Incremental replanning pays off when the same start and goal are re-queried after small, local edge changes on a large graph. The staffer graph is large (about 4.66M overlap pairs), but each request has a different origin and office target, and revisions arrive in batches from the identity loop. That is not one agent moving through slowly changing ice. Plain D* Lite or LPA* (which stay exact) could only fit a standing saved route that is re-checked after a revision. The paper's approximate rule would break the exact-cost ruling. ALT landmarks were already deferred by Paul (2026-10-02) and come first.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Staffer closeness route search|Staffer closeness route search]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-influence-engine.scenario-runner",
+    "relation": "qualifies",
+    "paper_claim": "D* Lite-family planners save work only by reusing earlier search state and updating the nodes a change touches. The paper reports 18,468 vs 72,835 node updates compared with full re-planning (freezing) and 16,864 vs 114,929 (melting).",
+    "paper_location": "Sec. 2.1-2.2; Tables 3-4, pp. 15-17",
+    "system_side": "The scenario.py docstring cites Ren et al.'s D* Lite for 'recompute only what the scenario actually touches'. The code recomputes baseline and scenario spread for every category on every run (and flip_value for every category in fm.cat2sc). Baseline and scenario are isolated by common random numbers, not by reusing earlier work.",
+    "code_ref": "fec/engine/scenario.py:13 (citation claim); :42-52 (CRN cascade); :103-104 and :113-115 (full per-category recompute)",
+    "transfer_conditions": "This is about documentation only. At 533 members and MC=40, a full recompute is cheap, so building incremental reuse is not justified (YAGNI). The docstring should credit CRN isolation, not D* Lite reuse. The paper's numbers say nothing about the cascade itself.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Scenario runner (what-if)|Scenario runner (what-if)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-pathfinding.cosponsor-route-pareto",
+    "relation": "context",
+    "paper_claim": "The movement cost is a weighted sum, delta*r + d. Raising delta from 1 to 3 lowers average risk from 0.076 to 0.039 and lengthens the route by 3.4% (freezing, Icemax 1.2 m). delta=3 is picked as 'sufficient' on unpublished simulations. The authors never show a Pareto front.",
+    "paper_location": "Sec. 3.2, Eq. 12, p. 12; Table 5, pp. 18-19",
+    "system_side": "The route finder sweeps lambda over {0, 0.5, 1, 2, 4} in value = (gain - lambda(1-p))/cost. It builds greedy routes and keeps only the non-dominated (cost, spread, risk) points. It does no shortest-path search and no incremental replanning. The MOPBD* citation is conceptual only.",
+    "code_ref": "fec/engine/cosponsor_route.py:40-63 (greedy route with lambda risk penalty), :64-76 (Pareto filter over lambda sweep)",
+    "transfer_conditions": "The two papers share only the move of putting risk into the cost as a weighted sum. The system goes further than the paper by sweeping and reporting the front instead of fixing one delta. Weighted-sum scalarization can miss non-convex front points in both. D* Lite does not plug into this greedy builder, and at 533 nodes replanning cost is not a bottleneck.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Cosponsor recruitment route finder (Pareto front)|Cosponsor recruitment route finder (Pareto front)]]",
+    "system": "melange-pathfinding"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "Dashboard recruitment-path 'member dropped' mode: distToTarget (make_dashboard_html_00.tpl:734) ignores the dropped set, while tracePath (:740) skips dropped members. The chain labelled 'PROVABLY-OPTIMAL' (:735) can then be suboptimal or falsely unreachable. The simple fix is to honor dropped in distToTarget (a full recompute is cheap at N=533). UNVERIFIED until reproduced by running the dashboard.",
+   "No incremental replanning (D* Lite or LPA*) exists anywhere in fec/ routing code; a search of fec/*.py, *.tpl and *.js found only citations. The only place it could plausibly pay off is a standing staffer route re-checked after a graph revision, and it ranks behind the deferred ALT work.",
+   "scenario.py credits D* Lite-style 'recompute only what the scenario touches', but recomputes every category. The real mechanism is CRN isolation, and the docstring should say so.",
+   "None of the system's route objectives has a sensitivity table like the paper's Table 5 (route outcome as the risk weight changes). The cosponsor Pareto sweep comes closest, but ASKM (0.07) and HOP_FACTOR are not swept."
+  ],
+  "flags": [
+   "Do not port the paper's local-update rule (Eq. 5) into the staffer router. It is approximate (about 0.1% length deviation, no optimality proof) and would break Paul's 2026-10-03 ruling that route costs must match exactly, with ties at 1e-12 relative.",
+   "The dashboard optimality finding (dropped members ignored in distToTarget) is new agent analysis from reading the code. Under DE-062 it stays UNVERIFIED until a second path, such as running the dashboard with a dropped member and comparing against a Dijkstra that honors dropped, reproduces it.",
+   "scenario.py:13 overclaims: it cites D* Lite reuse that the code does not perform.",
+   "Some of the paper's numbers are unreliable: '8 grid units = 432 n mi' (should be about 108 n mi), the 0.07% error figure can't be reproduced from Tables 3-4, timings are single runs with no hardware stated, and the claim that risk is monotone in Icemax fails in the melting sweep. Quote its percentages only as single-voyage simulation results.",
+   "The paper says nothing on SNA, LDA, reciprocity or influence wording, so no brain wording rules are triggered."
+  ],
+  "paul_alignment": "Paul marked D* dynamic replanning 'Very interesting' and made D* Lite / LPA* the operational layer in his addendum. The paper supports the general claim: an incremental D* Lite variant re-plans with 35-86% fewer node updates than the original, at nearly the same route quality. But it shows that only on a 136k-cell grid where change is gradual and local, which doesn't fit any built router. The cosponsor graph is 533 nodes, and the staffer router serves many different origin/target pairs. The paper's approximate update rule would also break Paul's own exact-tie ruling. His note is not wrong but now ranks lower: the system has since moved to exact bidirectional Dijkstra, with ALT deferred (2026-10-02), so incremental replanning comes after ALT. The paper's most useful lesson for him is diagnostic: stale cost-to-goal values break greedy path extraction, which is what the dashboard's dropped-member mode does today.",
+  "related": [
+   {
+    "slug": "ren-2022-multi-objective-path",
+    "relation": "same-method",
+    "why": "Both papers extend D* Lite. Ren adds multiple objectives (MOPBD*). Its citations in cosponsor_route.py and scenario.py are conceptual, the same overreach this paper exposes."
+   },
+   {
+    "slug": "luo-2020-path-planning-algorithm",
+    "relation": "same-method",
+    "why": "Another improved D* Lite, applied to UAV firefighting. Its local-replanning changes are a close parallel to Xu's ship-routing changes."
+   },
+   {
+    "slug": "abdelrahman-2025-conflict-based-search",
+    "relation": "same-method",
+    "why": "Uses D* Lite for dynamic re-planning inside multi-agent conflict-based search. Same incremental-replanning base, multi-agent setting."
+   },
+   {
+    "slug": "chen-2016-most-reliable-path",
+    "relation": "complements",
+    "why": "Risk-aware path objective (maximize the chance of arriving on time). It underlies the dashboard's max-product chain, where Xu's weighted-sum risk cost is the alternative way to price risk."
+   },
+   {
+    "slug": "lawande-2022-systematic-review-analysis",
+    "relation": "complements",
+    "why": "Survey of A*/D*-family pathfinding that puts D* Lite variants in context and is cited in Paul's pathfinding positions."
+   },
+   {
+    "slug": "duan-2025-breaking-sorting-barrier",
+    "relation": "complements",
+    "why": "Speeds up single-source shortest paths from scratch, the opposite strategy to Xu's reuse of earlier search state."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "selfhout-2010-emerging-late-adolescent",
+  "note": false,
+  "meta": {
+   "title": "Emerging Late Adolescent Friendship Networks and Big Five Personality Traits: A Social Network Approach",
+   "authors": [
+    "Maarten Selfhout",
+    "William Burk",
+    "Susan Branje",
+    "Jaap Denissen",
+    "Marcel van Aken",
+    "Wim Meeus"
+   ],
+   "year": "2010",
+   "venue": "Journal of Personality, 78(2), April 2010 (printed pages 510-538 visible; first-page header not in extracted text)",
+   "doi": "10.1111/j.1467-6494.2010.00625.x",
+   "sha12s": [
+    "b0aedf8340e3"
+   ],
+   "category": "Social Network Analysis",
+   "category_slug": "social-network-analysis"
+  },
+  "extraction": {
+   "title": "Emerging Late Adolescent Friendship Networks and Big Five Personality Traits: A Social Network Approach",
+   "authors": [
+    "Maarten Selfhout",
+    "William Burk",
+    "Susan Branje",
+    "Jaap Denissen",
+    "Marcel van Aken",
+    "Wim Meeus"
+   ],
+   "year": "2010",
+   "venue": "Journal of Personality, 78(2), April 2010 (printed pages 510-538 visible; first-page header not in extracted text)",
+   "doi": "10.1111/j.1467-6494.2010.00625.x",
+   "document_type": "Empirical journal article: quantitative longitudinal social network study using SIENA actor-oriented models",
+   "coverage": "Read the full extracted text (all 1427 lines, in two chunks: lines 1-945 and 946-1427): abstract, introduction, method, results, Tables 1 and 2, discussion, limitations, conclusion and references. No Paul markup files were listed for this item, so paul_markup is empty. Metadata hint checked: title, authors and year match; venue is Journal of Personality vol. 78 no. 2 (April 2010). Lobbying, elections, persuasion/turnout, legislators, text measurement, path-finding and resource allocation are not discussed; the only network-method relevance is the SIENA framework.",
+   "research_question": "Which self-rated Big Five traits predict friendship selection among just-acquainted late adolescents, separating selecting friends (ego), being selected as a friend (alter) and selecting similar friends (similarity), while controlling for network structure and sex; and how do friendship networks develop during acquaintanceship (pp. 513-514)?",
+   "theory": "Main-effect accounts: extraversion as reward-seeking with more positive affect in social situations (Elphick et al. 1998; Fleeson et al. 2002; pp. 509-510); agreeableness as prosocial and altruistic behavior that makes people attractive friends (pp. 510, 528-529). Similarity-attraction (Byrne 1971) with reinforcement-affect (Clore and Byrne 1974) and uncertainty reduction (Berger and Calabrese 1975) mechanisms (pp. 511-512). Trait-specific similarity argued for extraversion (predictable interaction styles) and agreeableness (evolutionary game theory of altruism; Maynard Smith 1984; Gilchrist 2007) (pp. 512-513). Network closure: friendships form through existing ties, so transitivity and geodesic distance-2 are modeled (p. 514; definitions p. 519).",
+   "data": "Sample: 205 psychology freshmen (M age 18.9, SD 1.6; 168 women = 82%; 189 Dutch = 92%) at Utrecht University, the Netherlands, nested in 10 introduction groups (of 20 groups of 16-24 students; 489 students randomly assigned; 378 agreed from 18 groups; 10 groups with more than 80% registration retained; 221 of 238 agreed, 93%; 205 of 221 retained at Wave 5, 93%) (pp. 514-516). Unit: directed friendship nominations among group members (dichotomized, 1 if 4 or higher on a 6-point scale), 5 monthly waves starting in week 2 of the first semester, i.e., roughly the first 4 months of university (pp. 515-516). Abstract says first year; the text covers about 4 months. Data-collection year not stated in text. Personality from single-item TIPI-r self-ratings on 1-7 bipolar scales, monthly (p. 516).",
+   "method": "Stochastic actor-oriented models for network evolution estimated in SIENA (Snijders 2001; Snijders et al. 2006), run separately for each of 10 groups, then combined by multilevel meta-analysis of parameter estimates (Snijders and Baerveldt 2003) with group-size weighting (pp. 517-521). Network effects: outdegree, reciprocity, transitivity and geodesic distance-2 (GD-2). Covariates: sex and five Big Five traits, each with ego, alter and similarity parameters (18 parameters entered together; p. 520). Two-sided significance at p less than .01. Score tests (chi-square above 3.84, df 1) assessed whether transitivity and GD-2 improve fit (p. 520). Tested whether the variance of each mean effect differs from zero for between-group heterogeneity (p. 521).",
+   "identification": "The text does not claim causal identification. Identification rests on longitudinal actor-based modeling of tie changes conditional on network state, simultaneous ego, alter and similarity parameters, controls for network effects and sex, and random assignment of students to introduction groups, which the authors say makes group-level confounding less likely (pp. 518, 531-532). The authors also note ego and alter effects may be confounded, so they estimate them jointly (p. 527).",
+   "scope": "One Dutch university, psychology freshmen in one cohort, predominantly female and highly educated, observed over about the first 4 months of university (p. 531). Generalization to other demographics is explicitly not established (p. 531).",
+   "key_findings": [
+    {
+     "finding": "Networks became more cohesive over the first 3 months, then stabilized: average degree rose from 1.71 (Wave 1) to 2.64, 3.56, 3.67 and 3.64 (Wave 5); reciprocity .13 to .32; transitivity .33 to .45.",
+     "location": "Table 1, p. 522; text pp. 521-522",
+     "numbers": "degree 1.71 to 3.64; reciprocity .13 to .32; transitivity .33 to .45"
+    },
+    {
+     "finding": "Mean network effects were all significant: outdegree negative (selectivity), reciprocity positive, transitivity positive, GD-2 negative (signs per text; table minus signs lost in extraction).",
+     "location": "Table 2 p. 524; text p. 524",
+     "numbers": "outdegree 1.86 (SE .08); reciprocity 1.73 (SE .11); GD-2 .52 (SE .06); transitivity .14 (SE .02); all p less than .001"
+    },
+    {
+     "finding": "Adding transitivity and GD-2 significantly improved fit in all 10 groups, supporting the actor-based network approach over a dyadic model.",
+     "location": "p. 524",
+     "numbers": "transitivity score tests 15.68 to 23.43; GD-2 84.68 to 93.43; df=1; all p less than .001"
+    },
+    {
+     "finding": "Friendship ties formed at Wave 2 persisted: 92% at Wave 3, 88% at Wave 4, 82% at Wave 5.",
+     "location": "p. 525",
+     "numbers": "92%, 88%, 82%"
+    },
+    {
+     "finding": "Extraversion ego effect was the only significant predictor of nominating more friends (more extraverted students nominated more friends).",
+     "location": "p. 525; Table 2",
+     "numbers": "Extraversion ego .10 (SE .01), p less than .001"
+    },
+    {
+     "finding": "Agreeableness alter effect: higher agreeableness predicted being nominated as a friend; no other alter effect was significant.",
+     "location": "p. 525; Table 2",
+     "numbers": "Agreeableness alter .14 (SE .01), p less than .001; Extraversion alter .01 (n.s.)"
+    },
+    {
+     "finding": "Similarity effects: individuals selected friends similar in Openness, Extraversion and Agreeableness, the strongest effects in the model.",
+     "location": "p. 526; Table 2",
+     "numbers": "Openness 1.45 (SE .19); Extraversion 1.46 (SE .10); Agreeableness 1.55 (SE .03); all p less than .001"
+    },
+    {
+     "finding": "Similarity effects varied across groups for Openness, Extraversion and Agreeableness, but were significant in most groups: 7/10 (Openness), 8/10 (Extraversion), 10/10 (Agreeableness).",
+     "location": "p. 526; Table 2 variance column",
+     "numbers": "variance .31 (p less than .001), .35 (p less than .001), .82 (p less than .01)"
+    },
+    {
+     "finding": "Sex: women nominated more friends (ego), and students selected same-sex friends (similarity).",
+     "location": "p. 525; Table 2",
+     "numbers": "sex ego .29 (p less than .01); sex similarity .40 (p less than .001)"
+    },
+    {
+     "finding": "No significant ego or alter effects for Openness, Conscientiousness or Neuroticism, and no Conscientiousness or Neuroticism similarity effect.",
+     "location": "Table 2; pp. 525-526, 530",
+     "numbers": "Openness ego .02 (n.s.); Conscientiousness ego .02 (n.s.); Neuroticism ego .07 (n.s.); Neuroticism similarity .15 (n.s.); Conscientiousness similarity .17 (n.s.)"
+    },
+    {
+     "finding": "Mean levels of the Big Five did not change over the 4 months.",
+     "location": "p. 522",
+     "numbers": "repeated-measures ANOVAs F ranged .77 to 1.20, p greater than .10"
+    },
+    {
+     "finding": "Trait-specific similarity effects were larger than main effects, so matching on specific traits mattered more than absolute trait levels. Overall profile similarity was not modeled in this paper.",
+     "location": "p. 530",
+     "numbers": "similarity estimates (about 1.45 to 1.55) exceed ego and alter estimates (.01 to .14) in Table 2"
+    }
+   ],
+   "limitations": [
+    "Sample is highly educated and mostly female (82%) and Dutch (92%); forced same-gender and same-education choices may limit choice; authors note social homogamy may make the setting realistic (p. 531).",
+    "Only 10 introduction groups selected by participation rate (more than 80% registration); personality data unavailable for nonparticipants, so group selection bias cannot be adjusted (p. 531).",
+    "Nonparticipating group members rated themselves less neurotic (3.21 vs 3.62) and substantially less conscientious (3.92 vs 4.75); conscientiousness predicted attrition but not selection (pp. 516-517, 531).",
+    "With 10 groups, between-group variance estimates are imprecise (pp. 531-532).",
+    "Ties were dichotomized (friend or better vs not) because SIENA handles binary ties; a different cutoff could change results, though an alternative cutoff gave similar patterns (p. 532).",
+    "Only about 4 months of data; no network information after Month 4, so later development is unknown (pp. 527-528).",
+    "SIENA assumes ties are enduring states; the authors could only partly test this assumption over a short period (p. 518).",
+    "Measures are single-item TIPI-r self-ratings, not full Big Five scales (p. 516).",
+    "The abstract says first year of university, but the analyzed waves cover about 4 months."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "Extraversion appeared to be the most important factor in selecting friends.",
+     "location": "Discussion, p. 527"
+    },
+    {
+     "quote": "Individuals who rated themselves as high on Extraversion tended to nominate more friends.",
+     "location": "Results, Effects of Personality Traits, p. 525"
+    },
+    {
+     "quote": "In contrast to Extraversion, Agreeableness predicted being selected more as a friend.",
+     "location": "Discussion, p. 528"
+    }
+   ],
+   "references_of_note": [
+    "Snijders, T. A. B. (2001). The statistical evaluation of social network dynamics. Sociological Methodology, 31, 361-395 (actor-oriented model foundation).",
+    "Snijders, T. A. B., Steglich, C. E. G., Schweinberger, M., and Huisman, M. (2006). Manual for SIENA (Vol. 3). Groningen: University of Groningen (software used).",
+    "Snijders, T. A. B., and Baerveldt, C. (2003). A multilevel network study of the effects of delinquent behavior on friendship evolution. Journal of Mathematical Sociology, 27, 123-151 (multilevel combination across groups).",
+    "Van de Bunt, G. G., Van Duijn, M. A. G., and Snijders, T. A. B. (1999). Friendship networks through time: An actor-oriented statistical network model. Computational and Mathematical Organization Theory, 5, 167-192 (earlier small-sample freshman network study).",
+    "Steglich, C. E. G., Snijders, T. A. B., and West, P. (2006). Applying SIENA: An illustrative analysis of the coevolution of adolescents' friendship networks, taste in music, and alcohol consumption. Methodology, 2, 48-56 (ego and alter confounding).",
+    "Burk, W., Steglich, C. E. G., and Snijders, T. A. B. (2007). Beyond dyadic interdependence: Actor-oriented models for co-evolving social networks and individual behaviors. International Journal of Behavioral Development, 31, 397-404.",
+    "Selfhout, M., Denissen, J. J. A., Branje, S., and Meeus, W. (2009). In the eye of the beholder. Journal of Personality and Social Psychology, 96, 1152-1165 (same sample; overall profile similarity did not predict friendship intensity).",
+    "Schweinberger, M. (2005). Statistical modeling of network panel data: goodness-of-fit (manuscript; score test basis).",
+    "Sunnafrank, M., and Ramirez, A., Jr. (2004). At first sight: Persistent relational effects of get-acquainted conversations. Journal of Social and Personal Relationships, 21, 361-379 (friendship-intensity measure).",
+    "Asendorpf, J. B., and Wilpers, S. (1998). Personality effects on social relationships. Journal of Personality and Social Psychology, 74, 1531-1544 (extraversion and selecting friends).",
+    "McPherson, M., Smith-Lovin, L., and Cook, J. (2001). Birds of a feather: Homophily in social networks. Annual Review of Sociology, 27, 415-444.",
+    "Byrne, D. (1971). The attraction paradigm. New York: Academic Press (similarity-attraction)."
+   ]
+  },
+  "summary_md": "Selfhout and colleagues followed 205 Dutch psychology freshmen in 10 randomly assigned introduction groups. They collected five monthly waves of friendship nominations, covering about the first 4 months of university, and analysed them with SIENA actor-oriented models. Each group was modelled separately and the results were then pooled by meta-analysis. Over the first three months the networks grew denser and then levelled off: average degree went from 1.71 to 3.64, and transitivity from .33 to .45. The structural terms were large in every group. Reciprocity was 1.73, and the score tests for transitivity and distance-2 ran from 15.7 to 93.4. A model that looks only at pairs would therefore misfit. Traits had small effects on individuals. Extraverts nominated more friends (ego effect .10), agreeable students were nominated more often (alter effect .14), and openness, conscientiousness and neuroticism had no ego or alter effect. Similarity in openness, extraversion and agreeableness had the largest effects (1.45 to 1.55), but they varied across groups: they were significant in 7, 8 and 10 of the 10 groups respectively.\n\nThe paper does not touch lobbying, legislators or elections. Its value for Paul's systems is narrow and comes in two parts. First, it shows that personality matters mostly for pairs of people, through how similar they are. A trait level on one person matters much less. Second, it shows how to test similarity: inside a model that also controls for reciprocity and closure, because a raw correlation can mislead. That bears on the persona-homophily null and on the receptivity layer, where every input describes one member. It also bears on the cosponsor forecaster, which has no reciprocity or closure features, and on the stance co-movement test, which is only a pair-level test. Transfer is weak throughout. These are self-rated single-item traits among strangers forming friendships. Legislators meeting lobbyists, or building cosponsorship records over years, are a different setting.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.persona-agency-communion",
+    "relation": "qualifies",
+    "paper_claim": "Trait similarity is the strongest selection effect: openness 1.45, extraversion 1.46, agreeableness 1.55 (all p<.001), against ego and alter effects of .01 to .14. It is estimated jointly with outdegree, reciprocity, transitivity, distance-2 and sex, and it varies by group: significant in 7/10, 8/10 and 10/10 groups. Overall profile similarity was not modelled here; the authors' 2009 paper on the same sample found it did not predict friendship intensity.",
+    "paper_location": "Table 2 p. 524; pp. 526, 530",
+    "system_side": "The persona-homophily gate correlates persona compatibility (sum of agency and communion differences, IPC complementarity, communion match only, both warm) with static cosponsor tie weights, with the party confound removed. All four models gave |r| <= 0.015, so the homophily edge weighting stays off.",
+    "code_ref": "fec/members/persona_homophily_validate.py:3-9,33-38",
+    "transfer_conditions": "Transfer is weak. The paper's similarity effect appears while self-rated strangers choose friends in the first months, with network structure held fixed. Cosponsorship among sitting legislators is an established, party- and committee-driven tie, not a choice among strangers. The paper does not overturn the null and is no reason to re-propose homophily edge weighting. Its one transferable point: a cross-sectional correlation with no reciprocity or closure controls, using a combined two-trait distance, is a different test from trait-specific similarity estimated inside a selection model. The null therefore holds for the test that was run, not for homophily in general. Any SIENA rerun would be new analysis and would stay UNVERIFIED (DE-062).",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Agency-communion persona channel|Agency-communion persona channel]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-influence-engine.receptivity-layer",
+    "relation": "qualifies",
+    "paper_claim": "Effects of one person's own traits are small next to similarity effects. Extraversion predicts making more ties (ego .10), agreeableness predicts being chosen (alter .14), and openness has no ego or alter effect (.02, n.s.).",
+    "paper_location": "Table 2 p. 524; pp. 525-528, 530",
+    "system_side": "seed_prob uses only the member's own traits. The default behavioural basis is 0.60 + .10 cooperation_v2 + .06 breadth + .04 visibility; the non-default lexical basis is 0.60 + .10A + .06O + .04E, on the reasoning that agreeable, open and extraverted members take meetings. Nothing describes the match between a lobbyist or recruiter and the member.",
+    "code_ref": "fec/members/receptivity_layer.py:29-34,211-216",
+    "transfer_conditions": "Transfer is weak. The paper measures friendship nomination, not whether a contacted official acts. Within that limit, it gives no support to the openness term in the lexical basis. The agreeableness result concerns being approached, not acting once approached. The paper's main point, that pairwise similarity outweighs individual levels, shows a dyadic term is missing, but there is no legislative evidence for adding one, and the system's own persona-homophily test came out null.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Receptivity layer (susceptibility, incentive, prospect domain, seed probability)|Receptivity layer (susceptibility, incentive, prospect domain, seed probability)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-lobbying.cosponsor-forecaster",
+    "relation": "suggests-extension",
+    "paper_claim": "Reciprocity 1.73 (SE .11), transitivity .14 (SE .02) and distance-2 -.52 (SE .06) were all significant. Adding transitivity and distance-2 improved fit in all 10 groups (chi-square 15.68 to 93.43, df 1), so a model of independent pairs misfits network tie formation.",
+    "paper_location": "Table 2 p. 524; p. 524",
+    "system_side": "The ridge-logistic forecaster uses pair and individual features: prior sponsor affinity, prior member cosponsorships, network degree and eigenvector, NOMINATE distances, same party/state/chamber, committee features. It has no term for reciprocation (has the sponsor previously cosponsored this member's bills?) and none for closure (shared cosponsor partners).",
+    "code_ref": "fec/lobbying/cosponsor_forecast.py:117-141",
+    "transfer_conditions": "Transfer is moderate in method and weak in evidence. Reciprocity and closure in friendship nominations do not establish the same effects in cosponsorship; the component's own question about Brandenberger reciprocity is the legislative test. Here 'reciprocity' means tie reciprocation and must not be confused with the money reciprocity that is still unvalidated (D-104..D-108). Any added feature counts only after the frozen 265,396-prediction forecast is scored against a non-circular outcome, and stays UNVERIFIED until a second path reproduces it.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-lobbying#Ridge-logistic cosponsor forecaster|Ridge-logistic cosponsor forecaster]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "melange-stance.stance-dynamics",
+    "relation": "method-source",
+    "paper_claim": "Stochastic actor-oriented models estimate tie selection conditional on the current network state, with ego, alter and similarity terms for each covariate, and pool groups by multilevel meta-analysis. The cited extensions (Steglich et al. 2006; Burk et al. 2007) model networks and behaviour together, which separates selection from influence.",
+    "paper_location": "Method pp. 517-521; references Steglich 2006, Burk 2007",
+    "system_side": "Neighbour co-movement counts members who move in the same versus the opposite direction as their cosponsor or HCoI neighbours, quarter to quarter. The result was null on both layers. Neighbour imputation proposals are built on this (77% sign agreement under masking).",
+    "code_ref": "fec/stance/stance_dynamics.py:85-121",
+    "transfer_conditions": "Transfer is moderate in method only. The paper itself models selection and not influence, so it gives no evidence on stance contagion. A joint network-and-behaviour SIENA model is the standard way to ask whether ties drive stance change or stance similarity drives ties. That would need panel waves of cosponsor ties and quarterly stances. It would be new analysis, UNVERIFIED until reproduced, and its pooled estimates must be reported by stratum (party, chamber) or marked UNSTRATIFIED.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#Stance dynamics and neighbour imputation|Stance dynamics and neighbour imputation]]",
+    "system": "melange-stance"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "No component has a pairwise similarity or compatibility term between the source (a lobbyist, or a recruiting member) and the target. Receptivity, seed_prob and edge_mult are all single-member multipliers, although the paper finds similarity effects about 10 times larger than individual effects. The system's own persona-homophily test is null, so this is a recorded gap, not a recommendation.",
+   "The cosponsor forecaster has no reciprocation feature (did the sponsor previously cosponsor this member?) and no closure feature (shared cosponsor partners). The paper shows such structural terms improved fit in every group it studied.",
+   "The homophily and co-movement tests are cross-sectional or pair-level and are not conditioned on network structure. No model jointly estimates selection and influence, so the cosponsor-stance null cannot separate 'no influence' from 'selection hides it'."
+  ],
+  "flags": [
+   "The paper's 'reciprocity' is the reciprocation of friendship nominations. It must not be read as support for the money reciprocity in the competitiveness multiplier, which remains NOT validated (D-104..D-108).",
+   "The pooled similarity estimates come from 10 groups with significant between-group variance (openness .31, extraversion .35, agreeableness .82). Quote them with strata (significant in 7/10, 8/10 and 10/10 groups) or mark them UNSTRATIFIED.",
+   "No conflict with the two rejected SNA proposals. The paper dichotomises ties at 'friend or better' because SIENA requires binary ties. That is a method constraint, not an argument for dropping regular cosponsorship edges or for per-edge volume normalisation, and it must not be cited as one.",
+   "The paper gives no basis for re-proposing persona-homophily edge weighting. The system's gate (|r| <= 0.015) stands. Any SIENA-style rerun is new agent analysis and stays UNVERIFIED (DE-062).",
+   "Window and denominator: 205 students in 10 groups (out of 20 introduction groups), 5 monthly waves over about 4 months, single-item TIPI-r self-ratings, 82% women. The abstract's 'first year' overstates the window."
+  ],
+  "paul_alignment": "Paul has not annotated this paper. It is nearest to his position on the receptivity layer, that psychological traits should enter as edge parameters (Oropeza), and to his agency/communion node design. The paper broadly agrees that personality acts on ties, and mainly through pairwise similarity, not through one person's trait level. That is closer to Paul's edge framing than to the system's single-member seed_prob. His notes are stale in one respect: they do not record that the system tested persona homophily against cosponsor ties and found nothing (all |r| <= 0.015), so the edge idea is unearned for now. This paper does not change that verdict, because friendship among strangers is a weak proxy for legislative ties.",
+  "related": [
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Supplies the agency/communion persona measurement that the system used in its homophily test. Selfhout supplies the selection-model evidence that trait similarity, not trait level, drives tie formation."
+   },
+   {
+    "slug": "palm-2025-influence-personality-traits",
+    "relation": "complements",
+    "why": "Palm reviews personality as a moderator of persuasion, the monadic receptivity question. Selfhout shows that in tie formation the pairwise similarity effect outweighs individual levels."
+   },
+   {
+    "slug": "haythornthwaite-1996-social-network-analysis",
+    "relation": "complements",
+    "why": "Haythornthwaite gives the directed, tie-strength SNA framing Paul values. Selfhout gives a longitudinal directed-tie model in which reciprocity and transitivity are estimated, not assumed."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "celli-2012-role-emotional-stability",
+    "relation": "complements",
+    "why": "Offline Big Five friendship-network selection study. It is a stronger, longitudinal test of the trait homophily that Celli only describes."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "moreno-2021-shadowing-shielding-effective",
+  "note": false,
+  "meta": {
+   "title": "Shadowing and shielding: Effective heuristics for continuous influence maximisation in the voting dynamics",
+   "authors": [
+    "Guillermo Romero Moreno",
+    "Sukankana Chakraborty",
+    "Markus Brede"
+   ],
+   "year": "2021",
+   "venue": "PLOS ONE 16(6): e0252515 (published June 18, 2021; received Jan 26, 2021; accepted May 17, 2021). Metadata hint confirmed.",
+   "doi": "10.1371/journal.pone.0252515",
+   "sha12s": [
+    "e6dce44af159"
+   ],
+   "category": "Adaptive Influence Maximization",
+   "category_slug": "adaptive-influence-maximization"
+  },
+  "extraction": {
+   "title": "Shadowing and shielding: Effective heuristics for continuous influence maximisation in the voting dynamics",
+   "authors": [
+    "Guillermo Romero Moreno",
+    "Sukankana Chakraborty",
+    "Markus Brede"
+   ],
+   "year": "2021",
+   "venue": "PLOS ONE 16(6): e0252515 (published June 18, 2021; received Jan 26, 2021; accepted May 17, 2021). Metadata hint confirmed.",
+   "doi": "10.1371/journal.pone.0252515",
+   "document_type": "Research article: analytical (heterogeneous mean-field) plus numerical simulation (gradient ascent, stochastic hill-climbing) on a single empirical network. No empirical election or lobbying data.",
+   "coverage": "Read the full extracted text file (1366 lines; 80,840 chars, slightly more than the 80,401 in the task hint) in four chunks: front matter, abstract, introduction, model, results, discussion, methods, heuristics, Table 1, supporting-information note, and the full reference list (refs 1-62). Page locations are inferred from the PLOS page-footer markers (\"N / 21\"). Not in the text file: the S1 Appendix (cited for other topologies, Figs 2-3, 5-14, Sections 1-12) and the figures themselves, so statements about those are unverified. Paul's markup: no annotation files were read, per the task's \"(none)\" instruction, so paul_markup is empty.",
+   "research_question": "How do optimal influence allocations differ between the continuous regime (flexible intensity per node) and the discrete regime (K nodes at fixed gain) in influence maximisation for the voter model with zealots? Can three heuristics (hub/degree preference, shadowing, shielding) explain optimal allocations? How exploitable is a passive opponent, and what is the pure-strategy Nash equilibrium when two active controllers optimise simultaneously? (Abstract p.1; Introduction pp.2-3.)",
+   "theory": "Voter model with external controllers (zealots) on a weighted network. Each node's probability of holding opinion A follows a rate equation (Eq 1, p.3). Steady state solves (L + Wa + Wb)x = wa (p.3); vote share X is Eq 2 (p.4). Controller A is active, controller B passive, both with budgets (Eq 3, p.4). Theoretical lenses: \"shadowing\" (first-order, target the opponent's nodes), \"shielding\" (second-order, target neighbours of the opponent's nodes), and degree preference (hub targeting). Analytical solution via a heterogeneous mean-field (HMF) approximation (Eq 4, p.5; Eqs 10-12, p.14) with series expansions in the low-allocation (w << d) and high-allocation (w >> d) limits (pp.6-8). Proof of concavity and uniqueness of the Nash equilibrium is deferred to S1 Appendix Section 12.",
+   "data": "Single empirical network: email interchange network of members of the Universitat Rovira i Virgili (Tarragona), N = 1133 nodes, taken from Guimerà et al. 2003 (ref 49; S1 Dataset). Unit of analysis: individual node (agent). Time period: not stated in the article. Edge count: not stated in the text. Synthetic/other topologies are referenced only to S1 Appendix Section 11 and Figs 10, 12, 13, which are not in the text file. Budget convention: B_a + B_b = N<d>/30 in most experiments; Fig 1 uses B = N<d>/60 per controller. Passive opponent typically targets K = 16 random nodes (discrete); K values up to 256 are used in Fig 3 and K varies in Fig 1b-c.",
+   "method": "Numerical optimisation for the active controller. Continuous: gradient ascent with step size mu = 50 and tolerance 1e-10, projection onto the N-simplex, backtracking, O(N^3/epsilon) cost (Methods, pp.15-16). Discrete: stochastic hill-climbing for 20N iterations or until no change in the last 10N (p.16). Analytical: HMF approximation and series expansions in the low and high allocation limits (Eqs 5-8, pp.7-8). Game-theoretic: iterated elimination of dominated strategies with gradient ascent to find the pure-strategy Nash equilibrium (p.13). Heuristics compared by vote-share gap ΔX against the numerical optimum, with binary-search tuning of heuristic parameters (pp.16-17, Table 1). Reported results are averages over 15 instances (K=16, Fig 6) or 15 and 60 instances elsewhere (Fig 4, Fig 5).",
+   "identification": "Not applicable in the econometric sense. No causal or statistical identification strategy. The \"explanatory\" claim rests on (a) visual and group-overlap analysis of numerical optima (Figs 1, 3, 4), (b) rank correlations between allocation and degree (Fig 5), and (c) comparing vote-share gaps of heuristics to the numerical optimum (Fig 6).",
+   "scope": "Population: one 1133-node email network (URV Tarragona), treated as a typical social-network topology; the paper claims results generalise to complex networks (S1 Appendix, not checked here). Institution: none; the network is an academic email network, not a political population. Era: not stated; the reference data is from 2003. Political relevance is framed only in general terms (\"political competition\", \"winner-takes-all scenarios such as political elections or referendums\", p.6). The model is abstract opinion dynamics, not calibrated to any election or lobbying outcome.",
+   "key_findings": [
+    {
+     "finding": "Optimal continuous allocations are spread widely across the network rather than concentrated on a few hubs. Around 111 of 1133 nodes (|H|+|A|, about 10%) get above-average allocation; 1013 nodes (V) are mostly flat (std/mean = 0.11); 9 nodes get zero (text also says 7 at p.5). Allocations range from 0.1 to 5.",
+     "location": "Results, 'Structure of optimal allocations in the continuous regime', p.5, lines 285-308, Fig 1a (K=16, equal budgets)",
+     "numbers": "|H|+|A| = 111; |V| = 1013; |Z| = 9 (and 7 at line 307); std/mean = 0.11; alloc range 1e-1 to 5"
+    },
+    {
+     "finding": "Entropy of the continuous optimal allocation distribution is considerably higher than for discrete allocations, across K and budget ratios. The gap widens as the passive controller spreads over more nodes.",
+     "location": "Results p.5-6, Fig 1b, lines 310-336 (entropy normalised by log N)",
+     "numbers": "No numeric values in text; qualitative only"
+    },
+    {
+     "finding": "Continuous allocation improves vote share over the best discrete allocation. Gain is about 5-10% for passive K < 100 and falls below 5% for K > 100.",
+     "location": "Results p.6, Fig 1c, lines 337-345; measure (X_cont - X_disc)/X_disc",
+     "numbers": "Relative improvement 5-10% for K < 100; < 5% for K > 100"
+    },
+    {
+     "finding": "Discrete optima are driven mainly by node degree (hub targeting); in the continuous regime shadowing plus shielding is the main explanatory factor, with degree effects weaker across scenarios.",
+     "location": "Results p.12, lines 737-755; Discussion p.13, lines 792-795",
+     "numbers": "Qualitative summary"
+    },
+    {
+     "finding": "Shielding explains the group structure of continuous optima: very high (H) and zero (Z) allocations fall mainly on the opponent's targets (Tb); above-average (A) on their neighbours (Nb); below-average (V) on the rest (R).",
+     "location": "Results p.10, lines 607-613, Fig 4a (K=16); Fig 4 caption p.9",
+     "numbers": "Qualitative overlap; no percentages in text"
+    },
+    {
+     "finding": "Shielding is second-order and weakens as K grows. With budget disadvantage, anti-shielding (avoiding neighbours of opponent targets) also appears.",
+     "location": "Results pp.9-10, lines 579-581 and 614-628, Fig 4b-c",
+     "numbers": "Shielding weaker at K = 256 (Fig 3c); Nb below R for K > 5 under budget disadvantage"
+    },
+    {
+     "finding": "Degree correlation of optimal allocations is a by-product of shielding. Kendall tau between allocation and degree is above 0.5 for K > 30 in both optimal and pure-shielding strategies, but below |0.25| for optimal allocations when the passive controller targets low-degree-neighbour nodes. Shielding then gives tau down to about -0.5.",
+     "location": "Results pp.10-11, lines 646-681, Fig 5b-c",
+     "numbers": "tau > 0.5 for K > 30 (Fig 5b); |tau| < 0.25 for optimal in Fig 5c; shielding tau down to ~ -0.5"
+    },
+    {
+     "finding": "Heuristic vote-share gaps relative to the numerical optimum (K=16 passive, discrete). Budget advantage: continuous shadowing+shielding best at 1.89e-3 (shadowing alone 2.55e-3; discrete shadowing 1.58e-2; discrete degree 2.41e-2). Budget equality: discrete degree 8.99e-3 closest; continuous shadowing+shielding 2.97e-3; other continuous heuristics 5.5e-3 to 7.0e-3. Budget disadvantage: discrete degree 2.12e-3; continuous shadowing+shielding 7.28e-4; other continuous 2.33e-3 to 4.44e-3.",
+     "location": "Results pp.11-12, lines 711-734, Fig 6 (caption p.12)",
+     "numbers": "Advantage: cont shadw+shield 1.89e-3, shadw 2.55e-3, unif 2.14e-2, deg 2.09e-2; Equality: cont shadw+shield 2.97e-3, discrete deg 8.99e-3; Disadvantage: cont shadw+shield 7.28e-4, discrete deg 2.12e-3"
+    },
+    {
+     "finding": "Analytical low-allocation limit (w << d): optimal w_ai is linear in opponent allocation w_bi and degree d_i with coefficient (Ba/Bb - 1). Positive coefficient (Ba > Bb) gives shadowing; negative (Ba < Bb) gives avoidance. Degree dependence only enters when positivity constraints bind, and then it favours low-degree nodes.",
+     "location": "Results p.7, Eq 5, lines 414-465",
+     "numbers": "coefficient c = (Ba/Bb - 1)"
+    },
+    {
+     "finding": "Vote share in the low limit is X_L = Ba/(Ba+Bb) + Bb/(4N^2) * sum_i (1 - w_bi/<w_b>)^2 / d_i, with <w_b> = Bb/N. A passive controller is more exploitable the more her allocation deviates from uniform, and the penalty is larger on low-degree nodes.",
+     "location": "Results p.7-8, Eq 6, lines 466-486",
+     "numbers": "<w_b> = Bb/N"
+    },
+    {
+     "finding": "High limit (w >> d): optimal allocation depends on opponent allocation non-linearly and on budget, with no degree dependence. Vote share X_H = 1 - (Bb/(Ba+Bb)) * (1/N) sum_i (sqrt(w_bi/<w_b>) - 1)^2 (sic; as printed). Exploitability is independent of which nodes are misallocated.",
+     "location": "Results pp.7-8, Eqs 7-8, lines 487-539",
+     "numbers": "<w_b> = Bb/N"
+    },
+    {
+     "finding": "Two active controllers: the unique pure-strategy Nash equilibrium is that both controllers target all nodes equally, w_ai = Ba/N and w_bi = Bb/N, regardless of network type and budgets. Numerically, normalised std of allocations converges to zero (S1 Appendix Fig 7).",
+     "location": "Results p.13, lines 758-782; Abstract p.1 lines 20-22",
+     "numbers": "w_ai = Ba/N; w_bi = Bb/N; normalised std -> 0"
+    },
+    {
+     "finding": "Gradient ascent is guaranteed to reach an epsilon-approximate solution in O(1/epsilon) iterations. Each step needs an N x N inversion, so cost is O(N^3/epsilon). Experiments used mu = 50, epsilon = 1e-10; all runs converged within 1e5 iterations.",
+     "location": "Methods p.15-16, lines 942-982",
+     "numbers": "mu = 50; epsilon = 1e-10; < 1e5 iterations; O(N^3/epsilon)"
+    }
+   ],
+   "measures": [
+    "Steady-state vote share X (fraction of nodes holding opinion A, Eq 2)",
+    "Normalised entropy of allocation distribution H(w_a) = -log(N) sum_i (w_ai/Ba) log(w_ai/Ba)",
+    "Relative improvement (X_cont - X_disc)/X_disc",
+    "Vote-share gap ΔX of each heuristic relative to numerical optimum",
+    "Allocation groups H, A, V, Z (high, above-average, below-average, zero) relative to mean allocation <w_a>",
+    "Shielding groups Tb (opponent targets), Nb (neighbours of opponent targets), R (rest)",
+    "Kendall rank correlation tau between allocation w_ai and degree d_i",
+    "Conditional probabilities P(i in A | d_i) and P(i in Nb | d_i)",
+    "Normalised standard deviation of allocations (std/mean), used as convergence test for Nash equilibrium"
+   ],
+   "limitations": [
+    "Strategies are time-invariant; campaigns that vary allocation over time are not modelled (p.14, lines 849-852; extensions cited to refs 54, 57).",
+    "Only one empirical network (URV email, N = 1133), described as well-mixed, without strong communities, and with little degree assortativity (p.14, lines 846-848). Generalisation to other topologies rests on S1 Appendix, which is not in the text file.",
+    "Only the voter model is studied. Ising and SIR extensions are proposed but not done (p.14, lines 844-846).",
+    "No noise in opinion dynamics. The authors note degree dependence might arise with noise, citing Lynn & Lee (p.14, lines 833-841).",
+    "The main analysis assumes a passive opponent. Two-active-controller results are limited to the uniform Nash equilibrium (p.13).",
+    "The HMF approximation is not always valid, ignores higher-order correlations, and is only reasonable for not overly sparse networks (p.15, lines 886-889). Analytical expressions rest on series expansions in the low and high allocation limits (p.7, lines 409-413).",
+    "Discrete optima come from stochastic hill-climbing, which only guarantees a global optimum for convex problems (p.16, lines 993-995). Discrete comparisons may therefore be sub-optimal.",
+    "Internal inconsistency: the count of zero-allocation nodes is |Z| = 9 at p.5 line 302 and |Z| = 7 at line 307 on the same page.",
+    "Political application is framed only qualitatively (winner-takes-all elections, p.6). No empirical election, lobbying or campaign data is used.",
+    "Heuristics need network structure, opponent strategy, or parameter tuning that a real campaigner may lack (Table 1, p.17)."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Brede M, Restocchi V, Stein S (2018) Resisting Influence: How the Strength of Predispositions to Resist Control Can Change Strategies for Optimal Opinion Control in the Voter Model. Front. Robot. AI 5:34 (ref 26). Shows hub preference can shift to periphery when resistance is present; the discrete-regime benchmark this paper builds on.",
+    "Masuda N (2015) Opinion control in complex networks. New J. Phys. 17:033031 (ref 33). Zealot placement and controller-based opinion control in the voter model; the discrete influence-maximisation benchmark.",
+    "Romero Moreno G, Tran-Thanh L, Brede M (2020) Shielding and Shadowing: A Tale of Two Strategies for Opinion Control in the Voting Dynamics. Complex Networks VIII (ref 43). The earlier paper that introduced shadowing and shielding; this article extends it to general networks and the continuous regime.",
+    "Romero Moreno G, Tran-Thanh L, Brede M (2020) Continuous Influence Maximisation for the Voter Dynamics: Is Targeting High-Degree Nodes a Good Strategy? AAMAS 2020 (ref 44). Continuous-regime precursor on the degree-preference question.",
+    "Kempe D, Kleinberg J, Tardos E (2003) Maximizing the Spread of Influence Through a Social Network. KDD (ref 11). Canonical discrete influence-maximisation framing with budget constraints.",
+    "Chakraborty S, Stein S, Brede M, Swami A, de Mel G, Restocchi V (2019) Competitive influence maximisation using voting dynamics. ASONAM (ref 47). Competitive IM in the voter model; the author group's earlier work.",
+    "Brede M, Restocchi V, Stein S (2019) Transmission errors and influence maximization in the voter model. J. Stat. Mech. (ref 48). Noise in influence maximisation; relevant to the noise extension the paper proposes.",
+    "Brede M, Restocchi V, Stein S (2019) Effects of time horizons on influence maximization in the voter dynamics. J. Complex Networks (ref 54). Time-horizon dependence; the paper's dynamic-allocation caveat points here.",
+    "Lynn CW, Lee DD (2017) Statistical mechanics of influence maximization with thermal noise. EPL (ref 25). Continuous IM under Ising noise with degree dependence, contrasted with this paper's no-degree result.",
+    "Eshghi S et al. (2020) Spread, Then Target, and Advertise in Waves: Optimal Budget Allocation Across Advertising Channels. IEEE TNSE (ref 42). Continuous budget allocation in an applied setting.",
+    "Braha D, de Aguiar MAM (2017) Voting contagion: Modeling and analysis of a century of U.S. presidential elections. PLOS ONE (ref 30). Voter-model fit to real election data; the nearest election-data link in the reference list.",
+    "Guimerà R et al. (2003) Self-similar community structure in a network of human interactions. Phys. Rev. E (ref 49). Source of the URV email network used as the only empirical topology."
+   ],
+   "short_quotes": [
+    {
+     "quote": "Optimal allocations can be explained almost perfectly by the shielding heuristics without the need for additional assumptions about degree preference.",
+     "location": "Results, 'Hub preferences and dependence on node degree', p.11, lines 680-681"
+    },
+    {
+     "quote": "their explanatory power is strongly reduced in the continuous regime.",
+     "location": "Abstract, p.1, lines 16-17"
+    },
+    {
+     "quote": "the unique pure Nash equilibrium is to target all nodes equally.",
+     "location": "Abstract, p.1, lines 21-22"
+    }
+   ]
+  },
+  "summary_md": "Romero Moreno, Chakraborty and Brede (PLOS ONE 2021) study influence maximisation in a voter model with zealots. An active controller spreads a budget over the nodes of one 1,133-node university email network against a passive opponent whose allocation is fixed and known. They compare a discrete regime (K nodes at fixed gain) with a continuous regime (any intensity per node). The continuous optimum is spread out: about 111 of 1,133 nodes get above-average allocation, and the remaining mass is near uniform (std/mean 0.11). It beats the best discrete plan by 5-10% when the opponent targets fewer than 100 nodes.\n\nHub (degree) targeting explains discrete optima but explains little in the continuous regime. Two heuristics do: shadowing (spend where the opponent spends) and shielding (spend on the neighbours of the opponent's targets). Continuous shadowing plus shielding comes within 1.89e-3 of optimal vote share under budget advantage, against 2.09e-2 for degree targeting. In the low-allocation limit the best response is linear in the opponent's spend, with coefficient (Ba/Bb − 1): a richer controller shadows the opponent and a poorer one avoids the opponent's nodes. When both controllers optimise, the unique pure Nash equilibrium is uniform allocation. The paper uses no political data, no lobbying data and no noise.\n\nThe paper matters here because Melange's money layer is exactly this setup. optimize.py allocates a CU pot in $500 steps against fixed industry money, a passive opponent, and pflip is a single-node a/(a+b) vote-share form. In the system, though, money acts only on the funded member's own pflip and never spreads to neighbours, so shielding cannot emerge. An opponent-share field w_b already exists, labelled for a \"shadowing layer\", but no engine reads it. The contested-bills registry cites this paper for a counterparty term that no code uses yet. The paper's support is theoretical and comes from one network, so it supports the design concept and gives no calibration.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-lobbying.contested-bills",
+    "relation": "method-source",
+    "paper_claim": "Against a passive opponent with known allocation w_b, the low-allocation optimum is w_ai linear in w_bi with coefficient c = (Ba/Bb − 1): shadow if Ba > Bb, avoid if Ba < Bb (Eq 5). Continuous shadowing+shielding comes within 1.89e-3 of the numerical optimum under budget advantage, against 2.09e-2 for degree targeting and 2.14e-2 for uniform. Under disadvantage it comes within 7.28e-4, against 2.12e-3 for discrete degree targeting (K=16, Fig 6).",
+    "paper_location": "Results p.7 Eq 5 (lines 414-465); pp.11-12 Fig 6 (lines 711-734)",
+    "system_side": "The registry gives contested bills a per-bill counterparty set, but its docstring says 'no consumer exists today' (CONTESTED_V1 is a future dial). Separately, build_opposition_prior.py builds a per-member opposition share w_b that sums to 1.0, with consumer listed as 'coalition-builder adversary substrate / shadowing layer'. No engine file imports it (VERIFIED by searching fec/engine, moneyball_core.py and the templates for opposition_prior).",
+    "code_ref": "fec/lobbying/contested_bills.py:1-14; fec/lobbying/build_opposition_prior.py:1425-1440,1528-1542",
+    "transfer_conditions": "Carries over only as a design template: (1) the opponent's allocation is observed per member, which w_b approximates from FEC opposition money and not from LDA (D-021); (2) the opponent is passive within the planning horizon. The paper's dynamics are an unnoised voter model on an academic email network, so the coefficient (Ba/Bb − 1) and the gap sizes are not calibrated for Congress. Which side holds the budget advantage must be measured per bill before the sign of the response is chosen. UNVERIFIED for this system until a second path reproduces it (DE-062).",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-lobbying#Contested-bills registry|Contested-bills registry]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "melange-allocation.joint-optimizer",
+    "relation": "qualifies",
+    "paper_claim": "With a passive opponent, the continuous optimum spreads widely: |H|+|A| = 111 of 1,133 nodes above average, |V| = 1,013 near-flat (std/mean 0.11). It beats the best discrete plan by 5-10% for opponent K < 100. When two active controllers optimise simultaneously, the unique pure Nash equilibrium is uniform allocation (w_ai = Ba/N), whatever the network or budgets.",
+    "paper_location": "Results p.5 Fig 1a (lines 285-308); p.6 Fig 1c (lines 337-345); p.13 (lines 758-782)",
+    "system_side": "CELF lazy greedy spends a $2.5M pot in $500 chunks with a $10k per-member cap. Industry money ind is fixed at fm.ind0 throughout, so industry is a passive opponent. The marginal of a chunk on member m changes only m's own pflip (marg_at sums tgt[m]·Δpflip over topics). CU dollars do not change neighbours' nA/nB, which are set by stance camps.",
+    "code_ref": "fec/engine/optimize.py:24-27,59,64-72,126-151",
+    "transfer_conditions": "The paper's spread and shielding results come from money propagating through the network's steady state. Melange's money term is node-local, so neither can arise in this optimizer; only shadowing-like behaviour through the b term of a/(a+b) can. The Nash result means the plan is a best response to a frozen opponent and could be exploited if industry PACs re-optimise. The paper's game is an idealised voter-model game, so this is a qualitative caution only. Equal-budget and per-candidate FEC limits have no analogue in the paper.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-allocation#Joint CU budget optimizer|Joint CU budget optimizer]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.flip-model",
+    "relation": "context",
+    "paper_claim": "Steady-state opinion of node i in the voter model with zealots solves (L + Wa + Wb)x = wa. Each node's A-share is a ratio of A-pull (neighbours' state plus wa_i) to total pull (d_i + wa_i + wb_i) (Eq 1-2). In the high-allocation limit (w >> d) the optimum has no degree dependence (Eqs 7-8).",
+    "paper_location": "Model p.3 Eq 1-2; Results pp.7-8 Eqs 7-8 (lines 487-539)",
+    "system_side": "pflip = a/(a+b), where a = WM·pm·saturating CU money + WP·nA/mAt and b mirrors it with industry money and anti neighbours. Neighbour pull comes from stance-labelled camps normalised by the network maximum. It is a one-shot ratio, not a self-consistent steady state.",
+    "code_ref": "fec/engine/flip_model.py:92-97",
+    "transfer_conditions": "The functional form is analogous: both are share-of-pull ratios. The paper's analytics need neighbour states to be endogenous; Melange fixes them from category_stance.json, so the paper's HMF results do not apply directly. The analogy supports reading pflip as a voter-model-style vote-share proxy, never as a vote or access probability (D-025).",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Flip - winnability model|Flip - winnability model]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-sna.katz-bonacich-benchmark",
+    "relation": "qualifies",
+    "paper_claim": "The degree correlation of optimal allocations is a by-product of shielding: Kendall tau > 0.5 for K > 30 for both optimal and pure-shielding plans. When the opponent targets nodes with low-degree neighbours, |tau| for the optimum falls below 0.25 and shielding gives tau down to about −0.5 (Fig 5b-c). 'Optimal allocations can be explained almost perfectly by the shielding heuristics without the need for additional assumptions about degree preference' (p.11).",
+    "paper_location": "Results pp.10-11, Fig 5b-c (lines 646-681)",
+    "system_side": "Diagnostic only, not consumed by the chain. It reports Spearman rho between Katz-Bonacich centrality on build_P and the optimizer allocation, money and score. It reads low rho as the allocator pricing stance, receptivity and leverage beyond centrality.",
+    "code_ref": "fec/engine/kb_benchmark.py:1-15,84-102",
+    "transfer_conditions": "An allocation-centrality correlation, high or low, can come from where the opponent places money rather than from a preference for centrality. Any reading of rho should be stratified by industry-money placement, or labelled UNSTRATIFIED. Rho here is a heuristic diagnostic, not evidence of influence. The paper's evidence comes from one email network.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-sna#Katz-Bonacich benchmark (diagnostic)|Katz-Bonacich benchmark (diagnostic)]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-influence-engine.competitive-cascade-crn",
+    "relation": "context",
+    "paper_claim": "In the discrete regime (K nodes at fixed gain), optima are driven mainly by degree (hub targeting). Shadowing and shielding matter mostly in the continuous regime, and shielding weakens as the opponent spreads (K = 256).",
+    "paper_location": "Results p.12 (lines 737-755); pp.9-10 Fig 3c, Fig 4",
+    "system_side": "The frontier and coalition engines pick discrete A seeds under a progressive two-colour first-to-reach IC race against fixed anti seeds, with bystanders turned by industry money. Lazy greedy runs up to 60 seeds with CRN draws.",
+    "code_ref": "fec/engine/budget_frontier.py:83-94",
+    "transfer_conditions": "The dynamics differ: IC is progressive (an activated node stays activated), while the voter model is reversible. Only the regime point carries over: seed-set optimisers will tend toward hubs, and opponent-aware placement matters more when allocation is continuous. Weak evidence; one network, no noise.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Competitive independent cascade with common random numbers|Competitive independent cascade with common random numbers]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "Money does not propagate in the flip model or the joint optimizer: CU dollars change only the funded member's pflip (optimize.py:64-72). The paper's main mechanism, shielding the neighbours of opponent-targeted nodes, therefore cannot appear in any allocation the system produces.",
+   "Opponent allocation is fixed (ind = fm.ind0 at optimize.py:59), so the allocator best-responds to a frozen opponent. The system has no test of how its plan fares if industry PACs re-optimise; the paper's two-active-controller result says that equilibrium is uniform allocation.",
+   "An opponent-share field w_b (build_opposition_prior.py:1425-1440) is labelled for a 'shadowing layer', and contested_bills.py ships a counterparty registry, but no engine consumes either (contested_bills.py:9 says 'no consumer exists today').",
+   "The paper says the direction of the best response depends on budget ratio Ba/Bb. The system never computes per-bill or per-topic CU vs counterparty budget ratios, so it cannot tell whether shadowing or avoidance would apply.",
+   "The paper's exploitability result (Eq 6) says a non-uniform opponent is most exploitable on low-degree nodes. The system has no diagnostic of where industry money departs from uniform relative to network degree."
+  ],
+  "flags": [
+   "Citation scope: contested_bills (Paul's position list) cites 'Romero Moreno 2021' for a counterparty term. The paper is an abstract, unnoised voter model on one 1,133-node academic email network, with no lobbying, election or legislative data. It supports the concept of an opponent-aware allocation, not any parameter or effect size.",
+   "D-025 wording: the paper's 'influence' and 'vote share' are steady-state model outputs. Any shadowing or shielding score built from it must be described as a heuristic model output, not closeness, access or the probability of a vote.",
+   "D-021: an opponent allocation w_b for shadowing must come from FEC money (as build_opposition_prior.py's basis does), never from LDA spend used as a weight.",
+   "DE-062: the claim that emergent shadowing would follow from the b term of a/(a+b) in the optimizer is this agent's inference. It is UNVERIFIED until a second path reproduces it.",
+   "The paper's internal inconsistency (|Z| = 9 at line 302 vs 7 at line 307) and its reliance on an unread S1 Appendix for other topologies limit how far its generality claims can be relied on.",
+   "No conflict with the rejected SNA proposals: the paper argues neither for dropping regular cosponsorship edges nor for per-edge volume normalisation."
+  ],
+  "paul_alignment": "This agrees with Paul's stated takeaway on contested bills: explicit inter-industry conflict over a bill is 'vital for political intelligence', and he wants rival industries modelled (Kim J. 2025 margin note). The paper gives that wish a formal shape: the response to a rival should depend on where the rival spends and on the budget ratio. It goes beyond his reading in two ways. First, the right response can be to avoid the rival's targets when CU is outspent. Second, a frozen-opponent plan is exploitable once the rival also optimises. His positions on the joint optimizer (adaptive greedy plus CELF, a learned policy later) do not mention opponent placement. They are therefore stale relative to what the system already holds: an unconsumed w_b 'shadowing layer' and an unwired registry. Neither the notes nor the system have taken up the paper's main mechanism, shielding, which the system's node-local money term cannot express.",
+  "related": [
+   {
+    "slug": "cai-2025-competitive-influence-maximization",
+    "relation": "extends",
+    "why": "Competitive influence maximisation in voter dynamics, adding timing and network heterogeneity, which addresses this paper's time-invariant-strategy limitation."
+   },
+   {
+    "slug": "bharathi-nd-competitive-influence-maximization",
+    "relation": "complements",
+    "why": "Competitive IC is the model behind the system's two-colour cascade race. This paper gives the voter-model (reversible) counterpart with an opponent-aware best response."
+   },
+   {
+    "slug": "borodin-nd-threshold-models-competitive",
+    "relation": "complements",
+    "why": "Competitive threshold models, which the flip model cites for having no submodularity guarantee. This paper instead proves concavity and a unique equilibrium in the continuous voter model."
+   },
+   {
+    "slug": "battaglini-2016-influencing-connected-legislators",
+    "relation": "complements",
+    "why": "Both derive equilibrium allocations across a network. B-P predict money loads on Katz-Bonacich centrality; this paper shows that a centrality correlation can be a by-product of the opponent's placement, which affects how kb_benchmark is read."
+   },
+   {
+    "slug": "almazaydeh-2026-heuristic-centrality-methods",
+    "relation": "complements",
+    "why": "Both test whether simple heuristics approach optimised allocations; here shadowing and shielding outperform degree heuristics in the continuous regime."
+   },
+   {
+    "slug": "kim-2025-measuring-interest-group",
+    "relation": "complements",
+    "why": "Per-bill support and oppose positions by industry are the observed opponent placement that a shadowing response on contested bills would need."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "pritoni-2025-lobbying-coalitions-determinants",
+    "relation": "complements",
+    "why": "Romero Moreno is the stated basis for the contested-bills counterparty term. Pritoni supplies the empirical case that counterparties should be set per issue rather than globally."
+   },
+   {
+    "slug": "zareie-2023-influence-maximization-social",
+    "relation": "complements",
+    "why": "Voter-dynamics influence maximization is an opinion-aware formulation of the kind the survey groups under opinion dynamics, and it is already cited for the contested-bills counterparty term."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "lechner-2025-mapping-political-personality",
+  "note": false,
+  "meta": {
+   "title": "Mapping the Political Personality (PoliPers): An Integrative Framework for Assessing Ideal and Actual Personality Profiles in Politicians",
+   "authors": [
+    "Clemens M. Lechner",
+    "Julian Aichholzer",
+    "Lukas Birkenmaier",
+    "Matthias Bluemke"
+   ],
+   "year": "2025",
+   "venue": "Working paper, version 0.1 (no journal or DOI shown in the text; the metadata hint's \"not visible\" note is correct)",
+   "doi": "",
+   "sha12s": [
+    "461d3d9201e0"
+   ],
+   "category": "Political Psychometrics",
+   "category_slug": "political-psychometrics"
+  },
+  "extraction": {
+   "title": "Mapping the Political Personality (PoliPers): An Integrative Framework for Assessing Ideal and Actual Personality Profiles in Politicians",
+   "authors": [
+    "Clemens M. Lechner",
+    "Julian Aichholzer",
+    "Lukas Birkenmaier",
+    "Matthias Bluemke"
+   ],
+   "year": "",
+   "venue": "Working paper, version 0.1 (no journal or DOI shown in the text; the metadata hint's \"not visible\" note is correct)",
+   "doi": "",
+   "document_type": "Working paper / manuscript (version 0.1), about 48 pages of main text plus appendix",
+   "coverage": "Full text read: lines 0 to 5066 of the text file (EOF reached), covering abstract, introduction, Study 1 to Study 4 (method and results), discussion, limitations, use cases, conclusion, references, general appendix, Study 1 literature overview, Study 2 and Study 3 appendices. No Paul markup files were listed for this item (\"(none)\"), so paul_markup is empty. Nothing in the text concerns lobbying, legislative networks, path-finding, allocation, or text-as-data pipelines beyond literature mentions and one use-case paragraph; the only text-measurement point is the Aaldering and Vliegenthart (2016) computer-assisted content analysis reference.",
+   "research_question": "How can political personality be assessed with a comprehensive, facet-level, contextualized, psychometrically validated inventory that works for (a) voters' ideal traits for politicians, (b) citizens' perceptions of actual politicians' traits, and (c) perceived self-other similarity between voters and politicians? (p.2, p.11-12)",
+   "theory": "Bottom-up construction of 15 politically relevant personality facets, each located a posteriori in the nomological net of established models: NEO PI-R, BFI-2, IPIP-NEO (Big Five facets), HEXACO, Values-in-Action character strengths, the Agency/Communion \"Big Two\" (Abele et al., 2020), and the six-category political leadership trait scheme of Aaldering and Vliegenthart (2016) (Table 1, pp.14-16). Argues global frameworks (Big Five, Big Two) lack specificity and contextualization, while ad hoc political measures lack generalizability and create jingle/jangle problems (pp.4-6). Argues contextualized items referring to the political role outperform non-contextualized ones (Danner and Lechner, 2024; Shaffer and Postlethwaite, 2012) and that items should target observable behavioral cues because voters judge the public persona (pp.8-10). Flags ideological content in items (Hatemi and Verhulst, 2015) and social desirability bias (Backstrom et al., 2009) as threats to neutrality (pp.9-10).",
+   "data": "Four German-language survey studies, unit = individual respondent rating self, an ideal politician, or a named real politician. Study 1 (pp.11-14, Table 1): no data sample; literature mapping and item pool construction (110-item pool). Study 2 (self-ratings, general population, pp.22-26): N = 404 after excluding 21 straight-liners (fieldwork Oct 2020; Respondi AG online panel, CAWI; German native speakers; quotas on age, gender, education from German census; 51.0% female; age M = 42.6, SD = 14.0, range 18-68; education 34.9% low, 33.2% intermediate, 31.9% high). Study 3 (other-ratings of ideal politician, pp.27-28): N = 589 after excluding 40 straight-liners (fieldwork May 2020; same sampling as Study 2; randomized male-politician (N = 289) vs female-politician (N = 300) prompts; 51.3% female; age M = 43.4, SD = 14.6, range 18-69). Study 4 (observer ratings of real politicians, pp.29-34): N = 211 after excluding 2 straight-liners (clickworker.de crowdsourcing, fieldwork April 2021; EUR 2.25 compensation; Trump n = 104, Merkel n = 107; 38.9% female; age M = 39.9, SD = 13.3, range 18-69; education 4.7% low, 19.0% intermediate, 76.3% high; authors describe sample as male-leaning, highly educated, and somewhat left-leaning). Study 2 used 110-item pool, planned missingness (three partial blocks A/B/C plus common block X, each respondent 85 of 110 items); Study 4 used 86 personality items plus catch-all candidate measures.",
+   "method": "Item construction from explicit facet definitions with two disambiguating trait words per item and balanced positive/negative keying (pp.21-22). 5-point agreement scale (Study 2, 3) and 1-5 scale for facet composites (Study 4). Composite facet scores are prorated means of 4-item scales (Dedication & Sacrifice uses 2 items). Factorial validity: principal components analysis of ipsatized items (centered on each respondent's mean to remove acquiescence) with Horn (1965) parallel analysis, 1,000 random draws, run in Stata fapara (pp.24-25, 28, 30). Reliability: Cronbach's alpha and composite reliability omega from a CFA congeneric model (Raykov, 1997), Stata sem/relicoef (pp.25, 28, 30). Convergent validity: correlations of facet composites with BFI-2-XS domain scores and a three-item Machiavellianism scale (Study 2, Table 3); Study 4 correlations with catch-all candidate measures on 11-point scales (likeability feeling thermometer, vote propensity, honesty, competence, charisma, assertiveness, left-right placement and absolute ideological proximity). Group comparisons: Cohen's d for male vs female prompt (Study 3) and Trump vs Merkel means (Study 4), plus sociodemographic means (Table A3). PCA reported with orthogonal varimax rotation for the prototype and candidate composites (Figures A4, A7).",
+   "identification": "None stated. The paper is psychometric and descriptive: cross-sectional survey correlations, mean differences, and factor structure. It does not claim causal identification. The text calls the Study 4 correlations \"predictive validity\" (p.36), but the analyses are concurrent associations among same-occasion ratings (Table 5).",
+   "scope": "Population: German native-speaking adults in general population panels (Studies 2-3) and German native-speaking crowdsourced raters (Study 4). Institutional focus: individual politicians as perceived by voters; item wording references the political role. Targets in Study 4: Donald Trump (US former president) and Angela Merkel (German former chancellor). Era: fieldwork 2020-2021; the paper's literature runs to 2024. Language: German items with English translations in Table A2. The authors note that generalization to lesser-known politicians and to other countries is untested (p.38).",
+   "key_findings": [
+    {
+     "finding": "The framework has 15 politically relevant personality facets (e.g., Trust & Faith in Others; Compromise & Cooperativeness; Assertiveness & Will to take control; Dedication & Sacrifice), each mapped to HEXACO, Big Five, VIA, Agency/Communion, and the Aaldering and Vliegenthart (2016) traits.",
+     "location": "Table 1, pp.14-16; Study 1 framework, pp.11-16",
+     "numbers": "15 facets; 4-item scales plus one 2-item scale (Dedication & Sacrifice)"
+    },
+    {
+     "finding": "Self-rated facet reliabilities (Study 2) were moderate to high for most facets but low for several.",
+     "location": "Table 2, p.25; text p.25",
+     "numbers": "alpha .44-.87; omega .43-.84. Lowest: Loyalty to Principles alpha .44 / omega .46; Humility alpha .46 / omega .43; Compromise alpha .51 / omega .45. Highest: Dedication alpha .87 / omega .84 (2-item scale)"
+    },
+    {
+     "finding": "Self-rated facets converge with the expected Big Five domains in the BFI-2-XS (Study 2): trust, compromise and empathy track Agreeableness; passion tracks Extraversion; optimism and composure track Emotional Stability.",
+     "location": "Table 3, pp.26-27; text pp.26-27",
+     "numbers": "Trust-A r = .50; Empathy-A r = .48; Compromise-A r = .33; Passion-E r = .57; Optimism-ES r = .63; Self-Confidence-ES r = .56; Manners-C r = .59; Creativity-O r = .33. Machiavellianism: Integrity r = -.44, Empathy r = -.44, Humility r = -.37"
+    },
+    {
+     "finding": "Intellect & Mental Acuity correlated unexpectedly with BFI-2 Emotional Stability, mostly driven by one depression item.",
+     "location": "p.27 (text on Table 3)",
+     "numbers": "r = .41"
+    },
+    {
+     "finding": "Essential unidimensionality for most facets in self-ratings, with Creativity & Problem-Solving the clear exception and Loyalty to Principles borderline.",
+     "location": "Figure 1 and text, pp.24-25",
+     "numbers": "Horn parallel analysis retained one component for all facets except Creativity; 15 scales judged essentially unidimensional"
+    },
+    {
+     "finding": "Ideal-politician prototypes showed almost no dependence on the politician's gender. Only Assertiveness differed, and it was rated more desirable for a female politician.",
+     "location": "Study 3 results, p.28; Table A5, p.74",
+     "numbers": "|d| = .00-.19; Assertiveness d = .19, p = .025 (male N = 289, female N = 300)"
+    },
+    {
+     "finding": "Ideal-trait scale reliabilities were modest. Assertiveness yielded two factors because one item (power-hungry, claims leadership) loaded reversed.",
+     "location": "pp.28-29; Table A4, p.70",
+     "numbers": "Text: alpha .40-.78, omega .55-.79. Table A4 gives alpha .53-.78 with Assertiveness not computed (n.c.)"
+    },
+    {
+     "finding": "Observer ratings of Trump and Merkel differed significantly on 14 of 15 facets. The clearest contrasts were Self-Confidence & Composure, Trust & Faith in Others, and Humility, with Trump lower; Trump was rated higher on Assertiveness, Passion, and Creativity. Loyalty to Principles showed no difference.",
+     "location": "Table 4, p.31; text p.31",
+     "numbers": "Self-Confidence d = -3.31 (Trump M 1.80 vs Merkel M 4.20); Trust d = -2.15 (1.72 vs 3.23); Humility d = -3.27 (1.31 vs 3.69); Assertiveness d = 1.41 (4.12 vs 3.33); Passion d = .93 (3.55 vs 2.73); Creativity d = .45 (2.98 vs 2.63); Loyalty d = .00 (3.31 vs 3.31); Trump N = 104, Merkel N = 107"
+    },
+    {
+     "finding": "Facets correlate with catch-all candidate measures in theoretically expected ways. Compassion tracks likeability; Integrity and Honesty tracks honesty; general assertiveness tracks the Assertiveness facet.",
+     "location": "Table 5, pp.33-34; text pp.31-32",
+     "numbers": "Empathy-likeability r = .70 (Trump) / .76 (Merkel); Integrity-honesty r = .70 / .80; Assertiveness-general assertiveness r = .42 / .53; Passion-charisma r = .58 / .61 (Trump / Merkel); Intellect-vote propensity r = .67 (Trump); Creativity-vote propensity r = .71 (Merkel)"
+    },
+    {
+     "finding": "Ideological proximity to the target correlates with several facet ratings, consistent with political opponents attributing more undesirable traits. The authors interpret this as bias in observer ratings.",
+     "location": "Table 5 column Prx, pp.33-34; text pp.32-33",
+     "numbers": "Intellect-proximity r = .48 (Trump); Integrity-proximity r = .46 (Trump) and .36 (Merkel); Creativity-proximity r = .37 (Merkel)"
+    },
+    {
+     "finding": "Observer ratings of Trump and Merkel were reported to show a reliability range that does not match Table A7 for two facets.",
+     "location": "Text p.30; Table A7, p.79",
+     "numbers": "Text: alpha .40-.93, omega .48-.94. Table A7 lists Loyalty to Principles alpha .34 (omega n.c.) and Assertiveness alpha .40 / omega .48. Loyalty may be bidimensional in observer ratings (footnote 5, p.30)"
+    },
+    {
+     "finding": "Study 2 Discussion states the Study 1 item pool was reduced to four core items per facet (60 total). The Study 2 section describes 58 retained items (14 four-item scales plus one two-item scale).",
+     "location": "p.22 vs p.36",
+     "numbers": "58 vs 60 items; 110-item initial pool"
+    }
+   ],
+   "measures": [
+    "15 PoliPers facets, self-report and observer versions, with 4-item scales (Dedication & Sacrifice: 2 items); 5-point agreement scale (Studies 2-3), 1-5 composites (Study 4)",
+    "Opposite poles defined per facet, e.g., Reserve & Reluctance to Trust; Rigidity & Inflexibility; Apathy & Indifference (pp.17-21)",
+    "BFI-2-XS (Rammstedt et al., 2018) domain scores for convergence (Study 2)",
+    "Three-item Machiavellianism scale (Moshagen et al., 2020) for convergence (Study 2)",
+    "Catch-all candidate measures in Study 4, 11-point scales from AUTNES 2013 and GLES-style items: left-right placement (with absolute ideological proximity), likeability (feeling thermometer), propensity to vote, honesty, competence, charisma, assertiveness (Table A8 wordings, pp.74-76)",
+    "Ipsatized composite scores; Cronbach alpha and composite omega (Raykov, 1997)"
+   ],
+   "limitations": [
+    "Social desirability and ideological bias may affect both self-reports and observer ratings (p.37, citing Rothschild et al., 2019).",
+    "Reliance on survey data restricts applicability; longitudinal, experimental, and qualitative designs are called for (pp.37-38).",
+    "Study 4 raters' affect toward the targets may drive ratings; Trump and Merkel are polarizing figures, and the authors separate positivity from descriptive normativity (p.38, citing Wessels et al., 2020).",
+    "Lesser-known politicians are untested (p.38).",
+    "Study 2 and Study 3 use general-population samples with neutralized wording ('other people' instead of 'other politicians'; 'work' instead of 'politics') (p.22), so the instrument has not been validated on actual politicians as self-raters.",
+    "Study 4 sample is skewed: 76.3% high education, 38.9% female, male-leaning, somewhat left-leaning (p.29).",
+    "Dedication & Sacrifice was tested with only two positively worded items and is 'yet to become fully fledged' (p.21).",
+    "Several 4-item scales have low reliability (alpha .44-.52 for Loyalty, Humility, Compromise, Creativity in Study 2; Table 2, p.25).",
+    "Assertiveness and Loyalty show multidimensionality or reversed items (pp.28-30).",
+    "Predictive validity is claimed in the Discussion (p.36) but the evidence is concurrent correlations only.",
+    "Inconsistent study labels: Table 2 and Table 3 are labeled Study 1 while the data are from Study 2; Table 4 and Table 5 are labeled Study 3 while the data are from Study 4; the Study 3 section heading is used for the ideal-trait study whereas the discussion labels it Study 3 too. Readers must map labels by content.",
+    "Acquiescence control relies on ipsatization and balanced keying; the authors do not report a model-based acquiescence correction."
+   ],
+   "references_of_note": [
+    "Nai, A. (2019b). The Electoral Success of Angels and Demons: Big Five, Dark Triad, and Performance at the Ballot Box. Journal of Social and Political Psychology, 7(2), 830-862. (electoral success; C, O, psychopathy positive; E negative)",
+    "Joly, J., Soroka, S., & Loewen, P. (2019). Nice guys finish last: Personality and political success. Acta Politica, 54(4), 667-683. (lower A predicts vote shares and party longevity)",
+    "Klingler, J. D., Hollibaugh, G. E., & Ramey, A. J. (2019). What I like about you: Legislator personality and legislator approval. Political Behavior, 41(2), 499-525. (legislator Big Five and approval)",
+    "Maier, J., & Nai, A. (2021). Mapping the drivers of negative campaigning: Insights from a candidate survey. International Political Science Review. (low-A candidates go negative)",
+    "Ketelaars, P. (2019). Position, Preference and Personality: A Microlevel Explanation of Negativity in Day-To-Day Politics. Political Psychology, 40(5), 1019-1038. (lower A predicts negative campaigning)",
+    "Hassell, H. J. (2020). It's Who's on the Inside that Counts: Campaign Practitioner Personality and Campaign Electoral Integrity. Political Behavior, 42, 985-1013. (low A, high E practitioners engage in unethical campaign behavior)",
+    "Amsalem, E., Zoizner, A., Sheafer, T., Walgrave, S., & Loewen, P. J. (2020). The effect of politicians' personality on their media visibility. Communication Research, 47(7), 1079-1102. (media coverage by E, ES, O; lower A)",
+    "Aaldering, L., & Vliegenthart, R. (2016). Political leaders and the media. Can we measure political leadership images in newspapers using computer-assisted content analysis? Quality & Quantity, 50(5), 1871-1905. (six political leadership trait categories; text measurement of leader images from newspapers)",
+    "Caprara, G. V., Vecchione, M., Barbaranelli, C., & Fraley, R. C. (2007). When likeness goes with liking: The case of political preference. Political Psychology, 28(5), 609-632. (politician-voter similarity and liking)",
+    "Aichholzer, J., & Willmann, J. (2020). Desired personality traits in politicians: similar to me but more of a leader. Journal of Research in Personality, 88, 103990. (desired traits and self-other similarity)",
+    "Laustsen, L., & Bor, A. (2017). The relative weight of character traits in political candidate evaluations: Warmth is more important than competence, leadership and integrity. Electoral Studies, 49, 96-107. (warmth weighs most in candidate evaluations)",
+    "Scott, C., & Medeiros, M. (2020). Personality and political careers. Personality and Individual Differences, 152, 109600. (candidate personality and electoral success)",
+    "Bøggild, T., Campbell, R., Nielsen, M. K., Pedersen, H. H., & vanHeerde-Hudson, J. A. (2021). Which personality fits personalized representation? Party Politics, 27(2), 269-281. (MPs' personalized representation and Big Five)",
+    "Rothschild, J. E., Howat, A. J., Shafranek, R. M., & Busby, E. C. (2019). Pigeonholing partisans: Stereotypes of party supporters and partisan polarization. Political Behavior, 41(2), 423-443. (partisan bias in trait ratings)",
+    "Dietrich, B. J., Lasley, S., Mondak, J. J., Remmel, M. L., & Turner, J. (2012). Personality and legislative politics: The Big Five trait dimensions among US state legislators. Political Psychology, 33(2), 195-210. (legislator personality and ideology)",
+    "Gerber, A. S., Huber, G. A., Doherty, D., & Dowling, C. M. (2011). The big five personality traits in the political arena. Annual Review of Political Science, 14, 265-287. (review of Big Five in politics)"
+   ],
+   "short_quotes": [
+    {
+     "quote": "Contextualized inventories, in which item content specifically references the relevant domain under study, have been shown to outperform non-contextualized ones",
+     "location": "p.5"
+    },
+    {
+     "quote": "cannot fully capture the specific traits most relevant to political behaviors and voter perceptions",
+     "location": "p.4"
+    },
+    {
+     "quote": "the prototype ratings showed hardly any variation in terms of the gender of the ideal politician",
+     "location": "p.28"
+    }
+   ],
+   "paul_markup": []
+  },
+  "summary_md": "PoliPers is a working paper (version 0.1, not peer reviewed) that builds a survey inventory of 15 politically relevant personality facets. Examples are Trust & Faith in Others, Compromise & Cooperativeness, Assertiveness & Will to Take Control, Empathy & Compassion, and Integrity & Honesty. Each facet is mapped to the Big Five, HEXACO, VIA, the Agency/Communion \"Big Two\" and the Aaldering-Vliegenthart leadership traits. The authors test it in four German samples: self-ratings (N=404), ideal-politician ratings (N=589) and crowd ratings of Trump and Merkel (N=211).\n\nReliability is uneven. Self-rating alphas run from .44 to .87, and Loyalty, Humility and Compromise all fall at or below .51. Assertiveness splits into two factors: the \"power-hungry, claims leadership\" item loads reversed in ideal ratings, and observer-rating alpha is .40. Observer ratings carry a large evaluative component. Empathy correlates with likeability at r=.70/.76 and Integrity with rated honesty at .70/.80. Rated facets also correlate with the rater's ideological proximity to the target, for example r=.46 between Integrity and proximity for Trump. The paper calls these \"predictive validity\", but all of them are concurrent associations measured on the same occasion.\n\nThe paper matters here because it is the upstream source of the two facet labels in Paul's agency/communion persona codebook (fec/members/agency_communion_llm.py), which feeds the receptivity layer at PERSONA_W 0.30. It does not test how personality affects response to pressure, lobbying, cosponsorship or votes. Its evidence therefore bears on how the persona construct is defined and on rater-bias risks. It gives no support to the susceptibility signs the engine assigns. It also supports two existing design choices: de-identifying text before LLM rating, and modeling halo as a method factor. Transfer is limited by the setting: German raters, two very prominent leaders, and the 2020-21 era.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.persona-agency-communion",
+    "relation": "method-source",
+    "paper_claim": "Defines 15 PoliPers facets, including Assertiveness & Will to take control (mapped to Agency) and Empathy & Compassion (mapped to Communion), each with a defined opposite pole such as Apathy & Indifference.",
+    "paper_location": "Study 1, Table 1, pp.14-16; facet definitions pp.17-21",
+    "system_side": "The persona codebook labels its two cue classes with exactly these PoliPers facet names (agency = 'Assertiveness & Will to Take Control', communion = 'Empathy & Compassion'). It reaches them through Birkenmaier & Lechner 2025 and scores positive poles only.",
+    "code_ref": "fec/members/agency_communion_llm.py:3-8,35,45,56-60",
+    "transfer_conditions": "The facet definitions transfer as construct definitions. The psychometric evidence does not: it comes from German survey ratings, not from LLM coding of English congressional text. PoliPers validates the facets as rated traits, not as sentence-level cues.",
+    "strength": "strong",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Agency-communion persona channel|Agency-communion persona channel]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.persona-agency-communion",
+    "relation": "qualifies",
+    "paper_claim": "The Assertiveness facet is not unidimensional. In ideal-politician ratings it yielded two factors because the 'power-hungry, claims leadership' item loaded reversed (alpha not computed). In observer ratings of Trump and Merkel its alpha was .40 and omega .48. Ideal-rating Assertiveness was the only facet that differed by politician gender (d=.19).",
+    "paper_location": "pp.28-30; Table A4 p.70; Table A7 p.79; Table A5 p.74",
+    "system_side": "The self-test treats 'I claim leadership and I am not afraid to use power to get results' as a gold agency unit. All agency cues, including power-seeking ones, are pooled into a single agency share.",
+    "code_ref": "fec/members/agency_communion_llm.py:100-101,233-237",
+    "transfer_conditions": "This applies wherever agency is read as a single construct. The paper's evidence comes from survey items rated by citizens, so whether power-claiming cues also split from leadership-taking cues in congressional text is untested. That makes this a plausibility warning, not a measured defect.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Agency-communion persona channel|Agency-communion persona channel]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-influence-engine.receptivity-layer",
+    "relation": "qualifies",
+    "paper_claim": "Perceived facets are heavily evaluative and partisan-tinged. Empathy correlates with likeability at r=.70 (Trump) and .76 (Merkel). Integrity correlates with ideological proximity at .46 (Trump) and .36 (Merkel), and Intellect with proximity at .48 (Trump). The paper tests no link from any facet to behavior under pressure.",
+    "paper_location": "Table 5, pp.33-34; text pp.31-33",
+    "system_side": "persona_susc_z = .60 z(communion) - .40 z(agency), blended into susceptibility at PERSONA_W 0.30, on the assumption that communal rhetoric means susceptible and assertive rhetoric means resistant to pressure.",
+    "code_ref": "fec/members/receptivity_layer.py:140-156",
+    "transfer_conditions": "The paper's correlations come from human observers rating two famous foreign leaders, so they say nothing direct about how lobbying moves members of Congress. The sign and weight of the persona term remain owner design priors (PERSONA_W is kept by owner ruling), and nothing in this paper validates or refutes them.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Receptivity layer (susceptibility, incentive, prospect domain, seed probability)|Receptivity layer (susceptibility, incentive, prospect domain, seed probability)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+    "relation": "supports",
+    "paper_claim": "Observer ratings of politicians are biased by the rater's ideological proximity (r=.36-.48 on Integrity, Intellect and Creativity) and dominated by global evaluation (facet-likeability r up to .76). The authors interpret this as bias and separate positivity from descriptive normativity.",
+    "paper_location": "pp.32-33, p.38; Table 5",
+    "system_side": "The LLM reader removes names, titles and party before scoring, and the CT-CM model adds an LLM method factor to absorb judge halo.",
+    "code_ref": "fec/members/big5_llm.py:196-200; fec/members/big5_ctcm.py:5-9",
+    "transfer_conditions": "The paper establishes the human-rater analogue: reputation and partisanship contaminate trait ratings. That the same holds for an LLM's reputational priors is an inference. CT-CM was a one-look MISS, so the paper supports the design rationale, not the outcome.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#LLM item-level reader (Pink), ridge hybrid and CT-CM latent model|LLM item-level reader (Pink), ridge hybrid and CT-CM latent model]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.gold-panel-validation",
+    "relation": "qualifies",
+    "paper_claim": "Observer trait ratings of politicians carry rater-ideology bias (proximity r up to .48). Several 4-item facets have low reliability (alpha .44-.52), which caps attainable convergent correlations.",
+    "paper_location": "pp.25, 32-33, 37-38; Table 2 p.25; Table 5",
+    "system_side": "Senate expert and insider panels are treated as independent gold criteria. A halo PC1 bifactor removal (P2) was tested against the panel.",
+    "code_ref": "fec/members/big5_improvements_eval.py:186,223,244-252",
+    "transfer_conditions": "The paper's raters were crowdworkers rating two very prominent leaders, not experts rating senators. Expert panels may be less partisan, but the paper is a reason to check panel ratings for rater-partisanship before treating them as an unbiased criterion.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Big Five validation against Senate gold panels and criteria|Big Five validation against Senate gold panels and criteria]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "suggests-extension",
+    "paper_claim": "Global Big Five domains lack specificity for politics, and contextualized facet measures outperform non-contextualized ones. Facets diverge within a domain: for example, Compromise correlates with Agreeableness at r=.33 while Trust correlates at .50, and Intellect correlates unexpectedly with Emotional Stability at .41.",
+    "paper_location": "pp.4-6, 26-27; Table 3",
+    "system_side": "Five domain-level z scores built from closed-vocabulary category rates with linear correlate weights, z-scored within the corpus.",
+    "code_ref": "fec/members/big5_traits.py:177-182",
+    "transfer_conditions": "The argument concerns survey item design, not text features. A facet-level text reader would need its own validation, and the existing domain-level validity record (A-ES halo, O reversed on the party check) is not changed by this paper.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "The persona channel collapses PoliPers' 15 facets into 2 cue shares. Facets with the most face relevance to lobbying receptivity have no measure: Compromise & Cooperativeness, Trust & Faith in Others, and Integrity & Honesty. Compromise is approximated only behaviorally, by cooperation_v2.",
+   "Opposite poles (indifference, distrust, rigidity) are coded as 'none' rather than as negative evidence, so low communion and missing communion cues are indistinguishable.",
+   "There is no check of whether the gold validation panels' ratings track rater partisanship or ideological proximity, which the paper shows contaminates observer trait ratings.",
+   "The assumption that the projected persona is what a lobbyist meets is untested. PoliPers measures persona as perceived by voters, and nothing in the system measures how lobbyists or staff perceive members.",
+   "The agency construct is not checked for the leadership-claiming versus power-seeking split that PoliPers found in Assertiveness."
+  ],
+  "flags": [
+   "Working paper version 0.1, not peer reviewed, with inconsistent study labels and item counts (58 vs 60). Cite with that status.",
+   "The paper's 'predictive validity' wording (p.36) describes same-occasion concurrent correlations. Do not quote it as predictive evidence for any member-level forecast.",
+   "Nothing in the paper validates the receptivity persona signs (communion means susceptible, agency means resistant). The persona term stays a design prior. PERSONA_W 0.30 is kept by owner ruling, and this paper is not grounds to propose removing it.",
+   "No conflict with the SNA rejections (D-021, D-025, D-104..D-108). The paper makes no network, lobbying, or reciprocity claims.",
+   "Agent analysis in this note, including the assertiveness-split concern applied to text cues, is UNVERIFIED until reproduced by a second path (DE-062)."
+  ],
+  "paul_alignment": "Paul's note treats Birkenmaier & Lechner as the most direct transfer and names two weaknesses: converting traits into node parameters, and ambiguous statements. PoliPers is the facet framework underneath that codebook, and it sharpens his first worry. It defines facets and shows that their ratings are reliable only in part, but it says nothing about how a facet changes a politician's response to pressure. The trait-to-node conversion (communion susceptible, agency resistant) therefore remains unsupported by this whole literature line. His receptivity note that ten personalities collapse into four observable ones understates the reduction: PoliPers offers 15 facets, and the system uses 2. His notes are not stale, but they do not record that the codebook inherits PoliPers' unstable Assertiveness facet, or that observer-rated persona carries partisan bias.",
+  "related": [
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Same author group. Birkenmaier & Lechner operationalize two PoliPers facets (Assertiveness/Agency and Empathy/Communion) as text cues, and that is the version the system's codebook ports."
+   },
+   {
+    "slug": "mondak-nd-online-appendix-personality",
+    "relation": "complements",
+    "why": "Expert ratings of US senators are the system's gold panel. PoliPers shows that citizen observer ratings carry ideological-proximity bias, which motivates checking the panel for the same."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "contradicts",
+    "why": "Ramey infers domain-level Big Five from speech. PoliPers argues domain-level measures lack political contextualization and favors facet-level, role-specific items."
+   },
+   {
+    "slug": "soto-2017-next-five-inventory",
+    "relation": "same-method",
+    "why": "Hierarchical facet-level inventory construction. PoliPers validates against the short BFI-2-XS version of this instrument."
+   },
+   {
+    "slug": "rammstedt-2025-going-global-language",
+    "relation": "same-data",
+    "why": "The BFI-2-XS is the convergent-validity instrument in PoliPers Study 2 (the paper cites the 2018 German version)."
+   },
+   {
+    "slug": "amsalem-2018-effect-politicians-personality",
+    "relation": "cites",
+    "why": "PoliPers cites Amsalem et al. on politicians' personality and media visibility (lower A, higher E/ES/O more covered)."
+   },
+   {
+    "slug": "byrne-2014-chokes-under-pressure",
+    "relation": "complements",
+    "why": "Byrne supplies the pressure mechanism the receptivity layer assumes. PoliPers supplies facet definitions but no pressure-response evidence, so the two together show the gap between construct and engine use."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "unverified"
+ }
+]

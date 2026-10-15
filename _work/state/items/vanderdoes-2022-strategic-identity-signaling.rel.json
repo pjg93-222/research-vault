@@ -1,0 +1,94 @@
+{
+ "summary_md": "van der Does, Galesic, Dunivin and Smaldino (PNAS 2022, 119(10) e2117898119) test covert signaling theory: people send identity signals that the ingroup reads but the outgroup cannot, and do so more when the audience is mostly outgroup. They built a tweet set of covert and overt left and right messages from rater gaps (1,992 MTurk raters; tweets from 2020), then ran a randomized 8-round experiment (n = 481 analysed) that varied outgroup size (1 to 9 of 10) and the cost of dislikes. With cross-partisan audiences, going from 1 to 9 outgroup members raised covert sharing (AME 0.73, 95 percent CI 0.47 to 0.99) and cut total sharing (AME -5.38). Copartisan audiences showed no effect (BF01 = 43.15), and the cost manipulation did little (BF01 = 16.83). A calibrated payoff model (R = 0.8, r_I = 0.6, r_o = 0.5) puts the covert advantage only at high outgroup share. The authors warn that automated political-speech classifiers probably catch only overt speech. For Paul's systems, the paper bears on the stance and press layers, not the network. Members facing mixed audiences may hedge, go quiet or code their messages, so the press pillar and the DEBATE stance reader could understate them. The say-do gate only lowers tiers, so it cannot correct for members who act more than they talk. The salience-shock backfire term ignores audience composition. Every transfer is UNVERIFIED (DE-062). The subjects were ordinary partisan Twitter users on a left-right axis, not legislators speaking about a largely bipartisan credit-union agenda. This paper offers nothing on graph edges, weights or reciprocity. An earlier relation pass said the text was blank; that result is stale, because the text file now holds the full paper (78,765 chars).",
+ "category": "Social Network Analysis",
+ "bearings": [
+  {
+   "component_id": "melange-stance.debate-nli-classifier",
+   "relation": "qualifies",
+   "paper_claim": "Covert tweets were defined partly by moderates rating them neutral in orientation and affect while far copartisans saw political content; the authors argue automated political-speech classifiers will likely detect only overt speech and miss covert signals.",
+   "paper_location": "p.7 (Discussion, classifier caveat); p.9 (Materials and Methods, covert criteria, SI Table S6)",
+   "system_side": "The DEBATE NLI reader picks the argmax over three hypotheses, and the neutral label is literally 'neutral toward or not about credit unions', mapped to sign 0. Coded or hedged support lands in the same zero bin as off-topic text, and no hedged or coded class exists.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:25-31, C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:77-79",
+   "transfer_conditions": "Holds only if members code CU positions for mixed constituencies. The paper's covertness concerns partisan identity on a left-right axis among ordinary Twitter users, and CU issues are comparatively bipartisan, so the size of any neutral-bin leakage in congressional press is unknown. The classifier warning is the authors' conjecture, not a tested result.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "moneyball-rank-pillars.press-pillar",
+   "relation": "qualifies",
+   "paper_claim": "As cross-partisan outgroup share rose from 1 to 9 of 10, participants shared fewer tweets overall (AME -5.38, 95 percent CI -6.04 to -4.72) and shifted toward covert ones (AME 0.73). Covert tweets drew fewer outgroup dislikes but also fewer ingroup likes, so the message is lower-affect for the ingroup.",
+   "paper_location": "p.5-6 (Results, Fig. 5B and 5D); p.3-4 (Fig. 3)",
+   "system_side": "press_value is the stance sign times LSD tone intensity times the category weight, normalized by signed extrema within each domain. Speaking less often and in a cooler tone both lower a member's Press%. No term reflects the composition of the member's audience (district partisan mix), so a member hedging for a mixed electorate scores like a lukewarm one.",
+   "code_ref": "fec/moneyball_core.py:214-241; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:48-61",
+   "transfer_conditions": "Requires that legislators in politically mixed districts or states reduce or code their CU statements the way the experiment participants did. The experiment paid at most 20 cents of cost and fixed audiences with no feedback, which is far from electoral stakes. Test by correlating own-domain press volume and LSD charge with district lean before acting; any pooled correlation across chambers is quoted with chamber strata or labelled UNSTRATIFIED.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-labels-and-tiers.say-do-gate",
+   "relation": "suggests-extension",
+   "paper_claim": "Under mixed audiences people cut overt signaling but keep some covert signals, and those who switched strategy earned more (SI Fig. S8). Low visible talk is a strategic response to audience, not lack of position.",
+   "paper_location": "p.5-6 (Results); p.7 (Discussion on self-censorship, citing Loury 1994)",
+   "system_side": "cap_uncorroborated only lowers Champion or Defender cells to Ally when no authored bill or aligned vote exists. The overall gate likewise only caps. Nothing flags the opposite case: members whose sponsorship and votes are CU-aligned while their rhetoric is muted or neutral-coded.",
+   "code_ref": "fec/moneyball_core.py:880-896, fec/moneyball_core.py:903-935",
+   "transfer_conditions": "An action-without-talk audit would be a display-side diagnostic, not a rank change. It goes through zero-rank-delta and change control, and it stays UNVERIFIED until a second path reproduces it. The paper gives a mechanism, not legislator evidence.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-influence-engine.salience-shock",
+   "relation": "suggests-extension",
+   "paper_claim": "The calibrated payoff model makes outgroup share of the audience the main driver of whether covert beats overt signaling, with cost a weaker driver, and covert messaging only reduces, not removes, outgroup dislikes.",
+   "paper_location": "p.4 (Fig. 4 model); p.3-4 (Fig. 3 reception); p.6-7 (cost effect weaker than predicted)",
+   "system_side": "The backfire probability b = min(0.35, 0.05 + 0.10 psi) depends only on policy uncertainty. The go-public advisory turns to 'quiet work' when the worst-case tail is large. Neither the backfire term nor the advisory uses the outgroup share of the audience being addressed.",
+   "code_ref": "fec/engine/salience_shock.py:92-93, fec/engine/salience_shock.py:235",
+   "transfer_conditions": "The paper's audience is a tweet reader pool, not the Noble-Turner public-campaign setting. An outgroup-share term would need its own calibration on congressional data, and the paper's r_o = 0.5 cannot be ported as a parameter.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "The stance readers have no hedged or coded class. DEBATE's neutral bin merges 'not about CUs' with ambiguous support (stage5_debate.py:29), so strategically muted statements read as sign 0.",
+  "The press pillar and media blend carry no audience-composition covariate. District or state partisan mix is never used to interpret press volume or LSD intensity, although the paper predicts both fall with outgroup share.",
+  "The say-do gate is one-directional, catching talk without action but never action without talk. Members who code or suppress rhetoric for mixed electorates have no detection path.",
+  "The salience-shock backfire probability uses policy uncertainty only, not the outgroup share of the audience. The paper's model makes outgroup share the main lever.",
+  "Pipeline staleness: the item's earlier rel output reported a blank text file. The text now holds the full paper (78,765 chars), so relation passes should re-check text length before declaring NO_TEXT."
+ ],
+ "flags": [
+  "Transfer gap: subjects are ordinary partisan Twitter users and MTurk workers on a left-right axis in the 2020 pre-election period, not members of Congress. Every bearing above is UNVERIFIED (DE-062) until congressional data reproduces it.",
+  "Recruited 480 (240 + 240) but analysed n = 481 (238 + 243); the paper does not explain the gap.",
+  "The cost effect was not supported (BF01 = 16.83) with at most 20 cents at stake. Do not quote the paper as showing that cost drives covert signaling.",
+  "No conflict with brain SNA rulings: the paper does not argue for dropping regular cosponsorship edges or for per-edge volume normalization, offers no edge or weight source, and says nothing about reciprocity.",
+  "Any audience-heterogeneity or covertness score built from this idea is a heuristic model output under D-025, never a closeness, access or introduction probability.",
+  "Superseded prior output: the earlier rel for this item (category 'Unclassified (text unavailable)', NO_TEXT flags) is stale; ext.json now holds the full extraction."
+ ],
+ "paul_alignment": "No bibliography entry exists. His 47 highlights (42 yellow, 5 green, pages 1-2) have no recoverable text, so his takeaway is unknown. The paper fits his note that ambiguous statements weaken stance extraction, because covert signaling is one cause of that ambiguity. It qualifies his view of public statements as the observable persona: statements are shaped by audience as well as stance. Nothing is stale, since nothing from this paper was built into the system.",
+ "related": [
+  {
+   "slug": "noble-2024-presidential-leadership-legislative",
+   "relation": "complements",
+   "why": "Noble and Turner model rally, retreat and backfire when an actor goes public, and the salience-shock component implements that model. This paper adds the audience-composition side of outgroup backlash and shows covert messaging only partly avoids it."
+  },
+  {
+   "slug": "merkley-nd-party-cues-news",
+   "relation": "complements",
+   "why": "Merkley and Stecula show outgroup backlash to overt partisan elite cues in news. This paper explains why senders facing mixed audiences shift to covert cues to avoid that backlash."
+  },
+  {
+   "slug": "fink-2023-congressional-social-network-dataset",
+   "relation": "complements",
+   "why": "Same medium. Fink builds congressional Twitter interaction ties that feed the social layer. This paper implies the content on those ties is audience-shaped, and that heterogeneous followings yield more covert political tweets."
+  },
+  {
+   "slug": "birkenmaier-2025-measuring-politicians-public",
+   "relation": "complements",
+   "why": "Birkenmaier validates text-based measures of politicians' public traits. This paper's warning that classifiers catch overt speech only bounds what such text measures can see."
+  },
+  {
+   "slug": "bakker-nd-understanding-partisan-receptivity",
+   "relation": "complements",
+   "why": "Bakker studies how receivers take partisan cues. This paper studies how senders adapt cue overtness to who is receiving."
+  },
+  {
+   "slug": "steinertthrelkeld-2018-twitter-data",
+   "relation": "complements",
+   "why": "A methods primer for Twitter data. This paper's sampling of seed accounts by news diet and its rater-based labels are a worked example, with the same platform-selection caveats."
+  }
+ ]
+}

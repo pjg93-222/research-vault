@@ -1,0 +1,118 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-stance.debate-nli-classifier",
+   "relation": "supports",
+   "paper_claim": "Ambiguity is 34.0 percent when Trump is not mentioned versus 19.5 percent when he is. NLI classifiers degrade most in low-context documents, while supervised and in-context classifiers adapt better.",
+   "paper_location": "Section 3.3 p.10; Figure 2; Section 6 pp.23-24",
+   "system_side": "Zero-shot DEBATE base read 53 percent accuracy and oppose F1 0.08 on the 156-row test. Fine-tuning on CU labels gave 87.2 percent accuracy and oppose F1 0.78 against the Claude reference. Figures trace to the vault note debate-stance-model and the 2026-06-22 topic note, not to code.",
+   "code_ref": "stage5_debate.py:26-31 (labels and hypothesis template) and finetune_debate.py:62-68 (NLI pairs) verified. The 53 percent and 0.08 figures are in the vault note only.",
+   "transfer_conditions": "The paper measured Trump approval with generic DeBERTaV3 NLI, not Political DEBATE on CU press releases. Transfer to CU is by analogy.",
+   "strength": "strong",
+   "verdict": "reproduced",
+   "verifier_note": "Section 3.3 re-opened and the 34.0 and 19.5 figures match. System figures match the vault. The 87.2 headline is agreement with the Claude reference, not human gold."
+  },
+  {
+   "component_id": "melange-stance.debate-nli-classifier",
+   "relation": "qualifies",
+   "paper_claim": "Zero-shot MCC for DeBERTaV3 Small is 0.15, Base 0.40 and Large 0.65 (83 percent accuracy). Performance comparable to supervised classifiers emerges only in larger models.",
+   "paper_location": "Table 4 p.14; Section 4.2.1 p.14",
+   "system_side": "Production runs the Political DEBATE base model fine-tuned on 552 labeled rows for 3 epochs. The large model was never fine-tuned or scored on the same member-grouped test; the vault lists the large fine-tune as a next step.",
+   "code_ref": "stage5_debate.py:38 (base default) and finetune_debate.py:32 (base default) verified.",
+   "transfer_conditions": "The paper gap is for generic zero-shot NLI. Political DEBATE is a politics-trained model not studied in this paper, so the size gap may differ.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Table 4 re-opened and matches. The claim that Political DEBATE was trained on political data comes from the code docstring, not from this paper."
+  },
+  {
+   "component_id": "melange-stance.debate-nli-classifier",
+   "relation": "qualifies",
+   "paper_claim": "In-context LLMs are useful for expanding training data and for validation, but not as the primary label source because proprietary models cannot be archived. The paper reports GPT-4 MCC 0.78 in Table 5 and recommends temperature zero in Section 4.3.4.",
+   "paper_location": "Section 4.3.1 pp.16-17; Table 5 pp.19-20; Section 4.3.4 p.20",
+   "system_side": "The fine-tune label is human_label when valid, otherwise the Claude pre_label. The Claude rater uses claude-sonnet-4-6 with no temperature argument. The 87.2 percent headline is agreement with Claude.",
+   "code_ref": "finetune_debate.py:40-48 (label choice), claude_stance.py:32 (model default), claude_stance.py:84-86 (no temperature), claude_stance.py:95-97 (ERR fallback) verified.",
+   "transfer_conditions": "Applies to any training row whose human_label is empty. The share of Claude-only rows is not counted in the analysis.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Table 5 gives GPT-4 0.78 but does not state the temperature used for it. The paper recommends temperature zero, so attributing 0.78 to temperature 0 is a paraphrase. Drop that attribution. The non-archivability and primary-label caution are stated in the paper."
+  },
+  {
+   "component_id": "melange-stance.supervised-stance-stack",
+   "relation": "qualifies",
+   "paper_claim": "Bag-of-words LR, RF and SVM reach MCC 0.49-0.51 and RoBERTa, BERTweet and PoliBERTweet reach 0.60, 0.63 and 0.68 on Twitter. Laurer et al. 2024 found 500 training examples let language models outperform algorithms trained on several thousand.",
+   "paper_location": "Table 3 p.12; p.12 citing Laurer et al. 2024",
+   "system_side": "Production is a LinearSVC on word plus char TF-IDF. Vault notes give 83.9 percent accuracy, but the 0.816 macro-F1 is a leak-free figure paired with an 84.7 percent headline, and other notes give 0.792 and 0.835 for the same model. The NLI-fine-tuned DEBATE reached 0.839 accuracy and 0.835 macro-F1 on n=87, which matches the vault. A distilroberta macro-F1 of 0.757 was not located.",
+   "code_ref": "train_stance_domain.py:24 (distilroberta default), :74-77 (word plus char union) and :68 (LinearSVC import) verified.",
+   "transfer_conditions": "With 456 training rows and an 87-row test all readers fall within each other's intervals. The paper's ordering is for larger training sets and for MCC, not macro-F1.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Table 3 re-opened and matches. The Laurer 500-example point is stated but the phrase NLI-style transfer is not in the paper. The system macro-F1 pairing is inconsistent across vault notes and needs a single source before it is quoted."
+  },
+  {
+   "component_id": "melange-stance.press-value-aggregate",
+   "relation": "qualifies",
+   "paper_claim": "Stance and sentiment are distinct dimensions to be measured independently. Sentiment may inform intensity but cannot stand in for stance. Integrating sentiment to scale stance intensity is named as a future direction needing more research.",
+   "paper_location": "Section 2.1 Definitions 1-2 pp.2-3; Section 6 p.24",
+   "system_side": "press_value = stance sign times LSD intensity (|net| per word). The sign comes from DEBATE or the human overlay, never from the dictionary.",
+   "code_ref": "run_stage5.R:9 (comment) and run_stage5.R:141-143 (formula) verified.",
+   "transfer_conditions": "This is a conceptual endorsement of separating the two dimensions only. The paper does not test whether multiplying sign by intensity improves measurement; it calls that open.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Definitions re-opened and match. Relation changed from supports to qualifies because the paper does not endorse sign-times-intensity; it lists it as an open research direction."
+  },
+  {
+   "component_id": "melange-stance.two-hop-decomposition",
+   "relation": "context",
+   "paper_claim": "Stance is entailment relative to context C. When the target is absent, ambiguity rises (34.0 versus 19.5 percent) and accuracy depends on outside knowledge. The paper flags outside-knowledge inference as the hard step.",
+   "paper_location": "Definition 4 pp.3-4; Sections 2.2-2.3 pp.3-5; Section 3.3 p.10",
+   "system_side": "CU alignment = stance toward named target times target CU valence. Valence hop 0.689 versus stance hop 0.915 per the module docstring. A curated registry composed with the stance hop reached 0.782 accuracy under honest 5-fold CV on 400 tweet golds.",
+   "code_ref": "apply_two_hop_stance.py:15 and :27 verified. The 0.782 CV figure comes from derive_valence_registry.py:130-151, which the analyst output does not cite.",
+   "transfer_conditions": "The paper never decomposes stance into a stance hop and a valence hop. The decomposition is the system's own design; the paper only explains why outside-knowledge steps are hard.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Relation changed from supports to context because the paper does not state the two-hop factorization. The 0.782 CV claim is correct but its source is derive_valence_registry.py."
+  }
+ ],
+ "related": [
+  {
+   "slug": "b-2025-comparing-fine-tuned",
+   "relation": "same-method",
+   "why": "Title matches: fine-tuned RoBERTa versus traditional ML for stance in political tweets. The Khan attribution in the analyst note is not verified; the Khan reference in code is a different Roman Urdu study."
+  },
+  {
+   "slug": "kim-2025-measuring-interest-group",
+   "relation": "complements",
+   "why": "Title matches. Text reports accuracy 96.93 and F1 97.19, which the analyst rounds to 96.9; the versus-human comparison was not checked."
+  },
+  {
+   "slug": "birkenmaier-2025-measuring-politicians-public",
+   "relation": "complements",
+   "why": "Title matches. XLM-RoBERTa and GPT-4o are confirmed in the text; the SVM comparison was not verified."
+  },
+  {
+   "slug": "dai-2025-large-language-model",
+   "relation": "complements",
+   "why": "Title matches a logic tensor network stance paper with LLM enhancement. The claim that it extends the in-context family Burnham benchmarks was not verified, so relation is softened from extends."
+  },
+  {
+   "slug": "haselmayer-2017-sentiment-analysis-political",
+   "relation": "complements",
+   "why": "Title matches a dictionary-plus-crowdcoding sentiment study. Neither text cites the other; Burnham's sentiment-is-not-stance argument bears on it indirectly, so contradicts was softened."
+  },
+  {
+   "slug": "rice-2018-corpus-based-dictionaries",
+   "relation": "complements",
+   "why": "Title matches corpus-based sentiment dictionaries for specialized vocabularies. The intensity-side link is the analyst's design choice, not a claim in Burnham."
+  }
+ ],
+ "summary_issues": [
+  "Venue confirmed by online scan: PSRM 13 (2025) 611-628, published online 19 September 2024. The summary's September 2024 wording is correct.",
+  "Version date conflict: the paper header says November 2023 but the arXiv stamp on v2 reads 3 May 2024. The ext note's v2 Nov 2023 mixes the two.",
+  "Misattribution: 'The paper also highlights three things the system has not settled' is wrong. The paper does not discuss this project's gaps (model size, Claude labels, MCC check); those are the analyst's own observations.",
+  "Unsupported attribution: 'Burnham's own Political DEBATE base model (a later, politics-trained NLI model)' does not appear in the paper; the authorship and model description come from the code docstring.",
+  "gaps_exposed item: 'Reports use accuracy, macro-F1 and Cohen's kappa (train_stance_domain.py:61-64)' is wrong. Lines 61-64 compute classification_report and macro-F1 only; kappa does not appear there.",
+  "Temperature attribution: 'GPT-4 MCC 0.78 at temperature 0' is not stated in the paper; Table 5 does not give the temperature used.",
+  "SVM figures: '83.9 percent accuracy, macro-F1 0.816' conflicts with other vault notes (0.792, 0.835, and 84.7 percent with 0.816 leak-free). The distilroberta 0.757 figure was not located.",
+  "Two-hop source: the 0.782 CV figure is correct, but it comes from derive_valence_registry.py:130-151, not from apply_two_hop_stance.py, which only runs an in-sample eval."
+ ]
+}

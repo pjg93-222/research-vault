@@ -1,0 +1,94 @@
+{
+  "bearings": [
+    {
+      "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+      "relation": "qualifies",
+      "paper_claim": "Lobby coefficient on ShareAssets is 0.0743 (SE 0.0094) with full controls and 0.0907 with none; ShareMcap 0.0804 and ShareSales 0.0759 at full controls. Industry and year FE, no firm FE. Full-control sample N = 116,242 firm-years (1998-2016). ShareAssets mean 0.0727, median 0.0010. Coefficients are level shifts in a 0-1 share.",
+      "paper_location": "Section 4.2; Table 3 columns 1 and 3; Table 4 column 3; Table 5 column 3; summary statistics table",
+      "system_side": "The sector growth study runs sector-by-year regressions of LobbyView real dollars on growth and sector controls. Verified: L3-LV base coefficient 0.352 and year-FE variant -0.477 (sgs_review.R line 33), and the year-effects guard at sgs_estimate.R line 386. The clause that growth added no adjusted R2 was not located and is not asserted here.",
+      "code_ref": "Mentat/sector_growth_study/code/R/sgs_registry.R:34 (L-control set), :155 (L-LV spec); code/R/sgs_estimate.R:386; code/R/sgs_review.R:33 (paths under C:/Users/pgoff/Mentat)",
+      "transfer_conditions": "The paper estimates a between-firm cross-sectional association within NAICS industries, with lobbying on the right-hand side. The sector study asks a within-sector, over-time question with lobbying as the outcome. The paper has no within-firm or within-sector-over-time evidence, so it cannot support the growth-to-lobbying lead. Pooled across industries, so label UNSTRATIFIED. Imai and Kim caution is the analysts own point, not the paper's.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers and table locations reproduced. The rel calls the coefficients percentage points, which is the correct level-shift reading, but the paper's own text calls them percent higher. System-side L3-LV values confirmed; the growth-R2 clause was not found and is dropped."
+    },
+    {
+      "component_id": "melange-allocation.break-even-and-roi",
+      "relation": "qualifies",
+      "paper_claim": "Lobby on ShareAssets 0.0743 with full controls; PAC on ShareAssets 0.1100 (election years, N = 62,198). Abramoff DiD Treatment x Post on ShareAssets with full controls is -0.0265 (SE 0.0096); on ShareMcap it is -0.0336 (SE 0.0099). Post window 2006Q1-2009Q1; pre-period 2003Q1-2005Q4 per the Table 8 description.",
+      "paper_location": "Sections 4.2-4.4; Tables 3, 6, 9, 10; Table 8 description (text line about 1104)",
+      "system_side": "The dashboard head-to-head block computes CU versus industry flip odds using WM, HALFF, the competitiveness multiplier and receipts, then solves for break-even CU dollars. When q is at least 1 the displayed text reads that CU money alone cannot fully offset the competitor spend. The rel's quoted message 'cannot offset' is not the literal wording.",
+      "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:1096-1105 (formula and message verified). fec/engine/money_response.py:31 is the LOSSFRAME default (1.10), not the share ratio, so cite it only for the loss-frame parameter. Paths under C:/Users/pgoff/OneDrive/Desktop/Melange Systems.",
+      "transfer_conditions": "The paper's return is a firm-level industry-share outcome from Compustat matched to CRP by company name, 1998-2016. It does not measure votes, cosponsorship or flips, so it cannot calibrate WM, HALFF or LOSSFRAME. It supports only a framing claim that political spending associates with firm share gains, reported in share points with the unit stated.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Coefficients and windows confirmed. Units: the coefficients are share points, but the paper's abstract and text call the same numbers percent (7.4 percent higher; 2.65 percent decline; the Exxon example applies 7.4 as relative, 12 to nearly 13 percent). The pp reading is the defensible one. Dashboard wording and the money_response cite were wrong."
+    },
+    {
+      "component_id": "mentat-sector-growth-study.seats-weekly-test",
+      "relation": "qualifies",
+      "paper_claim": "WinPAC 0.0620 (SE 0.0267, significant at 5 percent) and LosePAC 0.0404 (SE 0.0356, not significant) in the Table 7 region. The authors conclude contributions to winning candidates drive the PAC effect. The text reports no equality test of WinPAC against LosePAC.",
+      "paper_location": "Section 4.3, Table 7 and the text after it",
+      "system_side": "sgs_seats.R defines the SEATS-W estimand A (EXPLORATORY): weekly Democratic share change regressed on the prior-week change in expected Democratic seats, with residual block bootstrap within cycle. The rel's -3.47 pp estimate and its bootstrap p-values were not located in the sector growth study folder and are not asserted here.",
+      "code_ref": "Mentat/sector_growth_study/code/R/sgs_seats.R:15-18 (estimand description verified; numeric result not located)",
+      "transfer_conditions": "Bickmore classifies money by realised election outcome after the fact and does not observe donors' responses to forecasts, so it cannot show donors anticipate winners. WinPAC versus LosePAC is a significant versus non-significant comparison with overlapping intervals, so treat it as a hypothesis. The paper's outcome is firm share, not weekly Democratic share.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper figures reproduced. The winner-driven conclusion follows from the coefficient pattern but no equality test is reported. The -3.47 system-side figure is unlocated and has been removed from the claim."
+    },
+    {
+      "component_id": "melange-lobbying.fec-lda-bridge",
+      "relation": "context",
+      "paper_claim": "Lobbying (Tables 3-5, annual N = 116,242) and PAC (Tables 6-7, election-year N = 62,198 and 62,558) are estimated in separate regressions on different samples. The paper does not estimate them jointly, and 'never in sequence' is an inference from table structure, not an explicit statement.",
+      "paper_location": "Sections 4.2-4.3; Table 6 and Table 7 notes",
+      "system_side": "fec_lda_bridge3_look.py builds a Pearson rho and a partial correlation controlling for party, chamber, volume and committee (CONTROL_NAMES line 57; partial() and result dict around lines 1066-1085). The four-control partial of -0.0002 appears in lobby_forecast.py and lobby_champions.py comments. The raw rho of +0.153 was not located in the cited folder and is not asserted here.",
+      "code_ref": "fec/lobbying/fec_lda_bridge3_look.py:57 and 1066-1085 (verified); Melange paths under C:/Users/pgoff/OneDrive/Desktop/Melange Systems",
+      "transfer_conditions": "The paper gives no evidence on whether PAC giving leads lobbying or how much the two overlap, so it neither revives nor refutes the bridge. The claim that Furnas et al. show the sharper overlap relation comes from the vault, not from this paper.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Sample sizes and separate-regression structure confirmed. Rho +0.153 not located; the partial of -0.0002 is traced to comments and code structure."
+    }
+  ],
+  "related": [
+    {
+      "slug": "huneeus-2018-effects-firms-lobbying",
+      "relation": "complements",
+      "why": "Huneeus and Kim are not cited in this paper. The link is topical only: firm-level lobbying and firm size or revenue. Keep as thematic, not paper-grounded."
+    },
+    {
+      "slug": "alexander-nd-lobbying-analysis-under",
+      "relation": "complements",
+      "why": "Alexander et al. are not cited in this paper; the only Alexander reference is Borisov, Alexander, Goldman and Gupta 2016, a different work. Keep as thematic only."
+    },
+    {
+      "slug": "furnas-nd-conflating-lobbying-pacs",
+      "relation": "complements",
+      "why": "Furnas is not cited in this paper. The paper's separate lobbying and PAC regressions make the overlap question topically relevant. Keep as thematic only."
+    },
+    {
+      "slug": "kim-2020-strategic-sequential-links",
+      "relation": "complements",
+      "why": "Not cited in this paper, and the paper does not test sequence from donations to lobbying. Keep as thematic only."
+    },
+    {
+      "slug": "kim-2018-lobbyview-firm-level",
+      "relation": "complements",
+      "why": "Not same data: Bickmore uses CRP lobbying matched to Compustat by company name, not LobbyView. Relation changed from same-data to complements because the enum has no context value."
+    },
+    {
+      "slug": "imai-2021-fixed-effects-regression",
+      "relation": "complements",
+      "why": "Imai is not cited in this paper. The paper's industry and year FE without firm FE makes the two-way FE caution topically relevant. Keep as analyst context."
+    }
+  ],
+  "summary_issues": [
+    "The summary says the 0.0743 coefficient is about the size of the mean share and not a 7.4 percent relative rise. The paper's abstract and text call it 7.4 percent higher, and its Exxon example treats it as relative (12 to nearly 13 percent). The summary should state that the paper's wording conflicts with its share-point units.",
+    "The summary says lobbying appears in 4.23 percent of firm-years. The paper text says 4.23 percent of firms in the sample; Table 1 is firm-year level, so the figure stands but the wording should match.",
+    "The summary says nothing in Melange measures market concentration. No repo-wide search was run for this claim, so it is unverified here.",
+    "The paper alignment says Paul's comparable-size firms overstates the control. The full specifications do control for Assets, so the defensible point is residual size confounding without firm fixed effects.",
+    "The flags say lobbying is concentrated in the largest firms. The paper does not say this; it reports 4.23 percent of firm-years with lobbying and a robustness check excluding the top and bottom 5 percent by market cap. Remove the claim.",
+    "The flags say Paul's 7.5 percent low end is off. Confirmed: the abstract and text give 7.4 percent; the ext record's conclusion reading of 7 percent is a rounding of the same figure.",
+    "The Table 6-7 notes give 1998-2018 while the text gives 2000-2016 election years, and the sample ends in 2016. Confirmed as an internal inconsistency.",
+    "The flag about the pre-trend starting in late 2004 and the placebo results appearing only in figures is confirmed (text around lines 1017-1024 and 1389-1397; Figures 2-4 hold the numbers)."
+  ]
+}

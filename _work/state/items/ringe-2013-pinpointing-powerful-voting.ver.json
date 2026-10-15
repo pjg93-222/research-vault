@@ -1,0 +1,108 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-influence-engine.cascade-kernel",
+   "relation": "qualifies",
+   "paper_claim": "Among opposing-bloc MEP dyads, higher point connectivity predicts less co-voting. Table 3 model 3 log-odds multilevel coefficient is -0.1020 (SE 0.0307), about 10 percent lower odds per unit (95 percent CI 7-13 percent). Predicted co-voting falls from 52 to 44 percent between connectivity 0.6 and 3.8 (about -1 to +1 SD). Window: 40 Environment Committee roll calls, July 2004 to July 2008. Denominator: 1,319 non-unanimous dyads (perfect co-voters excluded in model 3).",
+   "paper_location": "pp. 625-627; Table 3 p. 626; Fig. 7 p. 627",
+   "system_side": "cpf_diffusion gives every cross-party edge between D and R members a contagion weight of 0.4 + 0.6*sqrt(bpf_u*bpf_v), so non-bridge out-party pairs keep a floor of 0.4. build_P maps the weight to activation probability x/(x+6) with x = w*cpf*edge_mult.",
+   "code_ref": "fec/moneyball_core.py:543-546 (cpf_diffusion); fec/moneyball_core.py:555-560 (build_P)",
+   "transfer_conditions": "Paper tie is staff-reported contact, not cosponsorship. Setting is a multi-party EP committee, not two-party US Congress. Result is cross-sectional association with acknowledged simultaneity and specification sensitivity (fn. 81). It does not show cross-party diffusion is zero or negative in US cosponsorship. Use it to motivate a test stratified by party pair, not to change a constant.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper numbers verified on rendered pages 26-27 (Table 3 and text p. 626). Code logic verified. The original cite 540-542 was off; cpf_diffusion is at lines 543-546 and build_P at 555-560. The 0.4 floor and the build_P mapping are as described."
+  },
+  {
+   "component_id": "melange-influence-engine.lt-priming",
+   "relation": "supports",
+   "paper_claim": "Social connection between political adversaries goes with less voting agreement, not more. Theory predicts this when the pair expects to disagree (H1, Fig. 1). Opposed-bloc baseline co-voting is about 50 percent (p. 626).",
+   "paper_location": "pp. 609 (H1 theory, Fig. 1); pp. 625-626 (results)",
+   "system_side": "The BAKKER_XCUE signing passes a cross-party pro-cue through sqrt(bpf_u*bpf_v), so cues from non-bridge out-partisans fall to about 0. The value is never negative because it is a square root of products of non-negative bridge-factor values. Priming pressure does not treat out-party ties as persuasive.",
+   "code_ref": "fec/engine/lt_priming.py:56-64 (comment block 56-62; xf at line 64)",
+   "transfer_conditions": "Direction agrees: out-party ties should not count as pro-pressure. The association is not causal and is EP staff contact, so it does not justify adding a negative backfire term. Keeping the floor at 0 remains the default.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "H1 and the 50 percent baseline verified in the text. Code comment and xf verified at lines 56-64. xf has no explicit max() clamp; the non-negative result follows from the square-root form, so the clamped at 0 wording describes the outcome. Verdict stays reproduced."
+  },
+  {
+   "component_id": "melange-stance.stance-dynamics",
+   "relation": "qualifies",
+   "paper_claim": "The connectivity to agreement link depends on whether the pair are expected allies or adversaries (bloc). Same-bloc dyads co-vote in 574 of 594 cases (about 97 percent), so H2 is untestable. For opposed-bloc pairs more contact predicts less co-voting (p. 625; Table 3).",
+   "paper_location": "pp. 609-610 (H1 and H2 theory); p. 625 (574 of 594); p. 628 (conclusion)",
+   "system_side": "Neighbour imputation takes the unweighted mean of TSCORE over every cosponsor neighbour, with at least 5 neighbours (SD_MINNB) and absolute estimate at least 0.75 (SD_CONF). It does not condition on party. Masking validation reports sign agreement but has no party-only baseline. The co-movement test on cosponsor and HCoI ties is reported as null.",
+   "code_ref": "fec/stance/stance_dynamics.py:132-146 (imputation); fec/stance/stance_dynamics.py:94-110 (comovement)",
+   "transfer_conditions": "The paper outcome is votes, not stance labels, so transfer is conceptual. The next diagnostic is a party-only baseline and a split of same-party from cross-party neighbours. The 77 percent figure stays UNVERIFIED as a network effect until that baseline exists (DE-062).",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "574 of 594 verified at p. 625. Code has no party condition (lines 132-146). Output data/stance/stance_dynamics.json: masking_validation n 1087, sign_agreement 0.775 (77 percent). Co-movement output 134 same vs 122 opposite (52 percent), at or below the 55 percent threshold in the code, so the null label is consistent. Checked against saved outputs, not re-run."
+  },
+  {
+   "component_id": "melange-sna.co-appearance-and-references",
+   "relation": "qualifies",
+   "paper_claim": "Unsigned contact is not alignment. Between adversaries more contact goes with less agreement (about -10 percent odds of co-voting per connectivity unit, opposed-bloc dyads, EP Environment Committee 2004-2008). Authors identify ally or adversary status from voting bloc and party membership, not from the contact itself (p. 617).",
+   "paper_location": "pp. 605-610; pp. 617, 625-626",
+   "system_side": "The co-appearance layer records unsigned, undirected pairs with a bipartisan flag. data/network/co_appearance.json holds 2,481 pairs of which 1,182 are bipartisan. The member-reference layer keeps net = (pos - neg)/scored per dyad. Both layers are display-only.",
+   "code_ref": "fec/network/co_appearance_layer.py:61 (bipartisan flag); fec/members/member_reference_layer.py:368-372 (net formula)",
+   "transfer_conditions": "Supports keeping the reference layer signed and warns against reading cross-party co-appearance as closeness or alignment (D-025). A broadcast pairing of opponents may be adversarial. The settings differ (EP staff contact vs US media co-appearance), so the evidence is weak.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "The prior count of 1,151 bipartisan pairs does not match data/network/co_appearance.json (1,182 bipartisan of 2,481 pairs); corrected above. Cites at line 61 and 368-372 verified. The denominator of net is pos+neg+neu, i.e. scored references. The p. 617 identification method verified."
+  },
+  {
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "qualifies",
+   "paper_claim": "Authors use measured staff-reported contacts rather than proxies such as cosponsorship, and argue this raises confidence in their measures. Reported contact was sparse: 6.1 percent density (118 of 1,920 possible directed ties in the asymmetric all-respondent subnetwork), mean point connectivity 2.2 (median 2), and 12.4 percent of dyads at zero connectivity.",
+   "paper_location": "pp. 603-604; p. 617 (density); pp. 620-621 (connectivity, Fig. 5)",
+   "system_side": "The cosponsor graph is the default substrate for cascades, routes and imputation. load_network reads the newest augmented congress_cosponsor workbook and mean-symmetrizes it for the cu config. Original-cosponsor weight 1.0 appears in legislation workbook code. No regular-cosponsor weight of 0.5 was found for the cu base graph; the only regular dial found is 0.2 in the holistic base builder.",
+   "code_ref": "fec/moneyball_core.py:461-507 (load_network); fec/moneyball_core.py:392 (NETWORKS cu symmetrize True); fec/network/build_holistic_base.py:14 (regular dial 0.2)",
+   "transfer_conditions": "The paper does not test cosponsorship, so it cannot show cosponsor edges are wrong. It shows measured contact and agreement can diverge for adversaries, which bears on the alignment assumption for cross-party cosponsor edges. It does not argue for dropping regular cosponsor edges or for per-edge volume normalization; both were measured and rejected in this project.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Density verified at p. 617: 5.7 percent (9.7 percent symmetric) is the both-respondent subnetwork, not the 1,920 denominator; 6.1 percent and 118 of 1,920 belong to the asymmetric all-respondent subnetwork. Mean connectivity 2.2 and 12.4 percent zero verified at pp. 620-621. The regular 0.5 weight is not found in code and has been removed from the claim. The p. 604 argument concerns social interaction more than information exchange, so that framing is softened."
+  }
+ ],
+ "related": [
+  {
+   "slug": "ringe-nd-pinpointing-powerful-voting",
+   "relation": "same-data",
+   "why": "Item title confirmed as co-voting network centrality in the EP (same first author). Relation to this paper outcome is plausible. Content of that item not re-verified."
+  },
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "relation": "complements",
+   "why": "Item title confirmed (hidden coalitions in the US House, 2021). The bloc-not-party and signed-tie parallel is not re-verified against that item text."
+  },
+  {
+   "slug": "bakker-nd-understanding-partisan-receptivity",
+   "relation": "complements",
+   "why": "Item title confirmed (partisan cue receptivity). The out-party cue claim is not re-verified against that item text; the lt_priming clamp relies on it."
+  },
+  {
+   "slug": "boxsteffensmeier-2018-taking-congress-interest",
+   "relation": "complements",
+   "why": "Item title confirmed (cue-taking in Congress, interest-group letters, 2018). Shared cue-taking framing is supported by titles only."
+  },
+  {
+   "slug": "sotoudeh-2024-network-based-measure",
+   "relation": "complements",
+   "why": "Changed from contradicts. Sotoudeh builds a cosponsorship influence measure on bill passage. This paper questions cosponsorship as a social-tie proxy (p. 604) but does not test that measure, so it is a premise dispute, not a contradiction."
+  },
+  {
+   "slug": "leskovec-2010-predicting-positive-negative",
+   "relation": "complements",
+   "why": "Item title confirmed (positive and negative links). The shared point that tie sign changes what a tie predicts is a framing link only; content not re-verified."
+  }
+ ],
+ "summary_issues": [
+  "Bipartisan co-appearance count 1,151 is wrong: data/network/co_appearance.json has 2,481 pairs of which 1,182 are bipartisan. Corrected in the co-appearance bearing.",
+  "Density line conflated subnetworks: 5.7 percent is the both-respondent subnetwork (9.7 percent symmetric); 6.1 percent with 118 of 1,920 is the asymmetric all-respondent subnetwork. Corrected in the cosponsor bearing.",
+  "Response count: the text (p. 616) reports 32 responses (24 interviews, 8 questionnaires; 47 percent). Paper Tables 1 and 2 (pp. 615-616) list 30 respondents of 65. The summary follows the text; the paper is internally inconsistent here.",
+  "Paul alignment cannot be checked: the paul_entries list in the item is empty and the PDF annotations carry no note text. Highlight topics on pp. 609 and 625-627 were seen on rendered pages; the claim that his only listed position is ink-only remains unverified.",
+  "The text file Documents/research/_text/e98be213beff.txt is 56 bytes of blank lines. Verification used page images rendered from Downloads/BJPS-Friends-Enemies.pdf with PyMuPDF into the scratchpad; the PDF has no text layer and no OCR tool is installed. Pages 2, 4-5, 10, 15-19, 21-22 and 26-28 were read.",
+  "Related link haythornthwaite-1996-social-network-analysis dropped: no Haythornthwaite citation was found in pages read; the paper cites Hanneman and Riddle for network methods (p. 620 fn. 73). The same-method link is unsupported.",
+  "Related links for ringe-nd-pinpointing, aref-2021, bakker-nd-2020, boxsteffensmeier-2018 and leskovec-2010 were checked for item existence and title only; their content-level claims were not re-verified against those papers.",
+  "Summary says 97 percent of same-bloc dyads always co-voted; the exact figure is 574 of 594 (96.6 percent). Acceptable rounding, but the denominator should be stated.",
+  "Summary cites N 1,319 without noting that Table 3 model 3 excludes perfect co-voting dyads; state the non-unanimous subset wherever the coefficient is quoted.",
+  "Original cpf_diffusion cite 540-542 was off by three lines (actual 543-546); corrected in the cascade-kernel bearing."
+ ]
+}

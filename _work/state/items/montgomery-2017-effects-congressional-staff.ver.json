@@ -1,0 +1,89 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-staffer-network.overlap-edge-rule",
+   "relation": "supports",
+   "paper_claim": "The tie is a member-member count of senior or policy staffers who worked for both offices in the current or previous two Congresses, undirected and row-standardized (p.11, p.18). Senior-tie LES pooled rho is 0.043, 95% CI 0.0095 to 0.096; senior-only ideology is -0.003, CI -0.029 to 0.020. The future-senior placebo CI of -0.033 to 0.071 overlaps the headline, so homophily is not excluded (p.29).",
+   "paper_location": "p.11 (W as undirected count, fn 12); p.18 (row-standardized, 3-Congress window); Table 1 p.23 (pooled 0.043); Table 3 p.26 (ideology -0.003); Table 5 p.30 (placebos)",
+   "system_side": "office_moves are directed consecutive-span pairs, emitted with SEQUENCE IS NOT A SOCIAL EDGE and canonical_eligible False. The paper's tie is not a sequence link: it is the undirected co-service count, whose closest analogue in the system is shared_with / pair_people, which has no window. The rule against treating sequence as a person-person edge is still consistent with the paper's caution about homophily.",
+   "code_ref": "audits/staffer_network/build_staffer_social_network.py:2544-2550 (SEQUENCE comment); :2630-2641 (note, canonical_eligible False). Verified. shared_with path: fec/surfaces/build_staffer_network_section.py:1239-1242, 1253-1254",
+   "transfer_conditions": "House personal offices, 105th-111th Congresses; observational; member-level outcome similarity, not transmission. The text gives Congress numbers only, so the 1997-2010 window is a calendar inference, not the paper's statement.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Numbers and CIs match the text. The analyst's claim that the tie is a directed office-to-office sequence link is wrong: the paper states the ties are undirected (p.11, fn 12). The supports relation holds only for the conclusion that the link should stay descriptive. Fields rewritten accordingly."
+  },
+  {
+   "component_id": "melange-staffer-network.overlap-edge-rule",
+   "relation": "qualifies",
+   "paper_claim": "Only senior and policy staff carry signal. Lower-level staff ties are a placebo with a null LES lag (pooled -0.016, text CI -0.070 to 0.027). Adding policy staff to senior ties weakens the LES lag (pooled 0.013, CI -0.015 to 0.037; Table 2 p.24).",
+   "paper_location": "p.4 fn 2 (senior and policy title definitions); p.24 Table 2; p.29 text (placebo CI); p.30 Table 5",
+   "system_side": "shared_staff counts people attached to two or more member offices, with no title filter at the count stage and no time window. SHARED EMPLOYEE and intern titles are dropped only from the top_staff eligible list. shared_with takes top partners from pair_people by count, with no window.",
+   "code_ref": "fec/surfaces/build_staffer_network_section.py:160-162 (SHARED_STAFF_NOTE); :297-298 (excluded titles); :1239-1242 (pair_people to shared_partners); :1251 (shared_staff); :1258-1266 (title exclusion applies to eligible top-staff list). Verified.",
+   "transfer_conditions": "Applies if shared_with or shared_staff is ever read as a member relationship signal. The paper's senior-only and 3-Congress specification is the comparison; shipped counts are descriptive only.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Paper numbers match the text. Code claims hold: no title filter and no window in the count; title exclusion only on the eligible top-staff list. Caveat: people tuple field 8 is len(bios); I did not trace upstream what bios holds."
+  },
+  {
+   "component_id": "melange-staffer-network.access-uncertainty",
+   "relation": "context",
+   "paper_claim": "Ties built over the current plus two prior Congresses carry the LES signal. Narrowing to a two-Congress horizon leaves the senior LES interval barely including zero (-0.0006 to 0.1088; 94% interval 0.0016 to 0.1066). This is window sensitivity, not a decay estimate.",
+   "paper_location": "p.18 (window); Online Appendix Table A1, Models 3-6 and the note on the two-congress horizon",
+   "system_side": "Access-uncertainty cost uses a fixed 5-year staleness half-life on years since last joint overlap (staleness = ln2 * age / 5). The file labels its calibration as 'Exploratory log-cost scenarios; not fitted success or friendship probabilities', and the docstring calls the costs assumptions that must not be shown as probabilities.",
+   "code_ref": "fec/staffer_network/relationship_uncertainty.py:10-14 (constants); :36-38 (staleness term); :49-55 (specification; calibration label at :54). Verified.",
+   "transfer_conditions": "Weak. The paper's window concerns member-member outcome similarity, not whether staffer-staffer relationships remain usable. It cannot calibrate the half-life.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Window interval and the not-a-decay-estimate caveat verified in the text. Code constants, staleness formula and exploratory label verified. The code does not claim calibration, so no change needed."
+  },
+  {
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "suggests-extension",
+   "paper_claim": "Members sharing senior staff have modestly correlated LES net of covariates (pooled rho 0.043). Committee chair direct effect is 1.853 (90% CI 1.376 to 2.352); indirect effect via ties is 0.442 (90% CI 0.131 to 0.826).",
+   "paper_location": "Table 1 p.23 (pooled 0.043); p.24 text (chair direct 1.853, indirect 0.442)",
+   "system_side": "The five-stage shadow score (BILL, AIC, ABC, PASS, LAW) in the cited engine file is a versioned illustrative candidate policy that requires calibration. The claim that it is validated against CEL LES for ceremonial share only is not in the cited engine file; the ceremonial-share and CEL work sits in fec/members/lep_criterion.py. I found no network-similarity check in the cited files.",
+   "code_ref": "fec/engine/legislative_effectiveness.py:1-31 (five stages; ScoringPolicy labelled illustrative, needs calibration). Validation support is in fec/members/lep_criterion.py:3-8, :31, :59, :83 (ceremonial share on CEL data), a different file from the one cited.",
+   "transfer_conditions": "Optional second criterion: shadow scores should show a similar small lag on senior-title ties if they track LES. This is UNVERIFIED, needs office_moves restricted to senior titles, and is not evidence that the shadow score is valid.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper figures verified. The shadow score is correctly described as a candidate needing calibration. The validation claim is attributed to the wrong file; the nearest support is lep_criterion.py, which pairs ceremonial share with CEL data but was not checked as a validation study."
+  }
+ ],
+ "related": [
+  {
+   "slug": "haythornthwaite-1996-social-network-analysis",
+   "relation": "complements",
+   "why": "Vault item exists; title confirms information-exchange framing of ties. Montgomery does not cite it, so the link is conceptual only."
+  },
+  {
+   "slug": "sotoudeh-2024-network-based-measure",
+   "relation": "complements",
+   "why": "Vault item exists; text contrasts its cosponsorship influence measure with LES, so the contrast is real. Its outcome is bill passing, not LES."
+  },
+  {
+   "slug": "bucchianeri-2025-legislative-effectiveness-american",
+   "relation": "same-method",
+   "why": "Vault item exists; applies the Volden-Wiseman LES framework to American states, the same outcome method with a different population."
+  },
+  {
+   "slug": "aroyehun-2026-politics-of-feelings",
+   "relation": "same-method",
+   "why": "Vault item exists; uses Volden-Wiseman LES as outcome, but the same underlying data was not verified, so same-data is downgraded."
+  },
+  {
+   "slug": "bacik-2025-measuring-dynamical-evolution",
+   "relation": "complements",
+   "why": "Vault item exists; title confirms a US lobbying network over time. Montgomery does not model lobbying, so the bracketing claim is conceptual."
+  },
+  {
+   "slug": "furnas-2019-moneyed-interests-information",
+   "relation": "complements",
+   "why": "Vault item exists; the survey experiment includes junior and senior congressional staff, which fits the staff-as-information-processor framing."
+  }
+ ],
+ "summary_issues": [
+  "Calls Montgomery's tie an office-to-office sequence link that the system emits as directed moves. The paper's W is an undirected, row-standardized co-service count over the current and two prior Congresses (p.11, fn 12, p.18). Sequence is the theory, not the operational tie.",
+  "States the window as 1997-2010. The text gives only the 105th-111th Congresses and never states years; 1997-2010 is calendar arithmetic.",
+  "Says the senior ideology result shows nothing (-0.003). Strictly, the paper says only that it is not reliably distinguishable from zero (95% CI -0.029 to 0.020); Table 3 has 4 of 7 Congress estimates positive, so the summary's flat reading is a fair shorthand but not a finding of no effect."
+ ]
+}

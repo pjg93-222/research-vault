@@ -1,0 +1,127 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-lobbying.fec-lda-bridge",
+      "relation": "qualifies",
+      "paper_claim": "Firm-politician-year LPMs (Table 3, N=16,428,834, public manufacturing firms NAICS 31-33 x members of Congress, 2008-2017): a first-time donation in year t raises P(firm lobbies a bill the politician sponsored, cosponsored or handled in committee, same year) by 0.102-0.118 (cols 1-4), against a base of about 0.05. The table text sets L = t-1; the matched DiD uses a 3-year no-donation history (L=3). Matched DiD (Fig 5): about +8.5 pp at t for the Senate, falling to about 3 pp (caption: 3.2) at t+3; the House is described as stronger but no number is given. Fig 6: effects larger for corporate PACs and particularly stronger for committee membership; the authors say the effects disappear within two to three years.",
+      "paper_location": "Sec 3.1 Table 3 and text (printed p. 15-17); Sec 3.2 Figs 5-6 (printed p. 18-22); Appendix E Fig E.1",
+      "system_side": "Bridge round 3 is a LOCKED corroboration look: X = FEC relational exposure, Y = rebuilt LDA attention, per member x industry (credit_union, fintech, crypto) x cycle, 2023-2026; pooled fractional-rank Spearman with member-blocked permutation (5,000) and four controls (party, chamber, volume-within-party, House Financial Services / Senate Banking membership). Recorded result: raw rho +0.1525 (member-blocked p=0.0146), four-control partial -0.0002; UNCORROBORATED, window CLOSED, predictor language barred. The brain's '42-month lead' (lobbyview-collector.md:124; memory lda_bridge.lead_months=42) is a data-freshness gap (FEC data runs about 42 months past LobbyView coverage), not a measured behavioral donation-to-lobbying lag.",
+      "code_ref": "fec_lda_bridge3_prereg.md:1-30,95-115,285-290; fec/lobbying/fec_lda_bridge3_look.py:30-60 (YEARS, INDUSTRIES, PERMUTATIONS, CONTROL_NAMES incl. committee); brain actors/lobbyview-collector.md:124,137",
+      "transfer_conditions": "Estimands differ: Kim identifies within-pair onset timing (pair FE or matched DiD on first-time donations) among public manufacturing firms; the bridge is a between-member cross-section over concurrent windows dominated by financial trade associations. The bridge Y credits only sponsor and cosponsor rosters, so the committee-referral outcome channel that carries Kim's strongest effect is absent; the bridge's committee control is a covariate (Kim also controls for 'powerful committee' membership), so 'controls away Kim's channel' is an interpretation, not a demonstrated fact. Appendix E's trade-association slope (beta 0.8 vs corporations beta 2) is a cube-root, 1999-2000, organization-level replication of Ansolabehere et al., not Kim's dyad design. So the bridge null does not refute Kim and Kim does not license predictor language. Kim does NOT bear on the '42-month lead' as written, because that number is a data-recency gap, not a behavioral lead; at most Kim argues against reading it as one. A successor onset/pair/committee-referral test is a new prereg and Paul's gate.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers confirmed in text (0.105/0.102/0.103/0.118; N 16,428,834; base about 0.05; 8.5 pp Senate t; 3 / 3.2 pp at t+3; House 'even stronger'; Groseclose-Stewart covariate). Corrected: Table 3 states L = t-1, the 3-year window belongs to the DiD; 'gone within 2-3 years' conflicts with the 3.2 pp still shown at t+3 in Fig 5 (the 2-3 year sentence is the authors' Fig 6 gloss). Code side confirmed (prereg lines 285-290 give rho +0.152525809416, p 0.014597080584, partial -0.000204468398; CONTROL_NAMES line 57). Corrected the 42-month framing: the brain line and memory define it as FEC-vs-LobbyView data freshness, so 'Kim contradicts the 42-month lead' was a category error."
+    },
+    {
+      "component_id": "melange-lobbying.lobbied-member-link",
+      "relation": "qualifies",
+      "paper_claim": "Outcome Y=1 if firm i lobbies any bill in year t related to politician j as sponsor, co-sponsor, or member of the committee the bill is assigned to. For the descriptive Lobby $ column, a firm's annual lobbying spend is divided by the number of unique bills lobbied and the per-bill amount is allocated across all connected politicians (sponsor, co-sponsors, committee members); the authors call this a highly noisy measure and use the binary link in the analysis. Donation onset is the separately measured treatment.",
+      "paper_location": "Sec 2.1 data (printed p. 7-8, Table 1 note); Sec 3.1 outcome definition (printed p. 15)",
+      "system_side": "The shipped network credits every sponsor and cosponsor of each lobbied bill (build_network_2021_rebuild.py docstring line 13; lobby_interactions.py:4-5 'did this organization lobby a bill this member sponsored or cosponsored'). The brain records the lobbied-member link as circular (P(joined | lobbied)=1 by construction); LD-2 never names members. committee_referrals is parsed (build_network_2021_rebuild.py:5466-5697) but not used to credit members.",
+      "code_ref": "fec/lobbying/lobby_interactions.py:4-5; fec/lobbying/build_network_2021_rebuild.py:13,5466,5697; brain actors/lobbyview-collector.md (Lobbied-member link is circular, 2026-08-19)",
+      "transfer_conditions": "Kim uses the same roster join only as an outcome against an independently timed treatment (donation onset), the non-circular use. That supports keeping the join as 'whose bills did this org lobby on', never as contact. Kim adds a committee-referral channel the system's join lacks. The paper gives no warrant to read the join as contact. Adopting Kim's dollar allocation would make LDA a weight source (barred by D-021).",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Outcome definition and the 'highly noisy measure' wording confirmed. Corrected 'spread evenly': the paper divides by the number of bills and 'allocates' across connected politicians without stating an even split. Allocation is for the descriptive Lobby $ column, not the analysis outcome. Code-side docstrings confirmed."
+    },
+    {
+      "component_id": "melange-lobbying.contact-inference",
+      "relation": "suggests-extension",
+      "paper_claim": "The DiD design keys on first-time donations (firm i gives to politician j for the first time in L=3 years). The effect appears in year t and declines (Senate about 8.5 pp to about 3 pp by t+3). Corporate PAC donations show larger effects than CEO or employee donations, though all show ties. Effects are particularly stronger for committee membership.",
+      "paper_location": "Sec 3.2 (printed p. 18-22), Figs 5-6",
+      "system_side": "DRAFT spec channel C3 (donation co-occurrence): org-PAC and (with Gate G1) lobbyist money reaching member m near quarter q, as gave-in-quarter, gave-in-cycle and amount tiers; zero = no-evidence; binding bar on donation-predicts/causes wording. C2 = dated committee activity on cited bills as venue relevance. Fused feature budget hard cap 10.",
+      "code_ref": "C:/Users/pgoff/Documents/research/_text/c764c9505505.txt:165-185,258-265 (DRAFT spec); brain topics/2026-07-feature-data-collection-lanes-contact-inference-design-and-evaluation.md:43-55",
+      "transfer_conditions": "Design hints only: an onset feature (first gift to m in 3 years) instead of gave-in-cycle, a short decay horizon, and a C2 x C3 interaction. They must fit the 10-feature cap and the prereg/one-look discipline. Kim's outcome is lobbying a related bill, not contact, so the paper cannot serve as validation (LobbyView-as-validation is barred). Sample transfer is weak: public manufacturing firms vs financial associations and CUs.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "L=3 first-time definition (text near Fig 4), decay, PAC > CEO/employee, and committee emphasis confirmed. Spec lines 165-185 and the brain topic lines 43-55 confirm C2/C3, the zero-is-no-evidence guard, the language bar and the 10-feature cap."
+    },
+    {
+      "component_id": "moneyball-rank-pillars.committee-pillar",
+      "relation": "supports",
+      "paper_claim": "Donation-linked lobbying effects are particularly stronger for the committee-membership channel than for co-sponsorship or sponsorship; the authors read this as firms targeting politicians with legislative power over their interests (committee jurisdiction over the firm's industry).",
+      "paper_location": "Sec 3.2 Fig 6 and text (printed p. 21-22)",
+      "system_side": "Influence% = committee score / max, where committee score = (Membership + Leadership)/2 from tiered seats (Highly 3.0 / Moderately 1.8 / Slightly 0.9; subcommittee 1/6; Chair/Ranking/Vice leadership multipliers); weighted 40% in the composite.",
+      "code_ref": "fec/engine/committee_scores.py:24-37; fec/engine/compute_pillars.py:11-12",
+      "transfer_conditions": "Only the qualitative point carries: money and lobbying converge on members holding jurisdiction. Nothing about tier weights, the 1/6 factor or the leadership ladder. Kim's 'powerful committee' covariate is Groseclose-Stewart (Appropriations, Armed Services, Finance, Rules and Administration), not Financial Services or Banking. Committee outcome also has a higher base rate than sponsorship (fn 13), so 'stronger' partly tracks channel breadth. Sample is manufacturing firms.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Fig 6 text and fn 11 committee list confirmed; tier weights, 1/6 and 40% Influence weight confirmed in code (line ranges corrected to where the rule and Score formula actually sit)."
+    },
+    {
+      "component_id": "mentat-fec-attribution.identity-ladder",
+      "relation": "method-source",
+      "paper_claim": "FEC has no unique donor IDs (about 53M itemized individual contributions 1980-2018, 4M employer names, about 827,000 occupation names). Authors match PAC and employer names to Compustat gvkey and occupations to SOC codes (executives 11-1011, government relations 27-3030), standardize names with NLP as in Bonica (2017), and run unsupervised constrained graph clustering on address, donation history and targets; employer and occupation matches are cross-validated against a hand-coded ground truth and corporate PAC matches checked and revised manually.",
+      "paper_location": "Sec 2.1 data (printed p. 6-7)",
+      "system_side": "identity_match_ladder in Mentat collect.R: AUTO (exact name + same zip), HIGH (exact name + same zip cross-employer, exact name + same city, nickname + same zip), REVIEW (suffix mismatch, nickname + same city, exact name + state + similar occupation, employer contradiction), else DISCARD. No name-frequency weighting in this function. Employer agreement is tested against company_variants.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:2087-2156",
+      "transfer_conditions": "Both work on FEC Schedule A, so the method transfers in kind. The paper reports no precision or recall, so it is a design reference, not a benchmark. Adopting clustering would loosen Mentat's rule-based ladder, and receipt-counting is frozen without per-change OK; any change is Paul's. The transferable piece is a hand-coded labelled sample to measure the ladder's precision and recall.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper side confirmed in the body text of p. 6 (fn 6 itself only mentions a planned GNN). Ladder levels confirmed at collect.R:2087-2156. Removed 'strict-names roster': no 'strict name' string exists in collect.R or Mentat/R; employer match is via company_variants."
+    },
+    {
+      "component_id": "melange-influence-engine.flip-model",
+      "relation": "qualifies",
+      "paper_claim": "Lobbying links follow first-time donations immediately and decline over the next three years; the paper measures lobbying-legislative links, not votes, and cites Fowler, Garro and Spenkuch (2020) for no quid-pro-quo returns to corporate PAC donations even if donations buy access.",
+      "paper_location": "Abstract (printed p. 1); Sec 3.2 (printed p. 20-22); Conclusion (printed p. 23-24)",
+      "system_side": "WM=0.35, WP=0.65 with code comment 'money is the minority partner ... money buys access/effort > votes'. CU money (congestion.json cu) and competitor money (banks+finserv) enter as static levels with Michaelis-Menten saturation on receipts (HALFF). No onset or recency term.",
+      "code_ref": "fec/engine/flip_model.py:3-6,19,32-36",
+      "transfer_conditions": "Consistent with the access-not-votes stance but gives no vote-shift evidence, so it cannot calibrate WM/WP or HALFF. It implies the lobbying-link value of money is onset-driven and transient, which a static cycle-level money term ignores. Sample is public manufacturing firms; the system models CU/bank money.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Code confirmed. Location corrected: the Fowler et al. citation is in the conclusion (text near the reference list), not the intro."
+    }
+  ],
+  "related": [
+    {
+      "slug": "kim-2023-systemic-sequential-links",
+      "relation": "same-data",
+      "why": "Later version of the same Kim-Stuckatz-Wolters project (title 'Systemic and Sequential Links...', the title Paul cites as JOP 2026). Where estimates differ, compare before preferring either; this 2020 draft does not itself reference the later version."
+    },
+    {
+      "slug": "kim-nd-mapping-political-communities",
+      "relation": "builds-on",
+      "why": "The paper states its lobbying data 'build on the data set assembled by Kim and Kunisky (2020)' (fn 4)."
+    },
+    {
+      "slug": "kim-2018-lobbyview-firm-level",
+      "relation": "builds-on",
+      "why": "LobbyView (Kim 2018) is cited as the public source of the firm-bill lobbying data."
+    },
+    {
+      "slug": "kalla-nd-campaign-contributions-facilitate",
+      "relation": "cites",
+      "why": "Kalla and Broockman (2016) is cited as experimental evidence that donations facilitate access; this paper is the observational, firm-dyad counterpart."
+    },
+    {
+      "slug": "furnas-nd-conflating-lobbying-pacs",
+      "relation": "complements",
+      "why": "Both document low overlap between lobbying and PAC giving with the overlapping group holding most money (Kim, 2013 public firms: 519 of 11,829, about 4%, hold 85% of $3.1B; Furnas, 1998-2018 pooled organizations: 6.3% do both, about 75% of lobbying spend). Not cited by Kim."
+    },
+    {
+      "slug": "huneeus-2018-effects-firms-lobbying",
+      "relation": "cites",
+      "why": "Huneeus and Kim (cited as 2019) is cited for strong returns to corporate lobbying, contrasted with the absence of quid-pro-quo returns to donations."
+    },
+    {
+      "slug": "bonica-2013-mapping-ideological-marketplace",
+      "relation": "cites",
+      "why": "Cited as Bonica (2014) when the authors warn that donation-based ideology scores may reflect strategy rather than ideology. The name-standardization reference is to a different work (Bonica 2017, DIME)."
+    },
+    {
+      "slug": "bombardini-2020-empirical-models-lobbying",
+      "relation": "cites",
+      "why": "Bombardini and Trebbi (2020), Annual Review of Economics, is cited as part of the firm-level lobbying literature the paper positions itself in."
+    }
+  ],
+  "summary_issues": [
+    "'A first-time donation (no gift in the prior 3 years)' is attached to the FE estimates; Table 3's text sets L = t-1, and the 3-year (L=3) window is the DiD's definition.",
+    "'Its effect is concurrent and gone within two to three years' sits beside 'falling to about 3 points by t+3'; Fig 5 still shows about 3.2 pp at t+3. The 2-3 year disappearance is the authors' gloss on Fig 6.",
+    "The claim that the paper 'cuts against the system's FEC leads LDA by 42 months heuristic' is a category error: in the brain (lobbyview-collector.md:124) and memory, 42 months is the FEC-vs-LobbyView data freshness gap, not a measured behavioral lag.",
+    "'The bridge design actually controls away the channel Kim finds strongest' overstates: Kim's committee channel is part of the outcome definition (lobbying bills referred to the member's committee), and Kim also controls for powerful-committee membership; the bridge's real gap is that its Y lacks the committee-referral channel.",
+    "'Matched difference-in-differences gives about 8.5 points' is the Senate figure; the abstract presents 8.5 pp without the chamber split and the House is only described as 'even stronger'. Quote as Senate, year t, or label UNSTRATIFIED.",
+    "Related link imai-2021-fixed-effects-regression removed: this paper does not cite Imai and Kim (2021); it cites Imai, Kim and Wang (2020) for matched TSCS DiD, so 'Imai and Kim's critique motivates the switch' is unsupported.",
+    "Bonica link: the paper cites Bonica 2017 (DIME) for name standardization, not 'Bonica's DIME donor data', and cites Bonica 2014 (the related item) only for the ideology-score caveat."
+  ]
+}

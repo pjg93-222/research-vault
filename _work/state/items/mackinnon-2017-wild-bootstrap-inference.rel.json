@@ -1,0 +1,73 @@
+{
+ "summary_md": "MacKinnon and Webb (Queen's WP 1314, corrected 2019; JAE 2017) study when cluster-robust (CRVE) t tests with t(G-1) critical values give correct size, and when the wild cluster bootstrap does better. Using Monte Carlo designs with 50 or 100 clusters sized like U.S. states (4 to 242 observations), CPS placebo laws (547,518 obs, 51 states) and a Colombian replication, they show the rule of 42 fails once cluster sizes are unequal: t(G-1) rejects up to 0.107 at nominal .05 with 50 state-sized clusters and 0.084 even with 100. The restricted wild cluster bootstrap (WCR) stays near .05 in those designs (0.049 to 0.053). The bootstrap breaks when few clusters are treated: with one treated cluster of 50 the t(G-1) test rejects 77.75 percent of the time while the WCR never rejects; WCR is safe roughly for 7 <= G1 <= G-7 with equal clusters and 6 <= G1 <= G-5 with unbalanced clusters at G of 20 to 32. The effective-clusters G* correction is erratic. Rademacher weights are not advised below about 12 clusters. For Paul's systems the paper is the method source for one component: the Mentat sector growth study already runs a WCR bootstrap-t by sector with Webb six-point weights, enumerating all 6^G draws when small, and labels per-sector terms resting on one cluster DESCRIPTIVE, which matches the paper's G1 = 1 warning. The open point is scale: the study runs with 3 to 9 sector clusters, below the 12-cluster floor of every design the paper tests, so the paper supports the procedure choice but does not certify its size at G = 9 or 5. No network, lobbying-edge or influence claim follows.",
+ "category": "Causal & Methodological",
+ "bearings": [
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "method-source",
+   "paper_claim": "With unequal state-sized clusters, CRVE t(G-1) overrejects (0.058 to 0.107 at nominal .05, G = 50; up to 0.084 at G = 100) while the restricted wild cluster bootstrap stays at 0.049 to 0.053; the paper recommends WCR over t(G-1) and over G* critical values.",
+   "paper_location": "Sections 3-4, Tables 1-4 (pp.6-10); Section 9 conclusions",
+   "system_side": "Every focal coefficient is tested with a wild cluster restricted bootstrap-t by sector, null imposed, CR1 SE in the statistic, symmetric two-sided p, test-inverted 95 percent CI, B = 9,999 or full enumeration.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:4-12; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:59-63",
+   "transfer_conditions": "Paper designs are linear models with G from 12 to 200 and a binary or continuous regressor; the study's regressors are continuous sector growth and year-level terms on a near-balanced sector-year panel, so cluster sizes are roughly equal and the unequal-size failure of t(G-1) is less acute than in the paper's state designs.",
+   "strength": "strong"
+  },
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "qualifies",
+   "paper_claim": "All evidence is for G >= 12 (Appendix A.6 tests G = 12 to 32); the authors note Rademacher weights should not be used below about 12 clusters and point to Webb (2014) for that regime, and say safe G1 cutoffs are data dependent.",
+   "paper_location": "Section 3 step 4 (p.5, Webb 2014 note); Section 6 (p.19); Appendix A.6 (p.39)",
+   "system_side": "The study clusters by its nine sectors, fewer for LobbyView tests (bootstrap inference at >= 3 sector clusters, DESCRIPTIVE below), and uses Webb six-point weights with exact enumeration when 6^G <= 9,999; the p floor 2/6^G is printed.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:113; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:258-260; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_rng.R:231",
+   "transfer_conditions": "The paper supports WCR in principle but gives no rejection rates at G = 3 to 9; size of the study's bootstrap p-values at 5 or 9 sectors is unverified by this paper and would need the study's own simulation (or Webb 2014) to certify.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "supports",
+   "paper_claim": "When only one cluster carries the treatment variation (G1 = 1), the CRVE t(G-1) test rejects 77.75 percent of the time at .05 and the WCR bootstrap essentially never rejects; neither is usable, and both fail when G1 or G - G1 is below about 4 to 7.",
+   "paper_location": "Section 6, Figure 4 and text (pp.16-19)",
+   "system_side": "Per-sector terms resting on one sector cluster and saturated SHIFT terms are labelled DESCRIPTIVE with bootstrap lines as reference only; the review adds per-year shares of absolute OLS weight (temporal support) for each focal term.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:11-14; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:440-480",
+   "transfer_conditions": "The paper's G1 is a count of treated clusters for a binary DiD regressor; for continuous growth terms the analogue is how concentrated the OLS weight is across sectors, which the study reports for years but not as a per-sector weight share.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "supports",
+   "paper_claim": "t-based cluster inference with G - 1 df overrejects under unequal clusters even at G = 100 (rule of 42 fails), so CRVE t p-values with few groups should not be trusted as primary inference.",
+   "paper_location": "Section 4, Tables 2 and 4 (pp.7-10); Section 7 (pp.21-23)",
+   "system_side": "The two-way sector-by-year CR1 SE with min(G_sector, G_year) - 1 df is computed only as a sensitivity when both dimensions have >= 3 clusters, explicitly not the study's inference.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-10",
+   "transfer_conditions": "The paper studies one-way clustering only; two-way CRVE is not tested, but its t(G-1) warning applies a fortiori with 9 sectors and about 7 years.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "No size check of the WCR bootstrap at the study's actual cluster counts (3 to 9 sectors); the paper's evidence starts at G = 12, so a placebo or simulated-null rejection rate on the study's own design would be needed before bootstrap p-values are read as correctly sized.",
+  "No per-sector OLS-weight (leverage) share is reported for focal growth terms, the continuous-regressor analogue of the paper's G1 problem; leave-one-sector-out refits exist but are EXPLORATORY with HC1 only.",
+  "The H5 champion-clustered tests (bioguide clusters, about 21 members) likely have unequal cluster sizes, the regime where the paper shows t(G-1) overrejection; whether the study reports cluster-size spread for those clusters was not confirmed."
+ ],
+ "flags": [
+  "Brain note records 5 clusters for the lobbying and champion reading and the reply that it is supportive, not confirmed; the paper reinforces that caution since it gives no validation for WCR below 12 clusters.",
+  "No conflict with D-021, D-025, D-104..D-108 or the rejected SNA proposals; the paper has no network or lobbying content."
+ ],
+ "paul_alignment": "Paul has no annotation entry for this work and no markup. The system as built already follows the paper's main recommendation (restricted wild cluster bootstrap over t(G-1), Webb weights for few clusters, DESCRIPTIVE labels when one cluster carries the variation), so the paper agrees with the design choice. It does not settle whether the bootstrap is correctly sized at 5 to 9 sectors, consistent with the brain's supportive-not-confirmed reading.",
+ "related": [
+  {
+   "slug": "zeileis-nd-various-versatile-variances",
+   "relation": "complements",
+   "why": "Zeileis documents the R implementation of the CRVE family (CR1, multiway clustering) whose few-cluster t(G-1) inference MacKinnon and Webb show overrejects; together they cover how the study's CR1 and two-way SEs are computed and why they are only sensitivities."
+  },
+  {
+   "slug": "imai-2021-fixed-effects-regression",
+   "relation": "complements",
+   "why": "Imai and Kim address what two-way fixed-effects panel estimates identify; MacKinnon and Webb address inference on those estimates with few, unequal clusters. The sector growth study's year-FE sensitivity needs both."
+  },
+  {
+   "slug": "callaway-2025-difference-differences-continuous",
+   "relation": "complements",
+   "why": "Callaway et al. cover identification in DiD with a continuous treatment like sector growth; MacKinnon and Webb cover cluster inference for DiD, mainly binary treatment with few treated clusters."
+  }
+ ]
+}

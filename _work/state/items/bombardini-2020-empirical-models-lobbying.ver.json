@@ -1,0 +1,189 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-influence-engine.flip-model",
+      "relation": "supports",
+      "paper_claim": "Kang (2016) structural Tullock-contest model of energy policy (538 policies in 445 bills, 110th Congress): lobbying raises enactment probability by only 0.021%-0.415% relative to an 8% baseline, while average returns to lobbying are estimated at 137% (renewables) to 152% (oil and gas). The review reads both as possible misspecification. The separate point that observable contributions miss other influence channels comes from the Farm Bill / Bombardini and Trebbi (2011) discussion, not from Kang.",
+      "paper_location": "Sec. 3.1, pp.398-400",
+      "system_side": "pflip = a/(a+b), where money is the minority partner (WM 0.35 vs peer weight WP 0.65). The money term saturates relative to the member's receipts (HALFF 0.10), on the stated premise that money buys access and effort more than votes.",
+      "code_ref": "fec/engine/flip_model.py:3-7,21,34",
+      "transfer_conditions": "Kang measures firm lobbying expenditure against provision-level enactment in the energy sector. Melange's money leg is PAC contributions against member-level winnability on CU topics. The review supports only the direction (small marginal effect of money), not the WM/WP split or the HALFF constant, which remain unestimated design choices. The evidence is federal and from 2007-08.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Numbers confirmed at text lines 343, 379-380, 399-402 (pp.398-399). The original claim attributed the 'channels observable money does not capture' reading to Kang; the review makes that point via Ansolabehere et al. and Bombardini and Trebbi 2011 (p.400). HALFF is defined at line 34. Code side confirmed."
+    },
+    {
+      "component_id": "melange-allocation.break-even-and-roi",
+      "relation": "qualifies",
+      "paper_claim": "Kang's model implies an average policy value of more than $500m, and the Farm Bill comparison gives a naive return of 600,000% ($22bn in 2000 subsidies vs under $3.7m in agribusiness PAC contributions that cycle). The review says excessive returns are common in this literature. Adding an electoral-vote channel (Bombardini and Trebbi 2011: $200-$400 per vote) lowers the Farm Bill figure to $13.7 per dollar, which the authors call still high but more reasonable; B&T's simulations give average returns of 10%-20% per year. The conclusion notes some structural models display symptoms of misspecification.",
+      "paper_location": "Sec. 3.1, pp.399-400 and n.17; Sec. 6 conclusions",
+      "system_side": "Saturating share-type money term in shift_lean (money_response.py) that break-even computations share. The dashboard template exists at fec/surfaces/templates/make_dashboard_html_00.tpl; no roi_verify.py was found in the repo, so the claim about ROI floors checked by roi_verify.py is unconfirmed.",
+      "code_ref": "fec/engine/money_response.py:68-75 (shift_lean saturating form); fec/surfaces/templates/make_dashboard_html_00.tpl (path only)",
+      "transfer_conditions": "This is a caution about any ROI read off contribution-to-outcome ratios. It applies whenever dashboard ROI floors are presented as returns. It does not invalidate the break-even algebra, which is internal to the model. Any ROI shown should carry an UNVERIFIED or model-output label.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers confirmed (lines 400-402, 433, 458-462, 492-495). 'Returns become reasonable' overstated: the paper says $13.7 per dollar is 'still a high figure'. Template path was wrong (fec/templates -> fec/surfaces/templates); roi_verify.py not found by fd in the Melange repo."
+    },
+    {
+      "component_id": "melange-influence-engine.money-response-defection",
+      "relation": "supports",
+      "paper_claim": "Structural work finds a very small marginal enactment effect of lobbying (Kang 0.021%-0.415%) despite large stakes, and campaign contributions are low with federal donation caps very seldom binding (Ansolabehere et al. 2003, as reported).",
+      "paper_location": "Sec. 3.1, pp.398-400",
+      "system_side": "MAXSHIFT was cut from 40 to 18 on the premise that money moves positions little. A defection requires a donation of about one sixth of the member's receipts, so a $10k gift shifts median receipts by about 0.9 lean, far below DTHRESH 11.25.",
+      "code_ref": "fec/engine/money_response.py:15-25",
+      "transfer_conditions": "The review addresses enactment and bill outcomes, not shifts in individual member stance. It supports rare money-triggered defection but not the LOSSFRAME 1.10 asymmetry or the specific constants.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Paper lines 379-380, 452-455; code comments at MAXSHIFT and DTHRESH confirm 40->18, ~1/6 receipts and ~0.9 shift."
+    },
+    {
+      "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+      "relation": "supports",
+      "paper_claim": "Lobbying is persistent: 92% of firms that lobby in a given year also lobby the next (Kerr et al. 2014), explained by large sunk costs. Conditional on lobbying, the elasticity of lobbying expenditure to firm sales is around one (Huneeus and Kim 2019).",
+      "paper_location": "Sec. 2.2, p.397",
+      "system_side": "The lobbying projection is an in-year nowcast (amount filed so far plus (1-s) times the prior full year), carried forward unchanged. Its bands come from LobbyView persistence error. The earlier year-effect slope model never beat last-period naive (G9).",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:1290-1297",
+      "transfer_conditions": "The 92% figure is a firm-level extensive-margin rate (does a firm lobby at all), not dollar-level persistence for an industry. The review offers no evidence on how lobbying dollars move within a cycle.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Text lines 293-297; code comment block confirmed. Dropped the unsupported aside that sector aggregation smooths levels further (analyst inference, not in paper)."
+    },
+    {
+      "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+      "relation": "supports",
+      "paper_claim": "Bertrand et al. (2014), about 37,000 active lobbyists over 1999-2008: the share of in-house LOBBYISTS fell from nearly 60% to under 40%, and the roughly 30% growth in lobbying expenses was almost entirely due to external lobbying, which doubled.",
+      "paper_location": "Sec. 2.1, pp.395-396",
+      "system_side": "The lobbying card shows hired-firm income and in-house expenses side by side and never adds them. The sector-growth config records that the undifferentiated LobbyView sum double-counts self-filers' outside-firm fees (a median of 9-26% by sector).",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:553-562; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:80-81,119-120",
+      "transfer_conditions": "The 60%->40% figure is a share of lobbyists (headcount), not of lobbying dollars, over all federal LDA lobbying 1999-2008. No finance or CU sector breakdown is reported, so this supports showing the two channels separately but provides no sector-specific shares.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper line 245-248 says 'share of in-house lobbyists', not share of lobbying; corrected. 37,000 appears on p.395. Code confirmed ('never added here'; double-count note at sgs_config.R:119)."
+    },
+    {
+      "component_id": "melange-lobbying.finance-client-classification",
+      "relation": "supports",
+      "paper_claim": "Bombardini and Trebbi (2012) report an average share of lobbying by individual firms of 67% (median 96%); industries with lower concentration and lower product differentiation spend a higher share of lobbying through trade associations. Huneeus and Kim (2019) put business-association lobbying at less than a quarter of all lobbying expenses.",
+      "paper_location": "Sec. 2.2, p.397 and n.11",
+      "system_side": "Finance clients are classified bank, CU or other from client names. The brain records that directional positions sit with trade associations (CUNA 174 Support / 12 Oppose, NAFCU 168 Support / 23 Oppose; the 22 pinned fintech and crypto firms hold 1 directional position out of 56). ABA lobbying is $228M against CUNA's $93M.",
+      "code_ref": "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md:93-97,102,132",
+      "transfer_conditions": "The prediction is cross-industry, from Bombardini and Trebbi's 2012 trade-issue sample. The review gives no CU-specific figure.",
+      "strength": "moderate",
+      "verdict": "reproduced",
+      "verifier_note": "Paper lines 298-302, 335-336. Brain lines 102 and 132 confirmed verbatim. Added the Huneeus-Kim under-a-quarter counterpoint the paper gives in the same note. Dropped the analyst assertion that CUs are an 'extreme low-concentration industry' (not in paper)."
+    },
+    {
+      "component_id": "melange-pathfinding.staffer-closeness-routes",
+      "relation": "suggests-extension",
+      "paper_claim": "Former Senate staffers turned lobbyists experience a persistent 24% drop in lobbying revenues when their connected senator exits office (Blanes i Vidal et al. 2012); drops are larger for connections on Finance, Appropriations or Ways and Means and statistically insignificant otherwise. Bertrand et al. (2014) find lobbyists take up new issues as the politicians they contacted change committee assignments. The review flags B-i-V's exogeneity of senator exit as a strong assumption.",
+      "paper_location": "Sec. 3.2.2, pp.404-405",
+      "system_side": "Route cost uses time-decayed exposure (5-year staleness half-life), workplace concentration, and a member-context modifier built from cosponsor-graph proximity times eigenvector centrality. Neither file reads whether the anchoring member is still serving; member_context.py explicitly refuses staff or committee affiliation layers.",
+      "code_ref": "fec/staffer_network/relationship_uncertainty.py:11-41; fec/staffer_network/member_context.py:34-66,87-88",
+      "transfer_conditions": "The evidence measures lobbyists' revenue, not introduction success, closeness or influence. Under D-025 and the revolving-door wording rule, an added term may be described only as dependence on the patron's current office, never as access or influence. The review text does not state Blanes i Vidal's sample years. Absence of an office/committee term was checked only in these two files, not repo-wide (UNVERIFIED as a system-wide gap).",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper lines 671-706, 717-729 confirmed. The original transfer_conditions asserted 'senators' staff from 1998 to 2008'; the review gives no sample period for B-i-V, so removed. Code confirmed for the two cited files."
+    },
+    {
+      "component_id": "melange-lobbying.contested-bills",
+      "relation": "suggests-extension",
+      "paper_claim": "Kang (2016) models lobbying as Tullock contests among four energy coalitions, mapped at the level of policy provisions decoupled from bills. Policies with no lobbying are enacted about 1% of the time and those with two or more lobbying players about 24%, which the review says implies substantial selection. The structural effect of lobbying is much smaller (0.021%-0.415%); entry has multiple equilibria resolved by a selection assumption.",
+      "paper_location": "Sec. 3.1, pp.397-399, n.12, n.14",
+      "system_side": "A per-bill contested or advisory registry with explicit counterparty industries. The loader has shipped. No engine consumer exists, and the CONTESTED_V1 dial is only planned.",
+      "code_ref": "fec/lobbying/contested_bills.py:2-15,33-42",
+      "transfer_conditions": "A contest success function is a candidate form for the planned counterparty term, but Kang's model carries misspecification symptoms and selects among multiple equilibria by assumption. The 1% vs 24% contrast reflects selection and must not be quoted as a lobbying effect. Weighting contests by LDA spend would conflict with D-021.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Paper lines 343-368, 379-380; code docstring confirms no consumer and future CONTESTED_V1."
+    },
+    {
+      "component_id": "melange-allocation.stance-money-gate",
+      "relation": "supports",
+      "paper_claim": "Hall and Deardorff (2006) treat information as a subsidy to resource-strapped legislators, which explains why lobbyists lobby friendly legislators and questions the persuasion role. Hirsch et al. (2019; FARA contacts, 219 foreign-interest lobbyists, 110th-111th Congress) find any lobbying contact is more likely for lobbyists ideologically aligned with the politician.",
+      "paper_location": "Sec. 4, p.407 and n.32",
+      "system_side": "Members whose overall tier is Skeptic, Highly Skeptical or Opponent are blocked as money targets in the allocators (per_topic_flip, optimize; lt_priming and dashboard hold copies). The gate fails open for members with no matrix row.",
+      "code_ref": "fec/moneyball_core.py:717-729",
+      "transfer_conditions": "The contact evidence concerns foreign-principal lobbyists under FARA, not domestic PAC dollars. It is consistent with funding allies but does not test whether contributions to opposed members change their positions.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Paper lines 810-812, 832-846, n.32; code confirmed. Page narrowed to p.407."
+    },
+    {
+      "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+      "relation": "qualifies",
+      "paper_claim": "Huneeus and Kim (2019; LobbyView-Compustat): 766 of 7,646 US public firms lobbied in 2017; lobbying firms have almost four times the revenue of non-lobbying firms; conditional on lobbying, the elasticity of lobbying to sales is around one. Using committee-assignment shocks for identification, a 10% increase in lobbying produces a 3% increase in revenue.",
+      "paper_location": "Sec. 2.2, pp.396-397; Sec. 3.1, p.401",
+      "system_side": "Sector-year regressions of giving and lobbying on lagged sector growth with year-FE variants; the cited code handles year-FE variants (no within-sector variation in sector-only regressions). The reported results (lobbying lead flips sign under year FE; growth adds no adjusted R2) are not visible at the code_ref and are UNVERIFIED here.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:384-398",
+      "transfer_conditions": "The review's figures are firm-level cross-sectional size elasticities and a firm-level revenue effect. They do not predict a within-sector growth-to-spending effect once year shocks are absorbed, so a sector-year null does not conflict with them. They should not be cited as support for a deep-pockets hypothesis at sector-year grain.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper lines 283-294, 520-528 confirmed. Code lines only show year-FE strata handling; the result claims belong to study outputs, not this code, so marked UNVERIFIED."
+    }
+  ],
+  "related": [
+    {
+      "slug": "huneeus-2018-effects-firms-lobbying",
+      "relation": "cites",
+      "why": "The review cites Huneeus and Kim (2019 manuscript version of this paper): 22% productivity loss from lobbying, 59/41 misallocation-vs-entry split, committee-assignment identification, and a caution that uniqueness of the minimizing parameter vector is not assured."
+    },
+    {
+      "slug": "kim-2018-lobbyview-firm-level",
+      "relation": "cites",
+      "why": "The review cites Kim (2018) LobbyView as the state-of-the-art Compustat-linked lobbying data set used by Huneeus and Kim."
+    },
+    {
+      "slug": "alexander-nd-lobbying-analysis-under",
+      "relation": "complements",
+      "why": "The review's warning that returns computed from observable political spending are routinely implausible applies to Alexander's ROI estimate."
+    },
+    {
+      "slug": "furnas-nd-conflating-lobbying-pacs",
+      "relation": "complements",
+      "why": "Both separate lobbying from PAC money; the review puts total lobbying at $3-3.5bn a year against $200-250m in yearly PAC donations."
+    },
+    {
+      "slug": "kalla-nd-campaign-contributions-facilitate",
+      "relation": "complements",
+      "why": "The review's account of money as access with small measured policy effects is consistent with Kalla and Broockman's evidence that contributions buy access."
+    },
+    {
+      "slug": "kim-2025-measuring-interest-group",
+      "relation": "complements",
+      "why": "Kang's mapping of lobbying to provision-level policies required extensive NLP preanalysis; position extraction from lobbying reports addresses the same problem."
+    },
+    {
+      "slug": "holyoke-2015-learnable-skills-unteachable",
+      "relation": "complements",
+      "why": "The review's access-versus-expertise evidence (Bertrand et al. 2014) bears on which lobbying skills are teachable."
+    },
+    {
+      "slug": "bonica-2013-mapping-ideological-marketplace",
+      "relation": "complements",
+      "why": "The review uses DIME campaign-finance ideology scores, citing Bonica (2016) DIME database rather than this 2013 paper; same scoring lineage."
+    },
+    {
+      "slug": "kim-2020-strategic-sequential-links",
+      "relation": "complements",
+      "why": "Both treat donations and lobbying as linked instruments; the review stresses multiple influence tools used simultaneously with substitution patterns (Bombardini and Trebbi 2011)."
+    },
+    {
+      "slug": "bickmore-2025-corporate-lobbying-political",
+      "relation": "complements",
+      "why": "Both relate firm lobbying to firm size, the stylized fact the review reports from Huneeus and Kim."
+    },
+    {
+      "slug": "anon-2019-partisan-ties-lobbying",
+      "relation": "complements",
+      "why": "Partisan ties of lobbyists extend the review's evidence that lobbyists' value rests on connections to particular politicians."
+    }
+  ],
+  "summary_issues": [
+    "Says the in-house share of lobbying fell from about 60% to under 40%; the paper reports the share of in-house LOBBYISTS (headcount), not of lobbying spending.",
+    "Says adding an electoral-vote channel brings implied returns down to 'plausible levels'; the paper calls the resulting $13.7 per dollar 'still a high figure' but more reasonable, with B&T simulations at 10-20% per year.",
+    "Attributes the 'influence channels left out of the model' reading partly to Kang's figures; in the review that explanation is offered for the Ansolabehere/Farm Bill puzzle via Bombardini and Trebbi (2011), while Kang's oddities are read as possible misspecification.",
+    "Relies on roi_verify.py checking ROI floors and a template at fec/templates/; roi_verify.py was not found and the template lives at fec/surfaces/templates/.",
+    "The staffer-route gap (no in-office or committee term) was confirmed only in relationship_uncertainty.py and member_context.py, not repo-wide; treat as UNVERIFIED system-wide.",
+    "Related link poole-1999-nominate-after-years dropped: the review mentions DW-NOMINATE but does not cite Poole and Rosenthal 1999; bonica-2013 relation changed from cites to complements (review cites Bonica 2016)."
+  ]
+}

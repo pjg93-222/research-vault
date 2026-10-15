@@ -1,0 +1,1086 @@
+[
+ {
+  "slug": "almazaydeh-2026-heuristic-centrality-methods",
+  "note": false,
+  "meta": {
+   "title": "Heuristic centrality methods challenge greedy optimization in influence maximization",
+   "authors": [
+    "Laiali Almazaydeh",
+    "Arar Al Tawil",
+    "Amneh Shaban",
+    "Rabiah Al-Qudah"
+   ],
+   "year": "2026",
+   "venue": "Scientific Reports, 16:17085 (received 5 Jan 2026; accepted 31 Mar 2026)",
+   "doi": "10.1038/s41598-026-47299-8",
+   "sha12s": [
+    "4e6d7eb8efcc"
+   ],
+   "category": "Adaptive Influence Maximization",
+   "category_slug": "adaptive-influence-maximization"
+  },
+  "extraction": {
+   "title": "Heuristic centrality methods challenge greedy optimization in influence maximization",
+   "authors": [
+    "Laiali Almazaydeh",
+    "Arar Al Tawil",
+    "Amneh Shaban",
+    "Rabiah Al-Qudah"
+   ],
+   "year": "2026",
+   "venue": "Scientific Reports, 16:17085 (received 5 Jan 2026; accepted 31 Mar 2026)",
+   "doi": "10.1038/s41598-026-47299-8",
+   "document_type": "Journal article: empirical comparative study of eight influence maximization algorithms on simulated Independent Cascade diffusion over Facebook subgraphs (open access, CC BY-NC-ND 4.0)",
+   "coverage": "Read the full text file (1352 lines, about 91k characters, pages 1-18 including references and declarations) in four 250-line chunks plus a final chunk; no section skipped. Metadata hint checked against the text: title, authors, venue, DOI and year all match, so no correction was needed. paul_markup is empty because the task listed no markup files; no sidecar or annotation files were searched for or read. The text is a PDF extraction, so page numbers are inferred from running footers (page 1 = lines 1-46; page 8 = lines 455-551; page 15 = lines 1081-1148).",
+   "research_question": "Do the theoretical guarantees of influence maximization algorithms (greedy CELF++, sampling-based RIS and IMM) hold in practice, and how do they compare with simple centrality heuristics (Degree, PageRank, Betweenness, Dangling, GCCDC) on spread quality, runtime and scaling under the Independent Cascade model on real social network subgraphs?",
+   "theory": "Influence maximization is NP-hard under IC and LT (Kempe et al. 2003, ref 12). The influence function is submodular, so greedy selection gives a (1-1/e) approximation (Nemhauser et al. 1978, ref 15). CELF and CELF++ use lazy evaluation to speed up greedy without changing that guarantee. RIS and IMM recast the problem as coverage of reverse-reachable sets with sampling bounds. Centrality heuristics carry no guarantee and are justified as cheap structural proxies. The paper's framing: asymptotic guarantees can diverge from practice because hidden constants, network structure and implementation matter (p.4, lines 260-269; p.13, lines 948-961).",
+   "data": "Source: Facebook ego network from the SNAP collection, 4,039 nodes and 88,234 undirected edges (p.6, lines 402-404). Sampled subgraphs: 200, 500, 800 and 1000 nodes per Methods and Table 2 (p.6, p.8); the abstract instead says 200, 400, 600, 800 and 1,000 nodes (p.1). Unit: one seed set per algorithm, size and run. Count: 8 algorithms x 4 sizes x 10 independent runs (seeds 42-51) = 320 seed sets, each scored by 50 Monte Carlo IC simulations (p.6, lines 411-434). No time period; a static snapshot of the 2014 SNAP dataset.",
+   "method": "Eight algorithms, implemented in Python 3.8 with NumPy 1.21 and NetworkX 2.6 (p.8): CELF++ (50 MC per marginal-gain estimate); RIS with theta = min(10000, 50n); IMM with epsilon = 0.2; Degree; PageRank (damping 0.85, power iteration, tolerance 1e-6, max 100 iterations); Betweenness (Brandes); Dangling centrality; GCCDC (p.4-6). Diffusion: IC with uniform p = 0.1 on all edges; seed budget k = 10. Subgraphs drawn by importance sampling: node importance is the average of normalised degree centrality and normalised PageRank; top-ranked nodes plus their highest-importance neighbours are kept to keep the subgraph connected (p.6, lines 402-410). Evaluation: mean spread over 50 MC simulations per seed set; 10 runs per configuration; mean, SD, min, max and CV reported; wall-clock seconds; spread per second as efficiency (p.7-8). Significance: paired t-tests with Bonferroni correction (alpha 0.05), with Mann-Whitney U said to give the same results (p.7-8, p.8).",
+   "identification": "None in a causal sense. This is a controlled simulation benchmark: algorithms are compared on identical subgraphs under the same IC settings, and seeds are paired across runs for the t-tests. No natural experiment or instrument is used.",
+   "scope": "One real-world network (Facebook ego network subgraphs) at 200-1000 nodes; one diffusion model (IC, uniform p = 0.1); one seed budget (k = 10); undirected graphs only. Not tested: directed, weighted or temporal networks; other diffusion models; large-scale graphs; deep RL or GNN methods. The paper says the sampled subgraphs have degree exponent above 3 (p.6, lines 408-409).",
+   "key_findings": [
+    {
+     "finding": "CELF++ performs far below the other algorithms at 1000 nodes (about 12.9% of IMM), despite its (1-1/e) guarantee. The authors attribute this mainly to only 50 MC simulations per estimate and Python implementation, not to an algorithmic flaw.",
+     "location": "Results p.8 (lines 473-486); Discussion p.13 (lines 948-955); Conclusion p.15-16",
+     "numbers": "CELF++ 122.95 +/- 24.37 vs IMM 954.90 +/- 1.27; ratio 12.9%; Delta 831.95, t = -107.78, p < 0.001. Abstract (p.1) says 11.2%, which conflicts."
+    },
+    {
+     "finding": "IMM is best at 1000 nodes and RIS is close behind. The IMM-RIS gap is small but significant.",
+     "location": "Results p.8-9 (lines 473-474, 492-493); Table 3 p.11",
+     "numbers": "IMM 954.90 +/- 1.27; RIS 952.53 +/- 2.72; Delta 2.36, t = 2.57, p < 0.05. RIS runs in 64.9 s vs IMM 323.5 s at 1000 nodes (p.10)."
+    },
+    {
+     "finding": "PageRank and Betweenness are statistically indistinguishable and reach about 96.5% of IMM spread at 1000 nodes, at 0.4 s and 8.8 s respectively.",
+     "location": "Results p.8-9 (lines 474-476, 495-499); Table 3 p.11; efficiency p.10 (lines 658-666); Discussion p.13 and p.15",
+     "numbers": "PageRank 921.78 +/- 3.28; Betweenness 921.80 +/- 3.34; Delta -0.02, t = -0.01, p = 0.99; PageRank vs IMM Delta 33.12, t = 26.97, p < 0.001. The paper states 96.3% in the abstract, Discussion and Conclusion, but 921.78/954.90 = 96.5%. Stated 794x runtime speed-up: 323.5/0.4 = 809x from the paper's own times."
+    },
+    {
+     "finding": "Degree, GCCDC and Dangling form a lower cluster around 80-85% of IMM spread. Dangling is lowest. GCCDC does not improve on Degree at 1000 nodes.",
+     "location": "Results p.8 (lines 475-477); Algorithm-specific observations p.12 (lines 893-908); Broader Discussion p.15 (lines 1123-1129)",
+     "numbers": "Degree 810.87 +/- 6.77; GCCDC 811.59 +/- 5.00; Dangling 797.44 +/- 12.05 (CV up to 6.24%). Degree vs Dangling t = 2.67, p < 0.05; GCCDC vs Dangling t = 2.90, p < 0.05."
+    },
+    {
+     "finding": "Sampling methods (IMM, RIS) have very low variance and scale near-linearly. Heuristics have moderate CVs. CELF++ is unstable, with a non-monotone trajectory.",
+     "location": "Scalability p.9 (lines 558-576); Algorithm-specific observations p.11-12 (lines 868-875); Fig. 4 p.10",
+     "numbers": "IMM CV 0.07-0.17%; RIS CV 0.13-0.23%; Betweenness CV 0.16-0.36%; PageRank 0.14-0.25%; Degree 0.66-2.59%; CELF++ CV rose to 71.5% at 500 nodes (p.10, line 646)."
+    },
+    {
+     "finding": "Growth from 200 to 1000 nodes is close to proportional for most methods. The text and Table 4 disagree for some entries.",
+     "location": "Scalability p.9 (lines 559-568); Table 4 p.11",
+     "numbers": "Text: IMM +402%, RIS +399%, PageRank +403%, Degree +411%, CELF++ +633%. Table 4: IMM +402%, RIS +400%, PageRank +404%, Degree +410%, CELF++ +740%. CELF++ at 500 nodes is 4.56 in the text and 4.91 in Table 2."
+    },
+    {
+     "finding": "Efficiency ranking: PageRank 2,304 spread/s; Degree 2,027; Dangling 1,994; GCCDC 279.86; Betweenness 104.75; RIS 14.68; IMM 2.95; CELF++ 0.18 (all at 1000 nodes).",
+     "location": "Computational efficiency p.10 (lines 658-664); Fig. 3 caption p.9",
+     "numbers": "PageRank 921.78 spread / 0.4 s; IMM 954.90 / 323.5 s; CELF++ 122.95 / 688.4 s max runtime. RIS vs PageRank: 3.3% lower spread for 162x runtime (p.10-11)."
+    },
+    {
+     "finding": "Extrapolated runtimes to 10,000 nodes are reported but were not measured.",
+     "location": "Scalability considerations p.13 (lines 977-987); Limitations p.14 (lines 1045-1049)",
+     "numbers": "RIS about 795 s; IMM about 3970 s; CELF++ about 840 s at 1000 nodes and over 8,400 s at 10,000 nodes (linear extrapolation). The limitations section also quotes PageRank at about 5 s at 10,000 nodes, a figure not given in the Discussion. Linear scaling from RIS's 64.9 s would give about 649 s, not 795 s."
+    }
+   ],
+   "measures": [
+    "Mean influence spread over 50 IC Monte Carlo simulations per seed set",
+    "Across 10 runs: mean, SD, min, max, coefficient of variation",
+    "Wall-clock runtime in seconds, from algorithm start to seed-set output",
+    "Efficiency = spread per second",
+    "Scaling growth percentage relative to the 200-node baseline",
+    "Paired t-test and Mann-Whitney U, Bonferroni-corrected, for pairwise differences at 1000 nodes",
+    "Centrality measures: degree, PageRank (alpha 0.85), betweenness (Brandes), dangling centrality (degree as proxy for connectivity), GCCDC"
+   ],
+   "limitations": [
+    "Stated by the authors (p.14, lines 1017-1098): only one real-world network (Facebook), so results may not transfer to directed, weighted or temporal networks.",
+    "Stated: uniform IC probability p = 0.1 only, with no weighted-cascade or LT model; the authors expect ranking changes under other models.",
+    "Stated: a single seed budget (k = 10); behaviour at k = 1-3 or k > 50 is not tested.",
+    "Stated: scales limited to 200-1000 nodes; results at millions to billions of nodes are extrapolated and not validated.",
+    "Stated: CELF++ used only 50 MC simulations per estimate versus 10,000+ in practice, using a Python 3.8 implementation; the authors say the underperformance is likely a budget and implementation artefact, not a flaw in the algorithm.",
+    "Stated: importance-based sampling (top degree and PageRank nodes) may densify the subgraph around hubs and favour centrality heuristics; the authors claim robustness to the extraction method without testing it.",
+    "Stated: no comparison with deep RL or GNN methods (PIANO and others); the authors say such a comparison is future work.",
+    "Reader-noted, not stated by the authors: (a) abstract subgraph sizes (200, 400, 600, 800, 1000) differ from Methods and Table 2 (200, 500, 800, 1000); (b) abstract gives CELF++ as 11.2% of sampling-based spread, but the body gives 12.9%; (c) PageRank is given as 96.3% of IMM, but Table 2 gives 96.5%; (d) the 794x runtime ratio does not match 323.5/0.4 = 809x; (e) RIS uses theta = min(10000, 50n), which equals 10,000 at every tested size, so it is a fixed budget rather than theory-determined; (f) the Dangling centrality implementation uses degree as a proxy for connectivity impact (p.6, lines 389-390), so the method tested is not the published metric; (g) Mann-Whitney results are described only qualitatively, and Bonferroni-adjusted p-values are not reported; (h) p.15 line 1117 refers to heuristics 'we proposed in SATIC', an undefined term, and the Broader implications paragraph (lines 1100-1101) contains an unclear sentence about CELF guarantees for static allocations; (i) refs 9-11 (traffic anomaly detection, side-channel attacks, sample-size guidance) are cited for influence-maximization claims but are off-topic; ref 52 lacks authors and ref 54 lists 'Others'; (j) abstract IMM 955.24 and RIS 951.27 do not match Table 2 at 1000 nodes (954.90 and 952.53) and are not explained."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Kempe, Kleinberg and Tardos 2003 (ref 12): IM problem and greedy (1-1/e) guarantee under IC and LT",
+    "Nemhauser, Wolsey and Fisher 1978 (ref 15): submodular greedy approximation",
+    "Leskovec et al. 2007, CELF (ref 18): lazy evaluation for greedy IM",
+    "Goyal, Lu and Lakshmanan 2011, CELF++ (ref 19): lazy-forward extension used here",
+    "Borgs et al. 2014, RIS (ref 25): reverse influence sampling",
+    "Tang, Xiao and Shi 2014, TIM/TIM+ (ref 26)",
+    "Tang, Shi and Xiao 2015, IMM (ref 27): martingale sampling used as the sampling baseline",
+    "Nguyen et al. 2016, SSA (ref 28) and Huang et al. 2017 revisit (ref 29)",
+    "Zhang et al. 2015, PageRank-inspired IM heuristic (ref 33)",
+    "Brandes 2001, betweenness algorithm (ref 56)",
+    "Arora, Galhotra and Ranu 2017, debunking IM myths benchmark (ref 40): the authors' closest prior benchmark",
+    "Lu et al. 2017, refutation of ref 40 (ref 41): methodology dispute",
+    "Galbrun, Gionis and Tatti 2021, IM benchmarker suite (ref 42)",
+    "Leskovec and Krevl 2014, SNAP datasets (ref 45): source of the Facebook ego network",
+    "Li et al. 2023, PIANO deep RL (ref 46) and Ling et al. 2023 (ref 47): learned-optimization alternatives",
+    "Fatima and Ahsan 2025 and Fatima, Hina and Wasif 2025 (refs 55, 58): dangling and GCCDC metrics"
+   ],
+   "short_quotes": [
+    {
+     "quote": "The findings indicate a significant disparity between theoretical guarantees and actual performance",
+     "location": "Abstract, p.1 (lines 12-13). Only one quote is given, per the copyright limit on reproducing observed text."
+    }
+   ]
+  },
+  "summary_md": "Almazaydeh et al. compare eight influence-maximization methods under the Independent Cascade (IC) model. The graphs are Facebook ego-network subgraphs of 200 to 1,000 nodes, with uniform p = 0.1, k = 10 seeds, 10 runs and 50 Monte Carlo (MC) simulations per seed set. At 1,000 nodes, IMM is best (954.90) and RIS is close behind (952.53, five times faster). PageRank and Betweenness cannot be told apart (about 921.8, or 96.5% of IMM; the paper itself says 96.3%), and PageRank runs in 0.4 s. Degree, GCCDC and Dangling reach about 80-85% of IMM. CELF++ collapses to 12.9% of IMM (the abstract says 11.2%), with a CV of up to 71.5%. The authors blame only 50 MC simulations per marginal estimate plus a Python implementation, but they never test that explanation. The study has several internal inconsistencies: subgraph sizes, percentages, the 794x speed-up and the extrapolated runtimes do not match the paper's own tables.\n\nThis paper is already wired into Melange. `fec/engine/mc_stability_check.py` names it as its motivation. The skill library cites it to argue that the frontier's MC=20 greedy is safe because common random numbers (CRN) mean every candidate is compared under the same draws. That reasoning is sound for comparing marginals. The problem is that the recorded pass is older than a 2026-10-01 fix. The pass (MEA-7, holistic graph: 100% at MC=100, 98% across RNG seeds) was measured before QME fix 3. Before that fix, the splitmix keys did not depend on SEED, so the 'different RNG seed' runs reused the same edge and seed-activation draws. The MC=100 leg still holds, though it shares its first 20 iterations with production. The cross-seed leg did not test independent draws.\n\nThe paper's other point, that cheap centrality gets within a few percent of IMM, suggests a cheap ablation the system lacks: run a PageRank, degree or Katz-Bonacich seed baseline through the same CRN cascade. It would be an ablation only, because stance gating and seed activation are things centrality cannot see. The joint optimizer is untouched by this paper. It is deterministic (no MC), so the CELF++ failure mode cannot occur there.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-allocation.budget-frontier",
+    "relation": "qualifies",
+    "paper_claim": "Lazy greedy (CELF++) with too few MC simulations per marginal estimate (50) is unstable and badly suboptimal: at 1,000 nodes it reaches 12.9% of IMM (122.95 +/- 24.37 vs 954.90 +/- 1.27; t = -107.78), and its CV peaks at 71.5% at 500 nodes. The authors blame the MC budget and the implementation, but they do not test this.",
+    "paper_location": "Results p.8 (lines 473-486); p.10 (line 646); Discussion p.13 (lines 948-955); Limitations p.14",
+    "system_side": "The frontier runs lazy greedy up to 60 seeds at MC=20 (fewer simulations than the paper's 50). It is protected by edge-keyed CRN: each (iteration, edge) draw comes from splitmix, so spread(S+c) and spread(S) share their draws. mc_stability_check.py was written in response to this paper. It compares production against MC=100 and against SEED=1 and SEED=13. Brain MEA-7 records a PASS on the holistic graph (100% Jaccard at MC=100, 98% across seeds). However, QME fix 3 (2026-10-01) says that before it, 'SEED!=7 reruns reused identical draws and understated seed variance', because the _SO key offset did not exist. The cross-seed leg of MEA-7, and the CU-vintage 100% record cited at salience_shock.py:44, were therefore measured when only the bystander random.random() stream changed between seeds.",
+    "code_ref": "fec/engine/budget_frontier.py:7,66-69,72-84,107-109; fec/engine/mc_stability_check.py:3-19; fec/engine/salience_shock.py:44; brain ledger STATE.md:765-768",
+    "transfer_conditions": "The paper's failure mode is independently noisy marginal estimates, and CRN removes it for pairwise comparisons. That part carries over as support for the CRN design, not as a threat. What does not carry over is the old evidence that the selected seed set is stable across independent realizations. That evidence must be re-measured under the post-fix keying. The MC=100 leg stays valid (iterations 0-99 include 80 new draws). This is a new agent analysis, so it is UNVERIFIED (DE-062), and re-running the engine is Paul's call. The paper's graphs are undirected with uniform p, while Melange uses competitive IC with seed gating on a 533-node directed or symmetrized kernel. The paper's numbers are evidence of the mechanism only.",
+    "strength": "strong",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-allocation#Budget frontier with knee and electoral modes|Budget frontier with knee and electoral modes]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-allocation.budget-frontier",
+    "relation": "suggests-extension",
+    "paper_claim": "At 1,000 nodes, PageRank seeds reach 921.78 / 954.90 = 96.5% of IMM spread in 0.4 s (IMM takes 323.5 s). Betweenness matches PageRank (t = -0.01, p = 0.99). Degree reaches about 85%.",
+    "paper_location": "Results p.8-9 (lines 474-476, 495-499); Table 2-3 p.8, p.11; efficiency p.10 (lines 658-666)",
+    "system_side": "Before greedy runs, the frontier and the coalition allocator cut the candidate pool to the top 45 neutral members by engagement x priority x delivery_mult. That cut is a heuristic too, and it has never been compared with anything. No run measures what greedy adds over a cheap structural seed rule (degree, PageRank or Katz-Bonacich on the same kernel) scored by the same CRN cascade.",
+    "code_ref": "fec/engine/budget_frontier.py:131; fec/engine/per_topic_coalition.py:104-114",
+    "transfer_conditions": "This is useful only as an ablation diagnostic, run the way kb_benchmark is run (read-only, consumed by nothing). The paper's hub-favoring subgraph sampling (degree plus PageRank importance) tilts results toward centrality heuristics. Melange's objective adds stance-gated pools, seed_prob x SGATE activation and rival-industry bystanders, none of which centrality can see. So a near-match on spread would not justify replacing greedy. A large gap would quantify what stance-aware selection buys. Spread here is modeled cascade reach, not evidence of real access or influence (D-025).",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-allocation#Budget frontier with knee and electoral modes|Budget frontier with knee and electoral modes]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-allocation.joint-optimizer",
+    "relation": "qualifies",
+    "paper_claim": "Theoretical guarantees such as greedy's (1-1/e) bound can diverge sharply from realized performance when marginal gains are estimated by noisy simulation. CELF++ reached only 12.9% of IMM.",
+    "paper_location": "Abstract p.1 (lines 12-13); Discussion p.13 (lines 948-961)",
+    "system_side": "The joint optimizer runs CELF lazy greedy over the deterministic closed-form pflip winnability, with no Monte Carlo. Within a fixed stance state, it numerically checks that the objective is separable by member and concave. It then claims an exact optimum on the $500 grid and reports the (1-1/e) floor and the Golovin-Krause bound only as context. When a modeled conversion happens, it voids the certificate instead of claiming a guarantee.",
+    "code_ref": "fec/engine/optimize.py:3-10,64-74,156-163",
+    "transfer_conditions": "The paper's gap between guarantee and practice comes from MC estimation error and does not transfer to a deterministic objective. Its evidence therefore does not undercut the optimizer's guarantee, which already rests on a verified fixed-state concavity certificate, not on submodular-greedy theory. The paper is relevant only if the optimizer's objective is ever replaced by a simulated cascade.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-allocation#Joint CU budget optimizer|Joint CU budget optimizer]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-sna.katz-bonacich-benchmark",
+    "relation": "suggests-extension",
+    "paper_claim": "Simple centrality rankings used as seed rules come close to sampling-based IM under IC (PageRank 96.5% of IMM), at a tiny fraction of the runtime (2,304 spread/s vs 2.95 for IMM).",
+    "paper_location": "Results p.8-10; efficiency p.10 (lines 658-664)",
+    "system_side": "kb_benchmark computes Katz-Bonacich centrality on the live kernel P = build_P(adj). It reports only Spearman correlations against the allocation, observed money and the legislative score (MEA-6 holistic: KB vs allocation +0.225). It never scores KB-top-k as a seed set under the cascade.",
+    "code_ref": "fec/engine/kb_benchmark.py:1-20,27-58",
+    "transfer_conditions": "Adding one more column to kb_benchmark (the spread of KB-top-k seeds under the frontier's CRN cascade) would answer, on Melange's own kernel, the question the paper answers on Facebook. It must stay a diagnostic labeled UNSTRATIFIED, with its window, denominator (533 members) and topic named. The KB score remains a model output, not a measure of access.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-sna#Katz-Bonacich benchmark (diagnostic)|Katz-Bonacich benchmark (diagnostic)]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+    "relation": "qualifies",
+    "paper_claim": "PageRank and betweenness are near-interchangeable proxies for IC spread on undirected graphs (921.78 vs 921.80, p = 0.99). The paper tests no directed or weighted networks.",
+    "paper_location": "Results p.9 (lines 495-499); Limitations p.14 (lines 1017-1030)",
+    "system_side": "InfluenceScore (0.60 out-degree + 0.25 betweenness + 0.15 eigenvector) was retired from the Influence pillar on 2026-06-25 (AB13 = 0) because it is blind to direction. It still feeds the underdog lens.",
+    "code_ref": "congress_centrality_*.xlsx; Blended Model AB12/AB13 (workbook; no Python line)",
+    "transfer_conditions": "The paper shows centrality predicts simulated cascade spread, not legislative effect or bill passage. It covers undirected graphs only, so it does not address the reason the score was retired. The paper gives no grounds to reinstate it.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/moneyball-rank-pillars#Cosponsor-network InfluenceScore (computed, weight 0)|Cosponsor-network InfluenceScore (computed, weight 0)]]",
+    "system": "moneyball-rank-pillars"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "The cross-seed leg of the MC-stability check was not re-measured after QME fix 3 (2026-10-01) added SEED-dependent splitmix keys. The recorded '98% across RNG seeds' (MEA-7) and the CU-vintage '100% overlap' therefore did not test independent edge and seed-activation draws.",
+   "No heuristic seed baseline (degree, PageRank or Katz-Bonacich on build_P) has been scored under the same CRN cascade. What greedy selection adds over cheap structural seeding is unmeasured.",
+   "The top-45 candidate pre-cut (engagement x priority x delivery) is itself a heuristic that has never been compared with an alternative pre-cut or with no pre-cut.",
+   "Neither the frontier nor the coalition output reports spread variance (SD or CV) across RNG seeds. The paper treats run-to-run CV as a first-class quality measure."
+  ],
+  "flags": [
+   "The system's citations misquote the paper. mc_stability_check.py:4-5 and .claude/skills/influence-modeling-reference/SKILL.md:108 give '11.2%' (the abstract figure; the body and Table 2 give 12.9%). They call it '11.2% of true spread', but it is a share of IMM spread. The skill also says the paper 'showed' that noisy MC estimates corrupt lazy greedy. The paper only offers the MC budget and implementation as a likely cause, untested. These are skill and docstring wording fixes for Paul to approve; nothing was edited.",
+   "STALE VALIDATION: .claude/skills/moneyball-config-and-flags/SKILL.md:102, moneyball-architecture-contract/SKILL.md:107, salience_shock.py:44 and brain STATE.md:765 all treat MC=20 as validated across RNG seeds. That evidence predates the SEED-keying fix in budget_frontier.py:66-69, so the cross-seed agreement was partly by construction. This agent analysis is UNVERIFIED (DE-062) until a second path reproduces it, and re-running mc_stability_check is Paul's call under the quant-model-evaluation melange binding (line 22).",
+   "D-025: the paper's centrality results concern simulated IC reach. They must not be used to describe layer-balanced staffer PageRank, or any graph rank, as closeness, access or introduction likelihood.",
+   "The paper argues for neither rejected SNA proposal (dropping regular cosponsorship edges, per-edge volume normalization). There is no conflict there.",
+   "The paper has internal numeric inconsistencies (subgraph sizes 200/400/600/800/1000 vs 200/500/800/1000; 96.3% vs 96.5%; 794x vs 809x; abstract IMM 955.24 and RIS 951.27 vs Table 2 at 954.90 and 952.53; RIS theta fixed at 10,000 at every size). Quote only the Table 2 numbers."
+  ],
+  "paul_alignment": "Paul has no annotation on this paper. His joint-optimizer position treats adaptive greedy plus CELF as the operational layer, with GCOMB-style learned policies taking over at scale. The paper does not threaten that position for optimize.py, which is deterministic. For MC-driven greedy (frontier, coalition), the paper supports it only when marginal estimates are reliable. At 533 nodes, scale is not the binding constraint, so the paper gives no reason to move to RIS, IMM or a learned policy; the brain note 'RIS/IMM unneeded at 533 nodes' agrees. On centrality, Paul says more research on forms of centrality is needed, and the paper adds that PageRank and betweenness are equivalent as spread proxies. That evidence comes only from undirected graphs with uniform p, so it does not touch his interest in directionality (Haythornthwaite) or the retirement of direction-blind centrality. The system-side record is what is stale: the cross-seed MC stability claim predates the 2026-10-01 SEED-keying fix.",
+  "related": [
+   {
+    "slug": "golovin-2011-adaptive-submodularity-theory",
+    "relation": "complements",
+    "why": "This is the source of the data-dependent bound the joint optimizer reports. The Almazaydeh paper shows that such guarantees break down in practice when marginals are estimated by noisy simulation."
+   },
+   {
+    "slug": "chen-2021-contingency-aware-influence",
+    "relation": "complements",
+    "why": "It grounds the seed-activation gate inside the frontier's cascade. That gate is the stance and receptivity factor that centrality heuristics like those benchmarked here cannot see."
+   },
+   {
+    "slug": "kumar-2022-influence-maximization-social",
+    "relation": "same-method",
+    "why": "Another influence-maximization benchmark on IC, using graph embeddings and GNNs. Almazaydeh lists learned methods as untested future work."
+   },
+   {
+    "slug": "zareie-2023-influence-maximization-social",
+    "relation": "complements",
+    "why": "A survey of behavior-aware IM. It covers the receiver-susceptibility and seed-probability extensions that the uniform-p setup here leaves out."
+   },
+   {
+    "slug": "trivedi-2020-efficient-influence-maximization",
+    "relation": "same-method",
+    "why": "Efficient IM under the IC model. It addresses the same runtime-versus-quality trade-off this paper measures."
+   },
+   {
+    "slug": "bharathi-nd-competitive-influence-maximization",
+    "relation": "complements",
+    "why": "Melange's frontier runs competitive two-color IC (Bharathi-Kempe-Salek), a setting this single-color benchmark does not test."
+   },
+   {
+    "slug": "battaglini-2016-influencing-connected-legislators",
+    "relation": "complements",
+    "why": "Katz-Bonacich centrality as the equilibrium allocation rule. This paper's evidence that centrality heuristics work well suggests scoring KB seed sets under the cascade."
+   },
+   {
+    "slug": "sotoudeh-2024-network-based-measure",
+    "relation": "contradicts",
+    "why": "Sotoudeh finds eigenvector centrality is a weak indicator of bill passage, whereas this paper finds centrality a strong proxy for simulated spread. Together they show that spread proxies are not legislative influence."
+   },
+   {
+    "slug": "harrison-2010-introduction-monte-carlo",
+    "relation": "complements",
+    "why": "Background on Monte Carlo sample size. The paper's CELF++ failure is a case of an inadequate MC budget."
+   },
+   {
+    "slug": "kamarthi-2019-influence-maximization-unknown",
+    "relation": "complements",
+    "why": "Learned IM policies are the alternative this paper defers. Paul's GCOMB-style learned-policy expectation sits in this lineage."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "ma-2022-adversarial-attack-graph",
+    "relation": "contradicts",
+    "why": "Almazaydeh argues centrality heuristics rival greedy in influence maximization. Ma et al. find degree, betweenness and PageRank weaker than greedy on a coverage objective, though in a GNN-attack setting."
+   },
+   {
+    "slug": "arya-2025-relink-edge-activation",
+    "relation": "complements",
+    "why": "Likely the 2026 Scientific Reports benchmark the dashboard cites for using a PageRank prior in route scoring. Its heuristic-versus-greedy findings sit beside RELINK's learned-versus-heuristic results."
+   },
+   {
+    "slug": "golovin-2011-adaptive-submodularity-approach",
+    "relation": "complements",
+    "why": "Its empirical challenge to greedy in IM is a counterweight to the worst-case greedy guarantees here. The dashboard uses PageRank on that basis."
+   },
+   {
+    "slug": "moreno-2021-shadowing-shielding-effective",
+    "relation": "complements",
+    "why": "Both test whether simple heuristics approach optimised allocations; here shadowing and shielding outperform degree heuristics in the continuous regime."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "salam-2022-learning-personalised-models",
+  "note": false,
+  "meta": {
+   "title": "Learning Personalised Models for Automatic Self-Reported Personality Recognition",
+   "authors": [
+    "Salam",
+    "Manoranjan",
+    "Jiang",
+    "Celiktutan"
+   ],
+   "year": "2022",
+   "venue": "PMLR 173",
+   "doi": "",
+   "sha12s": [
+    "b62297c9f1d7"
+   ],
+   "category": "Unsorted",
+   "category_slug": "unsorted"
+  },
+  "extraction": null,
+  "summary_md": "",
+  "paul_entries": [],
+  "bearings": [],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [],
+  "flags": [],
+  "paul_alignment": "",
+  "related": [],
+  "backlinks": [
+   {
+    "slug": "marrero-2022-evaluating-voice-samples",
+    "relation": "complements",
+    "why": "Self-reported personality recognition from audio. The system ran a Salam-style sex-cleanliness test on prosody features, the confound Marrero shows (gender over 90%) but never controls."
+   },
+   {
+    "slug": "celli-nd-twenty-years-personality",
+    "relation": "complements",
+    "why": "An audio and multimodal self-reported personality recognition benchmark, relevant to the survey's audio and video findings and to the system's prosody MISS."
+   },
+   {
+    "slug": "dietrich-2019-pitch-perfect-vocal",
+    "relation": "complements",
+    "why": "The brain uses Salam to sex-condition prosody features. Dietrich's within-speaker z is the alternative fix for the same sex confound in F0."
+   },
+   {
+    "slug": "mestre-2026-potential-pitfalls-audio",
+    "relation": "complements",
+    "why": "A speaker-personalized prosody model. It matches the paper's advice to prefer speaker-dependent over cross-speaker acoustic readings, and Melange already used it in the sex-confound test."
+   },
+   {
+    "slug": "rubio-2024-feasibility-data-analytics",
+    "relation": "complements",
+    "why": "Same target: automatic recognition of self-reported personality. Melange's Salam-2022 check on sex-clean pace and volume, and on sex-loaded pitch variability, fills in the sex-confound question that Rubio's all-female sample cannot answer."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "abdelrahman-2025-conflict-based-search",
+  "note": false,
+  "meta": {
+   "title": "Conflict-Based Search for Multi-Agent Path Planning Using D*Lite for Dynamic Re-planning: Analysis and Verification",
+   "authors": [
+    "Ahmed S. Abdel-Rahman",
+    "S.F. Nafea",
+    "Basem E. Elnaghi",
+    "Ayman A. El-Badawy"
+   ],
+   "year": "2025",
+   "venue": "Suez Canal Engineering, Energy and Environmental Science Journal, Vol. 3, No. 4, pp. 20-29 (Faculty of Engineering, Suez Canal University). Received 14/04/2025, accepted 05/08/2025, published 30/10/2025.",
+   "doi": "10.21608/sceee.2025.375386.1074",
+   "sha12s": [
+    "b513fdf30f7a"
+   ],
+   "category": "Path-Finding Algorithms",
+   "category_slug": "path-finding-algorithms"
+  },
+  "extraction": {
+   "title": "Conflict-Based Search for Multi-Agent Path Planning Using D*Lite for Dynamic Re-planning: Analysis and Verification",
+   "authors": [
+    "Ahmed S. Abdel-Rahman",
+    "S.F. Nafea",
+    "Basem E. Elnaghi",
+    "Ayman A. El-Badawy"
+   ],
+   "year": "2025",
+   "venue": "Suez Canal Engineering, Energy and Environmental Science Journal, Vol. 3, No. 4, pp. 20-29 (Faculty of Engineering, Suez Canal University). Received 14/04/2025, accepted 05/08/2025, published 30/10/2025.",
+   "doi": "10.21608/sceee.2025.375386.1074",
+   "document_type": "Journal article (simulation-based algorithm analysis, multi-agent path finding / robotics)",
+   "coverage": "Full text read in three chunks (extraction lines 0-616, covering all 43371 chars): front matter, abstract, introduction, related work, methodology, environments and metrics, results (Tables 1-2, Figures 2-6), conclusion, and the complete reference list. Paul's markup: all 4 annotations in the _annots JSON read (all on PDF page 1, journal p.20; none has a note). Metadata hint was correct on title, DOI, year, venue and author surnames; full author names and dates were added from the paper. Checked for networks, lobbying, allocation, elections, persuasion/turnout, legislators and text measurement: none appear in the paper (path-finding here is robot routing only). The paper has no limitations section. It does not describe hardware, software, code availability, number of simulation runs, or numeric environment parameters. Quotes limited to one per the copyright rule, which overrides the 3-quote request; Paul's highlighted text is paraphrased, not reproduced.",
+   "research_question": "Does replacing A* with D* Lite as the low-level single-agent planner inside Conflict-Based Search (CBS) reduce computation time and nodes explored, while keeping path length, for multi-agent path finding in dynamic environments (moving or appearing obstacles, moving agents)?",
+   "theory": "No formal theory is developed. The paper rests on the two-level CBS framework (high-level conflict tree plus low-level single-agent planner; Sharon et al. 2012) and on D* Lite's incremental replanning, which reuses earlier search results when costs change (Koenig and Likhachev 2002). The D* Lite priority key is written out in Eq. (1) and the one-step lookahead rhs(s) in Eq. (2); Eq. (3) gives each agent's path as a D* Lite call on graph G=(V,E) under CBS constraints. No hypotheses are stated.",
+   "data": "Simulated 3D voxel-grid multi-agent path-planning scenarios with random start and goal positions and randomized obstacle positions and movement, regenerated for each iteration (Sec. 4, p.24-25). Three environment types are described: Static Maze, Dynamic Open Field (sparse moving obstacles), and Crowded Warehouse (dense, randomly appearing and disappearing obstacles). Unit of analysis: a multi-agent instance (per-scenario run). Number of runs or instances (N) is not reported. The only instance with reported detail is 15 agents (Figs. 3-6, Table 1). The conclusion also cites a 3-agent case and a 6-agent case with no table or figure. No real-world data, no human sample, no time period beyond simulation.",
+   "method": "Simulation comparison of two low-level planners inside CBS: A* (baseline CBS-A*) versus D* Lite (CBS-D*Lite), each with 4-point (4 directions in 3D) and 8-point (4 plus diagonals) neighbour search. Pseudocode is in Fig. 1 (p.23). Metrics: execution time (s) to compute paths for all agents, nodes explored (expansions by the low-level planner), and average path length per agent (units). Results are reported as means across test scenarios (Table 2) with per-case values for 15 agents (Table 1). Qualitative claims on adaptability, conflict-resolution responsiveness and scalability are drawn from the same runs (p.28). No replication count, variance, confidence intervals or significance tests are reported. Implementation language, hardware and random seeds are not stated.",
+   "identification": "None in the causal or statistical sense. The design is an algorithm-versus-algorithm benchmark on simulated instances. The two planners are compared on the same scenario type, but the paper does not state that instances were paired across planners, nor how many instances went into the Table 2 averages.",
+   "scope": "Population: simulated 3D multi-agent path-planning instances (warehouse, swarm, search-and-rescue and autonomous-vehicle settings motivate the work). Institutions: Electrical Engineering and Mechatronics departments at Suez Canal University and German University in Cairo. Era: received April 2025, published October 2025. Not tested on physical robots or real facilities.",
+   "key_findings": [
+    {
+     "finding": "Table 2 averages across test scenarios: execution time falls from 5.575 s (CBS-A*) to 0.04 s (CBS-D*Lite), reported as a 99.2% improvement.",
+     "location": "Section 5, Table 2, p.28",
+     "numbers": "5.575 s vs 0.04 s; 99.2%. Check: the mean of the two A* values in Table 1 (8.64 and 0.51) is 4.575, not 5.575. The 99.2% figure holds either way (about 99.1-99.3%)."
+    },
+    {
+     "finding": "Average nodes explored falls from 2142 to 250.5 (reported 88.3% reduction). The reduction is driven by the 4-point case; in the 8-point case D* Lite explores more nodes than A*.",
+     "location": "Section 5, Tables 1 and 2, p.27-28",
+     "numbers": "Table 2: 2142 vs 250.5, 88.3%. Table 1 (15 agents): 4-point 4106 (A*) vs 303 (D*Lite); 8-point 178 (A*) vs 198 (D*Lite)."
+    },
+    {
+     "finding": "Average path length is slightly longer with D* Lite, although the paper labels this a -0.8% change and says path optimality is maintained.",
+     "location": "Section 5, Table 2, p.28; Abstract p.20",
+     "numbers": "15.6 (A*) vs 15.73 (D*Lite), listed as -0.8%. The arithmetic gives D*Lite paths about 0.8% longer. Table 1: 4-point 19.60 vs 19.53; 8-point 11.60 vs 11.93."
+    },
+    {
+     "finding": "Single 15-agent case: 4-point CBS-A* takes 8.64 s and CBS-D*Lite 0.03 s; 8-point CBS-A* takes 0.51 s and CBS-D*Lite 0.05 s. The 15-agent case is not tied to a named environment type.",
+     "location": "Section 5, p.27-28, Figs. 3-6 and Table 1",
+     "numbers": "4-point: 8.64 s vs 0.03 s; 8-point: 0.51 s vs 0.05 s."
+    },
+    {
+     "finding": "The conclusion cites a 3-agent case (15.24 s vs 0.22 s) and a 6-agent case (874 vs 39 nodes explored). These appear only in the conclusion; no table or figure reports them.",
+     "location": "Section 6 Conclusion, p.29",
+     "numbers": "3 agents: 15.24 s (A*) vs 0.22 s (D*Lite). 6 agents: 874 vs 39 nodes."
+    },
+    {
+     "finding": "Adaptability, conflict-resolution responsiveness and scalability are claimed as advantages, but these are qualitative. No replanning-count measurements, agent-count sweep, or per-environment breakdown is reported. The scalability claim rests on one 15-agent case.",
+     "location": "Section 5, p.28 (qualitative subsections); Section 4, p.24-25",
+     "numbers": "None reported."
+    }
+   ],
+   "limitations": [],
+   "measures": [
+    "Execution time (s): total time to compute paths for all agents",
+    "Nodes explored: total nodes expanded by the low-level planner (called 'visited points' in some passages)",
+    "Path length: total distance per agent, averaged across agents (units, no physical scale given)",
+    "Neighbour-search variant: 4-point vs 8-point in 3D voxel grids",
+    "Improvement (%) computed from the averages in Table 2"
+   ],
+   "references_of_note": [
+    "Sharon, Stern, Felner, Sturtevant (2012), Conflict-Based Search for Optimal Multi-Agent Path Finding, AAAI. The base CBS algorithm the paper modifies. The DOI given (10.48175/ijarsct-8161) looks wrong for an AAAI paper.",
+    "Koenig and Likhachev (2002), D*Lite (cited as 'D-Lite*'), AAAI. Source of the incremental replanning method that replaces A*.",
+    "Jin, Zhang, Zhou, Jin, Yang, Hu (2023), Conflict-based search with D* lite algorithm for robot path planning in unknown dynamic environments, Computers and Electrical Engineering. The closest prior work combining CBS and D*Lite; the paper says it builds on it but does not compare against it.",
+    "Boyarski et al. (2015), ICBS (Don't split, try to work it out), ICAPS. Heuristic CBS improvement.",
+    "Li et al. (2019), Disjoint splitting for multi-agent path finding with conflict-based search, ICAPS.",
+    "Gange, Harabor, Stuckey (2019), Lazy CBS, ICAPS.",
+    "Walker, Sturtevant, Felner, Zhang, Li, Kumar (2021), Conflict-Based Increasing Cost Search, ICAPS. Recomputes costs dynamically before search.",
+    "Wagner and Choset (2015), Subdimensional expansion for multirobot path planning, Artificial Intelligence.",
+    "Ma, Kumar, Li, Koenig (2017), Lifelong multi-agent path finding for online pickup and delivery tasks, AAMAS. The closest reference to task assignment, but it concerns robot routing, not allocation of resources.",
+    "No reference in the list concerns lobbying, social or policy networks, elections, persuasion or turnout, legislators, or text measurement."
+   ],
+   "short_quotes": [
+    {
+     "quote": "CBS encounters challenges in terms of path optimality and computational cost",
+     "location": "Abstract, p.20 (PDF p.1)"
+    }
+   ],
+   "paul_markup": [
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Abstract sentence (p.20) on CBS weaknesses: path optimality and computational cost in dynamic environments. Paraphrased; yellow highlight.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Abstract sentence (p.20) stating that the study analyzes D* Lite as a replacement for A* in the low-level planner. The extracted highlight text is garbled (fragments interleaved). Paraphrased; yellow highlight.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Abstract sentence (p.20) on D* Lite's incremental replanning, which avoids recalculating whole paths, and the resulting gain in CBS adaptability. Paraphrased; yellow highlight.",
+     "note": ""
+    },
+    {
+     "page": "1",
+     "type": "Highlight",
+     "text": "Abstract sentence (p.20) on D* Lite reusing parts of existing paths to resolve conflicts faster while keeping path optimality, ending with the simulation speed claim. Paraphrased; green-tinted yellow highlight.",
+     "note": ""
+    }
+   ]
+  },
+  "summary_md": "Abdel-Rahman et al. (2025) swap A* for D* Lite as the low-level single-agent planner inside Conflict-Based Search (CBS), a two-level multi-agent path-finding method. They test it on simulated 3D voxel grids with moving or appearing obstacles. In the paper's Table 2 averages, execution time falls from 5.575 s to 0.04 s and nodes explored fall from 2142 to 250.5, while D* Lite paths come out about 0.8% longer (15.73 vs 15.6). The paper labels that change -0.8% and says optimality is kept. The evidence is thin:\n- The number of runs is not reported, and there is no variance or significance test.\n- The 5.575 s average does not match its own Table 1, whose values average to 4.575 s.\n- The node reduction comes entirely from the 4-neighbour case. With 8 neighbours, D* Lite explores more nodes than A* (198 vs 178).\n- The scalability claim rests on one 15-agent case.\n- Nothing in the paper concerns legislators, lobbying or social networks.\n\nFor Paul's systems, the paper is relevant only to path-finding, as a possible design pattern rather than as evidence. D* Lite earns its speed by reusing earlier search work when edge costs change. None of the built routers do that: the cosponsor route finder, the dashboard recruitment chain and the staffer route search each rebuild every search from scratch on a fixed graph. On a 533-member graph a full recompute is already cheap, so the paper's compute savings do not transfer. Its useful idea is conceptual. When a planned recruitment ask fails or a member's stance changes, the route should be repaired, not abandoned. The dashboard's chain-hold figure currently assumes no rerouting at all. Paul's addendum makes D* Lite and LPA* the operational layer, and this paper is too weak to support that choice on its own.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-pathfinding.cosponsor-route-pareto",
+    "relation": "suggests-extension",
+    "paper_claim": "Replacing A* with incremental D* Lite inside CBS cuts mean execution time from 5.575 s to 0.04 s (99.2%) and nodes explored from 2142 to 250.5 (88.3%), at about 0.8% longer paths (15.73 vs 15.6). However, the 8-point case explores more nodes with D* Lite (198 vs 178). The number of runs is not reported.",
+    "paper_location": "Section 5, Tables 1-2, p.27-28; Abstract p.20",
+    "system_side": "The route finder is a static greedy builder on the shared build_P kernel. It reruns build_route from scratch for each of the five lambda values and keeps a Pareto front over cost, expected cosponsors and risk. A per-recruiter whip cap of K=5 is the only shared-resource constraint. MOPBD* is named in the docstring as a concept only. The code does no incremental replanning and no repair when an edge or stance changes.",
+    "code_ref": "fec/engine/cosponsor_route.py:3-5,23,41-63,70-71",
+    "transfer_conditions": "The speedup does not transfer. It was measured on 3D voxel grids with moving obstacles, while this graph has 533 nodes and recomputing it costs very little. What carries over is the idea of repairing a route when a member joins, declines or changes stance, rather than rebuilding it. The K=5 whip cap loosely resembles a CBS conflict over a shared resource, but CBS resolves conflicts between agents competing for space and time, not recruiter bandwidth. Treat the paper as a design pointer only (weak, single-source, unreplicated, UNVERIFIED).",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Cosponsor recruitment route finder (Pareto front)|Cosponsor recruitment route finder (Pareto front)]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.member-recruitment-path",
+    "relation": "suggests-extension",
+    "paper_claim": "D* Lite reuses earlier search results when costs change, so a route can be repaired instead of recomputed. The authors credit this for faster conflict resolution in dynamic settings, but they report no replanning counts.",
+    "paper_location": "Abstract p.20 (Paul's highlights); Section 3 Eqs. (1)-(3); Section 5 qualitative subsections p.28",
+    "system_side": "The dashboard chain uses Dijkstra on -log p. chainHold multiplies activeP over the hops and is documented as P(every ask lands first-try, no reroute), a conservative floor that rerouting could only improve. ASKM=0.07 is an unestimated dial. No reroute-on-failure logic exists.",
+    "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:748-753",
+    "transfer_conditions": "The extension would need an observed event: a failed ask or a stance move that changes edge probabilities while a campaign is under way. Only then would incremental repair, or simply recomputing the route, give a reroute-aware chain hold. The paper gives no evidence about recruitment success. Edge p values are heuristic kernel outputs, not ask-success probabilities (D-025 wording applies).",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Sponsor-to-target max-product path and chain hold|Sponsor-to-target max-product path and chain hold]]",
+    "system": "melange-pathfinding"
+   },
+   {
+    "component_id": "melange-pathfinding.staffer-closeness-routes",
+    "relation": "qualifies",
+    "paper_claim": "Incremental planning is not always cheaper. In the 8-point case, D* Lite expanded 198 nodes against A*'s 178. The paper also does not report node counts for single-shot queries on unchanged graphs.",
+    "paper_location": "Section 5, Table 1, p.27",
+    "system_side": "The router runs bidirectional Dijkstra with heuristic 0 to a virtual sink, plus Yen loopless alternatives. It runs one search per request on a fixed evidence snapshot, with no work caps (exact proof of the optimal route). The latency lane kept one-way Dijkstra without a heuristic and deferred ALT.",
+    "code_ref": "fec/surfaces/staffer_closeness_routes.py:12-21,79",
+    "transfer_conditions": "D* Lite pays off only when costs change between successive queries on the same graph. Each staffer request starts on a fixed snapshot, so incremental search buys little unless the sidecar starts updating evidence in place between queries. The current design, exact and stateless, has no gap that this paper fills.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-pathfinding#Staffer closeness route search|Staffer closeness route search]]",
+    "system": "melange-pathfinding"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "No incremental or repair-based replanning in any built router: cosponsor_route.py, the dashboard buildPath/chainHold, and the staffer routes all recompute from scratch. A route is never updated when a planned ask fails or a stance changes during a campaign.",
+   "chainHold explicitly assumes no rerouting, so it understates chain success in any setting where failed hops are re-planned. Nothing models a reroute-aware chain probability.",
+   "There is no multi-agent conflict layer. Several recruiters or lobbyists working the same targets at once (overlapping asks, the same member asked by two chains) are handled only by the per-recruiter K cap, not by a CBS-style search over conflicts."
+  ],
+  "flags": [
+   "Internal numeric inconsistency: Table 2 reports a CBS-A* mean of 5.575 s, but Table 1's values (8.64 and 0.51) average to 4.575 s. The path-length change is labelled -0.8%, yet D* Lite paths are about 0.8% longer.",
+   "The paper is weak as evidence: N is not reported, there is no variance or significance testing, the hardware and seeds are not stated, and scalability rests on a single 15-agent case. The 3-agent and 6-agent figures appear only in the conclusion. Do not quote the 99.2% figure as a general D* Lite speedup.",
+   "The node-reduction result reverses in the 8-point neighbour case (198 vs 178), so the claim that D* Lite uniformly reduces nodes explored is false within the paper's own data.",
+   "Paul's addendum makes D* Lite and LPA* the operational path-finding layer. This paper does not substantiate that choice for a small, static-per-query legislative graph, and any adoption argument built on it stays UNVERIFIED (DE-062) until it is reproduced independently.",
+   "The paper does not argue for either rejected SNA proposal (dropping regular cosponsorship edges, per-edge volume normalization), and it raises no LDA or reciprocity issues."
+  ],
+  "paul_alignment": "Paul's four highlights, all on the abstract (CBS cost problems, D* Lite as the A* replacement, incremental replanning, faster conflict resolution), match what the paper claims. His component note is still accurate: only the multi-objective concept was built, and cosponsor_route.py does no incremental replanning (verified at fec/engine/cosponsor_route.py:41-71). His note does not record two things. First, the paper's own evidence is thin and partly inconsistent, including the Table 2 vs Table 1 mismatch and the 8-point reversal. Second, on a 533-node graph the compute savings that motivate D* Lite hardly matter. The part worth keeping is reroute-on-failure, which the dashboard chainHold explicitly leaves out. That supports Paul's interest in dynamic replanning as a modeling idea, but not as a performance requirement.",
+  "related": [
+   {
+    "slug": "ren-2022-multi-objective-path",
+    "relation": "same-method",
+    "why": "MOPBD* is the multi-objective D* Lite variant cited as concept-only in cosponsor_route.py. Together with this paper it forms the D* Lite pair behind Paul's operational-layer addendum."
+   },
+   {
+    "slug": "luo-2020-path-planning-algorithm",
+    "relation": "same-method",
+    "why": "An improved D* Lite for UAV firefighting routes. It is another robotics-only application of the same incremental replanner."
+   },
+   {
+    "slug": "xu-2024-improved-lite-based",
+    "relation": "same-method",
+    "why": "An improved D* Lite for dynamic ship routing in Arctic waters. It shares the same method and the same dynamic-obstacle motivation."
+   },
+   {
+    "slug": "chen-2016-most-reliable-path",
+    "relation": "complements",
+    "why": "The built recruitment chain runs most-reliable-path Dijkstra on -log p. That paper sets the reliability objective, while this one only addresses replanning compute."
+   },
+   {
+    "slug": "lawande-2022-systematic-review-analysis",
+    "relation": "complements",
+    "why": "Its review of A*, D* and related pathfinding families gives the broader context for choosing D* Lite over A*."
+   },
+   {
+    "slug": "duan-2025-breaking-sorting-barrier",
+    "relation": "complements",
+    "why": "It is the other speed-oriented path-finding source. It speeds up single-source shortest paths on a static graph, while this paper reuses work when the graph changes."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "rubio-2024-feasibility-data-analytics",
+  "note": false,
+  "meta": {
+   "title": "Feasibility of Big Data Analytics to Assess Personality Based on Voice Analysis",
+   "authors": [
+    "Víctor J. Rubio",
+    "David Aguado",
+    "Doroteo T. Toledano",
+    "María Pilar Fernández-Gallego"
+   ],
+   "year": "2024",
+   "venue": "Sensors 24(22), 7151 (MDPI, Basel). Received 30 Sep 2024; accepted 4 Nov 2024; published 7 Nov 2024. Open access, CC BY 4.0.",
+   "doi": "10.3390/s24227151",
+   "sha12s": [
+    "557f30945d46"
+   ],
+   "category": "Personality Computing",
+   "category_slug": "personality-computing"
+  },
+  "extraction": {
+   "title": "Feasibility of Big Data Analytics to Assess Personality Based on Voice Analysis",
+   "authors": [
+    "Víctor J. Rubio",
+    "David Aguado",
+    "Doroteo T. Toledano",
+    "María Pilar Fernández-Gallego"
+   ],
+   "year": "2024",
+   "venue": "Sensors 24(22), 7151 (MDPI, Basel). Received 30 Sep 2024; accepted 4 Nov 2024; published 7 Nov 2024. Open access, CC BY 4.0.",
+   "doi": "10.3390/s24227151",
+   "document_type": "Journal article (empirical, exploratory correlational and classification study)",
+   "coverage": "Whole file read: all 1517 lines of C:\\Users\\pgoff\\Documents\\research\\_text\\557f30945d46.txt in two chunks (lines 1-1073, then 1074-1517), covering abstract, introduction, methods, results with Tables 3-6, discussion, limitations, supplementary note, and all 62 references. No Paul markup was supplied for this item (the task listed no annotation files), so paul_markup is empty and no annotation file was opened. Metadata hint was correct; the venue field is confirmed as Sensors 24(22), 7151.",
+   "research_question": "Three questions stated on p.5 (Introduction, lines 266-286): (1) Are there voice features related to self-reported Big Five scores (externalization)? (2) Are the voice features related to externalization the same as those related to the accuracy of close-other and expert judgments? (3) Can personality dimensions be predicted from voice recorded with ordinary devices in controlled but not restricted speech, so the approach could fit Asynchronous Video Interviews and personnel selection?",
+   "theory": "Brunswick lens model as adapted by Scherer (1978): traits are externalized through objectively measurable speech variables (distal cues), perceived by listeners as proximal cues that ground attributions (p.2, lines 80-86). Brown and Bradshaw (1985) three facets: accuracy, externalization, attribution; this study tests externalization and accuracy (p.5, lines 258-265). Big Five framework; the authors also draw on the Cannata et al. (2022) call to join psychological personality-judgment research and personality computing (p.3, lines 156-163). Authors argue speech reveals the self (Allport and Cantril 1934; Allport 1937) (p.5, lines 238-239). No formal hypothesis is stated; the authors describe the study as exploratory.",
+   "data": "Unit: individual participant (interview recording). N = 100 female participants, split into Sample 1 (n = 78 female psychology students, aged 18-27, M = 20.18) and Sample 2 (n = 44 female participants, aged 18-54, M = 29.42) (p.5, lines 289-292). NOTE: the two sample sizes sum to 122, not 100; the text does not reconcile this. Recruitment: the first author's School of Psychology participant pool at Universidad Autonoma de Madrid, students paid in extra credit (p.5, lines 296-299). Recording period: not stated; the only date is the IRB approval of June 2016 (p.17, lines 1311-1313). Procedure: group session (60-item NEO-FFI, Spanish adaptation), individual interview in the following two weeks, about 7 min per session (p.7, lines 402-410). Audio: WAV, 16 kHz, mono, 16-bit; manually selected open-answer segments, mean 172.8 s (SD 102 s), range 49 s to 15 min; total 4 h 48 min (p.7, lines 414-430). Two different microphones were used for Sample 1 and Sample 2 (p.16). Data available only on request, for privacy reasons (p.17, line 1315). Expert rating subset: N = 20 videos for inter-rater ICC (p.7).",
+   "method": "Voice features: the AVEC 2011 emotion feature set extracted with OpenSMILE 2.3, 1941 features (25 energy/spectral LLDs x 42 functionals, 6 voicing LLDs x 32, 25 delta energy/spectral x 23, 6 delta voicing x 19, 10 voiced/unvoiced durations) (p.6, lines 311-323). Analysis 1 (externalization and accuracy): Pearson-type correlation of all 1941 features with each Big Five score from three criteria (self-report, close-other rubric, expert VAS), then reporting the top features per trait in Sample 1 (Table 4). Replication: the top-correlated self-report feature per trait was re-examined in Sample 2 (Section 3.1.6). Analysis 2 (prediction): for each of five traits, the five highest-correlated features were used; scores were binned into low/medium/high at the 25th and 75th percentiles of training data; random forest classifier (scikit-learn, n_estimators = 20, other defaults); leave-one-out with 100 folds (99 train / 1 test). SVM and multiple linear regression were tried but not reported because random forests did better (p.13, lines 1005-1010). Software: Python with Pandas, SciPy, scikit-learn (p.8). The text does not say whether the five features were selected inside each LOO fold or on the full sample; this is a reviewer note, not a stated fact, and it bears on whether the reported accuracies are out-of-sample. The text also does not name the correlation type or any multiple-comparison correction across 1941 features.",
+   "scope": "Population: adult female Spanish participants recruited at one Madrid university; Sample 1 is mostly students aged 18-27. Institution: Universidad Autonoma de Madrid (School of Psychology and Polytechnic School of Engineering). Era: collection date not stated; published 2024. Setting: semi-structured interview simulating a job interview (warm-up questions, then self-description, career, and a 15-year future question; p.7 lines 418-424). Sex: all participants are female, which the authors treat as a sample restriction (p.16). Constructs: Big Five self-report, close-other judgments, and zero-acquaintance expert ratings from video plus audio.",
+   "key_findings": [
+    {
+     "finding": "Close-other ratings correlate with self-report on all Big Five dimensions except Openness. Expert ratings match self-report only for Conscientiousness and Extraversion.",
+     "location": "Section 3.1, Table 3, p.8-9 (lines 444-451)",
+     "numbers": "Close-other vs self, significant range 0.32 (Neuroticism) to 0.51 (Extraversion). Expert vs self: 'Responsibility' 0.34 and Extraversion 0.31; both significant, the rest not."
+    },
+    {
+     "finding": "Single voice features correlate moderately with personality ratings in Sample 1. The top correlation per trait and criterion is given in Table 4.",
+     "location": "Section 3.1 and Table 4, p.8-12 (lines 452-462, 806-867)",
+     "numbers": "Self: Extraversion 0.47 (mfcc_sma[3]_lpgain), Neuroticism 0.37, Openness 0.36, Agreeableness -0.33, Conscientiousness 0.30. Experts: Extraversion 0.48, Neuroticism -0.47, Conscientiousness 0.44, Openness -0.36, Agreeableness 0.35. Close others: Openness -0.41, Agreeableness -0.41, Neuroticism 0.32, Extraversion 0.40 (text says 0.40 in one sentence and 0.41 in the next), Conscientiousness -0.30."
+    },
+    {
+     "finding": "Expert ratings showed the strongest voice correlates; the authors read this as expert judgments tracking voice cues more than close-other judgments do.",
+     "location": "Discussion, p.14-16 (lines 1155-1160, 1225-1228)",
+     "numbers": "Largest correlations with acoustic features came from the non-acquainted expert. Expert Extraversion accuracy 60% was the best prediction cell (Table 6)."
+    },
+    {
+     "finding": "The feature-level correlations did not replicate across samples. Sample 2 (self-report only) gave different features, although of similar magnitude.",
+     "location": "Section 3.1.6, p.12-13 (lines 981-998, 991-993)",
+     "numbers": "Sample 2 top features: Neuroticism mfcc_sma[1]_percentile99.0 r=0.52; Extraversion F0final_sma_quartile3 r=0.46 (p=0.002); Openness mfcc_sma[3]_kurtosis r=0.52; Agreeableness mfcc_sma[2]_skewness r=-0.46 (p=0.002); Conscientiousness mfcc_sma_de[7]_kurtosis r=-0.53. Authors say the results 'did not coincide'."
+    },
+    {
+     "finding": "Three-class (low/medium/high) classification from the top-5 voice features gives overall accuracy above the 33% chance rate for most criteria, but not above the 50% majority-class baseline for self-report.",
+     "location": "Section 3.2, Table 6, p.13-14 (lines 1009-1020, 1109-1120)",
+     "numbers": "All-cases accuracy (%): Self N 50, E 46, O 46, A 53, C 43. Expert N 57, E 60, O 57, A 56, C 53. Close others N 54, E 57, O 45, A 52, C 54. Chance 33%; a constant central-class prediction gives 50% because the central band holds 50% of cases (p.14)."
+    },
+    {
+     "finding": "Within-class accuracy is highest for medium-trait cases and lower for low and high cases. Some cells are extreme: the Conscientiousness high-trait cell for self-report is 4.1%.",
+     "location": "Table 6, p.13; text p.14 (lines 1121-1127)",
+     "numbers": "Medium-trait accuracy ranges 47.4% to 81.1%; examples: close-other Neuroticism medium 76.4%, expert Neuroticism medium 81.1%. Self-report Conscientiousness high 4.1%, Extraversion high 18.2%. Close-other Conscientiousness low 0%, high 64.3%."
+    },
+    {
+     "finding": "Expert zero-acquaintance rating reliability was moderate to strong on four dimensions and low on Openness. This rating is the criterion that the authors say voice predicts best.",
+     "location": "Section 2.2.2, p.7 (lines 392-401)",
+     "numbers": "ICC on N=20 videos: Emotional Adjustment 0.70, Extraversion 0.73, Agreeableness 0.74, Conscientiousness 0.82, Openness 0.23. Experts discussed disagreements and re-rated Openness."
+    },
+    {
+     "finding": "The Discussion's numbers do not match the Results. It says the highest trait correlations were Neuroticism 0.38 and Extraversion 0.40, and that the predictions range 0.3 to 0.4. Results and Table 4 report 0.47 to 0.48 for Extraversion.",
+     "location": "Abstract p.1 (lines 45-47); Discussion p.14 (lines 1129-1132); Results p.8-10 (lines 459-460, 466, 475)",
+     "numbers": "Discussion: N 0.38, E 0.40. Results: E 0.47 (self), 0.48 (expert). Text claims all correlations p<0.001 with a maximum of 0.50, but Table 4 shows p = 0.0013, 0.002, 0.004 and 0.01 for some cells and a maximum of 0.48."
+    },
+    {
+     "finding": "The authors compare the voice results with facial-expression work and conclude voice alone is more limited; they call personality prediction a multimodal task.",
+     "location": "Discussion, p.14 (lines 1138-1144)",
+     "numbers": "Voice best case about 60% accuracy vs over 75% for facial-expression work by Gavrilescu (ref 56, cited as [56])."
+    }
+   ],
+   "limitations": [
+    "Sample: 100 participants, all female, mostly psychology students (age 18-27 in Sample 1). Authors say the group is homogeneous in age and personality, so extreme trait values are unlikely, limiting external validity (p.16).",
+    "Effect sizes are moderate and may not hold in larger or more varied samples; the authors say they should be read cautiously (p.16).",
+    "No cross-cultural sampling; the authors say cultural norms may change how traits are externalized through voice (p.16).",
+    "Confounders: noise in some recordings; two different microphones for Sample 1 and Sample 2, which the authors say may explain the lack of replication; colds, fatigue and emotional state could act as latent variables (p.16).",
+    "Only vocal aspects were analyzed. Fluency (pauses, discontinuities), morphology/syntax, conversational behavior, facial expression, body language and movement were not (p.17).",
+    "Feature interpretability is weak: most top features are MFCC or LPC coefficients whose meaning is unclear, and the top features did not replicate across samples (pp.12-15).",
+    "No explicit power analysis. The authors say N = 100 gives 80% power for correlations near 0.2 (p.5, lines 300-304). Many features (1941) raise the risk of spurious correlation; the authors used two samples to check consistency (p.5).",
+    "Expert Openness reliability was low (ICC 0.23 on 20 videos) (p.7).",
+    "Internal inconsistencies found in the text, not reconciled by the authors: Sample sizes 78 + 44 = 122 vs N = 100; Discussion correlation values (0.38/0.40) vs Results (0.47/0.48); Extraversion close-other r given as both 0.40 and 0.41; 'all p < 0.001' vs Table 4 p-values up to 0.01; 'one of two experts' vs both experts rating videos (p.7).",
+    "Data are available only on request for privacy reasons, so the results cannot be reproduced from the paper alone (p.17).",
+    "Prediction set-up: the text does not say whether feature selection (top-5 by correlation) was done inside each leave-one-out fold; this must be checked before accepting the 43-60% accuracies as out-of-sample."
+   ],
+   "measures": [
+    "Big Five self-report: NEO-FFI, 60-item Spanish adaptation (Cordero et al. 2008), completed in a group session (p.7).",
+    "Close-other judgments: 3-point (low/medium/high) rubric for 5 dimensions, completed by a relative or close friend; adapted from the NEO-FFI manual summary sheet (p.7; rubric in Supplementary Materials).",
+    "Expert zero-acquaintance ratings: 15 cm visual analog scale per Big Five dimension, scored as cm from the 0 mark, based on watching the full video (p.7). Two experienced PhD assessors (one female, one male; over 25 years of experience); calibrated to 100% agreement on cues before rating.",
+    "Inter-rater ICC on 20 videos: Emotional Adjustment 0.70, Extraversion 0.73, Agreeableness 0.74, Conscientiousness 0.82, Openness 0.23 (p.7).",
+    "Voice features: OpenSMILE AVEC 2011 emotion set, 1941 functionals (LLDs, deltas, voicing, durations) (p.6, Tables 1-2).",
+    "Dependent variable for prediction: low/medium/high classes at training-set 25th and 75th percentiles (p.13)."
+   ],
+   "references_of_note": [
+    "Ambady and Rosenthal 1992, Psychol. Bull. 111:256 (ref 3): thin-slice meta-analysis, overall accuracy 0.39 in zero-acquaintance predictions of outcomes. Relevant to the persuasion/accuracy theme.",
+    "Mairesse, Walker, Mehl and Moore 2007, J. Artif. Intell. Res. 30:457 (ref 14): automatic recognition of personality from linguistic cues in conversation and text. Closest text-measurement precedent in the reference list.",
+    "Van Zant and Berger 2020, J. Pers. Soc. Psychol. 118:661 (ref 23): 'How the voice persuades'; paralinguistic cues (pitch, volume) enhance persuasion. Only persuasion-related work the paper cites.",
+    "Breil, Osterholz, Nestler and Back 2021 (ref 24): review of 32 studies, up to 39 non-verbal cues, correlations with Big Five traits.",
+    "Cannata et al. 2022, Technol. Mind Behav. 3:1 (ref 27): framework linking psychological and AI personality research; the paper's stated bridge.",
+    "Hickman et al. 2022, J. Appl. Psychol. 107:1323 (ref 50): reliability, validity and generalizability of automated video-interview personality assessments.",
+    "Koutsoumpis et al. 2024, Comput. Hum. Behav. 154:108128 (ref 49): audio signals predict self-report and expert-rated traits in asynchronous video interviews.",
+    "Hosoda, Stone-Romero and Coats 2003 (ref 60): meta-analysis of physical attractiveness effects on job outcomes; cited for recruiter attribution bias.",
+    "Youyou, Kosinski and Stillwell 2015, PNAS 112:1036 (ref 57): computer-based personality judgments more accurate than human judgments.",
+    "Eyben et al. 2010 (ref 39, OpenSMILE) and Schuller et al. 2011 (ref 38, AVEC 2011 feature set): the feature pipeline used.",
+    "Mohammadi and Vinciarelli 2012, IEEE Trans. Affect. Comput. 3:273 (ref 41): automatic personality perception from prosodic features; Speaker Personality Corpus source.",
+    "Pennebaker and King 1999 (ref 59) and Argamon et al. 2005 (ref 58): lexical and linguistic-style predictors of personality; the text-based tradition the authors contrast with voice.",
+    "Marrero et al. 2022, Acta Psychol. 230:103740 (ref 21): voice samples predict self-reported traits (about 10% of variance)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "Voice features are related to the externalization of individuals' personality characteristics.",
+     "location": "Discussion, p.14, lines 1129-1130"
+    }
+   ],
+   "identification": "None in the causal sense. The design is cross-sectional: correlations between acoustic features and three personality criteria (Sample 1, with Sample 2 as a replication for self-report), then leave-one-out random-forest classification on N = 100. No instrument, quasi-experiment or manipulation. Out-of-sample validity depends on whether feature selection was inside each fold, which the text does not state.",
+   "theory_note": "The paper treats personality as externalized through vocal cues and perceived by judges. Accuracy and externalization are kept separate (Brown and Bradshaw 1985)."
+  },
+  "summary_md": "Rubio, Aguado, Toledano and Fernandez-Gallego (Sensors 2024) recorded about 7-minute mock job interviews with Spanish women, nearly all students. They extracted 1,941 OpenSMILE AVEC-2011 acoustic functionals and correlated them with Big Five scores from three sources: NEO-FFI self-report, close-other ratings and zero-acquaintance expert ratings. In Sample 1 (n=78), the best single feature reached r of about 0.30-0.48 per trait. Expert ratings tracked voice most closely (E 0.48, N -0.47). The paper also says N=100, but its two samples add to 122.\n\nThe key result is negative: the top features did not replicate in Sample 2 (n=44). The authors suggest a microphone change may explain this. For prediction, the top five features fed a random forest that sorted people into low, medium or high on each trait, scored by leave-one-out. Self-report accuracy was 43-53%, no better than the 50% you get by always guessing \"medium\". Expert ratings did best, at 53-60%. The paper never says whether the top five features were chosen inside each fold, so even those figures may be optimistic. The Discussion's numbers also contradict the Results (0.38/0.40 vs 0.47/0.48).\n\nFor Melange, the paper backs the audio lane's existing verdict rather than reopening it. The lane uses a related toolkit (eGeMAPS v02 from openSMILE), and its audio Neuroticism (N) pilot was a MISS. Audio is display-only, and the engine never reads it. The paper adds two concrete cautions. First, a change of channel (microphone or venue) can wipe out feature-level findings. Second, a sample of one sex hides the sex confound in pitch variability. Melange measured that confound, but the fix is not on the live branch (see flags).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-audio-speech.prosody-and-disfluency",
+    "relation": "supports",
+    "paper_claim": "Single-feature voice-trait correlations of r about 0.30-0.48 in Sample 1 (n=78) did not replicate in Sample 2 (n=44, self-report only): different top features, which the authors call results that 'did not coincide'. They blame the switch between two microphones, plus noise, colds and fatigue. Voice alone peaks at about 60% three-class accuracy, against over 75% in facial-expression work, so they call personality prediction a multimodal task.",
+    "paper_location": "Section 3.1.6, pp.12-13 (lines 981-998); Limitations p.16; Discussion p.14 (lines 1138-1144)",
+    "system_side": "The lane extracts eGeMAPS v02 (88 openSMILE functionals) per verified solo clip, pools them per member weighted by duration, then z-scores and winsorizes at +/-5. Channel (studio, remote or telephone) is recorded as uncontrolled. There is a large venue confound in disfluency (about 26 per 1k words live vs 0.22 per 1k on NPR). The engine and ranks never read audio, and the audio N look was spent and MISSed on 2026-08-25.",
+    "code_ref": "fec/members/b5_audio_build.py:3-5,97-100; C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md:44,107",
+    "transfer_conditions": "The paper's sample is all female, Spanish, mostly aged 18-27, with self-report criteria. Members of Congress are mixed-sex and older, recorded across many outlets, with no self-report criterion. The transfer is the methodological lesson: feature-level findings break when the recording channel changes. The effect sizes do not transfer. The Melange corpus has much more channel heterogeneity than two microphones, so the instability risk is larger here, which reinforces display-only.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-audio-speech#eGeMAPS prosody and Whisper disfluency rates|eGeMAPS prosody and Whisper disfluency rates]]",
+    "system": "melange-audio-speech"
+   },
+   {
+    "component_id": "melange-audio-speech.prosody-and-disfluency",
+    "relation": "qualifies",
+    "paper_claim": "Prediction: the 5 features most correlated with each trait were picked from 1,941, scores were binned at the 25th/75th percentiles, and a random forest (20 trees) was scored by leave-one-out on N=100. Self-report accuracy was N 50, E 46, O 46, A 53, C 43%, against a 50% majority-class baseline. Expert accuracy was 53-60%. The paper does not say whether feature selection ran inside each fold, and it applies no multiple-comparison correction across 1,941 correlations.",
+    "paper_location": "Section 3.2, Table 6, pp.13-14 (lines 1005-1020, 1109-1127)",
+    "system_side": "The audio pilot does no univariate pre-selection. Ridge regression uses all 88 features, alpha is tuned by GridSearch inside each outer fold, and 5-fold CV is repeated over 5 seeds. A permutation null with the same estimator sets the noise floor. The ES cross-modal re-test likewise uses all 88 features with nested CV and 5000 label permutations, and no analyst sign choices. That re-test gave held-out r=+0.208 (perm p=.0002) at the Melange N; it is a single path and stays UNVERIFIED as a trait claim.",
+    "code_ref": "fec/members/b5_audio_eval.py:28-43; fec/members/b5_es_crossmodal.py:3-5,35-38",
+    "transfer_conditions": "Melange's design already guards against the leakage this paper may contain, so Rubio's accuracies cannot be used as a bar or prior for Melange looks. The overall rates sit at or below the 50% majority baseline for self-report, and selection may have run outside the folds. At most they say the expected effect is small: about r 0.3-0.5 for the best single feature, before correcting for selection across 1,941 features. That fits Melange's MISS at N=90.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-audio-speech#eGeMAPS prosody and Whisper disfluency rates|eGeMAPS prosody and Whisper disfluency rates]]",
+    "system": "melange-audio-speech"
+   },
+   {
+    "component_id": "melange-audio-speech.prosody-and-disfluency",
+    "relation": "qualifies",
+    "paper_claim": "All 100 participants are female. The authors list this as a limit on generalization, and it also removes sex as a confound in pitch features. The paper never estimates how sex affects F0-based features.",
+    "paper_location": "Section 2.1, p.5 (lines 289-292); Limitations p.16",
+    "system_side": "Melange measured r(sex=F)=-0.266 (d=-0.944, 1,324 clips / 309 members) on F0semitone stddevNorm. Commit 4193f0140 changed pitch_variability_raw to the plain semitone SD (stddevNorm*amean) and barred stddevNorm on its own. That commit is NOT an ancestor of HEAD (git merge-base --is-ancestor returns false). The live file still emits stddevNorm alone and labels the metric without the bar.",
+    "code_ref": "fec/members/b5_audio_descriptors_candidate.py:27,217,366",
+    "transfer_conditions": "A same-sex study gives no evidence that pitch-variability effects survive in a mixed-sex legislature. Any pitch-based descriptor in Melange needs sex conditioning or the de-normalized SD. Melange's own Salam-2022 check found pace and volume_dynamics free of sex effects; pitch variability and jitter are not.",
+    "strength": "strong",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-audio-speech#eGeMAPS prosody and Whisper disfluency rates|eGeMAPS prosody and Whisper disfluency rates]]",
+    "system": "melange-audio-speech"
+   },
+   {
+    "component_id": "melange-psychometrics.persona-agency-communion",
+    "relation": "context",
+    "paper_claim": "The strongest voice correlates come from zero-acquaintance expert ratings made from video plus audio (E 0.48, N -0.47, C 0.44), not from self-report. The authors read this as voice tracking what a listener attributes more than the person's self-view. Self-other agreement on Openness was not significant, and expert Openness ICC was 0.23.",
+    "paper_location": "Table 3-4 pp.8-12; Discussion pp.14-16 (lines 1155-1160, 1225-1228); Section 2.2.2 p.7",
+    "system_side": "The persona channel models the projected persona that a lobbyist meets, built from LLM cue classification of text. The audio descriptors are written as listener-facing descriptions in narrative paragraphs and make no trait claims.",
+    "code_ref": "fec/members/b5_narratives.py:106; C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md:53,63",
+    "transfer_conditions": "This loosely supports framing audio as a perceived persona rather than a trait. The expert-rating result rests on two raters and 20 ICC videos in a non-political, all-female sample, so it does not validate any Melange persona weight. PERSONA_W stays an owner ruling.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Agency-communion persona channel|Agency-communion persona channel]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "The sex-confound fix for pitch_variability_raw (stddevNorm*amean, commit 4193f0140, 2026-08-21) is not on the live branch. fec/members/b5_audio_descriptors_candidate.py:217 still emits stddevNorm alone, a metric Melange itself measured as sex-loaded (r=-0.266). This finding is UNVERIFIED under DE-062: one path only (git ancestry plus a file read).",
+   "There is no explicit channel or microphone stratum. Rubio's non-replication across two microphones suggests eGeMAPS features should be checked for stability within member across recording channels, or z-scored within venue. The brain lists channel as uncontrolled.",
+   "Melange has no test of whether vocal descriptors match how listeners perceive members, as opposed to self-reported traits. That is where Rubio found the strongest signal (expert ratings). The system has no rater panel for audio-perceived persona."
+  ],
+  "flags": [
+   "Do not cite Rubio's 43-60% accuracies as evidence that voice predicts personality. For self-report they do not beat the 50% majority baseline. Fold placement of feature selection is unstated. There is no multiple-comparison correction across 1,941 features.",
+   "The paper is internally inconsistent: N=100 vs 78+44=122; Discussion r 0.38/0.40 vs Results 0.47/0.48; 'all p<0.001' vs Table 4 p values up to 0.01. Quote figures only from the Results tables, with the sample named.",
+   "Every figure comes from a homogeneous Spanish sample of 100 women in mock job interviews, with a recording date not stated. Mark any transfer to members of Congress as UNSTRATIFIED by sex and channel.",
+   "The audio N route is closed (look spent 2026-08-25). This paper does not justify reopening it, and a new audio-trait look would need a fresh pre-registration under the single-look discipline.",
+   "The missing-fix finding (4193f0140 not an ancestor of HEAD) is new agent analysis and stays UNVERIFIED until a second path reproduces it (DE-062). It is reported here, not repaired: the repo is read-only for this task."
+  ],
+  "paul_alignment": "Paul's notes favor non-textual channels (audio, video, image) and ask for a framework that handles the 'contextual or auditory constraints' of a format (Ramey). Rubio gives that concern concrete content: one microphone change was enough to break feature-level replication, and voice alone reached only about 60% at best. Overall, the evidence sides with the system's conclusion (audio is display-only; the audio N pilot MISSed) more than with an expectation that voice will yield trait scores. Paul's note is not stale so much as left open: it asks for a framework, and the system has answered with display-only plus reliability ranking (pause .92 > pace .86 > volume .85 >> pitch). Paul did not annotate this paper.",
+  "related": [
+   {
+    "slug": "marrero-2022-evaluating-voice-samples",
+    "relation": "cites",
+    "why": "Rubio cites Marrero (ref 21): voice samples explain about 10% of self-reported trait variance. Both test the same voice-to-self-report question, with similarly modest effects."
+   },
+   {
+    "slug": "salam-2022-learning-personalised-models",
+    "relation": "complements",
+    "why": "Same target: automatic recognition of self-reported personality. Melange's Salam-2022 check on sex-clean pace and volume, and on sex-loaded pitch variability, fills in the sex-confound question that Rubio's all-female sample cannot answer."
+   },
+   {
+    "slug": "mestre-2026-potential-pitfalls-audio",
+    "relation": "complements",
+    "why": "Audio as data for political research: alignment, features and classification pitfalls. Rubio's non-replication across microphones is a concrete case of those pitfalls."
+   },
+   {
+    "slug": "dietrich-2019-pitch-perfect-vocal",
+    "relation": "complements",
+    "why": "Vocal pitch in congressional speech measures emotional intensity, not trait. It is the political-domain counterpart to Rubio's lab interview setting."
+   },
+   {
+    "slug": "mondak-nd-online-appendix-personality",
+    "relation": "complements",
+    "why": "Expert ratings of legislators' traits (Personality on the Hill) play the same role as Rubio's zero-acquaintance expert criterion, which tracked voice most closely."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Ramey measures elite personality from the words in speech; Rubio measures it from the acoustics. Rubio sets the voice channel against the lexical tradition."
+   },
+   {
+    "slug": "celli-nd-twenty-years-personality",
+    "relation": "complements",
+    "why": "A review of threats in personality computing. Rubio's selection-leakage ambiguity and failed replication are examples of the reproducibility problems it covers."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "soto-2017-next-five-inventory",
+  "note": false,
+  "meta": {
+   "title": "The Next Big Five Inventory (BFI-2): Developing and Assessing a Hierarchical Model with 15 Facets to Enhance Bandwidth, Fidelity, and Predictive Power",
+   "authors": [
+    "Christopher J. Soto",
+    "Oliver P. John"
+   ],
+   "year": "2017",
+   "venue": "Journal of Personality and Social Psychology, 113, 117-143",
+   "doi": "",
+   "sha12s": [
+    "175849dd39a8"
+   ],
+   "category": "Psychometrics & Personality Measurement",
+   "category_slug": "psychometrics-personality-measurement"
+  },
+  "extraction": {
+   "title": "The Next Big Five Inventory (BFI-2): Developing and Assessing a Hierarchical Model with 15 Facets to Enhance Bandwidth, Fidelity, and Predictive Power",
+   "authors": [
+    "Christopher J. Soto",
+    "Oliver P. John"
+   ],
+   "year": "2017",
+   "venue": "Journal of Personality and Social Psychology, 113, 117-143",
+   "doi": "",
+   "document_type": "Empirical journal article: three-study scale development and validation (measurement instrument)",
+   "coverage": "Full text read: all 4,130 lines of the extracted text (printed pp. 1-79), covering front matter, abstract, introduction, Study 1, Study 2, Study 3, general discussion, limitations, conclusion, references, Tables 1-11, Figures 1-4 (captions and surrounding text only; figure graphics are not in the text file), appendix (60-item form) and scoring key. Paul's markup: no markup files were supplied for this PDF, so paul_markup is empty. Domain check: the paper contains no content on lobbying, social networks, path-finding, allocation, elections, persuasion or turnout, legislators, or text-as-data measurement. \"Nomological network\" is a construct-validity term (Cronbach and Meehl, 1955), not a social network. Lexical sourcing of items from trait adjectives and IPIP phrases (Study 1, Phase 2) is the only text-related element.",
+   "theory": "Big Five trait structure (Extraversion, Agreeableness, Conscientiousness, Negative Emotionality, Open-Mindedness) with a hierarchical facet level. Bandwidth-fidelity tradeoff (Cronbach and Gleser, 1957; John, Hampson, and Goldberg, 1991): broad traits predict broadly, narrow facets predict specifically. Facets are chosen as factor-pure (anchor the domain) plus complementary (broaden it). Acquiescent responding is a response style that biases reliability, structure and validity unless items are content-balanced (Jackson and Messick, 1958).",
+   "research_question": "Can a brief Big Five inventory be built with a robust hierarchical structure (three facets per domain), balanced true-keyed and false-keyed content to control acquiescence, and greater bandwidth, fidelity and predictive power than the original 44-item Big Five Inventory (BFI), while keeping the BFI's focus, clarity and brevity?",
+   "data": "Study 1 (item development): N = 1,137 members of the Eugene-Springfield Community Sample (Oregon adults), age 18-89 (M = 49.64, SD = 13.02), 52.9% female; 641 completed the BFI; 1,131 completed at least one trait-adjective list (885 adjectives); 995 completed at least one IPIP list (2,552 IPIP items); 401 completed all 12 IPIP lists. Study 2 (scale construction): N = 1,000 adults from personalitylab.org (500 men, 500 women), age 18-77 (M = 29.25, SD = 12.17), 79% US residents; all rated a 110-item pool. Study 3 (validation): internet sample N = 1,000 personalitylab.org visitors (500 men, 500 women), age 18-74 (M = 28.73); student sample N = 470 psychology students at a large public university (146 men, 313 women, 11 unreported), age 16-49 (M = 21.68). Subsamples: 8-week retest n = 110; peer reports n = 184 (60% friends, 30% romantic partners); behavioral self-reports (Schwartz values, about two weeks later) n = 439; psychological well-being n = 179; other Big Five measures (Mini-Markers, BFAS, NEO PI-R, NEO-FFI) n = 438. Unit: individual respondent. Study period: not stated in the text. Note: the student sample is 470 in the text but 459 in the gender breakdown of Table 5.",
+   "method": "Rational-empirical scale development in three studies. Study 1: three facets per domain chosen as one factor-pure facet plus two complementary facets (pp. 15-18); marker adjectives correlated against 885 adjectives, 2,552 IPIP items and 44 BFI items to find item content (pp. 18-19); preliminary pool of 110 items (44 original, 19 revised, 47 new) with at least three true-keyed and three false-keyed items per facet (p. 19). Study 2: rational review plus convergent and discriminant correlations with preliminary scales, and balanced keying, to select 60 items (four per facet, 15 facets, 5 domains of 12 items) (pp. 21-22); PCA with varimax rotation on the development sample, which the authors flag as possibly favorably biased (p. 22). Study 3 (independent samples): alpha and retest reliability; self-peer correlations; PCAs of raw and within-person-centered items; five-component varimax solutions for domains and facets with Tucker-type congruence; CFA of five model sets per domain (single domain, single domain plus acquiescence, positive/negative items, three facets, three facets plus acquiescence; acquiescence factor loadings fixed at 1 and uncorrelated with substantive factors); monotrait-heteromethod and heterotrait correlations with other Big Five measures; IRT test information comparisons with the BFI; and regressions predicting 20 self- and peer-reported criteria from BFI domains, post hoc BFI facets, BFI-2 domains and BFI-2 facets, with facets chosen by forward regression (inclusion p < .01, maximum three predictors) (pp. 22-38).",
+   "identification": "None in the causal sense. This is an observational psychometric validation. Acquiescence is handled three ways: content-balanced keying (equal true- and false-keyed items per scale), within-person centering of items (p. 10, p. 30), and modeling acquiescence as a latent method factor in CFA (p. 32-33). Validity evidence is correlational (convergent, discriminant, self-peer, and criterion correlations and regressions). No causal or quasi-experimental design is used.",
+   "scope": "Population: adults in economically developed English-speaking nations, mainly young or middle-aged and mostly with at least high-school education (Study 1 community sample from Oregon; Studies 2-3 volunteers from personalitylab.org, an online feedback site; Study 3 student sample from one public university). Not representative; the authors say population norms are still needed (p. 46). Era: not stated in the text. Institution: not applicable beyond the named samples. Measure scope: Big Five domains plus 15 facets, 60 items, 10 minutes or less.",
+   "key_findings": [
+    {
+     "finding": "Hierarchical model: 15 facets (three per Big Five domain) selected as one factor-pure plus two complementary facets per domain. Extraversion: Sociability, Assertiveness, Energy Level. Agreeableness: Compassion, Respectfulness, Trust. Conscientiousness: Organization, Productiveness, Responsibility. Negative Emotionality: Anxiety, Depression, Emotional Volatility. Open-Mindedness: Intellectual Curiosity, Creative Imagination, Aesthetic Sensitivity.",
+     "location": "Study 1, Phase 1, pp. 15-18; Table 1, p. 61; Conclusion of Study 1, p. 20",
+     "numbers": "15 facets; 3 per domain; 110-item preliminary pool (44 original, 19 revised, 47 new)"
+    },
+    {
+     "finding": "Final BFI-2: 60 items, four per facet, 12 per domain. Reliability in the scale-development sample (Study 2): domain alphas .87 E, .83 A, .88 C, .91 N, .84 O; facet alphas .65-.84, mean .76. First PCA: all 15 facets loaded most strongly on their intended component (primary loadings at least .73, M = .80); all 60 items loaded most strongly on the intended component (at least .41, M = .60).",
+     "location": "Study 2 Results, pp. 22-23",
+     "numbers": "60 items; domain alpha .83-.91; facet alpha .65-.84 (M = .76); facet primary loadings >= .73 (M = .80); item primary loadings >= .41 (M = .60)"
+    },
+    {
+     "finding": "Study 3 reliability: all five domain alphas were at least .83 internet and .85 student; eight-week retest of domains was at least .76 (student). Facet alphas ranged .66-.85 in each sample (mean .76 internet, .77 student); facet retest .66-.83 (mean .73).",
+     "location": "Study 3, Reliability section, p. 28; Tables 2-3, pp. 62-63",
+     "numbers": "domain alpha >= .83 (internet), >= .85 (student); domain retest >= .76; facet alpha .66-.85; facet retest mean .73"
+    },
+    {
+     "finding": "Discrimination: absolute correlations among domains averaged .20 (internet) and .24 (student). Within-domain facet correlations averaged .53 (internet) and .55 (student), versus absolute between-domain facet correlations of .16 and .19.",
+     "location": "Study 3, pp. 28-29; Table 2, p. 62; Table 3, p. 63",
+     "numbers": "domain intercorrelation mean |r| = .20/.24; within-domain facet r = .53/.55; between-domain facet |r| = .16/.19"
+    },
+    {
+     "finding": "Self-peer agreement (student sample, peer n = 184): domain agreement .42-.69 (mean .56) versus absolute discriminant mean .11. Facet agreement .27-.73 (mean .49), within-domain discriminant mean .32, between-domain discriminant mean .10. Thirteen of 15 self-reported facets and 14 of 15 peer-reported facets had their strongest correlation with the corresponding facet on the other rater's side.",
+     "location": "Study 3, p. 29; Table 4, p. 64",
+     "numbers": "domain agreement mean r = .56; facet agreement mean r = .49; 13/15 and 14/15 strongest-match counts"
+    },
+    {
+     "finding": "Acquiescence: PCA of 60 raw items gave six components above the scree line (Big Five plus an acquiescence component) in both samples. Within-person centering removed the extra component. Five varimax components of centered items reproduced the Big Five, with primary loadings averaging .62 (internet) and .61 (student); congruence with raw-item components was .97 or higher.",
+     "location": "Study 3, Domain-level structure, pp. 30-31; Figure 1, p. 73; Table 6, pp. 66-67",
+     "numbers": "raw-item PCA: 6 components vs 5 after centering; primary loadings M = .61 (internet raw), .60 (student raw), .62 (internet centered), .61 (student centered); congruence >= .97"
+    },
+    {
+     "finding": "Facet-level acquiescence: the PCA of 15 facet scales showed only five components above the scree line (first five eigenvalues 4.05, 2.16, 1.90, 1.60, 1.32 in the internet sample, then 0.56 or lower), so the content-balanced facets did not produce an acquiescence component. Facet primary loadings were at least .73 (M = .81, internet) and at least .67 (M = .79, student), with congruence .98 or higher.",
+     "location": "Study 3, p. 31; Table 7, p. 68",
+     "numbers": "5 components above scree; eigenvalues 4.05, 2.16, 1.90, 1.60, 1.32; facet primary loadings >= .73 (M = .81) and >= .67 (M = .79)"
+    },
+    {
+     "finding": "Confirmatory factor analysis within domains: a single-domain model fit poorly (CFI <= .805 internet, <= .800 student). Adding acquiescence or separating positive and negative items gave a large fit gain for Agreeableness but still poor fit (CFI <= .876 / .850). The three-facet model fit acceptably or nearly acceptably for E, C, N, O (CFI >= .902 / .895), and the three-facets-plus-acquiescence model fit acceptably for all domains (CFI >= .930 / .932).",
+     "location": "Study 3, pp. 31-34; Table 8, p. 69",
+     "numbers": "single-domain CFI <= .805 / .800; three facets CFI >= .902 (internet) / .895 (student) for E, C, N, O; three facets plus acquiescence CFI >= .930 / .932; RMSEA about .054-.075 for the best model per domain (Agreeableness .054 / .058)"
+    },
+    {
+     "finding": "Convergence with other Big Five measures (student sample): monotrait-heteromethod correlations averaged .92 with the original BFI, .82 with the BFAS, .80 with Mini-Markers, .75 with NEO-FFI and .72 with NEO PI-R; absolute heterotrait-heteromethod correlations averaged .21. Gains over the original BFI were largest for Agreeableness (.75 vs .70) and Open-Mindedness (.76 vs .72).",
+     "location": "Study 3, Convergence, pp. 34-35; Table 9, p. 70",
+     "numbers": "convergent r: BFI .92, BFAS .82, Mini-Markers .80, NEO-FFI .75, NEO PI-R .72; heterotrait mean |r| = .21; A .75 vs .70; O .76 vs .72"
+    },
+    {
+     "finding": "Facet convergence: 53 BFI-2 facet correlations with same-domain BFAS aspects and NEO PI-R facets were at least .50, and each facet had a distinctive profile (for example, Assertiveness with BFAS Assertiveness r = .85; Organization with Order r = .74; Depression with Withdrawal r = .77).",
+     "location": "Study 3, Facet-level associations, pp. 35-36; Figure 3, pp. 74-76 (N = 438)",
+     "numbers": "53 correlations >= .50; r = .85, .74, .77 as listed"
+    },
+    {
+     "finding": "Information: IRT test information was similar in shape for BFI and BFI-2 domains, but the BFI-2 gave about 55% more information on Negative Emotionality, 15% on Extraversion, 29% on Agreeableness, 12% on Open-Mindedness and 11% on Conscientiousness.",
+     "location": "Study 3, footnote 4, pp. 34-35",
+     "numbers": "+55% (N), +15% (E), +29% (A), +12% (O), +11% (C) total information"
+    },
+    {
+     "finding": "Predictive power: across 20 self- and peer-reported criteria, mean R-squared was .25 for BFI domains, .27 for post hoc BFI facets, .27 for BFI-2 domains and .33 for BFI-2 facets. Entering BFI-2 facets after BFI domains added significant variance for 14 of 20 criteria.",
+     "location": "Nomological network section, pp. 37-39; Table 11, p. 72; Figure 4, p. 77; footnote 7, pp. 38-39",
+     "numbers": "mean R2 = .25 (BFI domains), .27 (post hoc BFI facets), .27 (BFI-2 domains), .33 (BFI-2 facets); 14/20 criteria with significant incremental R2 for BFI-2 facets"
+    },
+    {
+     "finding": "Domain-level criterion patterns were nearly identical between BFI and BFI-2: column-vector correlations of zero-order correlations across 20 criteria averaged .98, as did standardized coefficients. Associations were slightly stronger for BFI-2 domains, giving higher explained variance.",
+     "location": "Footnote 6, pp. 36-37",
+     "numbers": "column-vector r = .98 (zero-order and standardized coefficients)"
+    },
+    {
+     "finding": "Facet-level predictors were distinct and conceptually meaningful. Examples (Table 10, r/beta): Benevolence predicted by Compassion (.47/.29) and Trust (.45/.28); Self-direction by Intellectual Curiosity (.44/.39); Stress resistance by Emotional Volatility (-.47/-.32) and Anxiety (-.46/-.28); Positive relations by Depression (-.53/-.38).",
+     "location": "Table 10, p. 71; text pp. 36-38",
+     "numbers": "see Table 10 r/beta values listed"
+    },
+    {
+     "finding": "Acquiescence index: averaging all 60 raw items without reversing false-keyed items gives a yea-saying or nay-saying index (range 1.00 to 5.00). The authors propose the BFI-2 for studying acquiescence itself.",
+     "location": "General Discussion, p. 45",
+     "numbers": "range 1.00-5.00 across 60 items"
+    }
+   ],
+   "limitations": [
+    "Samples are mostly young or middle-aged adults with at least high-school education; population norms are not yet available (p. 46). Reliability and validity among older adults and less-educated respondents are untested (pp. 46-47). The BFI-2's revisions for easier wording have not been directly tested for improved measurement among younger or less-educated respondents (p. 46).",
+    "All participants lived in economically developed English-speaking nations, so cross-cultural structure and correlates are untested (pp. 46-47).",
+    "Brevity forces exclusions. Domain-level: traits beyond the Big Five and constructs such as characteristic adaptations and narrative identity are excluded (p. 47). Facet-level: behavioral Open-Mindedness facets and peripheral facets such as excitement-seeking, modesty, deliberation and impulsivity are excluded (pp. 47-48). Item-level: anger/irritability content is measured only indirectly through Emotional Volatility (p. 48).",
+    "Study 2 facet and domain reliability and PCA results come from the same sample used to refine the item pool, so they may be favorably biased by capitalization on chance; the authors therefore emphasize Study 3 (p. 22).",
+    "Study 3 internet and student samples are self-selected (online feedback-seekers and course participants). The student sample is strongly gendered (313 women, 146 men) and the internet sample reports higher Open-Mindedness and Negative Emotionality than students (p. 29-30).",
+    "The 4-item facet scales have modest reliability (facet alphas .66-.85), and the authors note some Schwartz-value criteria have low alphas (.27-.70), which they retained as an a priori criterion set (p. 26-27).",
+    "Self-reported behavioral and psychological criteria come from single-method self-report, and peer reports are from a subsample of acquaintances (n = 184).",
+    "The authors recommend simple item aggregation for new studies. Regression-derived equations for switching from BFI to BFI-2 are available from the first author (footnote 3, p. 34), not reported in the text."
+   ],
+   "measures": [
+    "BFI-2: 60 items, 5-point agree-disagree scale; 15 facets (4 items) and 5 domains (12 items); balanced true- and false-keyed items; scoring key in Appendix pp. 78-79.",
+    "Original Big Five Inventory (BFI; 44 items), used for comparison.",
+    "Big Five Mini-Markers (Saucier, 1994): 40 unipolar adjectives on 9-point scale.",
+    "Big Five Aspect Scales (BFAS; DeYoung et al., 2007): 100 items, 10 aspects.",
+    "NEO Personality Inventory-Revised (NEO PI-R; 240 items; 30 facets) and NEO Five-Factor Inventory (NEO-FFI; 60 items).",
+    "Behavioral self-reports (Bardi and Schwartz, 2003): 80 items on the previous six months, within-person centered, aggregated into 10 Schwartz values scales (alpha .27-.70).",
+    "Psychological Well-Being Scales (Ryff, 1989): 84 items, six 14-item aspects (alpha .85-.92).",
+    "Peer-reported criteria (English et al., 2012): social connectedness (4 items), likability (2), stress resistance (5), positive affect (2).",
+    "Trait-descriptive adjectives (885, from Goldberg, 1992; Saucier, 1994, 1997) and IPIP items (2,552, Goldberg, 1999; Goldberg et al., 2006) used for item development in Study 1."
+   ],
+   "references_of_note": [
+    "Hofstee, De Raad and Goldberg (1992), Integration of the Big Five and circumplex approaches (AB5C; factor-pure facet logic).",
+    "Costa and McCrae (1995), Domains and facets: hierarchical personality assessment using the NEO PI-R (hierarchical bandwidth-fidelity approach).",
+    "DeYoung, Quilty and Peterson (2007), Between facets and domains: 10 aspects of the Big Five (aspect-level structure, BFAS basis).",
+    "Ashton, Jackson, Paunonen, Helmes and Rothstein (1995), The criterion validity of broad factor scales versus specific facet scales (bandwidth-fidelity evidence).",
+    "Paunonen and Ashton (2001), Big Five factors and facets and the prediction of behavior (facet-level prediction of behavior).",
+    "Ozer and Benet-Martinez (2006), Personality and the prediction of consequential outcomes (review of trait prediction).",
+    "John, Hampson and Goldberg (1991) and Cronbach and Gleser (1957), bandwidth-fidelity tradeoff.",
+    "Soto and John (2009a), Ten facet scales for the Big Five Inventory (post hoc BFI facets, direct precursor).",
+    "Soto, John, Gosling and Potter (2008), developmental psychometrics of Big Five self-reports and acquiescence.",
+    "Rammstedt and Farmer (2013), impact of acquiescence on personality structure (lower education).",
+    "Bardi and Schwartz (2003), Values and behavior (behavioral criteria used here).",
+    "Roberts et al. (2005) and MacCann, Duckworth and Roberts (2009), facet structure of Conscientiousness.",
+    "Danner, Aichholzer and Rammstedt (2015), acquiescence in personality questionnaires.",
+    "Jackson and Messick (1958), content and style in personality assessment (acquiescence origin).",
+    "English, John, Srivastava and Gross (2012), peer-rated social functioning (peer-report criteria).",
+    "Note: the paper cites no lobbying, election, legislator, or network-analysis works. Network references above are only in the sense of trait structure and nomological validity."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "the BFI-2 facet scales provided considerably more predictive power (mean R2 = .33) than any other set of predictors.",
+     "location": "Nomological network and predictive power, p. 38"
+    },
+    {
+     "quote": "the predictive utility of narrow trait measures depends more on their quality than their quantity.",
+     "location": "General Discussion, p. 44"
+    },
+    {
+     "quote": "Each criterion was associated with a distinctive and conceptually meaningful set of predictors.",
+     "location": "Nomological network and predictive power, p. 37"
+    }
+   ]
+  },
+  "summary_md": "Soto and John build the BFI-2, a 60-item self-report Big Five inventory. It has 15 facets, three per domain, and each facet has four items with equal numbers of true-keyed and false-keyed items. Validation in independent internet (N = 1,000) and student (N = 470) samples gives domain alphas of at least .83 and facet alphas of .66 to .85. Self-peer agreement averages .56 at the domain level and .49 at the facet level (peer n = 184). Convergence with other Big Five instruments runs from .72 (NEO PI-R) to .92 (BFI). Raw-item PCA finds a sixth component, acquiescence. Within-person centering removes it, and the content-balanced facet scales never produce it. Across 20 self- and peer-reported criteria, BFI-2 facets explain more variance than domains (mean R2 .33 vs .27). The authors stress that facet quality matters more than the number of facets.\n\nNothing in the paper concerns legislators, lobbying or text. It bears on Paul's systems only through measurement mechanics. (1) The LLM item reader (big5_llm.py) says it uses \"balanced keying\", but the code keys O, C, E and A at 3 true to 1 false. Only ES is balanced. By the paper's acquiescence logic, a rater that tends to mark items +1 would push O, C, E and A up together and inflate their intercorrelation. The system already worries about this kind of halo. (2) The dormant expert-panel instrument is BFI-2-XS, which takes one item per BFI-2 facet. That panel was CANCELED (see flags). (3) The affective-N LLM read sums pessimism, anxiety, depression and volatility, which roughly match the BFI-2 Negative Emotionality facets. In the paper those facets predict different criteria. (4) The self-peer agreement figures give a realistic ceiling for reading convergence between text-based traits and gold ratings. All transfers are indirect: the paper studies general-population self-report, while the system reads politicians' text with LLM and lexical methods. Everything here is UNVERIFIED (DE-062).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+    "relation": "qualifies",
+    "paper_claim": "When keying is unbalanced, acquiescent responding acts like a substantive factor. PCA of the 60 raw items gave six components (Big Five plus acquiescence) in both samples. Within-person centering removed the sixth, with congruence of .97 or higher for the remaining five. The content-balanced 15 facet scales gave only five components (eigenvalues 4.05, 2.16, 1.90, 1.60, 1.32, then 0.56 or lower). The mean of raw, unreversed items serves as an acquiescence index (range 1-5).",
+    "paper_location": "Study 3 domain- and facet-level structure, pp. 30-31 (Table 6, Table 7, Figure 1); CFA with acquiescence factor pp. 31-34 (Table 8); General Discussion p. 45",
+    "system_side": "The Pink LLM reader scores 20 observer items on a -1/0/+1 scale, with 'cannot tell' coded 0. Its docstring says the keying is balanced. In the item table, O, C, E and A each have 3 true-keyed and 1 false-keyed item (O3, C3, E3 and A3 are the only negatives). ES is 2:2. The chunk trait score is the keyed mean sum(s*o[i])/4. A chunk where the model answers +1 to everything therefore scores +0.5 on O, C, E and A but 0 on ES. The CT-CM capstone models a single Pink method factor (halo), which loosely parallels the paper's acquiescence factor, and it MISSed.",
+    "code_ref": "fec/members/big5_llm.py:7 (docstring 'balanced keying'); fec/members/big5_llm.py:56-77 (ITEMS; negatives at :59, :63, :67, :71; ES at :73-76); fec/members/big5_llm.py:337-344 (keyed-mean aggregation); fec/members/big5_ctcm.py:8-9 (Pink method factor)",
+    "transfer_conditions": "The paper's mechanism is human self-report yea-saying on a 5-point agree-disagree scale. It carries over only if the LLM has a comparable +1 tendency on observer items. That is plausible but untested, because roughly 90% of answers are expected to be 0 (cue-absent). The fix the paper implies is cheap and diagnostic only. Compute a per-chunk mean of raw, unreversed answers as the acquiescence index, then check its correlation with O, C, E and A, or within-chunk centering. Any item change creates a new ITEMSET_V and cache key. The A-ES halo of about .21 cannot come from acquiescence, because ES is balanced. Treat this as a doc-versus-code discrepancy plus a hypothesis. It stays UNVERIFIED until a second path reproduces it.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#LLM item-level reader (Pink), ridge hybrid and CT-CM latent model|LLM item-level reader (Pink), ridge hybrid and CT-CM latent model]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.gold-panel-validation",
+    "relation": "measurement-source",
+    "paper_claim": "The BFI-2 assigns each item to one of 15 facets (E: Sociability, Assertiveness, Energy Level; A: Compassion, Respectfulness, Trust; C: Organization, Productiveness, Responsibility; N: Anxiety, Depression, Emotional Volatility; O: Intellectual Curiosity, Creative Imagination, Aesthetic Sensitivity). Domain scales have 12 items with balanced keying; the 60-item form and scoring key are in the Appendix.",
+    "paper_location": "Study 1 Phase 1, pp. 15-18; Table 1, p. 61; Appendix and scoring key, pp. 78-79",
+    "system_side": "The dormant expert-panel instrument uses 15 BFI-2-XS items in observer form, three per domain, verified verbatim against Soto & John 2017 (JRP short-forms paper). The XS form takes one item from each BFI-2 facet. Keying is unbalanced within domains (C has 2 reversed items; E, A, N and O have 1 each). trait_score takes plain keyed means and does not correct for rater acquiescence.",
+    "code_ref": "fec/members/b5_panel_items.py:3-5,20-38 (ITEMS, REVERSED); fec/members/b5_panel_items.py:50-63 (trait_score)",
+    "transfer_conditions": "The paper is the parent instrument; the system cites the companion XS paper, which is correct. With three items per domain, each a single facet item, facet-level scoring is impossible and keying cannot be balanced. The paper's acquiescence results therefore apply to the XS form only in weakened form. The panel was CANCELED by Paul on 2026-07-09, so this bearing is lineage and context only. It is not a reason to revive the panel.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Big Five validation against Senate gold panels and criteria|Big Five validation against Senate gold panels and criteria]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.lexical-big5",
+    "relation": "context",
+    "paper_claim": "Even with a strong instrument and well-acquainted peers (60% friends, 30% romantic partners), cross-rater convergence is bounded. Self-peer domain agreement is .42-.69 (mean .56) and facet agreement .27-.73 (mean .49), with peer n = 184 in a student sample. Different Big Five instruments in the same respondents converge at .72-.92.",
+    "paper_location": "Study 3, self-peer agreement p. 29, Table 4 p. 64; convergence pp. 34-35, Table 9 p. 70",
+    "system_side": "Lexical Big Five is refit to RKH targets. Held-out CV r vs RKH: E .510, A .406, C .363, ES .258, O .214 (mean .350). The RKH reference shares method with the system (Mairesse/LIWC on both sides), so this convergence is inflated.",
+    "code_ref": "fec/members/fit_smoreg_rkh.py:8-11,67-71 (held-out CV r vs RKH, caveats)",
+    "transfer_conditions": "Use these figures only as a rough scale for reading convergence coefficients, not as a bar. The paper's figures are human self-report vs human peer report, on adults in the general population and students, using the full 60-item form. The system compares closed-vocabulary text rates for politicians against another text-derived estimate, so shared method pushes r up and thin text pushes it down. The paper cannot say whether .350 is good for text-based measurement of politicians.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Lexical Big Five (Ramey-style closed vocabulary)|Lexical Big Five (Ramey-style closed vocabulary)]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "suggests-extension",
+    "paper_claim": "Negative Emotionality facets have distinct criterion profiles. Peer-rated stress resistance is predicted by Emotional Volatility (r -.47, beta -.32) and Anxiety (-.46/-.28). Positive relations are predicted by Depression (-.53/-.38). Facets beat domains in mean R2 (.33 vs .27 across 20 criteria; 14/20 criteria with significant incremental R2). The authors add that predictive value depends more on facet quality than on the number of facets.",
+    "paper_location": "Table 10, p. 71; Nomological network section pp. 36-39; Table 11, p. 72; General Discussion p. 44",
+    "system_side": "The LLM side of affective N is an equal-weight sum of pessimism, anxiety, depression and volatility. It is combined with a LIWC-style read, residualized on E and party, and feeds the receptivity N slot. That slot is meant to capture the Byrne pressure-choking mechanism (susc .30 weight).",
+    "code_ref": "fec/members/emit_affective_n.py:45 (llm = pessimism + anxiety + depression + volatility); fec/members/receptivity_layer.py:180-189 (N slot in susc_trait)",
+    "transfer_conditions": "The pressure mechanism the receptivity layer assumes lines up most closely with Anxiety and Volatility, not with Depression or pessimism. Keeping those components separate is a measurement idea for later, not a recommendation to rewire the engine. Transfer is weak for three reasons. The paper's criteria are general-population self-report and peer ratings of well-being, not legislators' decisions under lobbying pressure. Genre transfer of affective N already failed (rho .050, .161). And no N susceptibility signal has been demonstrated in this system (H5 null). Any facet split would need its own prereg and look.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "No acquiescence or response-style diagnostic exists for the LLM item reader. The paper's index (mean of raw, unreversed items) and within-person centering are not computed, even though O, C, E and A are keyed 3:1.",
+   "The big5_llm.py docstring says 'balanced keying', which contradicts the item table (only ES is 2:2). This is a documentation-integrity gap.",
+   "Traits are scored only at the domain level, apart from ad hoc facets (A-antagonism; E communication facets taken from NEO, not BFI-2). There is no hierarchical facet model, so the facet-specific prediction the paper shows (R2 .27 to .33) cannot be tested.",
+   "Affective N merges anxiety, depression, volatility and pessimism into one sum. The paper shows these facets predict different criteria, and the receptivity mechanism (pressure-choking) is closest to Anxiety and Volatility."
+  ],
+  "flags": [
+   "The expert observer panel (b5_panel_items.py / b5_panel_score.py, BFI-2-XS) was CANCELED by Paul on 2026-07-09 with the instruction never to re-propose it. Nothing here recommends recruiting raters or reviving the panel; the bearing is lineage only.",
+   "The keying discrepancy in big5_llm.py and the acquiescence-leak mechanism are new agent analysis. They are UNVERIFIED until a second path reproduces them (DE-062). No item change is proposed, because any change to item text or keying creates a new ITEMSET_V and cache.",
+   "No graph-rank, revolving-door, LDA-edge or reciprocity wording is involved. The paper argues for neither rejected SNA proposal. Its 'nomological network' is a construct-validity term, not a social network.",
+   "Citation check: the system cites Soto & John 2017 JRP 68:69-81 (the BFI-2-XS/S short forms), a separate paper from this JPSP BFI-2 paper. The panel citation is correct and does not need relabelling."
+  ],
+  "paul_alignment": "Paul has not annotated this paper, and his psychometrics positions rest on Ramey and Birkenmaier & Lechner. The paper is consistent with his push for validated, codebook-driven trait measurement. It also tempers his receptivity note that '10 personalities collapse into 4 observable ones'. The BFI-2 evidence shows that finer-grained facets add predictive power, but only when each facet is measured reliably, and the system's text-based traits have not reached that level (many single-look MISSes). His notes do not record the canceled panel or the system's halo and method-factor findings, so they are stale on psychometrics validation as built.",
+  "related": [
+   {
+    "slug": "rammstedt-2025-going-global-language",
+    "relation": "builds-on",
+    "why": "Translates the BFI-2-XS, the extra-short form taken from this paper's 60 BFI-2 items, which is the form the dormant panel instrument uses, into 39 languages."
+   },
+   {
+    "slug": "mondak-nd-online-appendix-personality",
+    "relation": "complements",
+    "why": "Expert observer ratings of senators are the kind of other-rater criterion whose convergence the BFI-2 self-peer figures (mean r .56 domain) help calibrate."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Text-based domain-level Big Five for legislators, which the lexical reader follows. The BFI-2 supplies the hierarchical facet structure and self-report benchmarks that Ramey's approach lacks."
+   },
+   {
+    "slug": "koutsoumpis-2024-kernel-truth-text",
+    "relation": "complements",
+    "why": "A meta-analysis of LIWC-Big Five correlations. Together with the BFI-2 cross-rater and cross-instrument convergence figures, it brackets what text-to-trait convergence can reasonably reach."
+   },
+   {
+    "slug": "byrne-2014-chokes-under-pressure",
+    "relation": "complements",
+    "why": "Byrne's pressure-choking result is the basis for the receptivity N weight. The BFI-2 facet results (Anxiety and Volatility predict stress resistance; Depression does not) narrow which part of N should carry that mechanism."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "marrero-2022-evaluating-voice-samples",
+    "relation": "cited-by",
+    "why": "The BFI-2 is Marrero's criterion instrument. No such self-report exists for legislators, which is why Pink stood in."
+   },
+   {
+    "slug": "lechner-2025-mapping-political-personality",
+    "relation": "same-method",
+    "why": "Hierarchical facet-level inventory construction. PoliPers validates against the short BFI-2-XS version of this instrument."
+   }
+  ],
+  "evidence_status": "unverified"
+ }
+]

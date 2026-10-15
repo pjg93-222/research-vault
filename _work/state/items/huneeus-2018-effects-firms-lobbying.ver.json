@@ -1,0 +1,141 @@
+{
+ "bearings": [
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "qualifies",
+   "paper_claim": "Lobbying raises firm revenue. Table 2 (printed p.26): IV log-sales elasticity 0.319 for all years (SE 0.0754, first-stage F 14.30) and 0.227 for post-2007 (first-stage F 13.10). OLS 0.0436 (all years) and 0.0500 (post-2007). Firm, year and state-year fixed effects. N = 15,332 (all) and 8,796 (post-2007). The paper names column 4 (IV post-2007, 0.227) as its preferred estimate. The reverse effect of size on lobbying is listed as an open question in the Conclusion (printed p.33).",
+   "paper_location": "Table 2 printed p.26; Section 4.1 printed p.26; Conclusion printed p.33",
+   "system_side": "The L-LV family regresses sector LobbyView lobbying in real 2025 USD millions (dv lobby_lv_real_m, the de-duplicated primary column) on lagged sector growth. The log forms (R-log) are separate robustness fits, so the base model is in levels, not logs. The R-yearFE variant swaps national controls for sector and year fixed effects. The recorded result that the lobbying lead flips sign under year FE was not found in the sector_growth_study markdown files checked here.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R lines 640-667 and sgs_config.R lines 78-127 (checked: DV labels, LobbyView dedup column and limitations text match)",
+   "transfer_conditions": "Design warning only. If lobbying feeds revenue, a growth-to-lobbying regression is simultaneous, so OLS with fixed effects cannot sign the lead. The paper's IV is 4.5 to 7.3 times its OLS (0.227/0.0500 = 4.5; 0.319/0.0436 = 7.3), not 4.5 to 7. The paper uses Compustat public firms with federal LDA filings 1999-2015 and no trade associations, while the sector panel includes associations, so the effect size does not transfer. The paper does not say how it handles self-filer and outside-firm double counting; the text mentions only that about 85 percent of lobbying is outsourced.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Coefficients, F-stats, SEs, N and the preferred-column statement reproduce from Table 2. Corrections: base sector model is in levels not logs; IV/OLS ratio range is 4.5 to 7.3. The sign-flip result was not reproduced."
+  },
+  {
+   "component_id": "mentat-giving-forecast.refit-gates",
+   "relation": "context",
+   "paper_claim": "Firm lobbying is persistent. Fact 4 (printed p.10): more than 80 percent of firms that lobbied in 2016 also lobbied in 2017. Figure 3 (printed p.10): adjacent-year intensive-margin log-lobbying slope 0.922 (t = 157.88, conditional on lobbying in both years). The Figure 3 caption says over 70 percent of firms lobby in two consecutive years. Persistence dropped during the 2007-2009 financial crisis. The paper does not address forecasting.",
+   "paper_location": "Fact 4 printed p.10; Figure 3 and caption printed p.10",
+   "system_side": "The lobbying console rule is last year's level plus slope times the change in growth, backtested on rolling origins with 2014-2023 targets. Gate G9 warns when a refit does not beat naive. The README records the log-lobbying MAE as 4.050 against naive 3.936, so the refit does not beat naive (warning only).",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/forecast/refit/R/rf_backtest.R lines 2-7, 68 (console rule), 112; C:/Users/pgoff/Mentat/mentat/forecast/refit/R/rf_gates.R line 14 (G9 warning); C:/Users/pgoff/Mentat/mentat/forecast/refit/README.md line 142 (MAE 4.050 vs 3.936)",
+   "transfer_conditions": "The paper's persistence is firm-level on public firms in a 1999-2018 sample; the forecast works on sector aggregates. The claim that naive is a strong baseline is the analyst's inference from persistence, not the paper's. The 2007-2009 break lies outside the 2014-2023 target window but may fall in training data for later origins; the backtest start year was not checked, so 'regime shifts are not in the backtest' is not established. Persistence says nothing about whether growth adds signal.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Persistence numbers reproduce (0.922, t = 157.88, over 80 percent in Fact 4, 2007-2009 drop). MAE 4.050 vs 3.936 reproduces from the README. Corrections: relation is context, not supports; the paper does not address forecasting."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "suggests-extension",
+   "paper_claim": "Committee relevance is measured from data. Weight w_ict-k is the firm's lagged share of lobbied bills referred to committee c, with t-1 preferred and t-2 and t-3 in robustness (Appendix F). Interacted with committee seats held by politicians from the firm's headquarters state, the first-stage F is 14.30 (all years) and 13.10 (post-2007) in Table 2. Deeper-lag panels in Table F.1 give F of 6.0 to 9.9. About 30 percent of politicians change committee between Congresses (Section 4.1; Figure 6).",
+   "paper_location": "Instrument definition in Section 4.1 (printed pp.21-22; eq. 12 page not re-checked); Figure 6; Table 2 printed p.26; Tables F.1-F.2 Appendix F",
+   "system_side": "Seat relevance is a tier map: Highly 3.0, Moderately 1.8, Slightly 0.9. Subcommittee seats count 1/6. Leadership multipliers: Chair 3.0 full and 7.5 sub, Ranking 2.0 and 4.5, Vice 1.0 and 2.0. No weight is derived from where CU bills are referred. The owner-judgment provenance of the tiers is not visible in the code.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/committee_scores.py lines 120-132 (BASE tiers, SUBF, KLEAD verified)",
+   "transfer_conditions": "Extension as stated: compute each committee's lagged share of CU-category bills referred, from congress.gov billstatus rather than LDA lobbied-bill lists (D-021). H&K's weights are firm-specific and validated only as an instrument for firm revenue, with no evidence that referral shares predict a member's CU effectiveness, so any re-weighting needs its own look.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Paper numbers (F 14.30 and 13.10, about 30 percent churn, t-1 preferred with t-2 and t-3 robustness) and code tier values and subcommittee fraction reproduce. The owner-judgment provenance is not checkable in code."
+  },
+  {
+   "component_id": "melange-lobbying.finance-client-classification",
+   "relation": "method-source",
+   "paper_claim": "LDA client names were matched to Compustat in four steps: FuzzyWuzzy against 61,478 unique client names; Bureau van Dijk batch search for ISIN and ticker; CRP standardized client names; and a random 5 percent sample of client names checked for publicly traded firms that were missed. The 5 percent sample is a miss (recall) check, not a precision audit. The paper names messy spellings and abbreviations as the main hazard. The matched universe is 67,842 unique lobbying client names (Introduction).",
+   "paper_location": "Appendix A printed p.39 (footnotes 27-28); Introduction text on 67,842 names",
+   "system_side": "classify_client assigns Bank, CU or other. Credit-union names are checked first and are decisive, then trade-association names, then bank names with exclusions. Only when no name rule fires does the function fall back to a NAICS-based side. So NAICS does drive side assignment as a fallback, not only linkage metadata. No random-sample accuracy audit of the classification is recorded.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/lobbying/collect_lobbyview.py lines 176-183 (regexes, CREDIT_UNION_RE, CU_TRADE_RE) and 226-262 (classify_client; NAICS fallback at lines 258-262)",
+   "transfer_conditions": "The transferable piece is the 5 percent sample as a recall audit for missed names. The fuzzy matcher is not transferable, and the project's strict-names rule rejects fuzzy acceptance. H&K's firm match leaves out most CUs (not in Compustat, per the analyst; not checked against the paper) and trade-association lobbying such as CUNA and NAFCU, so their match rates and Fact 5 do not carry to CU lobbying.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Method and the 5 percent check reproduce, but the check is for missed public firms (recall), not precision. The claim that NAICS is linkage metadata only is contradicted: classify_client returns the NAICS side when no name rule fires."
+  },
+  {
+   "component_id": "melange-influence-engine.flip-model",
+   "relation": "qualifies",
+   "paper_claim": "The return to lobbying is measured as firm revenue (IV elasticity 0.227 to 0.319), not as member votes or positions (Table 2, printed p.26). Lobbying spend is more than six times PAC, party and candidate contributions on average (Fact 2 and Figure 1, printed pp.8-9; FEC two-year cycles 1999-2016; individual contributions excluded).",
+   "paper_location": "Table 2 printed p.26; Fact 2 and Figure 1 printed pp.8-9",
+   "system_side": "pflip combines saturating money terms for CU and industry dollars, from congestion.json, with industry = banks plus finserv money, plus peer proximity, at WM 0.35 and WP 0.65. No lobbying spend enters the flip model.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/flip_model.py docstring lines 1-22 (WM and WP constants) and line 46 (ind0 = banks plus finserv)",
+   "transfer_conditions": "The paper has no member-level outcome and cannot calibrate WM, HALFF or the saturation. Its only relevance is the scale fact that lobbying is the largest corporate political channel and is absent from the money terms. Under D-021 that absence is deliberate, so this is not a recommendation to add LDA dollars. The claim that Paul's positions cite H&K under the flip model is not supported by this item (paul_entries holds no takeaways or links), so it was not verified.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Paper claims and code constants reproduce (WM 0.35, WP 0.65, banks plus finserv money). The Paul-alignment claim is not verifiable from the item."
+  },
+  {
+   "component_id": "melange-demographic-potential.footprint-v30",
+   "relation": "qualifies",
+   "paper_claim": "Firm-politician connection is defined as politicians representing the firm's headquarters state. The paper reports no headquarters moves in its data, and the likelihood that a politician changes district is less than 1 percent. The instrument built on the home-state link has first-stage F 14.30 and 13.10 (Table 2).",
+   "paper_location": "Section 4.1 printed pp.22-25 (HQ-state definition; no HQ moves and under-1-percent district change on printed p.25); Table 2 printed p.26",
+   "system_side": "Footprint v3.0 (the default) scores districts by employment LQ 0.30, establishment LQ 0.20, CU branch share 0.25 and CU deposit share 0.25. A district qualifies at unrounded employment LQ of at least 1.0. It does not feed Demo percent (not checked).",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/district/demographic_potential.py lines 26-37 (default mode, FOOTPRINT_EMPLOYMENT_LQ_MIN = 1.0) and lines 158-165 (weights)",
+   "transfer_conditions": "In H&K the home-state link is an identifying assumption for headquarters only, not an estimated effect of employment or branch footprint, and it is at state level, not district level. It gives weak support to the state-layer idea. It does not validate the footprint weights or any claim that footprint predicts CU-aligned behaviour.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Paper claims (HQ-state definition, no HQ moves, under 1 percent district change, F 13 to 14) reproduce. Code weights and the LQ gate reproduce. The Demo percent claim was not checked."
+  }
+ ],
+ "related": [
+  {
+   "slug": "kim-2018-lobbyview-firm-level",
+   "relation": "same-data",
+   "why": "LobbyView is the firm-name-disambiguated LDA and bill database that this paper builds on and releases (confirmed from the item title). Ingestion by collect_lobbyview.py was not checked."
+  },
+  {
+   "slug": "kim-2020-strategic-sequential-links",
+   "relation": "same-data",
+   "why": "Same LobbyView firm linkage, joined to FEC donations, bearing on the lobbying-to-contribution relation in H&K Fact 2. Checked only by title and authors."
+  },
+  {
+   "slug": "kim-nd-mapping-political-communities",
+   "relation": "same-data",
+   "why": "Uses bill-level LobbyView data of the kind H&K use for committee shares and clients per bill (median 2). Checked only by title and authors."
+  },
+  {
+   "slug": "bombardini-2020-empirical-models-lobbying",
+   "relation": "complements",
+   "why": "Survey of empirical lobbying models, including returns-to-lobbying designs and the Grossman-Helpman microfoundation that H&K Section 3.2 generalizes."
+  },
+  {
+   "slug": "bickmore-2025-corporate-lobbying-political",
+   "relation": "complements",
+   "why": "Links corporate lobbying and PACs to market concentration, a related misallocation question at industry level. The outcome differs from H&K's firm-size distortion."
+  },
+  {
+   "slug": "alexander-nd-lobbying-analysis-under",
+   "relation": "complements",
+   "why": "A single-policy lobbying ROI estimate. H&K's economy-wide revenue elasticity is a different target, so compare with care."
+  },
+  {
+   "slug": "imai-2021-fixed-effects-regression",
+   "relation": "complements",
+   "why": "Its two-way fixed-effects caution applies to H&K's OLS columns (firm, year and state-year FE) and to the system's sector-growth regressions."
+  },
+  {
+   "slug": "furnas-nd-conflating-lobbying-pacs",
+   "relation": "complements",
+   "why": "Finds low overlap between organizational lobbying and PAC spending, which qualifies any use of H&K's lobbying-to-contribution ratio."
+  },
+  {
+   "slug": "thakur-2025-matching-theory-perspective",
+   "relation": "complements",
+   "why": "Models committee assignment as a matching process, bearing on H&K's identifying assumption that committee moves are exogenous to firms."
+  },
+  {
+   "slug": "porter-2005-network-analysis-committees",
+   "relation": "complements",
+   "why": "Network analysis of House committees, relevant to H&K's committee-share weights. Checked only by title and authors."
+  }
+ ],
+ "summary_issues": [
+  "Summary and gaps say the 5 percent random sample verifies classifier precision. The paper uses it to find publicly traded firms that were missed (recall), so the template is a recall audit.",
+  "Summary says NAICS is linkage metadata only and that the rules fail closed. classify_client falls back to a NAICS-based side when no name rule fires (collect_lobbyview.py lines 258-262).",
+  "Flags say the authors concede committee exogeneity may fail at p.26. The concession is on printed p.25 (annotation page 26).",
+  "Transfer text says the IV is 4.5 to 7 times OLS. The exact ratios are 4.5 (0.227/0.0500) and 7.3 (0.319/0.0436).",
+  "Summary says the 3 percent headline uses the full-sample estimate. That is arithmetically consistent (0.319 x 10) but the paper does not name the column, so present it as inference.",
+  "Summary describes the sector-growth base model as log sector lobbying. The base dv is lobby_lv_real_m in real 2025 USD millions; log forms are R-log robustness variants.",
+  "Summary says the 2007-2009 break is not in the backtest. It is outside the 2014-2023 targets but may be in training data; the backtest start year was not checked.",
+  "Summary says the lobbying lead flips sign under year fixed effects. No matching text was found in the sector_growth_study markdown files checked; not verified here.",
+  "Summary says Paul's positions cite H&K under the flip model, joint optimizer, workbook allocator, break-even, ROI, cycle model and employer match, and that several positions are stale. The item's Paul record (68 highlights, zero notes, zero takeaways) does not show this; not verified.",
+  "Related note: the claim that Paul calls the alexander item an outlier is not supported by the item and was removed from the why text. The bickmore link was reworded because it is an industry-level concentration study, not the same misallocation story.",
+  "Coverage: ext and rel are both inside the item JSON (no separate ext.json or rel.json exist). All 6 bearings, all 10 related links and the Melange and Mentat code ranges were checked. paul_markup has 68 Highlight items with zero notes and no takeaways; the schema has no key_findings or paul_markup field, so they are not returned. Page images were not used."
+ ]
+}

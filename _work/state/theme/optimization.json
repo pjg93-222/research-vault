@@ -1,0 +1,269 @@
+{
+ "name": "Optimization",
+ "slug": "optimization",
+ "paul_notes": [
+  {
+   "doc": "Annotation source \"Optimization - Untitled document\" (sha12 7c84a3b830f0), read in full from C:\\Users\\pgoff\\Documents\\research\\annotations\\Optimization - Untitled document.md. The file has YAML frontmatter (type annotation-source; source_zip \"Annotated Bibliographies & Literature Synthesis-20261009T191315Z-1-001.zip\"; source_path \"Annotated Bibliographies & Literature Synthesis/Optimization/Untitled document.docx\") and a body containing one line, a bare URL: https://journals.sagepub.com/doi/pdf/10.3233/FAIA397#page=583. There is no annotation prose, no takeaways, no system links, and no cross-references in the body. No reviewer sidecar exists: C:\\Users\\pgoff\\Documents\\research\\_annots\\7c84a3b830f0.json is absent, and no _annots file matches the sha. The only cited work is therefore the single URL, with no title, authors, or year supplied. Its DOI prefix 10.3233 belongs to IOS Press's Frontiers in Artificial Intelligence and Applications series (volume 397, page 583), though the link is hosted on journals.sagepub.com; the document does not confirm the bibliographic details, so verify them against the PDF before citing. Paul's takeaways for this work are not recorded anywhere in the file, so none are attributed to him here.",
+   "doc_level_notes": [
+    "The annotation document contains only a bare link and frontmatter; it has no commentary, so Paul's overarching arguments, research questions, syntheses, and stated gaps cannot be extracted from it.",
+    "No _annots sidecar JSON exists for sha 7c84a3b830f0, so there are no reviewer comments or highlights to incorporate.",
+    "The one entry's citation is a URL only. The title, authors, and year are not in the source and should be confirmed from the PDF.",
+    "The folder name Optimization comes from the source_path frontmatter. It is the only context linking this entry to the Melange, Moneyball, Mentat, or Terrier systems; no system linkage is stated in the file.",
+    "Re-running this extraction after Paul adds prose or a sidecar to the annotation would be needed to produce takeaways, system links, and cross-references."
+   ]
+  }
+ ],
+ "works": [
+  {
+   "slug": "anon-nd-untitled-document-single",
+   "title": "Untitled document (single link)",
+   "year": "",
+   "summary": "**Nothing in this item can be mapped onto the system.** It is a bibliography stub: a Word file in Paul's Optimization folder whose only content is one URL, https://journals.sagepub.com/doi/pdf/10.3233/FAIA397#page=583. I checked the source docx, both manifest records (ids 407 and 443, two identical copies across four raw snapshots) and the 61-character extracted text. There is no article text, no annotations (n_annots 0) and no title or author.\n\nThe DOI has no article-level suffix. The 10.3233 prefix belongs to IOS Press, and FAIA is its Frontiers in Artificial Intelligence and Applications series. So the link most likely points to a whole proceedings volume, with the page-583 anchor marking one paper inside it. I have not verified this. The volume and the paper are both unknown, and I did not fetch the URL.\n\nBecause of the folder, the paper is probably about optimization or influence maximization. Even so, any claim about its method, data or results would be made up. So I record no bearing for any component: not the joint optimizer (CELF lazy greedy, fec/engine/optimize.py), not the budget frontier, and not the per-topic allocators. Paul has a dedicated Optimization folder, so this paper may matter to the allocation layer, which he describes as adaptive greedy plus CELF today with a learned policy (GCOMB) to come. That stays a guess until the article is in hand.\n\nTo make the item usable, Paul should open page 583 of the FAIA volume, note its title and authors, and save the PDF into C:\\Users\\pgoff\\Documents\\research\\_raw. Extraction and this relation step can then be rerun.",
+   "question": "",
+   "method": "",
+   "findings": [],
+   "related": [
+    {
+     "slug": "anon-nd-untitled-document-link",
+     "relation": "complements",
+     "why": "This is the matching 'Untitled document' stub in Paul's bibliography (a link list rather than a single link). Neither has article text, and both need the same fix: fetch the linked PDFs and re-extract."
+    }
+   ],
+   "bearings": []
+  },
+  {
+   "slug": "ng-1999-policy-invariance-reward-transformations",
+   "title": "Policy Invariance Under Reward Transformations: Theory and Application to Reward Shaping",
+   "year": "1999",
+   "summary": "Ng, Harada and Russell (ICML 1999) ask which additions to an MDP reward leave the optimal policy unchanged. Their answer is potential-based shaping, F(s,a,s') = gamma*Phi(s') - Phi(s). It is sufficient for any real Phi on states. It is also necessary when nothing is known about the transitions or the reward: for any other F there is some MDP in which the shaped optimum is wrong. The corollary is that shaped Q and V equal the originals minus Phi(s), so the argmax over actions is the same. When Phi = V*, the shaped value is zero and greedy one-step choice is already optimal. A robustness remark adds that near-optimal policies carry over too. The experiments are small Sarsa grid worlds (10x10, 50x50, and a 5x5 grid with five subgoals). The paper reports no statistical tests, and this extraction lost the run counts. None of Paul's systems is a reinforcement learner. The bearing is on path-finding, where the deterministic case with gamma = 1 is the same thing as A* reduced costs, c'(u,v) = c(u,v) - h(u) + h(v). The theorem gives the rule for the learned or landmark heuristic Paul wants (his staffer and recruitment routers use heuristic 0 today). The heuristic must enter as a potential and be consistent; any other additive bonus changes which route wins. The staffer router's terminal normalization is a constant shift and is safe. Its member-context modifier and balanced step penalty change routes, which is correct as long as they are described as objective changes. One finding: the cosponsor recruitment path follows a greedy rule over a distance-to-target table that ignores dropped members. The template still calls this path provably optimal. UNVERIFIED until reproduced.",
+   "question": "Under what conditions can the reward function of a finite Markov decision process be modified (reward shaping) without changing which policies are optimal, especially when the learner does not know the transition function or the original reward?",
+   "method": "Formal analysis: definitions, a sufficiency proof (potential-based F leaves optimal policies unchanged, with Q and V shifted by Phi), a necessity proof for the case of no prior knowledge of T and R (Appendix A, fully worked for finite states and two actions), and robustness remarks. Simulation: Sarsa and Sarsa(lambda) with epsilon-greedy exploration on the grid worlds, comparing no shaping against shaping with a Manhattan-distance potential and, in the subgoal task, a subgoal-count potential and a fine-tuned estimate of V*.",
+   "findings": [
+    "Potential-based shaping F(s,a,s prime) = gamma*Phi(s prime) - Phi(s) is sufficient: every optimal policy of the shaped MDP is optimal in the original MDP, and vice versa. Location: Main results, Theorem, sufficiency part and its proof.",
+    "Necessity: absent prior knowledge of T and R, potential-based F is the only shaping form that guarantees consistency with the optimal policy; for any non-potential F there exist transitions and rewards such that no optimal policy of the shaped MDP is optimal in the original. Location: Main results, Theorem, necessity part; proof in Appendix A (finite states, two actions).",
+    "Corollary: Q prime*(s,a) = Q*(s,a) - Phi(s) and V prime*(s) = V*(s) - Phi(s), so the shaped problem has the same argmax over actions. With Phi zero at the absorbing state the identities hold exactly in the undiscounted case. Location: Main results, Corollary.",
+    "Robustness remark: the identities hold for arbitrary policies, not only optimal ones, so near-optimal policies are also preserved and an epsilon-optimal policy learned on the shaped MDP is epsilon-optimal in the original. Location: Main results, Remark (Robustness and learning).",
+    "Remark: if the original reward is itself potential-based, every policy is optimal in the original MDP, so potential-based shaping gives no reason to prefer one policy over another. Location: Main results, Remark (All policies optimal under potential).",
+    "Choosing Phi = V*(s) makes the shaped optimal value function identically zero, which the authors describe as an easy function to learn, leaving only the non-zero Q-values to learn. Location: Main results, paragraph after the Corollary."
+   ],
+   "related": [
+    {
+     "slug": "sutton-2018-reinforcement-learning-introduction",
+     "relation": "complements",
+     "why": "The 2018 text discusses potential-based shaping and cites Wiewiora 2003 alongside it, so it complements this paper's shaping theory."
+    },
+    {
+     "slug": "watkins-1992-q-learning",
+     "relation": "complements",
+     "why": "Watkins and Dayan 1992 introduce Q-learning, the learner whose optimal Q is shifted by the corollary."
+    },
+    {
+     "slug": "chen-2021-contingency-aware-influence",
+     "relation": "complements",
+     "why": "Chen et al. 2021 have a reward-shaping component (REWARD SHAPING section) based on marginal contribution, not a potential-based form, so the Ng condition bears directly on it. The earlier needs-the-potential-condition wording is an inference, not a finding in Chen."
+    }
+   ],
+   "bearings": [
+    "melange-pathfinding.member-recruitment-path:qualifies:VERIFIED-SOFTENED",
+    "melange-pathfinding.staffer-closeness-routes:method-source:VERIFIED-SOFTENED",
+    "melange-pathfinding.staffer-closeness-routes:qualifies:VERIFIED-SOFTENED"
+   ]
+  },
+  {
+   "slug": "watkins-1992-q-learning",
+   "title": "Q-Learning",
+   "year": "1992",
+   "summary": "Watkins and Dayan (Machine Learning 8, 1992, pp. 279-292) give the convergence proof for one-step Q-learning, a model-free way to learn optimal action values in a finite controlled Markov process. The theorem (p.282) says Q_n(x,a) converges to Q*(x,a) with probability 1 if rewards are bounded, learning rates sit in (0,1) with divergent sums and finite sums of squares, values are kept in a lookup table, and every state-action pair is tried infinitely often. The proof builds an artificial action-replay process from the episode history. Lemma A shows Q_n is optimal for that process. Lemma B shows the process converges to the real one. Section 4 sketches two extensions: undiscounted problems with absorbing goal states, and updating many Q values per step. It also notes that replaying stored episodes moves the method toward certainty-equivalence planning. The proof gives no convergence rate and no finite-sample bound. It does not cover function approximation, which the authors say may fail to converge (p.282), or multi-step TD(lambda) updates. For Paul's systems this is background rather than a method in use. The repo has no reinforcement learning. The joint optimizer is a certainty-equivalence planner. It takes a modeled stance state and runs exact greedy allocation over it, and its list for observed outcomes is empty. The paper matters for one point: Paul expects a learned policy such as GCOMB to replace greedy allocation at scale. GCOMB and S2V-DQN use Q-learning with function approximation, which is outside this theorem. A lobbying cycle also cannot try each member-action pair the many times the theorem requires. An online scan found no applications of RL to lobbying or to allocating contributions across legislators.",
+   "question": "Under what conditions does Q-learning, an incremental model-free method for learning optimal action-values in controlled Markov processes, converge to the optimal Q values?",
+   "method": "Formal convergence proof. An artificial action-replay process (ARP) is built from the episode sequence. Lemma A (p.282, proof p.288) shows the Q_n values are optimal ARP action values, by backward induction. Lemma B (p.282-284, appendix p.289-291) has four parts: B.1 discounting of infinite sequences, B.2 probability of straying below a level, B.3 stochastic convergence of ARP transition and reward estimates via Kushner and Clark (1978), B.4 close rewards and transitions imply close values. Section 3.2 (p.284-285) combines these with epsilon bounds on s-step values.",
+   "findings": [
+    "Theorem (p.282): with bounded rewards, learning rates in (0,1) meeting the stated conditions, and all state-action pairs sampled infinitely often, Q_n(x,a) converges to Q*(x,a) for all x and a, with probability 1. Section 3.2, p.284-285.",
+    "Lemma A (p.282, appendix p.288): the Q_n values are the optimal action values of the ARP at every level n, proved by induction on n.",
+    "Lemma B.3 (p.283-284, appendix p.290): ARP transition probabilities and expected rewards converge with probability 1 to those of the real process as the level grows.",
+    "B.4 (p.283, appendix p.291): if transitions and rewards of s chained steps are within eta of the true values, the value of the s actions differs by at most a term growing quadratically in s, so close models give close values.",
+    "B.1 (p.283, appendix p.289): with discount gamma below 1 and bounded rewards, the effect of truncating an infinite sequence after s actions tends to 0 as s grows.",
+    "Section 4 (p.285-286): the theorem extends to undiscounted processes with absorbing goal states, because a bound on steps to trap and a minimum trap probability replace discounting. Sketched, not fully proved."
+   ],
+   "related": [
+    {
+     "slug": "sutton-2018-reinforcement-learning-introduction",
+     "relation": "complements",
+     "why": "Real item (Sutton and Barto, 2018). Its content on the deadly triad and tabular versus function-approximation limits was not checked against the item text in this pass."
+    },
+    {
+     "slug": "manchanda-2020-gcomb-learning-budget-constrained",
+     "relation": "builds-on",
+     "why": "Verified in the item: GCOMB trains seed selection with n-step fitted Q-learning over GCN-derived node scores. That is function-approximation Q-learning, outside this paper's theorem."
+    },
+    {
+     "slug": "dai-2017-learning-combinatorial-optimization-graphs",
+     "relation": "builds-on",
+     "why": "Verified in the item: S2V-DQN uses n-step Q-learning with fitted Q-iteration over graph embeddings. That extends this paper's update to multi-step returns and function approximation, both outside the proof."
+    },
+    {
+     "slug": "chen-2021-contingency-aware-influence",
+     "relation": "builds-on",
+     "why": "Real item: contingency-aware influence maximization as a reinforcement learning approach (title and authors confirmed). Whether its learning step is Q-learning was not verified in the item text."
+    },
+    {
+     "slug": "chen-2023-complex-contagion-influence",
+     "relation": "complements",
+     "why": "Real item: complex contagion influence maximization as a reinforcement learning approach (title confirmed). The deep RL and Q-learning lineage claimed by the analyst was not confirmed, so the link is weakened to complements."
+    },
+    {
+     "slug": "arya-2025-relink-edge-activation",
+     "relation": "complements",
+     "why": "Real item: RELINK, deep reinforcement learning for edge activation (title confirmed). Its Q-learning lineage was not verified, so the link is weakened to complements."
+    },
+    {
+     "slug": "golovin-2011-adaptive-submodularity-theory",
+     "relation": "complements",
+     "why": "Real item (Golovin and Krause, 2011, adaptive submodularity). Its guarantee and sample-free claims were not checked against the item text; the link is conceptual."
+    }
+   ],
+   "bearings": [
+    "melange-allocation.joint-optimizer:qualifies:VERIFIED-SOFTENED",
+    "melange-influence-engine.seed-gate:context:VERIFIED-SOFTENED"
+   ]
+  },
+  {
+   "slug": "dai-2017-learning-combinatorial-optimization-graphs",
+   "title": "Learning Combinatorial Optimization Algorithms over Graphs",
+   "year": "2017",
+   "summary": "Dai, Khalil, Zhang, Dilkina and Song (NeurIPS 2017) learn greedy heuristics for NP-hard graph problems instead of hand-writing them. A structure2vec embedding (about 4-5 message-passing rounds, 64 dimensions) scores candidate nodes, and n-step Q-learning with fitted Q-iteration trains that score so a greedy loop adds one node at a time. Tested on minimum vertex cover, MaxCut, TSP and set cover, the learned policy (S2V-DQN) is near-optimal on synthetic graphs, holds up when trained on 50-100 nodes and run on 1000-1200 nodes (MVC ratio 1.0062), and beats hand heuristics on a 960-node MemeTracker diffusion graph (MVC ratio 1.0021 vs 1.2220 for greedy). It also wins on Ising MaxCut (1.0223) and TSPLIB (1.0475). Its edge is biggest where hand heuristics are weak (MVC, MaxCut). On set cover it nearly ties LP (1.001 vs 1.0009), and simple greedy trails by only 3 percent (1.03). It assumes many instances drawn from one distribution, offers no guarantees, and compares GPU runs against CPU baselines. For Melange this is the origin of the learned-greedy line (GCOMB, RL4IM, RELINK) that Paul cites. Every hand-built greedy in the system already fits its meta-algorithm with a hand-written score: the joint budget optimizer, budgetRecruit, the cosponsor route finder and closedCascadeRoute. The paper's own evidence suggests a learned score adds little where greedy is already exact or near-optimal (the fixed-state joint optimizer, coverage recruitment). The only plausible headroom is in the non-submodular route heuristics, and even there the training data does not exist: Melange has one 533-member graph per Congress, not a distribution of instances.",
+   "question": "Can heuristics for NP-hard graph combinatorial optimization problems be learned automatically from a distribution of instances that share structure, rather than hand-designed with trial and error? (Abstract; Introduction p.2)",
+   "method": "Structure2vec graph embedding (T about 4 to 5 message-passing rounds, embedding size p = 64) feeds a Q-function approximation for a greedy policy (Sections 3.1-3.2, Table D.9). Training uses n-step Q-learning combined with fitted Q-iteration over an experience replay buffer, with epsilon annealed from 1.0 to 0.05 (Section 4.2, Algorithm 1, Appendix D.5). Testing uses the deterministic greedy policy, not Active Search, except for TSPLIB where Active Search is applied on each instance (Sections 5 and C.3). Baselines: MVCApprox and MVCApprox-Greedy, MaxcutApprox and SDP, TSP heuristics (Farthest, Cheapest, Closest, Christofides, 2-opt, Nearest, MST), pointer networks with actor-critic (PN-AC, reimplemented), and CPLEX for optimal or best-known solutions with a 1-hour cutoff.",
+   "findings": [
+    "On 1000 synthetic test graphs the approximation ratio of S2V-DQN is very close to 1 for MVC and beats MVCApprox, MVCApprox-Greedy, PN-AC and all TSP heuristics on most settings (Section 5.1, Figure 2).",
+    "Generalization: trained on 50-100 node graphs, S2V-DQN gives MVC (BA) ratio 1.0062 and MaxCut (BA) ratio 1.0038 on 1000-1200 node graphs (Section 5.2, Table 2); TSP clustered ratio rises to 1.1065 at that size.",
+    "Speed: on 1200-node graphs MVC is solved in about 11 seconds on one GPU at ratio 1.0062 (Section 5.3); MVC is slightly slower than the approximation algorithms but much more accurate.",
+    "MemeTracker MVC (Appendix C.1): S2V-DQN covers 474 nodes against an optimum of 473, ratio 1.0021; MVCApprox-Greedy 1.2220 and MVCApprox 1.4080 (Table 3, Section 5.4).",
+    "Ising MaxCut physics instances (Appendix C.2, Table C.1): ratio 1.0223 for S2V-DQN, optimal on 3 of 10 instances, versus 1.2825 for MaxcutApprox and 1.8996 for SDP (Table 3).",
+    "TSPLIB (Appendix C.3, Table C.2): S2V-DQN ratio 1.0475 across 38 instances with 51-318 cities, best tour on all but 6; next best Farthest 1.0800 and 2-opt 1.0947 (Table 3)."
+   ],
+   "related": [
+    {
+     "slug": "manchanda-2020-gcomb-learning-budget-constrained",
+     "relation": "extends",
+     "why": "Verified: GCOMB (text lines 510-539) benchmarks a budget-constrained learned policy against S2V-DQN, Greedy and CELF on maximum coverage. The BP-2k row reads S2V-DQN 0.87, GCOMB 0.89, Greedy 0.89. The b=15 setting was not verified."
+    },
+    {
+     "slug": "chen-2021-contingency-aware-influence",
+     "relation": "builds-on",
+     "why": "Verified: RL4IM uses S2V-based Q-networks (text line 994) and S2V-DQN-IM is a baseline (line 968)."
+    },
+    {
+     "slug": "chen-2023-complex-contagion-influence",
+     "relation": "builds-on",
+     "why": "Verified: RL4CCIM says it builds on the Khalil 2017 and RL4IM line (text lines 395-413) and uses a graph attention network encoder (line 484)."
+    },
+    {
+     "slug": "kamarthi-2020-influence-maximization-unknown",
+     "relation": "builds-on",
+     "why": "Partly verified: Kamarthi says previous graph RL work [13], which is Khalil et al. 2017 in its reference list, did not use a distinct global representation (text around line 215). The closest prior work phrasing is not in the text. Internal item slug is kamarthi-2019 (arXiv 1907.11625) while the filename says 2020."
+    },
+    {
+     "slug": "arya-2025-relink-edge-activation",
+     "relation": "complements",
+     "why": "RELINK (CIKM 2025) does not cite Dai 2017, S2V, GCOMB or Khalil 2017; its only Khalil reference is the 2014 KDD paper. It is a parallel closed-network RL line, not a descendant. The RELINK design attribution in the closedCascadeRoute code comment is verified."
+    },
+    {
+     "slug": "watkins-1992-q-learning",
+     "relation": "builds-on",
+     "why": "Dai's n-step Q-learning cites Sutton and Barto 1998 [36], not Watkins; fitted Q-iteration cites Riedmiller [33]. The Watkins link is conceptual, not a citation."
+    },
+    {
+     "slug": "golovin-2011-adaptive-submodularity-theory",
+     "relation": "complements",
+     "why": "Dai does not cite Golovin. The link runs through Melange: the optimize.py docstring keeps a Golovin-Krause upper bound as a diagnostic (verified). Conceptual, not from the paper."
+    },
+    {
+     "slug": "kempe-2015-maximizing-spread-influence",
+     "relation": "complements",
+     "why": "Dai cites the classical Kempe et al. influence maximization paper as reference [20] (text line 796). The item year 2015 may differ from the 2003 KDD original; link kept as a conceptual complement."
+    }
+   ],
+   "bearings": [
+    "melange-allocation.joint-optimizer:qualifies:VERIFIED-SOFTENED",
+    "melange-pathfinding.multi-target-and-budget-modes:qualifies:VERIFIED-SOFTENED",
+    "melange-pathfinding.cosponsor-route-pareto:suggests-extension:VERIFIED-SOFTENED"
+   ]
+  },
+  {
+   "slug": "manchanda-2020-gcomb-learning-budget-constrained",
+   "title": "GCOMB: Learning Budget-constrained Combinatorial Algorithms over Billion-sized Graphs",
+   "year": "2020",
+   "summary": "GCOMB (Manchanda et al., NeurIPS 2020) learns a heuristic for budget-constrained set problems on graphs: max coverage, max vertex cover and influence maximization. A GCN regresses probabilistic-greedy marginal-gain scores; a noise predictor prunes low-value nodes; then n-step Q-learning picks seeds using score plus locality, the count of neighbours not already covered. The payoff is speed, not quality. On small graphs greedy already reaches at least 99 percent of the CPLEX optimum (BP-500 at b=20: GCOMB 0.998, greedy 0.99, optimal 1). On real graphs GCOMB matches greedy and runs about 10 times faster, 2 to 4 times faster than CELF on YouTube, and 30 to 160 times faster than IMM. It still finishes on billion-edge graphs where IMM runs out of 256 GB RAM. The paper explicitly excludes sequential and capacity-constrained problems (Sec 5). For Paul's systems, the dashboard's budget max-coverage recruiter is the direct descendant. It keeps GCOMB's locality idea (count only newly covered members) and a degree prune, but it uses exact greedy, which this paper's own evidence supports on a 533-member graph. The paper does not support replacing the CELF joint optimizer or the lazy-greedy frontier with a learned policy. Its gains appear only at million-edge scale. The optimizer's per-member PMAX cap is the capacity constraint GCOMB excludes. The IM objective is single-colour IC, evaluated with 10,000 Monte Carlo runs, not the system's two-colour competitive cascade at MC 20. An online scan found a 2024 VLDB benchmark (Liang et al., arXiv 2406.14697) reporting that lazy greedy consistently beats five deep-RL methods, GCOMB included, on max coverage. IMM and OPIM beat them on IM in most settings. That benchmark is not in the vault.",
+   "question": "Can a learned heuristic for budget-constrained set combinatorial problems on graphs (max coverage, max vertex cover, influence maximization) scale to billion-edge graphs while matching greedy and prior learned solvers in solution quality? (Sec 1, p.2-3)",
+   "method": "Stage 1 (Sec 3.1-3.2, p.4-5): probabilistic greedy run m=30 times per graph, stopping at marginal gain 0.01, gives node scores (Eq 1). A noise predictor on the first GCN layer prunes low-rank nodes; a GCN (K=2, embedding 60, 1000 epochs) regresses scores by MSE on good nodes (Eq 2). Stage 2 (Sec 3.3, p.5): n-step fitted Q-learning (n=2, gamma 0.8) with max-pool state over good nodes; locality from importance-sampled neighbors (Theorem 1, App F). Inference: one GCN forward pass plus budget-many Q-steps. Baselines: S2V-DQN, GCN-TreeSearch, Greedy, CELF, CPLEX, IMM, OPIM.",
+   "findings": [
+    {
+     "finding": "MCP at b=15 on synthetic bipartite graphs: BP-2k GCOMB 0.89, Greedy 0.89, S2V-DQN 0.87, GCN-TreeSearch 0.86; BP-20k GCOMB 0.83, GCN-TreeSearch 0.82, S2V-DQN not run (out of memory above 20,000 nodes).",
+     "location": "Table 2a, Sec 4.2, p.7"
+    },
+    {
+     "finding": "Table 1b on small graphs: Greedy reaches at least 99 percent of the CPLEX optimum; on BP-500 at b=20 GCOMB 0.998, Greedy 0.99, Optimal 1; GCOMB sometimes beats Greedy.",
+     "location": "Table 1b and Sec 4.2, p.6-7"
+    },
+    {
+     "finding": "Real-graph MCP quality: GCOMB similar to Greedy across budgets on Gowalla and YouTube; GCN-TreeSearch marginally inferior.",
+     "location": "Figs 2b-2c, Sec 4.2, p.7; Fig 6a App K, p.18"
+    },
+    {
+     "finding": "Speed: GCOMB up to 2 orders of magnitude faster than GCN-TreeSearch and 10 times faster than Greedy on MCP (Twitter-ego, YouTube); speed-up over CELF on YouTube falls from 4.0 at b=20 to 2.01 at b=200.",
+     "location": "Figs 2d-2e and Table 2b, Sec 4.2, p.7"
+    },
+    {
+     "finding": "Training time: GCOMB performance saturates within 10 minutes; S2V-DQN and GCN-TreeSearch need about 9 and 5 hours to reach best performance.",
+     "location": "Fig 2a, Sec 4.2, p.7"
+    },
+    {
+     "finding": "IM on YouTube subgraphs at b=20: GCN-TreeSearch takes about 3 hours on the 70 percent subgraph; GCOMB finishes in 5 seconds.",
+     "location": "Fig 3a, Sec 4.3, p.8"
+    }
+   ],
+   "related": [
+    {
+     "slug": "dai-2017-learning-combinatorial-optimization-graphs",
+     "relation": "builds-on",
+     "why": "S2V-DQN is GCOMB's main learned baseline. Table 2a BP-2k: GCOMB 0.89, S2V-DQN 0.87. S2V-DQN runs out of memory above 20,000 nodes (Sec 4.2). Checked against paper text; item file exists."
+    },
+    {
+     "slug": "kempe-2015-maximizing-spread-influence",
+     "relation": "cites",
+     "why": "The IC model in GCOMB Def 4 is cited to Kempe et al. (ref 14); the item file exists. Checked against paper text, not against the Kempe item itself."
+    },
+    {
+     "slug": "almazaydeh-2026-heuristic-centrality-methods",
+     "relation": "complements",
+     "why": "Title argues heuristic centrality challenges greedy IM. Checked by title and note only; item file exists."
+    },
+    {
+     "slug": "arya-2025-relink-edge-activation",
+     "relation": "extends",
+     "why": "Title confirms deep-RL edge activation for closed-network IM. Checked by title and note only; item file exists."
+    },
+    {
+     "slug": "kamarthi-2020-influence-maximization-unknown",
+     "relation": "same-method",
+     "why": "Title confirms RL policy for IM under unknown structure. Checked by title and note only; item file exists."
+    },
+    {
+     "slug": "chen-2021-contingency-aware-influence",
+     "relation": "same-method",
+     "why": "Title confirms RL for IM with contingent seed acceptance. Checked by title and note only; item file exists."
+    },
+    {
+     "slug": "bharathi-nd-competitive-influence-maximization",
+     "relation": "complements",
+     "why": "Title confirms competitive IM, the basis for the system's two-colour cascade. Checked by title and note only; item file exists."
+    }
+   ],
+   "bearings": [
+    "melange-pathfinding.multi-target-and-budget-modes:method-source:VERIFIED-SOFTENED",
+    "melange-allocation.joint-optimizer:qualifies:VERIFIED-SOFTENED",
+    "melange-allocation.budget-frontier:qualifies:VERIFIED"
+   ]
+  }
+ ]
+}

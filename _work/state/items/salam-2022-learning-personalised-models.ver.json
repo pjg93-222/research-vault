@@ -1,0 +1,81 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-audio-speech.prosody-and-disfluency",
+      "relation": "qualifies",
+      "paper_claim": "Gender-split fusion of the two best modalities gives AMSE 0.690 against 0.818 for generic bimodal fusion, a 0.128 reduction (abstract and Table 1). Age-split fusion gives 0.796. One challenge test split; no test N, subgroup sizes, intervals or seed variance reported.",
+      "paper_location": "Abstract p.53; Table 1 p.65; Section 4.2.1 p.64; Table 2 p.66",
+      "system_side": "b5_audio_descriptors_candidate.py: pitch_variability_raw is the eGeMAPS F0 stddevNorm (lines 27, 217). Only mean F0 is z-standardized within speaker (around lines 237-252). Percentiles pool men and women within outlet+program (around lines 315-332). Brain records r(sex=F) = -0.266 for pitch_variability_raw over 1,324 clips / 309 members, dropping to -0.065 once de-normalised; jitter r = -0.260; pace and volume sex-clean. Semitone-SD fix 4193f0140 is not an ancestor of HEAD (verified with git merge-base) and sits on branch claude/melange-speech-recognition-cfa049.",
+      "code_ref": "fec/members/b5_audio_descriptors_candidate.py:27,217,237-252,315-332; brain C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md:109,111",
+      "transfer_conditions": "The paper has no pitch or jitter result; its audio features are MFCC band statistics. The sex-conditioning lesson transfers only as a diagnostic for features whose signal partly is sex (pitch, jitter), with the denominator (1,324 clips / 309 members) named and strata or an UNSTRATIFIED label. It is not a basis for per-sex trait models: the paper's criterion is self-report in a volunteer sample of 147 dyadic participants, while Melange gold is expert and insider ratings.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Table 1 and Table 2 numbers re-checked and match (0.690, 0.796, 0.818, 0.820, 0.695, Dyadformer 0.722, prior ensemble 0.769). Softened because the paper does not test pitch or jitter, so it cannot carry a pitch-specific claim. The fail-closed 0-clip state is true of b5_audio_descriptors_v2.json (brain lines 14, 60), not of the candidate script. Brain line 90 records 1,410 of 2,192 audio_pilot clips feeding an anchor vault under a PASS receipt, so 'nothing live is affected' is not established. Code lines and the unmerged-fix status were verified."
+    },
+    {
+      "component_id": "melange-psychometrics.lexical-big5",
+      "relation": "suggests-extension",
+      "paper_claim": "Within the paper's NAS talk-turn models, adding sentiment to duration, content and speech-rate features moves AMSE from 0.874 to 0.942 (generic), 0.883 to 1.074 (age split), and 0.844 to 0.784 (gender split). Single test split, no intervals. The authors themselves expected sentiment to hurt, because their Spanish-only sentiment tool was applied to Catalan and English turns.",
+      "paper_location": "Table 1 p.65; Section 4.2.1 pp.64-65 (language caveat p.64)",
+      "system_side": "big5_traits.py builds lexical Big Five from word features with corpus-relative z-scores (lines 17-18), a LOWCONF_TOKENS=1500 flag (line 28), and a party-only external check (around lines 265-275). No sex-stratified check exists in the file.",
+      "code_ref": "fec/members/big5_traits.py:17-18,28,265-275",
+      "transfer_conditions": "The paper's sentiment features are a Spanish sentiment classifier applied to talk turns, not a lexical trait dictionary, and the paper's own language-mismatch caveat applies. The transferable item is a diagnostic only: report text-trait correlations against the target stratified by sex, or label them UNSTRATIFIED. This paper supports no per-sex models.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Numbers match Table 1. Softened: the bearing treats talk-turn sentiment as analogous to lexical Big Five features, which the paper does not show, and it omits the paper's own caveat that the sentiment tool was Spanish-only and mismatched to Catalan and English turns (p.64). Cited line 20 is a docstring line; the z-scoring statement sits at lines 17-18."
+    },
+    {
+      "component_id": "melange-psychometrics.behavioral-dispositions",
+      "relation": "context",
+      "paper_claim": "Among generic single modalities, talk-turn features without sentiment (duration, content, speech rate) average AMSE 0.874 across the five traits, audio 0.920, and FaceBody 1.325 (Table 1, p.65). The paper does not isolate extraversion or dominance and does not test broadcast interviews.",
+      "paper_location": "Table 1 p.65; Section 4.2.1 p.64",
+      "system_side": "behavioral_dispositions.py: dominance_z is the mean of an interaction-channel term (verbal output, floor-holding Gini, floor defense; lines 84-88) and a committee-leadership z (line 89). A header comment cites turn statistics as the replicated dominance signal (line 17).",
+      "code_ref": "fec/members/behavioral_dispositions.py:17,84-90",
+      "transfer_conditions": "Indirect, five-trait-averaged evidence that turn structure carries trait signal in dyadic lab tasks. It does not validate dominance_z or its committee term, and says nothing about congressional floor speech. Any use should name the window and denominator.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Numbers match Table 1. Softened from supports to context: the paper reports a five-trait average, not a dominance result, so it cannot support the dominance construct. The replicated-signal claim in the code comment (Rienks and Heylen; Valente) is not in this paper and was not verified here. Code citation corrected from 83-87 to 84-90."
+    }
+  ],
+  "related": [
+    {
+      "slug": "ramey-2016-measuring-elite-personality",
+      "relation": "complements",
+      "why": "Verified: Ramey estimates Big Five from legislators' floor speech with LIWC and MRCPD closed-vocabulary features. Salam uses non-verbal and turn channels with subgroup models on self-report labels. Link kept."
+    },
+    {
+      "slug": "marrero-2022-evaluating-voice-samples",
+      "relation": "complements",
+      "why": "Verified: Marrero tests Big Five self-report information from LIWC and vocal features of voice samples, with XGBoost pipelines. Link kept."
+    },
+    {
+      "slug": "dietrich-2019-pitch-perfect-vocal",
+      "relation": "complements",
+      "why": "Verified: Dietrich z-scores mean F0 within each speaker in congressional speech. That is the standardization Melange applies to mean F0. Link kept."
+    },
+    {
+      "slug": "celli-nd-twenty-years-personality",
+      "relation": "complements",
+      "why": "Verified loosely: a PRISMA review of personality computing that discusses bias and demographics as threats. Link kept, but the rel summary should not imply it treats the same confounds Salam tests."
+    },
+    {
+      "slug": "naz-2025-machine-deep-learning",
+      "relation": "complements",
+      "why": "Corrected: Naz is a review of ML and DL trait detection in online text. It mentions multimodal and audio approaches only in passing, so same-method overstates the overlap with Salam's multimodal NAS."
+    },
+    {
+      "slug": "mestre-2026-potential-pitfalls-audio",
+      "relation": "complements",
+      "why": "Verified: Mestre covers forced alignment, within-speaker pitch deviations and audio feature pitfalls for political audio. Link kept."
+    }
+  ],
+  "summary_issues": [
+    "Selection optimism is not flagged. Best-two-modality fusion and best-per-trait results are picked per profile from Table 1, which reports the unseen test partition used for inference (Section 4.2). The paper does not say a separate split did the selecting, so the 0.690 headline is likely optimistic.",
+    "Turn-taking wording is loose. The 0.874 figure is talk-turn features without sentiment (duration, content and speech rate) averaged over five traits, not turn-taking alone.",
+    "The 'nothing live is affected' claim rests on the v2 artifact having 0 accepted clips (brain line 60). The brain also records 1,410 of 2,192 audio_pilot clips feeding an anchor vault under a PASS receipt (brain line 90), so the claim is not established.",
+    "The pitch correlations (r = -.266, jitter -.260) lack their window and denominator. Brain line 109 gives 1,324 clips / 309 members, which the summary should name.",
+    "The summary omits that the semitone-SD fix cuts the pitch sex correlation from -.266 to -.065 (brain line 109). That bears on how much sex confound remains and should be stated.",
+    "'A general population' is not what the paper says. It describes 147 volunteer participants aged 4 to 84 in dyadic video sessions, 68 percent from Spain, so the population wording should be softened.",
+    "Unverified Paul-side claims: 'Paul is interested in non-textual channels', 'a Salam benchmark is on record', and 'criteria are expert ratings' were not traced to any source in the item or brain text reviewed. Only the Salam 2022 sex-confound test (brain line 111) was confirmed. The 'display-only' audio status comes from the memory index and was not re-verified."
+  ]
+}

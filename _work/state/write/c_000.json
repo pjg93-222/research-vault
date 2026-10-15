@@ -1,0 +1,996 @@
+[
+ {
+  "slug": "fink-2023-congressional-social-network-dataset",
+  "note": false,
+  "meta": {
+   "title": "A Congressional Twitter network dataset quantifying pairwise probability of influence",
+   "authors": [
+    "Christian G. Fink",
+    "Nathan Omodt",
+    "Sydney Zinnecker",
+    "Gina Sprint"
+   ],
+   "year": "2023",
+   "venue": "Data in Brief 50 (2023) 109521",
+   "doi": "10.1016/j.dib.2023.109521",
+   "sha12s": [
+    "445139e681c1"
+   ],
+   "category": "Social Network Analysis",
+   "category_slug": "social-network-analysis"
+  },
+  "extraction": {
+   "title": "A Congressional Twitter network dataset quantifying pairwise probability of influence",
+   "authors": [
+    "Christian G. Fink",
+    "Nathan Omodt",
+    "Sydney Zinnecker",
+    "Gina Sprint"
+   ],
+   "year": "2023",
+   "venue": "Data in Brief 50 (2023) 109521",
+   "doi": "10.1016/j.dib.2023.109521",
+   "document_type": "data article",
+   "coverage": "Full text read in one pass (18,192 chars): front matter, specifications table, data description, methods, limitations, ethics, references. All 23 Paul highlights returned from annot 445139e681c1 (matches n_annots 23); none carry sticky notes; paul_entries was empty. Figures not rendered; companion Physica A centrality paper not available, so its claims are unverified here. Metadata corrected: doi and venue were blank; authors expanded from the article header.",
+   "research_question": "Can a public Twitter dataset quantify empirical pairwise probabilities of influence among members of the 117th US Congress, for use in information diffusion and centrality research? Descriptive data article; no hypothesis is tested.",
+   "theory": "Information diffusion on complex networks: Independent Cascade Model and SIR epidemic models, with the influential-spreader centrality literature as motivation (Sec 1, p.2). Political theory is not engaged; the authors suggest political scientists may find it useful.",
+   "data": "Twitter API v2, most recent 3,200 tweets per account, for 530 active member accounts of 535, collected June 9 2022. Window Feb 9 to June 9 2022: 179,974 tweets from 525 accounts (Sec 3, p.4). Members with at least 100 window tweets kept: N = 475 nodes. Unit: directed member-to-member dyad. Section 2 (p.3) lists 117,974 tweet IDs, conflicting with 179,974 in Sec 3 and Ethics (p.4-5). Shared: user IDs, tweet IDs, network JSON and edgelist on Zenodo, DOI 10.5281/zenodo.8253486.",
+   "method": "Descriptive dataset construction; no statistical model. Tweepy and Twitter /2/users endpoints fetched tweets with referenced_tweets, in_reply_to_user_id and entities parameters (Sec 3, p.4-5). For each ordered pair, retweets, quote tweets, replies and mentions of member i tweets by member j are summed, then divided by the total tweets issued by member i. Viral Centrality code from the companion paper is applied to the network; its ICM-approximation claim is asserted here (p.4), not tested.",
+   "identification": "None. Descriptive data article with no causal or inferential identification strategy.",
+   "scope": "Members of the 117th United States Congress with active Twitter accounts on June 9 2022 (530 of 535); a four-month 2022 window; Twitter interactions only, not Congressional behavior overall.",
+   "measures": "Edge weight w(i,j) = (retweets + quote tweets + replies + mentions by j of i tweets) / tweets issued by i in the window; read as an empirical transmission probability. Node = Twitter user ID and username. Formats: directed weighted NetworkX edgelist; JSON with inList, inWeight, outList, outWeight, usernameList.",
+   "key_findings": [
+    "530 active congressional Twitter accounts identified of 535 members; 525 yielded tweets in the window (Sec 3, p.4).",
+    "179,974 tweets from 525 accounts in the Feb 9 to June 9 2022 window (Sec 3, p.4); conflicts with 117,974 IDs in Sec 2 (p.3).",
+    "475 members with at least 100 window tweets form the final network nodes (Sec 3, p.4).",
+    "Network is directed and weighted; each edge is an empirical influence probability from summed interactions over source tweet count (Sec 3, p.4).",
+    "Authors contrast with the Higgs dataset (ref 2): no interaction-to-probability synthesis there, and most users tweeted only a few times (Sec 1, p.2). Motivating comparison, not a measured result.",
+    "Claim: Viral Centrality approximates ICM Monte Carlo results without extensive simulation (Sec 3, p.4). Supported only by the companion paper; not shown in this article.",
+    "Authors note the network is a single snapshot and the probabilities may not be stationary (Sec 4, p.5)."
+   ],
+   "limitations": [
+    "API tweets can change over time through deletion, edits or privacy changes; network reflects June 9 2022 only (Sec 4, p.4-5).",
+    "Probabilities come from one four-month window and may not be statistically stationary (Sec 4, p.5).",
+    "Only 475 of 530 active members are retained after the 100-tweet threshold, which the authors justify on estimate reliability (Sec 3, p.4).",
+    "Summing retweets, quotes, replies and mentions with equal weight is assumed; no uncertainty intervals are reported for edge probabilities (Sec 3, p.4).",
+    "Tweet count conflict between 117,974 (Sec 2, p.3) and 179,974 (Sec 3, p.4; Ethics p.5) is not reconciled in the article.",
+    "Redistribution is limited to IDs under Twitter terms, so full content requires rehydration through API access (Ethics, p.5).",
+    "The 3,200-tweet API cap limits how far back the common window can reach (Sec 3, p.4)."
+   ],
+   "references_of_note": [
+    "Fink et al. 2023, A centrality measure for quantifying spread on weighted, directed networks, Physica A 626, 129083 (companion paper, Viral Centrality).",
+    "De Domenico et al. 2013, The anatomy of a scientific rumor, Sci Rep 3, 2980 (Higgs Twitter dataset).",
+    "Lu et al. 2016, Vital nodes identification in complex networks, Phys Rep 650, 1.",
+    "Das, Samanta and Pal 2018, Study on centrality measures in social networks: a survey, Soc Netw Anal Min 8, 13."
+   ],
+   "short_quotes": [
+    "the only publicly available Twitter dataset that empirically quantifies pairwise influence between users"
+   ],
+   "paul_markup": [
+    {
+     "page": 1,
+     "type": "Highlight",
+     "text": "Twitter’s application programming interface (API) V2 was used to determine the number of times each member of Congress retweeted, quote tweeted, replied to, or mentioned other Congressional members, and the probability of influence was found by normalizing the summed influence",
+     "note": ""
+    },
+    {
+     "page": 2,
+     "type": "Highlight",
+     "text": "Tweepy Python package to interact with Twitter’s AP",
+     "note": ""
+    },
+    {
+     "page": 2,
+     "type": "Highlight",
+     "text": "most recent 3,200 tweets of all members of the 117 th United States Congress.",
+     "note": ""
+    },
+    {
+     "page": 2,
+     "type": "Highlight",
+     "text": "We also excluded any Congressional member who tweeted less than 100 times during this window of time.",
+     "note": ""
+    },
+    {
+     "page": 2,
+     "type": "Highlight",
+     "text": "(through retweets, quote tweets, replies, or mentions)",
+     "note": ""
+    },
+    {
+     "page": 2,
+     "type": "Highlight",
+     "text": "the only publicly available Twitter dataset that empirically quantifies pairwise influence between users.",
+     "note": ""
+    },
+    {
+     "page": 2,
+     "type": "Highlight",
+     "text": "but it does not synthesize these data into influence probabilities.",
+     "note": ""
+    },
+    {
+     "page": 2,
+     "type": "Highlight",
+     "text": "most users in the dataset only tweeted a few times, making the inference of empirical probabilities problematic.",
+     "note": ""
+    },
+    {
+     "page": 2,
+     "type": "Highlight",
+     "text": "There is a vast literature on identifying ‘influential spreaders’ within social or epidemiological networks",
+     "note": ""
+    },
+    {
+     "page": 2,
+     "type": "Highlight",
+     "text": "The centrality measure’s performance is often compared with 'ground truth' results from Monte Carlo simulations of a simple epidemiological mode",
+     "note": ""
+    },
+    {
+     "page": 2,
+     "type": "Highlight",
+     "text": "these Monte Carlo simulations typically just assume a homogeneous transmission probability, set to an arbitrarily chosen value",
+     "note": ""
+    },
+    {
+     "page": 3,
+     "type": "Highlight",
+     "text": "All data files and code are hosted on the Zenodo repository linked above",
+     "note": ""
+    },
+    {
+     "page": 4,
+     "type": "Highlight",
+     "text": "he tweet IDs are provided in the congress_tweet_ids.txt file described previously in the Data Description sectio",
+     "note": ""
+    },
+    {
+     "page": 4,
+     "type": "Highlight",
+     "text": "so we went as far back in time as possible before first exhausting the 3,200-tweet limit for any one Congressional member.",
+     "note": ""
+    },
+    {
+     "page": 4,
+     "type": "Highlight",
+     "text": "Furthermore, in order for probabilities of influence to be meaningful, we required that a given Congressional member issue at least 100 tweets over this timeframe in order to be included in this dataset",
+     "note": ""
+    },
+    {
+     "page": 4,
+     "type": "Highlight",
+     "text": "475 Congressional members with tweets included in the social network",
+     "note": ""
+    },
+    {
+     "page": 4,
+     "type": "Highlight",
+     "text": "Our Twitter API rehydration code is available in a Zenodo repository at this URL: https://zenodo.org/record/8253486 .",
+     "note": ""
+    },
+    {
+     "page": 4,
+     "type": "Highlight",
+     "text": "To quantify influence of member i on member j , we considered the number of times member j retweeted, quoted tweeted, replied to, or mentioned a tweet by member i .",
+     "note": ""
+    },
+    {
+     "page": 4,
+     "type": "Highlight",
+     "text": "Code that calculates influence using this technique and produces a directed, weighted network given tweets IDs is available at the repository URL provided above",
+     "note": ""
+    },
+    {
+     "page": 4,
+     "type": "Highlight",
+     "text": "Viral Centrality efficiently approximates Monte Carlo simulations of the Independent Cascade Model",
+     "note": ""
+    },
+    {
+     "page": 4,
+     "type": "Highlight",
+     "text": "Our Viral Centrality algorithm provides very good approximation to ICM results without the need for extensive Monte Carlo simulation, drastically cutting down on computation time.",
+     "note": ""
+    },
+    {
+     "page": 5,
+     "type": "Highlight",
+     "text": "Congressional Twitter Network (Original data) (Zenodo).",
+     "note": ""
+    },
+    {
+     "page": 5,
+     "type": "Highlight",
+     "text": "Furthermore, it should be understood that the probabilities of influence which constitute edge weights are empirical estimates taken from a particular window of time, and may not represent their statistically stationary values.",
+     "note": ""
+    }
+   ]
+  },
+  "summary_md": "Fink, Omodt, Zinnecker and Sprint (Data in Brief 50, 2023) publish a directed, weighted Twitter network for the 117th Congress. Tweets were pulled on June 9 2022 (3,200-tweet API cap) for 530 active accounts. The common window is Feb 9 to June 9 2022: 179,974 tweets from 525 accounts, though Sec 2 lists 117,974 tweet IDs. After a 100-tweet floor, 475 members remain as nodes. The edge weight from i to j counts the retweets, quotes, replies and mentions that j makes of i's tweets, all weighted equally, and divides by the number of tweets i issued. The authors call this an empirical probability of influence. They pitch it as heterogeneous transmission probabilities for Independent Cascade or SIR simulations, in place of one arbitrary uniform rate. They also say their Viral Centrality approximates ICM Monte Carlo results, but only the companion Physica A paper shows this; this article does not test it. Limitations: one snapshot, possibly non-stationary rates, and no uncertainty on any edge. For Paul's system the article is a direct method source. press_engagement_layer.py implements Fink's normalization with the source-volume denominator. social_interaction_layer.py cites Fink but divides by the engaging member's own post volume, which is the opposite end of the dyad. It also uses a 25-post floor instead of 100, weights mentions 0.4 and skips quotes and replies. Both layers are mean-symmetrized, which discards Fink's direction. They are then mapped through w = 6p/(1-p) so that the cascade kernel reproduces p before party and receptivity factors. The denominator finding comes from reading the code only and stays UNVERIFIED (DE-062).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-sna.multilayer-social-press-edges",
+    "relation": "contradicts",
+    "paper_claim": "Influence of i on j is the count of j's retweets, quote tweets, replies and mentions of i's tweets divided by the tweets i issued in the window. Members with fewer than 100 window tweets are excluded, leaving 475 of 530 active accounts (525 with window tweets).",
+    "paper_location": "Sec 3, p.4",
+    "system_side": "social_interaction_layer.py divides each weighted event count by max(25, posts of the ENGAGING member a), so the denominator is the reposter or mentioner volume, the reverse end of the dyad from Fink, which divides by the source i tweets. It uses a 25-post floor, not Fink's 100-tweet exclusion. Mentions are weighted 0.4. There is no separate quote or reply event type: RT-prefixed rows count as reposts, and any @handle in a non-RT post, including a reply or quote, counts as a 0.4 mention. The docstring claims the same Fink discipline as press_engagement_layer.",
+    "code_ref": "fec/network/social_interaction_layer.py:15-19,25,33-56",
+    "transfer_conditions": "The pair weight in code is (ev(a,b)/vol(a) + ev(b,a)/vol(b))/2 with vol floored at 25 and each direction capped at 0.25. A Fink-consistent version would divide by vol(b) and vol(a) respectively. This is a code-read finding and stays UNVERIFIED (DE-062) until social_interactions.json is recomputed both ways. The source data are X/Quorum post text and Bluesky interactions, not Fink's API fields, so the analogy is looser than the docstring implies.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Paper side reproduced: the formula, the 100-tweet exclusion and 475 of 530 match Sec 3 p.4. Code side verified: the denominator is the engaging member volume (line 56), the floor is 25 and mention weight 0.4 (line 25). The original claim that quotes and replies are skipped is wrong, because there is no quote or reply event type and their @mentions count at 0.4. system_side rewritten to say so.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-sna#Social and press-engagement layers|Social and press-engagement layers]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-sna.multilayer-social-press-edges",
+    "relation": "method-source",
+    "paper_claim": "Edge weight is an empirical probability of influence: summed interactions of j on i divided by tweets issued by i. A minimum of 100 tweets per member is required so that the probabilities are meaningful.",
+    "paper_location": "Abstract; Specifications table p.2; Sec 3, p.4",
+    "system_side": "press_engagement_layer.py sets P(i to j) = mentions of i by j divided by items issued by i, capped at 1.0 (line 61), with MIN_ITEMS = 5 on the source (line 58, env ENG_MIN_ITEMS). A code comment calls this the analog of Fink's 100-tweet rule. The docstring says the layer validates cosponsor-edge probabilities.",
+    "code_ref": "fec/network/press_engagement_layer.py:3-11,56-61",
+    "transfer_conditions": "Naming a co-actor in a press title is an analogy for engagement, not a reply or retweet. A 5-item floor on the source is far below Fink's 100-tweet floor, so the rates are much noisier. Fink validates nothing, so the docstring claim of validating cosponsor-edge probabilities has no basis in this paper.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper quote and the 100-tweet requirement hold (Sec 3 p.4; specifications table p.2). Code matches the formula and the MIN_ITEMS default of 5. The original paper_location 'Value of the Data p.2' does not contain the normalization, so it was corrected to Abstract, Spec table and Sec 3. The layer caps probabilities at 1.0, which the bearing did not mention.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-sna#Social and press-engagement layers|Social and press-engagement layers]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-influence-engine.cascade-kernel",
+    "relation": "method-source",
+    "paper_claim": "Fink offers the directed pairwise probabilities as empirical transmission probabilities that can vary across edges. The paper argues that Monte Carlo SIR-type benchmarks usually assume one homogeneous, arbitrarily chosen rate.",
+    "paper_location": "Value of the Data, p.2; Sec 3, p.4",
+    "system_side": "For untied pairs, engagement (build_multilayer_network.py lines 117-122) and social (lines 158-166) probabilities enter as w = 6p/(1-p), capped by ENG_CAP and SOC_CAP, both default 2.0. In moneyball_core.py build_P returns x/(x+6) with x = w times physics times edge_mult, so it returns p when those factors are 1. For tied pairs, social multiplies the weight by (1 + 0.3 min(1, p/0.10)). Engagement on tied pairs goes through admit(), which drops them unless MEDIA_ADMIT is dominance, the default only in holistic runs.",
+    "code_ref": "fec/network/build_multilayer_network.py:117-122,146-166,71; fec/moneyball_core.py:556-562",
+    "transfer_conditions": "The mapping holds only for untied pairs and only when physics and edge_mult equal 1. Fink rates are directed and normalized per source tweet, while the system symmetrizes them and reads them as per-campaign activation odds, which changes unit and meaning. The 2.0 cap gives p_max of 0.25. Fink covers one 2022 window and says the rates may not be stationary.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "The paper's homogeneous-rate sentence refers to SIR-type Monte Carlo benchmarks; ICM is not named there, so the paper claim was narrowed. Kernel algebra verified: with w = 6p/(1-p), w/(w+6) = p. Caps and social reinforcement verified in code. The original wording that all tied pairs get a multiplier is true only for the social layer.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Cascade activation kernel build_P and partisan edge factors|Cascade activation kernel build_P and partisan edge factors]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary says the social layer skips quotes and replies. The code has no quote or reply event type; @mentions inside replies and quotes count at 0.4.",
+   "Summary says the uniform-rate critique covers IC or SIR simulations. The paper's homogeneous-rate sentence refers to SIR-type Monte Carlo benchmarks and does not name ICM.",
+   "Summary says the companion Physica A paper shows the Viral Centrality approximation. That paper is not in the text file, so the claim is UNVERIFIED here, not confirmed.",
+   "Summary omits that the social layer inputs are an RT-prefix parse of X/Quorum post text plus Bluesky interactions, not Fink's API fields, so the analogy is looser than presented.",
+   "The flags gloss calling Fink's per-source normalization row-stochastic-like is loose: dividing by the source tweet count does not make outgoing weights sum to one. Drop the gloss or qualify it."
+  ],
+  "gaps_exposed": [
+   "Engagement rates carry no uncertainty or shrinkage. Fink reports none, and the system's floors (25 posts for social, 5 items for press) sit far below Fink's 100-tweet bar. Nobody has counted how many admitted edges rest on fewer than 3 events.",
+   "Both layers mean-symmetrize and so throw away direction, although Fink's network and the ICM it targets are directed. The cascade engine's directed loader covers cosponsorship only.",
+   "The component's own question, whether Twitter interaction ties predict cosponsorship beyond party and state, is still untested; Fink supplies data, not that test.",
+   "Fink's Viral Centrality, an analytic approximation of ICM spread, has not been compared with the Katz-Bonacich diagnostic or with Monte Carlo cascade output on the live kernel."
+  ],
+  "flags": [
+   "The social layer cites Fink's normalization but divides by the engaging member's own volume, the reverse of Fink and of press_engagement_layer (social_interaction_layer.py:56 vs press_engagement_layer.py:60-61). UNVERIFIED code-read (DE-062).",
+   "The paper calls its edge weights probabilities of influence. On Melange surfaces they must read as engagement rates or heuristic model weights, never as influence, closeness or access probabilities (D-025).",
+   "Fink divides interaction counts by the source's volume, a per-source, row-stochastic-like normalization. Per-edge volume normalization, row-stochastic included, was MEASURED AND REJECTED for the cosponsor degree artifact (Spearman Katz vs raw volume +0.477). Do not cite this paper as support for extending it to the cosponsor layer.",
+   "The press_engagement_layer.py docstring says the layer empirically validates cosponsor-edge probabilities. Fink validates nothing, and an overlap count is not a validation test.",
+   "The article contradicts itself: 117,974 tweet IDs in Sec 2 vs 179,974 tweets in Sec 3 and Ethics. Any figure quoted must say which one it uses."
+  ],
+  "paul_alignment": "Paul has no written takeaway: 23 highlights, no notes. The highlights cover method: source-volume normalization, the 100-tweet floor, 475 nodes, and the homogeneous-rate critique. The press layer follows that method. The social layer (2026-07-02) cites it but reverses the denominator and lowers the floor to 25. The component's assumption that reposts and mentions are relational ties (Fink 2023) goes beyond the paper, which defines the measure but never tests it.",
+  "related": [
+   {
+    "slug": "trivedi-2020-efficient-influence-maximization",
+    "relation": "complements",
+    "why": "Influence maximization under the Independent Cascade Model, the diffusion model whose edge probabilities Fink supplies. Checked against the item title and venue."
+   },
+   {
+    "slug": "almazaydeh-2026-heuristic-centrality-methods",
+    "relation": "same-method",
+    "why": "Heuristic centrality versus greedy optimization in influence maximization, the same cheap-heuristic-versus-simulation question as Viral Centrality. Checked against the item title only; it does not test Fink's measure."
+   },
+   {
+    "slug": "steinertthrelkeld-2018-twitter-data",
+    "relation": "complements",
+    "why": "Methods book on collecting and using Twitter data. Item exists and is titled Twitter as Data; topical match checked on title only."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "porter-2025-campaignview-campaign-platforms",
+  "note": false,
+  "meta": {
+   "title": "CampaignView, a database of policy platforms and biographical narratives for congressional candidates",
+   "authors": [
+    "Rachel Porter",
+    "Colin R. Case",
+    "Sarah A. Treul"
+   ],
+   "year": "2025",
+   "venue": "Scientific Data (Nature Portfolio), 12:1237",
+   "doi": "10.1038/s41597-025-05491-x",
+   "sha12s": [
+    "7e7d42901395"
+   ],
+   "category": "Campaign Politics",
+   "category_slug": "campaign-politics"
+  },
+  "extraction": {
+   "title": "CampaignView, a database of policy platforms and biographical narratives for congressional candidates",
+   "authors": [
+    "Rachel Porter",
+    "Colin R. Case",
+    "Sarah A. Treul"
+   ],
+   "year": "2025",
+   "venue": "Scientific Data (Nature Portfolio), 12:1237",
+   "doi": "10.1038/s41597-025-05491-x",
+   "document_type": "data descriptor (dataset paper)",
+   "coverage": "Full text read in one pass (885 lines): abstract through references, all tables. No lobbying, network, path-finding or allocation content in paper. Elections, legislators and text measurement covered. Paul markup: none (annot_sha12s empty, no note flag). Page images not rendered. Corrections: full author names; venue, DOI, type filled; kind academic-article changed to data descriptor. Text gives 5,228 corpus candidates (abstract) vs 5,300 with a website (Methods p.4).",
+   "research_question": "No hypothesis is tested. The paper asks how to supply systematic, real-time text of congressional candidate campaign websites (platforms and biographies) for 2018 to 2022 House primaries, so that questions on polarization, agenda-setting and representation can be studied (Abstract p.1; Background p.2).",
+   "theory": "Not tested. Motivation cites candidate self-presentation and position-taking (refs 4-6), issue emphasis shaping voter perceptions and media attention (refs 7-9), campaign priorities predicting later legislative priorities (refs 10-12), and primaries as the pivotal competitive stage (refs 13-18), p.1-2.",
+   "data": "Population: 6,016 major-party, ballot-eligible House primary candidates, 2018-2022. Corpus: 5,228 candidates (86.9%); 43,465 platform points (candidate-year-point); 5,114 biographies (candidate-year). Collection: manual scrape of campaign sites one week before each primary, plus Wayback Machine for 1,111 candidates (archived text is 7.8%). Auxiliary: party, incumbency, vote shares, FEC ID, BioGuideID, fundraising. Release: Harvard Dataverse doi 10.7910/DVN/JIEAPT (CC0).",
+   "method": "Descriptive data construction. Name standardization by probabilistic record linkage on pretrained word embeddings, blocked on party and state; matches under 50% probability hand-checked (p.8-9). Every platform point hand-labeled into one of 14 Major Policy Topic codes by trained annotators with a codebook (p.3). Topic term lists from keyness analysis (Table 2, p.7). Missingness described by logistic regression of website, biography and platform absence on covariates (Table 5, p.9). Relabeling check on a 20% random sample (8,584 points) by other coders (p.10).",
+   "identification": "None. Table 5 missingness coefficients are associations only. No causal design.",
+   "scope": "U.S. House major-party, ballot-eligible primary candidates, 2018 to 2022 cycles. Population of campaign websites and platforms only, not all candidate communications. Era: 2018-2022 redistricting decade. Partisan dynamics are reported for platforms only (Fig. 3, p.10).",
+   "measures": "Major Policy Topic code (14 categories, Table 1 examples, Table 6 crosswalk to PAP and CRS). Biography and platform presence flags. Platform subheadings. Primary and general vote shares. Party, incumbency, prior office holding (quality_cand). Logged fundraising. Primary type (Open, Partially-Closed, Non-Partisan). Unopposed primary flag. Presidential vote share by district (dem_prez_vote). Identifiers: FECCandID, BioGuideID, housegov_bio flag, housegov_issue flag.",
+   "key_findings": [
+    {
+     "finding": "Corpus covers 5,228 candidates, 86.9% of 6,016 eligible House primary candidates, 2018-2022; 43,465 platform points and 5,114 biographies.",
+     "location": "Abstract p.1; Methods p.4"
+    },
+    {
+     "finding": "Campaign website identified for 5,300 candidates (88.1%); 85.0% of those had a platform and 96.5% a biography.",
+     "location": "Methods p.4"
+    },
+    {
+     "finding": "Missingness: no biography for 14.99%, no platform for 25.08%, no website at all for 11.9% of the 6,016 candidates.",
+     "location": "Technical Validation p.8"
+    },
+    {
+     "finding": "Archived Wayback data supplies 7.8% of candidates; 239 in 2018, 101 in 2020, 67 in 2022. 1,111 candidates (18.5%) had no primary-season data.",
+     "location": "Methods p.4"
+    },
+    {
+     "finding": "Unopposed primary is negatively associated with missing website, biography and platform (-0.342, -0.349, -0.320; all significant at 95%).",
+     "location": "Table 5 p.9"
+    },
+    {
+     "finding": "Current incumbent MC has the largest negative association with missing website (-2.967), biography (-2.000) and platform (-0.314). Logged fundraising is negative for all three (-0.222, -0.194, -0.136).",
+     "location": "Table 5 p.9"
+    },
+    {
+     "finding": "Three-quarters of candidates without a website raised under 100,000 dollars. Website-plus-platform present for 88.3% of general election winners and biography for 99.0%.",
+     "location": "Technical Validation p.8"
+    },
+    {
+     "finding": "Hand-coding reliability on a 20% relabel (8,584 points): percent agreement 80%, Cohen kappa 0.84, weighted kappa 0.74. Most disagreements were on Unknown/Other.",
+     "location": "Technical Validation p.10"
+    },
+    {
+     "finding": "Name linkage across cycles: 15 wrong matches for 2018-2020, 1 for 2020-2022, none for 2018-2022.",
+     "location": "Technical Validation p.9"
+    },
+    {
+     "finding": "Democrats consistently emphasize Energy and Environment, Healthcare and Social Welfare; Republicans emphasize Immigration and Government Operations more often.",
+     "location": "Usage Notes p.10, Fig. 3"
+    },
+    {
+     "finding": "Education partisan gap about 25 points before 2022, narrowing to about 5 points in 2022. Healthcare gap 23 points in 2020 and over 40 points in 2022 (driven by fewer Republicans discussing it).",
+     "location": "Usage Notes p.10"
+    },
+    {
+     "finding": "Platform text is cleaned and parsed to the policy level, so one row is one platform point (statement_id), aggregable to candidate-year.",
+     "location": "Data Records p.5, p.10"
+    }
+   ],
+   "limitations": "About 12% of eligible candidates have no website and 25% have no platform, with missingness concentrated among uncompetitive and low-fundraising candidates. Each platform point gets one topic (majority content), so multi-topic issues such as women rights or reproductive health may be under-coded (p.10). Topic codes are only partly aligned to PAP and CRS schemes (Table 6). Reliability check covers only the 2022 relabel sample. Redistricting changes district IDs, so cd is not a recommended key. Website text is a snapshot one week before primary.",
+   "references_of_note": [
+    "Porter and Treul (2025), Evaluating (in)experience in congressional elections, Am. J. Polit. Sci. 69, 284-298 (ref 14).",
+    "Druckman, Kifer and Parkin (2009), Campaign communications in US congressional elections, APSR 103, 343-366 (ref 19).",
+    "Xenos and Foot (2005), Politics as usual, or politics unusual? Campaign website position taking (ref 21).",
+    "Sulkin, Moriarty and Hefner (2007), Congressional candidates issue agendas on- and off-line (ref 22).",
+    "King, Lam and Roberts (2017), Computer-assisted keyword and document set discovery, AJPS 61, 971-988 (ref 31).",
+    "Ornstein (2025), Probabilistic record linkage using pretrained text embeddings, Political Analysis (ref 30).",
+    "Bailey (2023), Measuring candidate ideology from congressional tweets and websites, SSRN (ref 26).",
+    "Di Tella, Kotti, Le Pennec and Pons (2023), Keep your enemies closer, NBER WP 31503 (ref 24).",
+    "Porter and Case (2025), Measuring policy positioning in US congressional elections, OSF preprint (ref 32)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "Our corpus covers 5,228 candidates, representing 86.9% of major-party, ballot-eligible contenders who ran for the U.S. House",
+    "Currently, there is no open-source database of text from congressional candidate campaign websites.",
+    "Percent agreement between re-labeled documents and their original topical coding was 80%."
+   ]
+  },
+  "summary_md": "Porter, Case and Treul (Scientific Data 2025) release CampaignView, a data descriptor rather than a hypothesis test: campaign-website text for U.S. House major-party primary candidates in 2018, 2020 and 2022. Of 6,016 ballot-eligible candidates, 5,228 (86.9%) are in the corpus, giving 43,465 platform points and 5,114 biographies. Text was scraped about one week before each primary, with Wayback Machine backfill (7.8% of candidates). Every platform point is hand-coded into one of 14 policy topics. On a 20% relabel sample (8,584 points) agreement is 80% and Cohen kappa is 0.84. Rows carry FEC and BioGuide IDs, and candidate names were linked across cycles by embedding-based record linkage. Missingness is not random: across the 6,016 candidates, 11.9% have no website and 25.1% have no platform, and incumbents, unopposed candidates and better-funded candidates are much less likely to be missing (Table 5 logit, associations only). In descriptive platform shares, Democrats emphasize environment, healthcare and social welfare, while Republicans emphasize immigration and government operations. For Paul's systems the paper has no network, lobbying or allocation content. It matters in two places. First, the electoral-plays contest-primary route scores an Opponent's primary vulnerability against the same-party average CU score, not against any real challenger. CampaignView gives candidate-level challenger platforms that could replace that proxy for House seats in 2018-2022. Second, its hand-coded topic labels with reported reliability are a template for the open question of how precise the press-release regex topic tagger is. Coverage limits: House only, three cycles, website text only. The topic codes do not map to credit-union categories.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.electoral-plays",
+    "relation": "suggests-extension",
+    "paper_claim": "Platform text for 5,228 of 6,016 (86.9%) major-party ballot-eligible House primary candidates 2018-2022, with 43,465 hand-topic-coded platform points. Identifiers are FECCandID (not universal) and BioGuideID (incumbents only).",
+    "paper_location": "Abstract p.1; Methods p.4; Data Records p.5; Usage Notes p.9-10 (ID caveats)",
+    "system_side": "build_electoral_plays.py: the contest route primary term takes, per category, the Opponent's shortfall against the same-party average avgP, keeps only the negative parts, and divides the sum by the number of categories. So it is a mean-style proxy, not a plain sum. No challenger data enters.",
+    "code_ref": "fec/engine/build_electoral_plays.py:26-31",
+    "transfer_conditions": "House only, 2018-2022 cycles; the 14 topic codes are not CU categories. BioGuideID is incumbent-only and the paper advises against aggregating by either ID. Challenger coverage gaps (low fundraising, uncompetitive races) are where the proxy matters most. New analysis stays UNVERIFIED until a second path reproduces it (DE-062).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Count and coverage figures reproduce exactly. The keying claim is overstated: the paper says BioGuideID exists only for incumbents and FECCandID is missing for some. The contest route uses a mean-style shortfall over categories, not a plain sum. The substance (same-party average proxy, no real challenger data) holds.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Electoral security, leverage and contest-defend plays|Electoral security, leverage and contest-defend plays]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-legislative-data.category-taxonomy",
+    "relation": "method-source",
+    "paper_claim": "Each platform point is hand-coded by trained annotators to one of 14 Major Policy Topic codes using a codebook. A 20% relabel (8,584 points, by 2022 coders) gave 80% agreement, Cohen kappa 0.84 and weighted kappa 0.74, with most disagreement on Unknown/Other.",
+    "paper_location": "Methods p.3; Technical Validation p.10",
+    "system_side": "cu_press_release_scraper.R defines 19 Layer-2 categories by regex term lists plus bill-based tags. detect_categories tags a release with EVERY category it touches, so the tagger is multi-label, not single-topic. A human-label kappa exists for stance (run_stage5.R line 133: regex 0.17, DEBATE 0.34). No topic-level reliability benchmark was found.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R:1730-1739 and 1921-1927; run_stage5.R:133",
+    "transfer_conditions": "Transfers as a validation design (double-code a random sample, report kappa), not as labels: genre and topic scheme differ from CU categories. The paper's single-topic rule under-codes multi-topic text, but the regex tagger does not share that rule.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper figures reproduce. The claim that the regex tagger shares the single-topic-per-item rule is refuted by detect_categories, which is multi-label. The claim that no human benchmark exists is too strong: a stance kappa exists in run_stage5.R. Only the topic-level absence is supported, and only by a keyword search.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-legislative-data#Release category taxonomy and billstatus synthetic rows|Release category taxonomy and billstatus synthetic rows]]",
+    "system": "melange-legislative-data"
+   },
+   {
+    "component_id": "mentat-fec-attribution.identity-ladder",
+    "relation": "context",
+    "paper_claim": "Cross-cycle candidate names linked by probabilistic record linkage on pretrained embeddings, blocked on party and state. Estimated matches under 50% were hand-checked: 15 wrong for 2018-2020, 1 for 2020-2022, none for 2018-2022.",
+    "paper_location": "Methods p.8-9; Technical Validation p.9",
+    "system_side": "member_identity.py Resolver (about lines 118-135) maps a bioguide ID to a roster name and returns None as a refusal rather than guessing. The cited lines contain no contributor rule ladder (name parts, zip, city, occupation, employer) and no name-frequency logic, and a keyword search of member_identity.py found no occupation or employer rules.",
+    "code_ref": "fec/members/member_identity.py:118-135",
+    "transfer_conditions": "The paper links candidates (a small, ID-rich population), not donors; its error counts do not speak to donor-level false-match rates. Member bioguide lookup is a different problem from cross-cycle name linkage.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper figures reproduce exactly. The contributor-ladder and no-name-frequency-weighting claims are unsupported at the cited lines and were not found in member_identity.py. Only the Resolver bioguide and refusal behavior stands.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-fec-attribution#Contributor identity match ladder|Contributor identity match ladder]]",
+    "system": "mentat-fec-attribution"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Coverage: all 3 bearings and all 3 related links were checked against the paper text and code. Paper figures in the summary (5,228/6,016, 86.9%, 43,465, 8,584, 80%, kappa 0.84, 0.74, 15/1/0 wrong matches, 11.9%, 25.1%, one-week scrape, 7.8% Wayback) reproduce.",
+   "Keying: the summary says platform text is keyed by FEC ID and BioGuideID. The paper says BioGuideID exists only for incumbents, FECCandID is missing for some, and aggregation by either is not recommended.",
+   "Relabel scope: the summary omits that the 20% relabel was done only on 2022 primary text by coders from that cycle. The reliability statistics therefore cover one cycle only.",
+   "Missingness direction: the summary's claim that unopposed and better-funded candidates are less likely to be missing matches Table 5 signs. But the paper's prose says contested-primary candidates are less likely to be missing, which contradicts its own table. The summary should flag this internal inconsistency.",
+   "Missingness pooling: Table 5 coefficients are pooled across parties and cycles. The summary should quote them as UNSTRATIFIED associations.",
+   "Contest route: the summary says the proxy is a sum of negative gaps against the same-party average. The code divides by the number of categories, so it is a mean-style shortfall. The summary also omits the general (cross-party) route, which takes the max of the two.",
+   "Tagger: the summary says the single-topic-per-item caveat also applies to the regex press-release tagger, and that no human benchmark exists. Both are refuted or overstated by the Draft Systems code (multi-label tagging; stance kappa in run_stage5.R line 133).",
+   "Scrape timing: the summary says text was scraped about one week before each primary. The paper also runs searches one month before and after the season, so the window is wider than one week."
+  ],
+  "gaps_exposed": [
+   "electoral-plays primary route uses the same-party average as a stand-in challenger; no actual primary-challenger data (positions, fundraising, quality) enters the contest value.",
+   "No human-coded reliability benchmark (kappa or precision) exists for the regex press-release topic tagger; CampaignView shows the minimal design (20% double-code).",
+   "Systems have no campaign-stage issue-emphasis input; whether a member's campaign platform emphasis predicts later CU-relevant press or legislative priority is untested."
+  ],
+  "flags": [
+   "No conflict with brain rules: paper makes no network, closeness, influence or LDA claims.",
+   "Table 5 missingness coefficients are pooled across parties and cycles; quote as UNSTRATIFIED associations if cited.",
+   "Item kind corrected upstream to data descriptor; abstract says 5,228 corpus candidates while Methods says 5,300 had a website; both figures use denominator 6,016."
+  ],
+  "paul_alignment": "No annotated-bibliography entry and no markup from Paul for this work, so there is no takeaway to check. Nothing is stale.",
+  "related": [
+   {
+    "slug": "bonica-2013-mapping-ideological-marketplace",
+    "relation": "complements",
+    "why": "Vault summary confirms Bonica's CFscores are donor-based candidate ideal points. The pairing with CampaignView platform text is the analyst's suggestion; the paper does not cite Bonica."
+   },
+   {
+    "slug": "broockman-2026-should-moving-middle",
+    "relation": "complements",
+    "why": "Vault title and summary confirm a study of when moving to the middle wins votes. CampaignView is a candidate-level source of primary positions, as the analyst says; the paper does not cite Broockman."
+   },
+   {
+    "slug": "ornstein-2024-train-your-stochastic",
+    "relation": "complements",
+    "why": "Vault file confirms it is about LLMs for political texts (Political Science Research and Methods, 2025). The analyst's use as a scalable check on CampaignView's hand codes is a suggestion, not a claim in either paper."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "delano-2025-bicam-congressional-lobbying",
+  "note": false,
+  "meta": {
+   "title": "Bulk Ingestion of Congressional Actions and Materials Dataset (BICAM)",
+   "authors": [
+    "Ryan Delano",
+    "Aaron Rudkin",
+    "In Song Kim"
+   ],
+   "year": "2025",
+   "venue": "Scientific Data 12:1567 (2025)",
+   "doi": "10.1038/s41597-025-05737-8",
+   "sha12s": [
+    "58dbc0a2b055"
+   ],
+   "category": "Lobbying",
+   "category_slug": "lobbying"
+  },
+  "extraction": {
+   "title": "Bulk Ingestion of Congressional Actions and Materials Dataset (BICAM)",
+   "authors": [
+    "Ryan Delano",
+    "Aaron Rudkin",
+    "In Song Kim"
+   ],
+   "year": "2025",
+   "venue": "Scientific Data 12:1567 (2025)",
+   "doi": "10.1038/s41597-025-05737-8",
+   "document_type": "data descriptor (dataset paper), not a research article",
+   "coverage": "Full text read in one pass (49,035 chars, 552 lines of text file), including front matter, abstract, background, methods, all eleven data record sections, technical validation, usage notes, code availability, references and author notes. No page images, and the Supplementary Information (Bill-LDA Linkages, validation of LDA linkages) is not in the text file, so its details are unverified. Paul markup: none (n_annots 0, no annotation files). Metadata hints corrected: authors are full names, DOI and venue added, document type changed from academic-article to data descriptor. Lobbying linkage is covered only at the level described in the main text.",
+   "research_question": "No research question is posed. The paper's aim is to provide a standardized, linked, bulk-downloadable database of official U.S. congressional records (1789 to present) and to make Bill-to-LDA lobbying linkages available for interest-group research.",
+   "theory": "None stated. Background cites literature on committees, agenda control, bill text, amendments and hearings as motivation for the data, not as tested theory.",
+   "data": "Official sources: Congress.gov API and GovInfo.gov API, merged into a PostgreSQL relational database and exported as CSV. Eleven components: Bills (421,764; 6th-119th Congress), Amendments (123,061; 97th-119th), Members (2,597; 81st-119th), Committees (226 committees and 587 subcommittees; 1st-119th), Committee Reports (106,818; 16th-119th), Committee Prints (4,346; 67th-119th), Committee Meetings (12,238; 114th-119th), Hearings (74,918; 79th-119th), Treaties (758; 81st-119th), Nominations (43,858; 97th-119th), Congresses (119 sessions). Unit is the record; the lobbying linkage is between Bills and LDA Section 16 filings (LD-2 reports). LDA data come from the House and Senate; LobbyView and OpenSecrets are noted as existing compilations.",
+   "method": "Data engineering rather than statistical analysis. Steps: (1) gather from both government APIs with a custom Python package (pause/resume, error recovery, parallel download); (2) import into PostgreSQL, enforce types and unique keys, and connect components by identifiers; (3) merge the two upstream sources with rules-based corrections, keeping the most complete composite record; (4) add record linkages to Voteview (custom bill identifier, crosswalk to Voteview) and to LDA Section 16 filings by matching extracted bill numbers and titles to Bills using distance measures, with low-confidence matches manually scrutinized.",
+   "identification": "Not applicable. No causal or inferential design is used.",
+   "scope": "Population: all electronically available official U.S. congressional records. Institution: U.S. Congress and its committees, with sub-components varying in temporal start. Era: 1789 to the 119th Congress, with the download current to the paper's publication window and updated on bicam.net. Excluded: full Congressional Record transcripts, Congressional Communications, CRS reports, member press releases, executive-branch data (FEC donations and election results), and rollcall and lobbying data themselves (only linkages provided).",
+   "measures": "Standardized identifiers: bill_id, amendment_id (type, number, Congress), bioguide_id, icpsr, committee_code, report_id, print_id, meeting_id, hearing_id, treaty_id, nomination_id, and a custom Bill-to-Voteview crosswalk. Validation measures: download completeness, data type checks, identifier uniqueness, cross-component linkage checks, and cross-source agreement. Linkage confidence is a distance-based score; the paper does not report its numeric threshold or the match rate in the main text.",
+   "key_findings": [
+    "BICAM contains 421,764 bills spanning the 6th to 119th Congress, linked via bill_id (Methods, Bills section, p.6).",
+    "The Bills component includes 123,061 amendments from the 97th to 119th Congress (Amendments section, p.6).",
+    "All 2,597 members who served from the 81st to 119th Congress are included, with icpsr and bioguide_id keys (Members section, p.6).",
+    "BICAM covers 226 committees and 587 subcommittees, with committee history from the 1st to 119th Congress (Committees section, p.6).",
+    "Committee reports: 106,818 from the 16th to 119th Congress; committee prints: 4,346 from the 67th to 119th (p.6-7).",
+    "Hearings: 74,918 from the 79th to 119th Congress; committee meetings: 12,238 from the 114th to 119th Congress (p.7).",
+    "Nominations: 43,858 presidential nominations from the 97th to 119th Congress; treaties: 758 from the 81st to 119th (p.7).",
+    "Retrieving the full dataset via the Congress.gov API requires over 100 endpoints and a 5,000 requests per hour cap; at least 10 requests are needed for one bill (Methods, p.4).",
+    "The paper claims the Bill-LDA linkage detects significantly more bill lobbying than existing sources and captures ex-post lobbying (Introduction and Methods, p.4-5); no counts or precision/recall are given in the main text.",
+    "Validation is integrity-focused: completeness, type checks, unique identifiers, linkage consistency and cross-source agreement; the paper states that Congress itself is treated as ground truth (Technical Validation, p.7-8).",
+    "Discrepancies between the two APIs, such as missing bioguide_id for nickname members, are resolved by a rules-based merge (Technical Validation, p.8).",
+    "Discontinued third-party sources (Sunlight Foundation in 2016, ProPublica congressional data in 2024, NYT Congress API, GovTrack API) motivate the open, reproducible design (Introduction, p.2-3)."
+   ],
+   "limitations": [
+    "Main text reports no quantitative accuracy or error rate for the LDA linkage or for the overall data; validation is integrity-focused (p.7-8).",
+    "Bill-LDA matching uses distance measures on extracted bill numbers and titles; lower-confidence matches get extra scrutiny but the rules and threshold are in the Supplementary Information, not verified here (p.8).",
+    "Committee meeting witness and supporting documents remain in PDF and are not yet extracted to text (p.6).",
+    "Excluded components: full Congressional Record, CRS reports, congressional communications, member press releases, and rollcall and lobbying data themselves (p.5).",
+    "Sub-components have different temporal coverage, so historical analyses may be limited (p.3, p.6-7).",
+    "Manual effort is still needed for some discrepancies between sources (p.8).",
+    "The authors note that data availability depends on the continued operation of the upstream government APIs (p.3)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "BICAM's primary advantage is its wide breadth, easy record linkages, and rolling updates"
+   ],
+   "references_of_note": [
+    "Kim and Kunisky 2021, Mapping political communities: lobbying networks in legislative politics, Political Analysis (ref 17) - the earlier Bill-LDA linkage this paper improves upon.",
+    "Kim 2016, Political cleavages within industry: firm level lobbying for trade liberalization, APSR (ref 9) - firm-level lobbying use of LDA data.",
+    "Kim 2024, LobbyView technical report, MIT (ref 15) - existing compiled lobbying data.",
+    "You 2017, Ex post lobbying, Journal of Politics (ref 18) - ex-post lobbying concept the linkage extends.",
+    "Powell and Grimmer 2016, Money in exile, Journal of Politics (ref 33) - campaign contributions and committee access.",
+    "Fouirnaies and Hall 2018, How do interest groups seek access to committees, AJPS (ref 32).",
+    "Lewis 2024 Voteview (ref 8) and Lauderdale and Clark 2014 (ref 26) - roll-call and text-based scaling linked by BICAM."
+   ]
+  },
+  "summary_md": "BICAM (Delano, Rudkin and Kim, Scientific Data 2025) is a data descriptor, not a research article. It merges the Congress.gov and GovInfo APIs into one PostgreSQL/CSV release covering 421,764 bills (6th-119th Congress), 123,061 amendments, 2,597 members keyed by bioguide_id and icpsr, 226 committees and 587 subcommittees, 74,918 hearings, reports, prints, nominations and treaties. Its two external linkages are a bill crosswalk to Voteview and a Bill-to-LDA linkage that matches bill numbers and titles extracted from LD-2 Section 16 text to the Bills table by distance scores, with low-confidence matches reviewed by hand. The authors say this finds significantly more bill lobbying than earlier sources (Kim and Kunisky 2021), including ex-post lobbying. The main text gives no match counts, precision, recall or threshold; that material is in the Supplementary Information, which was not available here. Validation checks integrity only (completeness, types, unique keys, cross-source agreement) and treats Congress itself as ground truth. For Paul's system the paper matters at one point: how bill mentions in LD-2 filings are resolved. Melange's lobbying network uses its own parser for those mentions in build_network_2021_rebuild.py, which has a known 0.5 percent slash-citation loss, and then credits every sponsor and cosponsor of each lobbied bill. BICAM could be a second, independent path for checking bill resolution. It does not fix the circularity: the LDA still names bills, never the members contacted, so a bill-to-member join made from BICAM would still be P(joined given lobbied) = 1 by construction. Second, BICAM's bulk bills and cosponsors could replace or cross-check the congress.gov scrapers behind the activity score. That is a sourcing option and is UNVERIFIED until it is run.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-lobbying.lobbied-member-link",
+    "relation": "qualifies",
+    "paper_claim": "Bill numbers and titles extracted from LD-2 Section 16 are matched by distance measures to the Bills component (421,764 bills, 6th-119th Congress); low-confidence matches get extra scrutiny. The linkage is said to detect significantly more bill lobbying than Kim and Kunisky 2021 and to capture ex-post lobbying. The main text gives no match count, precision, recall or threshold.",
+    "paper_location": "Intro p.4-5 (text lines 176-188); Bills p.6 (lines 233-234); Technical Validation p.8 (lines 408-416)",
+    "system_side": "build_network_2021_rebuild.py credits every sponsor and cosponsor of each lobbied bill (line 13). Generous outputs keep ambiguous-title fan-out; strict outputs need a same-segment formal citation. Slash-joined citations parse only the left side (line 19; 2 of 376 distinct bills, 0.5 percent, 2023-24 association corpus). LD-2 has no member or position field (lobby_interactions.py line 18).",
+    "code_ref": "fec/lobbying/build_network_2021_rebuild.py:13; fec/lobbying/build_network_2021_rebuild.py:19; fec/lobbying/lobby_interactions.py:18",
+    "transfer_conditions": "BICAM fits only as a candidate second path for bill-mention resolution. A bill-to-sponsor join from it is a roster edge with P(credited given lobbied) = 1 by construction and adds no contact signal. Precision and recall sit in the Supplementary Information, which this check did not have.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "The paper says matches target the Bills component of 421,764 bills; it does not say that many bills were matched. The code lines and the 0.5 percent figure reproduce exactly. The analyst left out the generous versus strict split in the network output.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#Lobbying member-year network and circular lobbied-member link|Lobbying member-year network and circular lobbied-member link]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "melange-lobbying.finance-client-classification",
+    "relation": "context",
+    "paper_claim": "BICAM supplies Bill-LDA linkages, not the LDA filings, and points to LobbyView and OpenSecrets as the compilations of LDA data. Members are keyed by bioguide_id and icpsr. Discrepancies between the two APIs, such as GovInfo missing bioguide_id for nickname members, are fixed by a rules-based merge.",
+    "paper_location": "Background p.3-4 (lines 89-94, 177-178); Members p.6 (lines 259-266); Technical Validation p.8 (lines 398-407)",
+    "system_side": "collect_lobbyview.py is a standalone ingest of the LobbyView export dated 2024-10-25 (VINTAGE, line 73). The n_bills caveat at line 446 describes sponsored or cosponsored attention to bills, not disclosed contact.",
+    "code_ref": "fec/lobbying/collect_lobbyview.py:73; fec/lobbying/collect_lobbyview.py:446",
+    "transfer_conditions": "Context only. BICAM does not replace the client or filer source. Any post-2021 bill linkage from it would serve identity resolution, not classification input.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper statements reproduce. The paper does not tie its rules-based merge to the 2,597 member count. The 2024-10-25 vintage is confirmed in code. The reliability-through-2021 claim was not found in the code read or the paper, so it is dropped here.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-lobbying#LDA finance-client classification and report join|LDA finance-client classification and report join]]",
+    "system": "melange-lobbying"
+   },
+   {
+    "component_id": "melange-legislative-data.congress-activity-score",
+    "relation": "measurement-source",
+    "paper_claim": "Bulk bills, amendments, committees and members from the official APIs with rolling updates. Retrieving the full set directly needs over 100 endpoints, a 5,000 requests per hour cap, and at least 10 requests per bill.",
+    "paper_location": "Background p.3 (lines 114-116); Methods p.4 (lines 133-137); Data Records p.6-7",
+    "system_side": "sync_sentinel_bill_ledger.py decay_weight gives 1.0 for Congress 119, 0.8 for 118 and 0.64 for 117, described in the code as the frozen legacy archive schedule. The code read does not show that this weight feeds the activity score. The congress.gov search-URL scraping in R was not inspected.",
+    "code_ref": "fec/legislation/sync_sentinel_bill_ledger.py:96",
+    "transfer_conditions": "Sourcing cross-check only. Reconciling scraped counts against BICAM sponsor and cosponsor tables would need a run first. Remains UNVERIFIED.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "API figures reproduce. The 0.8 is one step of a 1.0, 0.8, 0.64 schedule rather than a single frozen rate, and the link from that schedule to the activity counts is not shown in the cited code.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-legislative-data#congress.gov legislative activity score with Congress decay|congress.gov legislative activity score with Congress decay]]",
+    "system": "melange-legislative-data"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "The summary implies the Bill-to-LDA linkage reaches 421,764 bills. The paper names the Bills component as the match target and gives no match count.",
+   "The summary calls BICAM a second independent path for bill resolution. BICAM uses the same kind of LDA text extraction, so it is a comparator until its precision and recall are read from the Supplementary Information.",
+   "The summary says Melange credits every sponsor and cosponsor. The network has generous and strict variants that disambiguate titles differently.",
+   "The summary ties a frozen 0.8 decay to the activity counts. The code shows a 1.0, 0.8, 0.64 schedule written as a weight on ledger rows, and the feed into the activity score is not shown.",
+   "The summary says finance-client classification is reliable through 2021. This was not found in the code read or the paper.",
+   "Not in the summary: ext.json lists the 123,061 amendments under the Bills component, and lists Lauderdale and Clark 2014 as a linkage BICAM makes. BICAM cites that paper only as text-scaling research (refs 24-26)."
+  ],
+  "gaps_exposed": [
+   "The bill-mention parser in build_network_2021_rebuild.py has no independent second path. Its 0.5 percent slash-citation loss is measured on one corpus only, and BICAM's distance-scored linkage is an available comparator.",
+   "The Bill-LDA linkage quality figures are in the BICAM Supplementary Information, which is not in the vault text, so no precision or recall can be quoted.",
+   "BICAM's ex-post lobbying coverage (lobbying of enacted laws) is not separated out in Melange's network; whether the parser captures post-enactment citations is unmeasured."
+  ],
+  "flags": [
+   "The paper's claim of more bill lobbying detected must not be carried over as more lobbying influence or contact. LD-2 never names members (D-021), and any bill-to-member join stays circular.",
+   "No accuracy figures appear in the main text, so the claim of high-quality linkages is unquantified here."
+  ],
+  "paul_alignment": "Paul has no annotation entries for this work, so there is no takeaway to compare. The paper is consistent with the system's stance that LDA links bills, not members; it offers a data source, not a finding.",
+  "related": [
+   {
+    "slug": "kim-nd-mapping-political-communities",
+    "relation": "extends",
+    "why": "Real item (vault dates it 2020, online). BICAM says its Bill-LDA linkage improves on Kim and Kunisky 2021, ref 17. Same paper; link holds."
+   },
+   {
+    "slug": "kim-2018-lobbyview-firm-level",
+    "relation": "complements",
+    "why": "Real item, a 2018 working paper. BICAM cites LobbyView as a 2024 technical report (ref 15). Likely the same lineage but a different version, so the link holds only as a version link."
+   },
+   {
+    "slug": "kim-2025-measuring-interest-group",
+    "relation": "complements",
+    "why": "Real item. BICAM does not cite it. The complement judgment is the analyst's inference from the title, not a BICAM statement."
+   },
+   {
+    "slug": "poole-1999-nominate-after-years",
+    "relation": "complements",
+    "why": "Real item. BICAM names Voteview/NOMINATE and builds a Voteview crosswalk (lines 89 and 238-239), citing Lewis 2024 (ref 8), not Poole 1999. Link holds on subject, not on citation."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "mccartan-2022-simulated-redistricting-plans",
+  "note": false,
+  "meta": {
+   "title": "Simulated redistricting plans for the analysis and evaluation of redistricting in the United States",
+   "authors": [
+    "Cory McCartan",
+    "Christopher T. Kenny",
+    "Tyler Simko",
+    "George Garcia III",
+    "Kevin Wang",
+    "Melissa Wu",
+    "Shiro Kuriwaki",
+    "Kosuke Imai"
+   ],
+   "year": "2022",
+   "venue": "Scientific Data 9:689 (2022)",
+   "doi": "10.1038/s41597-022-01808-2",
+   "sha12s": [
+    "b4df69e16e12"
+   ],
+   "category": "Campaign Politics",
+   "category_slug": "campaign-politics"
+  },
+  "extraction": {
+   "title": "Simulated redistricting plans for the analysis and evaluation of redistricting in the United States",
+   "authors": [
+    "Cory McCartan",
+    "Christopher T. Kenny",
+    "Tyler Simko",
+    "George Garcia III",
+    "Kevin Wang",
+    "Melissa Wu",
+    "Shiro Kuriwaki",
+    "Kosuke Imai"
+   ],
+   "year": "2022",
+   "venue": "Scientific Data 9:689 (2022)",
+   "doi": "10.1038/s41597-022-01808-2",
+   "document_type": "Data descriptor (journal article) introducing the 50stateSimulations dataset and code",
+   "coverage": "Full text read: all 789 lines (53,176 chars, pages 1-10 plus references). Figures 1-3 read from captions and axis labels only. Paul annotations: none (n_annots 0), so paul_markup is empty and 0 items dropped. Not a Paul note. Lobbying, networks, path-finding, persuasion/turnout, legislators and text measurement absent; elections covered via partisan metrics. Metadata corrected: eight authors (hint said McCartan only); venue and DOI filled from text.",
+   "research_question": "How can analysts run a complete, reproducible redistricting simulation analysis for the congressional districts of all 50 states, and what do simulated 2020-cycle plans show about enacted maps? The paper is a data descriptor: it documents the dataset, code and validation rather than testing a substantive hypothesis (p.1-2).",
+   "theory": "Gerrymandering is detected by treating an enacted plan as an outlier relative to a sample of alternative plans that satisfy the same statutory guidelines, on partisan bias metrics (p.2, citing Katz, King and Rosenblatt 2020).",
+   "data": "Precinct-level geography per state: 2020 Census PL 94-171 population and VAP by race, joined with VEST precinct election results (estimated to 2010 blocks, crosswalked to 2020 blocks), municipality boundaries, enacted 2010 and 2020 plans. Output: 5,000 simulated congressional plans per state, all 50 states, on Harvard Dataverse. Georgia example: 14 districts, 20,000 plans sampled and thinned to 5,000; lean uses 2016-2020 statewide results (p.3-5). Precinct count not stated.",
+   "method": "Sequential Monte Carlo (SMC) algorithm from the redist R package (McCartan and Imai 2021). Hard constraints: contiguity; population deviation at most 0.5 percent (about 3,826 people in Georgia); county or municipality splits capped at districts minus one. Soft constraints: default compactness, untuned in most states; minority opportunity districts matched to the enacted plan (Georgia: soft 52 percent BVAP target). Most states combine two samples of 2,500 (p.3-4). Diagnostics: resampling weights, variation of information, bottleneck checks, Gelman-Rubin R about 1.05 or less (p.7).",
+   "identification": "No causal identification strategy. The inference is an outlier comparison between the enacted plan and the simulated reference distribution. The authors state that a result from this comparison alone is not conclusive evidence of partisan gerrymandering (p.8-9).",
+   "scope": "Congressional districts of all 50 states, 2020 redistricting cycle, with plans intended for use in 2022 elections (p.2-4). Plans should not be compared across states, and partisan summary statistics are not directly comparable across states because statewide races differ (p.5, p.8). Legal criteria per state are in Supplementary Table 1 (not in the main text).",
+   "measures": "Plan-level: plan_dev (max population deviation), comp_edge (fraction of edges kept), comp_polsby (Polsby-Popper), county and municipality splits. Partisan: ndshare (normal Democratic share), e_dvs (average Democratic vote share), pr_dem (probability a seat is Democratic), e_dem (expected Democratic seats), pbias (partisan bias; positive means pro-Republican), egap (efficiency gap) (p.5-6). Racial: minority VAP share and BVAP per district (p.6-7). Diagnostics: variation of information, Gelman-Rubin R.",
+   "key_findings": [
+    "Georgia 2020 enacted plan: two of its 14 ordered districts (12th and 14th) have 2020 presidential Democratic two-party vote shares above the range of the 5,000 simulated plans; the authors suggest packing may exceed what traditional criteria require (p.8, Fig. 2).",
+    "Remaining Georgia enacted districts fall within the simulated range on 2020 presidential Democratic share (p.8, Fig. 2).",
+    "Georgia: 20,000 plans sampled, then 5,000 kept by random sampling after convergence diagnostics passed (p.3, p.4).",
+    "Population deviation limit of 0.5 percent corresponds to about 3,826 people in Georgia; precinct-level units are used rather than blocks (p.3).",
+    "Compactness is not tuned to the enacted map in most states; Florida and North Carolina final simulations are less compact than the enacted maps, while Illinois simulations are more compact (p.6-7).",
+    "Georgia sampler diagnostics: Gelman-Rubin R of about 1.05 or less is the convergence threshold for all summary statistics; no numeric variation-of-information value for Georgia is reported in the text (p.7-8).",
+    "VRA check: every simulated plan must have at least as many minority opportunity districts as the enacted plan, using an effects-based definition based on Chen and Stephanopoulos (p.6-7).",
+    "Dataset output: each state has documentation, a redist_map file, a redist_plans file and a summary-statistics CSV for 5,000 plans per state (p.4-5).",
+    "Output size example: 1,000 precincts, 5 districts, 5,000 plans plus one reference plan gives 25,005 rows in redist_plans (p.5).",
+    "Figure 1 shows 9 of 5,000 Georgia simulated plans next to the enacted plan, coloured by 2016-2020 average partisan lean (p.5)."
+   ],
+   "limitations": [
+    "Simulations are not a legal determination; the enacted plan is assumed to comply with the VRA and the authors do not judge legality (p.6-7, p.9).",
+    "Incumbency pairing was not implemented for Georgia, though courts may require it (p.2, p.9).",
+    "Units are precincts, not Census blocks, so the 0.5 percent deviation tolerance is coarser than a block-level plan (p.3).",
+    "Compactness defaults are not tuned to the enacted plan because compactness can disguise a gerrymander; this is a stated design choice (p.6-7).",
+    "The VRA approach is effects-based and is one of several possible methods; it does not say how many VRA districts a state should have (p.6-7).",
+    "Partisan metrics depend on which statewide elections exist in each state, so cross-state comparisons of partisan statistics are not valid (p.5, p.8).",
+    "Some states need extra soft constraints, subsetting or redefined administrative units; the Georgia 52 percent BVAP target is a team choice, not a legal threshold (p.3-4).",
+    "SMC can get stuck in a few plans that repeat many times; the diagnostics reduce but do not rule this out (p.6-7).",
+    "Internal inconsistency: the abstract describes ensembles of simulated 2020 plans, while the Background refers to a sample of simulated 2022 plans (p.1-2).",
+    "Competing interests: C.T.K. was a paid expert for the Maryland Redistricting Commission; K.I. was a paid expert witness in 2020-cycle cases in Alabama, Kentucky, Ohio and South Carolina (p.10)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "Alternative plans should not be compared across states (p.8)."
+   ],
+   "references_of_note": [
+    "McCartan and Imai 2021, Sequential Monte Carlo for sampling balanced and compact redistricting plans, arXiv:2008.06131 (ref 7)",
+    "Katz, King and Rosenblatt 2020, Theoretical foundations and empirical evaluations of partisan fairness, APSR 114, 164-178 (ref 2)",
+    "Chen and Stephanopoulos 2021, The Race-Blind Future of Voting Rights, Yale Law Journal 130, 862-946 (ref 22)",
+    "Becker, Duchin, Gold and Hirsch 2021, Computational Redistricting and the Voting Rights Act (ref 23)",
+    "Stephanopoulos and McGhee 2015, Partisan gerrymandering and the efficiency gap (ref 20)",
+    "Polsby and Popper 1991, The third criterion: compactness as a procedural safeguard (ref 19)",
+    "Kenny, McCartan, Simko, Kuriwaki and Imai 2022, Widespread partisan gerrymandering mostly cancels nationally, arXiv:2208.06968 (ref 28)",
+    "Guth, Nieh and Weighill 2020, Three applications of entropy to gerrymandering (ref 24)",
+    "Gelman and Rubin 1992, Inference from iterative simulation using multiple sequences (ref 25)"
+   ]
+  },
+  "summary_md": "McCartan, Kenny, Simko, Garcia, Wang, Wu, Kuriwaki and Imai (Scientific Data 9:689, 2022) is a data descriptor for the 50stateSimulations dataset. For each state's congressional map it gives 5,000 simulated 2020-cycle plans, drawn with the Sequential Monte Carlo sampler in the redist R package. The hard constraints are contiguity, at most 0.5 percent population deviation, and county splits capped at districts minus one. Soft constraints cover compactness and matching the enacted plan's count of minority-opportunity districts. Precinct-level VEST election returns are crosswalked onto 2020 Census blocks. The enacted plan is read as a possible gerrymander when it is an outlier against this ensemble. In the Georgia example (14 districts, 20,000 plans sampled and thinned to 5,000), the enacted 12th and 14th districts have 2020 presidential Democratic two-party shares above the simulated range, which suggests packing. The paper tests no substantive hypothesis. It warns that its partisan metrics depend on which statewide elections exist in each state and cannot be compared across states. Two authors disclose paid expert-witness work. For Paul's systems the bearing is narrow. Nothing here covers lobbying, PAC money, networks or persuasion. The work touches the system only where district geography enters. (1) The competitiveness multiplier c uses a single Cook PVI point per seat. It flags the 10 mid-decade-redistricted states but never adjusts them. The dataset could supply a map-dependence baseline, but only for 2020-cycle maps, not the 2025-26 redraws. (2) The census district metrics mix 119th-Congress ACS with 116th-Congress CBP boundaries. The paper's precinct-to-block crosswalk is a reusable template for re-aggregation. It does not measure the error that this mismatch causes. Both bearings are weak. Paul has no annotations on this work. The analysis here is UNVERIFIED (DE-062).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.competitiveness-multiplier",
+    "relation": "suggests-extension",
+    "paper_claim": "District partisanship is a function of the map. In Georgia the enacted 12th and 14th districts have 2020 presidential Democratic two-party shares above the range of 5,000 simulated plans (p.8, Fig. 2). Partisan metrics depend on the statewide elections available in each state, so cross-state comparisons are not valid (p.5, p.8).",
+    "paper_location": "p.5-8, Fig. 1-2; Measures section (ndshare, e_dvs, pr_dem)",
+    "system_side": "c = 1 + 1.0 x exp(-max(lean,0)/5.0), where lean is one Cook PVI point oriented to the member's party. AL CA FL LA MO NC OH TN TX UT are FLAGGED as mid-decade redistricted, never altered. A separate flag fires when the 2025-to-2026 PVI shift is 5 or more points. Retirees take their 2025 seat PVI through ballot overrides. c carries no uncertainty term.",
+    "code_ref": "fec/moneyball_core.py:83-93; fec/engine/build_competitiveness.py:50-52",
+    "transfer_conditions": "The ensembles cover 2020-cycle maps only. They do not include the 2025-26 mid-decade redraws that the system flags, and they describe counterfactual neutral maps, not the realized seat a member runs in. At most they could add a per-district map-sensitivity band or a cross-check of Cook lean against ndshare. Per the paper, ndshare is not comparable across states. Reciprocity and the c amplitude/scale stay unvalidated (D-104..D-108). This is not evidence for them.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Competitiveness multiplier c (COMPET_MULT)|Competitiveness multiplier c (COMPET_MULT)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-demographic-potential.census-cd-metrics",
+    "relation": "method-source",
+    "paper_claim": "VEST precinct returns are estimated down to 2010 blocks and crosswalked to 2020 blocks, then aggregated to any district plan. Each state's output is a redist_map object plus 5,000 plans: 1,000 precincts x 5 districts x 5,001 plans gives 25,005 rows (p.3-5).",
+    "paper_location": "p.3-5, Methods and Data Records",
+    "system_side": "The scraper pulls ACS 2024 1-year on 119th-Congress districts and CBP 2020 on 116th-Congress districts and stacks them. Some new districts come back NA. The boundary mismatch is documented but never quantified.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/census_cd_scraper.R:47-48; census_cd_scraper.R:350",
+    "transfer_conditions": "The block-crosswalk recipe could re-aggregate county or ZIP CBP counts onto 119th boundaries, but only with population-weighted allocation. That allocation adds its own error, because establishments are not distributed like population. The paper reports no estimate of that error, so it gives a method only, not an answer to the component's question about measurement error.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-demographic-potential#Census congressional-district metrics|Census congressional-district metrics]]",
+    "system": "melange-demographic-potential"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "Competitiveness c treats Cook PVI as an exact point, with no band for uncertainty or map dependence. The 10 redistricted states are flagged but not adjusted, and no alternative lean source (for example ndshare from statewide elections) is cross-checked.",
+   "No ensemble or baseline exists for the 2025-26 mid-decade maps. Public 50-state ensembles stop at the 2020 cycle.",
+   "The census district metrics mix 119th-Congress ACS with 116th-Congress CBP boundaries. The resulting measurement error has never been estimated, and no crosswalk re-aggregation exists."
+  ],
+  "flags": [
+   "Competing interests: C.T.K. was paid by the Maryland Redistricting Commission, and K.I. was a paid expert witness in Alabama, Kentucky, Ohio and South Carolina cases (p.10). Weigh the gerrymander-detection framing accordingly.",
+   "The paper is internally inconsistent: the abstract says simulated 2020 plans, while the Background says 2022 plans (p.1-2).",
+   "Do not quote any partisan statistic from this dataset across states. Per the paper, each state's partisan metrics rest on different statewide elections. Any figure must name its state, its election window and its 5,000-plan denominator.",
+   "No conflict with D-021, D-025 or the two rejected SNA proposals. The paper does not touch networks or LDA."
+  ],
+  "paul_alignment": "Paul has no annotated-bibliography entries or highlights for this work (n_annots 0), so there is no takeaway to compare and nothing is stale. The closest live system choice is Paul's 2026-10-05 ruling to flag, never alter, the mid-decade-redistricted states in the competitiveness build. The paper neither contradicts nor validates that ruling. Its ensembles predate those redraws.",
+  "related": [
+   {
+    "slug": "becker-nd-gameability-redistricting-criteria",
+    "relation": "same-method",
+    "why": "Both use ensembles of algorithmically sampled districting plans as the neutral baseline for judging maps and criteria."
+   },
+   {
+    "slug": "best-2022-redistricting-commissions-avoid",
+    "relation": "complements",
+    "why": "Best asks whether commissions avoid partisan gerrymanders. McCartan supplies the outlier-versus-ensemble benchmark such an evaluation needs."
+   },
+   {
+    "slug": "deluca-2022-validating-applicability-bayesian",
+    "relation": "complements",
+    "why": "DeLuca validates BISG race estimation for redistricting. McCartan's VRA constraint relies on district minority VAP shares, the measurement DeLuca's method addresses."
+   },
+   {
+    "slug": "harrison-2010-introduction-monte-carlo",
+    "relation": "builds-on",
+    "why": "The SMC sampler and its convergence diagnostics (Gelman-Rubin R of about 1.05 or less, resampling weights) extend the basic Monte Carlo sampling that Harrison introduces."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "sverdrup-nd-introduction-grf-causal-forests",
+  "note": false,
+  "meta": {
+   "title": "An introduction to grf",
+   "authors": [
+    "Erik Sverdrup",
+    "Vitor Hadad",
+    "Susan Athey",
+    "Julie Tibshirani",
+    "Stefan Wager"
+   ],
+   "year": "2026",
+   "venue": "R package grf vignette (no journal)",
+   "doi": "",
+   "sha12s": [
+    "c356deb40dc5"
+   ],
+   "category": "Causal & Methodological",
+   "category_slug": "causal-methodological"
+  },
+  "extraction": {
+   "title": "An introduction to grf",
+   "authors": [
+    "Erik Sverdrup",
+    "Vitor Hadad",
+    "Susan Athey",
+    "Julie Tibshirani",
+    "Stefan Wager"
+   ],
+   "year": "2026",
+   "venue": "R package grf vignette (no journal)",
+   "doi": "",
+   "document_type": "R package vignette (applied methods tutorial), March 2026",
+   "coverage": "Full text read in one chunk (32068 chars, 694 lines): front matter, guided tour (ML for causal inference, random forest weighting, causal forest, AIPW, TOC, Qini, policy trees), both applied examples and references. No annotation files exist (n_annots 0, annot_sha12s empty), so paul_markup is empty and 0 items were dropped. Metadata corrected: authors were only Sverdrup, now five authors from the title page; year set to 2026 from the title page date; venue set to the grf vignette. Relevance to lobbying, networks, path-finding, elections, persuasion/turnout, legislators or text measurement: none present. Allocation and policy learning are covered (Qini curves, policy trees). Page numbers are approximate from printed page markers.",
+   "research_question": "Not a research paper: a tutorial showing how to use the grf R package for heterogeneous treatment effect (CATE) estimation, doubly robust ATE, best linear projection, TOC/AUTOC evaluation, Qini policy evaluation and interpretable policy learning.",
+   "theory": "Robinson (1988) partially linear model and residual-on-residual orthogonality; generalized random forests (Athey, Tibshirani, Wager 2019) using forest weights as adaptive neighborhoods; AIPW/doubly robust scores (Robins, Rotnitzky, Zhao 1994); orthogonal estimating equations and pseudo-outcomes; honesty and subsampling for pointwise asymptotics (Wager and Athey 2018). Section pp.1-6.",
+   "identification": "Unconfoundedness given covariates X is assumed, described as a domain-knowledge choice (p.2). Both applied examples use randomized treatment with known propensity W.hat = 0.5 (pp.6-7, 10-11). Missing covariates are assumed missing at random and handled by MIA splitting (p.6).",
+   "data": "Example 1: Bruhn et al. (2016) Brazil school-level randomized financial education program; about 17,000 students at 850 high schools; outcome post-treatment financial literacy score; 13 pre-treatment covariates (4-10 percent missing); clustering by school (pp.6-9). Example 2: Carvalho et al. (2016) payday experiment on low-income individuals tested before versus after payday; about 2,500 individuals and 24 pre-treatment covariates; outcome number of correct answers (variable outcome.correct.ans.per.second); 60/40 train/test split and top 10 covariates by variable importance (pp.10-12).",
+   "method": "causal_forest with W.hat and clusters; average_treatment_effect (AIPW); best_linear_projection with HC3 cluster-robust SEs; out-of-bag CATE predictions; rank_average_treatment_effect for TOC/AUTOC; variable_importance; double_robust_scores and policy_tree depth-1 for interpretable policies; regression_forest for nuisance Y.hat; maq sister package for Qini and budget policies (described, not run). Tutorial only, no new estimator.",
+   "scope": "Software vignette for the grf R package, 2026. Examples concern Brazilian high school students (RCT data from 2016 study) and low-income individuals in the Carvalho et al. payday sample. Generalization beyond these samples is not argued.",
+   "key_findings": [
+    "Financial education program ATE = 4.35 points (SE 0.52), about 0.3 SD of outcome (p.7); the text calls this roughly a quarter SD.",
+    "Best linear projection on financial.autonomy.index: coefficient -0.0329 (SE 0.0128, p = 0.0099); students with higher autonomy benefit less (p.7).",
+    "Other BLP terms: is.female -0.7268 (SE 0.5307, p = 0.17); family.receives.cash.transfer -1.1992 (SE 0.6526, p = 0.066); is.unemployed 0.3206 (SE 0.6277, p = 0.61) (p.7).",
+    "Whole-sample AUTOC using out-of-bag predictions: one-sided p = 0.65, so no reliable heterogeneity signal overall; authors call the evidence suggestive only (p.8).",
+    "TOC prioritizing low financial autonomy: AUTOC estimate 0.69, SE 0.22, t about 3.2; bottom 20 percent by autonomy have ATE about 1.1 points above average with CI excluding zero (p.9).",
+    "Depth-1 policy tree: assign training if financial.autonomy.index is 41 or below (p.10). Double robust mean scores: control 58, treated 62 (p.9).",
+    "Poverty experiment: CATE TOC AUTOC estimate 0.0061 (SE 0.0092), t = 0.67; no evidence of heterogeneity in the held-out test sample (p.11).",
+    "Poverty example histogram: most individuals have effects near the overall ATE with some variation (p.8).",
+    "The original Carvalho et al. study found no statistically significant average effect; the tutorial cites Farbmacher et al. (2021) for subgroup concerns (p.10)."
+   ],
+   "limitations": "Authors state the out-of-bag TOC test is a pragmatic heuristic without finite-sample guarantees, because the same data build and evaluate the CATE (p.8). Policy tree example is in-sample and the text says a held-out test set would be needed in practice (p.10). Poverty example is moderate in size relative to predictors and possibly underpowered (p.10). Missing data assumed missing at random (p.6). Identification rests on unconfoundedness, a modeling choice (p.2). Cited Wager (2024) book is in preparation.",
+   "measures": "Outcomes: financial proficiency score (ATE and SD units, financial literacy); number of correct answers per second in the attention test. Heterogeneity: CATE predictions, AUTOC/RATE (estimate, SE, t), BLP coefficients, variable importance, policy value (double robust mean scores).",
+   "references_of_note": [
+    "Athey, Tibshirani, Wager 2019, Generalized random forests, Annals of Statistics",
+    "Athey and Wager 2019, Estimating treatment effects with causal forests: an application, Observational Studies",
+    "Athey and Wager 2021, Policy learning with observational data, Econometrica",
+    "Bruhn et al. 2016, Impact of high school financial education in Brazil, AEJ Applied",
+    "Carvalho, Meier, Wang 2016, Poverty and economic decision-making at payday, AER",
+    "Nie and Wager 2021, Quasi-oracle estimation of heterogeneous treatment effects, Biometrika",
+    "Yadlowsky et al. 2025, Evaluating treatment prioritization rules via rank-weighted average treatment effects, JASA",
+    "Wager and Athey 2018, Estimation and inference of heterogeneous treatment effects using random forests, JASA",
+    "Sverdrup, Petukhova, Wager 2025, Treatment effect heterogeneity in psychiatry with causal forests, IJMPR"
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "Assumptions 2) and 3) are modeling choices that we may wish to relax.",
+    "Robinson showed that this estimator is root-n consistent even if m(x) and e(x) are estimated more slowly.",
+    "This should be interpreted as suggestive evidence rather than a formally validated inference procedure."
+   ]
+  },
+  "summary_md": "A 2026 tutorial vignette for the grf R package (Sverdrup, Hadad, Athey, Tibshirani, Wager), not a research paper. It walks through causal forests for conditional average treatment effects, AIPW doubly robust average effects, best linear projection (BLP) of effect heterogeneity on covariates, rank-weighted average treatment effect (RATE) via TOC/AUTOC curves to test whether a prioritization rule actually concentrates the treatment effect, Qini curves for budgeted targeting, and depth-limited policy trees learned from doubly robust scores. Two randomized examples: a Brazilian school financial-education RCT (about 17,000 students, 850 schools; ATE 4.35 points, SE 0.52; whole-sample AUTOC p = 0.65, but prioritizing low financial autonomy gives AUTOC 0.69, SE 0.22) and a payday experiment (about 2,500 people; held-out AUTOC 0.0061, SE 0.0092, no heterogeneity). The authors flag that out-of-bag TOC tests are heuristics without finite-sample guarantees and that policy trees need held-out evaluation. For Paul's systems the value is methodological. Every targeting score he ships (Terrier untapped potential, the Melange PERS persuadability table, receptivity seed_prob) is a hand-built or correlational ranking of who is most movable. grf supplies the standard test of whether such a ranking sorts people by treatment effect rather than by outcome level. None of it transfers without logged treatment assignment (randomized or known-propensity canvass contacts, outreach or money) and outcomes, which none of the systems currently record. Observational use assumes unconfoundedness. Any analysis built on this stays UNVERIFIED until a second path reproduces it.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "terrier-canvass.untapped-potential",
+    "relation": "suggests-extension",
+    "paper_claim": "RATE/TOC tests whether a ranking sorts units by treatment effect. In the Brazil RCT (n about 17,000 students, 850 schools), ranking by low financial autonomy gave AUTOC 0.69 (SE 0.22, t about 3.2). Ranking by out-of-bag forest CATE gave one-sided p = 0.65 (the text says this rejects, which the printed p-value does not). Qini curves for budgeted targeting and depth-1 policy trees from doubly robust scores are described (pp.7-10).",
+    "paper_location": "pp.7-10 (BLP, OOB AUTOC p=0.65, autonomy TOC 0.69, policy_tree split at 41); Qini in guided tour via maq (not run)",
+    "system_side": "Untapped potential (untapped.py docstring): undecided = (1 - |2s-1|) x t; supporter = s x (1-t); potential = (wp x undecided + (1-wp) x supporter) x (1 + wi x i), with s candidate support, t turnout, i sphere percentile. wp and wi come from the district settings (module default 0.5, 0.5). The score is a fixed formula with no effect-heterogeneity estimate and no RATE or Qini check.",
+    "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:8-9 (formula in module docstring; cited 9-10 in rel)",
+    "transfer_conditions": "Needs randomized or known-propensity knock vs no-knock assignment with logged outcomes (support ID or validated turnout), scored as RATE on held-out doors. Without randomized contacts, any test is an observational CATE that assumes unconfoundedness. Not transferable from this tutorial as evidence about the formula.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Numbers and method description verified against the text. Corrections: the p = 0.65 result does not reject (text wording is wrong); wp = 0.5 is only the module default, not the district value; line cite is 8-9. The claim that the formula presumes effects peak at s = 0.5 is an interpretation of the formula, not something the code states; reworded in paper_claim and system_side.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/terrier-canvass#Untapped potential|Untapped potential]]",
+    "system": "terrier-canvass"
+   },
+   {
+    "component_id": "melange-validation.prospective-contract",
+    "relation": "qualifies",
+    "paper_claim": "Effect heterogeneity is tested by ranking on a score and computing the gain over the ATE in the top-ranked fraction (TOC/AUTOC), which requires treated and untreated units. The authors warn that out-of-bag TOC is a heuristic without finite-sample guarantees and that policy trees need a held-out set (pp.8-11).",
+    "paper_location": "pp.8-11 (OOB heuristic p.8; policy tree held-out note p.10; poverty example evaluated on held-out test sample p.11)",
+    "system_side": "H1 in the prospective-contract protocol: frozen seed_prob correlates positively with new cosponsorships adopted after the freeze (Spearman over members with panel coverage in both snapshots). This is an association with the outcome level, not a test of whether contact moves high-seed_prob members more.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/outcome_contract.py:17 (PROTOCOL_TEXT H1 line; read-only)",
+    "transfer_conditions": "Effect-modification reading applies only if CU outreach or money exposure is logged per member with plausibly known assignment. Otherwise H1 is a predictive-validity check. The held-out, single-look design is consistent with the authors' advice, but this is a judgment, not something the paper tests.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper claims about RATE needing treated and untreated units, the OOB heuristic caveat and held-out advice are in the text. The H1 description matches code line 17 (PROTOCOL_TEXT starts there). Rel's characterization of H1 as predictive rather than effect-modification is a fair reading of the code.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-validation#Prospective receptivity contract (H1-H2) and forecast ledger|Prospective receptivity contract (H1-H2) and forecast ledger]]",
+    "system": "melange-validation"
+   },
+   {
+    "component_id": "melange-influence-engine.persuadability-table",
+    "relation": "qualifies",
+    "paper_claim": "Best linear projection tests whether effects vary along a chosen covariate: financial.autonomy.index coefficient -0.0329 (SE 0.0128, p = 0.0099). Other terms: is.female p = 0.17, family cash transfer p = 0.066, is.unemployed p = 0.61. Heterogeneity can be hard to detect at moderate n (payday AUTOC t = 0.67, about 2,500 individuals; text says possibly underpowered).",
+    "paper_location": "p.7 (BLP table); pp.10-11 (payday sample size and AUTOC t = 0.67)",
+    "system_side": "PERS in moneyball_core.py: fixed table over stance tiers (Highly Persuadable 0.65, Persuadable 0.60, Ally 0.40, Champion 0.10, Opponent 0.08, no-position default 0.45 via PERS_NONE). Not estimated against observed stance movement after contact.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/moneyball_core.py:564-568 (PERS table at 565; PERS_NONE at 564; read-only)",
+    "transfer_conditions": "A BLP of contact effect on stance-tier ordinals needs logged contact and tier movement; the payday example suggests a sample of 533 members may be too small for tier-level heterogeneity. A null would not refute the table.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "BLP coefficients and p-values verified on p.7. Overstatements: cash-transfer term (p = 0.066) is not null at the 10 percent level; 'often undetectable' is the rel's inference, not the paper's claim. PERS values verified in code but the 'inverted-U' label is loose (Defender 0.12, Lean Skeptic 0.40, Neutral 0.50 break a clean U). The 533-member count and the claim that the 0.45 default covers about 60 percent of cells were not verified in this pass.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Persuadability table PERS|Persuadability table PERS]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary's whole-sample AUTOC p = 0.65 is the right number, but the vignette text says the one-sided test rejects the null. A pnorm upper-tail p of 0.65 does not reject, so the vignette's wording is wrong and should not be repeated.",
+   "Flags call the 0.69 autonomy AUTOC a same-sample out-of-bag heuristic. The text does not say that. The autonomy covariate was chosen after the BLP result (p = 0.0099) on the same data, with no held-out set or selection adjustment. It is post-selected in-sample evidence, and the summary should say so.",
+   "The poverty AUTOC is described as held-out (correct: text evaluates on the 40 percent test sample, p.11). The 0.0061 SE 0.0092 t 0.67 figures match.",
+   "Summary calls the BLP terms null. Cash-transfer p = 0.066 is nominally significant at 10 percent; say 'not significant at 5 percent' instead.",
+   "Untapped code_ref cites lines 9-10; the formula sits in the docstring at lines 8-9. wp = 0.5 is only DEFAULT_WEIGHTS for districts without a setting, not the district value.",
+   "Summary says PERS is an inverted-U table; the values do not form a clean U. The 533-member count and the 'about 60 percent of cells' for the 0.45 default were not verified.",
+   "Paul-alignment cites Aref and Neal as persuasion support for PERS. The vault item aref-2020 is signed-network coalition detection, not persuasion. Kalla 2020 and Broockman 2026 exist as items; their support for PERS and untapped was not checked.",
+   "Component label Terrier is not confirmed from the code path, which sits in a Codex cu-geography-v3 outputs folder.",
+   "Quarter-SD wording: the text says roughly a quarter SD, while the computed ratio is 0.3 SD. Quote 0.3 SD with a note that the text says roughly a quarter.",
+   "Ext and rel metadata fixes (five authors, year 2026, venue grf vignette) are correct per the title page."
+  ],
+  "gaps_exposed": [
+   "No system logs treatment assignment (canvass knocks, CU outreach, PAC dollars) with propensities, so none of the targeting scores can be tested for effect heterogeneity, only for outcome prediction.",
+   "Terrier untapped potential assumes persuasion peaks at s = 0.5 and mobilization at low-t supporters. Neither has been checked with a RATE/Qini evaluation on held-out canvass outcomes.",
+   "The prospective receptivity contract H1 tests predictive association (Spearman with outcome level), not effect modification. Its label as a receptivity test overstates what it can show.",
+   "The PERS inverted-U table has no estimate of heterogeneity behind it, and the 533-member scale is likely too small to detect tier-level CATE differences."
+  ],
+  "flags": [
+   "Tutorial, not peer-reviewed evidence: both examples are non-political RCTs, and the only positive heterogeneity finding (AUTOC 0.69) comes from a same-sample out-of-bag heuristic that the authors say lacks finite-sample guarantees.",
+   "Any causal-forest or BLP analysis built from this on Paul's data stays UNVERIFIED until a second path reproduces it (DE-062) and must follow single-look discipline. BLP coefficients are pooled and must be quoted with strata (party, chamber) or labelled UNSTRATIFIED.",
+   "No conflict with D-025, D-021 or the rejected SNA proposals. The paper does not touch networks, lobbying data or edge weighting.",
+   "Metadata corrected by the extract stage: five authors, year 2026, venue is the grf package vignette."
+  ],
+  "paul_alignment": "Paul has no annotated-bibliography entry and no PDF markup for this work (n_annots 0), so there is no takeaway to check. His positions on the nearest components rely on substantive persuasion papers (Kalla and Broockman 2020, Broockman and Kalla 2026 for untapped potential; Aref and Neal, Jacoby, Broockman and Kalla for PERS) and never use an estimator for effect heterogeneity. This vignette supplies the missing evaluation tool and does not contradict his reading.",
+  "related": [
+   {
+    "slug": "cagala-2021-optimal-targeting-fundraising",
+    "relation": "same-method",
+    "why": "Vault item exists. Rel describes it as applying causal forests and policy learning to target fundraising appeals by estimated individual effect. Content was not re-read in this pass; kept on existence and title fit."
+   },
+   {
+    "slug": "tappin-2023-quantifying-potential-persuasive",
+    "relation": "complements",
+    "why": "Vault item exists with a tappin-2023 ext and rel file. Rel describes it as measuring how persuasion effects vary across audiences. Kept on existence; content not re-read here."
+   },
+   {
+    "slug": "kalla-2020-which-narrative-strategies",
+    "relation": "complements",
+    "why": "Vault item exists and its title (Which Narrative Strategies Durably Reduce Prejudice? Field and Survey Experiments) confirms it is a randomized field-experiment paper, which fits the 'randomized canvass design' role."
+   },
+   {
+    "slug": "imai-2021-fixed-effects-regression",
+    "relation": "complements",
+    "why": "Vault item exists. Rel uses it for observational panel identification assumptions; kept on existence, content not re-read here."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ }
+]

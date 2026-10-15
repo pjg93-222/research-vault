@@ -1,0 +1,898 @@
+{
+ "system": {
+  "slug": "terrier-row-scoring",
+  "name": "Terrier (CU Geography) person and area scoring",
+  "description": "The row framework that scores every voter-file person (Colorado, OR-05, CT-01). Covers the CUA index, Participation Index, Sphere of Influence, partisan lean, the district-specific overall standing, expected-value cells with uncertainty draws, categorical transforms and rules, empirical-Bayes area aggregation and descriptive area measures.",
+  "brain_notes": [
+   "C:/Users/pgoff/Documents/brain/terrier/terrier.md",
+   "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md",
+   "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-cu-geography-luna-and-row-framework.md",
+   "C:/Users/pgoff/Documents/brain/projects/cu-geography.md"
+  ]
+ },
+ "components": [
+  {
+   "id": "terrier-row-scoring.cua-index",
+   "system": "terrier-row-scoring",
+   "name": "CUA (Credit Union Alignment) index",
+   "computes": "Expected weighted exposure over 16 fields in 4 themes (credit .40; digital, auto/insurance, housing .20 each); midrank percentile standing.",
+   "method": "Expected values over class probabilities (PR2), never argmax. Grade D if measured share <= 1/2.",
+   "assumptions": [
+    "Vendor consumer fields measure exposure to ACU issues",
+    "Council weights are unratified"
+   ],
+   "empirical_questions": [
+    "Does CUA standing predict actual CU membership or responsiveness to CU canvassing?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/engine.py:49-593",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/terrier/terrier.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-cu-geography-luna-and-row-framework.md"
+   ],
+   "heading": "CUA (Credit Union Alignment) index"
+  },
+  {
+   "id": "terrier-row-scoring.participation-index",
+   "system": "terrier-row-scoring",
+   "name": "Participation Index",
+   "computes": "Four themes at 1/4 each over ten sai_* turnout and engagement scores; code 50 on digital reachability is left unscored.",
+   "method": "Weighted index with midrank standing.",
+   "assumptions": [
+    "Vendor propensities are valid"
+   ],
+   "empirical_questions": [
+    "Do vendor turnout scores predict validated turnout?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/engine.py:376-383"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/terrier/terrier.md"
+   ],
+   "heading": "Participation Index"
+  },
+  {
+   "id": "terrier-row-scoring.sphere-of-influence",
+   "system": "terrier-row-scoring",
+   "name": "Sphere of Influence",
+   "computes": "0.45 giving + 0.45 volunteering + 0.10 household; midrank percentile.",
+   "method": "Ratified 2026-10-01 (owner 'leaning').",
+   "assumptions": [
+    "Givers and volunteers engage members of Congress"
+   ],
+   "empirical_questions": [
+    "Do volunteers and donors contact representatives at higher rates (civic voluntarism)?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json (groups.soi)"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/terrier/terrier.md"
+   ],
+   "heading": "Sphere of Influence"
+  },
+  {
+   "id": "terrier-row-scoring.partisan-lean",
+   "system": "terrier-row-scoring",
+   "name": "Partisan lean (descriptive, never weighted)",
+   "computes": "Signed lean from registration (0.5) and vendor partisan fields; bands at +/-25 and +/-75; Undetermined when band confidence < 0.80.",
+   "method": "Excluded from the overall score.",
+   "assumptions": [
+    "Registration and vendor codes lie on one axis"
+   ],
+   "empirical_questions": [
+    "How well do vendor partisan scores agree with registration and primary ballot choice?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/engine.py:441,669"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-cu-geography-luna-and-row-framework.md"
+   ],
+   "heading": "Partisan lean (descriptive, never weighted)"
+  },
+  {
+   "id": "terrier-row-scoring.overall-standing",
+   "system": "terrier-row-scoring",
+   "name": "Overall standing (district weights)",
+   "computes": "Colorado: 0.40 CUA + 0.35 Participation + 0.25 Sphere. Candidate districts: 30 CUA / 25 support / 25 participation / 20 sphere. Re-ranked by midrank.",
+   "method": "Fixed linear weights (PR1; approved 2026-10-07).",
+   "assumptions": [
+    "Standings are commensurable"
+   ],
+   "empirical_questions": [
+    "Does overall standing rank people by realized advocacy action (contacts, turnout)?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/tools/districts.py:50-154",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/engine.py:675"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "heading": "Overall standing (district weights)"
+  },
+  {
+   "id": "terrier-row-scoring.uncertainty-draws",
+   "system": "terrier-row-scoring",
+   "name": "Expected-value cells and uncertainty draws (C0, C3)",
+   "computes": "Monte Carlo redraws of 26 estimated fields (independent C0, household-correlated C3); summed P(top10); analytic SD assuming independence.",
+   "method": "Seed 20260930.",
+   "assumptions": [
+    "Imputation probabilities are calibrated",
+    "Cells are independent (C3 probes this)"
+   ],
+   "empirical_questions": [
+    "Are imputation class probabilities calibrated on holdout (ECE)?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/draws.py",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/engine.py:447-510"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-cu-geography-luna-and-row-framework.md"
+   ],
+   "heading": "Expected-value cells and uncertainty draws (C0, C3)"
+  },
+  {
+   "id": "terrier-row-scoring.transforms-and-rules",
+   "system": "terrier-row-scoring",
+   "name": "Ridit transforms and rule cells",
+   "computes": "Ridit = (mass below + half mass at code)/N. Children rule D5a. Ordinal maps for owner, homeowner and dwelling.",
+   "method": "Bross ridit.",
+   "assumptions": [
+    "Ordinal order is supported; spacing is arbitrary"
+   ],
+   "empirical_questions": [
+    "Does ridit scoring change rankings materially versus equal-interval coding?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/engine.py:205"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-cu-geography-luna-and-row-framework.md"
+   ],
+   "heading": "Ridit transforms and rule cells"
+  },
+  {
+   "id": "terrier-row-scoring.area-eb-aggregation",
+   "system": "terrier-row-scoring",
+   "name": "Area aggregation with empirical-Bayes shrinkage",
+   "computes": "Beta-binomial EB-shrunk top-decile share per area (block -> tract -> file) using a design effect; area standing and bands.",
+   "method": "Summed probabilities, not flags. Households use the mean of member percentiles. Suppression is superseded in the app (nothing withheld).",
+   "assumptions": [
+    "Areas are exchangeable within the parent"
+   ],
+   "empirical_questions": [
+    "Does EB shrinkage improve stability of area rankings across file vintages?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/areas.py:406-458",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/tools/measures.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/terrier/terrier.md"
+   ],
+   "heading": "Area aggregation with empirical-Bayes shrinkage"
+  }
+ ],
+ "positions": [
+  {
+   "component_id": "terrier-row-scoring.cua-index",
+   "citations": [],
+   "paul_position": "No annotated literature."
+  },
+  {
+   "component_id": "terrier-row-scoring.participation-index",
+   "citations": [
+    "Nickerson & Rogers 2014 (listed, missing)"
+   ],
+   "paul_position": "Listed only."
+  },
+  {
+   "component_id": "terrier-row-scoring.sphere-of-influence",
+   "citations": [
+    "Holyoke et al. 2015",
+    "Bonica & Grumbach 2025"
+   ],
+   "paul_position": "Paul highlighted that prominent constituents call their own members first, and that donors are old and wealthy. There is no annotation."
+  },
+  {
+   "component_id": "terrier-row-scoring.partisan-lean",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "terrier-row-scoring.overall-standing",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "terrier-row-scoring.uncertainty-draws",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "terrier-row-scoring.transforms-and-rules",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "terrier-row-scoring.area-eb-aggregation",
+   "citations": [],
+   "paul_position": "No literature."
+  }
+ ],
+ "citations_in_system": [
+  {
+   "citation": "Ramey, Klingler & Hollibaugh, 'Measuring Elite Personality Using Speech', Political Science Research and Methods (year conflict in repo: 2016 in PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32 and code; 2019 in big5_methods.md:12). Replication data doi:10.7910/DVN/JDH6KR",
+   "where": [
+    "fec/members/big5_traits.py:1-25",
+    "fec/members/fit_smoreg_rkh.py:5",
+    "fec/members/lep_criterion.py:5-6",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32",
+    "big5_methods.md:12",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Lexical Big Five pipeline, token shrinkage, RKH reference targets (melange-psychometrics); ceremonial-share C criterion (melange-legislative-data)"
+  },
+  {
+   "citation": "Mairesse et al. (2007), JAIR, personality from text (SMOreg on LIWC/MRC; 53-58% band)",
+   "where": [
+    "fec/members/fit_smoreg_essays.py:4",
+    "fec/members/big5_traits.py:13-16",
+    "fec/members/interaction_features.py:5-6",
+    "big5_methods.md:31",
+    "big5_audio_prereg.md:15"
+   ],
+   "used_for": "SMOreg feature weights and word-count features (melange-psychometrics); audio cues"
+  },
+  {
+   "citation": "Pennebaker & King (1999); Yarkoni (2010); Pennebaker (2003, Annual Review)",
+   "where": [
+    "fec/members/big5_traits.py:14-15",
+    "fec/members/affective_n_validate.py:10",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Published-correlate lexical weights; essays corpus; negative-emotion basis for affective N"
+  },
+  {
+   "citation": "Birkenmaier & Lechner (2025), 'Measuring Politicians' Public Personality', Political Analysis; Birkenmaier, Lechner & Wagner (2024)",
+   "where": [
+    "fec/members/agency_communion_llm.py:3,33",
+    "fec/members/big5_llm.py:10",
+    "fec/members/big5_traits.py:9",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:33",
+    "big5_behavioral_extraversion_prereg.md:239"
+   ],
+   "used_for": "Agency/communion persona cue classifier and PERSONA_W; cannot-tell coding"
+  },
+  {
+   "citation": "Lechner, Aichholzer, Birkenmaier & Bluemke (2025), 'Mapping the Political Personality' (Polipers v0.1, GESIS)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Review of politician-personality studies; external criterion search"
+  },
+  {
+   "citation": "'Personality on the Hill' Senate insider and academic gold panels (online_appendix.pdf, SHA-256 43c98926...; author/year not recorded)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "External gold for Big Five validation"
+  },
+  {
+   "citation": "Amsalem et al. (2018), media visibility of Belgian, Canadian and Israeli MPs (Eran.pdf) - provenance warning only, NOT the gold source",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Hash-mismatch provenance check"
+  },
+  {
+   "citation": "Norgaard & Klemmensen (2019), J. Personality 87(2):267-275; Schumacher & Zettler (2019), PAID 141:173-181",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Elite self-report personality benchmarks and desirability caveat"
+  },
+  {
+   "citation": "Cao & Kosinski (PNAS Nexus 2024); Peters & Matz (PNAS Nexus 2024, doi:10.1093/pnasnexus/pgae231)",
+   "where": [
+    "fec/members/big5_llm.py:12",
+    "big5_methods.md:46-49",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "De-identification before LLM trait scoring; LLM zero-shot personality benchmark"
+  },
+  {
+   "citation": "Valente (Interspeech 2012); Yu (Interspeech 2019); Rienks & Heylen (2005)",
+   "where": [
+    "fec/members/interaction_features.py:5-8",
+    "fec/members/behavioral_dispositions.py:17",
+    "big5_methods.md:30"
+   ],
+   "used_for": "Turn-statistic dominance and reactivity features"
+  },
+  {
+   "citation": "Koutsoumpis (meta-analysis, language and personality); Yang, Lau & Abbasi (ISR 2023)",
+   "where": [
+    "big5_methods.md:114",
+    "AUDIT_FINDINGS_2026-07-04.md:332",
+    "big5_behavioral_extraversion_prereg.md:221"
+   ],
+   "used_for": "Text tracks observer more than self-report; response-selection bias; PERSONA_W scope argument"
+  },
+  {
+   "citation": "Soto & John (2017) BFI-2-XS; Connelly & Ones (2010); Judge et al. (2002); Funder & Ozer (2019); Dietrich (2012); Dynes (2019); Wagner (2024); Steiger (1980); Stern et al. (2021); Harari (2022); Rubio et al. (2024); Marrero et al. (2022); Marengo et al. (2018, doi:10.1016/j.paid.2017.12.018); Hargittai (2015, doi:10.1177/0002716215570866); Hinds & Joinson (2024, doi:10.1037/bul0000430); Marengo, Montag & Settanni (2025, doi:10.1111/jopy.70019); Lau & Abbasi (2023)",
+   "where": [
+    "big5_expert_panel_prereg.md",
+    "big5_nomological_prereg.md",
+    "big5_n_matrix_prereg.md",
+    "big5_audio_prereg.md",
+    "big5_es_crossmodal_prereg.md",
+    "big5_a_coverage_prereg.md",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "Prereg designs for Big Five expert panel, nomological, audio and coverage looks (melange-psychometrics)"
+  },
+  {
+   "citation": "Salam et al. (2022), PMLR 173, personalised NAS Big Five on UDIVA",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md:132"
+   ],
+   "used_for": "Audio trait benchmark and sex-conditioning check"
+  },
+  {
+   "citation": "Mestre & Ryan (2026), validated aeneas forced alignment; Dietrich (2019)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Audio identity design (forced alignment, within-speaker F0)"
+  },
+  {
+   "citation": "ECAPA-TDNN speaker embedding (name only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Proposed speaker verification"
+  },
+  {
+   "citation": "Byrne, Silasi-Mansat & Worthy (2015), 'Who chokes under pressure?', PAID",
+   "where": [
+    "fec/members/receptivity_layer.py:6-7,189,233",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:34",
+    "AUDIT_FINDINGS_2026-07-04.md:548",
+    "fec/engine/outcome_contract.py:18"
+   ],
+   "used_for": "Susceptibility composite (only N and A supported; C and E are design priors); H2 predictor"
+  },
+  {
+   "citation": "Fouirnaies & Hall, 'How Do Electoral Incentives Affect Legislator Behavior?' (APSR)",
+   "where": [
+    "fec/members/receptivity_layer.py:15-20",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:35",
+    "fec/engine/money_response.py:27"
+   ],
+   "used_for": "Retiring-member incentive multiplier and competitiveness term"
+  },
+  {
+   "citation": "Linde & Vis (2016), 'Do Politicians Take Risks Like the Rest of Us?', Political Psychology",
+   "where": [
+    "fec/members/receptivity_layer.py:22-28",
+    "fec/engine/money_response.py:27-29",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:36"
+   ],
+   "used_for": "Prospect-theory domain multiplier and attenuated loss frame"
+  },
+  {
+   "citation": "Kahneman & Tversky (loss aversion)",
+   "where": [
+    "fec/engine/money_response.py:29",
+    "fec/members/receptivity_layer.py:27"
+   ],
+   "used_for": "LOSSFRAME 1.10"
+  },
+  {
+   "citation": "Chen, Kamarthi, Wilder & Tambe, contingency-aware influence maximization (UAI 2021, arXiv 2106.07039; venue corrected from ICML); Zareie & Sakellariou (SNAM 2023)",
+   "where": [
+    "fec/members/receptivity_layer.py:28-34",
+    "fec/engine/budget_frontier.py:72-74",
+    "fec/engine/outcome_contract.py:17",
+    "AUDIT_FINDINGS_2026-07-04.md:564-565"
+   ],
+   "used_for": "Seed take-up probability and seed gate; H1 predictor"
+  },
+  {
+   "citation": "Bharathi, Kempe & Salek, Competitive Influence Maximization",
+   "where": [
+    "fec/engine/scenario.py:6-11",
+    "fec/engine/budget_frontier.py",
+    "fec/engine/per_topic_coalition.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Competitive IC cascade and coalition submodularity"
+  },
+  {
+   "citation": "Borodin et al. (submodularity can fail in competitive LT)",
+   "where": [
+    "fec/engine/scenario.py:11-12"
+   ],
+   "used_for": "Flip side treated as heuristic"
+  },
+  {
+   "citation": "Kempe, Kleinberg & Tardos (2003, KDD) influence maximization",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:157",
+    "quant skill references"
+   ],
+   "used_for": "Cascade and threshold model assumptions"
+  },
+  {
+   "citation": "Golovin & Krause (2011), Adaptive Submodularity, JAIR (Lemma 5.3/A.9)",
+   "where": [
+    "fec/engine/optimize.py:8,108-113",
+    "fec/engine/scenario.py:8-10",
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md"
+   ],
+   "used_for": "Joint optimizer bound and framing (melange-allocation)"
+  },
+  {
+   "citation": "Leskovec et al. (KDD 2007) CELF lazy greedy; Nemhauser (1-1/e)",
+   "where": [
+    "fec/engine/optimize.py:74-96",
+    "fec/engine/budget_frontier.py:96-106",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Lazy greedy seed and budget selection"
+  },
+  {
+   "citation": "Almazaydeh et al. (2026), Scientific Reports, s41598-026-47299-8",
+   "where": [
+    "fec/engine/mc_stability_check.py:3-10",
+    "influence-modeling-reference SKILL.md"
+   ],
+   "used_for": "Noisy MC corrupts CELF; motivates CRN and stability check"
+  },
+  {
+   "citation": "Manchanda et al., GCOMB, NeurIPS 2020, arXiv:1903.03332",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Budget mode: locality, degree pruning, CELF (melange-pathfinding)"
+  },
+  {
+   "citation": "Chen & Lam, most-reliable path; Ren et al., Multi-Objective Path-Based D* Lite (MOPBD*) and RELINK",
+   "where": [
+    "fec/engine/cosponsor_route.py:3-5",
+    "fec/engine/scenario.py:13",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Pathfinder and route-finder concepts (melange-pathfinding)"
+  },
+  {
+   "citation": "Sotoudeh, Porter & Krishnagopal (2024), arXiv 2406.19554, network measure of cosponsorship influence on bill passage",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Cosponsor edge weights and path grounding"
+  },
+  {
+   "citation": "Aref & Neal (2020, 2021), signed-network optimal partitioning / generalized balance; Neal signed backbone (R backbone sdsm)",
+   "where": [
+    "fec/network/signed_coalitions.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Signed coalition partition and multi-target coalition mode"
+  },
+  {
+   "citation": "Porter, Mucha, Newman et al. (PNAS 2005), committee network community structure / normalized interlock",
+   "where": [
+    "fec/surfaces/make_member_desk.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-model-facts.md",
+    "HOLISTIC_NETWORK_DESIGN_2026-08-17.md:78"
+   ],
+   "used_for": "Committee-cluster layout; community structure in pathfinder"
+  },
+  {
+   "citation": "Fink et al. (2023), Congressional Twitter influence network, Data in Brief",
+   "where": [
+    "fec/network/social_interaction_layer.py:15-19",
+    "MATHEMATICAL_SPECIFICATION.md:44",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Author-volume normalized social and press edges"
+  },
+  {
+   "citation": "Malaterre & Lareau (2024), HCoI communities",
+   "where": [
+    "fec/press_hcoi.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Press-attention communities"
+  },
+  {
+   "citation": "Zhou & Elejalde (2026), Information Processing & Management, TWLGCN",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Stance dynamics port"
+  },
+  {
+   "citation": "Joo & Steinert-Threlkeld (2022), Computational Communication Research; Steinert-Threlkeld, Twitter as Data",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Frame alignment"
+  },
+  {
+   "citation": "Ringe, Victor & Gross (BJPS 2013), Friends and Enemies",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:599"
+   ],
+   "used_for": "Signed mention layer concept"
+  },
+  {
+   "citation": "Battaglini & Patacchini, 'Influencing Connected Legislators', NBER w22739",
+   "where": [
+    "fec/engine/kb_benchmark.py:2-18"
+   ],
+   "used_for": "Katz-Bonacich benchmark"
+  },
+  {
+   "citation": "Kim & Kunisky, lobbying networks / latent communities (local PDF)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Community structure exploited by pathfinder"
+  },
+  {
+   "citation": "Noble & Turner (2024), 'Presidential Leadership and Legislative Polarization'; Lee (2009)",
+   "where": [
+    "fec/engine/salience_shock.py:4-38",
+    "fec/surfaces/build_dashboard_bundle.py:663",
+    "fec/moneyball_core.py:731"
+   ],
+   "used_for": "Salience shock regimes; retreat regime"
+  },
+  {
+   "citation": "Furnas, LaPira, Hertel-Fernandez, Drutman & Kosar (congressional staff survey experiment); Bakker (partisan cues); Bakker, Lelkes & Malka (JOP)",
+   "where": [
+    "fec/moneyball_core.py:11",
+    "fec/engine/lt_priming.py:56-58",
+    "fec/surfaces/templates/make_dashboard_html_00.tpl:742",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "cpf_pressure 1.7/0.5; out-party cue clamp; executive cue factor; money capped, information is the lever"
+  },
+  {
+   "citation": "Ansolabehere, de Figueiredo & Snyder (2003); Fowler, Garro & Spenkuch (2020); Hall & Wayman (1990); Kalla & Broockman (2016), 'Campaign Contributions Facilitate Access'; Kalla & Broockman (general-election persuasion about zero); Coppock (persuasion about 5 pp / 0.1 SD)",
+   "where": [
+    "fec/engine/flip_model.py:21",
+    "fec/engine/money_response.py:15,20",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Money buys access not votes; WM/WP weights; MAXSHIFT calibration; access multiplier"
+  },
+  {
+   "citation": "Huneeus & Kim (lobbying distorts policy); Bombardini & Trebbi (annual review of empirical lobbying); Pritoni (lobbying coalitions); Bacik et al. / Kim, lobbying-network dynamics (arXiv 2503.11745); Azaiez & Mandel (EC lobby hypergraph); Harrison et al. (lobbying record mining)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-scenario-model-build.md"
+   ],
+   "used_for": "Calibration context for small, capped lobbying returns; pathfinder background"
+  },
+  {
+   "citation": "Trivedi & Singh (Procedia 2020) coalition modeling; Scientific Reports 2026 IM algorithm comparison (CELF++/RIS/IMM)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md"
+   ],
+   "used_for": "Coalition and IM algorithm references"
+  },
+  {
+   "citation": "Gaynor (LSQ 2022); Kim, Stuckatz & Wolters (JOP 2026); Furnas, LaPira & Brock (PS 2025)",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:706-711"
+   ],
+   "used_for": "Leadership PAC edges and donation/lobbying sequencing (identified, not implemented)"
+  },
+  {
+   "citation": "Volden & Wiseman, legislative effectiveness (five-stage LES; Center for Effective Lawmaking LES 93-118); Bucchianeri/Volden/Wiseman-style",
+   "where": [
+    "fec/members/lep_criterion.py:1-15",
+    "fec/engine/flip_model.py:142 (comment only)",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md",
+    "C:/Users/pgoff/Documents/brain/actors/codex-executor-incidents.md"
+   ],
+   "used_for": "Effectiveness shadow score and convergence criterion; uncoded passage-bonus comment"
+  },
+  {
+   "citation": "Nokken & Poole dynamic ideal points; DW-NOMINATE (Poole-Rosenthal)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Drift criterion for N (MISS); NOMINATE rejected for vote edges"
+  },
+  {
+   "citation": "Matz et al. (PNAS 2017); Simchon (2024, PNAS Nexus); Hackenburg & Margetts (2024)",
+   "where": [
+    "fec/surfaces/make_member_desk.py:846",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Persona-matched appeals (design-only) and aggregate null caution"
+  },
+  {
+   "citation": "Brysbaert concreteness norms; Guiraud index; Empath lexicon; Valente (N overlap stat 68.7%)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-record-1-big5-campaign.md"
+   ],
+   "used_for": "Big Five lexical features"
+  },
+  {
+   "citation": "Miller & Sutherland, APSR (hearing conduct; doctrine WITHDRAWN 2026-07-10)",
+   "where": [
+    "big5_methods.md:36",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics.md"
+   ],
+   "used_for": "Withdrawn hearing-antagonism doctrine"
+  },
+  {
+   "citation": "Burnham, 'Stance detection: a practical guide' (PSRM 2024.35); mlburnham/Political_DEBATE_base_v1.0 (Hugging Face)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39",
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md"
+   ],
+   "used_for": "NLI stance templates and the DEBATE base model (melange-stance)"
+  },
+  {
+   "citation": "Stanceformer, arXiv 2410.07083; ACL 2023.acl-long.560 (TSE); MDPI 2076-3417/15/21/11784",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39,63",
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md"
+   ],
+   "used_for": "Target-aware stance (planned); two-stage decoupling; neutral-class difficulty"
+  },
+  {
+   "citation": "Khan et al. (2025), IECE TACS, Roman Urdu agree/disagree/unrelated stance",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md:45"
+   ],
+   "used_for": "Multi-view augmentation (hurt classical readers)"
+  },
+  {
+   "citation": "Park, Lee & Cho (2025), 'Automatic construction of direction-aware sentiment lexicon using direction-dependent words', Language Resources & Evaluation 59:843-869",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:65"
+   ],
+   "used_for": "Direction-aware valence lexicon idea (rejected on dry run)"
+  },
+  {
+   "citation": "Soroka et al., Lexicoder Sentiment Dictionary LSD2015 (snsoroka.com LSDaug2015.zip); Haselmayer & Jenny (2017); Rice & Zorn (2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-congress-r-scrapers-graded-scoring-and-audits.md:26-28"
+   ],
+   "used_for": "Stage 5b tone intensity; graded tone and polarity normalization"
+  },
+  {
+   "citation": "Dai, Liao, Zhao et al. (2025), LLM-enhanced Logic Tensor Network for stance detection, Neural Networks 183:106956, doi:10.1016/j.neunet.2024.106956",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md:198",
+    "stance_valence_folcot_prereg.md:13"
+   ],
+   "used_for": "FOL-CoT valence proposals (not adopted)"
+  },
+  {
+   "citation": "Kim, Kim, Jeong, Oh & In Song Kim (2025), 'Measuring Interest Group Positions on Legislation' (PNAS draft); LobbyView positions dataset doi:10.7910/DVN/D0QWM2; In Song Kim LobbyView (Song 2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md",
+    "fec/lobbying/lobby_position_benchmark.py:9",
+    "fec/lobbying/collect_lobbyview.py:35"
+   ],
+   "used_for": "LDA data and interest-group positions (melange-lobbying)"
+  },
+  {
+   "citation": "Romero Moreno (2021)",
+   "where": [
+    "CONTESTED_BILLS_DESIGN.md:29-30"
+   ],
+   "used_for": "Contested-bills counterparty term"
+  },
+  {
+   "citation": "Delano, Rudkin & Kim (2025), BICAM, Scientific Data 12:1567, doi:10.1038/s41597-025-05737-8; Porter, Case & Treul (2025), CampaignView, Scientific Data 12:1237, doi:10.1038/s41597-025-05491-x; Zhan & Cai (2025), ESWA 263:125705, doi:10.1016/j.eswa.2024.125705; Cao, Gai, Wu et al. (2025), Information Fusion 120:103107, doi:10.1016/j.inffus.2025.103107",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md",
+    "CAMPAIGN_SITE_COLLECTION_2026_RUNBOOK.md:10"
+   ],
+   "used_for": "Research-integration proposals (bill-LDA linkage, campaign corpus, trust-KNN imputation, signed trust propagation)"
+  },
+  {
+   "citation": "Russo et al. (ACL 2023), 'Helping a Friend or Supporting a Cause?'; Brandenberger (2018), 'Trading Favors', Social Networks 54:238-253, doi:10.1016/j.socnet.2018.02.001; Montgomery & Nyhan (2017), doi:10.1086/690301; Shalizi & Thomas (2011); Nay (2017), PLOS ONE doi:10.1371/journal.pone.0176999",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:153-158",
+    "fec/research/cosponsor_challengers/PROTOCOL.md:44-47"
+   ],
+   "used_for": "Cosponsorship prediction and reciprocity baselines; homophily vs contagion confounding; staff exchange and policy similarity"
+  },
+  {
+   "citation": "Tiedens & Fragale (2003), doi:10.1037/0022-3514.84.3.558; Santoro & Broockman (2022), Science Advances, doi:10.1126/sciadv.abn5515",
+   "where": [
+    "fec/research/member_personal_relationships/PERSONALITY_CONTEXT_EXPLORATION.md:46"
+   ],
+   "used_for": "Context only for member personal-relationship research"
+  },
+  {
+   "citation": "DerSimonian-Laird random-effects estimator",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "used_for": "R2 partially pooled industry slope (mentat-giving-forecast)"
+  },
+  {
+   "citation": "Cameron, Gelbach & Miller (2011), two-way cluster-robust variance; Holm step-down; Newey-West HAC; Driscoll-Kraay (requested); Ball (2024)",
+   "where": [
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-8,168,210",
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:71-76,389,588",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Inference in the sector growth regressions and SEATS-W"
+  },
+  {
+   "citation": "Bross (1958) ridit; Spearman-Brown; Kendall tau-b; pool-adjacent-violators (PAV)",
+   "where": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/design/spec_rigor.md",
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "used_for": "Ridit transforms, internal consistency and sensitivity tests (terrier-row-scoring); turnout calibration (terrier-canvass)"
+  },
+  {
+   "citation": "MAST multi-agent failure taxonomy (named only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/metaloop.md"
+   ],
+   "used_for": "Failure-attribution tags (metaloop-orchestration)"
+  },
+  {
+   "citation": "SR 11-7 model risk management (superseded 2026-04-17 by SR 26-2); quant-model-evaluation skill bibliography (Cinelli & Hazlett 2020; Politis & Romano 1994; Simar & Wilson 1998; Grubesic & Matisziw 2006; Fouirnaies & Hall 2018; Powell & Grimmer 2016; others)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md",
+    ".claude/skills/quant-model-evaluation/references/sources.md"
+   ],
+   "used_for": "Audit tooling references applied to Melange (melange-validation)"
+  },
+  {
+   "citation": "Data sources (not literature): MEDSL Dataverse election returns; Cook Political Report PVI; Voteview; congress-legislators; govinfo BILLSTATUS; Ballotpedia; openFEC and FEC bulk; OpenSecrets; IBISWorld; Census ACS/CBP/LODES/cb_2024 and cb_2020; FDIC SOD; NCUA Call Reports; HMDA; Polymarket/Kalshi/IEM; Crystal Ball/538",
+   "where": [
+    "fec/engine/build_competitiveness.py",
+    "fec/district/demographic_potential.py",
+    "DEMOGRAPHIC_POTENTIAL_METHOD.md:185-191",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Model inputs across systems"
+  }
+ ],
+ "evidence": [
+  {
+   "slug": "broockman-2026-should-moving-middle",
+   "title": "Should Moving to the Middle Win Candidates Votes? It Depends Where Voters Are",
+   "year": "2026",
+   "component_id": "terrier-row-scoring.partisan-lean",
+   "relation": "qualifies",
+   "claim": "Public opinion is multidimensional, and voters are often liberal on some issues and conservative on others. Fewer than 10% are consistent across five issues. The authors note an alternative reading: preferences could be one-dimensional with a mapping from that dimension to specific issues that differs between voters and elites.",
+   "system_side": "Lean is built as 100 x (w_reg x registration + w_vendor x mean(P, O, C)), which assumes that registration and vendor codes lie on one axis. Band cuts sit at 25 and 75. Undetermined is displayed only for people whose registration is neither D nor R and whose same-band probability is below 0.80. Lean does not enter the overall score (ovr_score uses only the CUA, participation and sphere-of-influence percentiles).",
+   "transfer": "The stakes are low because lean never enters a weighted score. The paper implies that a mid-band or Undetermined lean often marks cross-pressure on issues rather than a centrist or noisy measurement. That reading applies only if the vendor fields embed issue content; registration does not.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "harrison-2010-introduction-monte-carlo",
+   "title": "Introduction To Monte Carlo Simulation",
+   "year": "2010",
+   "component_id": "terrier-row-scoring.uncertainty-draws",
+   "relation": "method-source",
+   "claim": "Inversion method: draw u uniform on [0,1), locate it on the CDF, and take the corresponding x. The paper demonstrates it on the exponential distribution and says it works for any distribution with an invertible CDF. It does not discuss discrete or binary cases; extending it to a categorical inverse CDF (and u < p for binary) is standard but is the analyst's extension, not the paper's text.",
+   "system_side": "C0 draws give each (replicate, field, row) one PCG64 uniform via numpy default_rng; C3 draws give one uniform per (replicate, household), and only under C3 do the four negative lean fields use 1 - u. A binary cell is set when u < p. A categorical cell takes idx = count of cumulative thresholds at or below u, with codes ordered highest exposure first (docstring), i.e. inverse-CDF sampling. Results feed streamed accumulators (Welford moments, histograms, cut counters, top-10 counts).",
+   "transfer": "The sampling mechanics transfer because the math is the same. Correct mechanics do not make the output correct: the draws are only as good as the imputation class probabilities, whose calibration remains open (the paper's input-quality caveat). Independence across cells in C0 is a model assumption the paper does not address.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bonica-2025-money-campaign-finance",
+   "title": "Old money: Campaign finance and gerontocracy in the United States",
+   "year": "2025",
+   "component_id": "terrier-row-scoring.sphere-of-influence",
+   "relation": "qualifies",
+   "claim": "Political contribution dollars to congressional candidates are concentrated among older people. In the 2020 cycle the median dollar comes from a 66-year-old and the mean dollar from a 64-year-old (63.9), and only 9% of dollars come from donors aged 40 or younger. People who have ever given the $2,900 individual limit average 63 years old. Cohorts aged 70-80 donate about 200-300x more per capita than 18-year-olds (Fig. 4, 2020). Denominator: itemized individual contributions to congressional candidates in DIME, linked to L2 (the linked set is 17M donors over 2012-2020, not 2020 alone).",
+   "system_side": "Sphere = 0.45 Giving + 0.45 Volunteer + 0.10 Household. Inside Giving, the vendor high-political-contribution flag sci_ct_dnr_contribamt_high carries 1/2 of the weight, and charitable and cpi_donor carry 1/4 each. Standings are midrank percentiles, and a within-registration standing is stored. There is no within-age standing and no age control.",
+   "transfer": "The paper's age gradient is for federal itemized contributions in 2020. Terrier's field is a vendor's modelled flag for high political contribution amount in a district voter file (CO, OR-05, CT-01). The direction should carry over because both index political-donor wealth. The size will differ by vendor model and by district age structure. The paper says nothing about whether donors contact members more. Its access link rests on the cited Kalla and Broockman experiment, which is about announced donor status, not about individual donors' outreach.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bonica-2025-money-campaign-finance",
+   "title": "Old money: Campaign finance and gerontocracy in the United States",
+   "year": "2025",
+   "component_id": "terrier-row-scoring.overall-standing",
+   "relation": "qualifies",
+   "claim": "Participation is age-graded at every stage. The median non-voter is 39, the median voter 52, and the median primary voter and median donor are both 59. The authors call these gaps larger than the gap between candidates and donors. Figures are for 2020, from the L2 national file of about 208M registrants.",
+   "system_side": "Overall = 0.40 CUA + 0.35 Participation + 0.25 Sphere (framework_config.json overall.W40_35_25), a weighted mean of midrank standings. Participation is the mean of four themes: Turnout, Early/mail, Activism and Digital. Sphere includes political giving. Both components therefore contain inputs that the paper shows are age-graded (turnout and political giving). The paper gives no evidence on the other inputs (Digital, Activism, Volunteer, Household), so calling the whole 60% 'age-loaded' goes beyond it. The only stored stratified view is by registration group.",
+   "transfer": "Federal-level age medians from L2 transfer directionally to any US voter file. The size within OR-05 or CT-01 is unknown until it is measured on Terrier's own file. This bearing is a confound warning, not evidence that age-tilted standings are wrong for advocacy. Paul's ruling is that volunteers and givers are the people who engage members.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "holyoke-2015-learnable-skills-unteachable",
+   "title": "Learnable Skills, or Unteachable Instinct? What Can and What Cannot Be Taught in the Lobbying Profession",
+   "year": "2015",
+   "component_id": "terrier-row-scoring.sphere-of-influence",
+   "relation": "supports",
+   "claim": "Members of interest groups contact lawmakers more than non-members do (Holyoke 2013, cited). Entrenched interests show an issue's importance by having prominent constituents call first. Members should target their own elected officials, and personal constituent stories persuade most (Fitch 2010, cited).",
+   "system_side": "Sphere of Influence = 100 x (0.10 household + 0.45 giving + 0.45 volunteering). Giving is built from charitable-donor, donor-index and high-contribution vendor fields. There is no term for group membership or prior contact with officials. The weights are Paul's 'leaning' ruling.",
+   "transfer": "Only the direction carries over: civically engaged people are likelier to contact their own representative. The claims are cited, not tested, and are about national federal contact. Vendor charitable-giving fields are not the political group membership the paper names. Nothing here supports the 45/45/10 weights.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "furnas-2019-moneyed-interests-information",
+   "title": "Moneyed Interests, Information, and Action in Congress: A Survey Experiment",
+   "year": "2019",
+   "component_id": "terrier-row-scoring.sphere-of-influence",
+   "relation": "qualifies",
+   "claim": "Relative to a constituent, a requester presented as a campaign donor gets no meeting advantage, staff are less likely to use the donor's information, and all-staff ratings put donors as less representative of the district or state (null among Republican staff).",
+   "system_side": "Sphere = 0.45 Giving + 0.45 Volunteer + 0.10 Household. Within Giving, contrib_high carries half the weight, on the assumption that givers and volunteers engage Members.",
+   "transfer": "Terrier's people are constituents. The paper sets 'donor' against 'constituent' as alternative identities, so it cannot say whether a constituent who also gives is received better or worse. At most it suggests that a request framed around giving buys no extra staff access. It gives no reason to change the 45/45/10 split (recorded as Paul ruling (leaning), PR3), and it supports volunteer and constituent standing as the more credible channel.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kalla-nd-campaign-contributions-facilitate",
+   "title": "Campaign Contributions Facilitate Access to Congressional Officials: A Randomized Field Experiment",
+   "year": "",
+   "component_id": "terrier-row-scoring.sphere-of-influence",
+   "relation": "qualifies",
+   "claim": "When an organized group tells an office its members are local campaign donors, senior officials attend more often than when described as constituents: three to four times in the abstract; Table 1 ratios about 3.2 for Member, 3.4 for legislative director or above, and 5.2 for chief of staff or above.",
+   "system_side": "Sphere of Influence = 0.45 giving + 0.45 volunteering + 0.10 household. Giving G = (charitable + cpi_donor)/4 + contrib_high/2. The weights status is a leaning ruling (framework_config.json:2556-2557).",
+   "transfer": "The paper bears only on donor status made known to an office through an organized group's request. It says nothing about charitable giving, volunteering, or individuals acting alone, and it covers one liberal organization in 2013. Use it to justify revealing donor status in organized asks, not to reweight the giving term. The config does not define contrib_high, so its mapping to donor status is unverified.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "deluca-2022-validating-applicability-bayesian",
+   "title": "Validating the Applicability of Bayesian Inference with Surname and Geocoding to Congressional Redistricting",
+   "year": "2022",
+   "component_id": "terrier-row-scoring.cua-index",
+   "relation": "supports",
+   "claim": "Summed BISG posteriors (PSM) give lower absolute error than modal assignment (PM) in nearly all districts. In NC, PSM Black-share error never exceeds about 5 pp; in GA it peaks about 5 pp. PSM White-share error is near 0 in NC and reaches about 10 pp in GA.",
+   "system_side": "engine.py lines 264-270 (categorical_map branch) compute mu = P @ m as the expected value and variance P @ (m*m) - mu^2 for estimated categorical fields. The draw spec in the same branch samples from the probability columns, not argmax.",
+   "transfer": "The paper validates area-level aggregates of voter-level race posteriors for Black vs White in two segregated states. CUA is a person-level expected value for vendor consumer fields. Support for the person-level index is indirect and holds only where the class probabilities are roughly calibrated; calibration is the open ECE question.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "deluca-2022-validating-applicability-bayesian",
+   "title": "Validating the Applicability of Bayesian Inference with Surname and Geocoding to Congressional Redistricting",
+   "year": "2022",
+   "component_id": "terrier-row-scoring.area-eb-aggregation",
+   "relation": "supports",
+   "claim": "Researchers should aggregate to a polygonal unit by summing estimated probabilities of racial membership. Assigning race to single voters makes errors drastically higher.",
+   "system_side": "areas.py eb_top10_params (lines 435-449): area top-decile share is np.bincount of summed P(top10) contributions divided by row count (line 438), followed by beta-binomial EB shrinkage with a design-effect variance (lines 444-448).",
+   "transfer": "The summed-probability step matches the paper's recommended aggregation. The paper does not test EB shrinkage or top-decile shares, so it says nothing about the shrinkage layer. Its expectation of larger error in heterogeneous areas is where shrinkage matters most. This is an analogy for the aggregation choice, not a validation of Terrier area values.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  }
+ ]
+}

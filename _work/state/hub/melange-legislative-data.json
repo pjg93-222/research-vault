@@ -1,0 +1,944 @@
+{
+ "system": {
+  "slug": "melange-legislative-data",
+  "name": "Melange legislative activity and effectiveness data (incl. Draft Systems R pipeline)",
+  "description": "Upstream legislative inputs: the congress.gov activity scrape with Congress decay, Ballotpedia committee, caucus and party-leadership scores, the signal-prioritized press collector cap, the release category taxonomy, synthetic billstatus rows, the sentinel bill ledger with strongest-role dedup, and the five-stage legislative-effectiveness shadow (Volden-Wiseman style) with its CEL criterion.",
+  "brain_notes": [
+   "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline-architecture.md",
+   "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline-code-catalogue.md",
+   "C:/Users/pgoff/Documents/brain/actors/sentinel-collectors.md",
+   "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md"
+  ]
+ },
+ "components": [
+  {
+   "id": "melange-legislative-data.congress-activity-score",
+   "system": "melange-legislative-data",
+   "name": "congress.gov legislative activity score with Congress decay",
+   "computes": "Per member x 17 sections x 3 roles: bill counts, average cosponsors and success rate, with counts decayed by 0.8^age per Congress (138 columns).",
+   "method": "Role swap on search URLs. Success comes from status text with a fallback classifier. The sentinel ledger also applies 0.8^(119-c) and keeps the strongest role per bill.",
+   "assumptions": [
+    "Recent Congresses matter more by a constant factor",
+    "Search terms capture CU-relevant legislation"
+   ],
+   "empirical_questions": [
+    "Does a 0.8 per-Congress decay maximize prediction of current-Congress CU activity from past activity?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/congress_member_scraper.R",
+    "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/congress_search_urls.R",
+    "fec/legislation/sync_sentinel_bill_ledger.py",
+    "build_archive_legislative.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline-architecture.md",
+    "C:/Users/pgoff/Documents/brain/actors/sentinel-collectors.md"
+   ],
+   "heading": "congress.gov legislative activity score with Congress decay"
+  },
+  {
+   "id": "melange-legislative-data.ballotpedia-leadership-scores",
+   "system": "melange-legislative-data",
+   "name": "Ballotpedia committee, caucus and party-leadership scores",
+   "computes": "Committee leadership (Chair 1.0 ... Member 0.2), caucus leadership, party leadership (Speaker 1.0 ... Minority Whip 0.2) and a weighted electoral average (2018 x2).",
+   "method": "Bioguide-keyed (this fixed a five-Johnsons bug). Sub Layer AW:BA is normalized by x/max.",
+   "assumptions": [
+    "Leadership positions indicate CU leverage (hand-set constants)"
+   ],
+   "empirical_questions": [
+    "Does party leadership rank predict effectiveness on CU bills?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/ballotpedia_119th_cu_scraper.R",
+    "merge_committee_caucus.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline-architecture.md"
+   ],
+   "heading": "Ballotpedia committee, caucus and party-leadership scores"
+  },
+  {
+   "id": "melange-legislative-data.press-collector-cap",
+   "system": "melange-legislative-data",
+   "name": "Signal-prioritized press collection cap",
+   "computes": "Per-member URL cap (default 1000) prioritized by CU-term titles.",
+   "method": "Coverage 86.6% before fixes. P(CU-relevant | CU-term title) = 0.825 vs 0.0089 for generic titles. Coverage: D 92.5% vs R 87%; Senate 83% vs House 96%.",
+   "assumptions": [
+    "CU-term titles proxy CU relevance; missing pages carry about 10% CU signal"
+   ],
+   "empirical_questions": [
+    "Does differential coverage by party or chamber bias the press pillar?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_text_collector.R"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline-code-catalogue.md"
+   ],
+   "heading": "Signal-prioritized press collection cap"
+  },
+  {
+   "id": "melange-legislative-data.category-taxonomy",
+   "system": "melange-legislative-data",
+   "name": "Release category taxonomy and billstatus synthetic rows",
+   "computes": "19 Layer-2 categories under 7 groups via regex, net and count per member; synthetic 'X (co)sponsored' rows from BILLSTATUS XML.",
+   "method": "Billstatus rows were removed from Stage 5 on 2026-06-30; 110 members then had no real releases.",
+   "assumptions": [
+    "Regex terms identify a release's topic",
+    "Cosponsorship is a press-layer signal (later rejected)"
+   ],
+   "empirical_questions": [
+    "What is the precision of regex topic tagging against human coding?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R (CATEGORIES, stage_bill_cosponsors)"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline-architecture.md"
+   ],
+   "heading": "Release category taxonomy and billstatus synthetic rows"
+  },
+  {
+   "id": "melange-legislative-data.effectiveness-shadow",
+   "system": "melange-legislative-data",
+   "name": "Five-stage legislative effectiveness shadow and CEL criterion",
+   "computes": "Role-weighted, timing-decayed credit per stage (BILL, AIC, ABC, PASS, LAW), normalized N/5 per chamber-term, decayed 0.8 per Congress. Results-only and 70/30 advocacy composite percentiles. Ceremonial-share criterion against CEL LES.",
+   "method": "Role weights 3/2/1; cosponsor timing 2^(-delay/180); impact weights 1/5/10. A shadow candidate, not activated.",
+   "assumptions": [
+    "Stage progression measures effectiveness (Volden-Wiseman)",
+    "Earlier cosponsorship is worth more",
+    "More conscientious members sponsor fewer ceremonial bills (RKH)"
+   ],
+   "empirical_questions": [
+    "Does the shadow score converge with published CEL LES for the same members and Congresses?",
+    "Does cosponsor timing (early joiners) predict bill advancement?"
+   ],
+   "code_refs": [
+    "fec/engine/legislative_effectiveness.py:17-498",
+    "fec/engine/effectiveness_integration.py:23-212",
+    "fec/members/lep_criterion.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md"
+   ],
+   "heading": "Five-stage legislative effectiveness shadow and CEL criterion"
+  }
+ ],
+ "positions": [
+  {
+   "component_id": "melange-legislative-data.congress-activity-score",
+   "citations": [
+    "Fouirnaies & Hall 2022",
+    "Harrison et al. 2018",
+    "Sotoudeh et al. 2024"
+   ],
+   "paul_position": "Paul wants a pipeline from public records. He highlighted Ardekani's point that legislation is machine-readable, with the margin note 'Same for the US?'."
+  },
+  {
+   "component_id": "melange-legislative-data.ballotpedia-leadership-scores",
+   "citations": [
+    "Gaynor 2022",
+    "Kim & Kunisky 2020"
+   ],
+   "paul_position": "Leadership insulates members from the broader ecosystem (Gaynor), and senior leaders hold the broadest community memberships (Kim & Kunisky)."
+  },
+  {
+   "component_id": "melange-legislative-data.press-collector-cap",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "melange-legislative-data.category-taxonomy",
+   "citations": [
+    "Bacik et al. 2026 (79 issue codes)"
+   ],
+   "paul_position": "No annotation addresses the taxonomy."
+  },
+  {
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "citations": [
+    "Aref & Neal 2021 (LES)",
+    "Sotoudeh et al. 2024",
+    "Ramey et al."
+   ],
+   "paul_position": "Paul highlighted LES as the effectiveness criterion and Sotoudeh's contrast with it."
+  }
+ ],
+ "citations_in_system": [
+  {
+   "citation": "Ramey, Klingler & Hollibaugh, 'Measuring Elite Personality Using Speech', Political Science Research and Methods (year conflict in repo: 2016 in PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32 and code; 2019 in big5_methods.md:12). Replication data doi:10.7910/DVN/JDH6KR",
+   "where": [
+    "fec/members/big5_traits.py:1-25",
+    "fec/members/fit_smoreg_rkh.py:5",
+    "fec/members/lep_criterion.py:5-6",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32",
+    "big5_methods.md:12",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Lexical Big Five pipeline, token shrinkage, RKH reference targets (melange-psychometrics); ceremonial-share C criterion (melange-legislative-data)"
+  },
+  {
+   "citation": "Mairesse et al. (2007), JAIR, personality from text (SMOreg on LIWC/MRC; 53-58% band)",
+   "where": [
+    "fec/members/fit_smoreg_essays.py:4",
+    "fec/members/big5_traits.py:13-16",
+    "fec/members/interaction_features.py:5-6",
+    "big5_methods.md:31",
+    "big5_audio_prereg.md:15"
+   ],
+   "used_for": "SMOreg feature weights and word-count features (melange-psychometrics); audio cues"
+  },
+  {
+   "citation": "Pennebaker & King (1999); Yarkoni (2010); Pennebaker (2003, Annual Review)",
+   "where": [
+    "fec/members/big5_traits.py:14-15",
+    "fec/members/affective_n_validate.py:10",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Published-correlate lexical weights; essays corpus; negative-emotion basis for affective N"
+  },
+  {
+   "citation": "Birkenmaier & Lechner (2025), 'Measuring Politicians' Public Personality', Political Analysis; Birkenmaier, Lechner & Wagner (2024)",
+   "where": [
+    "fec/members/agency_communion_llm.py:3,33",
+    "fec/members/big5_llm.py:10",
+    "fec/members/big5_traits.py:9",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:33",
+    "big5_behavioral_extraversion_prereg.md:239"
+   ],
+   "used_for": "Agency/communion persona cue classifier and PERSONA_W; cannot-tell coding"
+  },
+  {
+   "citation": "Lechner, Aichholzer, Birkenmaier & Bluemke (2025), 'Mapping the Political Personality' (Polipers v0.1, GESIS)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Review of politician-personality studies; external criterion search"
+  },
+  {
+   "citation": "'Personality on the Hill' Senate insider and academic gold panels (online_appendix.pdf, SHA-256 43c98926...; author/year not recorded)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "External gold for Big Five validation"
+  },
+  {
+   "citation": "Amsalem et al. (2018), media visibility of Belgian, Canadian and Israeli MPs (Eran.pdf) - provenance warning only, NOT the gold source",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Hash-mismatch provenance check"
+  },
+  {
+   "citation": "Norgaard & Klemmensen (2019), J. Personality 87(2):267-275; Schumacher & Zettler (2019), PAID 141:173-181",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Elite self-report personality benchmarks and desirability caveat"
+  },
+  {
+   "citation": "Cao & Kosinski (PNAS Nexus 2024); Peters & Matz (PNAS Nexus 2024, doi:10.1093/pnasnexus/pgae231)",
+   "where": [
+    "fec/members/big5_llm.py:12",
+    "big5_methods.md:46-49",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "De-identification before LLM trait scoring; LLM zero-shot personality benchmark"
+  },
+  {
+   "citation": "Valente (Interspeech 2012); Yu (Interspeech 2019); Rienks & Heylen (2005)",
+   "where": [
+    "fec/members/interaction_features.py:5-8",
+    "fec/members/behavioral_dispositions.py:17",
+    "big5_methods.md:30"
+   ],
+   "used_for": "Turn-statistic dominance and reactivity features"
+  },
+  {
+   "citation": "Koutsoumpis (meta-analysis, language and personality); Yang, Lau & Abbasi (ISR 2023)",
+   "where": [
+    "big5_methods.md:114",
+    "AUDIT_FINDINGS_2026-07-04.md:332",
+    "big5_behavioral_extraversion_prereg.md:221"
+   ],
+   "used_for": "Text tracks observer more than self-report; response-selection bias; PERSONA_W scope argument"
+  },
+  {
+   "citation": "Soto & John (2017) BFI-2-XS; Connelly & Ones (2010); Judge et al. (2002); Funder & Ozer (2019); Dietrich (2012); Dynes (2019); Wagner (2024); Steiger (1980); Stern et al. (2021); Harari (2022); Rubio et al. (2024); Marrero et al. (2022); Marengo et al. (2018, doi:10.1016/j.paid.2017.12.018); Hargittai (2015, doi:10.1177/0002716215570866); Hinds & Joinson (2024, doi:10.1037/bul0000430); Marengo, Montag & Settanni (2025, doi:10.1111/jopy.70019); Lau & Abbasi (2023)",
+   "where": [
+    "big5_expert_panel_prereg.md",
+    "big5_nomological_prereg.md",
+    "big5_n_matrix_prereg.md",
+    "big5_audio_prereg.md",
+    "big5_es_crossmodal_prereg.md",
+    "big5_a_coverage_prereg.md",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "Prereg designs for Big Five expert panel, nomological, audio and coverage looks (melange-psychometrics)"
+  },
+  {
+   "citation": "Salam et al. (2022), PMLR 173, personalised NAS Big Five on UDIVA",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md:132"
+   ],
+   "used_for": "Audio trait benchmark and sex-conditioning check"
+  },
+  {
+   "citation": "Mestre & Ryan (2026), validated aeneas forced alignment; Dietrich (2019)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Audio identity design (forced alignment, within-speaker F0)"
+  },
+  {
+   "citation": "ECAPA-TDNN speaker embedding (name only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Proposed speaker verification"
+  },
+  {
+   "citation": "Byrne, Silasi-Mansat & Worthy (2015), 'Who chokes under pressure?', PAID",
+   "where": [
+    "fec/members/receptivity_layer.py:6-7,189,233",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:34",
+    "AUDIT_FINDINGS_2026-07-04.md:548",
+    "fec/engine/outcome_contract.py:18"
+   ],
+   "used_for": "Susceptibility composite (only N and A supported; C and E are design priors); H2 predictor"
+  },
+  {
+   "citation": "Fouirnaies & Hall, 'How Do Electoral Incentives Affect Legislator Behavior?' (APSR)",
+   "where": [
+    "fec/members/receptivity_layer.py:15-20",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:35",
+    "fec/engine/money_response.py:27"
+   ],
+   "used_for": "Retiring-member incentive multiplier and competitiveness term"
+  },
+  {
+   "citation": "Linde & Vis (2016), 'Do Politicians Take Risks Like the Rest of Us?', Political Psychology",
+   "where": [
+    "fec/members/receptivity_layer.py:22-28",
+    "fec/engine/money_response.py:27-29",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:36"
+   ],
+   "used_for": "Prospect-theory domain multiplier and attenuated loss frame"
+  },
+  {
+   "citation": "Kahneman & Tversky (loss aversion)",
+   "where": [
+    "fec/engine/money_response.py:29",
+    "fec/members/receptivity_layer.py:27"
+   ],
+   "used_for": "LOSSFRAME 1.10"
+  },
+  {
+   "citation": "Chen, Kamarthi, Wilder & Tambe, contingency-aware influence maximization (UAI 2021, arXiv 2106.07039; venue corrected from ICML); Zareie & Sakellariou (SNAM 2023)",
+   "where": [
+    "fec/members/receptivity_layer.py:28-34",
+    "fec/engine/budget_frontier.py:72-74",
+    "fec/engine/outcome_contract.py:17",
+    "AUDIT_FINDINGS_2026-07-04.md:564-565"
+   ],
+   "used_for": "Seed take-up probability and seed gate; H1 predictor"
+  },
+  {
+   "citation": "Bharathi, Kempe & Salek, Competitive Influence Maximization",
+   "where": [
+    "fec/engine/scenario.py:6-11",
+    "fec/engine/budget_frontier.py",
+    "fec/engine/per_topic_coalition.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Competitive IC cascade and coalition submodularity"
+  },
+  {
+   "citation": "Borodin et al. (submodularity can fail in competitive LT)",
+   "where": [
+    "fec/engine/scenario.py:11-12"
+   ],
+   "used_for": "Flip side treated as heuristic"
+  },
+  {
+   "citation": "Kempe, Kleinberg & Tardos (2003, KDD) influence maximization",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:157",
+    "quant skill references"
+   ],
+   "used_for": "Cascade and threshold model assumptions"
+  },
+  {
+   "citation": "Golovin & Krause (2011), Adaptive Submodularity, JAIR (Lemma 5.3/A.9)",
+   "where": [
+    "fec/engine/optimize.py:8,108-113",
+    "fec/engine/scenario.py:8-10",
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md"
+   ],
+   "used_for": "Joint optimizer bound and framing (melange-allocation)"
+  },
+  {
+   "citation": "Leskovec et al. (KDD 2007) CELF lazy greedy; Nemhauser (1-1/e)",
+   "where": [
+    "fec/engine/optimize.py:74-96",
+    "fec/engine/budget_frontier.py:96-106",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Lazy greedy seed and budget selection"
+  },
+  {
+   "citation": "Almazaydeh et al. (2026), Scientific Reports, s41598-026-47299-8",
+   "where": [
+    "fec/engine/mc_stability_check.py:3-10",
+    "influence-modeling-reference SKILL.md"
+   ],
+   "used_for": "Noisy MC corrupts CELF; motivates CRN and stability check"
+  },
+  {
+   "citation": "Manchanda et al., GCOMB, NeurIPS 2020, arXiv:1903.03332",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Budget mode: locality, degree pruning, CELF (melange-pathfinding)"
+  },
+  {
+   "citation": "Chen & Lam, most-reliable path; Ren et al., Multi-Objective Path-Based D* Lite (MOPBD*) and RELINK",
+   "where": [
+    "fec/engine/cosponsor_route.py:3-5",
+    "fec/engine/scenario.py:13",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Pathfinder and route-finder concepts (melange-pathfinding)"
+  },
+  {
+   "citation": "Sotoudeh, Porter & Krishnagopal (2024), arXiv 2406.19554, network measure of cosponsorship influence on bill passage",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Cosponsor edge weights and path grounding"
+  },
+  {
+   "citation": "Aref & Neal (2020, 2021), signed-network optimal partitioning / generalized balance; Neal signed backbone (R backbone sdsm)",
+   "where": [
+    "fec/network/signed_coalitions.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Signed coalition partition and multi-target coalition mode"
+  },
+  {
+   "citation": "Porter, Mucha, Newman et al. (PNAS 2005), committee network community structure / normalized interlock",
+   "where": [
+    "fec/surfaces/make_member_desk.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-model-facts.md",
+    "HOLISTIC_NETWORK_DESIGN_2026-08-17.md:78"
+   ],
+   "used_for": "Committee-cluster layout; community structure in pathfinder"
+  },
+  {
+   "citation": "Fink et al. (2023), Congressional Twitter influence network, Data in Brief",
+   "where": [
+    "fec/network/social_interaction_layer.py:15-19",
+    "MATHEMATICAL_SPECIFICATION.md:44",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Author-volume normalized social and press edges"
+  },
+  {
+   "citation": "Malaterre & Lareau (2024), HCoI communities",
+   "where": [
+    "fec/press_hcoi.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Press-attention communities"
+  },
+  {
+   "citation": "Zhou & Elejalde (2026), Information Processing & Management, TWLGCN",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Stance dynamics port"
+  },
+  {
+   "citation": "Joo & Steinert-Threlkeld (2022), Computational Communication Research; Steinert-Threlkeld, Twitter as Data",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Frame alignment"
+  },
+  {
+   "citation": "Ringe, Victor & Gross (BJPS 2013), Friends and Enemies",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:599"
+   ],
+   "used_for": "Signed mention layer concept"
+  },
+  {
+   "citation": "Battaglini & Patacchini, 'Influencing Connected Legislators', NBER w22739",
+   "where": [
+    "fec/engine/kb_benchmark.py:2-18"
+   ],
+   "used_for": "Katz-Bonacich benchmark"
+  },
+  {
+   "citation": "Kim & Kunisky, lobbying networks / latent communities (local PDF)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Community structure exploited by pathfinder"
+  },
+  {
+   "citation": "Noble & Turner (2024), 'Presidential Leadership and Legislative Polarization'; Lee (2009)",
+   "where": [
+    "fec/engine/salience_shock.py:4-38",
+    "fec/surfaces/build_dashboard_bundle.py:663",
+    "fec/moneyball_core.py:731"
+   ],
+   "used_for": "Salience shock regimes; retreat regime"
+  },
+  {
+   "citation": "Furnas, LaPira, Hertel-Fernandez, Drutman & Kosar (congressional staff survey experiment); Bakker (partisan cues); Bakker, Lelkes & Malka (JOP)",
+   "where": [
+    "fec/moneyball_core.py:11",
+    "fec/engine/lt_priming.py:56-58",
+    "fec/surfaces/templates/make_dashboard_html_00.tpl:742",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "cpf_pressure 1.7/0.5; out-party cue clamp; executive cue factor; money capped, information is the lever"
+  },
+  {
+   "citation": "Ansolabehere, de Figueiredo & Snyder (2003); Fowler, Garro & Spenkuch (2020); Hall & Wayman (1990); Kalla & Broockman (2016), 'Campaign Contributions Facilitate Access'; Kalla & Broockman (general-election persuasion about zero); Coppock (persuasion about 5 pp / 0.1 SD)",
+   "where": [
+    "fec/engine/flip_model.py:21",
+    "fec/engine/money_response.py:15,20",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Money buys access not votes; WM/WP weights; MAXSHIFT calibration; access multiplier"
+  },
+  {
+   "citation": "Huneeus & Kim (lobbying distorts policy); Bombardini & Trebbi (annual review of empirical lobbying); Pritoni (lobbying coalitions); Bacik et al. / Kim, lobbying-network dynamics (arXiv 2503.11745); Azaiez & Mandel (EC lobby hypergraph); Harrison et al. (lobbying record mining)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-scenario-model-build.md"
+   ],
+   "used_for": "Calibration context for small, capped lobbying returns; pathfinder background"
+  },
+  {
+   "citation": "Trivedi & Singh (Procedia 2020) coalition modeling; Scientific Reports 2026 IM algorithm comparison (CELF++/RIS/IMM)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md"
+   ],
+   "used_for": "Coalition and IM algorithm references"
+  },
+  {
+   "citation": "Gaynor (LSQ 2022); Kim, Stuckatz & Wolters (JOP 2026); Furnas, LaPira & Brock (PS 2025)",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:706-711"
+   ],
+   "used_for": "Leadership PAC edges and donation/lobbying sequencing (identified, not implemented)"
+  },
+  {
+   "citation": "Volden & Wiseman, legislative effectiveness (five-stage LES; Center for Effective Lawmaking LES 93-118); Bucchianeri/Volden/Wiseman-style",
+   "where": [
+    "fec/members/lep_criterion.py:1-15",
+    "fec/engine/flip_model.py:142 (comment only)",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md",
+    "C:/Users/pgoff/Documents/brain/actors/codex-executor-incidents.md"
+   ],
+   "used_for": "Effectiveness shadow score and convergence criterion; uncoded passage-bonus comment"
+  },
+  {
+   "citation": "Nokken & Poole dynamic ideal points; DW-NOMINATE (Poole-Rosenthal)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Drift criterion for N (MISS); NOMINATE rejected for vote edges"
+  },
+  {
+   "citation": "Matz et al. (PNAS 2017); Simchon (2024, PNAS Nexus); Hackenburg & Margetts (2024)",
+   "where": [
+    "fec/surfaces/make_member_desk.py:846",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Persona-matched appeals (design-only) and aggregate null caution"
+  },
+  {
+   "citation": "Brysbaert concreteness norms; Guiraud index; Empath lexicon; Valente (N overlap stat 68.7%)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-record-1-big5-campaign.md"
+   ],
+   "used_for": "Big Five lexical features"
+  },
+  {
+   "citation": "Miller & Sutherland, APSR (hearing conduct; doctrine WITHDRAWN 2026-07-10)",
+   "where": [
+    "big5_methods.md:36",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics.md"
+   ],
+   "used_for": "Withdrawn hearing-antagonism doctrine"
+  },
+  {
+   "citation": "Burnham, 'Stance detection: a practical guide' (PSRM 2024.35); mlburnham/Political_DEBATE_base_v1.0 (Hugging Face)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39",
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md"
+   ],
+   "used_for": "NLI stance templates and the DEBATE base model (melange-stance)"
+  },
+  {
+   "citation": "Stanceformer, arXiv 2410.07083; ACL 2023.acl-long.560 (TSE); MDPI 2076-3417/15/21/11784",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39,63",
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md"
+   ],
+   "used_for": "Target-aware stance (planned); two-stage decoupling; neutral-class difficulty"
+  },
+  {
+   "citation": "Khan et al. (2025), IECE TACS, Roman Urdu agree/disagree/unrelated stance",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md:45"
+   ],
+   "used_for": "Multi-view augmentation (hurt classical readers)"
+  },
+  {
+   "citation": "Park, Lee & Cho (2025), 'Automatic construction of direction-aware sentiment lexicon using direction-dependent words', Language Resources & Evaluation 59:843-869",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:65"
+   ],
+   "used_for": "Direction-aware valence lexicon idea (rejected on dry run)"
+  },
+  {
+   "citation": "Soroka et al., Lexicoder Sentiment Dictionary LSD2015 (snsoroka.com LSDaug2015.zip); Haselmayer & Jenny (2017); Rice & Zorn (2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-congress-r-scrapers-graded-scoring-and-audits.md:26-28"
+   ],
+   "used_for": "Stage 5b tone intensity; graded tone and polarity normalization"
+  },
+  {
+   "citation": "Dai, Liao, Zhao et al. (2025), LLM-enhanced Logic Tensor Network for stance detection, Neural Networks 183:106956, doi:10.1016/j.neunet.2024.106956",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md:198",
+    "stance_valence_folcot_prereg.md:13"
+   ],
+   "used_for": "FOL-CoT valence proposals (not adopted)"
+  },
+  {
+   "citation": "Kim, Kim, Jeong, Oh & In Song Kim (2025), 'Measuring Interest Group Positions on Legislation' (PNAS draft); LobbyView positions dataset doi:10.7910/DVN/D0QWM2; In Song Kim LobbyView (Song 2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md",
+    "fec/lobbying/lobby_position_benchmark.py:9",
+    "fec/lobbying/collect_lobbyview.py:35"
+   ],
+   "used_for": "LDA data and interest-group positions (melange-lobbying)"
+  },
+  {
+   "citation": "Romero Moreno (2021)",
+   "where": [
+    "CONTESTED_BILLS_DESIGN.md:29-30"
+   ],
+   "used_for": "Contested-bills counterparty term"
+  },
+  {
+   "citation": "Delano, Rudkin & Kim (2025), BICAM, Scientific Data 12:1567, doi:10.1038/s41597-025-05737-8; Porter, Case & Treul (2025), CampaignView, Scientific Data 12:1237, doi:10.1038/s41597-025-05491-x; Zhan & Cai (2025), ESWA 263:125705, doi:10.1016/j.eswa.2024.125705; Cao, Gai, Wu et al. (2025), Information Fusion 120:103107, doi:10.1016/j.inffus.2025.103107",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md",
+    "CAMPAIGN_SITE_COLLECTION_2026_RUNBOOK.md:10"
+   ],
+   "used_for": "Research-integration proposals (bill-LDA linkage, campaign corpus, trust-KNN imputation, signed trust propagation)"
+  },
+  {
+   "citation": "Russo et al. (ACL 2023), 'Helping a Friend or Supporting a Cause?'; Brandenberger (2018), 'Trading Favors', Social Networks 54:238-253, doi:10.1016/j.socnet.2018.02.001; Montgomery & Nyhan (2017), doi:10.1086/690301; Shalizi & Thomas (2011); Nay (2017), PLOS ONE doi:10.1371/journal.pone.0176999",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:153-158",
+    "fec/research/cosponsor_challengers/PROTOCOL.md:44-47"
+   ],
+   "used_for": "Cosponsorship prediction and reciprocity baselines; homophily vs contagion confounding; staff exchange and policy similarity"
+  },
+  {
+   "citation": "Tiedens & Fragale (2003), doi:10.1037/0022-3514.84.3.558; Santoro & Broockman (2022), Science Advances, doi:10.1126/sciadv.abn5515",
+   "where": [
+    "fec/research/member_personal_relationships/PERSONALITY_CONTEXT_EXPLORATION.md:46"
+   ],
+   "used_for": "Context only for member personal-relationship research"
+  },
+  {
+   "citation": "DerSimonian-Laird random-effects estimator",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "used_for": "R2 partially pooled industry slope (mentat-giving-forecast)"
+  },
+  {
+   "citation": "Cameron, Gelbach & Miller (2011), two-way cluster-robust variance; Holm step-down; Newey-West HAC; Driscoll-Kraay (requested); Ball (2024)",
+   "where": [
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-8,168,210",
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:71-76,389,588",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Inference in the sector growth regressions and SEATS-W"
+  },
+  {
+   "citation": "Bross (1958) ridit; Spearman-Brown; Kendall tau-b; pool-adjacent-violators (PAV)",
+   "where": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/design/spec_rigor.md",
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "used_for": "Ridit transforms, internal consistency and sensitivity tests (terrier-row-scoring); turnout calibration (terrier-canvass)"
+  },
+  {
+   "citation": "MAST multi-agent failure taxonomy (named only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/metaloop.md"
+   ],
+   "used_for": "Failure-attribution tags (metaloop-orchestration)"
+  },
+  {
+   "citation": "SR 11-7 model risk management (superseded 2026-04-17 by SR 26-2); quant-model-evaluation skill bibliography (Cinelli & Hazlett 2020; Politis & Romano 1994; Simar & Wilson 1998; Grubesic & Matisziw 2006; Fouirnaies & Hall 2018; Powell & Grimmer 2016; others)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md",
+    ".claude/skills/quant-model-evaluation/references/sources.md"
+   ],
+   "used_for": "Audit tooling references applied to Melange (melange-validation)"
+  },
+  {
+   "citation": "Data sources (not literature): MEDSL Dataverse election returns; Cook Political Report PVI; Voteview; congress-legislators; govinfo BILLSTATUS; Ballotpedia; openFEC and FEC bulk; OpenSecrets; IBISWorld; Census ACS/CBP/LODES/cb_2024 and cb_2020; FDIC SOD; NCUA Call Reports; HMDA; Polymarket/Kalshi/IEM; Crystal Ball/538",
+   "where": [
+    "fec/engine/build_competitiveness.py",
+    "fec/district/demographic_potential.py",
+    "DEMOGRAPHIC_POTENTIAL_METHOD.md:185-191",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Model inputs across systems"
+  }
+ ],
+ "evidence": [
+  {
+   "slug": "kim-2020-mapping-political-communities",
+   "title": "Mapping Political Communities: A Statistical Analysis of Lobbying Networks in Legislative Politics",
+   "year": "2020",
+   "component_id": "melange-legislative-data.ballotpedia-leadership-scores",
+   "relation": "qualifies",
+   "claim": "Legislators with the most legislation-community memberships are often senior politicians or party leaders, and high-entropy legislators (entropy >= 2, roughly 4+ communities) sit on power committees. The paper measures breadth of lobbying interaction, not leverage.",
+   "system_side": "Hand-set constants: committee leadership Chair 1.0, Ranking 0.8, Vice Chair 0.6, Vice Ranking 0.4, Member 0.2; party leadership Speaker 1, President pro tempore 1, Majority Leader 0.8, Minority Leader 0.6, Majority Whip 0.4, Minority Whip 0.2.",
+   "transfer": "Consistent with scoring leadership as general reach rather than CU-specific leverage; the 'diluted industry share' reading is the analyst's inference. Says nothing about effectiveness on CU bills. One Congress, descriptive.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "title": "Identifying hidden coalitions in the US House of Representatives by optimally partitioning signed networks based on generalized balance",
+   "year": "2021",
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "suggests-extension",
+   "claim": "Effectiveness is the CEL LES: fifteen indicators, normalized to mean 1 per session. The paper compares coalition-mean LES with 95% CI bands across party, k=2 and k=3 partitions. The third coalition is the most effective in most sessions and is anchored by a few members (e.g. Christopher Smith, mean effectiveness 8.44, 106th-108th).",
+   "system_side": "lep_criterion.py loads CEL House and Senate data (93rd-118th) from fec/lep/*.dta (CELHouse93to118Reduced.dta, CELSenate93to118Reduced.dta), including lesclassic and dwnom1, for a pre-registered convergence look against the blended score.",
+   "transfer": "The LES half of the comparison is already local. Reproducing it also needs a House-only, per-Congress signed co-sponsorship backbone and a k=3 partition, and neither is built. The result would be descriptive, with no controls for majority or chair status, which drive LES. It stays UNVERIFIED until a second path reproduces it (DE-062). Any pooled comparison across sessions must be stratified by majority party or labelled UNSTRATIFIED.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "ramey-2016-measuring-elite-personality",
+   "title": "Measuring Elite Personality Using Speech",
+   "year": "2016",
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "qualifies",
+   "claim": "Conscientiousness lowers the ceremonial share of sponsored bills: -0.52 (M1), -0.39 (M3), -0.53 (M4), -0.58 (M5, Congress FE), all p<0.01. Majority x C is +0.27 (M4) and +0.29 (M5), so the C effect is smallest in the majority. N = 3,648 member-Congresses in M3 to M5, 104th to 112th Congresses; binomial regression with implicit weighting by bills proposed (fn 37).",
+   "system_side": "lep_criterion.py computes Spearman rho between pooled ceremonial share (115th to 118th Congresses, at least 8 bills) and diligence_z, lexical C v1 and behaviour-calibrated C v2. Stored data/members/lep_criterion.json: rho 0.0026, 0.0176 and 0.0003, n = 440, all null. There is no majority split. The script's own comment (lines 127-128) says the test is attenuated.",
+   "transfer": "The paper's effect is minority-concentrated, so a pooled rank correlation is an UNSTRATIFIED test of a conditional claim. Modern Congresses carry few ceremonial bills, which attenuates the test. A stratified, bill-weighted re-run is new analysis and stays UNVERIFIED until a second path reproduces it.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "sotoudeh-2024-network-based-measure",
+   "title": "A Network-Based Measure of Cosponsorship Influence on Bill Passing in the United States House of Representatives",
+   "year": "2024",
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "suggests-extension",
+   "claim": "Shorter decay gives slightly more separation within the tested range: relative differences 0.248, 0.223 and 0.203 at 6, 12 and 24-month half-lives (SE 0.0139, 0.0119, 0.0107). The paper lists a comparison with LES as future work and does not run it.",
+   "system_side": "Shadow uses Volden-Wiseman-style stages with role weights 3/2/1, a 180-day cosponsor timing half-life and congress decay 0.8 (confirmed in code). The 0.8 per Congress equals a half-life of about 3.1 Congresses, far longer than the 24-month maximum the paper tested.",
+   "transfer": "The paper proposes an LES comparison; it does not propose a sub-Congress decay check, and it already tested 6 and 12-month half-lives. Its outcome (separating passed from failed bills) differs from the shadow's goal (convergence with LES), so it cannot set the decay value. Its evidence covers only 6-24 months.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "malaterre-2024-inferring-social-networks",
+   "title": "Inferring social networks from unstructured text data: A proof of concept detection of hidden communities of interest",
+   "year": "2024",
+   "component_id": "melange-legislative-data.category-taxonomy",
+   "relation": "suggests-extension",
+   "claim": "k was chosen by combining Cv coherence (scanned over k = 5 to 100, with no coherence gain above 35) and manual reading of top words; any topic model is acceptable if assignments are continuous probabilities rather than crisp.",
+   "system_side": "The HCoI profile input is a regex categorisation into 20 CU press categories, not 19: 20 entries in the CATEGORIES block of cu_press_release_scraper.R and 20 categories in the stored press_hcoi.json. Each item's labels are crisp and split evenly (press_hcoi.py lines 25-27, 45). No precision check against human coding and no coherence or overlap check on the categories was found.",
+   "transfer": "The continuous-assignment requirement is met only loosely: member profiles are continuous after averaging, item tags are crisp. A coherence-selected LDA on the same corpus or a precision sample of the regex tags would show whether communities reflect the taxonomy or the text. Any result stays a diagnostic until reproduced.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "malaterre-2024-inferring-social-networks",
+   "title": "Inferring social networks from unstructured text data: A proof of concept detection of hidden communities of interest",
+   "year": "2024",
+   "component_id": "melange-legislative-data.press-collector-cap",
+   "relation": "qualifies",
+   "claim": "The quality of an HCoI network depends on the representativeness of the corpus, which is crucial for conclusions. The authors also flag the venues and languages they left out.",
+   "system_side": "cu_text_collector.R caps each member at 1000 URLs by default (CU_TC_CAP, line 128), taking CU-candidate titled pages first and a sample of the rest. The coverage percentages in the analyst output (D 92.5 vs R 87; Senate 83 vs House 96) were not located in the code and were not verified.",
+   "transfer": "The caution applies. Before reading HCoI membership substantively, check party and chamber gaps in who is profiled (155 members profiled in the current artifact). Any figure should name its window and denominator.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "gaynor-2022-financial-ties-bind",
+   "title": "The (Financial) Ties That Bind: Social Networks of Intraparty Caucuses",
+   "year": "2022",
+   "component_id": "melange-legislative-data.ballotpedia-leadership-scores",
+   "relation": "suggests-extension",
+   "claim": "Leadership predicts higher outward LPAC degree. Paul Ryan gave to 195 members and Joe Crowley to 80. Republican leaders give to 86% of members but about 30% of Freedom Caucus members (Table 4 Freedom -0.816***). Leader models use the full-party networks; the 238 R and 168 D connected-node counts are in the Table 2-3 notes, and Tables 4-5 give no N.",
+   "system_side": "party_caucus_score: Speaker and President pro tempore 1.0, Majority Leader 0.8, Minority Leader 0.6, Majority Whip 0.4, Minority Whip 0.2. cu_caucus_leadership_score: Chair 1.0 and Co-Chair/Vice Chair 0.8 across 13 CU-relevant caucuses. Rank-and-file membership scores 0 and is not counted. No ideological intraparty caucus is on the list.",
+   "transfer": "Paper treats ideological intraparty caucus membership as a structural variable for within-party money flows. System records only policy-caucus leadership. Adding faction membership needs a dated 119th Congress roster; the paper's Yellow Book membership is self-reported (fn.6). Membership would describe position in party, not CU leverage.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "boxsteffensmeier-2018-taking-congress-interest",
+   "title": "Cue-Taking in Congress: Interest Group Signals from Dear Colleague Letters",
+   "year": "2018",
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "supports",
+   "claim": "Stage-specific coefficients (Tables 3-4): endorser social power predicts cosponsors (0.055) but not reporting (0.020) or passage (-0.035). Endorser count predicts passage (0.013) but not reporting (0.004, ns). Cosponsor count predicts reporting (0.002, p<.01) and passage (0.004, p<.001).",
+   "system_side": "legislative_effectiveness.py lines 17-28 confirmed: stages BILL, AIC, ABC, PASS, LAW; role weights; cosponsor_half_life_days 180; policy_status shadow_candidate, consistent with not activated.",
+   "transfer": "The paper gives stage-specific coefficients on one sample of letter bills (N = 6,597) and does not argue for stage-based modelling; the stage pattern is an empirical observation only. It does not test cosponsor timing decay and gives no support for the 180-day half-life. Pooled, UNSTRATIFIED.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "hargittai-2015-bigger-always-better",
+   "title": "Is Bigger Always Better? Potential Biases of Big Data Derived from Social Network Sites",
+   "year": "2015",
+   "component_id": "melange-legislative-data.press-collector-cap",
+   "relation": "suggests-extension",
+   "claim": "A sampling frame tied to the outcome can bias findings (Schwartz et al. 2013 opt-in app users, p. 65). Studies should state the frame scope and keep sampling separate from the outcome.",
+   "system_side": "cu_text_collector.R lines 112-140: every CU-candidate-titled page is fetched; generic pages are capped at CAP = 1000 per member, newest first (confirmed). Registry figures (P(CU-relevant given CU title) 0.825 vs 0.0089; coverage D 92.5 vs R 87, Senate 83 vs House 96) match the component registry text; not re-measured from the corpus.",
+   "transfer": "Hargittai's argument applies only if coverage gaps correlate with CU stance or volume. The cap drops only generic pages (about 0.9 percent CU-relevant per the registry). The cap is not party- or chamber-specific, so 'favours House and Democratic offices' does not follow from the code; it rests on unmeasured coverage rates. The collector comment assumes the skipped bulk is missing at random, which is the untested premise.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ornstein-2024-train-your-stochastic",
+   "title": "How to train your stochastic parrot: large language models for political texts",
+   "year": "2024",
+   "component_id": "melange-legislative-data.category-taxonomy",
+   "relation": "suggests-extension",
+   "claim": "LLM topic labels can be checked with an optimal-label task. In 400 speeches a blinded coder picked the GPT-3 label over three random intruders 80 percent of the time, against 25 percent chance. Keyword presence overcounts: 5332 speeches contain honor, but only 145 are labelled as praising it.",
+   "system_side": "Release and post categories come from regex keyword maps (CATKW = MR.RAW_PATTERNS at build_media_blend.py:50). No human-label check of those regex tags was found in the files read. Downstream use (media blend, press category weights) was not traced.",
+   "transfer": "The paper labels are open-ended virtue labels for 2013-2014 House speeches; Melange uses fixed CU policy categories on releases and posts. The intruder protocol transfers as a measurement check on existing regex tags. Adopting LLM-assigned categories would be a separate decision. The R scraper CATEGORIES regex was not opened.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bucchianeri-2025-legislative-effectiveness-american",
+   "title": "Legislative Effectiveness in the American States",
+   "year": "2025",
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "method-source",
+   "claim": "SLES is a weighted average of 15 indicators: five stage shares (introduced, AIC, ABC, passed chamber, law) at three significance weights (1, 5, 10), normalized by N/5 so each chamber-term averages 1 (Eq. 1). Window 1987-2018, 97 chambers, 80,344 legislator-term scores. Hand audit: 46,693 of 49,037 sampled bills (95.2%) correctly coded, over 99% after revision. North Carolina 2005-2012: SLES explains about half the variation in NCCPPR rankings and beats hit-rate metrics.",
+   "system_side": "fec/engine/legislative_effectiveness.py: STAGES at line 17; role weights sponsor 3, original 2, cosponsor 1 at lines 18-19; impact weights limited to 1, 5, 10 at line 232; letters forced to weight 5 at line 228; congress_decay 0.8 at lines 29 and 482; normalization N/5 per chamber and Congress at line 500; cosponsor timing multiplier 2 to the power of minus delay over 180 at line 132; status shadow_candidate at line 31. effectiveness_integration.py line 111 holds the 0.7 advocacy and 0.3 results composite. The CU-mention significance source was not found in this file; the weight arrives from an upstream impact record (line 225).",
+   "transfer": "The stage, weight and normalization structure transfers to the federal shadow as a structural adaptation. The paper's validation covers sponsor-based state SLES with newspaper-coded significance; it does not validate cosponsor role credit, the 180-day timing decay, letters at weight 5, or the 70/30 composite. Those stay UNVERIFIED until checked against CEL LES for the same members and Congresses.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "aref-2020-detecting-coalitions-optimally",
+   "title": "Detecting coalitions by optimally partitioning signed networks of political collaboration",
+   "year": "2020",
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "supports",
+   "claim": "House bill passage rate fell 0.11 pp per session (beta -0.528, p<0.05); Senate fell 0.35 pp per session (beta -0.852, p<0.01). What mediates passage differs by chamber.",
+   "system_side": "Shadow normalizes stage credit as population/5 within each originating chamber and Congress, then applies a Congress decay (policy default 0.8) to chamber-term results.",
+   "transfer": "The paper's passage rate is a chamber-session share of bills. It does not discuss normalization, stage weights or decay, so it supports within-chamber normalization only by analogy. Its measure is chamber-level, covers 1979-2016, and is association rather than cause.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "porter-2025-campaignview-campaign-platforms",
+   "title": "CampaignView, a database of policy platforms and biographical narratives for congressional candidates",
+   "year": "2025",
+   "component_id": "melange-legislative-data.category-taxonomy",
+   "relation": "method-source",
+   "claim": "Each platform point is hand-coded by trained annotators to one of 14 Major Policy Topic codes using a codebook. A 20% relabel (8,584 points, by 2022 coders) gave 80% agreement, Cohen kappa 0.84 and weighted kappa 0.74, with most disagreement on Unknown/Other.",
+   "system_side": "cu_press_release_scraper.R defines 19 Layer-2 categories by regex term lists plus bill-based tags. detect_categories tags a release with EVERY category it touches, so the tagger is multi-label, not single-topic. A human-label kappa exists for stance (run_stage5.R line 133: regex 0.17, DEBATE 0.34). No topic-level reliability benchmark was found.",
+   "transfer": "Transfers as a validation design (double-code a random sample, report kappa), not as labels: genre and topic scheme differ from CU categories. The paper's single-topic rule under-codes multi-topic text, but the regex tagger does not share that rule.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "delano-2025-bicam-congressional-lobbying",
+   "title": "Bulk Ingestion of Congressional Actions and Materials Dataset (BICAM)",
+   "year": "2025",
+   "component_id": "melange-legislative-data.congress-activity-score",
+   "relation": "measurement-source",
+   "claim": "Bulk bills, amendments, committees and members from the official APIs with rolling updates. Retrieving the full set directly needs over 100 endpoints, a 5,000 requests per hour cap, and at least 10 requests per bill.",
+   "system_side": "sync_sentinel_bill_ledger.py decay_weight gives 1.0 for Congress 119, 0.8 for 118 and 0.64 for 117, described in the code as the frozen legacy archive schedule. The code read does not show that this weight feeds the activity score. The congress.gov search-URL scraping in R was not inspected.",
+   "transfer": "Sourcing cross-check only. Reconciling scraped counts against BICAM sponsor and cosponsor tables would need a run first. Remains UNVERIFIED.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "aroyehun-2026-politics-of-feelings",
+   "title": "Politics of Feelings: Emotional Expression and Legislative Effectiveness in the U.S. Congress",
+   "year": 2026,
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "qualifies",
+   "claim": "On member-Congress LES (n = 13,671; Tables 7-9, all models with session and topic fixed effects): anger -0.037 (95% CI -0.046 to -0.029, p < 0.001) is the only significant negative emotion term; enthusiasm +0.016 (CI 0.007 to 0.025) and pride +0.011 (CI 0.003 to 0.019, p < 0.01) are positive; fear, disgust, sadness, joy and hope are not significant. Marginal R2 is 0.113 to 0.118 in Tables 7-8 and 0.118 to 0.119 in Table 9. The paper reports no controls-only model, so an incremental R2 for emotion terms is not stated.",
+   "system_side": "lep_criterion.py loads CEL House and Senate LES 93rd-118th and scores it against the blended score (bar B: rho >= +0.30 convergent). Its docstring says LES rewards majority and chair status. The claim that the five-stage shadow is not activated was not checked (outside the lines read).",
+   "transfer": "Transfers as context only: speech tone is a small associational correlate of LES once structural controls are in, so a shadow-vs-LES gap should not be read as a rhetoric effect. No identification, so not usable as a predictor. Quote coefficients as UNSTRATIFIED with window 93rd-118th Congresses and n = 13,671 member-Congresses; the paper pools over majority-flip fault lines.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "battaglini-2018-effectiveness-connected-legislators",
+   "title": "Effectiveness of Connected Legislators",
+   "year": 2018,
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "suggests-extension",
+   "claim": "Network spillovers are positive at every stage. Corrected phi is 0.5634 (SE 0.0539) for BILL only, 0.8387 (SE 0.0465) for BILL plus AIC and 0.8643 (SE 0.0767) for ABC plus PASS plus LAW, with the selection term significant in each (BILL xi = -0.1601, SE 0.0687). House, 109th-113th.",
+   "system_side": "legislative_effectiveness.py scores the five stages with standard role weights 3/2/1 and has no peer or network spillover term. Its cosponsor weight carries a 180-day half-life. lep_criterion.py loads CEL LES (lesclassic) and scores convergence against the blended score only.",
+   "transfer": "A spillover term needs a network that is exogenous or corrected relative to the stage outcomes. Paul's cosponsor edges are partly built from the same bills the shadow credits, which is a circularity risk. Any test stays UNVERIFIED until reproduced by a second path.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "harbridge-yong-2023-bipartisan-path-effective",
+   "title": "The Bipartisan Path to Effective Lawmaking",
+   "year": 2023,
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "suggests-extension",
+   "claim": "Stage models use a member's count of bills reaching each stage as the DV, with legislator FE and one-tailed tests. House: committee action (A8.2) 0.894 SE 0.204; beyond committee (A8.3) 0.853; passing chamber (A8.4) 0.800; law (A8.5) 0.485 SE 0.088; all p<0.001. Senate: committee action (A9.2) 1.767, not significant; law (A9.5) 0.589, p<0.05.",
+   "system_side": "legislative_effectiveness.py defines STAGES BILL AIC ABC PASS LAW (line 17), role weights sponsor 3, original 2, cosponsor 1 (lines 18-19), a cosponsor timing multiplier of 2 to the power of minus delay over 180 (line 132), and compute_effectiveness (line 152). There is no cross-party term. I found no code that compares the shadow score with the Volden-Wiseman LES; verify_effectiveness_shadow.py checks internal consistency only.",
+   "transfer": "The paper DVs are counts of a member's own bills at each stage, not stage rates and not LES. A shadow-vs-LES check would need a per-Congress attracted share (not built) and a comparable LES series. It stays a diagnostic. Quote the coefficients as count-DV associations, House and Senate separately.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "montgomery-2017-effects-congressional-staff",
+   "title": "The Effects of Congressional Staff Networks in the U.S. House of Representatives",
+   "year": 2017,
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "suggests-extension",
+   "claim": "Members sharing senior staff have modestly correlated LES net of covariates (pooled rho 0.043). Committee chair direct effect is 1.853 (90% CI 1.376 to 2.352); indirect effect via ties is 0.442 (90% CI 0.131 to 0.826).",
+   "system_side": "The five-stage shadow score (BILL, AIC, ABC, PASS, LAW) in the cited engine file is a versioned illustrative candidate policy that requires calibration. The claim that it is validated against CEL LES for ceremonial share only is not in the cited engine file; the ceremonial-share and CEL work sits in fec/members/lep_criterion.py. I found no network-similarity check in the cited files.",
+   "transfer": "Optional second criterion: shadow scores should show a similar small lag on senior-title ties if they track LES. This is UNVERIFIED, needs office_moves restricted to senior titles, and is not evidence that the shadow score is valid.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  }
+ ]
+}

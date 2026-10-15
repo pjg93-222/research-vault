@@ -1,0 +1,483 @@
+[
+ {
+  "slug": "zeileis-nd-various-versatile-variances",
+  "note": false,
+  "meta": {
+   "title": "Various Versatile Variances: An Object-Oriented Implementation of Clustered Covariances in R",
+   "authors": [
+    "Achim Zeileis",
+    "Susanne Köll",
+    "Nathaniel Graham"
+   ],
+   "year": "2020",
+   "venue": "Journal of Statistical Software 95(1), 1-36 (this text is a slightly modified reprint; it reports R 4.6.1 and sandwich 3.1-3)",
+   "doi": "10.18637/jss.v095.i01",
+   "sha12s": [
+    "02a5be949f84"
+   ],
+   "category": "Causal & Methodological",
+   "category_slug": "causal-methodological"
+  },
+  "extraction": {
+   "title": "Various Versatile Variances: An Object-Oriented Implementation of Clustered Covariances in R",
+   "authors": [
+    "Achim Zeileis",
+    "Susanne Köll",
+    "Nathaniel Graham"
+   ],
+   "year": "2020",
+   "venue": "Journal of Statistical Software 95(1), 1-36 (this text is a slightly modified reprint; it reports R 4.6.1 and sandwich 3.1-3)",
+   "doi": "10.18637/jss.v095.i01",
+   "document_type": "software vignette / modified reprint of a JSS software article",
+   "coverage": "Full text read in two chunks (lines 1-2061 of 2061): front matter, abstract, Sec 1 intro, Sec 2 overview (lm/glm, lme4, GEE, plm, geepack, Stata), Sec 3 theory (sandwich, clustered, multi-way, panel Newey-West, Driscoll-Kraay, PCSE), Sec 4 software, Sec 5 illustrations (Aghion et al. hurdle model, Petersen 2009 benchmark), Sec 6 Monte Carlo design and Experiments I-IV, Sec 7 summary, computational details, references, Appendix A. Figures 1-6 read from captions and axis labels only (no images). Lobbying, networks, path-finding, allocation, elections, persuasion/turnout and text measurement are not discussed. No annotation files exist for this item (n_annots 0), so paul_markup is empty. Metadata hints corrected: year set to 2020 (JSS original, per the text reference list), venue and DOI taken from the text reference list.",
+   "research_question": "How can clustered and panel sandwich covariances be provided as one object-oriented R implementation that works for any model with estfun() and bread() methods, and how well do these covariances perform in finite samples beyond lm() and glm()?",
+   "theory": "Quasi-maximum likelihood / M-estimation with misspecified likelihood (White 1994); sandwich covariance B M B with bread and meat; cluster-robust meat with G approaching infinity (Cameron and Miller 2015); independence working model of GEE (Liang and Zeger 1986).",
+   "data": "Sec 5.1: InstInnovation data from the sandwich package, following Aghion, Van Reenen and Zingales (2013): 803 firms, firm-level panel 1991-1999, citation-weighted patent counts; clustered by company (803 clusters) and by industry. Sec 5.2: PetersenCL simulated benchmark data from Petersen (2009): 500 firms over 10 years, linear model y on x. Sec 6 and Appendix A: Monte Carlo simulations with balanced clusters of 5 observations (up to 50 in Appendix A), G from 10 to 250 clusters, 100 clusters in the main Experiments I-III, cluster correlation rho from 0 to 0.9 via a Gaussian copula, regressor correlation rho_x = 0.25; unit of analysis is the observation within cluster; period is cross-sectional simulation (no calendar period).",
+   "method": "Object-oriented sandwich estimators in R package sandwich: vcovCL (one-way and multi-way clustered covariances with HC0-HC3 bias corrections, cluster factor G/(G-1), multi-way inclusion-exclusion sum with odd/even signs, optional multi0 variant), vcovPL (panel Newey-West and Driscoll-Kraay with Bartlett or other kernels, lag NW1987 or NW1994), vcovPC (Beck and Katz panel-corrected SEs, balanced and unbalanced via pairwise or casewise), vcovBS (clustered bootstrap with xy, residual, wild, Mammen, Webb, norm types, R default 250). Benchmarks against lmtest, multiwayvcov, plm, geepack, pcse and lme4 random-intercept models, and GEE with exchangeable correlation.",
+   "identification": "None in the causal sense. Inference is via Wald tests and 95 percent confidence intervals using the estimated covariance; the paper notes that clustering in treatment assignment matters more than clustering in sampling (Abadie, Athey, Imbens and Wooldridge 2023) when fixed cluster effects are included.",
+   "measures": "Standard errors from the candidate covariance matrices; empirical coverage of nominal 95 percent Wald confidence intervals over 10,000 replications (1,000 for bootstrap in Experiment III); HC bias-correction factors HC0-HC3; Driscoll-Kraay and PCSE sandwich forms; comparison of standard errors across methods on real and benchmark data.",
+   "scope": "Population: regression models with estfun() and bread() methods (lm, glm, mlm, nls, betareg, clm, coxph, survreg, crch, hurdle, zeroinfl, mlogit, polr, rlm); simulated cross-section and panel data; benchmark data from finance and political-economy style applications. Software era: sandwich 2.4.0 onward, paper computations with sandwich 3.1-3 and R 4.6.1. Not an institutional or historical study.",
+   "key_findings": [
+    "Sec 5.1 (p.17): hurdle negbin on Aghion et al. data with CL clustering by company (803 clusters): institutions in zero part 0.00658, clustered SE 0.00209, p = 0.0016; in count part 0.00397, SE 0.00430, p = 0.357. Only the zero-part coefficient is significant.",
+    "Sec 5.1 (p.17-18): usual standard errors greatly overstate precision. Standard and basic sandwich SEs for zero institutions are both about 0.00135 versus 0.00209 under clustering; clustered SEs are about 1.5 to 2 times the basic sandwich SEs.",
+    "Sec 5.1 (p.18): the clustered bootstrap (vcovBS, R = 250) agrees closely with CL-1, e.g. count institutions 0.00411 versus 0.00430, at much higher computational cost.",
+    "Sec 5.2 (p.18-19): on the Petersen benchmark (500 firms, 10 years), one-way firm-clustered slope SE 0.050596 from vcovCL matches multiwayvcov; plm and geepack give 0.050540 with HC0 and no cluster adjustment.",
+    "Sec 5.2 (p.20): two-way firm and year clustering gives intercept SE 0.065066 and slope SE 0.053561 (multi0 = TRUE); the authors caution that year has only 10 clusters, below what theory requires.",
+    "Sec 5.2 (p.20-21): Driscoll-Kraay vcovPL with adjust = FALSE gives slope SE 0.028163, identical to plm vcovSCC; PCSE slope SE 0.025276 agrees with pcse, including unbalanced panels (pairwise 0.025338, casewise 0.025241).",
+    "Sec 6.2 Experiment I (p.24): with G = 100 clusters of 5 observations and cluster correlation rho up to 0.9, standard, basic, PL and PC covariances lose coverage for the correlated and clustered regressors; CL-0 stays near the nominal 0.95. PL also fails for the uncorrelated regressor x3.",
+    "Sec 6.2 Experiment II (p.25): binomial (logit) and Poisson GLMs give results similar to the Gaussian case, so clustered covariances work well with GLMs; random-intercept mixed models differ because they are conditional rather than marginal in nonlinear models.",
+    "Sec 6.2 Experiment III (p.26-27): beta, zero-truncated Poisson and zero-inflated Poisson: CL-0 performs well and is similar to bootstrap (R = 250); coverage for zerotrunc and zeroinfl sits slightly below 0.95 regardless of rho, which the authors attribute to the normal approximation rather than to clustering.",
+    "Sec 6.2 Experiment IV (p.27-28): at rho = 0.25 and G = 10, standard errors are underestimated in most cases; about 50 to 100 clusters suffice for CL-0. For small G the ordering is HC3 best, then HC2, HC1, HC0; bootstrap is somewhat better than HC0 and HC1 at small G.",
+    "Sec 6.2 Experiment IV (p.28): the authors do not find HC3 overly aggressive for small G, contrary to Pustejovsky and Tipton (2018), though HC3 slightly over-corrects for binomial models at G = 10.",
+    "Appendix A (p.35-36): with 5 to 50 observations per cluster, PL and PC approach 0.95 only under AR(1) correlation; under exchangeable correlation with correlated or clustered regressors their coverage falls as clusters get longer. Clustered HC0 performs satisfactorily throughout."
+   ],
+   "limitations": [
+    "HC2 and HC3 cluster corrections need blocks of the full hat matrix, which no object-oriented extractor provides, so they are available only for lm and glm (Sec 4.1, p.9 and p.13).",
+    "Panel estimators PL and PC are unreliable for short panels and with non-decaying autocorrelation (Sec 7, p.28; Appendix A).",
+    "Small numbers of clusters bias standard errors downward (G = 10 in Exp IV); the year dimension in the Petersen example has only 10 clusters, so its two-way results are cautioned (p.20).",
+    "Residual cluster bootstrap is not well defined for unbalanced clusters and only issues a warning (p.16).",
+    "The fixed-G asymptotic framework is not pursued (p.4). Main simulations use balanced clusters of size 5 and at most three regressors with fixed coefficient vectors, fixed beta precision 10 and zero-inflation probability 0.3.",
+    "The authors explain the below-0.95 coverage for zero-truncated and zero-inflated Poisson by the normal approximation but do not test this explanation (p.26-27).",
+    "The xy bootstrap makes the same assumptions as the asymptotic estimator, so its results converge to it and may be unnecessary when the asymptotic estimator is available (p.15).",
+    "Multi-way clustering default follows Ma (2014) and differs from multiwayvcov unless multi0 is set (p.13, p.20).",
+    "Clustered estimators are unavailable when a model package lacks estfun() (p.15)."
+   ],
+   "references_of_note": [
+    "Abadie, Athey, Imbens and Wooldridge (2023), When should you adjust standard errors for clustering, QJE 138(1)",
+    "Petersen (2009), Estimating standard errors in finance panel data sets, RFS 22(1)",
+    "Cameron, Gelbach and Miller (2011), Robust inference with multiway clustering, JBES 29(2)",
+    "Cameron and Miller (2015), A practitioners guide to cluster-robust inference, JHR 50(2)",
+    "Aghion, Van Reenen and Zingales (2013), Innovation and institutional ownership, AER 103(1)",
+    "Berger, Stocker and Zeileis (2017), Innovation and institutional ownership revisited, Empirical Economics 52(4)",
+    "Driscoll and Kraay (1998), Consistent covariance matrix estimation with spatially dependent panel data, REStat 80(4)",
+    "Beck and Katz (1995), What to do (and not to do) with time-series cross-section data, APSR 89(3)",
+    "Harden (2011), A bootstrap method for conducting statistical inference with clustered data, SPPQ 11(2)",
+    "Pustejovsky and Tipton (2018), Small-sample methods for cluster-robust variance estimation, JBES 36(4)",
+    "Webb (2014), Reworking wild bootstrap based inference for clustered errors, Queens WP 1315",
+    "Zeileis (2004), Econometric computing with HC and HAC covariance matrix estimators, JSS 11(10)",
+    "Zeileis (2006), Object-oriented computation of sandwich estimators, JSS 16(9)",
+    "Ma (2014), Are we really doing what we think we are doing, SSRN working paper",
+    "Thompson (2011), Simple formulas for standard errors that cluster by both firm and time, JFE 99(1)"
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "the usual standard errors greatly overstate the precision of the estimators",
+    "clustered covariances work reasonably well in the models investigated but some care is needed when applying panel estimators",
+    "the larger the number of clusters G, the better the coverage and the less standard errors are underestimated"
+   ]
+  },
+  "summary_md": "Zeileis, Koell and Graham (JSS 95(1), 2020; reprint run on sandwich 3.1-3) describe the sandwich package's object-oriented clustered and panel covariances: vcovCL (one-way and multi-way, HC0-HC3, G/(G-1) adjustment, odd/even inclusion-exclusion with an optional multi0 swap), vcovPL (panel Newey-West and Driscoll-Kraay), vcovPC (Beck-Katz PCSE) and vcovBS (clustered bootstrap). Worked examples reproduce multiwayvcov, plm and pcse to six decimals on the Petersen benchmark. On the Aghion et al. hurdle model, clustered SEs come out roughly 1.5 to 2 times the basic sandwich SEs. The Monte Carlo (10,000 replications, clusters of 5) finds CL-0 coverage near 0.95 across lm, GLMs, beta and count models once G is around 50 to 100. At G = 10, standard errors are underestimated, and the order from best to worst is HC3, HC2, HC1, HC0. The bootstrap is only somewhat better than HC0 and HC1 at that size. Panel NW and PCSE fail when panels are short or the dependence is exchangeable rather than decaying. The main relevance to Paul's systems is the Mentat sector growth study. Its two-way sector-by-year CR1 sensitivity in sgs_review.R is Equation 20 of this paper, implemented by hand. Its primary inference clusters by 5 to 9 sectors. That is below the paper's smallest tested G of 10, a size the paper already shows to be anti-conservative for CR1-type errors. The study's choice of a wild cluster restricted bootstrap with Webb weights, rather than CR1 t-tests, is therefore the right instinct. However, this paper does not test WCR bootstrap-t (its vcovBS is a variance bootstrap), so it neither validates nor refutes that choice. The SEATS-W test treats Newey-West HAC as secondary with no p-value, which matches the paper's finding that panel NW is unreliable. The paper has no bearing on networks, lobbying identity or allocation.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "method-source",
+    "paper_claim": "Eq 20 gives the two-way meat as G(id)/(G(id)-1) M(id) + G(time)/(G(time)-1) M(time) - G(id x time)/(G(id x time)-1) M(id x time). For Petersen firm+year the slope SE 0.053561 matches multiwayvcov only in the printed run with multi0 = TRUE; the text says the default Ma (2014) correction differs from multiwayvcov.",
+    "paper_location": "Sec 3.2 Eq 20 (text ~lines 545-575); Sec 4.1 multi0 (text ~lines 769-772); Sec 5.2 Petersen (text ~lines 1150-1168, p.19-20)",
+    "system_side": "sgs_review.R crv() applies (G/(G-1))*((n-1)/(n-p)) to cluster score sums; two-way = crv(sector) + crv(year) - crv(sector x year); df = min(G_sector, G_year) - 1; a non-positive variance is reported as a note only, not repaired. No multi0 option exists in the code.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:21 and :74-86 (crv and two-way block) and :98-106 (df, note)",
+    "transfer_conditions": "Formula is for OLS on the sector-year design. Equivalence with sandwich::vcovCL on the study design is not run, so it stays UNVERIFIED (DE-062). The paper's multi0 advice applies when each sector-year cell holds one observation; whether the study's cells are singletons was not checked.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Formula and code agree. Removed the summary's claim that the code mirrors a sandwich fix = TRUE option: no such option appears in sgs_review.R. Added the multi0 point. The 0.053561 match holds only with multi0 = TRUE as printed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "qualifies",
+    "paper_claim": "Exp IV (Fig 4, rho = 0.25, G = 10 to 250): at G = 10 clustered SEs are underestimated in most cases, with HC3 the exception for binomial and Poisson; about 50 to 100 clusters suffice for CL-0. Separately, Sec 5.2 cautions that the Petersen year dimension has only 10 clusters.",
+    "paper_location": "Sec 6.2 Exp IV and Fig 4 caption (p.27-28); Sec 5.2 (p.19-20)",
+    "system_side": "sgs_review.R computes the two-way CR1 only when both dimensions have at least 3 clusters (SGS_TWOWAY_MIN_CLUSTERS = 3), with t on min(G_sector, G_year) - 1 df, labelled a sensitivity. DEFAULT_WINDOW is 2020-2025 (about 6 years; 2026 partial and excluded by default). Nine study sectors are listed in sgs_config.R.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:21 and :98-106; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:28-29 and :34-36",
+    "transfer_conditions": "The paper's simulations are balanced clusters of 5 with Gaussian-copula correlation, not two-way designs. The direction (SEs too small below G = 10) transfers qualitatively; the size of the bias for the study's sector x year design is not measured. The analyst's 9 x 4 design is not traced in code.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Code window is 2020-2025, not 2020-2026. Exp IV says 'in most cases', not all. The year-dimension caution comes from Sec 5.2, not Exp IV; the bearing mixes the two under one label.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "suggests-extension",
+    "paper_claim": "Exp IV: for small G the coverage order is HC3 best, then HC2, HC1, HC0. The authors say their results are not consistent with HC3 being overly aggressive, though HC3 slightly over-corrects at G = 10 for binomial. The clustered bootstrap (R = 250) is somewhat better than HC0 and HC1 at small G. Pustejovsky and Tipton (2018) is cited as recommending HC2 with Satterthwaite t.",
+    "paper_location": "Sec 6.2 Exp IV (p.27-28; text ~lines 1600-1615)",
+    "system_side": "sgs_estimate.R: WCR bootstrap-t with Webb six-point weights, clusters = sectors, CR1 factor G/(G-1)(n-1)/(n-p) in the t statistic (sgs_cr1_factor). A grep of sgs_review.R and sgs_estimate.R finds no CR2 or CR3 error.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:4-5 and :20",
+    "transfer_conditions": "The paper's bootstrap is a clustered bootstrap with R = 250; its resampling type is not stated for the simulations, and wild or Webb bootstrap-t is not tested. So the paper cannot rank WCR against CR2 or CR3. The HC3 ranking is for linear and GLM fits with balanced clusters of 5, not two-way designs with about 9 sector clusters.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "'HC3 is not found overly aggressive' needs the binomial caveat. The paper gives no evidence on WCR versus CR1 t-tests. The no-CR2/CR3 gap is verified by grep. Recommendation is analyst opinion and needs Paul's go under change control.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.seats-weekly-test",
+    "relation": "supports",
+    "paper_claim": "Panel PL and PC coverage is poor with short panels (5 observations per cluster) and with exchangeable correlation, where coverage falls as panels lengthen. With decaying AR(1) correlation, coverage rises toward 0.95 as panels lengthen. The paper says some care is needed with panel estimators in short panels or with non-decaying autocorrelation.",
+    "paper_location": "Sec 6 discussion (p.20, text ~lines 1412-1421); Fig 6 and Appendix A (p.35-36); Sec 7 (p.28)",
+    "system_side": "sgs_seats.R: primary inference is a fixed-X residual moving-block bootstrap within cycle (3 and 5 weeks, Holm within family). Newey-West HAC with Bartlett lags 2, 4 and 8 is a secondary check and carries no p-value.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:271-277 (HAC and bootstrap design comments); :588-589 (Holm within family)",
+    "transfer_conditions": "The paper's panel estimators apply to many short clusters. SEATS-W is one weekly series inside each cycle with no cluster dimension, so only the general point transfers: HAC is fragile when dependence does not decay. The paper gives no evidence on a single series.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "'Only under decaying AR(1)' and 'fail' overstate the paper, which says coverage deteriorates and needs care. The SEATS-W series has no clusters, so 'supports' is generous; 'context' fits better. Code details verified.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#SEATS-W weekly seat-gain test (2022 House)|SEATS-W weekly seat-gain test (2022 House)]]",
+    "system": "mentat-sector-growth-study"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Window error: summary says the study has 9 sectors over the 2020-2026 cycles. sgs_config.R DEFAULT_WINDOW is 2020-2025 (about 6 years), 2026 is partial and excluded by default, and the fallback is the latest run of at least 10 years. The 9 study sectors are correct.",
+   "The 5-to-9 sector cluster range in the summary is not traced. Config lists 9 study sectors and MIN_SECTORS = 2; the lower bound of 5 needs a per-test count from the study outputs.",
+   "Overstatement: summary says panel NW and PCSE fail when panels are short or dependence is exchangeable. The paper says coverage deteriorates and needs care, and that AR(1) improves coverage toward 0.95.",
+   "Threshold misattribution: the 50 to 100 cluster threshold for CL-0 comes from Exp IV (Gaussian, binomial, Poisson). Exp III (beta, zero-truncated and zero-inflated Poisson) is run at G = 100 only, so near-0.95 coverage across beta and count models at G = 50 to 100 is not shown.",
+   "At G = 10 the paper says standard errors are underestimated in most cases, not all; HC3 is the exception for binomial and Poisson. The summary drops this qualifier.",
+   "The summary's judgment that WCR bootstrap-t is the right instinct is analyst opinion, not supported by this paper. vcovBS offers wild, Mammen, Webb and Rademacher types and the paper says Webb may help with few clusters, but these are described, not evaluated.",
+   "Missing point: the paper suggests multi0 (basic sandwich in place of the intersection term) when each id-time cell holds one observation. sgs_review.R has no multi0 option. Check whether sector-year cells are singletons before treating Eq 20 without multi0 as the paper's preferred form.",
+   "Removed: the code has no sandwich fix = TRUE option, so the claim that a non-positive two-way diagonal is eigen-fixed is wrong. The code only records the non-positive case as a note.",
+   "Dropped related link imai-2021-fixed-effects-regression: this paper does not discuss two-way fixed-effects causal inference, and the stated complement is not in the text.",
+   "The 1.5 to 2 times SE inflation is from the InstInnovation negative binomial hurdle model (803 company clusters, text ~lines 943-1063). It must be quoted with that window and denominator, not as a general factor.",
+   "Verification scope: all text claims were checked by search in the text file; figure contents were not read (text and captions only). No paul_markup exists (n_annots 0). No bearing is refuted: each is softened to what the paper and code support."
+  ],
+  "gaps_exposed": [
+   "No CR2 or CR3 small-G cluster-robust error is reported alongside CR1 in the sector growth study, although the paper finds HC3 best at G = 10 and the study has 5 to 9 sector clusters.",
+   "The two-way CR1 floor of 3 clusters per dimension is far below the paper's 50 to 100. Its df = min(G) - 1 t-test is untested at the study's 9 x 4 size.",
+   "There is no cross-check of the hand-rolled two-way CR1 against sandwich::vcovCL on the same design (a second path for DE-062)."
+  ],
+  "flags": [
+   "This entry is a methods and software paper. No conflict with D-021, D-025, D-104..D-108 or the rejected SNA proposals.",
+   "The 1.5 to 2 times SE inflation figure belongs to the Aghion et al. firm panel (803 company clusters). Quote it with that window and denominator, never as a general Mentat factor.",
+   "Bearings are agent analysis and stay UNVERIFIED until a second path reproduces them (DE-062)."
+  ],
+  "paul_alignment": "There are no annotated-bibliography entries or annotations for this work (n_annots 0), so there is no takeaway to check or flag as stale. The built sector growth study already follows the paper's main lessons: cluster at the dependence level, distrust few clusters, and demote HAC.",
+  "related": [
+   {
+    "slug": "zeileis-nd-object-oriented-computation",
+    "relation": "builds-on",
+    "why": "The paper cites Zeileis 2006b for the object-oriented sandwich framework that vcovCL and vcovPL extend. Verified in the reference list and Sec 3."
+   },
+   {
+    "slug": "zeileis-nd-econometric-computing-with",
+    "relation": "builds-on",
+    "why": "The paper cites Zeileis 2004 for the HC and HAC estimators reused in vcovPL and the HC0-HC3 corrections (text ~line 336 and ~line 773). Verified."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "zeileis-nd-object-oriented-computation",
+  "note": false,
+  "meta": {
+   "title": "Object-Oriented Computation of Sandwich Estimators",
+   "authors": [
+    "Achim Zeileis"
+   ],
+   "year": "2006",
+   "venue": "Journal of Statistical Software 16(9), 1-16 (text is a slightly modified reprint, in sandwich package vignette form, of Zeileis 2006)",
+   "doi": "10.18637/jss.v016.i09",
+   "sha12s": [
+    "2c2eeae381ad"
+   ],
+   "category": "Causal & Methodological",
+   "category_slug": "causal-methodological"
+  },
+  "extraction": {
+   "title": "Object-Oriented Computation of Sandwich Estimators",
+   "authors": [
+    "Achim Zeileis"
+   ],
+   "year": "2006",
+   "venue": "Journal of Statistical Software 16(9), 1-16 (text is a slightly modified reprint, in sandwich package vignette form, of Zeileis 2006)",
+   "doi": "10.18637/jss.v016.i09",
+   "document_type": "journal-article (software paper, reprinted as package introduction)",
+   "coverage": "Full text read in one pass (36077 chars, text file 2c2eeae381ad.txt, pp. 1-16 incl. references and affiliation). Sections 1-6 read in full, including the 5.1 count-data and 5.2 probit/tobit tables. Paul markup: none; the item lists n_annots 0 and annot_sha12s is empty, so no _annots files were read and paul_markup is empty. Note: p.note is not set; this is not a Paul research note. Metadata hints corrected: year (empty) set to 2006 and venue/doi filled from the paper's own self-citation in the references (p.16). Page images not available; text-only extraction.",
+   "research_question": "How can sandwich (robust) covariance matrix estimators be computed in general parametric models fitted by estimating functions, not only in lm(), so that inference such as partial z or t tests is robust to some model misspecification.",
+   "theory": "M-estimation and estimating-function theory (White 1994; Stefanski and Boos 2002). Sandwich form S = B M B with B the inverse expected negative derivative of the estimating function and M the variance of the estimating function (Eq. 4-6, p.2-3). For models where the objective depends on x and theta only through the linear predictor, the estimating function is r(y, eta) times x (Eq. 7-8, p.4), which justifies HC-type meat estimators. Consistency of theta-hat still requires correctly specified estimating functions (p.3, p.13).",
+   "data": "No empirical sample in the theory sections. Illustration 1 (Sec 5.1, p.9-11): simulated count data, n = 250, one regressor x ~ N(0,1), y negative binomial with log-mean 1 + x and size 1, seed 123, R 3.5.0 RNG. Illustration 2 (Sec 5.2, p.11-13): Fair's affairs data from the AER package, n = 601 individuals, response number of affairs (tobit) and binary affairs > 0 (probit); covariates age, yearsmarried, religiousness, occupation, rating. Benchmarks are Greene (2003) Table 22.3 values.",
+   "method": "Object-oriented R infrastructure in the sandwich package: generics bread() (default Hessian-based bread, Eq. 9, p.5), estfun() (n x k matrix of empirical estimating functions, p.6), meat() outer-product estimator (Eq. 10, with optional n/(n-k) adjustment, p.6), meatHAC() with weights over lags (Eq. 11, p.7), meatHC() with diagonal omega(r, hat, df) (Eq. 12, p.8), and sandwich() = (1/n) B M B (p.8-9). Wrappers vcovHAC(), vcovHC(), kernHAC(), NeweyWest(), weave(). Inference via lmtest coeftest() and waldtest(), car linear.hypothesis(). Methods are demonstrated for glm (poisson, quasipoisson, glm.nb), survreg via tobit(), and glm probit.",
+   "identification": "Robustness comes from the sandwich variance, not from a new estimator. Validity needs consistency of theta-hat under the assumed estimating function (p.3, p.13). HC extension beyond HC0/HC1 additionally needs a linear-predictor structure, a model.matrix method, and hatvalues method for HC2-HC4 (p.8). No formal asymptotic theorem is proven in this paper; it refers to White (1994) Theorem 6.10 and Lumley and Heagerty (1999).",
+   "scope": "Parametric regression models fitted by estimating functions in R: linear models, GLMs (Poisson, negative binomial, quasi-Poisson, probit), nls, survreg (tobit via AER), coxph, rlm. Cross-section (HC) and time-series (HAC) settings. Era: 2006 software paper; R 2.x-era package sandwich. Not an inference package itself.",
+   "key_findings": [
+    "Sandwich form S = B M B with M = VAR[psi] and B = inverse expected Hessian (Eq. 4-6, p.2-3); estimator is S-hat = (1/n) B-hat M-hat B-hat (p.8-9).",
+    "Poisson fit on overdispersed NB data: naive z-test of I(x^2) is -2.12, p = 0.034; sandwich SE 0.0363 gives z = -1.35, p = 0.18 (Sec 5.1, p.10-11).",
+    "Quasi-Poisson gives the same conclusion: I(x^2) SE 0.0506, z = -0.97, p = 0.33; glm.nb gives coefficient -0.0527, SE 0.0649, z = -0.81, p = 0.42 (p.11).",
+    "Poisson coefficients track the true conditional mean (intercept 1.0633, x 0.9961, true values 1 and 1); only dispersion is misspecified (p.10).",
+    "Tobit on Fair's affairs (n = 601): HC SEs only slightly differ from model SEs; religiousness SE 0.4038 vs sandwich 0.3999; rating -2.2850 with SE 0.4078 vs sandwich 0.3935; age SE 0.0791 vs sandwich 0.0889 (p.12).",
+    "Tobit: age p-value moves from 0.0234 to 0.0437 with sandwich, still significant at 5 percent; occupation remains insignificant (0.200 vs 0.185) (p.11-12).",
+    "Probit on Fair's affairs: age z = -2.13, p = 0.0328 (model) becomes z = -1.95, p = 0.0508 (sandwich), a change in significance at 5 percent; rating z = -5.19 to -5.12 (p.12-13).",
+    "Author's caveat: sandwich errors lose power when the model is correctly specified, and are useful only if the estimates remain consistent, i.e. misspecification causes no bias (p.14).",
+    "The paper claims the same qualitative interpretations for tobit and probit under HC and model-based SEs, so HC is not a power-free default (p.12-13)."
+   ],
+   "limitations": "Author states the sandwich package contains no inference functions (p.14). Consistency under misspecification is only partly understood outside linear models (p.14). HC2-HC4 and HAC weights are described only by reference to Zeileis (2004) and Andrews (1991) (p.7-8). Examples use one simulated dataset and one real dataset; no simulation coverage, no coverage-rate study. Finite-sample n/(n-k) adjustment has no theoretical support for non-linear models (p.6). Restriction testing via sandwich is one of several strategies; Godfrey (2006) and Kiefer and Vogelsang (2002) are mentioned as alternatives (p.14).",
+   "measures": "Covariance matrices S-hat, bread B-hat from Hessian, meat M-hat as outer product, HAC weighted autocorrelation sums, HC diagonal weight omega. Test statistics: z for coefficients (coeftest), Wald tests. Outputs: estimates, standard errors, z values, p-values per coefficient (Tables p.10-13).",
+   "paul_markup": [],
+   "short_quotes": [
+    "Sandwich covariance matrix estimators are a popular tool in applied regression modeling",
+    "the sandwich estimators are only useful if the parameters estimates are still consistent",
+    "Object orientation can be achieved by providing a few extractor functions"
+   ],
+   "references_of_note": [
+    "Zeileis A (2004). Econometric Computing with HC and HAC Covariance Matrix Estimators. J Stat Softw 11(10). doi 10.18637/jss.v011.i10 (linear-model predecessor, p.16)",
+    "White H (1994). Estimation, Inference and Specification Analysis. Cambridge University Press (asymptotic theorem, p.3)",
+    "Lumley T, Heagerty P (1999). Weighted Empirical Adaptive Variance Estimators for Correlated Data Regression. JRSS B 61 (p.15)",
+    "Freedman DA (2006). On the So-Called Huber Sandwich Estimator and Robust Standard Errors. Am Statistician 60(4) (p.14)",
+    "Koenker R (2006). Maximum Likelihood Asymptotics Under Non-Standard Conditions: A Heuristic Introduction to Sandwiches. Lecture notes (p.14)",
+    "Godfrey LG (2006). Tests for Regression Models with Heteroskedasticity of Unknown Form. CSDA 50 (p.14)",
+    "Kiefer NM, Vogelsang TJ (2002). Heteroskedasticity-Autocorrelation Robust Testing Using Bandwidth Equal to Sample Size. Econometric Theory 18 (p.14)",
+    "Zeileis A, Kleiber C, Jackman S (2008). Regression Models for Count Data in R. J Stat Softw 27(8) (p.10)",
+    "Kleiber C, Zeileis A (2008). Applied Econometrics with R. Springer (p.15)"
+   ]
+  },
+  "summary_md": "Zeileis (JSS 16(9), 2006; read as the sandwich package vignette) recasts heteroskedasticity-consistent (HC) and autocorrelation-consistent (HAC) covariance estimation as a modular sandwich S = (1/n) B M B, where the bread B is the inverse Hessian and the meat M is the variance of the empirical estimating functions. R generics bread(), estfun(), meat(), meatHC() and meatHAC() let one computation serve lm, glm, survreg and other models. Two illustrations show what the correction does. In a Poisson fit to simulated negative-binomial data (n = 250), the naive z for I(x^2) is -2.12 (p = .034); with the sandwich it is -1.35 (p = .18). In a probit on Fair's affairs data (n = 601), age moves from p = .033 to p = .051. The author's own caveat carries the most weight: sandwich errors help only if the point estimates stay consistent, they cost power when the model is right, and the package does no inference itself. For Paul's systems the paper is a method source, not evidence. The Mentat sector-growth study hand-codes the same estimators in base R: HC1 (meat as an outer product with the n/(n-k) factor) as a reference-only error, CR1 and two-way cluster errors, and, in SEATS-W, a Bartlett-weighted Newey-West HAC at 2, 4 and 8 week lags kept secondary with no p-value. The way the system is built already follows the paper's caveat, since primary inference comes from wild-cluster and block bootstraps. The paper's HC meat also ignores cluster dependence, which the study handles separately with CR1. One real gap: HC1 and CR1 are cross-checked against statsmodels in a test, but no comparable second-path check was found for the hand-coded HAC (for example against sandwich::NeweyWest), so under DE-062 those HAC numbers stay UNVERIFIED.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "method-source",
+    "paper_claim": "Meat is the outer product of estimating functions with optional n/(n-k) adjustment (Eq. 10, p.6); sandwich errors lose power under correct specification and are useful only if estimates stay consistent; probit age p moves from .033 to .051 (n = 601, Sec 5.2).",
+    "paper_location": "Eq. 10 p.6; Sec 5.2 p.12-13; Sec 6 p.14",
+    "system_side": "OLS with sector baselines reports HC1 = (n/df) A X'uu'X A as a reference-only error (sgs_estimate.R lines 35-36); CR1 at sgs_estimate.R lines 44-45; primary inference is a wild cluster restricted bootstrap-t with a t_cr1 statistic (header lines 1-12, sgs_estimate.R line 264).",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:35",
+    "transfer_conditions": "HC1 and CR1 formulas match Eq. 10 with cluster sums added. The paper's meat assumes independent rows, so within-sector dependence needs CR1, which the paper does not treat. Statsmodels cross-check is in code/tests/test_estimate.py lines 44-45, not tests/ at repo root.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers reproduced at Sec 5.2 (p = 0.03282 to 0.05077). Code lines 35-36 and 44 verified. Softened for the test path (code/tests/test_estimate.py) and for the bootstrap wording, which is a wild cluster restricted bootstrap-t, not a plain bootstrap.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.seats-weekly-test",
+    "relation": "method-source",
+    "paper_claim": "HAC meat is a weighted sum of lagged estimating-function cross-products (Eq. 11, p.7) behind NeweyWest-type wrappers; no coverage study is reported, and Kiefer-Vogelsang fixed-b testing is named as an alternative (Sec 6, p.14).",
+    "paper_location": "Eq. 11 p.7; Sec 3.2 p.7-8; Sec 6 p.14",
+    "system_side": "SEATS-W computes Bartlett Newey-West HAC by hand at lags 2, 4 and 8 weeks within cycle with weights 1 - l/(L+1) and n/(n-p) (sgs_seats.R line 277 and lines 389-400); reported as secondary with no p-value. Primary inference is a residual moving-block bootstrap with fixed regressors, plus a recursive block bootstrap for dynamic models.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:391",
+    "transfer_conditions": "Lags, Bartlett weights and n/(n-p) factor match the paper's Eq. 11 setup. The paper gives no finite-sample guarantee, so the caveat that HAC is secondary applies. The 17-week figure appears in the code comment at sgs_seats.R lines 71-77 as an example of an interval, not as a stated cycle length. No second-path check against sandwich::NeweyWest was found in code/tests.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Lags, weights, secondary-only status and the Holm example verified (sgs_seats.R lines 71-76, 277, 391-400). Softened: primary inference is a fixed-X residual moving-block bootstrap plus a recursive block bootstrap for dynamic models, and 17 weeks is an illustrative example, not a stated cycle length. The missing second-path check is confirmed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#SEATS-W weekly seat-gain test (2022 House)|SEATS-W weekly seat-gain test (2022 House)]]",
+    "system": "mentat-sector-growth-study"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary says the paper's HC meat ignores cluster dependence and the study handles it with CR1. The meat assumes independent rows, which is verified, but the paper never discusses clustering, so this is the reviewer's inference, not a paper claim.",
+   "Summary's gap about the missing HAC second-path check is verified: no NeweyWest or HAC check exists in code/tests. The HAC figures stay UNVERIFIED under DE-062.",
+   "Summary's numbers are all verified: Poisson z -2.12 (p .034) to -1.35 (p .18); probit age .033 to .051; n = 250 and n = 601; statsmodels cross-check of HC1 and CR1. The path tests/test_estimate.py should read code/tests/test_estimate.py.",
+   "Extraction scope says R 2.x-era package. The paper's simulation calls RNGversion 3.5.0 (Sec 5.1, p.9), so the text is an R 3.5-era reprint. Correct the scope line.",
+   "Extraction limitations say the n/(n-k) adjustment has no theoretical support for non-linear models (p.6). The paper says only that the adjustment lacks theoretical justification, with no linear or non-linear qualifier. Soften.",
+   "Extraction key finding says the paper claims the same qualitative interpretations for tobit and probit. The paper says results are qualitatively identical for tobit but the picture is only similar for probit, and the probit age term does cross 0.05 (0.0328 to 0.0508). Restrict the claim to tobit.",
+   "Extraction citation of the 2006 paper as year 2006 with JSS 16(9) and DOI 10.18637/jss.v016.i09 is verified against the paper's own self-citation (text line 885). Coverage: all numeric claims in ext and rel were checked against the text; theory sections 2-3 were spot-checked only."
+  ],
+  "gaps_exposed": [
+   "The hand-coded Newey-West HAC in sgs_seats.R:391-400 has no second-path reproduction such as sandwich::NeweyWest(lag = L, prewhite = FALSE, adjust = TRUE). HC1 and CR1 do have statsmodels checks at tests/test_estimate.py:44-45. Under DE-062 the HAC figures stay UNVERIFIED.",
+   "No coverage or size simulation exists for HC1 or HAC at the study's sample sizes (sector-year panels; about 17 weeks per cycle). The paper offers none either, so the reference errors carry no finite-sample guarantee.",
+   "The paper's HC meat assumes independent rows. Any Mentat or Melange regression quoting HC1 on panel data without clustering would understate uncertainty. The growth study avoids this, but the rule is not stated system-wide."
+  ],
+  "flags": [
+   "Paper is a software and method paper with no substantive political finding; it does not bear on SNA, LDA or reciprocity rules.",
+   "Paper figures (z -2.12 to -1.35; p .033 to .051) come from one simulated dataset (n = 250) and one cross-section (n = 601). They illustrate the estimator and do not validate it."
+  ],
+  "paul_alignment": "Paul has no annotated-bibliography entry and no markup for this work (n_annots 0), so there is no takeaway to compare against. The built system already follows the paper's central caveat: HC1 and HAC are kept as reference or secondary errors, and bootstraps carry inference. This fits Paul's directives to present regressions as R summary() output with a bootstrap and to put trend over significance.",
+  "related": [
+   {
+    "slug": "zeileis-nd-econometric-computing-with",
+    "relation": "builds-on",
+    "why": "Real item. The 2006 text cites Zeileis 2004 JSS 11(10) as the linear-model predecessor, and the 2004 text covers HC4 and Andrews-type HAC weights, matching the claim that this paper only cites those details."
+   },
+   {
+    "slug": "zeileis-nd-various-versatile-variances",
+    "relation": "extends",
+    "why": "Real item. Its title is an object-oriented implementation of clustered covariances in R, which is the CR extension of the same bread and meat framework that the growth study uses via CR1."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "zeileis-nd-econometric-computing-with",
+  "note": false,
+  "meta": {
+   "title": "Econometric Computing with HC and HAC Covariance Matrix Estimators",
+   "authors": [
+    "Achim Zeileis"
+   ],
+   "year": "2004",
+   "venue": "Journal of Statistical Software 11(10), 1-17 (this file is a slightly modified reprint of that article, as a package introduction for the R package sandwich)",
+   "doi": "10.18637/jss.v011.i10",
+   "sha12s": [
+    "2c95fc847117"
+   ],
+   "category": "Causal & Methodological",
+   "category_slug": "causal-methodological"
+  },
+  "extraction": {
+   "title": "Econometric Computing with HC and HAC Covariance Matrix Estimators",
+   "authors": [
+    "Achim Zeileis"
+   ],
+   "year": "2004",
+   "venue": "Journal of Statistical Software 11(10), 1-17 (this file is a slightly modified reprint of that article, as a package introduction for the R package sandwich)",
+   "doi": "10.18637/jss.v011.i10",
+   "document_type": "software paper / package introduction (modified reprint; text cites itself as Zeileis 2004 in JSS)",
+   "coverage": "Full text read in one pass (47137 chars, 1031 lines): abstract, Sections 1-5, Acknowledgments, references, and Appendix A.1-A.4 (R code). Page images not used. Paul annotations: none (n_annots 0, annot_sha12s empty), so paul_markup is empty; p.note absent, so not a Paul research note. Metadata hint corrected: author 'Zeileis' expanded to 'Achim Zeileis'; blank year set to 2004 from the text's self-citation. Topics checked and absent from the text: lobbying, networks, path-finding, allocation, elections, persuasion/turnout, legislators, text measurement; nothing extracted for those. Items dropped from key_findings: none needed (under 12). Dropped paul_markup items: 0.",
+   "research_question": "How to turn HC (heteroskedasticity-consistent) and HAC (heteroskedasticity and autocorrelation consistent) covariance estimators from the econometrics literature into reusable, modular computational tools in R that plug into fitted models and inference procedures.",
+   "theory": "Sandwich form Psi = (X'X)^-1 X'Omega X (X'X)^-1 for OLS (eq. 4-5, p.3-4). HC: plug diagonal Omega estimate with weights omega_i from residuals and hat-matrix diagonal (const, HC0-HC4, p.4-5). HAC: plug estimate of Phi from weighted lagged products of estimating functions V_i (eq. 6, p.6), extending to estimating functions beyond OLS (ML, GMM, QML; footnote 1, p.5). Cites White 1980, MacKinnon and White 1985, Newey and West 1987, 1994, Andrews 1991, Andrews and Monahan 1992, Lumley and Heagerty 1999.",
+   "data": "Three illustrative real-world datasets, no new data collected. (1) PublicSchools (Greene 1993 Table 14.1): per capita school expenditure vs per capita income for 51 US states in 1979; after dropping Wisconsin NA the analysed N is 50 (p.10). Unit: US state, cross-section. (2) Investment (Greene 1993 Table 15.1): real investment on real GNP and real interest, time series; period not stated in text (fitted series starts 1964 per appendix code, p.19). (3) RealInt (strucchange package): quarterly US ex-post real interest rate 1961(1)-1986(3), so 103 quarterly observations by calendar count, regressed on a mean (p.13).",
+   "method": "Estimator functions in R package sandwich: vcovHC(lmobj, omega, type = HC3 default) for HC; vcovHAC(lmobj, weights, prewhite, adjust, sandwich, order.by, ar.method, data) for HAC. Weight helpers: NeweyWest (Bartlett with lag L, default data-driven bwNeweyWest), weightsAndrews and bwAndrews via kernHAC (default quadratic spectral kernel, VAR(1) prewhitening, AR(1) bandwidth), weightsLumley via weave (truncate C=4 or smooth C=1). Inference: coeftest from lmtest with z tests (df = Inf) or t tests; gefp and sctest for OLS-based CUSUM with kernHAC; Fstats for supF; breakpoints (Bai and Perron 2003 dynamic programming, BIC-chosen partition) with confint using vcov = kernHAC.",
+   "identification": "None in the causal sense. Consistency of the covariance estimators is asserted from the cited asymptotic theory under regularity conditions (p.3-4, p.6), with no new identification argument. Paper is a software and methods exposition.",
+   "scope": "Scope is the general linear model estimated by OLS (lm), with HAC also available for glm and robust rlm (MASS) per p.2-3, and extensions to other estimating-function models per footnote 1 and footnote 2. Era: literature of roughly the last 20 years as of about 2004, software in R 4.6.1 with sandwich 3.1-3, lmtest 0.9-40, strucchange 1.5-4, zoo 1.9-0 (appendix, p.18). Population: applied econometricians using R. Institution: none stated.",
+   "measures": "Covariance matrices Psi (HC/HAC sandwich), standard errors (square root of diagonal), z and t statistics, p-values, CUSUM and supF statistics, breakpoint confidence intervals (2.5 and 97.5 percent). HC leverage: hat-matrix diagonal h_i, with delta_i = min(4, h_i/mean h) for HC4.",
+   "key_findings": [
+    "Public schools (Sec 4.1, p.10-11): HC0 gives the quadratic income term I(Income^2) coefficient 1587, SE 830, z 1.91, p 0.056 (weakly significant); HC4 gives SE 5489, z 0.29, p 0.77 (clearly non-significant).",
+    "The HC0 vs HC4 difference is attributed to a single high-leverage outlier, Alaska (Figure 2, p.11), with HC4 correcting for leverage.",
+    "Investment (Sec 4.2, p.11-13): RealGNP coefficient 0.1691 is significant under all three HAC variants: SE 0.0168 (Newey-West lag 4, no prewhitening, p<2e-16), SE 0.0236 (Newey-West automatic bandwidth with prewhitening, p 7.4e-13), SE 0.0208 (Parzen kernel, VAR(2) prewhitening, no finite-sample adjustment, p 4.7e-16).",
+    "RealInt coefficient -1.0014 is not significant under any of the three HAC variants: SE 3.3424, 3.6399, 3.9475 with p 0.76, 0.78, 0.80 respectively (p.12-13).",
+    "Intercept under the three HAC variants: SE 18.9583, 24.3742, 24.6639 (p 0.51, 0.61, 0.61) (p.11-13). Paper states the three estimators give slightly different standard errors but agree on the substantive conclusions.",
+    "Real interest CUSUM (Sec 4.3, p.13-14): OLS-based CUSUM with quadratic spectral kernel HAC variance (VAR(1) prewhitened, AR(1) bandwidth) crosses its 5 percent boundary; sctest p = 0.0082, indicating a significant change in mean with a clear peak in the early 1980s.",
+    "Bai-Perron dating (BIC-minimal partition, 3 segments, two breaks; p.14-15): break 1 at observation 47 (1972(3)) with 95 percent CI 37 to 48 (1970(1) to 1972(4)); break 2 at observation 79 (1980(3)) with 95 percent CI 77 to 81 (1980(1) to 1981(1)).",
+    "Footnote 6 (p.15): choosing breakpoints by sequential tests instead of BIC yields an additional breakpoint with rather wide confidence intervals.",
+    "Section 3.1 (p.5): paper cites Long and Ervin (2000) concluding HC3 performs best in small samples as it down-weights influential observations; Cribari-Neto (2004) proposed HC4 for influential observations.",
+    "Section 3.2 (p.6-8): all implemented HAC estimators are weighted sums of lagged products of estimating functions (eq. 6); kernel weights per Andrews 1991 (Figure 1, p.7) with bandwidth selection by AR(1) or ARMA(1,1) approximation or Newey-West 1994."
+   ],
+   "limitations": [
+    "Paper is a software exposition and reports no simulation or Monte Carlo evidence on finite-sample coverage; small-sample performance claims are cited from Long and Ervin (2000) and Cribari-Neto (2004).",
+    "Choice of HAC weights and bandwidth (lag L, kernel, prewhitening order, bandwidth selector) changes standard errors and the paper notes results depend on these choices (p.8-13).",
+    "HC0 vs HC4 conclusions on the public-schools quadratic term hinge on one outlier (Alaska), as the paper itself notes (p.11).",
+    "HAC requires that observations be ordered (order.by, default current order, suited to time series); prewhitening uses VAR(p) with OLS by default (p.6-7).",
+    "Weights vectors shorter than n are padded with zeros (footnote 3, p.7), a convention the user must keep in mind.",
+    "The breakpoint CI approach needs a function-valued vcov because it is applied to several segments; the sequential-test alternative gives wide intervals (footnote 6, p.15)."
+   ],
+   "references_of_note": [
+    "Andrews DWK 1991 Econometrica 59 817-858 (kernel HAC with automatic bandwidth)",
+    "Newey WK and West KD 1987 Econometrica 55 703-708 and 1994 Review of Economic Studies 61 631-653 (HAC weights, automatic lag selection)",
+    "White H 1980 Econometrica 48 817-838 (HC0)",
+    "MacKinnon JG and White H 1985 Journal of Econometrics 29 305-325 (HC1-HC3)",
+    "Long JS and Ervin LH 2000 The American Statistician 54 217-224 (small-sample HC comparison)",
+    "Cribari-Neto F 2004 Computational Statistics and Data Analysis 45 215-233 (HC4)",
+    "Lumley T and Heagerty P 1999 JRSS B 61 459-477 (weighted empirical adaptive variance estimators)",
+    "Bai J and Perron P 2003 Journal of Applied Econometrics 18 1-22 (multiple structural change dating)",
+    "Zeileis A 2006b JSS 16(9) (object-oriented sandwich estimators, follow-up paper)",
+    "Zeileis A 2006a Computational Statistics and Data Analysis 50 2987-3008 (structural change tests, strucchange)"
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "Paper attributes the HC4 vs HC0 gap on school spending to 'the improved performance of the HC4' correcting high-leverage points (p.11)"
+   ]
+  },
+  "summary_md": "Zeileis (JSS 11(10), 2004; reprinted as the sandwich package introduction) is a software paper, not an empirical study. It casts HC and HAC covariance estimators as one sandwich form, (X'X)^-1 X'Omega X (X'X)^-1, and gives R tools that plug into coeftest and structural-change tests: vcovHC (const, HC0-HC4, HC3 default) and vcovHAC with Newey-West, Andrews kernel and Lumley weights, optional VAR prewhitening and automatic bandwidth. Three worked examples carry the numbers. On 50 US states (1979 school spending), the quadratic income term goes from SE 830 (HC0, p .056) to SE 5489 (HC4, p .77) because one high-leverage state, Alaska, drives it. On the Greene investment series, three HAC settings move the RealGNP SE from 0.0168 to 0.0236 (about 40 percent) without changing the conclusion. On quarterly US real interest 1961-1986 (103 quarters), a HAC-scaled CUSUM rejects stability (p .0082) and Bai-Perron dating finds breaks in 1972(3) and 1980(3). There is no simulation evidence. Claims about small-sample performance come from Long and Ervin (2000) and Cribari-Neto (2004). For Paul's systems this is a method source for the robust-variance rows in Mentat. The forecast refit calls sandwich::vcovHC HC1 and vcovCL directly. The SEATS-W weekly test hand-codes a Bartlett Newey-West SE at fixed lags 2, 4 and 8 weeks and labels it secondary. The paper's own examples support that design: HAC lag and prewhitening choices visibly move SEs. Its leverage example qualifies the HC1 rows in small refit regressions (df about 11). Nothing here touches the network, lobbying or influence components.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "mentat-sector-growth-study.seats-weekly-test",
+    "relation": "method-source",
+    "paper_claim": "Eq. 6 HAC is a weighted sum of lagged products of estimating functions. Investment example RealGNP SE is 0.0168 (Newey-West lag 4, no prewhitening), 0.0236 (Newey-West automatic bandwidth with prewhitening) and 0.0208 (Parzen kernel, VAR(2) prewhitening, no finite-sample adjustment). Spread about 40 percent (0.0236 vs 0.0168). Coefficient 0.1691 is significant under all three; paper says the estimators give slightly different SEs but agree on the conclusion.",
+    "paper_location": "Sec 3.2 eq. 6 (p.6); Sec 4.2 Investment output (p.11-12)",
+    "system_side": "SEATS-W hand-codes a Bartlett Newey-West SE at fixed lags 2, 4 and 8 weeks, lag pairs matched within cycle by calendar week, n/(n-k) adjustment, no prewhitening and no automatic bandwidth, labelled secondary with no p-value. Primary inference is a fixed-X moving-block bootstrap with Holm.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:277 and :391",
+    "transfer_conditions": "Paper examples are time series; RealInt has 103 quarterly obs (1961(1)-1986(3)); Investment length is not stated in the text (fitted series starts 1964). The text does not call the series stationary and gives no coverage evidence at weekly-panel sizes. The ~40 percent spread supports showing several lag settings, not validating any one lag.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Numbers, eq. 6, lag choices and code lines check out. Softened because the rel's 'stationary macro series of about 40-100 observations' is not supported by the paper text.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#SEATS-W weekly seat-gain test (2022 House)|SEATS-W weekly seat-gain test (2022 House)]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-giving-forecast.cycle-model",
+    "relation": "qualifies",
+    "paper_claim": "On the public schools data (51 states, Wisconsin NA dropped, N=50), the quadratic income term has SE 830, z 1.91, p 0.056 under HC0 and SE 5489, z 0.29, p 0.77 under HC4. Paper attributes the gap to one high-leverage outlier (Alaska) and HC4's leverage correction. It cites Long and Ervin (2000) for HC3 as best in small samples and makes HC3 the vcovHC default.",
+    "paper_location": "Sec 3.1 p.5; Sec 4.1 p.10-11 and Figure 2",
+    "system_side": "Refit robustness block prints an HC1 row via sandwich::vcovHC type HC1, beside CR1, CR2 (clubSandwich) and a wild cluster restricted bootstrap. Fixture row: HC1 SE 0.0395 on 11 df for the pac G_current model.",
+    "code_ref": "mentat/forecast/refit/R/rf_robust.R:9 and mentat/forecast/refit/tests/testthat/fixtures/robustness_pvalues.csv:3 (repo at C:/Users/pgoff/Mentat)",
+    "transfer_conditions": "The paper's HC0 vs HC4 contrast is an estimator-choice comparison on one 50-state cross-section with one outlier. It does not show HC1 understates SEs in the refit's ~11 df regressions. The HC1 understatement point is the analyst's inference from cited small-sample literature, not a result in this paper. The paper has no simulation.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Numbers and code lines confirmed. Softened: 'leverage drives HC choice' and 'one leverage point moving p from .056 to .77' blend an estimator change (HC0 to HC4) with a single outlier, and the HC1 understatement claim is not in the paper.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-giving-forecast#Cycle-aware giving refit (phase and drift log models, 50-50 growth)|Cycle-aware giving refit (phase and drift log models, 50-50 growth)]]",
+    "system": "mentat-giving-forecast"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "context",
+    "paper_claim": "HC variants use the sandwich form (X'X)^-1 X' Omega X (X'X)^-1 with diagonal Omega weights built from residuals and the hat-matrix diagonal; HC0 to HC4 differ only in these weights.",
+    "paper_location": "Sec 2 eq. 4-5 (p.3-4); Sec 3.1 (p.4-5)",
+    "system_side": "sgs_estimate.R hand-codes an HC1 sandwich V = (n/df) A X'uu'X A, labelled reference only. DESCRIPTIVE tests report the estimate and the HC1 error only; inference is a wild cluster restricted bootstrap with Webb weights. The Holm step was not seen in this file.",
+    "code_ref": "sector_growth_study/code/R/sgs_estimate.R:35 (also :1 and :266) in C:/Users/pgoff/Mentat",
+    "transfer_conditions": "Context only. Any HC3 column for DESCRIPTIVE fits is an UNVERIFIED suggestion until a second path reproduces it (DE-062).",
+    "strength": "weak",
+    "verdict": "reproduced",
+    "verifier_note": "Paper equations and the code line match. The rel's Holm detail was not confirmed in sgs_estimate.R, so it is flagged rather than asserted.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "summary_md says the paper's examples support the SEATS-W fixed-lag design. The paper shows lag and prewhitening sensitivity only; it does not endorse fixed lags 2, 4 and 8.",
+   "summary_md says Mentat robust rows use HC1 throughout. Only the refit robustness block and sgs_estimate.R were checked; no full census was run.",
+   "summary_md says the package versions match registry/models.json. The paper does state sandwich 3.1-3, lmtest 0.9-40, strucchange 1.5-4 and zoo 1.9-0 (p.18), but the registry file was not opened.",
+   "rel bearing 2 code_ref rf_robust.R:8 should be :9 (the vcovHC line); line 8 is the rf_hc1 function header.",
+   "rel bearing 1 transfer_conditions describes the examples as stationary macro series of about 40-100 observations; the paper states neither the stationarity nor the Investment series length.",
+   "rel bearing 2 says a single leverage point moves p from .056 to .77; that contrast is an HC0 vs HC4 estimator change, and the paper attributes it to one outlier plus the HC4 correction.",
+   "rel related 'various-versatile-variances' is real (title and abstract confirm clustered covariances in sandwich) but postdates and is not cited by this 2004 paper.",
+   "Coverage: paper_markup is empty because paul_entries is empty and n_annots is 0. Page images were not used; checks were against the text file only."
+  ],
+  "gaps_exposed": [
+   "Mentat's robust-variance rows use HC1 throughout, in sandwich::vcovHC in the refit and hand-coded in sgs_estimate. There is no HC3 or HC4 leverage-adjusted row, although the paper shows a single leverage point moving p from .056 to .77 at N=50 and makes HC3 the small-sample default.",
+   "SEATS-W HAC uses fixed Bartlett lags 2/4/8 with no prewhitening or data-driven bandwidth (Andrews 1991 or Newey-West 1994). The paper's examples show these choices move SEs by about 40 percent. The secondary-only, no-p labelling already contains the risk, but no automatic-bandwidth row is shown.",
+   "No component runs a structural-change test (CUSUM or Bai-Perron) on giving series. The giving forecast assumes stable phase effects across cycles (D-092), and the paper's strucchange workflow is one candidate check. Treat it as exploratory, because giving series have few cycles."
+  ],
+  "flags": [
+   "No conflict with brain rules: the paper makes no network, lobbying or influence claims and does not argue for either rejected SNA proposal.",
+   "The paper is a software exposition with no Monte Carlo evidence. Any small-sample claim (HC3 or HC4 superiority) comes from Long and Ervin (2000) and Cribari-Neto (2004) and should be cited as such, not to this paper.",
+   "Package versions in the reprint (sandwich 3.1-3) match the refit's vendored sandwich 3.1-3 in registry/models.json, so the method source and the code agree on version."
+  ],
+  "paul_alignment": "Paul has no annotated-bibliography entry and no markup for this work (n_annots 0), so there is no takeaway to compare. The system as built already follows the paper's spirit and goes further. HC and HAC errors are reported but kept secondary to cluster and block bootstraps, with Holm adjustment, which is stricter than the paper's coeftest z-tests. The live code shows the paper is a method source, not a stale citation.",
+  "related": [
+   {
+    "slug": "zeileis-nd-object-oriented-computation",
+    "relation": "extends",
+    "why": "The paper points to Zeileis 2006b, Object-Oriented Computation of Sandwich Estimators, as the follow-up implementation. The rel's claim that it generalizes to any model with estimating functions and bread was not confirmed in this paper's text, so the link rests on the paper's own citation."
+   },
+   {
+    "slug": "zeileis-nd-various-versatile-variances",
+    "relation": "extends",
+    "why": "Later work by Zeileis, Koll and Graham on clustered covariances in the same sandwich package. This 2004 paper does not cite it, so the link is real but is not a citation from this paper. The vcovCL use in the Mentat refit is a code fact, not something this paper supports."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ }
+]

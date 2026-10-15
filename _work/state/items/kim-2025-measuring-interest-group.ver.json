@@ -1,0 +1,134 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-validation.gold-set-and-rank-gate",
+   "relation": "qualifies",
+   "paper_claim": "LLM labels agree with human coders at 96.93% accuracy and F1 97.19, but only on the 391 samples where two coders agreed. MapLight concordance is 91.03% (1,076 of 1,182 pairs) and covers Support/Oppose only; MapLight labels were also part of the GNN training labels. GNN best configuration: accuracy 78.51, F1 74.65; per-class F1 Support 79.19, Oppose 64.06, Engage 80.70.",
+   "paper_location": "Validation p.3 (MapLight footnote); GNN Annotation p.4; SI Table 12",
+   "system_side": "The system's benchmark of the Kim-format Haiku lane uses the 876 (organisation, bill) pairs where Kim's published dataset overlaps the system's work items, at natural base rates with no stratification, and separates Kim's two annotation lanes (541 gnn pairs, 335 llm pairs). The join module records Support/Oppose recall 0.49 and precision 0.42, and Amend 0 found against Kim's 23. The DEBATE 0.571 adversarial-frame figure comes from audit documents, not these files.",
+   "code_ref": "fec/lobbying/lobby_position_benchmark.py:1-40; fec/lobbying/lobby_position_join.py:13-19",
+   "transfer_conditions": "The paper's human validation uses only coder-agreed lines, so its 96.93% does not carry over to ambiguous, Amend or Mention lines. The system benchmark measures agreement with Kim's labels, not accuracy: 541 of its 876 reference pairs are Kim GNN predictions (a stage with 78.51% test accuracy) and 335 are GPT-4 labels. Denominator: the 876-pair overlap (the benchmark file states no year window). UNVERIFIED as accuracy until a human-gold path reproduces it (DE-062).",
+   "strength": "strong",
+   "verdict": "softened",
+   "verifier_note": "All paper numbers confirmed in text and SI Table 12. 876/541/335 and the lane split are confirmed in the benchmark docstring; 0.42/0.49/0-of-23 are confirmed in the join docstring. Corrected: 'the reference set is itself about 78% accurate' overstated it, since 78.51 applies only to the 541 GNN-labelled pairs. Removed the unverified claim that three-class accuracy is 'carried by Engage'."
+  },
+  {
+   "component_id": "melange-labels-and-tiers.industry-boards-crown",
+   "relation": "supports",
+   "paper_claim": "Oppose is the GNN's hardest class. The text says Oppose F1 is 'in the 60s', but SI Table 12 shows Oppose F1 from 57.65 to 64.06 across the 17 graph configurations, with five configurations below 60. Engage dominates GNN output: 137,023 of 188,639 Engage-class labels (72.6%) come from the GNN stage. Fig 5 orders industries by mean LPscore, with commercial sectors at one end and social/progressive sectors at the other.",
+   "paper_location": "SI Appendix 2 p.12 and Table 12; Table 1 p.3; Analysis 4 p.7 Fig 5",
+   "system_side": "Kim-format positions are joined onto the ledger with basis tag inferred_<variant>, and the module states that a Support badge is a lead, not a fact. In industry_tiers the adjudicated credit-union cell owns the CU tensor weight, and the older raw position overlay (acu_position) is removed from it.",
+   "code_ref": "fec/lobbying/lobby_position_join.py:1-19; fec/lobbying/industry_tiers.py:375-382",
+   "transfer_conditions": "The paper's Oppose weakness belongs to its GNN stage. The system's weak Oppose agreement belongs to its Haiku lane, scored against Kim labels. They point the same way, but they are different readers. The bank-column pilot result (about 70% of Oppose labels wrong, zero rows signed) was not found in the cited code or in a repo search, so it is dropped here as UNVERIFIED.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Table 1 arithmetic checks: 9,317 Amend + 42,299 Monitor + 137,023 GNN Engage = 188,639. 'F1 in the 60s across all 17 configurations' is false per SI Table 12, where configs 4, 5, 6, 10 and 11 score 57.65-59.08. The pilot claim could not be located. industry_tiers.py:378-380 shows only the adjudicated CU-cell override, not cell signing by adjudication in general."
+  },
+  {
+   "component_id": "melange-lobbying.contested-bills",
+   "relation": "suggests-extension",
+   "paper_claim": "Bill-level positions show opposing interest groups on the same bill. Coal-deregulation bills (H.R. 3409, 112th; H.R. 806, 115th) are opposed by environmental groups and supported by commercial entities, while an environmental-protection bill (S. 847, 112th) shows the reverse. Subject Oppose ratios: Public lands and natural resources 0.354 (51 bills), Environmental protection 0.280 (108 bills). The paper does not tabulate inter-industry conflict per bill.",
+   "paper_location": "Analysis 3 pp.6-7 (Fig 4, Fig 6, SI Table 21); Analysis 4 p.7 (Fig 5)",
+   "system_side": "The contested-bills registry is a loader for per-bill counterparty sets that Paul ratifies. No consumer exists today (CONTESTED_V1 is unopened), and the bundle surfaces it for display only. Separately, org_stance_priors recomputes ALIGNED, OPPOSED and UNKNOWN per bill for each directional sector pair from label_3_class. It raises CCCAValidationError if a CCCA anchor bill reads OPPOSED for the bank|credit_union pair.",
+   "code_ref": "fec/lobbying/contested_bills.py:1-15; fec/surfaces/build_dashboard_bundle.py:731-741; fec/lobbying/org_stance_priors.py:783-860",
+   "transfer_conditions": "Kim's data ends at the 117th Congress (2022). It can nominate historical candidate contested bills and calibrate the alliance-conflict recompute. Current bills depend on the weaker Haiku lane. Registry admission stays an owner ruling. An OPPOSED pair from inferred labels is a lead, not a fact.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Ratios and bill counts confirmed in SI Table 21. Corrected 'on environmental bills, environmental groups Oppose while commercial groups Support': that holds for deregulation bills, and for protection bills the paper reports the reverse. Code side confirmed as written."
+  },
+  {
+   "component_id": "melange-lobbying.lobbied-member-link",
+   "relation": "qualifies",
+   "paper_claim": "Positions are measured as interest group x bill. Legislators enter only as context nodes in the GNN graph, through sponsor/cosponsor relations and legislator-lobbyist prior-work relations. The selected configuration is 'Base Graph + legislator-lobbyist'. The paper does not measure a position or contact between a group and a member.",
+   "paper_location": "Graph Configuration p.4; SI Appendix 2 (Fig 7, Tables 11-12)",
+   "system_side": "build_dyad_signs joins signed org-bill rows to sponsor/cosponsor rosters by canonical bill, counting probability >= 0.7 as support and <= 0.3 as oppose. efficiency_layers z-scores signed_non_cu_opposition_count into signed_non_cu_opposition_z, which is one component of contest_index.",
+   "code_ref": "fec/lobbying/org_stance_priors.py:631-700; fec/engine/efficiency_layers.py:175-211",
+   "transfer_conditions": "Kim's measure stops at the bill. Pushing it onto members through the bill roster brings back the circular sponsor/cosponsor mapping the system already refuted as influence evidence. The dyad counts describe which bills members sponsored, not whom an org targeted. Kim's legislator-lobbyist relation is a revolving-door edge, so influence language is barred on it.",
+   "strength": "strong",
+   "verdict": "reproduced",
+   "verifier_note": "The paper's graph description and SI Table 12 confirm the graph and the selected model. Code thresholds and the contest_index component are confirmed at the cited lines. The P(joined|lobbied)=1 refutation comes from project memory and was not re-derived here."
+  },
+  {
+   "component_id": "melange-stance.bill-sign-handling",
+   "relation": "suggests-extension",
+   "paper_claim": "The released dataset gives measured group positions on named S./H.R. bills for the 111th-117th Congresses (2009-2022). It is on Dataverse at doi:10.7910/DVN/D0QWM2.",
+   "paper_location": "Dataset section and Table 1 p.3; data availability statement",
+   "system_side": "A bill's CU direction comes from a 60-row hand table, cfpb_bill_directions.csv (Direction 1 = Reduce, -1 = Expand; 5 Expand rows).",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cfpb_bill_directions.csv:1-61",
+   "transfer_conditions": "Useful as an external audit of the hand-set direction table, but only for 111th-117th Congress bills that CU trade associations named in LD-2 lines. 118th and 119th Congress bills would need the Haiku lane. Use it to adjudicate the table, never to overwrite it.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Removed CUNA 174/12 and NAFCU 168/23: they are not in the paper (CUNA does not appear in the text) and were not found in the repo, so the original attributed a system pull to a paper location. Removed 'member-prior override rejected (0.839 to 0.770)': it was not found, and 0.839 in the audit docs is the DEBATE press-stance held-out accuracy, so the attribution looks wrong. The R-scraper BILLS table was not checked."
+  },
+  {
+   "component_id": "melange-lobbying.finance-client-classification",
+   "relation": "supports",
+   "paper_claim": "Firm size is associated with position type. Comparing firms at the 90th and 10th employment percentiles, larger firms are 19.5 p.p. more likely to lobby and 4.5 p.p. more likely to adopt Monitor. Smaller firms are more likely to Oppose (1.8 p.p.) or Amend (1.3 p.p.). These are associations, not causal effects. Sample: Compustat firm-years 2009-2022, 5,421-7,014 firms per year.",
+   "paper_location": "Analysis 2 p.6 (Fig 3); SI Tables 18-20",
+   "system_side": "classify_client assigns side (credit_union, bank or other) from decisive name rules first. When no name rule fires, it falls back to a NAICS-based classification, and a NAICS conflict with a name match is tagged in the rule string.",
+   "code_ref": "fec/lobbying/collect_lobbyview.py:226-263",
+   "transfer_conditions": "Kim's sample is Compustat firms and says nothing about trade associations. The claim that the system's 22 pinned fintech/crypto firms hold 56 positions with one directional label was not found and is UNVERIFIED. Treat any reading that associations are the directional filers as a descriptive lead, not a replication.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper numbers confirmed in the text and in SI Table 19, where Monitor is positive and significant in all 5 specifications. The code claim 'NAICS used only as linkage metadata' is wrong: NAICS is a classification fallback, returning naics_side when no name rule matches. The 22-firm/56-position figure could not be located."
+  },
+  {
+   "component_id": "melange-stance.debate-nli-classifier",
+   "relation": "qualifies",
+   "paper_claim": "GPT-4 zero-shot labelling at temperature 0 reaches 96.93% accuracy on 391 coder-agreed lobbying lines. The lines pass a keyword filter for position terms first (e.g. endorse, defeat, advocate, watch).",
+   "paper_location": "Validation p.3; SI Table 3 (keywords), Table 4 (prompt)",
+   "system_side": "stage5_debate.py runs Political DEBATE zero-shot NLI to score each press release's stance toward credit unions (support, oppose and neutral hypotheses). Audit documents (not the code) report the fine-tuned reader at 0.839 accuracy on a held-out human-gold test (n=87) and 0.571 on the adversarial frame.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:1-49; AUDIT_FINDINGS_2026-07-02_RUN2.md:118; AUDIT_FINDINGS_2026-07-04.md:452",
+   "transfer_conditions": "Does not transfer. Kim's text is pre-filtered to explicit position terms about a named bill, and the validation set excludes coder disagreements. Press stance toward CUs needs a target-valence step that Kim's task lacks. The 96.9% is not a benchmark for this reader.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper side confirmed. The cited code lines show only argparse and model loading; the accuracy figures live in the audit docs, which are now cited. 'Main bottleneck is the two-hop valence step' comes from project memory and was not re-checked."
+  }
+ ],
+ "related": [
+  {
+   "slug": "kim-2018-lobbyview-firm-level",
+   "relation": "same-data",
+   "why": "Both rest on LDA reports organised in LobbyView. The paper maps MapLight onto lobbying pairs organised in LobbyView."
+  },
+  {
+   "slug": "kim-nd-mapping-political-communities",
+   "relation": "cites",
+   "why": "Cited as ref 14 (Kim and Kunisky, Political Analysis 2021), prior work on lobbying-network structure that motivates the GNN graph of groups, bills and legislators."
+  },
+  {
+   "slug": "bonica-2013-mapping-ideological-marketplace",
+   "relation": "cites",
+   "why": "Cited as ref 17 (Bonica 2014). The paper compares LPscores with DIME CFscores for 218 groups and finds Pearson r = 0.191, meaning the two measures capture different behaviour. That does not contradict Bonica."
+  },
+  {
+   "slug": "bacik-2025-measuring-dynamical-evolution",
+   "relation": "complements",
+   "why": "Same LobbyView group (In Song Kim is a co-author). It studies how the lobbying network evolves over time, while this paper measures each group's position on each bill."
+  },
+  {
+   "slug": "huneeus-2018-effects-firms-lobbying",
+   "relation": "complements",
+   "why": "Both relate firm size to lobbying, and In Song Kim co-authored both. Huneeus and Kim study lobbying and resource misallocation. Kim et al. find larger firms lobby more and take Monitor positions more often."
+  },
+  {
+   "slug": "ornstein-2024-train-your-stochastic",
+   "relation": "same-method",
+   "why": "Both use zero-shot LLM labelling of political text, validated against human coders."
+  },
+  {
+   "slug": "harrison-2018-application-data-mining",
+   "relation": "same-data",
+   "why": "Both mine LDA congressional lobbying records. Kim et al. add bill-position labels at scale."
+  }
+ ],
+ "summary_issues": [
+  "'That finding rests on 3 vetoed bills' is incomplete. Fig 2 does use only 3 vetoed bills (SI Table 13), but the SI reports the same rise in Oppose and Amend in 74 'Provisionally Killed' bills. Quote the vetoed pattern with n=3 and add the provisionally-killed replication.",
+  "'Oppose is its weakest class (F1 64)' is right for the selected model. The bearing gloss that Oppose F1 is 'in the 60s across all 17 configurations' is wrong: five configurations score 57.65-59.08 (SI Table 12).",
+  "The system-benchmark figures (precision 0.42, recall 0.49, Amend 0 of 23) measure agreement with Kim labels over the 876-pair overlap, and 541 of those pairs are Kim GNN predictions. The summary should say 'agreement with Kim', not imply accuracy, and should name the 876-pair denominator. The flags' '2021-2022' window was not found in the benchmark code.",
+  "The Bonica relation was mislabelled 'contradicts'. r = 0.191 (n = 218) shows that the measures differ, not that one refutes the other.",
+  "System figures not found in the cited code or a repo search were removed as UNVERIFIED: the bank-column pilot's '~70% of Oppose labels wrong', CUNA 174/12 and NAFCU 168/23, 22 fintech firms with 56 positions, and the member-prior override 0.839 to 0.770.",
+  "Dropped the related link to moreno-2021-shadowing-shielding-effective. It is an influence-maximisation paper tied to the system's registry, not to this paper.",
+  "All of this agent analysis stays UNVERIFIED until a second path reproduces it (DE-062)."
+ ]
+}

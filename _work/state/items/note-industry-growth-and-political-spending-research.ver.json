@@ -1,0 +1,125 @@
+{
+  "bearings": [
+    {
+      "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+      "relation": "method-source",
+      "paper_claim": "Six core tests C1-C3 (contributions) and L1-L3 (lobbying), each with prior actual, same-year actual or predicted growth as the regressor; Y in millions of 2025 USD; X in percentage points; keep all six results including nulls; nine planned sectors give few independent groups so ordinary independent-row OLS errors are not sufficient for strong significance claims.",
+      "paper_location": "Section 2 (six core tests table), Section 3 (equations and units), Section 5 (final paragraph)",
+      "system_side": "R build runs C1-C3 on contributions_real_m and L1-L3 on lobbying DVs with the growth regressors in SGS_GROWTH; controls are pres_year, midterm_year, exp_dem_house, exp_dem_senate, plus cur_dem_house and cur_dem_senate for lobbying; sector baselines; inference is wild cluster restricted bootstrap-t by sector with Webb six-point weights, enumerated when 6^G is at most 9999; Holm adjustment across pre-specified families. Main outcomes are levels in millions; log DVs appear only as robustness variants R-log and R-logFE on L-LV. No Tossup or trend regressor is in either control set.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:31-36,105-150; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:1-12,194-212; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_run.R:706-731",
+      "transfer_conditions": "Direct for the six-test design and the inference rules. The plan asks for dollar levels as the main outcome, and the build keeps levels as the main outcome too, so the log departure is a robustness addition, not the main model. Label any log-based figure as robustness.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Plan design, the WCR bootstrap with Webb weights and the Holm step are confirmed in code. The rel claims the build models log giving with Tossup and trend terms; the code contradicts both. Main DVs are levels, log is robustness only (sgs_registry.R:113-150), and no Tossup or trend regressor exists in SGS_C_CONTROLS or SGS_L_CONTROLS (sgs_registry.R:33-34). Trend exists only as a diagnostic section label (sgs_config.R:298)."
+    },
+    {
+      "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+      "relation": "qualifies",
+      "paper_claim": "Readiness check: verified contribution years overlap the IEM congressional forecasts only in 2021-2022; IEM covers 2008-2022 with 2023-2025 missing; a later election result must never substitute for a missing forecast.",
+      "paper_location": "Section 8 (readiness check); Section 6D (forecast meaning)",
+      "system_side": "Build fills 2023-2026 expected control from the 02 expected_control_2023_2026 sheet on Paul's ruling, labelled RETROSPECTIVE / NOWCAST (RETRO_LABEL), with exp_dem_*_after_year flags; STRICT variants drop values measured after their year; the 538 generic-ballot margin is robustness family H4-538 only, replacing exp_dem_house there and never the main measure.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:182-191,259-264,315-320; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_panel.R:211-232,260-264,387-415",
+      "transfer_conditions": "Holds for the main series only as the labelled RETROSPECTIVE / NOWCAST measure that Paul ruled. Any quoted main-series result using 2023-2026 expectations must carry that label. The STRICT variant is the timing-clean check that the plan's rule supports, and it should be quoted beside any main-series result.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Plan text confirmed. The build is not a silent breach: sgs_config.R:185 labels the series retrospective per Paul's ruling and STRICT variants exclude such values. The rel calls this a possible conflict to verify; the code answers that question with an explicit ruling and label, so the flag should cite it. The rel's description of 538 as filling the IEM gap is wrong: 538 is robustness only, and the 2023-2026 fill is the expected-control sheet."
+    },
+    {
+      "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+      "relation": "qualifies",
+      "paper_claim": "Do not add a full set of year indicators while keeping national annual controls because year effects absorb them; a separate check may swap the controls for year indicators to see whether the growth relationship survives common yearly shocks.",
+      "paper_location": "Section 3, paragraph after the control table",
+      "system_side": "Build runs a year-FE variant of L1-LV..L3-LV as robustness (R-yearFE). Recorded reference values for L3-LV in sgs_review.R: base +0.352 (n 77); year-FE -0.477; log-FE -0.006; first-difference -0.537 (n 71); adjusted R2 0.884717 with growth and 0.884690 without, on the same rows. Other year-effect strata are marked insufficient because year effects leave no within-sector variation in a sector-only regression.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:30-35; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:385-398; C:/Users/pgoff/Mentat/sector_growth_study/code/R/tests/testthat/test-review-0926.R:250",
+      "transfer_conditions": "The recorded figures are hard-coded reference values from the Codex methodology review of run analysis-R-20260926T070630Z, which the pipeline must reproduce; they are not a fresh re-estimation in this check. The pooled slope is UNSTRATIFIED unless the per-sector SLOPES strata are quoted beside it. Single analysis path, so UNVERIFIED under DE-062.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "The plan's check design is confirmed. The bearing's +0.352 and -0.477 match sgs_review.R:33. The rel summary's 0.242 (p 0.033) does not appear anywhere in the code; the code gives p 0.0375, and Holm 0.1125 equals 3 x 0.0375, consistent with Holm over three tests. The bearing's code_ref should point to sgs_review.R:30-35 because 385-398 is the year-effects guard, not the flip itself."
+    },
+    {
+      "component_id": "mentat-giving-forecast.cycle-model",
+      "relation": "qualifies",
+      "paper_claim": "Predicted industry growth is the variable of direct interest, and the sign of the growth-spending relation is to be estimated, not assumed; IBISWorld forecasts proxy public expectations only and do not establish any company's private forecast or whether a donor read the report.",
+      "paper_location": "Section 1 (research logic); Section 4 (IBISWorld proxy caveat)",
+      "system_side": "Live cycle model: M = B exp(phi dP + d_h) (1 + x/2), with x the IBISWorld real-growth budget change with a one-year lag. Company PACs (pac_to_candidates) are on the panel nowcast with x = 0 under D-116 (PANEL_NOWCAST); general giving keeps the x term. The 50/50 weight is taken from the 2026-10-07 owner ruling named in the code header.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:1391-1411,1594,1668-1673",
+      "transfer_conditions": "The plan supplies a design principle, not evidence for the 50/50 term. The rel's claim that Paul ruled roster mismatch a stated limitation does not appear in the plan and is unverified. The build's no-stable-effect reading is single path and UNVERIFIED under DE-062. No backtest of the 50/50 term was checked here.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Code confirmed: general giving still carries (1 + x/2) and company PACs were moved off the growth term under D-116. The rel formula omits the exp(phi dP + d_h) factor and the P1 conditioning, so write the full cycle form. The rel's transfer claim about Paul's roster ruling is not supported by the plan text."
+    },
+    {
+      "component_id": "mentat-sector-growth-study.seats-weekly-test",
+      "relation": "context",
+      "paper_claim": "Partisan direction is tested with a per-chamber Democratic share D over (D plus R), with zero denominators set missing; party, presidential and other committee flows are not assigned to a chamber without a defensible mapping.",
+      "paper_location": "Section 5, Partisan direction",
+      "system_side": "SHIFT and DS families use per-chamber Democratic share. In the latest R report the core SHIFT-House and SHIFT-Senate are NOT ESTIMABLE; only the preview SHIFT-Chamber-PV is estimable (-0.0425, p 0.7576, 80 rows, 4 residual df, below the 6-year minimum and labelled post-result exploratory). SEATS-W House level on 538 lite, exploratory, 17 weeks, gives -3.4686 in one row of the report; 538 classic gives -3.58 in the same report.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:195-216; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:270-290; C:/Users/pgoff/Mentat/sector_growth_study/results/report_analysis-R-20260926T221444Z.md",
+      "transfer_conditions": "The plan supplies only the outcome definition. SEATS-W and the SHIFT tests are extensions beyond the plan's annual design. The SHIFT preview is exploratory and below the 6-year minimum, so it must not be quoted as an annual test result. The 2022-only window for SEATS-W is not confirmed by the report.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Outcome definition matches the plan. The rel presents the annual SHIFT of -0.04 (p 0.76) as the answer to the plan's partisan question; it is a preview estimate only, and the core annual SHIFT tests are not estimable. The -3.47 figure is in the report as an exploratory House row, but the 2022-only window is not confirmed."
+    }
+  ],
+  "related": [
+    {
+      "slug": "imai-2021-fixed-effects-regression",
+      "relation": "complements",
+      "why": "Item record exists (Imai and Kim 2021, two-way fixed effects for causal inference with panel data); fits the plan's sector-FE and year-FE check. Title checked only."
+    },
+    {
+      "slug": "huneeus-2018-effects-firms-lobbying",
+      "relation": "complements",
+      "why": "Item record exists (Huneeus and Kim 2018, effects of firms' lobbying on resource misallocation). Title checked only; the rel's link to deep-pockets and seek-relief hypotheses was not re-read."
+    },
+    {
+      "slug": "bickmore-2025-corporate-lobbying-political",
+      "relation": "complements",
+      "why": "Item record exists as an ext file only. Content and the rel's market-concentration link were not re-read."
+    },
+    {
+      "slug": "alexander-nd-lobbying-analysis-under",
+      "relation": "complements",
+      "why": "Item record exists (Alexander, Scholz and Mazza, lobbying ROI under the AJCA 2004; working paper). Title checked only."
+    },
+    {
+      "slug": "furnas-nd-conflating-lobbying-pacs",
+      "relation": "complements",
+      "why": "Item record exists (Furnas, LaPira and Brock, low overlap of lobbying and PAC spending). Title checked only; supports the plan's separate-outcomes rule as the rel states."
+    },
+    {
+      "slug": "kim-2023-systemic-sequential-links",
+      "relation": "complements",
+      "why": "Item record exists (Kim, Stuckatz and Wolters Freiheyt 2023, donations and lobbying links). Title checked only."
+    },
+    {
+      "slug": "bacik-2025-measuring-dynamical-evolution",
+      "relation": "complements",
+      "why": "Item record exists (Bacik et al. 2025, dynamical evolution of the US lobbying network). Title checked only; election-cycle synchronization claim not re-read."
+    },
+    {
+      "slug": "anon-2025-cross-industry-political",
+      "relation": "same-data",
+      "why": "Item record exists (Cross-Industry Political Spending memo, 2025). Authorship unknown; the same-data claim was not re-read."
+    },
+    {
+      "slug": "goff-nd-cross-industry-finance",
+      "relation": "same-data",
+      "why": "Item record exists (Goff, Cross Industry Finance and Lobbying Disclosure Report). Title checked only; the same-data claim was not re-read."
+    }
+  ],
+  "summary_issues": [
+    "Rel summary gives L3 on LobbyView as b 0.242 with p 0.033 and Holm 0.1125. The reference record in sgs_review.R gives base 0.352, p 0.0375, Holm 0.1125. Holm 0.1125 equals 3 x 0.0375, consistent with Holm over three tests; 3 x 0.033 would be 0.099. Correct the summary.",
+    "Rel summary says the build models log giving with Tossup and trend terms. Code: main DVs are levels in millions; log is only the R-log and R-logFE robustness family; no Tossup or trend regressor is in the growth control sets. Remove or rewrite this departure.",
+    "Rel flags a possible conflict between the 2023-2026 retrospective expectation series and the plan's timing rule. Code (sgs_config.R:185) records it as Paul's explicit ruling, labelled RETROSPECTIVE / NOWCAST, with STRICT variants. State it that way.",
+    "Rel says the annual partisan SHIFT is -0.04 with p 0.76 and that the plan's partisan question is answered as no stable shift. Only the preview SHIFT-Chamber-PV gives that, below the 6-year minimum and labelled post-result exploratory. Core SHIFT-House and SHIFT-Senate are NOT ESTIMABLE in report_analysis-R-20260926T221444Z.md. Rewrite as not estimable.",
+    "Rel says the plan names statsmodels and IEM only. This is false: the plan also names IBISWorld, Mentat and FEC workbooks, Melange LDA and LobbyView, Minneapolis Fed CPI, and the Georgetown and IBISWorld sources (Sections 4, 6A to 6D, 9).",
+    "The pooled L3-LV coefficient is quoted without strata. Wording rules require either the SLOPES per-sector strata or an UNSTRATIFIED label. The year-FE flip conclusion should also cite the first-difference value of -0.537 (n 71) from sgs_review.R.",
+    "Rel calls the growth results a single analysis path. The sgs_review.R figures are the Codex methodology review of run analysis-R-20260926T070630Z, which the pipeline is meant to reproduce. They remain UNVERIFIED under DE-062 until an independent path reproduces them, and the summary should say so.",
+    "SEATS-W -3.47 comes from an EXPLORATORY 17-week House row. The rel's 2022-only window is not confirmed by the report, and 538 classic gives -3.58 in the same report. Quote with window, denominator and exploratory status.",
+    "Rel says 538 robustness fills the IEM gap. Code uses 538 only as robustness H4-538, replacing exp_dem_house there (sgs_config.R:259-264); the 2023-2026 fill is the expected-control sheet.",
+    "Rel's gaps and paul_alignment use the phrase nine or fewer sector clusters. The plan gives nine planned sectors with fewer usable and no numeric threshold. Use the plan's wording.",
+    "Related links were checked for existence and title only. All nine item records exist. The substantive claims in the why text for Huneeus, Furnas, Kim, Alexander, Bacik, Bickmore and the two same-data items were not re-read and should be checked before use.",
+    "Coverage: the plan (301 lines, 29,981 characters) was read in full from the text file. No annotation files exist, so paul_markup is empty and nothing was dropped. The rel's 'Paul's own research plan (dated 2026-09-25)' metadata is correct; the item metadata marks it as a note by Paul Goff."
+  ]
+}

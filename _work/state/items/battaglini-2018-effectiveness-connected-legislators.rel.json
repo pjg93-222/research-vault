@@ -1,0 +1,129 @@
+{
+ "summary_md": "Battaglini, Leone Sciabolazza and Patacchini (NBER WP 24442, 2018; a working paper, not peer reviewed) model House members who put effort into lawmaking and gain from the effectiveness of the colleagues they cosponsor with. In equilibrium, a member's Volden-Wiseman Legislative Effectiveness Score (LES) is proportional to a characteristic-weighted Katz-Bonacich centrality of the cosponsorship network. They estimate this by nonlinear least squares on 2,176 member-Congress observations (House, 109th to 113th Congresses). Cosponsorship ties are endogenous, so they correct with a two-step control function that uses shared-alma-mater ties as the instrument (first stage on 945,382 dyads). The spillover parameter phi is 0.44 uncorrected and 0.83 corrected (SE 0.05). The selection term is significant. Betweenness, closeness and eigenvector centrality are each significant in naive OLS, but none is significant after the correction. In a horse race, only the model-derived Katz-Bonacich term survives (phi 0.71). The committee-chair effect shrinks about 18 percent (1.97 to 1.61) once the network enters the model. Network effects are positive at every stage from BILL to LAW and grow at later stages. Cross-party and within-party ties have similar coefficients (0.87 vs 0.83), and the gap is small next to their standard errors. For Paul's systems, the paper is the empirical twin of the 2016 targeting paper behind the diagnostic Katz-Bonacich benchmark. It supports the June decision to retire the direction-blind InfluenceScore blend. It also flags that the live cosponsor graph is used without any endogeneity correction. The system already loads CEL LES data, so a direct replication of this paper's KB-to-LES link is cheap. That replication has not been run, and any such result stays UNVERIFIED until a second path reproduces it.",
+ "category": "Social Network Analysis",
+ "bearings": [
+  {
+   "component_id": "melange-sna.katz-bonacich-benchmark",
+   "relation": "method-source",
+   "paper_claim": "Equilibrium LES is proportional to a weighted Katz-Bonacich centrality (Proposition 1). Corrected NLLS phi = 0.8324 (SE 0.0516) on a row-share cosponsorship matrix. In the horse race against betweenness, closeness and eigenvector, only the model term stays significant (phi 0.7095, SE 0.0817). N = 2,176 House member-Congresses, 109th-113th.",
+   "paper_location": "Sec 2.2 Proposition 1; Table 2 col 3; Table 4 last block",
+   "system_side": "kb_benchmark.py computes unweighted KB (unit vector, no characteristic weights) on the build_P activation kernel with delta = 0.85/lambda_max and correlates it with allocations, money and MBC.scores(). The 2026-08-18 output gives rho +0.65 (n = 533 members, current roster) against what it labels the legislative score. MBC.scores() is the composite four-pillar score, not the legislative pillar. The benchmark cites only Battaglini-Patacchini 2016 (money targeting), not this effectiveness paper.",
+   "code_ref": "fec/engine/kb_benchmark.py:50-59; fec/engine/kb_benchmark.py:88; fec/moneyball_core.py:252",
+   "transfer_conditions": "The paper's W is row-normalized cosponsorship share, so phi is directly comparable to the benchmark's delta fraction 0.85. The benchmark runs on a saturated activation kernel (x/(x+6)) with receiver susceptibility, not on raw shares. Paul's graph mixes both chambers, while the paper is House only. The benchmark target is a composite score, not LES. Transfer holds only if KB is recomputed on a row-normalized cosponsor matrix and tested against CEL LES for the same Congresses.",
+   "strength": "strong"
+  },
+  {
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "supports",
+   "paper_claim": "Naive OLS gives betweenness 0.0079, closeness 0.0011 and eigenvector 0.1203, all significant. After the endogeneity correction none is significant (betweenness -0.2599 SE 0.1662; eigenvector -0.4122 SE 0.2500). Off-the-shelf centralities pick up selection into ties rather than effectiveness spillovers. Sample: House, 109th-113th Congresses.",
+   "paper_location": "Table 4; Sec 4 discussion",
+   "system_side": "InfluenceScore = 0.60 weighted out-degree + 0.25 betweenness + 0.15 eigenvector from congress_centrality. It was retired from the Influence pillar on 2026-06-25 (AB13 0.65 to 0.0) as direction-blind.",
+   "code_ref": "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md:133; C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md:76",
+   "transfer_conditions": "The paper tests these centralities against LES, not against CU-relevant influence. The retirement was decided on a different ground (direction), so this is independent corroboration, not the original reason. Weighted out-degree is not tested in the paper.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "moneyball-rank-pillars.undervaluation-lens",
+   "relation": "qualifies",
+   "paper_claim": "After correcting for endogenous tie formation, eigenvector and betweenness centralities lose significance for LES (Table 4). Only the model-weighted Katz-Bonacich term carries signal.",
+   "paper_location": "Table 4",
+   "system_side": "The underdog lens still uses Intrinsic = 0.5 Leg% + 0.5 Centrality%. Its Centrality% is the retired InfluenceScore blend of out-degree, betweenness and eigenvector.",
+   "code_ref": "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md:137",
+   "transfer_conditions": "Applies if the lens means Centrality% to stand for hidden effectiveness. If it is only a descriptive visibility contrast, the endogeneity point weakens. The paper covers the House only.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "suggests-extension",
+   "paper_claim": "Network spillovers raise effectiveness at every stage. Corrected phi is 0.5634 for BILL only, 0.8387 for BILL plus AIC, and 0.8643 for ABC plus PASS plus LAW, with the selection term significant in each. Sample: House, 109th-113th Congresses.",
+   "paper_location": "Table 7",
+   "system_side": "The shadow scores the same five stages (BILL, AIC, ABC, PASS, LAW) with role weights 3/2/1 and no peer or network term. lep_criterion loads CEL LES (lesclassic) but only scores convergence against the blended score.",
+   "code_ref": "fec/engine/legislative_effectiveness.py:17-19; fec/members/lep_criterion.py:12-19",
+   "transfer_conditions": "Adding a spillover term needs a network that is exogenous, or corrected, relative to the stage outcomes. Paul's cosponsor edges are partly built from the same bills the shadow credits, which raises a circularity risk. A first test would be a read-only fit of LES on own covariates plus phi times W times LES with CEL data for the same Congresses. It would stay UNVERIFIED until reproduced.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-sna.cosponsor-network",
+   "relation": "qualifies",
+   "paper_claim": "Cosponsorship links are endogenous. The control-function selection term xi = -0.4133 (SE 0.0741) is significant, and correcting for it moves phi from 0.44 to 0.83 and shrinks covariate effects. Alumni ties predict links (3.87 x 10^-2 per dyad, 945,382 dyads), but R-squared is only 0.079.",
+   "paper_location": "Table 1; Table 2 cols 2-3; Sec 3-4",
+   "system_side": "load_network reads the newest cosponsor workbook and mean-symmetrizes it. Original 1.0 and regular 0.5 weights are summed per sponsor bill and treated as an exogenous influence and alignment tie. There is no selection or endogeneity correction anywhere downstream.",
+   "code_ref": "fec/moneyball_core.py:461-496",
+   "transfer_conditions": "The paper's estimand is effectiveness spillover, not stance diffusion or recruitment, so the bias size does not transfer. What transfers is the sign that naive cosponsor-network coefficients are biased. The paper's edge weight is shared bills over the member's total cosponsored bills, a per-member volume normalization that this project measured and rejected. Treat it as a description, not a recommendation.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-influence-engine.cascade-kernel",
+   "relation": "qualifies",
+   "paper_claim": "Between-party ties carry effectiveness spillovers at least as large as within-party ties: 0.8668 (SE 0.2136) vs 0.8346 (SE 0.0584) in the corrected column. The difference is small relative to the standard errors.",
+   "paper_location": "Table 6; Sec 5.2",
+   "system_side": "cpf_diffusion damps every cross-party edge to 0.4 + 0.6 sqrt(bpf_u bpf_v), which is 0.544 at the default bpf 0.24. Same-party edges stay at 1.0.",
+   "code_ref": "fec/moneyball_core.py:543-545",
+   "transfer_conditions": "The kernel models stance and activation diffusion, while the paper measures productivity spillovers. Cross-party damping may still be right for persuasion. The paper only shows that cross-party ties are not weaker channels of legislative help. The Table 6 split is the only stratification the paper reports, and the paper's phi is otherwise pooled across Congresses.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "qualifies",
+   "paper_claim": "The committee-chair coefficient on LES falls from 1.9669 (SE 0.1147) in OLS to 1.6107 (SE 0.1545) once corrected network spillovers enter, about 18 percent smaller. Chairs and senior members also gain less from spillovers (chair susceptibility cell -0.5981, SE 0.1588). Sample: House, 109th-113th Congresses.",
+   "paper_location": "Table 2; Tables 5a-5b",
+   "system_side": "Since 2026-06-25 the Influence pillar has been committee-only (AB12 = 1.0), with Chair leadership multiplier 3.0. The network share was removed, so any network effect a chair carries now loads onto seat weights.",
+   "code_ref": "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md:117; C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md:133",
+   "transfer_conditions": "The paper uses LES as the outcome and the Influence pillar is a prestige proxy, so the 18 percent is indicative only. The paper covers the House only.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "kb_benchmark.py labels MBC.scores() as the legislative score, but moneyball_core.py:252 returns the composite four-pillar score. The 2026-08-18 rho of +0.65 (n = 533) is KB versus the composite, not versus the legislative pillar or LES.",
+  "kb_benchmark.py uses an unweighted unit vector on the saturated build_P kernel. Neither the 2016 nor the 2018 papers use that form: both use characteristic-weighted KB on a row-share cosponsor matrix. The benchmark is a loose analogue, not a replication.",
+  "The CEL LES data are already loaded (fec/members/lep_criterion.py) but have never been regressed on KB or network spillovers. That makes the paper's central result a cheap read-only replication target, which has not been attempted.",
+  "No component treats cosponsorship ties as endogenous. All centralities, the cascade kernel and recruitment routes take the observed graph as exogenous, and nothing addresses selection into ties.",
+  "The undervaluation lens still uses Centrality% from the retired InfluenceScore blend. The paper finds no predictive value for those centralities once tie selection is corrected.",
+  "The effectiveness shadow has no peer-spillover term, although the paper finds spillovers at every one of its five stages."
+ ],
+ "flags": [
+  "The paper's edge weight is shared bills over the member's total cosponsored bills, a per-member volume normalization. This project measured and rejected per-edge volume normalization, so do not adopt the paper's weighting into the live graph.",
+  "Alumni (shared-background) ties appear here only as an instrument for link formation. Under D-025, any shared-background score in Paul's systems remains a heuristic, never a closeness or introduction probability.",
+  "The paper's phi (0.83) is pooled across five Congresses and both parties. Its only stratification is the within- versus between-party tie split in Table 6. Quote phi as pooled, House only, 109th-113th.",
+  "Working paper, not peer reviewed. The text and tables disagree on the horse-race column and on which Table 8 columns carry committee dummies.",
+  "Any replication of KB to LES on Paul's graph is new agent analysis and stays UNVERIFIED until a second path reproduces it (DE-062)."
+ ],
+ "paul_alignment": "Paul has no annotation for this work. Under the Katz-Bonacich benchmark he lists only the 2016 companion paper, unannotated. He highlighted Ardekani's preference for Katz centrality and Sotoudeh's weak result for eigenvector centrality. This paper agrees with both: only the model-derived Katz-Bonacich term survives the correction. His position is not stale, but the benchmark is mislabeled (it scores against the composite) and has never been tested against the CEL LES data already on hand.",
+ "related": [
+  {
+   "slug": "battaglini-2016-influencing-connected-legislators",
+   "relation": "builds-on",
+   "why": "Same authors and the same Katz-Bonacich equilibrium and alumni-network instrument. The 2016 paper prices PAC money by centrality, and this one tests the same centrality against LES. kb_benchmark.py cites only the 2016 paper."
+  },
+  {
+   "slug": "sotoudeh-2024-network-based-measure",
+   "relation": "complements",
+   "why": "Both test whether cosponsorship-network position predicts House legislative success. Sotoudeh finds eigenvector centrality weak for bill passage, which matches this paper's null for eigenvector after correction."
+  },
+  {
+   "slug": "harbridge-yong-2023-bipartisan-path-effective",
+   "relation": "complements",
+   "why": "Links bipartisan cosponsorship to LES. This paper's Table 6 finds cross-party ties at least as productive as within-party ties."
+  },
+  {
+   "slug": "bucchianeri-2025-legislative-effectiveness-american",
+   "relation": "same-data",
+   "why": "Uses the Volden-Wiseman LES framework (extended to the states), the outcome measure this paper models."
+  },
+  {
+   "slug": "montgomery-2017-effects-congressional-staff",
+   "relation": "complements",
+   "why": "Estimates House network effects on legislative output through staff ties rather than cosponsorship. This offers a less endogenous network than cosponsorship."
+  },
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "relation": "complements",
+   "why": "Relates House cosponsorship-network structure to LES-style effectiveness through signed coalitions rather than centrality."
+  },
+  {
+   "slug": "ringe-nd-pinpointing-powerful-voting",
+   "relation": "complements",
+   "why": "Proposes a network centrality, built on co-voting, as a measure of legislative influence. It is an alternative to the Katz-Bonacich effectiveness measure tested here."
+  }
+ ]
+}

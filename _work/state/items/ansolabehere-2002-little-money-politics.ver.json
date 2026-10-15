@@ -1,0 +1,96 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-influence-engine.money-response-defection",
+   "relation": "supports",
+   "paper_claim": "In the most common House specification (Column 1, 1978-1994, N = 3400, CCUS 0-100 score) an extra 60000 dollars of corporate PAC money (about 1 SD) changes the score by at most 2 points; 50000 dollars of labor PAC money changes it by 6; a change of party changes it by more than 30 points (40 with district FE). Member fixed effects eliminate the contribution effects, and IV reverses the sign on corporate money. Changes in donations to an individual legislator do not translate into changes in that legislator's roll-call votes.",
+   "paper_location": "Table 2 and text pp.18-20 (printed NBER pages)",
+   "system_side": "shift_lean uses MAXSHIFT times r/(r+HALF) with r = c times amount over receipts. MAXSHIFT defaults to 18 with a code comment citing Ansolabehere for the cut from 40. On median receipts recomputed from congestion.json (1743281, n = 517), a 10k gift shifts lean by about 0.98, below DTHRESH 11.25. Defection needs roughly 1/6 of receipts before the pressure_mult and 1.10 LOSSFRAME factors, which can lower that fraction.",
+   "code_ref": "fec/engine/money_response.py:15-25 and :60-80",
+   "transfer_conditions": "The paper estimates business-wide PAC money against a Chamber score at ordinary contribution sizes, pooled across the House. The defection channel fires only on scenario shocks near 1/6 of receipts, outside the paper's support. The member-FE null puts the within-member slope at zero, so any nonzero MAXSHIFT is owner judgment, not an estimate. The 2-vs-30 contrast is conditional on party and is not stratified; quote it with an UNSTRATIFIED label.",
+   "strength": "strong",
+   "verdict": "softened",
+   "verifier_note": "Paper numbers and the member-FE null reproduce from Table 2 and pp.18-20. The system side is softened: the 0.9 figure is about 0.98 on recomputed median receipts, and the 1/6 boundary ignores pressure_mult and LOSSFRAME. Code comments and congestion.json checked read-only."
+  },
+  {
+   "component_id": "melange-influence-engine.flip-model",
+   "relation": "qualifies",
+   "paper_claim": "Money is a small part of a reelection-minded legislator's calculation: party moves the score by more than 30 points against about 2 for money. The paper lists buying access as one of several group motives and does not test it. It cites 3 billion dollars of lobbying against 300 million of PAC contributions in 1997-98, and Langbein's estimate of about 10000 dollars per legislator hour. Its main thesis is consumption rather than access.",
+   "paper_location": "pp.18-20 (votes); pp.31-33 (access, lobbying totals, 20 percent illustration)",
+   "system_side": "WM 0.35 and WP 0.65 at flip_model.py:21, with a comment that money buys access and effort more than votes, citing Ansolabehere, Hall and Wayman, and Kalla and Broockman. pflip = a/(a+b) with saturating money terms, each carrying a +1 smoothing term.",
+   "code_ref": "fec/engine/flip_model.py:21 and :88-100",
+   "transfer_conditions": "The paper supports money as the minority partner on votes, not on access. The access attribution rests on Kalla and Broockman, which is outside this paper. Peer proximity (cpf_pressure) is not party; the 30-point party effect is only the nearest analogue. With peer terms zero, pflip approaches 0 or 1 only at extreme money ratios because of the +1 smoothing.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper claims reproduce from text (party 30 vs 2, access untested, 3 billion vs 300 million, Langbein 10000). The WM comment credits Ansolabehere for access, which the paper does not test; this is the citation-precision flag, and it stands. The 0-to-1 range sentence was overstated and is narrowed."
+  },
+  {
+   "component_id": "melange-influence-engine.competitiveness-multiplier",
+   "relation": "qualifies",
+   "paper_claim": "Closeness raises the quantity of money. In the gubernatorial panel (1976-2000, N = 326, state FE) the closeness coefficient on log per-capita spending is 2.93. In House races of 1992-2000, close seats (under 5 points) draw 60 percent of funds from individuals and 31 percent from PACs, while safe seats (30 points or more) draw 48 and 46 percent. Most of the gap in the individual share comes from gifts under 500 dollars.",
+   "paper_location": "Table 3 (pp.26-27); The Marginal Dollar (pp.28-29)",
+   "system_side": "c = 1 + exp(-max(lean,0)/5) scales effective dollars on both money legs; receipts stay in the denominators of pflip and shift_lean.",
+   "code_ref": "fec/moneyball_core.py:83-93 and fec/engine/flip_model.py:95-96",
+   "transfer_conditions": "The paper shows the supply side only: more money, mostly from individuals, flows to close races. It says nothing about per-dollar influence. The PAC evidence is in shares, not dollar levels. Higher receipts in close seats shrink r and partly offset c. Reciprocity is not validated (D-104..D-108), and this paper does not validate it.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "The 2.93 coefficient and the 60/31 and 48/46 splits reproduce. The marginal-dollar wording was wrong: the paper says most of the individual-share gap between close and safe seats comes from gifts under 500 dollars, not that close-race marginal dollars are mostly small gifts. PAC evidence is shares only."
+  },
+  {
+   "component_id": "melange-allocation.stance-money-gate",
+   "relation": "supports",
+   "paper_claim": "With member fixed effects, changes in donations to an individual legislator do not translate into changes in that legislator's roll-call voting. A third explanation for group giving is to elect sympathetic legislators rather than to change the views of sitting ones.",
+   "paper_location": "p.19; pp.32-34",
+   "system_side": "STANCE_GATE_BLOCKED (Skeptic, Highly Skeptical, Opponent) is defined at moneyball_core.py:717 and applied to money in optimize.py:52 (GATED), per_topic_flip.py:37 and per_topic_coalition.py:26. The rel claim that gated members receive zero money in every allocator, and still count in the objective, was not confirmed in this pass.",
+   "code_ref": "fec/moneyball_core.py:717 and fec/engine/optimize.py:52",
+   "transfer_conditions": "The evidence is general business and labor PAC money against CCUS scores (1978-1994), not CU-specific bills or the current Congress. It supports not paying to convert opposed members. It does not measure electoral help to allies.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper passages confirmed. The gate set and its use in optimize.py, per_topic_flip.py and per_topic_coalition.py are confirmed. The every-allocator and objective claims were not verified and are removed from the system side."
+  },
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "supports",
+   "paper_claim": "In the gubernatorial panel (N = 326, state FE) the income elasticity of spending is 1.07 and 1.17 across Table 3 specifications, and per-capita state government spending has no independent effect (-0.09). Real campaign spending roughly doubled 1976-2000 but shows no trend relative to national income. 94 top executives at 12 large firms gave about 7500 dollars per cycle, or 51 dollars per 100000 of annual compensation (0.05 percent), against 0.04 percent of national income in 2000.",
+   "paper_location": "Table 3 (pp.26-27); executives and time series (pp.22-24)",
+   "system_side": "sgs_config.R lines 67-76 define the job tiers and NATIONAL_VARS (presidential and midterm year, party control, seat forecasts, GB538 margin). No income term appears there. The study's own result (no stable growth effect, no adjusted R2 gain) was not checked in this pass.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:67-76",
+   "transfer_conditions": "The paper's units are states and aggregate federal spending, not industry sectors. The consumption account predicts that employee and executive giving follows donor income rather than industry fortunes, consistent with the study's null. A real-dollar trend may partly reflect income growth. The executive figure is a share of compensation, which the paper says overstates the income share.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Numbers reproduce from Table 3 and the text. One fix: the 0.05 percent executive figure is of annual compensation, not income, and the paper says that overstates the share. The sgs_config lines match the no-income-term description. The study's own null result was not reproduced here."
+  },
+  {
+   "component_id": "mentat-giving-forecast.cycle-model",
+   "relation": "qualifies",
+   "paper_claim": "In the gubernatorial panel, campaign spending scales with per-capita income at an elasticity of 1.07 to 1.17, and government spending adds nothing once income and state FE are included. In aggregate, campaign spending shows no trend relative to national income over 1976-2000, and presidential spending as a share of GDP was flat over 1912-2000.",
+   "paper_location": "pp.23-27, Table 3",
+   "system_side": "giving_forecast.py lines 1393-1397 hold the cycle formula M = B exp(phi dP + d_h)(1 + x/2), where x is the one-year-lagged IBISWorld real industry growth path. The D-116 exemption (company PACs take x = 0) was not checked in this pass.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:1393-1397",
+   "transfer_conditions": "The paper's evidence is aggregate and state-level spending, not industry-attributed giving. Industry revenue proxies firm size and stakes, not donor income, so the bearing is weak. The elasticity should be attributed to the gubernatorial panel, not to campaign spending in general.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Formula and cited lines confirmed in giving_forecast.py. The paper claim was too broad: the elasticity comes from the gubernatorial panel, and the flat-share finding is aggregate. D-116 was not checked."
+  }
+ ],
+ "related": [
+  {"slug": "kalla-nd-campaign-contributions-facilitate", "relation": "complements", "why": "Randomized field experiment (Kalla and Broockman) on donor access to congressional officials. It supplies the access half of the engine's citation, which this paper only hypothesizes. Item exists."},
+  {"slug": "alexander-2009-lobbying-analysis-under", "relation": "contradicts", "why": "Lobbying ROI analysis under the 2004 American Jobs Creation Act. Its text reports positive, significant lobbying returns, set against this paper's small-return account. The link is a framing contrast, not a direct test. Item exists."},
+  {"slug": "furnas-nd-conflating-lobbying-pacs", "relation": "complements", "why": "Reports minimal overlap between organizations that lobby and those that make PAC expenditures. It is a check on this paper's claim that big givers also lobby heavily. Item exists."},
+  {"slug": "bouton-2022-small-campaign-donors", "relation": "builds-on", "why": "Studies small individual donors, the consumer contributor this paper puts at the center of campaign finance. Item exists."},
+  {"slug": "bonica-2013-mapping-ideological-marketplace", "relation": "complements", "why": "Shows ideologically sorted donors, consistent with giving as ideological participation. Item exists."},
+  {"slug": "fouirnaies-2022-electoral-incentives-affect", "relation": "complements", "why": "Fouirnaies and Hall on electoral incentives in U.S. state legislatures. Bears on the competitiveness lever, but for state, not federal, legislators. Item exists."},
+  {"slug": "kim-2020-strategic-sequential-links", "relation": "complements", "why": "Links donation timing to lobbying, which complicates a pure consumption reading for organized interests. Item exists."},
+  {"slug": "defigueiredo-2013-advancing-empirical-research", "relation": "complements", "why": "A co-author's later review of lobbying empirics. The claim that lobbying spending dwarfs PAC giving was not found in its text, so only the agenda link stands. Item exists."},
+  {"slug": "note-sector-growth-and-political-spending-source", "relation": "complements", "why": "Paul's sector growth source note. The paper's null for stakes and its income elasticity bear on the growth-giving hypothesis. Item exists."}
+ ],
+ "summary_issues": [
+  "Executive figure: 0.05 percent is a share of annual compensation, not income. The paper says this overstates the income share (p.22). Summary wording should change.",
+  "Marginal-dollar wording: the paper says most of the individual-share gap between close and safe seats (60 vs 48) comes from gifts under 500 dollars. It does not say close-race marginal dollars are mostly small gifts.",
+  "Defection threshold: the code gives about 0.98 at median receipts (1743281), not 0.9. The 1/6 boundary ignores pressure_mult and LOSSFRAME.",
+  "The consumption account 'fits' the sector growth null: the study's own result was not checked in this pass, so the sentence rests only on its config.",
+  "Alexander 2009 is described as very large lobbying returns; its text reports positive, significant returns. The contradiction is a framing, not a direct test.",
+  "The de Figueiredo 2013 link's stated point (lobbying spending dwarfs PAC giving) was not found in that text.",
+  "The summary says the paper supports the MAXSHIFT cut on votes. That holds for the direction, but the paper does not estimate MAXSHIFT, so the cut stays a calibration choice."
+ ]
+}

@@ -1,0 +1,103 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-influence-engine.flip-model",
+      "relation": "qualifies",
+      "paper_claim": "Bank CEOs give little directly to candidates; several, including Moynihan and Masrani, gave nothing across recent cycles. Bank money flows mainly through company PACs and the ABA (cyclical average $2,402,499, memo wording). Mutual-fund Super PAC spending (about $261M annual average to the four biggest Super PACs; industry PACs about $13M cumulative; memo figures, no source or window) is described as channeled by the industry. CU giving runs through ACU coordination, with $0 dark money to the four biggest Super PACs (memo wording).",
+      "paper_location": "Commercial Banking lines 18-22; Mutual Funds lines 24-25; Credit Union lines 36-42",
+      "system_side": "flip_model.py line 39 builds cu0 from C[n]['cu'] and ind0 from banks plus finserv; the flip formula at lines 4-7 uses cu as the a-term and ind as the b-term. Only those two columns are read in this file. Whether the upstream cu and banks columns include trade-association or Super PAC money was not checked.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/flip_model.py:4-7,39",
+      "transfer_conditions": "Structural caution only. The memo's dollar figures have no source, window, N or denominator, so they cannot calibrate WM, HALFF or the b-term. Before any engine change, Mentat's trade-association and Super PAC columns would need mapping to members.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Memo figures match lines 18, 21, 25 and 41. The cited code line for ind0 is 39, not 37. The claim that trade-association, Super PAC and executive money never enter a or b is broader than what flip_model.py shows; it holds only for the inputs this file reads."
+    },
+    {
+      "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+      "relation": "qualifies",
+      "paper_claim": "Mutual-fund Super PAC money goes particularly to PACs aligned with the GOP (memo wording; the memo does not say mostly). The memo calls this a vast reservoir of partisan spending. House and Senate Majority PAC donations linked to JPMorgan are +90% from the company rather than individuals (memo wording, no denominator). Credit unions report $0 dark money to the four biggest Super PACs.",
+      "paper_location": "Mutual Funds line 25; Commercial Banking line 21; Credit Union lines 41-42",
+      "system_side": "report.R lines 32-34 define 527 and 501c as supplementary categories. Lines 55-77 define the channel columns, including Super PAC, Trade Association and Company PAC: To Super PAC, each with a partisan split. spending_title_role at line 2528 onward and spending_contributor_tier assign Corporate to entity contributors. fec_transfer_graph.R lines 30-42 hold the F12 date-walk rule. The brain note that 89 percent of beneficiary dollars were oppose-coded was not found in the Project Brain melange-systems-brain folder searched.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/R/report.R:32-34,55-77,2528-2563; C:/Users/pgoff/Mentat/mentat/R/fec_transfer_graph.R:30-42",
+      "transfer_conditions": "Quote the memo's partisan and dark-money readings only after recomputing with the support/oppose split and the 501c and 527 separation. The attributed-estimate producer status claimed by the analyst was not checked.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Misquote: the memo says particularly, not mostly. The +90 percent is written as +90 with no denominator. The 89 percent oppose-coded figure is not in the brain folder searched. Code references hold for the channel columns and supplementary categories."
+    },
+    {
+      "component_id": "mentat-fec-attribution.employer-match",
+      "relation": "suggests-extension",
+      "paper_claim": "Charles Schwab's company PAC and executives halted giving. Per the memo, Chairman Schwab and his wife moved giving to a charity fund that invested over $250M in conservative causes in 2021-2024 and gave to Republican Super PACs (memo figures, partly redacted). The memo's thesis is that spending is offloaded onto company executives, measured as CEO and executive averages per industry.",
+      "paper_location": "Overview line 11; Mutual Funds line 26 (partly redacted)",
+      "system_side": "collect.R company_cross_reference_people (lines 1009-1035) builds the trusted name set from roster executives and from contributions whose match reason is verified_employer_alias or verified_roster_alias. report.R spending_title_role (line 2528 onward) assigns Chief to CEO, CFO, general counsel, founder, owner, chairman and president titles, and Middle Management to vice president, director, partner, head and manager titles. The 501c category is supplementary at report.R line 32.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:1009-1035; C:/Users/pgoff/Mentat/mentat/R/report.R:32-34,2528-2563",
+      "transfer_conditions": "An extension would link executive-controlled vehicles (foundations, donor-advised funds, family entities) to roster people. That needs a verified-affiliation rule consistent with the strict-names policy, not a fuzzy guess. The memo never defines executive, so its averages cannot be reconciled with the Chief or Middle Management tiers.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "The analyst says charity or family routing is attributed only when the vehicle's filings name the employer. No such rule appears in the cited collect.R range, and a search of collect.R found no family, foundation or 501 handling. The title-role mapping holds, except the memo's VP shorthand is not in the pattern, which matches VICE PRESIDENT only."
+    },
+    {
+      "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+      "relation": "qualifies",
+      "paper_claim": "The memo says industries adapt giving to executive-branch pressure regardless of party. Examples: Bank of America PAC spending rose and its partisan split became more balanced after the debanking dispute and DOJ probe; JPMorgan streamlined PAC giving after internal memos. The causal link is hedged ('most likely', lines 22 and 28). No counterfactual or test is given.",
+      "paper_location": "Overview line 11; Commercial Banking lines 19-22; Mutual Funds line 28",
+      "system_side": "sgs_estimate.R lines 172-179 label the expected-minus-current House and Senate control terms and the presidential-year term. Lines 1-10 and 299-359 describe a wild cluster restricted bootstrap by sector. The Holm adjustment is not found in sgs_estimate.R. The SHIFT result of -0.04 with p .76 was not found in the sector growth study text searched, so that number is not confirmed here.",
+      "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:1-10,172-179,299-359",
+      "transfer_conditions": "The memo concerns executive-branch pressure, while SHIFT concerns congressional control, so the two do not test the same thing. The memo offers firm-level anecdote with no counterfactual and cannot be cited as a finding. At most it motivates a pre-registered event study around dated enforcement actions.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper side holds at lines 19, 22 and 28. Code side labels check out, but the Holm adjustment and the -0.04 SHIFT figure are not confirmed in the code or outputs searched. Drop the number, or give its source, before citing."
+    },
+    {
+      "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+      "relation": "context",
+      "paper_claim": "Credit unions have the lowest CEO and executive averages of the four industries (CEO $5,147, executive $3,009). Their giving is coordinated through the ACU trade association, with a near-perfect bipartisan balance (memo gives no figure), emphasis on open seats and special elections, and hedging across opposing candidates.",
+      "paper_location": "Credit Union lines 36-47 (figures at line 40; bipartisan claim at line 42; hedging at lines 46-47)",
+      "system_side": "giving_forecast.py lines 1741-1757 state that the credit-union company-PAC measure uses the published PAC panel's 16-PAC cohort (D-117), with the D/R split pinned to the same cohort. The comment contrasts this with the anchors' single committee and does not discuss executive giving.",
+      "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:1741-1757",
+      "transfer_conditions": "Supports treating credit-union political money as PAC- and association-led, so the panel cohort is the right unit. The near-perfect ratio and the volatility claims have no figures, so they cannot check the pinned split.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Memo figures match line 40. The code comment matches the stated 16-PAC cohort and D-117 reference. The split file referenced in the comment was not opened."
+    }
+  ],
+  "related": [
+    {
+      "slug": "goff-nd-cross-industry-finance",
+      "relation": "complements",
+      "why": "Paul-authored cross-industry finance and lobbying report (author Goff) covering credit unions and community banks. Overlap with this memo may be real, but the memo names are redacted, so shared data lineage is unverified."
+    },
+    {
+      "slug": "furnas-nd-conflating-lobbying-pacs",
+      "relation": "complements",
+      "why": "Furnas, LaPira and Brock find low overlap between organizational lobbying and PAC spending. That supports the memo's premise that money moves across channels and warns against treating one channel as total effort."
+    },
+    {
+      "slug": "irvin-2023-dark-investigation-dark",
+      "relation": "complements",
+      "why": "Irvin (2023) studies dark-money vehicles among 501(c)(4) advocacy groups, using dark money for nonprofit non-disclosure. The memo instead uses the term for disclosed Super PAC donations."
+    },
+    {
+      "slug": "christopher-2016-mathematical-modeling-analysis",
+      "relation": "complements",
+      "why": "Couch, Fox and Everton (2016) model a single dark-money network and rank nodes with AHP/TOPSIS. It is a network view of dark money, not a model of the memo's reservoir claim, so the link to Mentat's transfer graph is loose."
+    },
+    {
+      "slug": "kim-2020-strategic-sequential-links",
+      "relation": "complements",
+      "why": "Kim, Stuckatz and Wolters (2020) link donations to lobbying for interest group-politician pairs and report firm-level executive and employee giving in Appendix C. That is a more rigorous version of the executive-giving question, not the same design."
+    }
+  ],
+  "summary_issues": [
+    "Misquote: the memo says Super PAC money goes particularly to GOP-aligned PACs (line 25), not mostly. The ext key finding and rel bearing both quote mostly.",
+    "The summary says the memo reports its own ranking contradictions. It does not; the contradiction between the bank CEO figure and the mutual-fund CEO figure is the analyst's observation and is not acknowledged in the memo.",
+    "The +90 figure for House and Senate Majority PAC donations is written in the memo as +90 with no denominator, not as over 90 percent.",
+    "paul_alignment cites a Paul note on conflicting industries and a Bacik agreement. paul_entries is empty and n_annots is 0, so no Paul notes exist in this item, and the Bacik link is not in the memo.",
+    "The brain claim that 89 percent of beneficiary dollars were oppose-coded was not found in the Project Brain melange-systems-brain folder searched.",
+    "The SHIFT result of -0.04 with p .76 and the Holm adjustment were not found in the sector growth study text or in sgs_estimate.R.",
+    "flip_model.py line 37 is cited, but ind0 is at line 39.",
+    "The flag that the memo may come from the Mentat product line rests only on a layout resemblance; the item holds no evidence of lineage and it should stay an open question.",
+    "The summary's no cycle years point is fair, but the memo does use cyclical and both cycles wording; the cycle window is simply unstated.",
+    "The memo ranks the mutual-fund CEO average of $17,882 as 1nd (likely typo for 1st); the summary does not mention this typo."
+  ]
+}

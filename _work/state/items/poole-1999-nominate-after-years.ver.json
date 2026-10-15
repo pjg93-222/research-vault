@@ -1,0 +1,129 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-labels-and-tiers.say-do-gate",
+   "relation": "qualifies",
+   "paper_claim": "The second dimension now adds less than 1 percent improvement in classification over the first in both chambers (p.7). Party overlap, measured as the share of a party's members closer to the opposing party's mean than to their own, is under 1.5 percent in both chambers for the past 5 Congresses, with none in the past 3 Senates (p.15). The paper does not discuss final-passage votes specifically; the inference that a single final-passage vote mostly records party position is the analyst's, not the paper's.",
+   "paper_location": "Sec. 3 p.7-8; Sec. 5 p.15 (Fig 9 not in extracted text)",
+   "system_side": "vote_corroboration() (Path V) marks a category as corroborated when vote_category_lean.json shows lean >= 0.5 with n >= 1 for the member; it does not condition on party or ideal point. Verifier re-ran the same function on 2026-10-09 (window = current vote_category_lean.json; denominators = moneyball_core.party() roster counts, D 259, R 271, I 3 excluded) and got identical shares: CFPB D 4/259 (2%) vs R 179/271 (66%); Technology & Emerging D 18 (7%) vs R 263 (97%); Examination & Supervision D 106 (41%) vs R 261 (96%); CU Capital Requirements D 9 (3%) vs R 149 (55%); Charter Modernization D 215 (83%) vs R 70 (26%); NCUA Budget & Insurance D 145 (56%) vs R 51 (19%). Not every category sorts by party: Mortgage & Housing D 78% vs R 74%, Fraud Prevention 63% vs 68%, Defense CU Issues 57% vs 58%. Correct category names are 'CU Capital Requirements' and 'NCUA Budget & Insurance'.",
+   "code_ref": "fec/moneyball_core.py:856-871",
+   "transfer_conditions": "Paper evidence ends at the 105th Congress (1998). The party split is a re-run of the same function, not an independent second method, so it stays UNVERIFIED under DE-062 and is quoted stratified by party only. The qualification applies to the party-sorted categories, not to Mortgage & Housing, Fraud Prevention or Defense CU Issues.",
+   "strength": "strong",
+   "verdict": "softened",
+   "verifier_note": "Paper numbers confirmed at text lines 206-209 and 431-433. Code confirmed at moneyball_core.py:856-871. The analyst's numbers reproduce exactly, but two category names were abbreviated and the paper_claim attached an analyst inference about final-passage votes to the paper. Three categories show no party split."
+  },
+  {
+   "component_id": "melange-influence-engine.receptivity-layer",
+   "relation": "qualifies",
+   "paper_claim": "The linear model is not a striking improvement over the constant model, about 0.3 percent in both chambers (Table 1: House 2D constant 85.65 vs linear 5-Congress 85.96; Senate 84.04 vs 84.40). The authors let legislators serving as few as 3 Congresses get linear terms, admitting random walkers will appear linear, a bias deliberately in favour of the polynomial models.",
+   "paper_location": "Sec. 3 p.5-7; Table 1 p.23-24",
+   "system_side": "susc_trait includes N at weight .30 (lines 186 and 189) and is blended with persona z at line 191. The brain records the Tier-1 Nokken-Poole drift gate (2026-07-08, n = 441) as MISS on all candidates and a real verdict; N stays in the blend unverified; 'NOT more looks on drift'.",
+   "code_ref": "fec/members/receptivity_layer.py:186-191; C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md:85-86",
+   "transfer_conditions": "Interpretation only: low true-score variance in drift is consistent with the MISS but does not overturn or reopen it. Supports the brain's listed alternative (CU-specific vote-switch criterion), not another look.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper text lines 155-191 and Table 1 values confirmed. Brain lines 85-86 confirmed. Code_ref corrected: line 191 alone is the persona blend; the N term sits at 186/189."
+  },
+  {
+   "component_id": "melange-influence-engine.money-response-defection",
+   "relation": "supports",
+   "paper_claim": "Across Congresses 1-105, a constant ideal point per legislator classifies almost as well as a linear one (about 0.3 percent difference); linear change captured most of the relatively small changes in positions.",
+   "paper_location": "Sec. 3 p.5-7; Table 1 p.23-24",
+   "system_side": "MAXSHIFT default 18 (cut from 40, 'money moves POSITIONS little'); DTHRESH 11.25; COMMITTED = {Champion, Opponent} are the only rungs immune to money defection.",
+   "code_ref": "fec/engine/money_response.py:15,25,35",
+   "transfer_conditions": "Indirect: the paper measures general-ideology stability with no money treatment, so it supports only a low prior on position change, not any MAXSHIFT or DTHRESH value.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Paper lines 155-191 confirmed; code lines 15, 25, 35 confirmed verbatim."
+  },
+  {
+   "component_id": "melange-stance.cfpb-axis-isolation",
+   "relation": "suggests-extension",
+   "paper_claim": "Party overlap is under 1.5 percent in both chambers for the past 5 Congresses (p.15). The paper states, citing McCarty, Poole and Rosenthal (1999) rather than presenting evidence, that party per se does not account for much roll-call voting over and above the spatial model (p.17).",
+   "paper_location": "Sec. 5 p.15; Sec. 6 p.17",
+   "system_side": "Brain records CFPB-negative tiers as a confirmed party proxy (D 123 vs R 7), and after axis isolation D 98 vs R 0. dw_control.py provides a dim1 and extremity loader for psychometric residualization; within fec it is imported only by hearing_antagonism_build.py, not by any stance code. bluesky_stance_stack.py:46 defines POLICY_KEYS, the CFPB policy_force axis.",
+   "code_ref": "fec/members/dw_control.py:2-20; fec/stance/bluesky_stance_stack.py:46; C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-gate2-and-say-do.md:34-35",
+   "transfer_conditions": "With near-zero overlap, dim1 and party are nearly collinear; the informative test is within-party. A pooled coefficient carries the UNSTRATIFIED label.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper lines 431-433 and 485-488 confirmed; the p.17 claim rests on a cited paper, which the paper_claim now says. CFPB counts found in the brain gate2-and-say-do topic (lines 34-35), added as a citation."
+  },
+  {
+   "component_id": "melange-psychometrics.cooperation-v2",
+   "relation": "supports",
+   "paper_claim": "Average between-party and within-party pairwise distances (Figs 7-8, 1879-1998) show polarization declining to WWII, stable until the late 1970s, and rising steadily since. The paper does not state that the most extreme members sit farthest from the opposing party; that is an analyst inference.",
+   "paper_location": "Sec. 5 p.13-15 (Figs 7-8 not in extracted text)",
+   "system_side": "dw_control.py docstring records cooperation_v2_z vs |dim1| = -0.250 (n = 532/533, 2026-07-10) and states the extremity control is essential for A.",
+   "code_ref": "fec/members/dw_control.py:7-13",
+   "transfer_conditions": "The paper supplies context for why an extremity control matters in a polarized chamber; it does not test the cooperation measure.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Text lines 396-410 describe the distance measures and trend only. The extremity inference was removed from the paper side; strength lowered to weak because the paper's measure is party-level, not member-level extremity."
+  },
+  {
+   "component_id": "melange-sna.signed-coalitions",
+   "relation": "suggests-extension",
+   "paper_claim": "Parties in Congress are, for the most part, spatially adjacent ideological coalitions (p.17, citing Krehbiel 1993), and party overlap is near zero (p.15). The paper does not discuss partitions of networks or cutting-line members.",
+   "paper_location": "Sec. 5 p.15; Sec. 6 p.17",
+   "system_side": "signed_coalitions.py is a diagnostic Aref-Neal frustration partition of the signed mention layer (member_references.json), with a party-recovery check and cross-party hidden-coalition candidates; nothing in the chain consumes it.",
+   "code_ref": "fec/network/signed_coalitions.py:2-15",
+   "transfer_conditions": "Benchmark only: checking hidden-coalition candidates against |dim1| would show whether the mention layer adds information beyond roll-call ideology. Does not reinstate DW-NOMINATE vote edges, which Paul rejected (brain cosponsor-and-sector-networks topic, line 93).",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Code docstring confirmed. The paper_claim's two-group partition and cutting-line statements were analyst inference and are removed."
+  },
+  {
+   "component_id": "melange-labels-and-tiers.category-stance-ladder",
+   "relation": "method-source",
+   "paper_claim": "Appendix eqs. A2-A3: utility for an outcome is beta times exp of minus the weighted squared distance plus a normal error; the choice probability is a probit on the utility difference between Yea and Nay. Table 2: beta 4.125 (House, 2D linear).",
+   "paper_location": "Appendix p.19-20; Table 2 p.26",
+   "system_side": "FIXED_BANDS: nine cut points (0.70/0.35/0.25/0.15/0.05/-0.05/-0.15/-0.35/-0.70) defining ten bands on signed scores.",
+   "code_ref": "fec/stance/stance_rules.py:11-21",
+   "transfer_conditions": "Testing band edges against vote probabilities needs a member x CU roll-call matrix with dates, which the brain records as not in the repo. Paul's FreeText 'Most important part' sits on the appendix.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Appendix text (lines 545-600) and 'Most important part' note (line 553) confirmed; bands confirmed (line range off by one, corrected)."
+  },
+  {
+   "component_id": "melange-influence-engine.priority-engagement",
+   "relation": "qualifies",
+   "paper_claim": "The second dimension now adds less than 1 percent improvement over the first dimension in both chambers.",
+   "paper_location": "Sec. 3 p.7-8",
+   "system_side": "blended_engine_priority adds PRIORITY_ORIENTATION_ALPHA (0.15 flip, 0.25 coalition) times engine_orientation, a fixed-IMP-weighted mean of the member's category stance scores excluding the current topic.",
+   "code_ref": "fec/moneyball_core.py:577-609",
+   "transfer_conditions": "engine_orientation reads category_stance scores, not votes. The Path V vote shares (UNVERIFIED) show opposite party direction across some categories (CFPB, Technology, Exam, CU Capital Requirements lean R; Charter, NCUA Budget & Insurance lean D) and none in others. If stance scores share that pattern, leave-one-out borrowing could import party sign; that has not been checked on the stance scores. Alpha is small.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Code confirmed. The analyst's 'CU orientation is not the NOMINATE dimension' was drawn from vote data while the engine uses stance scores; reworded as conditional."
+  }
+ ],
+ "related": [
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "relation": "complements",
+   "why": "Aref and Neal partition signed House co-sponsorship networks (1981-2017) and find the optimal 2-partition and especially the 3-partition leave fewer frustrated edges than the party partition, with a fluid third coalition. NOMINATE dim1 is a natural benchmark for whether those members are more than near-center moderates."
+  },
+  {
+   "slug": "aref-2020-detecting-coalitions-optimally",
+   "relation": "complements",
+   "why": "Earlier optimal signed partition of House and Senate co-sponsorship networks (sessions 96-114); its coalitions can be checked against DW-NOMINATE ideal points."
+  },
+  {
+   "slug": "bonica-2013-mapping-ideological-marketplace",
+   "relation": "extends",
+   "why": "Bonica estimates candidate and contributor ideal points from contribution records and compares them with DW-NOMINATE; relevant to the donors-and-primaries claim this paper leaves unevidenced."
+  },
+  {
+   "slug": "noble-2024-presidential-leadership-legislative",
+   "relation": "complements",
+   "why": "A formal model (no data) of how presidential going-public can raise legislative polarization; a mechanism for the polarization trend this paper measures."
+  }
+ ],
+ "summary_issues": [
+  "The Spearman agreements quoted (.960 House, .981 Senate) are pooled over 1789-1998, across party systems and the Civil Rights realignment; the summary should carry the UNSTRATIFIED label, as the analyst's own flag says.",
+  "The summary says party overlap is 'on dimension 1'; the text defines overlap as members closer to the opposing party's mean than their own and does not state the dimension.",
+  "The summary states DW-NOMINATE appears only via dw_control.py and Nokken-Poole scores; within fec, hearing_antagonism_build.py also imports dw_control, and paul_alignment's mention of behavior_panel.py and work_baseline.py as dw_control users was not confirmed by a search of fec.",
+  "'A read-only check confirms strong party sorting in several categories': the verifier re-ran the same function and reproduced it, but three categories (Mortgage & Housing, Fraud Prevention, Defense CU Issues) show no party split, and a same-function rerun is not an independent second path, so it remains UNVERIFIED (DE-062).",
+  "Related link ringe-nd-pinpointing-powerful-voting was labelled same-data as 'House roll-call data'; its data are European Parliament MEPs. Dropped."
+ ]
+}

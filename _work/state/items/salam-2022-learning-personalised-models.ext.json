@@ -1,0 +1,58 @@
+{
+  "title": "Learning Personalised Models for Automatic Self-Reported Personality Recognition",
+  "authors": ["Hanan Salam", "Viswonathan Manoranjan", "Jian Jiang", "Oya Celiktutan"],
+  "year": "2022",
+  "venue": "Proceedings of Machine Learning Research (PMLR) vol. 173, pp. 53-73; Understanding Social Behavior in Dyadic and Small Group Interactions",
+  "doi": "",
+  "document_type": "academic-article (challenge-track proceedings paper)",
+  "coverage": "Full text read in one pass (59,349 chars, 1,415 lines): front matter, abstract, introduction, related work, data, feature extraction, NAS method, results (Tables 1-4), discussion, limitations, conclusion. Paul markup: none (annot_sha12s empty, no note flag), so paul_markup is empty and 0 items were dropped. Topic check: no lobbying, social networks, path-finding, allocation, elections, persuasion/turnout or legislator content. Text measurement appears only as sentiment and SBERT features. Metadata hints corrected: authors given in full; year, PMLR 173 and page range confirmed; no DOI printed in text so left empty. Discrepancy noted in limitations: text on p.64 gives 0.796 as the fused AMSE for the best model, while Table 1 gives 0.690 for gender-wise and 0.796 for age-wise. No ext or rel override files existed.",
+  "research_question": "Does learning separate neural architectures per user profile (gender, or age split at 30) improve automatic self-reported Big Five personality recognition over one generic model, using multimodal behavioural features from dyadic interactions?",
+  "theory": "Personality computing built on the Big Five (OCEAN) model. Premise: self-reported traits and the way traits are expressed in nonverbal behaviour differ by gender, age and culture, so one-fits-all models may be suboptimal. No formal theory is tested.",
+  "data": "UDIVA dataset: 188 dyadic face-to-face interactions, 147 participants, 90.5 hours of recordings, 55.1 percent male, ages 4 to 84, 22 nationalities (68 percent Spain), five interaction contexts (talk, animals game, Lego building, ghost blitz card game, gaze events). Unit of analysis: one-minute per-participant segments (25 fps, 1,500 frames). Outcome: self-reported Big Five scores. Model trained on challenge train and validation partitions; evaluated on the unseen challenge test partition. Test-set N and profile subgroup sizes are not reported.",
+  "method": "Per-modality features: FaceBody landmark mean and SD (552 dims); talk-turn duration (5), content (5), sentiment (10, Spanish-only library), speech rate (5); SBERT sentence embeddings; MFCC-20 band-energy statistics. For each profile (female, male; age 30 or under, over 30) and each modality, Auto-Keras neural architecture search (network morphism with Bayesian optimisation), 100 trials, up to 1,000 epochs, Adam optimiser, MSE loss, early stopping patience 30, 85/15 train/validation split, default start of two 32-unit dense layers. Decision fusion: per-minute scores averaged over sessions, then modality predictions averaged, using the best two modalities or all modalities. Comparison against generic models and challenge-team results.",
+  "scope": "Population: adult and minor participants in dyadic video interactions, mostly Spanish-speaking (dominant language Spanish, then Catalan and English). Institution: ChaLearn LAP DYAD challenge at ICCV 2021, automatic self-reported personality track. Era: 2021-2022 challenge; collection date of UDIVA not stated in text.",
+  "identification": "None in the causal sense. Profile-specific models are compared with a generic model and challenge entries on one fixed test split. No significance tests, intervals, or repeated-seed variance are reported in the text.",
+  "measures": ["Mean squared error per Big Five trait (O, C, E, A, N)", "Average MSE across the five traits (AMSE), equation 2 p.63", "Features: FaceBody landmark statistics; talk-turn duration, content, sentiment, speech rate; SBERT embeddings; MFCC-based audio statistics"],
+  "key_findings": [
+    {"finding": "Gender-wise bimodal NAS (fusion of two best modalities) gives the lowest AMSE in the paper; generic and age-wise bimodal fusion are higher.", "location": "Table 1 p.65; Section 4.2.1 p.64", "numbers": "AMSE 0.690 gender-wise; 0.796 age-wise; 0.818 generic fusion"},
+    {"finding": "Abstract's error reduction is measured against generic bimodal fusion, not the generic best single modality.", "location": "Abstract p.53; Table 1 p.65", "numbers": "Reduction 0.128 vs generic fusion; generic best single modality 0.820, so gap 0.130"},
+    {"finding": "In the generic setting, bimodal fusion barely improves on the best single modality; the gain is concentrated in the gender split.", "location": "Table 1 p.65", "numbers": "Generic fusion 0.818 vs best single 0.820; gender fusion 0.690 vs gender best single 0.695"},
+    {"finding": "Age-wise personalisation helps only slightly over the generic model.", "location": "Section 4.2.1 p.64", "numbers": "Age-wise fusion 0.796 vs generic fusion 0.818"},
+    {"finding": "Against the challenge comparison, gender-wise bimodal NAS beats Dyadformer and the authors' prior winning ensemble on AMSE.", "location": "Table 2 p.66; Section 4.2.2 p.66", "numbers": "Gender bimodal 0.690; Dyadformer 0.722; prior SMART-SAIR ensemble 0.769; challenge baseline 0.818"},
+    {"finding": "Per-trait results for gender-wise bimodal NAS; it beats the prior ensemble on all traits except Agreeableness, where the prior ensemble is ahead by 0.002.", "location": "Table 2 p.66; text p.66", "numbers": "O 0.684; C 0.588; E 0.830; A 0.550 (prior 0.548); N 0.796"},
+    {"finding": "The best modality varies by trait and profile; no consistent feature wins across personalisation strategies.", "location": "Section 4.2.1 pp.64-65", "numbers": "e.g. Duration best for Openness generic and gender-wise; SBERT best for Openness age-wise"},
+    {"finding": "FaceBody is the weakest generic single modality, while talk-turn without sentiment and audio do better.", "location": "Table 1 p.65", "numbers": "Generic AMSE: FaceBody 1.325; Talk Turn (NS) 0.874; Audio 0.920"},
+    {"finding": "Adding sentiment to talk-turn features helps in the gender split but hurts in the generic and age splits; the text had expected it to hurt.", "location": "Table 1 p.65; Section 4.2.1 p.64", "numbers": "Generic NS 0.874 vs WS 0.942; gender NS 0.844 vs WS 0.784; age NS 0.883 vs WS 1.074"},
+    {"finding": "Searched architectures show no shared trend across traits or profiles; male architectures are deeper than female for Openness and Neuroticism in most features.", "location": "Section 4.3 p.66; Table 3 p.67; Table 4 p.67", "numbers": "Parameter counts range from 236 to 302,866 across cells of Table 3"},
+    {"finding": "Dataset scale for the study.", "location": "Section 3.1 p.57", "numbers": "188 interactions; 147 participants; 90.5 hours; 55.1 percent male"}
+  ],
+  "limitations": [
+    "Needs gender and age metadata at inference to assign a profile (Section 5, p.68).",
+    "Gender is treated as binary, which the authors themselves note conflicts with fairness concerns (Section 5, p.68).",
+    "The fairness advantage over data balancing or adversarial debiasing is asserted, not tested (Section 5, p.68).",
+    "Architectures show no interpretable trend; variation is partly attributed to random initialisation; explanation tools left to future work (Section 4.3, p.67).",
+    "Modalities are trained separately on one-minute segments and averaged; feature-level fusion left to future work (Section 6, p.68).",
+    "Subgroup sizes, test-set N, confidence intervals and repeated-run variance are not reported.",
+    "Internal inconsistency: text on p.64 calls 0.796 the fused AMSE of the best model, but Table 1 gives 0.690 for gender-wise and 0.796 for age-wise.",
+    "Sentiment uses a Spanish-only library applied to Catalan and English turns (Section 3.2.2 p.61; Section 4.2.1 p.64).",
+    "Profile comparisons are observational; splits are not tested for significance against the generic model.",
+    "Dyadformer row in Table 2 reports AMSE only, so the trait-level comparison is incomplete.",
+    "Single challenge test split from one dataset, 68 percent Spain-based participants; generalisability not tested."
+  ],
+  "paul_markup": [],
+  "references_of_note": [
+    "Jin, Song and Hu 2019, Auto-Keras: NAS system used for all searches",
+    "Palmero et al. 2021, UDIVA dataset",
+    "Palmero et al. 2022, ChaLearn LAP challenge results (PMLR 173)",
+    "Curto et al. 2021, Dyadformer, the comparison transformer model",
+    "Reimers and Gurevych 2019, Sentence-BERT embeddings",
+    "Yan, Huang and Soleymani 2020, bias in self-reported personality recognition",
+    "Shao et al. 2021, person-specific NAS for personality via graph representation",
+    "Di Mascio et al. 2022, survey of age and gender recognition (proposed upstream step)"
+  ],
+  "short_quotes": [
+    {"quote": "our proposed approach depends on features extracted from the target subject only", "location": "Section 2.2, pp.56-57"},
+    {"quote": "The bimodal fusion strategy decreased the AMSE by 0.106 and 0.128 with respect to the age-wise model and the generic model", "location": "Section 4.2.1, p.64"},
+    {"quote": "Even though the multimodal models performed better than the unimodal ones, they did not exhibit a unified architecture", "location": "Section 4.3, p.66"}
+  ]
+}

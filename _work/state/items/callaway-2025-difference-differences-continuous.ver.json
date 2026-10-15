@@ -1,0 +1,59 @@
+{
+ "bearings": [
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "qualifies",
+   "paper_claim": "The TWFE slope on a continuous dose is a weighted integral of ATT(d|d). In the levels form the weights integrate to zero and are negative for doses below the mean dose (Thm 3.4b). Under PT the causal-response form is a convex average of ACRT(d|d) plus a selection-bias term (Thm 3.4a). With no untreated units only differences relative to the lowest dose are identified (Remarks 3.1, 3.2). Application: TWFE 1.14 (s.e. 0.099), ATT_loc 0.80 (s.e. 0.05), ACRT_glob -0.08 (s.e. 0.19); dropping untreated units shrinks TWFE by 78 percent; recoding dose from 0-1 to 0-100 shrinks it to 0.0114.",
+   "paper_location": "Sec 3.3 Thm 3.4 and Eq 3.1 (p.15-17); Remarks 3.1-3.2 (p.14-15); Sec 6.2-6.3 (p.27-31); Appendix C staggered extension",
+   "system_side": "sgs_registry.R:31 defines the growth regressors (growth_previous_year_pct, growth_same_year_pct, predicted_growth_pct). Robustness tests R-yearFE-* and R-logFE-* replace the national controls with sector plus year fixed effects (sgs_registry.R:664-671). Sector-only fits with year effects are labelled UNSTRATIFIED because no sector-only estimate exists (sgs_estimate.R:254-255, reason at 385-398). The primary specifications were not fully traced here, so sector-plus-year is confirmed only for the robustness variants. In the latest run (summaries_analysis-R-20260926T221444Z.txt) the L1-LV year-FE growth coefficient is -0.0014 (s.e. 0.123) with adjusted R2 0.8863 with the term and 0.8874 without it. The claim that the lobbying lead flips sign under year FE was not checked.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:31; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:664-671; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:254-255; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:385-398; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_report.R:593",
+   "transfer_conditions": "The paper's formal results cover two-period and staggered absorbing doses. Sector growth is non-absorbing and changes every year, so the decomposition does not carry over exactly; the de Chaisemartin and D'Haultfoeuille estimators the paper cites fit that case. The qualitative lesson transfers: a null or sign-changing pooled growth slope under FE can reflect implicit weighting across sector-years and heterogeneous sector responses, not only zero response. Window and denominator: sector-years in each test's gated sample.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Theorem content and all cited numbers match the text (1.14, 0.80, -0.08, 78 percent, 0.0114, 0.60/0.53). Code refs resolve and the UNSTRATIFIED and no-causal-reading labels are present. Softened because sector-plus-year FE is a robustness variant, the lobbying sign-flip claim was not checked, and strength is lowered since growth is non-absorbing, outside the paper's formal results."
+  },
+  {
+   "component_id": "melange-influence-engine.flip-model",
+   "relation": "suggests-extension",
+   "paper_claim": "A dose-response curve ACRT(d) is identified only under strong parallel trends; cross-dose comparisons otherwise carry selection bias ATT(l|h) minus ATT(l|l) (Thm 3.2). In the application the nonparametric ACRT(m) point estimates are negative for m above 0.41, covering 71 percent of treated hospitals, but the 95 percent uniform band covers zero everywhere, so only pointwise sign changes are reported. ATT_loc stays positive. A quadratic functional form is precise only if it is correctly specified.",
+   "paper_location": "Thm 3.2-3.3 and Cor 3.1 (p.11-14); Sec 4 (eq 4.1, 4.2, 4.6); Sec 6.3 (p.30-31); Appendix B",
+   "system_side": "flip_model.py:33-34 sets HALFF default 0.10. pflip (flip_model.py:92-96) uses (cm*cu+1)/((cm*cu+1)+HALFF*R). money_response.py:15-16 sets MAXSHIFT 18 and HALF 0.10. shift_lean (money_response.py:68-74) uses MAXSHIFT*(r/(r+HALF)) with r = amount/receipts. Code comments describe these as judgment dials calibrated against Ansolabehere and Fowler-Garro-Spenkuch, so 'literature priors' is a fair description. Neither file estimates a dose-response from panel data. The statement that the component's own open question asks about concavity was not checked.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/flip_model.py:33-34; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/flip_model.py:92-96; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/money_response.py:15-16; C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/engine/money_response.py:68-74",
+   "transfer_conditions": "A test would need a member panel: votes or stance before and after giving, an unfunded zero-dose comparison group, and dose as share of receipts. PAC dose is plausibly selected on expected response, so strong parallel trends is doubtful and any curve beyond ATT_loc would carry selection bias. This is a design template for a future test, not evidence on the current HALF or MAXSHIFT values. Any result stays UNVERIFIED until a second path reproduces it (DE-062).",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Paper quotes check out, but the ACRT(m) sign change is pointwise only; the uniform band covers zero everywhere (p.30), so the paper_claim was rewritten. Code refs resolve (HALFF default is at line 33, guard at 34). The PAC selection argument is the analyst's reasoning, not the paper's."
+  }
+ ],
+ "related": [
+  {
+   "slug": "imai-2021-fixed-effects-regression",
+   "relation": "complements",
+   "why": "Imai and Kim (Political Analysis 2021) critique two-way fixed effects with panel treatments; this paper gives the continuous-dose analogue of that caution. Item exists and is linked to the same sector-growth component."
+  },
+  {
+   "slug": "mackinnon-2017-wild-bootstrap-inference",
+   "relation": "complements",
+   "why": "Covers the wild cluster bootstrap inference layer the sector-growth study uses with few clusters; this paper covers what the point estimate means, not inference. Item exists; MacKinnon text not re-read here."
+  },
+  {
+   "slug": "kalla-nd-campaign-contributions-facilitate",
+   "relation": "complements",
+   "why": "Kalla and Broockman (AJPS 2016) is a randomized field experiment on whether contributions buy access, the experimental counterpart of the observational money dose-response design discussed here. Confirmed from the item's paper record."
+  },
+  {
+   "slug": "sverdrup-nd-introduction-grf-causal-forests",
+   "relation": "complements",
+   "why": "The grf vignette is an introduction to generalized random forests for heterogeneous effects; this paper points to Neyman-orthogonal and double machine learning routes for ACRT_glob as future work (p.22). Item exists; grf text not re-read here."
+  },
+  {
+   "slug": "ansolabehere-2002-little-money-politics",
+   "relation": "complements",
+   "why": "The money_response.py calibration comment cites Ansolabehere for the small MAXSHIFT, so the link is real in the code. The Ansolabehere paper text was not re-read here."
+  }
+ ],
+ "summary_issues": [
+  "The summary says the Mentat growth regressions use sector-plus-year fixed effects. Year FE appear only in the robustness variants R-yearFE and R-logFE (sgs_registry.R:664-671); the primary specifications were not fully traced here.",
+  "All other summary numbers check against the text: 5881 hospitals, 1980-1986, TWFE 1.14, ATT_loc 0.80, ACRT_glob -0.08, 78 percent shrinkage, 0.0114 recoding, and the Thm 3.4b sign pattern. Purely econometric scope is correct, with no lobbying, network or legislator content."
+ ]
+}

@@ -1,0 +1,86 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-psychometrics.lexical-big5",
+      "relation": "qualifies",
+      "paper_claim": "Text Personality Recognition SotA is an average correlation of about 0.30 over a 0.133 baseline (WASSA2024 Rho 0.300; PANDORA talks 0.292). Among 45 text systems: SVM 20, neural networks 12, Naive Bayes 10; social network data 27, Essays 15; psycho-linguistic features 16 homogeneous, 20 broader.",
+      "paper_location": "Section 2.6 p.11; Table 3 p.10; Section 3.1 and Table 4 p.12-13",
+      "system_side": "big5_traits.py implements a Ramey-style pipeline: closed-vocabulary category rates z-scored across the corpus, combined with Mairesse SMOreg weights when liwc/mairesse_smoreg.json exists, otherwise published-correlate weights.",
+      "code_ref": "fec/members/big5_traits.py:3-21, fec/members/big5_traits.py:186-189",
+      "transfer_conditions": "Paper figures are against self-report in general-user corpora. The system's held-out CV figure against RKH is not a Recognition benchmark and must not be compared with 0.30 as if it were. The CV figure (.350, with E .510 to O .214) was not found anywhere in the Melange fec tree. fit_smoreg_rkh.py produces candidate refit weights promoted only on REFIT WINS, so the summary's claim that weights are refit to RKH should say candidate, not active.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper side reproduced: 0.30 over 0.133 at p.11, 0.292 and 0.300 in Table 3, and the SVM 20, NN 12, NB 10, social 27, Essays 15, psycho-linguistic 16 and broader 20 counts. System side: header and SMOreg load confirmed. The .350 CV figure was not located and is treated as unverified."
+    },
+    {
+      "component_id": "melange-psychometrics.gold-panel-validation",
+      "relation": "measurement-source",
+      "paper_claim": "Brunswik lens separates Recognition (self-report target) from Perception (observer-attributed traits). Computer Perception convergent validity is Rho 0.30 against 0.38 for human perception (Hinds and Joinson 2024), with a caveat that settings are not fully comparable. The paper recommends correlation coefficients over median splits.",
+      "paper_location": "Section 2.3 p.5 and Figure 1; Section 2.6 p.11; Table 3 p.10; Section 4.2 recommendations p.25",
+      "system_side": "b5_gold_multitrait_validate.py evaluates predictions separately against the senate insider and academic expert panels, reporting continuous per-trait r for each panel.",
+      "code_ref": "fec/members/b5_gold_multitrait_validate.py:6, fec/members/b5_gold_multitrait_validate.py:28, fec/members/b5_gold_multitrait_validate.py:337-339",
+      "transfer_conditions": "Expert and insider panels are observer judgments, so the Perception figures (0.30 machine, 0.38 human) are the relevant comparison, not the Recognition rows. The paper's figures come from social media, video and smartphone data, not U.S. senators. The claimed pass pattern (E and A pass both panels; O, C, N one each) was not checked against outputs.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper claims reproduced: lens framing, 0.30 vs 0.38 with caveat, and the correlation-over-median-split recommendation. Code reports the two panels separately as described. The per-trait pass pattern is unverified."
+    },
+    {
+      "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+      "relation": "qualifies",
+      "paper_claim": "Zero-shot GPT-3.5 and GPT-4 infer Big Five from Facebook status updates at average r = 0.29, comparable to specialized ML (Peters and Matz 2024), which is parity rather than superiority. LLM output shows consistent trait profiles (high Agreeableness, high Openness, low Neuroticism), and the paper says these are not psychological states.",
+      "paper_location": "Section 2.6 p.11; Table 3 p.10; Section 3.5 and Table 13 p.22-23",
+      "system_side": "big5_llm.py uses item-level scoring with 20 IPIP-style observer-keyed items, coarse -1/0/+1 responses, cannot-tell coded 0, and de-identification of author name, state, party and title before scoring (deidentify at line 196).",
+      "code_ref": "fec/members/big5_llm.py:3-13, fec/members/big5_llm.py:196",
+      "transfer_conditions": "The paper's parity result uses users' own casual posts against self-report. The system scores de-identified political text, so a lower figure is expected, and the paper does not support LLM readers beating lexical ones. The Pink x behavioral diagonal (+0.064 against a 0.12 bar, failing) and the display-only status were not checked.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper claims reproduced at p.11 and p.22 (the text says comparable and says LLM profiles are not psychological states). Code design claims confirmed from the header and deidentify function. The +0.064 figure was not checked."
+    },
+    {
+      "component_id": "melange-audio-speech.prosody-and-disfluency",
+      "relation": "suggests-extension",
+      "paper_claim": "Biel et al. 2012 identified Extraversion and Emotional Stability as the traits with the largest and fewest informative audio-visual cues. OpenSMILE is a common tool for prosodic and technical audio features.",
+      "paper_location": "Section 3.3 p.18 (Biel et al. 2012 text); Section 2.6 p.10 (OpenSMILE)",
+      "system_side": "b5_audio_build.py extracts eGeMAPS v02 (88 functionals, openSMILE) per clip, duration-weighted mean-pooled per member, with winsorized z-scores.",
+      "code_ref": "fec/members/b5_audio_build.py:4, fec/members/b5_audio_build.py:31-32, fec/members/b5_audio_build.py:100",
+      "transfer_conditions": "Biel's cue counts come from vlog and video impressions, not congressional audio. The extension to prioritize Extraversion for audio is an inference: the paper also reports prosodic SVMs performing best for Extraversion and Conscientiousness. The N pilot MISS at N=90 was not checked, and the survey gives no estimate for edited broadcast audio.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Biel finding confirmed in the text. The openSMILE and 88-functional claims are confirmed in code. The recommendation to start audio with Extraversion is an extension, not a paper finding."
+    },
+    {
+      "component_id": "melange-influence-engine.receptivity-layer",
+      "relation": "qualifies",
+      "paper_claim": "Computer Perception convergent validity is Rho 0.30 (Hinds and Joinson 2024). The paper names personality-aware marketing used to influence voting (cites [79]) as a threat and calls for explainable AI in Perception systems.",
+      "paper_location": "Section 2.6 p.11; Section 4.2 p.24-25",
+      "system_side": "receptivity_layer.py computes susceptibility as .40 coop + .30 N - .20 diligence - .10 dominance under the default behavioral basis, blended with the persona channel at PERSONA_W (default 0.30); RECEPT_TRAITS=lexical reverts to .40A + .30N - .20C - .10E.",
+      "code_ref": "fec/members/receptivity_layer.py:59-65, fec/members/receptivity_layer.py:147, fec/members/receptivity_layer.py:186-191, fec/members/receptivity_layer.py:210-216",
+      "transfer_conditions": "The 0.30 figure is a Perception convergent validity, not a Recognition figure; the bearing's earlier wording implied otherwise. The 9 percent shared variance is the reviewer's arithmetic, not the paper's. The voting threat concerns voters and consumers, so it is context for wording, not evidence against the layer. Owner ruling on PERSONA_W was not checked.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Formula, PERSONA_W default 0.30 and the lexical revert confirmed in code. Paper claims confirmed at p.11 and p.24-25, with the Perception attribution corrected."
+    }
+  ],
+  "related": [
+    {"slug": "ramey-2016-measuring-elite-personality", "relation": "same-method", "why": "Ramey applies the Mairesse/LIWC Recognition pipeline the survey reviews as the field's text core; big5_traits.py copies it. Item exists; description not checked beyond existence."},
+    {"slug": "koutsoumpis-2024-kernel-truth-text", "relation": "complements", "why": "Existence confirmed. The survey does not cite it, so the complement claim is unverified."},
+    {"slug": "azucar-2017-predicting-personality-traits", "relation": "complements", "why": "Existence confirmed. The survey does not cite it, so the complement claim is unverified."},
+    {"slug": "mondak-nd-online-appendix-personality", "relation": "complements", "why": "Existence confirmed. The survey does not cite it. The panel role is a Melange-side claim."},
+    {"slug": "birkenmaier-2025-measuring-politicians-public", "relation": "complements", "why": "Existence confirmed. Not cited in the survey; the link is a Melange-side reading."},
+    {"slug": "naz-2025-machine-deep-learning", "relation": "same-method", "why": "Existence confirmed. Not cited in the survey; same-method claim unverified."},
+    {"slug": "celli-2012-role-emotional-stability", "relation": "builds-on", "why": "Existence confirmed. Same first author; the survey's WCPR-era discussion is consistent with it but was not checked line by line."},
+    {"slug": "salam-2022-learning-personalised-models", "relation": "complements", "why": "Existence confirmed. Not cited in the survey; complement claim unverified."},
+    {"slug": "tappin-2023-quantifying-potential-persuasive", "relation": "complements", "why": "Existence confirmed. The persuasion threat in Section 4.2 is consistent with it; the survey does not cite it."},
+    {"slug": "simchon-2024-persuasive-effects-political", "relation": "complements", "why": "Existence confirmed. Not cited in the survey; complement claim unverified."},
+    {"slug": "pennebaker-2003-psychological-aspects-natural", "relation": "cites", "why": "Existence confirmed. The survey's founding benchmark is Pennebaker and King 1999 (Essays and LIWC), so the cites relation is to that lineage."}
+  ],
+  "summary_issues": [
+    "Screening arithmetic: 152 minus 26 is 126. The 119 papers across the six system categories do not match 126, and the 10 LLM-ethics papers are described as additional. The mismatch is 119 vs 126, not 129 vs 126; quote corpus totals with that caveat.",
+    "The summary says SVMs on psycholinguistic features dominate most text systems. SVM is the largest group (20 of 45) but not a majority; say largest group.",
+    "The summary's RKH held-out CV figure (.350, E .510 to O .214) was not located in the Melange fec tree. big5_traits.py does not refit to RKH; fit_smoreg_rkh.py produces candidate weights promoted only on REFIT WINS. Treat the figure as unverified.",
+    "The Gan et al. finding is that effect sizes are small (below 0.2 Cohen h). The paper does not say most; drop the word most from the item.",
+    "The paul_alignment paragraph cites Paul's annotations (Ramey dated but foundational; Birkenmaier endorsement; receptivity notes; PERSONA_W owner ruling). The item has paul_entries empty and annot_sha12s empty, so these cannot be verified from the item and should not enter the vault as evidence.",
+    "Related-item descriptions were checked for existence only (all 11 item files exist in _work/state/items). Their relation claims about other papers were not checked against those papers.",
+    "Coverage: the full paper text (3,220 lines) was searched for every figure cited; page images could not be rendered, so page numbers were taken from the text export."
+  ]
+}

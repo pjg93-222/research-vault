@@ -1,0 +1,1296 @@
+{
+ "system": {
+  "slug": "moneyball-rank-pillars",
+  "name": "Moneyball four-pillar influence rank",
+  "description": "The official 533-member CU-influence rank. It blends Legislative, Press, Influence (committee) and Demographic pillars into a score; ranks_python.json (fec/engine/compute_pillars.py) is the rank authority and the workbook is a view of it. Includes each pillar's construction, the legacy workbook cascade and the underdog lens. Code paths are relative to C:/Users/pgoff/OneDrive/Desktop/Melange Systems.",
+  "brain_notes": [
+   "C:/Users/pgoff/Documents/brain/concepts/four-pillar-percentile-blend.md",
+   "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md",
+   "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md",
+   "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-rules-scoring-and-sublayer-surgery.md",
+   "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-lineage-and-june-audit.md",
+   "C:/Users/pgoff/Documents/brain/topics/2026-07-rfc-melange-architecture-system-of-record-model-config-and-committee-formula.md"
+  ]
+ },
+ "components": [
+  {
+   "id": "moneyball-rank-pillars.score-blend",
+   "system": "moneyball-rank-pillars",
+   "name": "Four-pillar score blend and rank",
+   "computes": "Score = w2*Leg% + w3*Press% + w4*Influence% + w5*Demo%; Rank = descending competition rank over 533 members. ranks_python.json is the rank authority.",
+   "method": "Linear weighted sum of normalized pillars. Normalization differs by pillar: legislative uses Excel PERCENTRANK.INC truncated to 5 decimals, committee uses raw/max, press uses signed raw/max, and demographic uses PERCENTRANK. Weight history: .40/.30/.20/.10 (2026-06-29, historical); 30/25/40/5 (ratified 2026-07-07); 45/10/40/5 (Leg/Press/Inf/Demo), live in fec/engine/pillar_policy.py since 2026-09-03 and unratified (code-review S-5 open). VERIFIED: pillar_policy.py:11-16 reads leg .45, press .10, inf .40, demo .05. Its docstring says 10 of the original 25 press points remain and 15 moved to legislative, which implies the ratified set was Leg .30 / Press .25. MATHEMATICAL_SPECIFICATION.md:12 instead writes 0.25*Leg + 0.30*Press, and brain notes disagree on the order. Unresolved.",
+   "assumptions": [
+    "Pillar values after normalization are commensurable, so fixed weights are meaningful",
+    "Weights are owner policy, not estimated from outcomes",
+    "Rank measures influence; stance (alignment) is a separate axis",
+    "Min-max was rejected because one outlier set each pillar's scale (effective variance shares at 06-25: Press 40 / Leg 6 / Committee 52 / Demo 2)"
+   ],
+   "empirical_questions": [
+    "Does the blended rank predict an external influence criterion (bill advancement, Volden-Wiseman LES, CU-aligned final-passage votes) better than any single pillar?",
+    "How sensitive is top-133 membership to moving between the 30/25/40/5 and 45/10/40/5 weight sets (Kendall tau, overlap)?",
+    "Do percentile-normalized pillars yield effective variance shares close to the nominal weights?"
+   ],
+   "code_refs": [
+    "fec/engine/compute_pillars.py:11-14,36-59,195-216",
+    "fec/engine/pillar_policy.py:11-16",
+    "fec/engine/apply_weights.py:11-13",
+    "MATHEMATICAL_SPECIFICATION.md:12",
+    "ranks_python.json"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/four-pillar-percentile-blend.md",
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-case-1-moneyball-gate2.md",
+    "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md"
+   ],
+   "heading": "Four-pillar score blend and rank"
+  },
+  {
+   "id": "moneyball-rank-pillars.committee-pillar",
+   "system": "moneyball-rank-pillars",
+   "name": "Committee / Influence pillar",
+   "computes": "Influence% = committee_raw / MAX(committee_raw), where committee_raw = (Membership + Leadership)/2 from seats held.",
+   "method": "Seat weight by CU-relevance tier: Highly 3.0, Moderately 1.8, Slightly 0.9; subcommittee seats (names containing ' - ') weigh 1/6. Leadership = seat weight x multiplier: Chair 3.0 full / 7.5 sub, Ranking 2.0 / 4.5, Vice 1.0 / 2.0 (Paul applied chair/ranking x1.5 by hand on 2026-06-30). Replaced a double-PERCENTRANK version (CMTEFIX). Centrality was retired from Influence on 2026-06-25 (AB13 = 0) as direction-blind. The formal-office party-elite bonus is display-only (set to 0 at compute_pillars.py:163). Judiciary was added at tier Slightly.",
+   "assumptions": [
+    "Committee seat relevance and leadership measure structural CU power",
+    "Subcommittee seats are worth 1/6 of a full seat",
+    "Tier labels and multipliers are owner judgment, not estimated"
+   ],
+   "empirical_questions": [
+    "Do committee scores predict CU-bill markup or advancement outcomes for bills referred to those committees?",
+    "Is the chair/ranking multiplier ladder consistent with published leadership effects on legislative effectiveness (chairs vs rank-and-file LES)?",
+    "Do members with no committee row (245/533) differ systematically in CU outcomes, beyond what the zero score implies?"
+   ],
+   "code_refs": [
+    "fec/engine/committee_scores.py:1-185",
+    "fec/engine/apply_committee_fix.py:3-18",
+    "fec/engine/apply_committee_reweight.py:15-37",
+    "fec/engine/add_judiciary_seats.py:3-27",
+    "fec/engine/influence_roles.py:11-30"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-rules-scoring-and-sublayer-surgery.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-rfc-melange-architecture-system-of-record-model-config-and-committee-formula.md"
+   ],
+   "heading": "Committee - Influence pillar"
+  },
+  {
+   "id": "moneyball-rank-pillars.legislative-pillar",
+   "system": "moneyball-rank-pillars",
+   "name": "Legislative pillar (stance-gated agenda plus efficiency)",
+   "computes": "Leg% = percentile of a blend of agenda% and efficiency% (0.7/0.3 at 2026-06-25; live blend read from workbook AB10/AB11). Agenda = sum over topics of IMP[topic] x activity x stanceMult, so opponents go negative.",
+   "method": "Activity weights by role: sponsor 0.286, original cosponsor 0.143, cosponsor 0.0714 (letters count at original-cosponsor weight). stanceMult is signed from category_stance.json. Efficiency per category = decay-weighted sign of advanced sponsored or original-cosponsored bills over total decay weight; advancement is tri-state and unknown outcomes are excluded. The pillar stays PERCENTRANK because raw/max (tried 2026-07-01) squashed the mid-board. The live routing implementation is fec/engine/live_legislative_pillar.py.",
+   "assumptions": [
+    "Sponsorship and cosponsorship in a CU topic reveal the direction of advocacy once signed by stance",
+    "Advancement past introduction measures legislative efficacy",
+    "category_stance.json is current when the step runs (known staleness trap)"
+   ],
+   "empirical_questions": [
+    "Does stance-signed legislative activity predict CU-aligned final-passage votes better than unsigned activity?",
+    "Is the sponsor : original : cosponsor weight ratio (about 4:2:1) consistent with estimated effort or effect differences by role?",
+    "Does the efficiency term add predictive validity beyond agenda volume?"
+   ],
+   "code_refs": [
+    "fec/apply_leg_stance.py",
+    "fec/apply_legstance_undo.py",
+    "fec/engine/live_legislative_pillar.py:17-124"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md",
+    "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-model-facts.md"
+   ],
+   "heading": "Legislative pillar (stance-gated agenda plus efficiency)"
+  },
+  {
+   "id": "moneyball-rank-pillars.press-pillar",
+   "system": "moneyball-rank-pillars",
+   "name": "Press pillar (own-domain, signed raw/max)",
+   "computes": "Press% = signed press_value / MAX, where press_value = sum over categories of (stance sign x LSD tone intensity) x tiered category weight, for the member's own-domain statements only.",
+   "method": "Only *.senate.gov and *.house.gov rows count; 819 third-party rows were dropped, 816 of them americascreditunions.org. 1,310 synthetic billstatus rows were de-duplicated out. Category weights tiered 2026-07-02: Interchange, CU Tax Status, Credit-Card Mandates 0.30; Charter/FOM 0.15; Exam/NCUA 0.10; medium 0.08; low 0.02-0.05. Speech channel normalized at 1/n per event (a3174bc). Press is the only directional signal in the original design. Display-only overrides do not feed the pillar.",
+   "assumptions": [
+    "A member's own-domain statements represent the member's stance; third-party mentions do not",
+    "Stance labels are the owner's domain (never relabelled)",
+    "Tone intensity x stance sign is a valid single press measure"
+   ],
+   "empirical_questions": [
+    "Does own-domain press stance predict subsequent CU-aligned cosponsorship or votes?",
+    "Does excluding third-party CU-lobby press reduce or increase the validity of the press pillar against votes?",
+    "Is the 1/n per-event normalization justified by evidence that high-volume speakers are not proportionally more aligned?"
+   ],
+   "code_refs": [
+    "fec/apply_press_dedup.py",
+    "fec/apply_raw_max_norm.py",
+    "fec/moneyball_core.py:214-241",
+    "fec/engine/pillar_policy.py:2-55"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/four-pillar-percentile-blend.md",
+    "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-rules-scoring-and-sublayer-surgery.md",
+    "C:/Users/pgoff/Documents/brain/concepts/zero-rank-delta-verification.md"
+   ],
+   "heading": "Press pillar (own-domain, signed raw-max)"
+  },
+  {
+   "id": "moneyball-rank-pillars.demographic-pillar",
+   "system": "moneyball-rank-pillars",
+   "name": "Demographic pillar input (Demo%)",
+   "computes": "Demo% = PERCENTRANK of Blended Model column F (5% weight).",
+   "method": "Column F is formula-backed and edited by hand; no Python producer writes it. Sub Layer V:AF holds hard-coded values. The DEMO_POTENTIAL dial does not move this input. A 06-21 bias audit found a mild Democratic tilt (bucket mean D 0.52 vs R 0.34), accepted at 5% weight.",
+   "assumptions": [
+    "District demographics carry a small legitimate influence signal",
+    "Demographic Potential is a market score, not a support prediction"
+   ],
+   "empirical_questions": [
+    "Does Demo% correlate with CU-aligned behaviour after controlling for party?",
+    "Would replacing column F with Demographic Potential v3.0 change ranks materially?"
+   ],
+   "code_refs": [
+    "Moneyball Main Version - Blended.xlsx Blended Model col F; Sub Layer V:AF"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/demographic-potential-method.md",
+    "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-lineage-and-june-audit.md"
+   ],
+   "heading": "Demographic pillar input (Demo%)"
+  },
+  {
+   "id": "moneyball-rank-pillars.sublayer-efficiency-repair",
+   "system": "moneyball-rank-pillars",
+   "name": "Sub Layer legislative-efficiency formulas and off-by-one repair",
+   "computes": "Per-member legislative efficiency from Sub Layer - Raw AG:AW, normalized by Table1 min-max.",
+   "method": "A 2026-07-15 row shift made every member use the neighbour's record. Repair c6dc6b2 (2026-07-17) repointed 9,061 formulas, fixed AH (Q->P) and AI (AI->X), and anchored on each formula's own Table1 basis column. Independent recompute matches 533/533; 520/533 ranks moved, all legislative-only.",
+   "assumptions": [
+    "Each formula's Table1 basis names the intended column (the majority pattern was the bug)",
+    "A stale pillar snapshot can shield downstream consumers from an unrepaired reference plane"
+   ],
+   "empirical_questions": [
+    "Do the post-repair efficiency values reproduce from raw congress.gov success data in an independent pipeline?"
+   ],
+   "code_refs": [
+    "fec/repair_sublayer_references.py (--plan/--apply)"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/zero-rank-delta-verification.md",
+    "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-rules-scoring-and-sublayer-surgery.md"
+   ],
+   "heading": "Sub Layer legislative-efficiency formulas and off-by-one repair"
+  },
+  {
+   "id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "system": "moneyball-rank-pillars",
+   "name": "Cosponsor-network InfluenceScore (computed, weight 0)",
+   "computes": "InfluenceScore = 0.60 x weighted out-degree + 0.25 x betweenness + 0.15 x eigenvector, joined to 494/533 members; the 39 absent fall back to committee%.",
+   "method": "Computed from the congress_centrality output. It was retired from Influence on 2026-06-25 (AB13 = 0) because it is direction-blind. It still feeds the underdog lens.",
+   "assumptions": [
+    "Cosponsor centrality reflects influence regardless of stance direction"
+   ],
+   "empirical_questions": [
+    "Does cosponsor-network centrality predict bill passage of a member's sponsored bills beyond committee position (cf. Sotoudeh-Porter-Krishnagopal)?"
+   ],
+   "code_refs": [
+    "congress_centrality_*.xlsx; Blended Model AB12/AB13"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-lineage-and-june-audit.md"
+   ],
+   "heading": "Cosponsor-network InfluenceScore (computed, weight 0)"
+  },
+  {
+   "id": "moneyball-rank-pillars.undervaluation-lens",
+   "system": "moneyball-rank-pillars",
+   "name": "Undervaluation (underdog) lens",
+   "computes": "Underdog rank = Intrinsic - Visibility, where Intrinsic = 0.5 Leg% + 0.5 Centrality% and Visibility = 0.5 Press% + 0.5 Committee%.",
+   "method": "Difference of two equal-weight composites, ranked. The brain note gives no code file.",
+   "assumptions": [
+    "Legislative activity and centrality measure intrinsic influence; press and committee measure visibility"
+   ],
+   "empirical_questions": [
+    "Do high-underdog members show higher realized legislative effectiveness per dollar of PAC attention than their visibility predicts?"
+   ],
+   "code_refs": [],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook.md"
+   ],
+   "heading": "Undervaluation (underdog) lens"
+  },
+  {
+   "id": "moneyball-rank-pillars.legacy-workbook-cascade",
+   "system": "moneyball-rank-pillars",
+   "name": "Legacy Sub Layer -> Primary Layer -> Rank & Allocation cascade",
+   "computes": "Legacy 11-dimension SUMPRODUCT score and rank (Rank & Allocation cols K/L/M).",
+   "method": "This cascade is orphaned in the Blended version but not retired. Its rankings disagree with Blended. Primary Layer - Normalized H2 = 0.80 (likely meant to be 0.08), so the weight row sums to 1.72.",
+   "assumptions": [
+    "Superseded design; recorded for lineage only"
+   ],
+   "empirical_questions": [
+    "Which of legacy vs blended rank better tracks CU-aligned final-passage votes in the 119th Congress?"
+   ],
+   "code_refs": [
+    "Rank & Allocation cols C-M; Primary Layer - Normalized row 2"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-lineage-and-june-audit.md"
+   ],
+   "heading": "Legacy Sub Layer -> Primary Layer -> Rank & Allocation cascade"
+  }
+ ],
+ "positions": [
+  {
+   "component_id": "moneyball-rank-pillars.score-blend",
+   "citations": [
+    "Aref & Neal 2021",
+    "Porter et al. 2005",
+    "Sotoudeh et al. 2024 (highlighted, LES comparison)"
+   ],
+   "paul_position": "No annotated work underwrites the pillar weights. Paul's reading supports measuring effectiveness (Aref & Neal's hidden effective bloc; Sotoudeh's contrast with the Volden-Wiseman LES), but the blend weights remain owner policy that no literature tests."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "citations": [
+    "Porter, Mucha, Newman & Warmbrand 2005",
+    "Kim, Stuckatz & Wolters 2020/2026",
+    "Huneeus & Kim 2018",
+    "Kim & Kunisky 2020",
+    "Gaynor 2022"
+   ],
+   "paul_position": "Committees are the structural layer of the House (Porter), and money and lobbying effects are strongest in committee-related activity (Kim et al.; Huneeus & Kim's committee-assignment instrument). Paul flags the chicken-or-egg problem between partisanship and committee selection, and Gaynor's leadership insulation."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.legislative-pillar",
+   "citations": [
+    "Fouirnaies & Hall 2022",
+    "Ramey et al. (conscientiousness and sponsorship)",
+    "Sotoudeh et al. 2024",
+    "Box-Steffensmeier et al. 2018"
+   ],
+   "paul_position": "Paul's sources favor observable effort (sponsorship, committee work) as an incentive-sensitive signal. Ramey links conscientiousness to substantive sponsorship by minority members. No annotation addresses the 4:2:1 role weights."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.press-pillar",
+   "citations": [
+    "Bacik et al. 2026",
+    "Birkenmaier & Lechner 2025",
+    "Ramey et al.",
+    "Merkley & Stecula (highlighted)"
+   ],
+   "paul_position": "Paul wants press statements, news cycles and social feeds, scored by sentiment, added as determinants of pathway change (Bacik augmentation). He treats a member's public statements as the observable persona. Nothing he annotated addresses own-domain filtering."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.demographic-pillar",
+   "citations": [
+    "Huneeus & Kim 2018 (state layer)"
+   ],
+   "paul_position": "Paul proposes a state layer that would show whom to target by general industry presence. This later became Demographic Potential, but that score does not feed Demo%."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.sublayer-efficiency-repair",
+   "citations": [],
+   "paul_position": "No literature; engineering repair."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "citations": [
+    "Haythornthwaite 1996",
+    "Ardekani et al. 2026",
+    "Fink et al. 2023",
+    "Sotoudeh et al. 2024",
+    "Box-Steffensmeier et al. 2018"
+   ],
+   "paul_position": "Paul says more research on forms of centrality is needed (Ardekani). He values directionality (Haythornthwaite) and wants Viral Centrality tested (Fink). Highlights in Sotoudeh note that eigenvector centrality is 'not a strong indicator of bill passage'. This is consistent with the system retiring direction-blind centrality."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.undervaluation-lens",
+   "citations": [
+    "Aref & Neal 2021"
+   ],
+   "paul_position": "Aref & Neal's hidden, highly effective coalition 'whose actions otherwise avoid typical headlines' is the conceptual twin of an underdog lens. Paul reads that bloc as the responsive or vulnerable seats."
+  },
+  {
+   "component_id": "moneyball-rank-pillars.legacy-workbook-cascade",
+   "citations": [],
+   "paul_position": "No literature."
+  }
+ ],
+ "citations_in_system": [
+  {
+   "citation": "Ramey, Klingler & Hollibaugh, 'Measuring Elite Personality Using Speech', Political Science Research and Methods (year conflict in repo: 2016 in PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32 and code; 2019 in big5_methods.md:12). Replication data doi:10.7910/DVN/JDH6KR",
+   "where": [
+    "fec/members/big5_traits.py:1-25",
+    "fec/members/fit_smoreg_rkh.py:5",
+    "fec/members/lep_criterion.py:5-6",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32",
+    "big5_methods.md:12",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Lexical Big Five pipeline, token shrinkage, RKH reference targets (melange-psychometrics); ceremonial-share C criterion (melange-legislative-data)"
+  },
+  {
+   "citation": "Mairesse et al. (2007), JAIR, personality from text (SMOreg on LIWC/MRC; 53-58% band)",
+   "where": [
+    "fec/members/fit_smoreg_essays.py:4",
+    "fec/members/big5_traits.py:13-16",
+    "fec/members/interaction_features.py:5-6",
+    "big5_methods.md:31",
+    "big5_audio_prereg.md:15"
+   ],
+   "used_for": "SMOreg feature weights and word-count features (melange-psychometrics); audio cues"
+  },
+  {
+   "citation": "Pennebaker & King (1999); Yarkoni (2010); Pennebaker (2003, Annual Review)",
+   "where": [
+    "fec/members/big5_traits.py:14-15",
+    "fec/members/affective_n_validate.py:10",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Published-correlate lexical weights; essays corpus; negative-emotion basis for affective N"
+  },
+  {
+   "citation": "Birkenmaier & Lechner (2025), 'Measuring Politicians' Public Personality', Political Analysis; Birkenmaier, Lechner & Wagner (2024)",
+   "where": [
+    "fec/members/agency_communion_llm.py:3,33",
+    "fec/members/big5_llm.py:10",
+    "fec/members/big5_traits.py:9",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:33",
+    "big5_behavioral_extraversion_prereg.md:239"
+   ],
+   "used_for": "Agency/communion persona cue classifier and PERSONA_W; cannot-tell coding"
+  },
+  {
+   "citation": "Lechner, Aichholzer, Birkenmaier & Bluemke (2025), 'Mapping the Political Personality' (Polipers v0.1, GESIS)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Review of politician-personality studies; external criterion search"
+  },
+  {
+   "citation": "'Personality on the Hill' Senate insider and academic gold panels (online_appendix.pdf, SHA-256 43c98926...; author/year not recorded)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "External gold for Big Five validation"
+  },
+  {
+   "citation": "Amsalem et al. (2018), media visibility of Belgian, Canadian and Israeli MPs (Eran.pdf) - provenance warning only, NOT the gold source",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Hash-mismatch provenance check"
+  },
+  {
+   "citation": "Norgaard & Klemmensen (2019), J. Personality 87(2):267-275; Schumacher & Zettler (2019), PAID 141:173-181",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Elite self-report personality benchmarks and desirability caveat"
+  },
+  {
+   "citation": "Cao & Kosinski (PNAS Nexus 2024); Peters & Matz (PNAS Nexus 2024, doi:10.1093/pnasnexus/pgae231)",
+   "where": [
+    "fec/members/big5_llm.py:12",
+    "big5_methods.md:46-49",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "De-identification before LLM trait scoring; LLM zero-shot personality benchmark"
+  },
+  {
+   "citation": "Valente (Interspeech 2012); Yu (Interspeech 2019); Rienks & Heylen (2005)",
+   "where": [
+    "fec/members/interaction_features.py:5-8",
+    "fec/members/behavioral_dispositions.py:17",
+    "big5_methods.md:30"
+   ],
+   "used_for": "Turn-statistic dominance and reactivity features"
+  },
+  {
+   "citation": "Koutsoumpis (meta-analysis, language and personality); Yang, Lau & Abbasi (ISR 2023)",
+   "where": [
+    "big5_methods.md:114",
+    "AUDIT_FINDINGS_2026-07-04.md:332",
+    "big5_behavioral_extraversion_prereg.md:221"
+   ],
+   "used_for": "Text tracks observer more than self-report; response-selection bias; PERSONA_W scope argument"
+  },
+  {
+   "citation": "Soto & John (2017) BFI-2-XS; Connelly & Ones (2010); Judge et al. (2002); Funder & Ozer (2019); Dietrich (2012); Dynes (2019); Wagner (2024); Steiger (1980); Stern et al. (2021); Harari (2022); Rubio et al. (2024); Marrero et al. (2022); Marengo et al. (2018, doi:10.1016/j.paid.2017.12.018); Hargittai (2015, doi:10.1177/0002716215570866); Hinds & Joinson (2024, doi:10.1037/bul0000430); Marengo, Montag & Settanni (2025, doi:10.1111/jopy.70019); Lau & Abbasi (2023)",
+   "where": [
+    "big5_expert_panel_prereg.md",
+    "big5_nomological_prereg.md",
+    "big5_n_matrix_prereg.md",
+    "big5_audio_prereg.md",
+    "big5_es_crossmodal_prereg.md",
+    "big5_a_coverage_prereg.md",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "Prereg designs for Big Five expert panel, nomological, audio and coverage looks (melange-psychometrics)"
+  },
+  {
+   "citation": "Salam et al. (2022), PMLR 173, personalised NAS Big Five on UDIVA",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md:132"
+   ],
+   "used_for": "Audio trait benchmark and sex-conditioning check"
+  },
+  {
+   "citation": "Mestre & Ryan (2026), validated aeneas forced alignment; Dietrich (2019)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Audio identity design (forced alignment, within-speaker F0)"
+  },
+  {
+   "citation": "ECAPA-TDNN speaker embedding (name only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Proposed speaker verification"
+  },
+  {
+   "citation": "Byrne, Silasi-Mansat & Worthy (2015), 'Who chokes under pressure?', PAID",
+   "where": [
+    "fec/members/receptivity_layer.py:6-7,189,233",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:34",
+    "AUDIT_FINDINGS_2026-07-04.md:548",
+    "fec/engine/outcome_contract.py:18"
+   ],
+   "used_for": "Susceptibility composite (only N and A supported; C and E are design priors); H2 predictor"
+  },
+  {
+   "citation": "Fouirnaies & Hall, 'How Do Electoral Incentives Affect Legislator Behavior?' (APSR)",
+   "where": [
+    "fec/members/receptivity_layer.py:15-20",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:35",
+    "fec/engine/money_response.py:27"
+   ],
+   "used_for": "Retiring-member incentive multiplier and competitiveness term"
+  },
+  {
+   "citation": "Linde & Vis (2016), 'Do Politicians Take Risks Like the Rest of Us?', Political Psychology",
+   "where": [
+    "fec/members/receptivity_layer.py:22-28",
+    "fec/engine/money_response.py:27-29",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:36"
+   ],
+   "used_for": "Prospect-theory domain multiplier and attenuated loss frame"
+  },
+  {
+   "citation": "Kahneman & Tversky (loss aversion)",
+   "where": [
+    "fec/engine/money_response.py:29",
+    "fec/members/receptivity_layer.py:27"
+   ],
+   "used_for": "LOSSFRAME 1.10"
+  },
+  {
+   "citation": "Chen, Kamarthi, Wilder & Tambe, contingency-aware influence maximization (UAI 2021, arXiv 2106.07039; venue corrected from ICML); Zareie & Sakellariou (SNAM 2023)",
+   "where": [
+    "fec/members/receptivity_layer.py:28-34",
+    "fec/engine/budget_frontier.py:72-74",
+    "fec/engine/outcome_contract.py:17",
+    "AUDIT_FINDINGS_2026-07-04.md:564-565"
+   ],
+   "used_for": "Seed take-up probability and seed gate; H1 predictor"
+  },
+  {
+   "citation": "Bharathi, Kempe & Salek, Competitive Influence Maximization",
+   "where": [
+    "fec/engine/scenario.py:6-11",
+    "fec/engine/budget_frontier.py",
+    "fec/engine/per_topic_coalition.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Competitive IC cascade and coalition submodularity"
+  },
+  {
+   "citation": "Borodin et al. (submodularity can fail in competitive LT)",
+   "where": [
+    "fec/engine/scenario.py:11-12"
+   ],
+   "used_for": "Flip side treated as heuristic"
+  },
+  {
+   "citation": "Kempe, Kleinberg & Tardos (2003, KDD) influence maximization",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:157",
+    "quant skill references"
+   ],
+   "used_for": "Cascade and threshold model assumptions"
+  },
+  {
+   "citation": "Golovin & Krause (2011), Adaptive Submodularity, JAIR (Lemma 5.3/A.9)",
+   "where": [
+    "fec/engine/optimize.py:8,108-113",
+    "fec/engine/scenario.py:8-10",
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md"
+   ],
+   "used_for": "Joint optimizer bound and framing (melange-allocation)"
+  },
+  {
+   "citation": "Leskovec et al. (KDD 2007) CELF lazy greedy; Nemhauser (1-1/e)",
+   "where": [
+    "fec/engine/optimize.py:74-96",
+    "fec/engine/budget_frontier.py:96-106",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Lazy greedy seed and budget selection"
+  },
+  {
+   "citation": "Almazaydeh et al. (2026), Scientific Reports, s41598-026-47299-8",
+   "where": [
+    "fec/engine/mc_stability_check.py:3-10",
+    "influence-modeling-reference SKILL.md"
+   ],
+   "used_for": "Noisy MC corrupts CELF; motivates CRN and stability check"
+  },
+  {
+   "citation": "Manchanda et al., GCOMB, NeurIPS 2020, arXiv:1903.03332",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Budget mode: locality, degree pruning, CELF (melange-pathfinding)"
+  },
+  {
+   "citation": "Chen & Lam, most-reliable path; Ren et al., Multi-Objective Path-Based D* Lite (MOPBD*) and RELINK",
+   "where": [
+    "fec/engine/cosponsor_route.py:3-5",
+    "fec/engine/scenario.py:13",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Pathfinder and route-finder concepts (melange-pathfinding)"
+  },
+  {
+   "citation": "Sotoudeh, Porter & Krishnagopal (2024), arXiv 2406.19554, network measure of cosponsorship influence on bill passage",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Cosponsor edge weights and path grounding"
+  },
+  {
+   "citation": "Aref & Neal (2020, 2021), signed-network optimal partitioning / generalized balance; Neal signed backbone (R backbone sdsm)",
+   "where": [
+    "fec/network/signed_coalitions.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Signed coalition partition and multi-target coalition mode"
+  },
+  {
+   "citation": "Porter, Mucha, Newman et al. (PNAS 2005), committee network community structure / normalized interlock",
+   "where": [
+    "fec/surfaces/make_member_desk.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-model-facts.md",
+    "HOLISTIC_NETWORK_DESIGN_2026-08-17.md:78"
+   ],
+   "used_for": "Committee-cluster layout; community structure in pathfinder"
+  },
+  {
+   "citation": "Fink et al. (2023), Congressional Twitter influence network, Data in Brief",
+   "where": [
+    "fec/network/social_interaction_layer.py:15-19",
+    "MATHEMATICAL_SPECIFICATION.md:44",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Author-volume normalized social and press edges"
+  },
+  {
+   "citation": "Malaterre & Lareau (2024), HCoI communities",
+   "where": [
+    "fec/press_hcoi.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Press-attention communities"
+  },
+  {
+   "citation": "Zhou & Elejalde (2026), Information Processing & Management, TWLGCN",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Stance dynamics port"
+  },
+  {
+   "citation": "Joo & Steinert-Threlkeld (2022), Computational Communication Research; Steinert-Threlkeld, Twitter as Data",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Frame alignment"
+  },
+  {
+   "citation": "Ringe, Victor & Gross (BJPS 2013), Friends and Enemies",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:599"
+   ],
+   "used_for": "Signed mention layer concept"
+  },
+  {
+   "citation": "Battaglini & Patacchini, 'Influencing Connected Legislators', NBER w22739",
+   "where": [
+    "fec/engine/kb_benchmark.py:2-18"
+   ],
+   "used_for": "Katz-Bonacich benchmark"
+  },
+  {
+   "citation": "Kim & Kunisky, lobbying networks / latent communities (local PDF)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Community structure exploited by pathfinder"
+  },
+  {
+   "citation": "Noble & Turner (2024), 'Presidential Leadership and Legislative Polarization'; Lee (2009)",
+   "where": [
+    "fec/engine/salience_shock.py:4-38",
+    "fec/surfaces/build_dashboard_bundle.py:663",
+    "fec/moneyball_core.py:731"
+   ],
+   "used_for": "Salience shock regimes; retreat regime"
+  },
+  {
+   "citation": "Furnas, LaPira, Hertel-Fernandez, Drutman & Kosar (congressional staff survey experiment); Bakker (partisan cues); Bakker, Lelkes & Malka (JOP)",
+   "where": [
+    "fec/moneyball_core.py:11",
+    "fec/engine/lt_priming.py:56-58",
+    "fec/surfaces/templates/make_dashboard_html_00.tpl:742",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "cpf_pressure 1.7/0.5; out-party cue clamp; executive cue factor; money capped, information is the lever"
+  },
+  {
+   "citation": "Ansolabehere, de Figueiredo & Snyder (2003); Fowler, Garro & Spenkuch (2020); Hall & Wayman (1990); Kalla & Broockman (2016), 'Campaign Contributions Facilitate Access'; Kalla & Broockman (general-election persuasion about zero); Coppock (persuasion about 5 pp / 0.1 SD)",
+   "where": [
+    "fec/engine/flip_model.py:21",
+    "fec/engine/money_response.py:15,20",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Money buys access not votes; WM/WP weights; MAXSHIFT calibration; access multiplier"
+  },
+  {
+   "citation": "Huneeus & Kim (lobbying distorts policy); Bombardini & Trebbi (annual review of empirical lobbying); Pritoni (lobbying coalitions); Bacik et al. / Kim, lobbying-network dynamics (arXiv 2503.11745); Azaiez & Mandel (EC lobby hypergraph); Harrison et al. (lobbying record mining)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-scenario-model-build.md"
+   ],
+   "used_for": "Calibration context for small, capped lobbying returns; pathfinder background"
+  },
+  {
+   "citation": "Trivedi & Singh (Procedia 2020) coalition modeling; Scientific Reports 2026 IM algorithm comparison (CELF++/RIS/IMM)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md"
+   ],
+   "used_for": "Coalition and IM algorithm references"
+  },
+  {
+   "citation": "Gaynor (LSQ 2022); Kim, Stuckatz & Wolters (JOP 2026); Furnas, LaPira & Brock (PS 2025)",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:706-711"
+   ],
+   "used_for": "Leadership PAC edges and donation/lobbying sequencing (identified, not implemented)"
+  },
+  {
+   "citation": "Volden & Wiseman, legislative effectiveness (five-stage LES; Center for Effective Lawmaking LES 93-118); Bucchianeri/Volden/Wiseman-style",
+   "where": [
+    "fec/members/lep_criterion.py:1-15",
+    "fec/engine/flip_model.py:142 (comment only)",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md",
+    "C:/Users/pgoff/Documents/brain/actors/codex-executor-incidents.md"
+   ],
+   "used_for": "Effectiveness shadow score and convergence criterion; uncoded passage-bonus comment"
+  },
+  {
+   "citation": "Nokken & Poole dynamic ideal points; DW-NOMINATE (Poole-Rosenthal)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Drift criterion for N (MISS); NOMINATE rejected for vote edges"
+  },
+  {
+   "citation": "Matz et al. (PNAS 2017); Simchon (2024, PNAS Nexus); Hackenburg & Margetts (2024)",
+   "where": [
+    "fec/surfaces/make_member_desk.py:846",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Persona-matched appeals (design-only) and aggregate null caution"
+  },
+  {
+   "citation": "Brysbaert concreteness norms; Guiraud index; Empath lexicon; Valente (N overlap stat 68.7%)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-record-1-big5-campaign.md"
+   ],
+   "used_for": "Big Five lexical features"
+  },
+  {
+   "citation": "Miller & Sutherland, APSR (hearing conduct; doctrine WITHDRAWN 2026-07-10)",
+   "where": [
+    "big5_methods.md:36",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics.md"
+   ],
+   "used_for": "Withdrawn hearing-antagonism doctrine"
+  },
+  {
+   "citation": "Burnham, 'Stance detection: a practical guide' (PSRM 2024.35); mlburnham/Political_DEBATE_base_v1.0 (Hugging Face)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39",
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md"
+   ],
+   "used_for": "NLI stance templates and the DEBATE base model (melange-stance)"
+  },
+  {
+   "citation": "Stanceformer, arXiv 2410.07083; ACL 2023.acl-long.560 (TSE); MDPI 2076-3417/15/21/11784",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39,63",
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md"
+   ],
+   "used_for": "Target-aware stance (planned); two-stage decoupling; neutral-class difficulty"
+  },
+  {
+   "citation": "Khan et al. (2025), IECE TACS, Roman Urdu agree/disagree/unrelated stance",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md:45"
+   ],
+   "used_for": "Multi-view augmentation (hurt classical readers)"
+  },
+  {
+   "citation": "Park, Lee & Cho (2025), 'Automatic construction of direction-aware sentiment lexicon using direction-dependent words', Language Resources & Evaluation 59:843-869",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:65"
+   ],
+   "used_for": "Direction-aware valence lexicon idea (rejected on dry run)"
+  },
+  {
+   "citation": "Soroka et al., Lexicoder Sentiment Dictionary LSD2015 (snsoroka.com LSDaug2015.zip); Haselmayer & Jenny (2017); Rice & Zorn (2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-congress-r-scrapers-graded-scoring-and-audits.md:26-28"
+   ],
+   "used_for": "Stage 5b tone intensity; graded tone and polarity normalization"
+  },
+  {
+   "citation": "Dai, Liao, Zhao et al. (2025), LLM-enhanced Logic Tensor Network for stance detection, Neural Networks 183:106956, doi:10.1016/j.neunet.2024.106956",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md:198",
+    "stance_valence_folcot_prereg.md:13"
+   ],
+   "used_for": "FOL-CoT valence proposals (not adopted)"
+  },
+  {
+   "citation": "Kim, Kim, Jeong, Oh & In Song Kim (2025), 'Measuring Interest Group Positions on Legislation' (PNAS draft); LobbyView positions dataset doi:10.7910/DVN/D0QWM2; In Song Kim LobbyView (Song 2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md",
+    "fec/lobbying/lobby_position_benchmark.py:9",
+    "fec/lobbying/collect_lobbyview.py:35"
+   ],
+   "used_for": "LDA data and interest-group positions (melange-lobbying)"
+  },
+  {
+   "citation": "Romero Moreno (2021)",
+   "where": [
+    "CONTESTED_BILLS_DESIGN.md:29-30"
+   ],
+   "used_for": "Contested-bills counterparty term"
+  },
+  {
+   "citation": "Delano, Rudkin & Kim (2025), BICAM, Scientific Data 12:1567, doi:10.1038/s41597-025-05737-8; Porter, Case & Treul (2025), CampaignView, Scientific Data 12:1237, doi:10.1038/s41597-025-05491-x; Zhan & Cai (2025), ESWA 263:125705, doi:10.1016/j.eswa.2024.125705; Cao, Gai, Wu et al. (2025), Information Fusion 120:103107, doi:10.1016/j.inffus.2025.103107",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md",
+    "CAMPAIGN_SITE_COLLECTION_2026_RUNBOOK.md:10"
+   ],
+   "used_for": "Research-integration proposals (bill-LDA linkage, campaign corpus, trust-KNN imputation, signed trust propagation)"
+  },
+  {
+   "citation": "Russo et al. (ACL 2023), 'Helping a Friend or Supporting a Cause?'; Brandenberger (2018), 'Trading Favors', Social Networks 54:238-253, doi:10.1016/j.socnet.2018.02.001; Montgomery & Nyhan (2017), doi:10.1086/690301; Shalizi & Thomas (2011); Nay (2017), PLOS ONE doi:10.1371/journal.pone.0176999",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:153-158",
+    "fec/research/cosponsor_challengers/PROTOCOL.md:44-47"
+   ],
+   "used_for": "Cosponsorship prediction and reciprocity baselines; homophily vs contagion confounding; staff exchange and policy similarity"
+  },
+  {
+   "citation": "Tiedens & Fragale (2003), doi:10.1037/0022-3514.84.3.558; Santoro & Broockman (2022), Science Advances, doi:10.1126/sciadv.abn5515",
+   "where": [
+    "fec/research/member_personal_relationships/PERSONALITY_CONTEXT_EXPLORATION.md:46"
+   ],
+   "used_for": "Context only for member personal-relationship research"
+  },
+  {
+   "citation": "DerSimonian-Laird random-effects estimator",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "used_for": "R2 partially pooled industry slope (mentat-giving-forecast)"
+  },
+  {
+   "citation": "Cameron, Gelbach & Miller (2011), two-way cluster-robust variance; Holm step-down; Newey-West HAC; Driscoll-Kraay (requested); Ball (2024)",
+   "where": [
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-8,168,210",
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:71-76,389,588",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Inference in the sector growth regressions and SEATS-W"
+  },
+  {
+   "citation": "Bross (1958) ridit; Spearman-Brown; Kendall tau-b; pool-adjacent-violators (PAV)",
+   "where": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/design/spec_rigor.md",
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "used_for": "Ridit transforms, internal consistency and sensitivity tests (terrier-row-scoring); turnout calibration (terrier-canvass)"
+  },
+  {
+   "citation": "MAST multi-agent failure taxonomy (named only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/metaloop.md"
+   ],
+   "used_for": "Failure-attribution tags (metaloop-orchestration)"
+  },
+  {
+   "citation": "SR 11-7 model risk management (superseded 2026-04-17 by SR 26-2); quant-model-evaluation skill bibliography (Cinelli & Hazlett 2020; Politis & Romano 1994; Simar & Wilson 1998; Grubesic & Matisziw 2006; Fouirnaies & Hall 2018; Powell & Grimmer 2016; others)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md",
+    ".claude/skills/quant-model-evaluation/references/sources.md"
+   ],
+   "used_for": "Audit tooling references applied to Melange (melange-validation)"
+  },
+  {
+   "citation": "Data sources (not literature): MEDSL Dataverse election returns; Cook Political Report PVI; Voteview; congress-legislators; govinfo BILLSTATUS; Ballotpedia; openFEC and FEC bulk; OpenSecrets; IBISWorld; Census ACS/CBP/LODES/cb_2024 and cb_2020; FDIC SOD; NCUA Call Reports; HMDA; Polymarket/Kalshi/IEM; Crystal Ball/538",
+   "where": [
+    "fec/engine/build_competitiveness.py",
+    "fec/district/demographic_potential.py",
+    "DEMOGRAPHIC_POTENTIAL_METHOD.md:185-191",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Model inputs across systems"
+  }
+ ],
+ "evidence": [
+  {
+   "slug": "azaiez-2025-hypergraph-analysis-european",
+   "title": "A hypergraph analysis of the European Commission lobby network",
+   "year": "2025",
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "supports",
+   "claim": "Network centrality is a proxy for embeddedness, not a direct measure of influence. Company hypercoreness is predicted by lobbying FTE (beta 0.464) and assets (0.253), R2 = 0.398, N = 1,178, with reverse causation acknowledged.",
+   "system_side": "The cosponsor InfluenceScore (0.60 out-degree + 0.25 betweenness + 0.15 eigenvector) was retired from Influence on 2026-06-25 (AB13 = 0) because it is direction-blind. It still feeds the underdog lens.",
+   "transfer": "The regression covers EC company nodes (N = 1,178 in H, 702 in Hstak), not legislators, so it supports the principle that centrality tracks resources and activity rather than influence, not any US estimate. It agrees with the project finding that the raw all-bills Katz ranking measured activity (Spearman with tie volume +0.845, STATE.md:886-887).",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kim-2020-strategic-sequential-links",
+   "title": "Strategic and Sequential Links between Campaign Donations and Lobbying",
+   "year": "2020",
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "supports",
+   "claim": "Donation-linked lobbying effects are particularly stronger for the committee-membership channel than for co-sponsorship or sponsorship; the authors read this as firms targeting politicians with legislative power over their interests (committee jurisdiction over the firm's industry).",
+   "system_side": "Influence% = committee score / max, where committee score = (Membership + Leadership)/2 from tiered seats (Highly 3.0 / Moderately 1.8 / Slightly 0.9; subcommittee 1/6; Chair/Ranking/Vice leadership multipliers); weighted 40% in the composite.",
+   "transfer": "Only the qualitative point carries: money and lobbying converge on members holding jurisdiction. Nothing about tier weights, the 1/6 factor or the leadership ladder. Kim's 'powerful committee' covariate is Groseclose-Stewart (Appropriations, Armed Services, Finance, Rules and Administration), not Financial Services or Banking. Committee outcome also has a higher base rate than sponsorship (fn 13), so 'stronger' partly tracks channel breadth. Sample is manufacturing firms.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "fouirnaies-2022-electoral-incentives-affect",
+   "title": "How Do Electoral Incentives Affect Legislator Behavior? Evidence from U.S. State Legislatures",
+   "year": "2022",
+   "component_id": "moneyball-rank-pillars.legislative-pillar",
+   "relation": "qualifies",
+   "claim": "Bill sponsorship volume falls about 6% when reelection incentives end (-1.63, SE 0.77, mean 27.32; N=16,727) with no ideological change. Sponsorship volume partly reflects electoral advertising (legislators' webpages list bills introduced) rather than position.",
+   "system_side": "Agenda sums signed row contribution times |topic weight| over all selected rows (no per-member volume normalization), and Leg% blends agenda with an efficiency component before percent-ranking. A member's final-Congress drop in activity therefore lowers the agenda component of Leg% with no change in stance. Stance enters as the sign of each contribution, so volume and direction stay distinguishable, which fits the paper's finding that effort and position separate.",
+   "transfer": "Weak. The 6% effect at the state level is small, and in Congress it would touch only members in their final Congress or those running for other office. The paper supports the influence-vs-alignment split. It does not address the 4:2:1 role weights or cosponsorship.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kim-2020-mapping-political-communities",
+   "title": "Mapping Political Communities: A Statistical Analysis of Lobbying Networks in Legislative Politics",
+   "year": "2020",
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "supports",
+   "claim": "Legislators who interact with probability at least 40% in the 'Finance & Insurance' community have committee memberships concentrated in relevant committees such as House Financial Services; high-entropy legislators sit on power committees (House Ways and Means, Senate Appropriations), and broad groups such as the CHAMBER OF COMMERCE target them. Window: 113th Congress; lobbying-attention counts, not outcomes.",
+   "system_side": "Committee score = (Membership + Leadership) / 2, with seat base weights set by the owner-judged CU-relevance tier marker (Highly 3.0, Moderately 1.8, Slightly 0.9), subcommittee seats at 1/6, and Chair/Ranking/Vice leadership multipliers. The score feeds the Influence pillar.",
+   "transfer": "Supports the premise that lobbying attention is organised by jurisdiction. It does not show seats produce CU outcomes. One Congress, descriptive. The power-committee finding suggests checking how tax-writing and appropriations seats are tiered; not verified here.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "aref-2021-identifying-hidden-coalitions",
+   "title": "Identifying hidden coalitions in the US House of Representatives by optimally partitioning signed networks based on generalized balance",
+   "year": "2021",
+   "component_id": "moneyball-rank-pillars.undervaluation-lens",
+   "relation": "qualifies",
+   "claim": "Third-coalition members are usually ideologically aligned with the majority party. The paper attributes the majority party's effectiveness to agenda-setting power, and says a substantial portion of the apparent majority advantage comes from the third coalition. Third-coalition effectiveness drops temporarily during majority transitions and rests on a few ultra-effective members.",
+   "system_side": "Underdog rank = Intrinsic (0.5 Leg% + 0.5 Centrality%) minus Visibility (0.5 Press% + 0.5 Committee%). No code file is recorded.",
+   "transfer": "The paper defines its 'hidden' bloc by signed-tie structure, not by low press or committee visibility, and its effectiveness tracks majority alignment. That is closer to what the lens subtracts (committee position) than to what it rewards. The link is an analogy and is not evidence for the lens's formula.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "huneeus-2018-effects-firms-lobbying",
+   "title": "The Effects of Firms' Lobbying on Resource Misallocation",
+   "year": "2018",
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "suggests-extension",
+   "claim": "Committee relevance is measured from data. Weight w_ict-k is the firm's lagged share of lobbied bills referred to committee c, with t-1 preferred and t-2 and t-3 in robustness (Appendix F). Interacted with committee seats held by politicians from the firm's headquarters state, the first-stage F is 14.30 (all years) and 13.10 (post-2007) in Table 2. Deeper-lag panels in Table F.1 give F of 6.0 to 9.9. About 30 percent of politicians change committee between Congresses (Section 4.1; Figure 6).",
+   "system_side": "Seat relevance is a tier map: Highly 3.0, Moderately 1.8, Slightly 0.9. Subcommittee seats count 1/6. Leadership multipliers: Chair 3.0 full and 7.5 sub, Ranking 2.0 and 4.5, Vice 1.0 and 2.0. No weight is derived from where CU bills are referred. The owner-judgment provenance of the tiers is not visible in the code.",
+   "transfer": "Extension as stated: compute each committee's lagged share of CU-category bills referred, from congress.gov billstatus rather than LDA lobbied-bill lists (D-021). H&K's weights are firm-specific and validated only as an instrument for firm revenue, with no evidence that referral shares predict a member's CU effectiveness, so any re-weighting needs its own look.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "kumar-2022-influence-maximization-social",
+   "title": "Influence maximization in social networks using graph embedding and graph neural network",
+   "year": "2022",
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "qualifies",
+   "claim": "SGNN features come from struc2vec structural identity, and labels come from SIR and IC diffusion simulations. The regressor therefore predicts diffusion-based influence on structure, not purely structural spreading power.",
+   "system_side": "The cosponsor InfluenceScore (0.60 weighted out-degree, 0.25 betweenness, 0.15 eigenvector) had its centrality weight set to 0 in the Influence pillar on 2026-06-25 (AB13 from 0.65 to 0.0), with the stated reason that centrality is direction-blind. It still feeds the underdog lens at 0.5 weight.",
+   "transfer": "Applies only if someone proposes learned structural embeddings as an influence signal. Any such signal would need stance gating and would remain a heuristic model output, never closeness or access (D-025).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "haythornthwaite-1996-social-network-analysis",
+   "title": "Social Network Analysis: An Approach and Technique for the Study of Information Exchange",
+   "year": "1996",
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "qualifies",
+   "claim": "Prominence is measured by degree (lines per actor) and by closeness (lowest sum of shortest-path distances). Brokerage is measured by betweenness. In Figure 3, after three arms are removed, actors B and C each keep degree 4 and actor A drops to degree 2, yet A still sits between the peripheral groups and keeps an intermediary role.",
+   "system_side": "InfluenceScore = 0.60 weighted out-degree + 0.25 betweenness + 0.15 eigenvector, renormalized over components present, each min-max scaled. Computed with igraph on the directed weighted graph with path distance 1/W.",
+   "transfer": "A taxonomy of measures, with no evidence on which predicts legislative influence. It does not bear on the stance-sign retirement. Whether centrality predicts passage belongs to Sotoudeh 2024 and the system data.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "sotoudeh-2024-network-based-measure",
+   "title": "A Network-Based Measure of Cosponsorship Influence on Bill Passing in the United States House of Representatives",
+   "year": "2024",
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "supports",
+   "claim": "Eigenvector centrality on the decayed pass/total matrix (largest connected component) barely separates passed from failed bills: relative difference 0.004 (mean) and 0.002 (max), against 0.139 and 0.248 for the influence score. Closeness (0.004 / 0.002) and strength (0.004 / 0.003) are equally weak. The authors suspect network density but do not test it.",
+   "system_side": "InfluenceScore = 0.60 weighted out-degree + 0.25 betweenness + 0.15 eigenvector, min-max normalized and rescaled to 0-100, on the success-weighted directed cosponsor graph. Weights confirmed in code. The retirement from Influence percent (AB13 = 0) and the underdog-lens use were not found in a search of fec/ or the Draft Systems R script, so they remain unverified.",
+   "transfer": "This backs the retirement only loosely. The paper's centralities use a different matrix (ratio, undirected, House 2009-2019) and it never tests betweenness or weighted out-degree. Answering the component's open question on the system graph would be circular: weighted out-degree sums ties on the member's own sponsored bills, which are already multiplied by 3 when the bill passed. A passage test needs an as-of network built only from bills resolved before the outcome window.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "sotoudeh-2024-network-based-measure",
+   "title": "A Network-Based Measure of Cosponsorship Influence on Bill Passing in the United States House of Representatives",
+   "year": "2024",
+   "component_id": "moneyball-rank-pillars.legislative-pillar",
+   "relation": "supports",
+   "claim": "A decayed pass/total success ratio is informative about outcomes. Passed bills carry higher cosponsor pass-ratio influence than failed bills in every 4-month window (relative difference 0.139 mean / 0.248 max at a 6-month half-life). The authors contrast their approach with LES, which has no decay and splits the process into finer stages.",
+   "system_side": "Efficiency term per (member, category) = sum(decay x sign x advanced) / sum(decay) over sponsored and original-cosponsored bills, excluding unknown outcomes. Blended with the agenda term via percentranks. Confirmed in code.",
+   "transfer": "Indirect support only. The paper's ratio is pairwise, aggregated to bills, and includes each bill's own outcome. The pillar's ratio is member-level and describes CU-topic advancement; the paper does not show that a member's success rate measures CU influence or predicts future behaviour. The paper pools across parties and 2009-2019 with no strata, so label UNSTRATIFIED. The authors report a decline from about 2015 and hypothesize it is correlated with polarization.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "porter-2005-network-analysis-committees",
+   "title": "A network analysis of committees in the U.S. House of Representatives",
+   "year": "2005",
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "qualifies",
+   "claim": "In the 107th House the four Intelligence subcommittees each include at least half of the 20-member parent committee and at least one third of each other subcommittee, with normalized interlocks of 14.4 to 26.6 among the five nodes. Single-linkage clustering places subcommittees at the bottom of a roughly four-level hierarchy (subcommittees, committees, groups, House).",
+   "system_side": "seat_weights gives each subcommittee seat BASE tier times SUBF (1/6) membership (committee_scores.py:126, 161), and subcommittee leadership multiplies that seat's membership by Chair sub 7.5 or Ranking sub 4.5 (lines 127-129, 169). compute sums seat values as independent additive units (lines 173-183).",
+   "transfer": "The nesting evidence is one parent committee in one Congress, so it cannot support a general statement that subcommittee seats are nested in the parent. The paper calls these overlaps expected and measures membership redundancy, not influence, so it says nothing on whether additive counting is wrong for CU outcomes. The 1/6 factor is a code constant; its origin as owner judgment is not shown in the lines read.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "porter-2005-network-analysis-committees",
+   "title": "A network analysis of committees in the U.S. House of Representatives",
+   "year": "2005",
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "suggests-extension",
+   "claim": "Committees differ in mean partisan extremism of their members. Select Homeland Security ranks 4th of 113 committees and above all 19 standing committees. Rules is the second most extreme standing committee (after Judiciary) and 18th of 113. Intelligence and its four subcommittees rank among the 10 least extreme of 113.",
+   "system_side": "The committee score depends only on the CU tier base (Highly 3.0, Moderately 1.8, Slightly 0.9) and leadership role. seat_weights and compute take no input about partisan composition or extremism of members.",
+   "transfer": "Extremism is relative to the 107th House mean, tracks party, and is descriptive with no test. It is evidence of heterogeneity across committees, not a weight to adopt. Any use would mix party loyalty with CU leverage, the chicken-or-egg problem Paul raised.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "battaglini-2016-influencing-connected-legislators",
+   "title": "Influencing Connected Legislators",
+   "year": "2016",
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "supports",
+   "claim": "Standard centralities do not explain PAC money (Table 4): committee degree 0.0004 (SE 0.0003), alumni degree -0.0018 (SE 0.0053), closeness 0.5902 (SE 0.4711), betweenness committee -4.9e-05 (SE 2.9e-05, significant at 10 percent only). R-squared is 0.148 in most Table 4 columns (0.149 in one). Likelihood-ratio tests reject phi = 0 for the Bonacich-type SAR term (11.127 committee, 9.615 alumni).",
+   "system_side": "InfluenceScore = 0.60 normalized weighted out-degree + 0.25 betweenness + 0.15 eigenvector, confirmed at build_legislation_base_network.py 818-835. The AB13 retirement and the feed into the underdog lens Intrinsic composite were not located: a repo search found no AB13 reference in that file or elsewhere under fec.",
+   "transfer": "The paper tests unweighted degree, closeness and betweenness on PAC money in House committee and alumni networks, 2004-2012. It does not test weighted out-degree on a cosponsorship graph, and it does not test legislative influence or bill passage. It supports only the narrow point that direction-blind degree and betweenness do not predict money; it is neutral on whether they measure influence.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kim-2023-systemic-sequential-links",
+   "title": "Systemic and Sequential Links between Campaign Donations and Lobbying",
+   "year": "2023",
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "supports",
+   "claim": "Committee-linked lobbying after a donation is the largest channel and grows over time (PAC 0.103 to 0.147 over t+0 to t+3). Hypothesis H3 predicts the committee channel is strongest (pp.6-8). Committee chairmanship enters the model only as a control.",
+   "system_side": "fec/engine/committee_scores.py lines 30-33 and 125-128 set seat base weights Highly 3.0, Moderately 1.8, Slightly 0.9, subcommittee factor 1/6, and leadership multipliers Chair 3.0 full and 7.5 sub, Ranking 2.0 full and 4.5 sub, Vice 1.0 and 2.0. These values match the code.",
+   "transfer": "The paper supports only the claim that committee position is where interest-group money and lobbying concentrate. It does not estimate chair, ranking, or subcommittee weights, and it does not estimate committee effects on bill outcomes. Sample is manufacturing firms, federal level, 2008-2018.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "trivedi-2020-efficient-influence-maximization",
+   "title": "Efficient Influence Maximization in Social-Networks Under Independent Cascade Model",
+   "year": "2020",
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "context",
+   "claim": "The paper says selecting maximum-degree vertices gives higher simulated influence than other centrality measures, and that degree-discount and greedy beat plain degree. Katz equals degree at small k and falls as k grows. The paper does not test betweenness, eigenvector or any weighted composite.",
+   "system_side": "InfluenceScore is built as 0.60 weighted out-degree plus 0.25 betweenness plus 0.15 eigenvector, scaled to 0-100. The Python builder is in fec/legislation/build_legislation_base_network.py (lines 826-840, weights at lines 833-835). The 2026-06-25 retirement (AB13=0) was not checked; it sits in the workbook.",
+   "transfer": "The paper measures simulated cascade spread on co-authorship graphs, not legislative influence or bill passage. It does not test the composite, so it cannot support or contradict the retirement or the underdog lens. Degree beating other centralities is a simulated ordering, not evidence about influence on outcomes.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "thakur-2025-matching-theory-perspective",
+   "title": "A matching theory perspective on legislative organization: assignment of committees",
+   "year": "2025",
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "qualifies",
+   "claim": "Senate seats are filled by two party mechanisms. Republicans use a seniority-ordered Serial Dictatorship that the paper says seems to be run as TTC/YRMH-IGYT in practice. Democrats use a Boston approximation with COC tie-breaking. Cross-party seniority-at-appointment gaps on some committees are read as possible party discipline: Environment and Public Works R mean 3.80 (N=30) vs D 1.00 (N=14), diff 2.80, t=3.05; Commerce, Science and Transport diff -1.74, t=-2.09; 104th-114th.",
+   "system_side": "Each seat token is priced by CU-relevance tier with chair, ranking and vice multipliers. The rule has no party or chamber input, and the committee score feeds the Influence pillar at 40% (per compute_pillars docstring).",
+   "transfer": "Senate rows only (about 100 senators; the 533 total is not from the paper). Paper calls the evidence suggestive (p. 18). Only Environment and Commerce have reported t-stats; Budget and Rules differences rest on SD gaps with no test. Supports only that seat selection differs by party, not the tier weights or any power claim.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "thakur-2025-matching-theory-perspective",
+   "title": "A matching theory perspective on legislative organization: assignment of committees",
+   "year": "2025",
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "qualifies",
+   "claim": "Committees differ in common value. Rules, Finance, Governmental Affairs and Appropriations are the most sought after even after excluding the most senior members. In the Republican reduced-form model, Finance and Appropriations have large common value and small idiosyncratic spread, while Constituency committees such as Small Business have lower common value. Sample: 426 assignments, 25 committees, 97 senators, 104th-114th.",
+   "system_side": "Every Small Business seat token reads [Highly] on the live sheet (74 of 74, per the committee_scores docstring), and the override that forced it was removed. Seat weight encodes CU relevance only, with no prestige or competitiveness term.",
+   "transfer": "Tables A7 and A8 numeric cells are garbled in extraction, so the lower-common-value claim for Small Business is verified only as text, not numerically. Republican Senate 1995-2017 only. Use as a validity caveat, not a re-tiering input.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "boxsteffensmeier-2018-taking-congress-interest",
+   "title": "Cue-Taking in Congress: Interest Group Signals from Dear Colleague Letters",
+   "year": "2018",
+   "component_id": "moneyball-rank-pillars.legislative-pillar",
+   "relation": "qualifies",
+   "claim": "Passed House logit (Table 4, N = 6,597): hot bill 2.428 (SE .161), commemorative 1.386 (SE .150), majority-party sponsor 1.353 (SE .220), endorser count 0.013 (SE .004), cosponsors 0.004 (SE .001). Endorser social power is -0.035 (SE .032, ns) for passage and 0.020 (SE .031, ns) for reporting.",
+   "system_side": "live_legislative_pillar.py lines 60-81 confirmed: per-category efficiency is the decay-weighted signed share of advanced bills, divided by the max absolute value across members, then percentile-blended. No majority-party, hot-bill, or salience adjustment appears in that block.",
+   "transfer": "The paper estimates a covariate association over letter-bearing House bills pooled across 106th-111th Congresses. It is not a per-member efficiency model and says nothing about efficiency metrics. Reading the majority coefficient as showing that a raw advancement rate rewards majority status is an inference, not the paper's claim, and any adjustment is Paul's call.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "christopher-2016-mathematical-modeling-analysis",
+   "title": "Mathematical modeling and analysis of a dark money network",
+   "year": "2016",
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "qualifies",
+   "claim": "Expert-weighted centralities: out-degree 0.50199, total degree 0.14517, eigenvector 0.11045, betweenness 0.07489 (CR 0.062). TOPSIS on this composite matches the plain out-degree order only for the top two of eight. Corner Table LLC (out-degree 7) ranks 3rd and TC4 Trust (out-degree 38) ranks 7th. The authors state that no significant changes resulted, and they validate the composite against no outcome.",
+   "system_side": "InfluenceScore = 0.60 x max-normalized weighted out-degree + 0.25 x max-normalized betweenness + 0.15 x max-normalized eigenvector, rescaled to 0-100. The weights are hand-set. Per the record, the score was retired from the Influence pillar (AB13 = 0) but still feeds the underdog lens. The retirement and lens use were not checked against code.",
+   "transfer": "Both composites use judgment weights led by out-degree, so the structural comparison holds. The paper adds a consistency check and a sensitivity sweep but no outcome test, so it cannot justify the 0.60/0.25/0.15 weights or reverse the retirement. Its ties are dollar flows among nonprofits, not cosponsorship. The outcome test that matters is Sotoudeh 2024: does centrality predict bill passage.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "christopher-2016-mathematical-modeling-analysis",
+   "title": "Mathematical modeling and analysis of a dark money network",
+   "year": "2016",
+   "component_id": "moneyball-rank-pillars.score-blend",
+   "relation": "method-source",
+   "claim": "Criterion weights come from AHP pairwise comparison on Saaty's nine-point scale, accepted at CR below 0.10 (here 0.062). Robustness follows Alinezhad and Amini Equation 1: change one weight in 0.1 steps, rescale the others proportionally, and track rank. Raising the out-degree weight keeps Freedom Partners Chamber of Commerce first. Raising the weight the paper labels lowest (closeness, Figure 5) lets Center to Protect Patients Rights overtake it.",
+   "system_side": "Pillar weights are owner policy, set as constants: Leg 0.45, Press 0.10, Influence 0.40, Demo 0.05. The summary says they are unratified (S-5 open) and that the record conflicts on the ratified set (30/25/40/5 vs 25/30/40/5). Those two statements were not verified.",
+   "transfer": "The one-weight proportional-rescale sweep can be used directly for the open top-133 sensitivity question. AHP would only document owner judgment and check its internal coherence; it gives no outcome validity, and the paper's own weights are unvalidated. Any AHP-derived set must be labelled owner policy with its CR, never an estimate.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "amsalem-2018-effect-politicians-personality",
+   "title": "The Effect of Politicians' Personality on Their Media Visibility",
+   "year": "2018",
+   "component_id": "moneyball-rank-pillars.undervaluation-lens",
+   "relation": "qualifies",
+   "claim": "Holding office is the strongest predictor of visibility: minister beta .369 (b 3.122), about three times the trait betas. Party leader beta .195 is only slightly stronger than the personality effects. Office here means minister, party leader and house speaker; committee position is not tested.",
+   "system_side": "Underdog = Intrinsic (0.5 Leg% + 0.5 Centrality%) minus Visibility (0.5 Press% + 0.5 Committee%), per the brain workbook note (actors/moneyball-workbook.md line 137). Press% is normalized by signed positive and negative extrema per domain in press_matrix (fec/moneyball_core.py lines 214-237). The code confirms that normalization on workbook press columns, not the stance-by-tone composition or the restriction to .house.gov and .senate.gov statements.",
+   "transfer": "The paper's evidence is MPs in three parliamentary systems, not US House members. Its visibility construct is press mentions, which Press% does not capture. Committee% is a visibility input the paper never tests. Any reading of personality as part of the underdog residual is an inference, not a finding.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bucchianeri-2025-legislative-effectiveness-american",
+   "title": "Legislative Effectiveness in the American States",
+   "year": "2025",
+   "component_id": "moneyball-rank-pillars.legislative-pillar",
+   "relation": "qualifies",
+   "claim": "In North Carolina 2005-2012 SLES outperforms hit-rate metrics against subjective rankings. Scores are relative to each chamber-term and should not be compared directly across chambers or eras. Majority status adds 0.370 in the pooled full-sample estimate (strata: 0.362 lower chamber, 0.387 upper), 58 percent above the minority mean of 0.636.",
+   "system_side": "fec/engine/live_legislative_pillar.py lines 74-80: per category, decay-weighted signed share of advanced bills divided by total decay weight, scaled by category maximum, then percentile-ranked across members. fec/engine/compute_pillars.py line 179 uses legislative_percentiles in legacy mode; line 181 divides influence by the cross-member maximum. No majority or minority term appears in these lines, and House and Senate share one roster and one percentile.",
+   "transfer": "The NC criterion covers one state chamber pair over eight years; transfer to Congress is an assumption. The 0.370 figure is an unstratified pooled estimate and must carry strata or an UNSTRATIFIED label, which the rel does.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "bucchianeri-2025-legislative-effectiveness-american",
+   "title": "Legislative Effectiveness in the American States",
+   "year": "2025",
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "qualifies",
+   "claim": "Committee chairs score 0.507 above rank-and-file in the pooled full-sample estimate (strata: 0.609 lower chamber, 0.307 upper). The chair gap widens with log chamber size (0.205, p<0.05) and narrows where chambers vote on committee appointments (-0.180, p<0.01). Majority status adds 0.370 (strata 0.362 and 0.387).",
+   "system_side": "fec/engine/committee_scores.py lines 125-129 set multipliers Chair 3.0 full and 7.5 sub, Ranking 2.0 and 4.5, Vice 1.0 and 2.0, identical for both chambers. Influence is committee raw divided by the maximum across members (compute_pillars.py line 181), so House and Senate are pooled. No majority-status term.",
+   "transfer": "The paper's estimates are associational with endogeneity unaddressed (p. 34) and do not estimate multipliers. The chamber-size transfer to a 435-seat House and 100-seat Senate is the analyst's extrapolation, not the paper's claim. The Ranking-to-Chair ratio of two-thirds holds only for full weights; for sub weights it is 4.5 over 7.5, or 0.60.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bucchianeri-2025-legislative-effectiveness-american",
+   "title": "Legislative Effectiveness in the American States",
+   "year": "2025",
+   "component_id": "moneyball-rank-pillars.score-blend",
+   "relation": "qualifies",
+   "claim": "Stage-based effectiveness is a valid construct: SLES explains about half the variation in NC expert rankings, and lagged SLES persists (rho 0.38 when majority entered, 0.40 when minority entered, 0.66 with no change in control). Effectiveness reflects innate or cultivated lawmaking ability as well as position.",
+   "system_side": "fec/engine/compute_pillars.py lines 181-183 form the score from weighted leg, press, influence and demo terms; fec/engine/pillar_policy.py lines 11-16 hold Leg 0.45, Press 0.10, Influence 0.40, Demo 0.05. fec/members/lep_criterion.py lines 17-19 define bar B: rho at least 0.30 convergent, 0.15 to 0.30 weak, below 0.15 null. The +0.10 orthogonality value and n are recorded only in the brain, which was not read in this check.",
+   "transfer": "The persistence and NC validity figures are from the state paper and do not validate the federal blend. The orthogonality reading depends on CEL LES being the federal analogue. Under bar B, +0.10 falls in the null band, which matches the rel's wording, but the +0.10 value itself was not verified.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ringe-nd-pinpointing-powerful-voting",
+   "title": "Pinpointing the Powerful: Co-voting Network Centrality as a Measure of Political Influence (online appendix)",
+   "year": "",
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "qualifies",
+   "claim": "In a three-voter single-party legislature the leader's centrality is at least each follower's, with the condition reducing to q2 below 1 and q3 below 1; the result is extended to n voters by a term-by-term argument. In simulation, absolute-value centrality correlates highly with closeness and weighted degree (no coefficients reported) and about 0.25 with betweenness.",
+   "system_side": "InfluenceScore = 0.60 weighted out-degree + 0.25 betweenness + 0.15 eigenvector on the cosponsor network (brain line 25). Its centrality weight was set to 0 on 2026-06-25 (AB13 0.65 to 0) as direction-blind; Influence is now committee-only (AB12 set to 1.0). compute_pillars.py defines Influence as committee influence divided by the cross-member maximum.",
+   "transfer": "The proof is in signed phi terms (leader-follower correlation at least follower-follower), while simulations use the absolute-value measure; the appendix does not show the inequality holds for that version. The algebra is omitted (line 344). The result concerns co-voting correlations, not cosponsorship weights. The paper's 0.25 is a simulated correlation with betweenness, not a weight, so it says nothing about InfluenceScore's 0.25 betweenness weight. Any revived centrality rank is a heuristic model output, never a closeness, access or influence probability (D-025).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "haselmayer-2017-sentiment-analysis-political",
+   "title": "Sentiment analysis of political communication: combining a dictionary approach with crowdcoding",
+   "year": "2017",
+   "component_id": "moneyball-rank-pillars.press-pillar",
+   "relation": "qualifies",
+   "claim": "Dictionary-based tonality runs in the same direction as expert coding but compresses effects. In App. 3 Table 6 the government-pair coefficient is -0.13 with the dictionary vs -0.40 with expert coding, and electoral losses are 0.12 vs 0.23. Authors call dictionary estimates more conservative than manual coding. Pooled regression with party fixed effects, standard errors clustered by party pair; adjusted R2 0.03 with n = 619 (Table 3 and Table 6 dictionary columns).",
+   "system_side": "press_value = final_sign x LSD heat (run_stage5.R lines 141-143). The per-category rollup in run_stage5.R (lines 171-182) is a decay-weighted mean of press_value, not a sum. The Python side (fec/moneyball_core.py lines 214-237) reads workbook raw values, applies normalize_signed_extrema from fec/stance/media_rules.py (about lines 215-230), which divides positive values by the largest positive and negative values by the absolute largest negative, and uses tier weights from row 535. Whether sign x intensity beats sign alone has not been tested; that repo-status claim was not verified here.",
+   "transfer": "The evidence is one Austrian campaign, in German, on negativity only. It suggests dictionary intensity carries a weaker, noisier version of the human-coded signal, so multiplying stance sign by that intensity may add noise. The paper does not test a stance x intensity product, so this is a caution, not a refutation. The paper's pooled coefficients should be labelled as pooled across parties with party fixed effects if quoted.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "becker-nd-gameability-redistricting-criteria",
+   "title": "The Gameability of Redistricting Criteria",
+   "year": "",
+   "component_id": "moneyball-rank-pillars.score-blend",
+   "relation": "context",
+   "claim": "When a criterion admits several defensible metrics, each metric favors a different plan, so stakeholders can cherry-pick the metric their plan wins on. The paper recommends that states clarify metric definitions rather than set hard numeric thresholds.",
+   "system_side": "fec/engine/pillar_policy.py PILLAR_WEIGHTS sets Legislative 0.45, Press 0.10, Influence 0.40, Demographic 0.05 and asserts they sum to 1. MATHEMATICAL_SPECIFICATION.md line 12 states 0.25 Leg, 0.30 Press, 0.40 Infl, 0.05 Demo, so the code and spec disagree. The analyst note cites a 30/25/40/5 set as ratified; that was not checked here.",
+   "transfer": "Analogy only. The paper studies redistricting metrics, not legislator rankings, and provides no evidence about these weights. It supports pinning one documented weight set and reporting rank sensitivity across the competing sets; it does not justify any particular weights.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "vanderdoes-2022-strategic-identity-signaling",
+   "title": "Strategic identity signaling in heterogeneous networks",
+   "year": "2022",
+   "component_id": "moneyball-rank-pillars.press-pillar",
+   "relation": "qualifies",
+   "claim": "As cross-partisan outgroup share rose from 1 to 9 of 10, participants shared fewer tweets overall (AME -5.38, 95 percent CI -6.04 to -4.72) and shifted toward covert ones (AME 0.73). Covert tweets drew fewer outgroup dislikes but also fewer ingroup likes, so the message is lower-affect for the ingroup.",
+   "system_side": "press_value is the stance sign times LSD tone intensity times the category weight, normalized by signed extrema within each domain. Speaking less often and in a cooler tone both lower a member's Press%. No term reflects the composition of the member's audience (district partisan mix), so a member hedging for a mixed electorate scores like a lukewarm one.",
+   "transfer": "Requires that legislators in politically mixed districts or states reduce or code their CU statements the way the experiment participants did. The experiment paid at most 20 cents of cost and fixed audiences with no feedback, which is far from electoral stakes. Test by correlating own-domain press volume and LSD charge with district lean before acting; any pooled correlation across chambers is quoted with chamber strata or labelled UNSTRATIFIED.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "anon-nd-house-committee-requests",
+   "title": "House Committee Requests Codebook",
+   "year": "",
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "suggests-extension",
+   "claim": "UNVERIFIED and unread: the codebook (0 chars extracted) could not be opened. Paul's annotation names it 'Frisch & Kelly 2007, House Committee Request Data'. From general knowledge only, it records House members' committee-assignment requests next to the assignments they received. No numbers can be quoted.",
+   "system_side": "The Committee pillar prices seats as structural CU power. Each seat gets an owner-judgment tier weight: Highly 3.0, Moderately 1.8 or Slightly 0.9, with subcommittee seats at 1/6. Leadership multipliers are Chair 3.0 full / 7.5 sub, Ranking 2.0 / 4.5 and Vice 1.0 / 2.0. The score is (Membership + Leadership) / 2. Nothing models why a member sits on the committee: self-selection by prior interest is not separated from leverage conferred by the seat. The pillar feeds Influence at 40% of the composite.",
+   "transfer": "This applies only if the codebook confirms request-vs-assignment fields. Even then the data are historical (not the 119th Congress) and House-only, and they cover new assignments and transfers rather than continuing seats. They could support a design check: whether high committee scores reflect pre-existing interest (selection). They could not be used as a live input or an edge or weight source. Strength is weak until the document is read and a second path reproduces any result (DE-062).",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "kempe-2015-maximizing-spread-influence",
+   "title": "Maximizing the Spread of Influence through a Social Network (Theory of Computing extended version)",
+   "year": "2015",
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "context",
+   "claim": "Under LT, greedy beats high-degree seeding by about 18 percent and distance-centrality seeding by over 40 percent (Sec 8.4, p.134). The base of these percentages is not stated, so high-degree is not 18 percent below greedy; it is about 15 percent below greedy if 18 is measured against greedy. Under IC with p=10%, random seeds beat both centrality heuristics beyond about 12 targets (p.135).",
+   "system_side": "Base centrality InfluenceScore = 0.60 normalized weighted out-degree + 0.25 betweenness + 0.15 normalized eigenvector (formula string in the audit script). The rank weight of 0 since 2026-06-25 is not verified because the workbook cells were not opened.",
+   "transfer": "Paper evidence comes from one physics co-authorship graph, window winter 2002, denominator 10748 researchers, k = 1 to 30. Under D-025 centrality scores are heuristic outputs, not influence or access probabilities.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "battaglini-2018-effectiveness-connected-legislators",
+   "title": "Effectiveness of Connected Legislators",
+   "year": 2018,
+   "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+   "relation": "supports",
+   "claim": "Naive OLS: betweenness 0.0079 (SE 0.0007), closeness 0.0011 (SE 0.0001) and eigenvector 0.1203 (SE 0.0073), all significant; coefficients are on centralities scaled by 100, 10,000 and 10,000 per the Table 4 note. After the endogeneity correction none is significant: betweenness -0.2599 (SE 0.1662), closeness 0.0085 (SE 0.0086), eigenvector -0.4122 (SE 0.2500). Weighted out-degree is not tested. House, 109th-113th, N = 2,176.",
+   "system_side": "InfluenceScore = 0.60 weighted out-degree + 0.25 betweenness + 0.15 eigenvector, min-max to 0-100, per the June network plan. Retired from the Influence pillar on 2026-06-25 (AB13 0.65 to 0.0; Influence made committee-only with AB12 = 1.0) as direction-blind.",
+   "transfer": "The paper tests these centralities against LES, not against CU-relevant influence. The 2026-06-25 retirement rested on edge direction, which the paper does not address, so this is independent corroboration of the null only, not the original reason. Weighted out-degree is untested here.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "battaglini-2018-effectiveness-connected-legislators",
+   "title": "Effectiveness of Connected Legislators",
+   "year": 2018,
+   "component_id": "moneyball-rank-pillars.undervaluation-lens",
+   "relation": "qualifies",
+   "claim": "After correcting for endogenous tie formation, eigenvector and betweenness centralities lose significance for LES (Table 4). Only the model-weighted Katz-Bonacich term carries signal. House only, 109th-113th.",
+   "system_side": "Underdog lens per workbook line 137: Intrinsic = 0.5 Leg% + 0.5 Centrality%, minus Visibility = 0.5 Press% + 0.5 Committee%. The line does not say which centrality column feeds Centrality%, so the link to the retired InfluenceScore blend is unconfirmed.",
+   "transfer": "Applies only if the lens treats Centrality% as hidden effectiveness. If it is a descriptive visibility contrast, the endogeneity point weakens. The paper covers the House only.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "battaglini-2018-effectiveness-connected-legislators",
+   "title": "Effectiveness of Connected Legislators",
+   "year": 2018,
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "qualifies",
+   "claim": "Committee-chair coefficient on LES: OLS 1.9669 (SE 0.1147) falls to 1.6107 (SE 0.1545) in the corrected network model, about 18 percent smaller. Chair susceptibility cell in Table 5b is -0.5981 (SE 0.1588). Seniority susceptibility in Table 5a is -0.0339 (SE 0.0123). House, 109th-113th.",
+   "system_side": "Since 2026-06-25 the Influence pillar is committee-only (AB12 = 1.0). The committee score is (Membership + Leadership)/2, with Chair full multiplier 3.0 as of 2026-06-30.",
+   "transfer": "The paper uses LES as the outcome, while the Influence pillar is a prestige proxy, so the 18 percent figure is indicative only. House only.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "defigueiredo-2013-advancing-empirical-research",
+   "title": "Advancing the Empirical Research on Lobbying",
+   "year": 2013,
+   "component_id": "moneyball-rank-pillars.committee-pillar",
+   "relation": "supports",
+   "claim": "De Figueiredo and Silverman (2006), academic earmarks 1997-1999: lobbying raises earmarks when the district legislator sits on an appropriations committee and has no statistically significant independent effect when not (pp.22-24). Powerful, allied and marginal legislators are the ones lobbied (pp.10-11).",
+   "system_side": "committee_scores.py weights seats by CU-relevance tier (Highly 3.0, Moderately 1.8, Slightly 0.9) with Chair and Ranking multipliers and a subcommittee ratio of 1/6.",
+   "transfer": "The evidence is from academic earmarks on appropriations and supports the conditioning logic only. It does not validate the tier weights or the 1/6 subcommittee ratio, which remain owner judgment.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "osnabrugge-2021-playing-gallery-emotive",
+   "title": "Playing to the Gallery: Emotive Rhetoric in Parliaments",
+   "year": 2021,
+   "component_id": "moneyball-rank-pillars.press-pillar",
+   "relation": "qualifies",
+   "claim": "Hypothesis H (p. 4): legislators use more emotive rhetoric in high-profile debates with a larger general audience. The theory section adds that overt emotion can signal weak credibility, so speakers balance ethos, logos and pathos by audience. The paper studies parliamentary speech only, not press releases.",
+   "system_side": "press_value = stance sign x heat, where heat defaults to abs(lsd_net_norm) (run_stage5.R:141-143). press_matrix in moneyball_core.py normalizes signed extrema within each domain. Press releases are one public-facing venue, so the intensity term may index messaging style more than commitment; this is analyst inference, not a paper finding.",
+   "transfer": "Holds only to the extent that between-member intensity differences reflect style rather than commitment. The paper shows within-speaker venue shifts in parliament, not between-member style differences within one venue.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  }
+ ]
+}

@@ -1,0 +1,1192 @@
+[
+ {
+  "slug": "kempe-2015-maximizing-spread-influence",
+  "note": false,
+  "meta": {
+   "title": "Maximizing the Spread of Influence through a Social Network",
+   "authors": [
+    "David Kempe",
+    "Jon Kleinberg",
+    "Eva Tardos"
+   ],
+   "year": "2015",
+   "venue": "Theory of Computing 11(4), 2015, pp. 105-147 (extended version of KDD 2003 and ICALP 2005 papers)",
+   "doi": "10.4086/toc.2015.v011a004",
+   "sha12s": [
+    "901ecb91b6dc"
+   ],
+   "category": "Adaptive Influence Maximization",
+   "category_slug": "adaptive-influence-maximization"
+  },
+  "extraction": {
+   "slug": "kempe-2015-maximizing-spread-influence",
+   "title": "Maximizing the Spread of Influence through a Social Network",
+   "authors": [
+    "David Kempe",
+    "Jon Kleinberg",
+    "Eva Tardos"
+   ],
+   "year": "2015",
+   "venue": "Theory of Computing 11(4), 2015, pp. 105-147 (extended version of KDD 2003 and ICALP 2005 papers)",
+   "doi": "10.4086/toc.2015.v011a004",
+   "document_type": "journal article (theoretical computer science; extended journal version of two conference papers)",
+   "coverage": "Read the full extracted text (2166 lines, about 125k chars) in chunks, including abstract, introduction, all models, all theorems and proofs, experiments in Section 8, conclusions, and references. Metadata hints corrected: DOI was blank and is 10.4086/toc.2015.v011a004 (from the article header and the online record). Paul markup: none, because annot_sha12s is empty and no _annots file is linked. Paul entries: none. Page images were not rendered; locations are printed page numbers. Online scan: one web search confirmed the DOI, dates (received 2014-04-17, published 2015-04-22), and keywords. Downloaded the published PDF (397821 bytes, sha256 446f5dc5...) to _sources; it matches the existing _raw copy.",
+   "research_question": "How should a k-node seed set be chosen to maximize the expected final number of active nodes when influence spreads through a social network under threshold or cascade diffusion models? The paper asks whether the NP-hard influence maximization problem admits efficient approximation guarantees, and which model generalizations keep such guarantees.",
+   "theory": "Progressive diffusion models from mathematical sociology (Granovetter and Schelling threshold models) and interacting particle systems (independent cascade). Influence is submodular under these models, so greedy hill-climbing gives a (1-1/e-eps) guarantee via Nemhauser-Wolsey-Fisher. Triggering-set equivalence (Lemma 4.4) is the main proof device. Generalizations: general threshold, general cascade, decreasing cascade, submodular threshold, non-progressive, and multi-action marketing with diminishing returns.",
+   "data": "No empirical influence data. Experiments use a co-authorship graph built from the high-energy physics theory section of arXiv as of winter 2002: 10748 nodes (researchers with at least one coauthored paper), about 53000 node pairs with edges, parallel edges kept as tie strength. Single-author papers ignored. Unit of analysis: researcher. Influence parameters are set by simple rules, not estimated (Section 8.2). Each targeted set is evaluated with 10000 simulations; target set size k runs from 1 to 30.",
+   "method": "Theory: NP-hardness reductions (vertex cover, maximum coverage, set cover), monotone and submodular proofs via triggering sets, the Decreasing Cascade coupling argument (Theorem 5.1), a layered-graph reduction for non-progressive models (Theorem 6.1), and a hill-climbing analysis for budgeted marketing actions (Theorem 7.1). Empirics: greedy Monte Carlo hill-climbing compared with high-degree, distance-centrality, and random seed selection under Linear Threshold, weighted Cascade, and Independent Cascade with p = 1% and p = 10%.",
+   "identification": "Not applicable. This is a worst-case algorithm analysis and a simulation comparison on a fixed graph. No causal identification strategy is claimed.",
+   "scope": "Population: abstract diffusion models on directed graphs, tested on one collaboration network. Institution: theoretical computer science. Era: conference versions 2003 and 2005, journal version 2015, with 2014 revisions. Claims are about model-based seeding, not about real-world marketing outcomes.",
+   "measures": "Influence sigma(A) is the expected number of active nodes at quiescence, and weighted sigma uses node weights. Heuristic baselines are degree centrality (node degree) and distance centrality (smallest average shortest-path distance, with n used for disconnected pairs). Approximate sigma is estimated by simulation.",
+   "key_findings": [
+    "Greedy hill-climbing gives a (1-1/e-eps) approximation for influence maximization in the Linear Threshold and Independent Cascade models (Theorem 1.1, p.106; proof Section 4, pp.118-122).",
+    "Influence sigma(A) is monotone and submodular for every triggering-set model (Lemma 4.4, pp.119-120), including Independent Cascade (Theorem 4.5, p.121) and Linear Threshold with in-weights summing to at most 1 (Theorem 4.6, pp.121-122).",
+    "Decreasing Cascade is submodular (Theorem 5.1, p.124) even though no triggering-set equivalent exists (example, pp.123-124); the proof uses a residual-process coupling.",
+    "Exact influence maximization is NP-hard for Linear Threshold (Theorem 2.1, p.111), and for Independent Cascade it is hard to approximate better than 1-1/e (Theorem 2.2, p.113).",
+    "For general threshold models, influence maximization cannot be approximated within n^(1-eps) for any eps > 0 under P not equal NP (Theorem 3.3, pp.116-117).",
+    "Non-progressive influence maximization over horizon tau reduces exactly to progressive maximization on a layered graph with tau*|V| nodes (Theorem 6.1, p.127), so the guarantees carry over.",
+    "For budget split across marketing actions with diminishing returns, hill-climbing gives 1 - exp(-gamma k/(k+delta m)) of optimum (Theorem 7.1, pp.128-130).",
+    "Linear Threshold experiment on the hep-th co-authorship graph: greedy beats high-degree by about 18% and distance centrality by over 40% (Section 8.4, p.134; Figure 1).",
+    "Weighted Cascade curves have the same shape as Linear Threshold, with values about 25% smaller (Section 8.4, p.135; Figure 2).",
+    "Independent Cascade with p = 1%: each targeted node adds on average about three activations, so network effects are much weaker; random seeds do relatively better (Section 8.4, pp.135-136; Figure 3).",
+    "Independent Cascade with p = 10%: beyond about 12 targets, random seeds beat both high-degree and distance-centrality heuristics; those heuristics reach about 2415 activations and then barely grow (Section 8.4, pp.136-137; Figure 4).",
+    "Greedy keeps growing the active set in every experiment because it accounts for overlap of earlier seeds' reach (Section 8.4, pp.136-137); the paper says a local search step would likely improve results further (p.137)."
+   ],
+   "limitations": [
+    "Influence probabilities and thresholds are not inferred from data; the experiments use simple uniform or weighted settings (Section 8.2, p.133; Conclusions, pp.138-139).",
+    "The co-authorship graph is a proxy for social influence, with name-aliasing errors only partly corrected (Section 8.1, p.133).",
+    "Models are progressive in the main analysis; the non-progressive extension is a reduction, not a full experimental study (Section 6, pp.126-128).",
+    "No approximation hardness is known for Linear Threshold, so the optimal tight ratio there is open (Conclusions, p.138).",
+    "Sigma(A) is only estimated by Monte Carlo; the paper notes exact evaluation is #P-complete (Section 4, p.118), and weighted sampling can be inaccurate for exponentially large weights (footnote 3, p.119).",
+    "Experiments stop at k = 30 for computational reasons, and only one network is studied (Section 8.3, pp.134-135).",
+    "The paper leaves competing cascades, negative opinions, and a consistent timing-free competition model open (Conclusions, pp.137-138)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "'a natural greedy strategy obtains a solution that is provably within 63% of optimal' (abstract, p.105)"
+   ],
+   "references_of_note": [
+    "Domingos and Richardson, Mining the network value of customers, KDD 2001 (p.106-107)",
+    "Richardson and Domingos, Mining knowledge-sharing sites for viral marketing, KDD 2002 (p.107)",
+    "Nemhauser, Wolsey, and Fisher, analysis of approximations for maximizing submodular set functions, 1978 (p.119)",
+    "Mossel and Roch, Submodularity of influence in social networks: from local to global, SIAM J. Comput. 2010 (p.108, p.126)",
+    "Salek, Shayandeh, and Kempe, WINE 2010 (characterization of Triggering-model equivalence, p.124)",
+    "Leskovec et al., Cost-effective outbreak detection in networks, KDD 2007 (CELF, p.108)",
+    "Borgs, Brautbar, Chayes, and Lucier, Maximizing social influence in nearly optimal time, SODA 2014 (p.109)",
+    "Granovetter, Threshold models of collective behavior, 1978 (p.107)",
+    "Goldenberg, Libai, and Muller, word-of-mouth and complex systems models, 2001 (p.106)",
+    "Wasserman and Faust, Social Network Analysis, 1994 (degree and centrality measures, p.108, p.133)"
+   ]
+  },
+  "summary_md": "Kempe, Kleinberg and Tardos give the founding result of influence maximization. Under the Independent Cascade and Linear Threshold models, expected spread sigma(A) is monotone and submodular. The proof goes through live-edge or triggering-set worlds (Lemma 4.4). Greedy hill-climbing therefore reaches (1-1/e-eps) of the optimal k-seed set, and eps shrinks as the Monte Carlo estimate of sigma improves. The guarantee has hard edges. LT needs thresholds drawn uniformly on [0,1] and in-weights summing to at most 1. General threshold models cannot be approximated within n^(1-eps) (Theorem 3.3). Competing cascades are left open. Experiments run on one 10,748-node hep-th co-authorship graph, with 10,000 simulations per evaluation and k up to 30. Under LT, greedy beats high-degree seeds by about 18% and distance centrality by over 40%. Under IC with p = 10%, the centrality heuristics plateau near 2,415 activations, and random seeds beat them beyond about 12 targets. Edge parameters are set by rule, not estimated. For Melange, the paper is the method source for the edge-keyed common-random-number draws, which are live-edge worlds, and for the lazy-greedy frontier. It also marks where the system sits outside the guarantee. The frontier greedy runs on a two-colour race, scales marginals by a leverage factor and averages only 20 worlds. LT priming uses a fixed threshold ladder. The coalition allocator ranks by singleton marginals, which is the overlap-blind pattern the paper's experiments penalize. All of this is model-based expected activation under assumed parameters. None of it is a closeness, access or persuasion probability (D-025).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-allocation.budget-frontier",
+    "relation": "qualifies",
+    "paper_claim": "Greedy on a monotone submodular sigma reaches 1-1/e-eps of optimum (Thm 1.1). Submodularity follows from triggering-set (live-edge) worlds (Lemma 4.4; Thm 4.5 for IC; Thm 4.6 for LT). Each estimate uses 10000 simulations (Sec 8.3). Competing cascades are left open (Conclusions).",
+    "paper_location": "Thm 1.1 p.106; Lemma 4.4 p.119; Thm 4.5 p.120; Thm 4.6 p.121; Sec 8.3 text p.133; Conclusions p.137-138",
+    "system_side": "Cascade draws one splitmix key per (iteration, directed edge), i.e. a live-edge world. Lazy greedy adds up to MAXSEEDS=60 seeds. Departures: pro-A vs anti-B first-to-reach race with bystander B seeds; marginal = max(0, delta) times fac, where fac is REPFAC x lev for contest seeds, 1.0 for defend seeds, lev otherwise; sigma is averaged over MC=20 worlds.",
+    "code_ref": "fec/engine/budget_frontier.py:83-94 (cascade), 118-135 (spread), 153-170 (marg and lazy loop); defaults MC and MAXSEEDS line 7, CRN line 43, REPFAC line 67",
+    "transfer_conditions": "With CRN, greedy is exact greedy on the 20-world sample objective, which is submodular only for a single cascade. The two-colour race needs a separate argument whose tie order differs from this BFS (A queued first). fac-weighted, clamped marginals optimize no stated set function. The (1-1/e) bound is context, not a certificate, unless fac = 1 and race submodularity is shown.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Thm 1.1, Lemma 4.4, Thm 4.5 and the 10000-simulation statement hold. Thm 4.5 is on p.120 and the simulation text on p.133, not as cited. Code verified: one splitmix key per (iteration, directed edge), MAXSEEDS 60, MC 20, REPFAC 0.6, max(0, .) clamp. Fix the fac description: defend seeds get 1.0, not c. Live-edge equivalence is the paper's; common random numbers are project practice and are not in the paper.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Budget frontier with knee and electoral modes|Budget frontier with knee and electoral modes]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.lt-priming",
+    "relation": "qualifies",
+    "paper_claim": "LT is submodular when in-weights sum to at most 1 (Thm 4.6). The LT model draws each threshold uniformly on [0,1] (Sec 2). Thm 3.3, for the general threshold model, shows NP-hardness of approximation within n^(1-eps) for any eps > 0. Fixed-threshold models are only stated to admit no non-trivial approximation factor (p.117).",
+    "paper_location": "Thm 4.6 p.121; LT definition p.110; Thm 3.3 p.116; fixed-threshold remark p.117",
+    "system_side": "LT priming uses fixed per-tier resistance THETA from 0.6 to 3.0. Pressure is the sum over pro neighbours of P[u][v] times xf, with P the shared build_P kernel and no normalization to at most 1. Per target, recruits are taken by greedy sort on recruit_cost/add and money closes the residual. It maximizes no seed set and claims no guarantee.",
+    "code_ref": "fec/engine/lt_priming.py:19-21 (THETA), 103 (pressure), 131-140 (cheapest tip); fec/moneyball_core.py:556-563 (build_P)",
+    "transfer_conditions": "Deterministic thresholds are the regime the paper excludes, so the greedy guarantee does not transfer. A future joint multi-target priming optimizer would inherit the n^(1-eps) hardness for general thresholds. Per-target cheapest tip remains a heuristic.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Thm 4.6 and Thm 3.3 exist as cited, but Thm 3.3 is the general model. The fixed-threshold statement is weaker: no non-trivial factor, not n^(1-eps). Code verified: fixed THETA ladder and unnormalized pressure. The lean and Opponent add-ons were not located in the cited lines, so UNVERIFIED.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Linear-threshold priming (cheapest tip)|Linear-threshold priming (cheapest tip)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.per-topic-allocators",
+    "relation": "qualifies",
+    "paper_claim": "Seeds picked by individual degree or distance centrality ignore clustering and overlap. On the hep-th graph under LT, greedy beats high-degree by about 18% and distance centrality by over 40%. Under IC with p=10%, the centrality heuristics level off near 2415 activations and random seeds beat them beyond about 12 targets. Greedy keeps rising because it prices overlap.",
+    "paper_location": "Sec 8.4 pp.134-136; Fig 1 p.134; IC 10% text p.135-136",
+    "system_side": "Shortlist of the top 45 neutrals by engagement priority, each scored by singleton spread({n}) minus base, boosted by (1 + 0.8 bpf), and water-filled into a 2000000 budget. Overlap is computed only afterwards, as the joint spread of the funded set.",
+    "code_ref": "fec/engine/per_topic_coalition.py:114-119 (shortlist, singleton marginal, boost, water-fill), 125-126 (joint spread); BUDGET line 6; BETA_C line 30",
+    "transfer_conditions": "Evidence is one 10748-node co-authorship graph under uniform p, window winter 2002. Whether singleton ranking loses comparably on the 533-member cosponsor kernel is unverified; a check would compare the joint spread of the water-fill seed set against lazy greedy at equal seed count and the same CRN. The allocator is labelled diagnostic, which limits the harm.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "The 18 percent, over 40 percent, 2415 and 12-target figures are confirmed. The paper's stated mechanism is clustering and first-node coverage, which matches the overlap framing. Page cites in the bearing are off by up to one page. Code verified: top-45 shortlist, singleton marginal, BETA_C 0.8, BUDGET 2000000, joint spread reported after selection.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-allocation#Per-topic flip and coalition allocators|Per-topic flip and coalition allocators]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.cascade-kernel",
+    "relation": "qualifies",
+    "paper_claim": "Edge probabilities are set by rule, not estimated: LT weights from co-authorship multiplicity, IC uniform p of 1 or 10 percent, and weighted cascade p = 1/d_v with no multiplicity term (Sec 8.2, p.133). At p=1% each targeted node adds about three activations, so random seeds do relatively better (Sec 8.4, p.135). Estimating parameters from data is left open (Conclusions, p.138).",
+    "paper_location": "Sec 8.2 p.133; Sec 8.4 pp.135-136; Conclusions p.138",
+    "system_side": "Shared kernel p = x/(x+6) with x = w times cpf times edge_mult. The saturation constant 6 is a literal design choice, not estimated. budget_frontier, per_topic_coalition and lt_priming each build their P through MBC.build_P. The scenario engine and others were not checked.",
+    "code_ref": "fec/moneyball_core.py:543-548 (cpf factors), 556-563 (build_P); fec/engine/budget_frontier.py:77, fec/engine/per_topic_coalition.py:37, fec/engine/lt_priming.py:55 (all MBC.build_P)",
+    "transfer_conditions": "Seed rankings are sensitive to the activation level, so a sweep of the constant 6 (for example 3, 6, 12) should accompany any claim that frontier seed order is stable. This is not validation of the constant.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Kernel formula and single shared build are confirmed in code. Softened: the paper does not show a flip in which heuristic wins. It shows random seeds gain relative to centrality heuristics as activation rises, and it never tests greedy against heuristics at p=1%. The flags text writing the weighted cascade as c_uv/d_v is wrong; the paper has 1/d_v.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Cascade activation kernel build_P and partisan edge factors|Cascade activation kernel build_P and partisan edge factors]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.joint-optimizer",
+    "relation": "supports",
+    "paper_claim": "Thm 7.1 (p.128): hill climbing with total budget k, taken in pieces of size delta, on a non-negative monotone non-decreasing g with diminishing returns, ends with g(x) >= (1 - exp(-k gamma/(k + delta m))) times g of the optimum under sum <= k. Each step picks a direction with gamma-approximately largest gradient.",
+    "paper_location": "Sec 7, Thm 7.1 p.128",
+    "system_side": "Joint CU optimizer allocates $500 increments (INC default) by lazy greedy on the largest next marginal. A concavity check verifies per-member equal-cost chunks are non-increasing in the fixed state. Code comments claim the exact grid optimum; the 1-1/e floor is printed as context only. A modeled money-triggered conversion triggers replanning and drops the certificate.",
+    "code_ref": "fec/engine/optimize.py:3-12 (docstring), 26 (BUDGET 2.5M, INC 500), 70-74 (concavity check), 120-151 (greedy loop), 170-193 (certificate and floor print)",
+    "transfer_conditions": "Holds only in the fixed stance state where concavity is checked. Once money crosses a defection threshold, returns are non-concave steps and neither Thm 7.1 nor the exact certificate applies. The code states this scope.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Thm 7.1 and its conditions are confirmed on p.128. The bound is approximate, so supports is the right relation. Code claims verified: INC default 500, concavity check runs before the greedy loop, exact-grid comment, 1-1/e floor printed only as context, certificate dropped after a modeled conversion. The exact-grid claim rests on separability and concavity, not on Kempe.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-allocation#Joint CU budget optimizer|Joint CU budget optimizer]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+    "relation": "context",
+    "paper_claim": "Under LT, greedy beats high-degree seeding by about 18 percent and distance-centrality seeding by over 40 percent (Sec 8.4, p.134). The base of these percentages is not stated, so high-degree is not 18 percent below greedy; it is about 15 percent below greedy if 18 is measured against greedy. Under IC with p=10%, random seeds beat both centrality heuristics beyond about 12 targets (p.135).",
+    "paper_location": "Sec 8.4 pp.134-135",
+    "system_side": "Base centrality InfluenceScore = 0.60 normalized weighted out-degree + 0.25 betweenness + 0.15 normalized eigenvector (formula string in the audit script). The rank weight of 0 since 2026-06-25 is not verified because the workbook cells were not opened.",
+    "code_ref": "fec/audit/audit_legislation_downstream_readiness.py:1057 (formula string); workbook congress_centrality_*.xlsx cells AB12/AB13 not opened",
+    "transfer_conditions": "Paper evidence comes from one physics co-authorship graph, window winter 2002, denominator 10748 researchers, k = 1 to 30. Under D-025 centrality scores are heuristic outputs, not influence or access probabilities.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper figures and the random-beats-centrality claim verified. The sign of the 18 percent comparison was misstated. The formula weights are confirmed in the audit string; the rank weight of 0 is not verified.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/moneyball-rank-pillars#Cosponsor-network InfluenceScore (computed, weight 0)|Cosponsor-network InfluenceScore (computed, weight 0)]]",
+    "system": "moneyball-rank-pillars"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Page cites in the item are off for several claims: Thm 2.2 is on p.112 not p.113; Thm 4.5 is on p.120 not p.121; the 10748-node graph description is on p.132 not p.133; the 10000-simulation text is on p.133 not pp.134-135; the weighted-cascade 25 percent comparison is on p.134 not p.135; the 2415 plateau and random-beats-centrality-past-12 text are on p.135 not pp.136-137; the local-search remark is on p.136 not p.137.",
+   "Thm 3.3 is stated for the general threshold model (n^(1-eps) hardness). The key finding and bearing that carry this bound over to fixed-threshold models overreach; p.117 says only that fixed-threshold models admit no non-trivial approximation factor.",
+   "Flags text writes weighted cascade as p(u,v) = c_uv/d_v. The paper defines it as 1/d_v with no multiplicity term (Sec 8.2, p.133). The graph is undirected, so degree is the right word, not in-degree.",
+   "Summary says the paper is the method source for edge-keyed common-random-number draws. The paper gives only the live-edge (triggering) equivalence and does not discuss common random numbers. Attribute CRN to project practice and cite the paper only for live-edge worlds.",
+   "Summary says the coalition allocator's singleton ranking is the overlap-blind pattern the paper's experiments penalize. The paper penalizes degree and distance-centrality seeding, not singleton-marginal ranking. Present it as an analogy, not a tested result.",
+   "The cascade-kernel bearing says which seeding heuristic wins flips with activation level. The paper shows only that random seeds gain relative to centrality heuristics as activation rises; it does not show a flip in greedy's rank and never tests greedy against heuristics at p=1%.",
+   "Item says the 18 percent LT margin is 18 percent below greedy. The paper says greedy outperforms high-degree by about 18 percent, with no stated base; the direction of the statement must be corrected in the centrality bearing.",
+   "All eleven related slugs exist as item files in the research state folder. Relation labels were re-read only for chen-2023 (relabelled complements) and the Kempe-side claims; the other nine labels are carried forward unverified against those papers' text.",
+   "Not checked here: paul_alignment and Paul's note claims (no Paul entries exist and annotations are empty), the Sadeh et al. 2019 sample-complexity reference from the online scan, the sha256 of the downloaded PDF, and the scenario.py coalition-side claim.",
+   "Not returned: the StructuredOutput schema has bearings, related and summary_issues only, so the requested key_findings and paul_markup arrays were not produced. Dropped items: none of the bearings were dropped; all six were verified and returned."
+  ],
+  "gaps_exposed": [
+   "The 20-world Monte Carlo average has no stated error bound. The paper used 10,000 simulations, and sample-complexity results (Sadeh et al. 2019, from the online scan) scale with n, seed count and eps^-2. The frontier knee and seed order may move between MC 20 and MC 1000. mc_stability_check.py exists, but whether it bounds seed-order stability was not checked here.",
+   "No greedy-vs-degree-vs-random benchmark in the style of Section 8 has been run on the live 533-member kernel, so the gain from greedy over cheap centrality seeding is unmeasured for this system.",
+   "The coalition-side (1-1/e) claim in scenario.py rests on Bharathi-Kempe-Salek. Whether the BFS first-to-reach race with fixed A-first queue order is submodular in pro seeds has not been shown or tested numerically (for example, by random diminishing-returns probes on the 20 CRN worlds).",
+   "The fac-weighted, max(0, .)-clamped marginals in the frontier greedy optimize no explicitly defined set function, so no approximation statement attaches to the frontier path.",
+   "Kernel edge probabilities are not estimated from data. Kempe flags parameter estimation as open, and the saturation constant 6 has no sensitivity sweep reported against frontier seed order."
+  ],
+  "flags": [
+   "Weighted Cascade (Section 8.2) sets p(u,v) = c_uv / d_v, a per-edge normalization by receiver in-degree. Per-edge volume normalization was measured and REJECTED in this project, so do not adopt the weighted cascade kernel on that basis.",
+   "The paper's 'influence' and sigma are expected activations under an assumed diffusion model. Any Melange spread, frontier or InfluenceScore output must not be described as a closeness, access, introduction or persuasion probability (D-025). The cosponsor_refinement report already words Kempe this way correctly.",
+   "Kempe's experimental margins (18%, 40%, 2,415 activations) come from one hep-th graph, window winter 2002, denominator 10,748 researchers with k = 1..30. Quote them with that window and denominator, never as transferable effect sizes.",
+   "Paper markup: none. annot_sha12s is empty and paul_entries is empty, so no annotation conflicts exist."
+  ],
+  "paul_alignment": "Paul has no annotation or bibliography entry on this paper. His component positions agree with it. His Chen 2023 margin note, that pressure from high-ranking members is not diminishing, matches Kempe's boundary: submodularity needs random thresholds, and fixed thresholds break it (Theorem 3.3). LT priming sits in exactly that non-submodular regime. His view of greedy plus CELF as the operational layer is grounded here. It is not stale, but the built optimizer has moved past the (1-1/e) framing to an exact fixed-state certificate. His wish for cheap Monte Carlo (Viral Centrality) is sharpened by the gap between the paper's 10,000 simulations and the system's 20 CRN worlds.",
+  "related": [
+   {
+    "slug": "bharathi-nd-competitive-influence-maximization",
+    "relation": "extends",
+    "why": "Competitive follower-vs-fixed-opponent extension of Kempe IC submodularity. Kempe leaves competing cascades open (Conclusions pp.137-138). Item exists; the cited paper text was not re-read here."
+   },
+   {
+    "slug": "golovin-2011-adaptive-submodularity-theory",
+    "relation": "extends",
+    "why": "Adaptive analogue of the greedy guarantee. Item exists; the cited paper text was not re-read here."
+   },
+   {
+    "slug": "chen-2021-contingency-aware-influence",
+    "relation": "extends",
+    "why": "Adds seed take-up probability to Kempe-style IM. Kempe has no take-up step. Item exists; not re-read here."
+   },
+   {
+    "slug": "chen-2023-complex-contagion-influence",
+    "relation": "complements",
+    "why": "Relabelled from contradicts. Complex contagion leaves the submodular regime that Kempe proves for triggering models, a different model, so it does not contradict Kempe's theorems."
+   },
+   {
+    "slug": "almazaydeh-2026-heuristic-centrality-methods",
+    "relation": "contradicts",
+    "why": "Claims centrality heuristics can rival greedy, which conflicts with Sec 8.4 only as an empirical finding on other graphs. Item exists; the relation was not checked against that paper's text here."
+   },
+   {
+    "slug": "fink-2023-congressional-social-network-dataset",
+    "relation": "complements",
+    "why": "Supplies estimated pairwise influence probabilities, the parameter-estimation step Kempe leaves open (Conclusions p.138). Item exists; not re-read here."
+   },
+   {
+    "slug": "manchanda-2020-gcomb-learning-budget-constrained",
+    "relation": "builds-on",
+    "why": "Learned budget-constrained replacement for Kempe-style greedy. Item exists; not re-read here."
+   },
+   {
+    "slug": "trivedi-2020-efficient-influence-maximization",
+    "relation": "builds-on",
+    "why": "Speeds up Kempe-style greedy under Independent Cascade. Item exists; not re-read here."
+   },
+   {
+    "slug": "zareie-2023-influence-maximization-social",
+    "relation": "cites",
+    "why": "Survey of behaviour-aware IM methods that build on the Kempe models. Item exists; not re-read here."
+   },
+   {
+    "slug": "kamarthi-2020-influence-maximization-unknown",
+    "relation": "builds-on",
+    "why": "IM on a sampled, unknown graph, which relaxes Kempe's known-graph assumption. Item exists; not re-read here."
+   },
+   {
+    "slug": "cai-2025-competitive-influence-maximization",
+    "relation": "complements",
+    "why": "Competitive IM under voter dynamics, where timing matters; Kempe lists competition and timing as open (Conclusions pp.137-138). Item exists; not re-read here."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "dai-2017-learning-combinatorial-optimization-graphs",
+    "relation": "complements",
+    "why": "Dai cites the classical Kempe et al. influence maximization paper as reference [20] (text line 796). The item year 2015 may differ from the 2003 KDD original; link kept as a conceptual complement."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "burnham-2023-stance-detection-practical-guide",
+  "note": false,
+  "meta": {
+   "title": "Stance Detection: A Practical Guide to Classifying Political Beliefs in Text",
+   "authors": [
+    "Michael Burnham"
+   ],
+   "year": "2023",
+   "venue": "arXiv preprint arXiv:2305.01723v2 (Nov 2023), Penn State. The PSRM 2025 venue hint is not supported by the text",
+   "doi": "",
+   "sha12s": [
+    "bbbd7016da74"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "slug": "burnham-2023-stance-detection-practical-guide",
+   "title": "Stance Detection: A Practical Guide to Classifying Political Beliefs in Text",
+   "authors": [
+    "Michael Burnham"
+   ],
+   "year": "2023",
+   "venue": "arXiv preprint arXiv:2305.01723v2 (Nov 2023), Penn State. The PSRM 2025 venue hint is not supported by the text",
+   "doi": "",
+   "document_type": "working paper (arXiv preprint; methods guide with replication)",
+   "coverage": "Full text read: front matter, Sections 1-6, Appendix A (method summaries), Appendix B (testing data and hypothesis lists) and the reference list, in 3 chunks of about 450 lines (1339 lines, 72,948 chars). Figures 1-4 are referenced but not rendered (no page images on this machine); figure content comes from surrounding text only. Paul annotation files: none (annot_sha12s is empty, n_annots is 0), so paul_markup is empty. p.note is not true, so this is not a Paul research note. Metadata check: title, author and year match the text; the venue hint PSRM 2025 does not appear in the text, which shows arXiv:2305.01723v2 dated November 2023.",
+   "research_question": "How should political scientists define and operationalize stance detection (the position a document expresses toward a proposition), and which classification approach (supervised, NLI zero-shot, or in-context generative LLM) should they choose given document context, compute, reproducibility and human labor constraints? A secondary aim is to show that NLI and in-context classifiers can replicate a supervised-classifier finding on COVID-19 mitigation stance (Block Jr et al. 2022).",
+   "theory": "Stance is an individual's attitudes, feelings, judgments or commitment toward a proposition (Biber and Finegan 1988), defined here as how an individual would answer a proposition (Definition 1). Sentiment is positive or negative emotional valence and is treated as a separate dimension (Definition 2). Stance detection is recast as textual entailment (Dagan et al. 2005; AlDayel and Magdy 2021): text T entails stance S when a human reading T with context C would infer that T supports S (Definition 4, pp.3-4). Context (information in the document plus the classifier's knowledge) governs ambiguity and therefore accuracy (Sections 2.2-2.3, pp.3-5).",
+   "data": "Trump-approval test set: public tweets (n = 1,135 per text on p.5; Table 6 Twitter sources sum to 1,134, a small internal mismatch) plus 1,000 random sentences containing 'Trump' from 117th Congress congressional e-newsletters (DC Inbox; Cormack 2017). Human coded twice with third-annotator adjudication. Total test set about 2,135 short documents (p.17). Table 6 (p.32): MTSD 398, ConStance 98, KE-MLM 380, SemEval2016 97, Titling 161, Newsletters 1,000. Replication data (Section 5, pp.21-23): 862,923 COVID-19 tweets from 23,476 users, 1 Sep 2020 to 28 Feb 2021; user ideology from tweetscores (Barbera 2015); 2,000 hand-labeled training tweets with coding rules for non-compliant tweets; 300 randomly sampled labeled tweets used as the NLI validation sample.",
+   "method": "Three classifier families compared. (1) Supervised: bag-of-words logistic regression, random forest and SVM (grid search) versus RoBERTa, BERTweet, PoliBERTweet and DeBERTaV3 base (Bayesian hyperparameter sweep, 10 runs each; MCC primary metric; pp.11-12). (2) NLI zero-shot: DeBERTaV3 Large NLI model; each tweet paired with hypothesis templates (single versus multi-hypothesis; keyword matching of hypotheses to documents; 9 synonymous hypotheses for sensitivity; pp.14-15). (3) In-context: GPT-4, GPT-3.5 Turbo and Zephyr 7B with system and user prompts, temperature 0, zero-shot, few-shot, chain-of-thought and logit bias variants (Table 5, pp.19-20). Replication: negative binomial regression of count of threat-minimizing tweets on ideology, county COVID death rate, their interaction, county demographics, political lean and state fixed effects, following Block Jr et al. (2022) (pp.21-22).",
+   "identification": "No causal identification strategy. The replication is an observational negative binomial regression with county and state controls and state fixed effects; the paper compares coefficient direction and size across three label sources (original supervised labels, two NLI hypothesis sets) rather than claiming causal effects.",
+   "measures": "Matthews correlation coefficient (MCC) is the primary metric (Chicco and Jurman 2023), with F1, accuracy, bootstrapped 95% confidence intervals (Figure 2), inference time on GPU and CPU, and API cost per run. Intercoder reliability between NLI and supervised labels is MCC = 0.84. Ambiguity is defined as conflicting human codes; relevance is the presence of the term Trump. Ideology is a uni-dimensional left-right score (tweetscores).",
+   "scope": "English-language US political text: Trump approval in tweets and congressional newsletters (117th Congress newsletters; tweets from several stance projects) and COVID-19 mitigation stance on Twitter (Sep 2020 to Feb 2021). Guidance is presented for political text in general, but the evidence rests on one target (Trump), one replication case, and models available as of 2023-2024.",
+   "key_findings": [
+    "Stance is distinct from sentiment and should be measured independently; sentiment can inform intensity but does not replace stance (Section 2.1, pp.2-3).",
+    "Ambiguity is higher when the document does not mention Trump: 34.0% of non-Trump documents versus 19.5% of Trump-mentioning documents had conflicting human codes (Section 3.3, p.10).",
+    "NLI classifiers degrade most when Trump is not mentioned; supervised and in-context classifiers adapt better to low-context documents (Figure 2, p.10).",
+    "Supervised results (Table 3, p.12, Twitter only): logistic regression MCC 0.51, random forest 0.49, SVM 0.49, RoBERTa 0.60, BERTweet 0.63, PoliBERTweet 0.68 (best); DeBERTaV3 base without domain adaptation 0.63.",
+    "Laurer et al. (2024), cited on p.12: 500 training examples let language models consistently beat other algorithms trained on several thousand.",
+    "NLI results (Table 4, p.14): DeBERTaV3 Small MCC 0.15, Base 0.40, Large 0.65 (83% accuracy); only the Large model is described as comparable to supervised classifiers and human-level.",
+    "Test-set cost and performance (Table 5, pp.19-20; cost text p.17): GPT-4 standard prompt MCC 0.78 at $12.52 for 2,135 documents; GPT-3.5 Turbo MCC 0.58 at $0.68; Zephyr 7B MCC 0.59 with no API cost but about 2.5 min on a consumer GPU.",
+    "Logit bias raised GPT-4 MCC to 0.80 and GPT-3.5 to 0.63 at no extra cost (Table 5). Chain-of-thought gave no perceptible accuracy benefit for GPT-4 and tripled its cost ($38.62 versus $12.52), and Zephyr 7B failed template compliance (p.19).",
+    "Scaling cost: classifying 1,000,000 tweets with the cheapest in-context approach would cost $6,260 (p.17), so in-context models are recommended mainly for small sets, training data expansion or validation.",
+    "Hypothesis sensitivity: nine synonymous NLI hypotheses gave average MCC 0.64, range 0.62 to 0.66 (p.15).",
+    "Replication (Section 5.2, pp.22-23): NLI hypothesis set 1 MCC 0.70 (89% accuracy), set 2 MCC 0.75 (91%), original supervised classifier MCC 0.66 (86%) on 300 labeled tweets; NLI and supervised labels agree at MCC 0.84, and regression direction and size are consistent across the three models (Figure 3, p.22).",
+    "Threat-minimizing tweets concentrate at the conservative pole in all three label sets (Figure 4, p.23); average author ideology -0.66 overall, and disagreement samples average -0.11 (set 1) and -0.07 (set 2).",
+    "Author's conclusion: when document information is sufficient, NLI classifiers reach performance comparable to supervised classifiers without training; when outside context is needed, supervised or in-context classifiers are better (Section 6, pp.23-24)."
+   ],
+   "limitations": "Author notes there are no NLI datasets or benchmarks for stance detection, and NLI models are trained on computer-science data (Section 6, p.24). In-context models are proprietary and cannot be archived for replication, and their cost grows with corpus size (Section 4.3.1, p.16). Few-shot prompts are unstable and can overfit (p.19). Open models such as Zephyr 7B are much slower than NLI classifiers. Evidence comes from one target (Trump) and one replication. Twitter test count is 1,135 in the text but 1,134 in Table 6, a minor inconsistency. The 300-tweet NLI validation sample is small (about 5% margin of error per the author). Some sources had labelers with no context (SemEval, newsletters). The paper states there is no best approach; choices depend on resources and context.",
+   "paul_markup": [],
+   "references_of_note": [
+    "Laurer, Van Atteveldt, Casas and Welbers (2024), Less annotating, more classifying, Political Analysis 32, 84-100 (500-example result; NLI transfer)",
+    "Block Jr, Burnham, Kahn, Peng, Seeman and Seto (2022), Perceived risk, political polarization, and COVID-19 mitigation, Social Science and Medicine (replicated here)",
+    "AlDayel and Magdy (2021), Stance detection on social media: state of the art and trends, Information Processing and Management 58 (entailment definition)",
+    "Bestvater and Monroe (2022), Sentiment is not stance: target-aware opinion classification, Political Analysis",
+    "Dagan, Glickman and Magnini (2005), PASCAL recognising textual entailment challenge (entailment definition)",
+    "Chicco and Jurman (2023), MCC should replace ROC AUC, BioData Mining 16 (metric choice)",
+    "Denny and Spirling (2018), Text preprocessing for unsupervised learning, Political Analysis 26 (preprocessing risks)",
+    "Nguyen, Vu and Nguyen (2020), BERTweet; Kawintiranon and Singh (2022), PoliBERTweet (domain-adapted models in Table 3)",
+    "Mohammad et al. (2016), SemEval-2016 Task 6 (source of Table 1 examples)",
+    "Tornberg (2023a), ChatGPT-4 outperforms experts and crowd workers in annotating political Twitter messages; Spirling (2023), open-source generative AI for science (reproducibility argument)",
+    "Barbera (2015), Birds of the same feather tweet together (tweetscores ideal point estimation used in the replication)",
+    "Barbera, Boydstun, Linn, McMahon and Nagler (2021), Automated text classification of news articles, Political Analysis 29 (sentence versus segment classification)"
+   ],
+   "short_quotes": [
+    "Stance detection is entailment classification and determines how a document responds to a proposition.",
+    "NLI classifiers are a good default approach for their accuracy, scalability, and reproducibility.",
+    "Using non-reproducible models as the primary source of labels should be discouraged."
+   ]
+  },
+  "summary_md": "Burnham's methods guide treats stance as textual entailment: a document's stance is how its author would answer a stated proposition. Stance is kept separate from sentiment. The guide compares three ways to classify it on about 2,135 human-coded Trump-approval tweets and newsletter sentences, scored by MCC. Supervised models: bag-of-words gets 0.49 to 0.51 and transformers 0.60 to 0.68. Zero-shot NLI: DeBERTaV3 Base gets 0.40 and Large 0.65. In-context LLMs: GPT-4 gets 0.78, or 0.80 with logit bias, but costs $12.52 per run and cannot be archived. The main practical finding is about context. Human coders disagree more when the target is not named (34.0% versus 19.5%), and NLI degrades most in that case. When outside knowledge is needed, supervised or in-context classifiers do better. The guide recommends NLI as the reproducible default. LLMs are fine for expanding training data or for validation, but not as the main source of labels. The arXiv text is v2. An online check confirms the published version in PSRM 13 (2025), 611-628, online September 2024. This bears directly on Paul's CU press-stance stack, which runs Burnham's own Political DEBATE base model (a later, politics-trained NLI model) as its main reader. The system's own history repeats the paper's context finding. Zero-shot DEBATE missed implicit anti-CU stances (oppose F1 0.08), and fine-tuning on 552 labels fixed this. The paper also highlights three things the system has not settled: model size (base versus large), labels that fall back to Claude pre-labels, and the lack of an MCC or hypothesis-wording check. All system-side figures are the project's own reports, measured on small held-out sets (n = 87 or 156). They are UNVERIFIED by a second path.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "supports",
+    "paper_claim": "Ambiguity is 34.0 percent when Trump is not mentioned versus 19.5 percent when he is. NLI classifiers degrade most in low-context documents, while supervised and in-context classifiers adapt better.",
+    "paper_location": "Section 3.3 p.10; Figure 2; Section 6 pp.23-24",
+    "system_side": "Zero-shot DEBATE base read 53 percent accuracy and oppose F1 0.08 on the 156-row test. Fine-tuning on CU labels gave 87.2 percent accuracy and oppose F1 0.78 against the Claude reference. Figures trace to the vault note debate-stance-model and the 2026-06-22 topic note, not to code.",
+    "code_ref": "stage5_debate.py:26-31 (labels and hypothesis template) and finetune_debate.py:62-68 (NLI pairs) verified. The 53 percent and 0.08 figures are in the vault note only.",
+    "transfer_conditions": "The paper measured Trump approval with generic DeBERTaV3 NLI, not Political DEBATE on CU press releases. Transfer to CU is by analogy.",
+    "strength": "strong",
+    "verdict": "reproduced",
+    "verifier_note": "Section 3.3 re-opened and the 34.0 and 19.5 figures match. System figures match the vault. The 87.2 headline is agreement with the Claude reference, not human gold.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "qualifies",
+    "paper_claim": "Zero-shot MCC for DeBERTaV3 Small is 0.15, Base 0.40 and Large 0.65 (83 percent accuracy). Performance comparable to supervised classifiers emerges only in larger models.",
+    "paper_location": "Table 4 p.14; Section 4.2.1 p.14",
+    "system_side": "Production runs the Political DEBATE base model fine-tuned on 552 labeled rows for 3 epochs. The large model was never fine-tuned or scored on the same member-grouped test; the vault lists the large fine-tune as a next step.",
+    "code_ref": "stage5_debate.py:38 (base default) and finetune_debate.py:32 (base default) verified.",
+    "transfer_conditions": "The paper gap is for generic zero-shot NLI. Political DEBATE is a politics-trained model not studied in this paper, so the size gap may differ.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Table 4 re-opened and matches. The claim that Political DEBATE was trained on political data comes from the code docstring, not from this paper.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.debate-nli-classifier",
+    "relation": "qualifies",
+    "paper_claim": "In-context LLMs are useful for expanding training data and for validation, but not as the primary label source because proprietary models cannot be archived. The paper reports GPT-4 MCC 0.78 in Table 5 and recommends temperature zero in Section 4.3.4.",
+    "paper_location": "Section 4.3.1 pp.16-17; Table 5 pp.19-20; Section 4.3.4 p.20",
+    "system_side": "The fine-tune label is human_label when valid, otherwise the Claude pre_label. The Claude rater uses claude-sonnet-4-6 with no temperature argument. The 87.2 percent headline is agreement with Claude.",
+    "code_ref": "finetune_debate.py:40-48 (label choice), claude_stance.py:32 (model default), claude_stance.py:84-86 (no temperature), claude_stance.py:95-97 (ERR fallback) verified.",
+    "transfer_conditions": "Applies to any training row whose human_label is empty. The share of Claude-only rows is not counted in the analysis.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Table 5 gives GPT-4 0.78 but does not state the temperature used for it. The paper recommends temperature zero, so attributing 0.78 to temperature 0 is a paraphrase. Drop that attribution. The non-archivability and primary-label caution are stated in the paper.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Fine-tuned Political DEBATE NLI stance reader|Fine-tuned Political DEBATE NLI stance reader]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.supervised-stance-stack",
+    "relation": "qualifies",
+    "paper_claim": "Bag-of-words LR, RF and SVM reach MCC 0.49-0.51 and RoBERTa, BERTweet and PoliBERTweet reach 0.60, 0.63 and 0.68 on Twitter. Laurer et al. 2024 found 500 training examples let language models outperform algorithms trained on several thousand.",
+    "paper_location": "Table 3 p.12; p.12 citing Laurer et al. 2024",
+    "system_side": "Production is a LinearSVC on word plus char TF-IDF. Vault notes give 83.9 percent accuracy, but the 0.816 macro-F1 is a leak-free figure paired with an 84.7 percent headline, and other notes give 0.792 and 0.835 for the same model. The NLI-fine-tuned DEBATE reached 0.839 accuracy and 0.835 macro-F1 on n=87, which matches the vault. A distilroberta macro-F1 of 0.757 was not located.",
+    "code_ref": "train_stance_domain.py:24 (distilroberta default), :74-77 (word plus char union) and :68 (LinearSVC import) verified.",
+    "transfer_conditions": "With 456 training rows and an 87-row test all readers fall within each other's intervals. The paper's ordering is for larger training sets and for MCC, not macro-F1.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Table 3 re-opened and matches. The Laurer 500-example point is stated but the phrase NLI-style transfer is not in the paper. The system macro-F1 pairing is inconsistent across vault notes and needs a single source before it is quoted.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Supervised and stacked stance readers|Supervised and stacked stance readers]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.press-value-aggregate",
+    "relation": "qualifies",
+    "paper_claim": "Stance and sentiment are distinct dimensions to be measured independently. Sentiment may inform intensity but cannot stand in for stance. Integrating sentiment to scale stance intensity is named as a future direction needing more research.",
+    "paper_location": "Section 2.1 Definitions 1-2 pp.2-3; Section 6 p.24",
+    "system_side": "press_value = stance sign times LSD intensity (|net| per word). The sign comes from DEBATE or the human overlay, never from the dictionary.",
+    "code_ref": "run_stage5.R:9 (comment) and run_stage5.R:141-143 (formula) verified.",
+    "transfer_conditions": "This is a conceptual endorsement of separating the two dimensions only. The paper does not test whether multiplying sign by intensity improves measurement; it calls that open.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Definitions re-opened and match. Relation changed from supports to qualifies because the paper does not endorse sign-times-intensity; it lists it as an open research direction.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#press_value aggregate and human-label overlay|press_value aggregate and human-label overlay]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.two-hop-decomposition",
+    "relation": "context",
+    "paper_claim": "Stance is entailment relative to context C. When the target is absent, ambiguity rises (34.0 versus 19.5 percent) and accuracy depends on outside knowledge. The paper flags outside-knowledge inference as the hard step.",
+    "paper_location": "Definition 4 pp.3-4; Sections 2.2-2.3 pp.3-5; Section 3.3 p.10",
+    "system_side": "CU alignment = stance toward named target times target CU valence. Valence hop 0.689 versus stance hop 0.915 per the module docstring. A curated registry composed with the stance hop reached 0.782 accuracy under honest 5-fold CV on 400 tweet golds.",
+    "code_ref": "apply_two_hop_stance.py:15 and :27 verified. The 0.782 CV figure comes from derive_valence_registry.py:130-151, which the analyst output does not cite.",
+    "transfer_conditions": "The paper never decomposes stance into a stance hop and a valence hop. The decomposition is the system's own design; the paper only explains why outside-knowledge steps are hard.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Relation changed from supports to context because the paper does not state the two-hop factorization. The 0.782 CV claim is correct but its source is derive_valence_registry.py.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Two-hop stance x valence decomposition with curated registry|Two-hop stance x valence decomposition with curated registry]]",
+    "system": "melange-stance"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Venue confirmed by online scan: PSRM 13 (2025) 611-628, published online 19 September 2024. The summary's September 2024 wording is correct.",
+   "Version date conflict: the paper header says November 2023 but the arXiv stamp on v2 reads 3 May 2024. The ext note's v2 Nov 2023 mixes the two.",
+   "Misattribution: 'The paper also highlights three things the system has not settled' is wrong. The paper does not discuss this project's gaps (model size, Claude labels, MCC check); those are the analyst's own observations.",
+   "Unsupported attribution: 'Burnham's own Political DEBATE base model (a later, politics-trained NLI model)' does not appear in the paper; the authorship and model description come from the code docstring.",
+   "gaps_exposed item: 'Reports use accuracy, macro-F1 and Cohen's kappa (train_stance_domain.py:61-64)' is wrong. Lines 61-64 compute classification_report and macro-F1 only; kappa does not appear there.",
+   "Temperature attribution: 'GPT-4 MCC 0.78 at temperature 0' is not stated in the paper; Table 5 does not give the temperature used.",
+   "SVM figures: '83.9 percent accuracy, macro-F1 0.816' conflicts with other vault notes (0.792, 0.835, and 84.7 percent with 0.816 leak-free). The distilroberta 0.757 figure was not located.",
+   "Two-hop source: the 0.782 CV figure is correct, but it comes from derive_valence_registry.py:130-151, not from apply_two_hop_stance.py, which only runs an in-sample eval."
+  ],
+  "gaps_exposed": [
+   "No MCC anywhere in the stance stack. Reports use accuracy, macro-F1 and Cohen's kappa (train_stance_domain.py:61-64). With class imbalance (support 2,323 / neutral 1,151 / oppose 224 in production), MCC with bootstrapped CIs is the metric the paper argues for.",
+   "Hypothesis wording is fixed and was never sensitivity-tested (stage5_debate.py:26-31). The paper's 9-synonym test gave an MCC range of 0.62-0.66, which is a cheap check to run on the 87-row test.",
+   "Fine-tuned DEBATE large has never been scored against base on the same member-grouped human-gold test. The paper's base-to-large zero-shot gap is 0.40 to 0.65 MCC.",
+   "The share of fine-tune train rows labelled only by Claude is uncounted. Also, claude_stance.py:80 and 95-97 write neutral with an ERR reason after 4 failed API attempts. Whether those rows can enter training as pre_label is UNVERIFIED.",
+   "The Claude rater runs at the API default temperature (claude_stance.py:84-86, no temperature argument). The paper's in-context protocol uses temperature 0 for reproducibility."
+  ],
+  "flags": [
+   "Venue correction: the stage-1 extraction says the PSRM 2025 venue is not supported by the text. An online scan shows the published version in Political Science Research and Methods 13 (2025), 611-628, online 19 September 2024. The arXiv v2 text is the pre-publication version.",
+   "No conflict with the SNA, LDA or reciprocity brain rules. The paper is about text classification only and argues for neither rejected SNA proposal.",
+   "The system's headline 87.2% is agreement with the Claude reference (distillation). Quote the member-grouped human-gold figures (about 85%, kappa 0.76) instead, with n stated."
+  ],
+  "paul_alignment": "Paul has no annotation entry for this paper. His position on the DEBATE reader (component literature) endorses transformer and LLM stance extraction and flags trouble with ambiguous statements. Burnham agrees, and locates that ambiguity in low-context documents where the target is not named, which is the system's implicit-oppose failure. Paul's view that bag-of-words SVMs are outdated matches Burnham's Table 3 in general. But here the production reader is a LinearSVC that ties fine-tuned NLI within CI, so that note is partly stale.",
+  "related": [
+   {
+    "slug": "b-2025-comparing-fine-tuned",
+    "relation": "same-method",
+    "why": "Title matches: fine-tuned RoBERTa versus traditional ML for stance in political tweets. The Khan attribution in the analyst note is not verified; the Khan reference in code is a different Roman Urdu study."
+   },
+   {
+    "slug": "kim-2025-measuring-interest-group",
+    "relation": "complements",
+    "why": "Title matches. Text reports accuracy 96.93 and F1 97.19, which the analyst rounds to 96.9; the versus-human comparison was not checked."
+   },
+   {
+    "slug": "birkenmaier-2025-measuring-politicians-public",
+    "relation": "complements",
+    "why": "Title matches. XLM-RoBERTa and GPT-4o are confirmed in the text; the SVM comparison was not verified."
+   },
+   {
+    "slug": "dai-2025-large-language-model",
+    "relation": "complements",
+    "why": "Title matches a logic tensor network stance paper with LLM enhancement. The claim that it extends the in-context family Burnham benchmarks was not verified, so relation is softened from extends."
+   },
+   {
+    "slug": "haselmayer-2017-sentiment-analysis-political",
+    "relation": "complements",
+    "why": "Title matches a dictionary-plus-crowdcoding sentiment study. Neither text cites the other; Burnham's sentiment-is-not-stance argument bears on it indirectly, so contradicts was softened."
+   },
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "complements",
+    "why": "Title matches corpus-based sentiment dictionaries for specialized vocabularies. The intensity-side link is the analyst's design choice, not a claim in Burnham."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "burnham-2024-political-debate-zero",
+    "relation": "built-on-by",
+    "why": "Same first author. The paper defers to Burnham (2024), Stance detection: a practical guide in Political Science Research and Methods, for NLI best practice and cites its finding that larger NLI models generalize better to unseen tasks. The item is dated 2023 (arXiv 2305.01723, PSRM 2025); the paper cites 2024."
+   },
+   {
+    "slug": "lemens-2025-positioning-political-texts",
+    "relation": "complements",
+    "why": "This guide covers target-specific stance classification. Le Mens covers continuous positioning; together they frame the categorical versus scaled choice for the CU rater."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "bouton-2022-small-campaign-donors",
+  "note": false,
+  "meta": {
+   "title": "Small Campaign Donors",
+   "authors": [
+    "Laurent Bouton",
+    "Julia Cagé",
+    "Edgard Dewitte",
+    "Vincent Pons"
+   ],
+   "year": "2022",
+   "venue": "NBER Working Paper 30050 (May 2022, revised June 2026; no journal version found in online scan)",
+   "doi": "",
+   "sha12s": [
+    "6b1c738e4575"
+   ],
+   "category": "Campaign Politics",
+   "category_slug": "campaign-politics"
+  },
+  "extraction": {
+   "slug": "bouton-2022-small-campaign-donors",
+   "title": "Small Campaign Donors",
+   "authors": [
+    "Laurent Bouton",
+    "Julia Cagé",
+    "Edgard Dewitte",
+    "Vincent Pons"
+   ],
+   "year": "2022",
+   "venue": "NBER Working Paper 30050 (May 2022, revised June 2026; no journal version found in online scan)",
+   "doi": "",
+   "document_type": "working paper (NBER); JEL D72, M37, P16",
+   "coverage": "Read the full extracted text (6405 lines): front matter, abstract, introduction, Sections 2-6, conclusion and references in full; Appendix A (data construction, A.1-A.4.2) read in full; Appendix C (TV ad validation, turnout and vote shares) read in excerpts; Appendix tables F.1-F.20 and figures E.1-E.13 scanned by heading and notes only, values not transcribed beyond those quoted in the main text. No Paul annotations exist (no _annots file; annot_sha12s empty), so paul_markup is empty. Not Paul's own note. Lobbying: not studied in the paper (only mentioned as a literature point). Network analysis and path-finding: none. Allocation and candidate targeting: yes (Section 4). Elections and outcomes: yes (Appendix C). Persuasion and turnout: yes (TV and social media ads; turnout null). Legislators: not directly; candidate ideology and seniority only. Text measurement: none. Online scan (one web search) found no journal publication; the search snippet gave a July 2024 revision date that conflicts with the June 2026 date printed in the PDF, so the PDF was trusted. Metadata hints checked: title, authors, year 2022 correct; venue corrected to NBER WP 30050; doi left blank per instructions.",
+   "research_question": "Are small campaign donors (giving at most 200 dollars to any committee per two-year cycle) a new force that could transform U.S. elections, in terms of their number, sociodemographic profile, candidate and race targeting, and responsiveness to events and ads?",
+   "theory": "Contrasts strategic and expressive motives: large donors are often expressive, while strategic giving would favor close races. Small donors may be a passive response to campaign solicitations and external events rather than active policy agency. Cites Ansolabehere et al. (2003), Grossman and Helpman (1994, 1996), Coate (2004), and Bouton, Castanheira and Drazen (2024) for the passive-response view. Hypotheses are not formally modeled in this paper.",
+   "data": "FEC individual contribution records, 2005-2020: about 340 million contributions, 42.9 million donor-cycles (23.2 million small, 19.7 million large), 30 million unique donors. Unit is the donor-cycle, and donor-candidate pair for targeting. Main sample is donations to congressional Democratic candidates, 2012-2020 (11.3 million donor-cycles, 4.4 billion dollars). Coverage relies on conduits such as ActBlue and WinRed, which report earmarked contributions; conduits account for 76.4 percent of individual contributions 2006-2020 and 91.1 percent in 2020. Candidate-donor pairs number 2.7 billion (general) and 4.8 billion (primary). Also county-level TV ad data (Wesleyan Media and Wisconsin Advertising Projects, border county pairs in 204 DMA clusters) and Meta/Facebook and Instagram ad data for 2020 (20,579 events, 402 candidates). Census, ACS, Zillow ZTRAX home values, BLS SOC occupations and wages, Bonica CFscores.",
+   "method": "Section 2: descriptive counts with imputed unobserved unitemized totals. Section 3: descriptive comparison of gender, ethnicity, occupation, wage, home value and geography. Section 4: OLS linear probability model of the share of a donor's contributions going to a candidate (equation 1), with election year, state, House/Senate and donor fixed effects, two-way clustered at seat and donor. Section 4.5: Herfindahl-Hirschman index by donor decile. Section 5.1: weekly timing and abnormal-week flags. Section 5.2: TV ads via border-county pairs in different DMAs (Spenkuch and Toniatti 2018 design), OLS with county-pair-by-year and county-by-office fixed effects, clustered at DMA. Section 5.3: social media ads event study with the heterogeneity-robust de Chaisemartin and D'Haultfoeuille (2024) estimator, week-state fixed effects, clustered at candidate-week.",
+   "identification": "Donor fixed effects compare a given donor's support for same-gender, same-race or same-district candidates against other candidates. TV ads: differences in ad volume across adjacent counties in different media markets, argued to be as-good-as-random because DMAs cover many counties and candidates set ads at DMA level; validated by replicating Spenkuch and Toniatti (2018) for 2012. Social media: staggered-adoption event study, with parallel trends assessed with pre-event placebo estimates (pre-trends not visible in Figure 8 for three weeks before ads).",
+   "scope": "U.S. federal campaign finance, individual donors to presidential, House, Senate and party committees, 2005-2020 cycles. Main targeting and timing analysis is congressional Democratic candidates 2012-2020 general and primary elections. Republican analysis is limited to 2020 (WinRed era). TV ad effects estimated for Democratic ads only; Republican ad effects on Republican races not estimated. Social media analysis covers 2020 only.",
+   "key_findings": [
+    "Small donors rose from 5.0 million (2006 cycle) to 21.8 million (2020); large donors rose from 2.3 million to 7.0 million (Section 2.2, p. 9).",
+    "Small donor contributions were 12.8 percent of all contributions in the 2020 cycle and 14.9 percent for Democratic congressional candidates; small contributions grew from 362 million to 1.664 billion dollars 2006-2020 versus large from 2.084 to 11.307 billion (Section 2.2, p. 10).",
+    "Unitemized contribution totals overstate small donor contributions by a factor of 1.8 to 3.1 (Section 2.2, p. 8).",
+    "Among Democratic congressional donors 2012-2020, 23.1 percent of small donors are non-white, about 13 percent more than large donors, but 42.1 percent less than the voting-age population; small donors are 56.9 percent female versus 47.2 percent for large donors (Section 3, p. 12, Table 2).",
+    "Median 2020 home value is 289,900 dollars for small donors, 419,910 for large donors and 176,838 for the population; 44.5 percent of small donors have high-SOC occupations versus 54.1 percent for large donors (Table 2, p. 13).",
+    "About 88 percent of small-donor contributions go to out-of-district candidates; same-district matching raises small donor shares by 16.8 percentage points versus 20.4 for large donors (Section 4.1-4.3, p. 17-18).",
+    "Close races do not attract more small-donor money: the close-seat coefficient is 0.11 (not significant) for small donors versus 0.18 for large donors (Table 3, p. 16-17; Section 4.3).",
+    "Small donors give 135 and 52 percent more (relative to mean) to left and center ideology tercile candidates than to right tercile candidates (Section 4.3, p. 18).",
+    "Small donor shares are concentrated in a few candidates: 12.2 percent of candidates receive more than one quarter of donations from small donors; bottom deciles show higher concentration (HHI) (Sections 4.1 and 4.5, p. 15, 23-24).",
+    "Timing: 13.0 percent of 2020 small-donor contributions fell in the week of Justice Ginsburg's death versus 5.9 percent for large donors; 30 of 31 large-donor abnormal weeks coincide with quarterly deadlines versus 27 of 43 for small donors (Section 5.1, p. 25).",
+    "TV ads: 1,000 additional Democratic ads raise small-donor contributions by 10.86 dollars per 10,000 adults (6.3 percent of mean, significant at 1 percent), with large-donor effect 27.87 (not significant); Republican ads have no significant effect (Table 4, p. 28). Turnout effects of TV ads are null, while congressional vote shares rise about 0.55 percentage points per 1,000 net ads (Appendix C, Table C.1, p. 18).",
+    "Social media: an event of Democratic Meta ads raises weekly small-donor contributions by 3.0 dollars per 10,000 (8.3 times mean) in general elections but not significantly; in primaries small donors rise 1.3 times mean and large donors 0.5 times, both significant (Section 5.3, p. 30-31)."
+   ],
+   "limitations": "Authors note that donor grouping relies on conservative rules, and that FEC committee totals mismatch in 42.8 percent of committee-cycles (Appendix A.2.1). Race is imputed from surname and census geography, with a 26 percent false-positive rate for White individuals (Appendix A.4.2); gender is imputed from first names. Unitemized small-donor estimates rely on weighted averages across cycles. Donor-candidate regressions cannot study the non-donor population and do not observe donor ideology (footnotes 20 and 24). Donor fixed effects leave candidate-level confounders partly uncontrolled, and electoral race fixed effects drop race-level covariates (footnote 29). TV-ad sample excludes Republican-race outcomes due to power. Social media effects are significant only in primaries. Subsamples defined by impressions may be endogenous to ad quality (footnote 45). The paper is an NBER working paper with revisions through June 2026.",
+   "paul_markup": [],
+   "short_quotes": [
+    "small donors appear to occupy the passenger seat rather than the driver's seat.",
+    "they are unlikely to transform U.S. elections.",
+    "Small donors do not target close races to a greater extent than large donors."
+   ],
+   "references_of_note": [
+    "Bouton, Castanheira and Drazen (2024), A theory of small campaign contributions, The Economic Journal 134(662).",
+    "Spenkuch and Toniatti (2018), TV ad effects design used for the county-pair strategy.",
+    "de Chaisemartin and D'Haultfoeuille (2024), event-study estimator for the social media analysis.",
+    "Imai and Khanna (2016), ethnicity inference from voter registration and census data.",
+    "Ansolabehere, de Figueiredo and Snyder (2003), expressive versus strategic donor motives.",
+    "Cagé (2018), The Price of Democracy.",
+    "Fowler et al. (2021), political advertising online and offline.",
+    "Culberson, McDonald and Robbins (2019), small donors in congressional elections."
+   ],
+   "measures": "Small donor: maximum contribution to any single committee in a cycle at or below 200 dollars. Donor-candidate share of total contributions. Same district, same state, same gender and same race dummies. Close seat (mean Democratic winning margin within 10 points), safe Republican seat, incumbency, seniority, left and center CFscore terciles. Imputed gender, ethnicity, occupation (SOC), wage (BLS state median), home value (Zillow 2020). Abnormal week flags. Contributions per 10,000 adults; ads per county; weekly contributions per 10,000 state inhabitants. Herfindahl-Hirschman index of candidate shares."
+  },
+  "summary_md": "Bouton, Cage, Dewitte and Pons (NBER WP 30050, revised June 2026) build a contribution-level panel of about 340 million FEC individual contributions (2005-2020) by parsing ActBlue and WinRed earmark memos, which makes sub-200-dollar donors visible. Their main finding is that small donors are a passive force. They tripled to 21.8 million by 2020 but supplied only 12.8 percent of 2020 money. They back the same kinds of candidates as large donors, send about 88 percent of their money out of district, and do not concentrate on close races (close-seat coefficient +0.11 pp, not significant, versus +0.18 pp for large donors; Democratic congressional candidates 2012-2020). Their giving spikes on salient events, while large donors spike at quarterly deadlines. TV ads raise small-dollar giving by 6.3 percent of the mean per 1,000 ads, and Meta ads do so only in primaries. For Paul's systems the substantive results are background. The data appendix matters more for Mentat. First, it documents that an earmarked gift from a donor above the 200-dollar aggregate appears in both the conduit report and the recipient committee report. The authors pair and drop 87 percent of these duplicates, whereas Mentat counts both legs under ruling R8; this is flagged, not recommended. Second, the donor-grouping rules always require a street address and reject employer and occupation as grouping keys. Mentat's identity ladder auto-accepts on exact name plus ZIP alone. Third, conduit coverage changes over time (76.4 percent of contributions 2006-2020, 91.1 percent in 2020, WinRed only from 2019), so cross-cycle partisan comparisons of employee giving carry a visibility artifact. The paper says nothing about whether dollars buy access or alignment.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "mentat-fec-attribution.dedup-and-versions",
+    "relation": "qualifies",
+    "paper_claim": "A recipient committee must itemize an earmarked contribution when the donor's cycle aggregate to it exceeds 200 dollars, so the same gift appears in both the conduit report and the committee report. The authors coupled 87 percent of earmarked committee-itemized donations to their conduit twin and dropped the committee leg. The remaining committee-itemized donations are 3 percent of all contributions.",
+    "paper_location": "Appendix A.3.1 Earmarked contributions (Processing), appendix pp. 5-6",
+    "system_side": "Code comment at export_guards.R:110-113 says a conduit leg is a real row that counts, and that guard G3 against conduit double counting was removed 2026-07-27 under the R5/R8 recipient-as-shown ruling. report.R:1566-1568 keeps the downstream-earmark mask as an analytical flag only. report.R:1601-1606 is a sub_id duplicate guard. Not shown in code: that the two legs carry different sub_ids, and that the committee leg is counted. A report.R:2775-2786 comment says the receipt counts once, to the row's recipient.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/R/export_guards.R:110-113; C:/Users/pgoff/Mentat/mentat/R/report.R:1566-1568,1601-1606,2775-2786",
+    "transfer_conditions": "Paper population is employees whose cycle aggregate to the recipient exceeds 200 dollars. Sub-200 gifts are visible only through the conduit (paper Appendix A.4.3). The size of the double count in Mentat books is unmeasured. Money collection is frozen; any change needs Paul's per-change OK.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper figures reproduced: 87 percent coupled, 3 percent remainder, Appendix A.3.1. Code side softened to what the comments state: G3 removal and the analytical-only mask are confirmed. The sub_id claim and the 'counts both legs' reading are not shown in code.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-fec-attribution#Conduit legs, memo dedup, filing-version identity and transfer rule|Conduit legs, memo dedup, filing-version identity and transfer rule]]",
+    "system": "mentat-fec-attribution"
+   },
+   {
+    "component_id": "mentat-fec-attribution.identity-ladder",
+    "relation": "method-source",
+    "paper_claim": "Donor grouping uses explicit rules. Two records are one person if they match exactly on three of first name, surname, full street and ZIP and fuzzily on the fourth (first-name variant index, fuzzy surname, fuzzy street, or city-state in place of ZIP). Occupation and employer are too inconsistent to use as grouping variables. The authors expect a very small false-positive rate but do not measure it.",
+    "paper_location": "Appendix A.4.1 Grouping, Steps 1-2 and footnote 4",
+    "system_side": "collect.R:2087-2157 (identity_match_ladder) returns AUTO on exact name plus same ZIP with no street check, and HIGH on exact name plus same city or nickname plus same ZIP. Employer contradiction only changes the grade (collect.R:2120-2134). AUTO and HIGH are kept (collect.R:2896). Street fields are collected (collect.R:1415-1416) but this ladder does not read them.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:2087-2157,2120-2134,2896; C:/Users/pgoff/Mentat/mentat/R/collect.R:7,1415-1416",
+    "transfer_conditions": "The paper groups across all committees; Mentat links same-name rows to a seed within a company run (seed logic not traced in this check). A false merge adds a stranger's money to a company total, so the cost is higher. The paper's rules have no measured precision, so they are a design benchmark, not a validated standard.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Paper rules and footnote 4 match the text. Code grades match the analyst's description exactly for the ladder function. The seed-linkage sentence was not traced.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-fec-attribution#Contributor identity match ladder|Contributor identity match ladder]]",
+    "system": "mentat-fec-attribution"
+   },
+   {
+    "component_id": "mentat-fec-attribution.collection-completeness",
+    "relation": "measurement-source",
+    "paper_claim": "Conduits must report every contribution they collect, whatever its amount. Conduit contributions were 76.4 percent of individual contributions 2006-2020 and 91.1 percent in 2020, and processing them more than doubles observed contributions. WinRed launched in 2019. Committee-reported unitemized totals overstate small-donor contributions by a factor of 1.8 to 3.1.",
+    "paper_location": "Introduction, Section 2.1 (rise of conduit contributions), Section 2.2 (unitemized totals), Appendix Figure E.1a",
+    "system_side": "collect.R:1452-1454 sets is_conduit_leg for the two conduit committee IDs. export_guards.R:447-449 treats an empty Conduit category as a real zero for industries or cycles with no earmark-platform giving. No cycle- or party-varying coverage adjustment was found in the cited lines.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/R/collect.R:1452-1454; C:/Users/pgoff/Mentat/mentat/R/export_guards.R:447-449",
+    "transfer_conditions": "Matters for cross-cycle or partisan splits of individual employee giving that span the 2019 WinRed launch. The paper limits its Republican analysis to 2020. It does not affect PAC-to-candidate totals. Direct gifts under 200 dollars stay invisible in itemized data (paper footnote 12).",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper figures and code lines confirmed. Removed the WinRed petition (REG 2022-05) reference: the paper does not contain it and the online-scan status was unconfirmed. The no-adjustment statement is an absence claim limited to the cited lines.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-fec-attribution#Collection completeness (zero provenance, count reconciliation, key pool)|Collection completeness (zero provenance, count reconciliation, key pool)]]",
+    "system": "mentat-fec-attribution"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.seats-weekly-test",
+    "relation": "suggests-extension",
+    "paper_claim": "Weekly giving is dominated by calendar and event shocks. 30 of 31 abnormal weeks for large donors coincide with quarterly deadlines, against 27 of 43 for small donors. The week of Justice Ginsburg's death carried 13.0 percent of 2020 small-donor contributions versus 5.9 percent for large donors.",
+    "paper_location": "Section 5.1 Timing (Figure 6)",
+    "system_side": "sgs_seats.R:511-515 builds a formula of the form y on a focal term plus a base term. For multi-cycle level models the base is cycle fixed effects plus cycle-specific linear week-of-cycle trends. Single-cycle models use one common week trend. Change and lag variants exist. No quarter-end or salient-event term appears in these lines. The outcome definition (D share of giving) was not traced.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:511-515",
+    "transfer_conditions": "Relevant only if the weekly series includes individual employee receipts and if deadline or event surges differ by party. Dobbs in 2022 is an example event. A quarter-end and event-week sensitivity is a candidate check, not a demonstrated bias. Unverified agent analysis (DE-062).",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper figures match. Model description corrected: cycle-specific week trends in multi-cycle level models, plus change and lag variants. The absence of deadline or event terms is confirmed in these lines.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#SEATS-W weekly seat-gain test (2022 House)|SEATS-W weekly seat-gain test (2022 House)]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "melange-influence-engine.competitiveness-multiplier",
+    "relation": "context",
+    "paper_claim": "Relative to safe Democratic seats, close races (mean Democratic winning margin between -10 and 10 percent over the last two elections) receive 0.11 pp more of a small donor's giving (48 percent of mean, not significant) and 0.18 pp more of a large donor's (75 percent of mean, significant at the 5 percent level). Sample is Democratic congressional candidates 2012-2020 with donor fixed effects.",
+    "paper_location": "Section 4.3, pp. 16-18; Table 3",
+    "system_side": "moneyball_core.py:74-93 implements c = 1 + AMPLITUDE times exp(minus max(lean,0) over SCALE), with AMPLITUDE 1.0 and SCALE 5.0. The header calls these Paul's uncalibrated judgment constants and says the reciprocity they encode is not validated. c scales effective dollars on both money legs (cu and ind).",
+    "code_ref": "fec/moneyball_core.py:74-93",
+    "transfer_conditions": "The paper measures where individual donors send money, not what a dollar buys from a legislator, so it neither supports nor refutes c. Quote the close-seat figures only as Democratic candidates only, UNSTRATIFIED by party.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper figures and the code formula match. The analyst's phrase 'competitor dollars' does not match the code comment (cu and ind legs), so it was rewritten.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Competitiveness multiplier c (COMPET_MULT)|Competitiveness multiplier c (COMPET_MULT)]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Summary says small donors 'tripled' to 21.8 million. The paper gives 5.0 million (2006 cycle) to 21.8 million (2020 cycle), a rise of about 4.4 times. Correct to more than four-fold.",
+   "Author name misspelled: 'Cage' should be Cagé (Julia Cagé).",
+   "'The paper says nothing about whether dollars buy access or alignment' is too strong. The paper discusses access as theory (intro, citing Grossman and Helpman and Kalla and Broockman) and tests no access or alignment outcome. Reword to 'does not estimate access or alignment'.",
+   "TV-ad figure lacks its window and units. The 6.3 percent of mean is for general elections only (primaries 3.7 percent), per 1,000 additional Democratic ads, with dollars expressed per 10,000 adults (10.86 dollars). Add the general-election qualifier.",
+   "'Send about 88 percent of their money out of district' should read 88 percent of their contributions, a count share from the paper's introduction and Section 4 (paper p. 17).",
+   "'Mentat counts both legs under ruling R8' is stronger than the code shows. Code comments say the conduit leg counts and that G3 was removed, and the committee leg is expected to appear. A report.R comment says the receipt counts once to the recipient. Reword as expected, not verified end to end.",
+   "'Re-ratified 2026-07-27' attaches that date to R8. The code gives 2026-07-27 only for removal of G3 (export_guards.R:110-113). The ratification date was not verified here.",
+   "Meta-ad summary should add that the paper finds the small-donor and large-donor primary effects both significant (1.3 and 0.5 times mean) and the difference between them not significant.",
+   "The 'passive force' framing is the authors' theory and metaphor (passenger seat), not a measured finding. Attribute it as such.",
+   "Bearing transfer_conditions named a pending WinRed petition (REG 2022-05). The paper does not mention it and the status was unconfirmed. Removed.",
+   "Related link bonica-2025-money-campaign-finance removed. That work (Bonica and Grumbach, Old money, Journal of Public Economics 2025) is not cited by Bouton et al., and the shared-data claim is not shown in the Bouton text.",
+   "Related link cagala-2021 kept as a vault-level complement only; it is not cited by Bouton et al.",
+   "Coverage note: the ext file reports the paper as fully read; this verifier read the claimed sections and tables by search and excerpt, and did not transcribe Appendix F tables."
+  ],
+  "gaps_exposed": [
+   "Mentat has no measured estimate of how many employer-matched dollars appear twice (conduit leg plus earmark-target leg) under R8. A read-only count pairing conduit rows with committee rows that carry an EARMARKED THROUGH memo, by company and cycle, would size it.",
+   "The identity ladder has no street-address tier. It auto-accepts exact name plus ZIP and keeps exact name plus city, and its precision against a hand-coded sample is unmeasured (component question still open).",
+   "No cycle-varying coverage note on individual-giving partisan splits across the 2019 WinRed launch. Direct sub-200 gifts stay invisible.",
+   "SEATS-W has no quarter-end or salient-event indicators in its weekly specification."
+  ],
+  "flags": [
+   "The paper's both-legs evidence sits against Paul's ruling R8 (conduit legs COUNT, re-ratified 2026-07-27, G3 deleted). It is reported as evidence only. Money collection is frozen, so nothing changes without Paul's per-change OK.",
+   "The close-seat coefficients are pooled over Democratic candidates only and do not test whether money buys access or alignment. They must not be cited as validating reciprocity or the competitiveness multiplier (D-104..D-108).",
+   "The paper's donor-grouping rules are described as conservative, but no precision or recall is reported, so they are a design benchmark, not a validated standard.",
+   "All bearings are new agent analysis and remain UNVERIFIED until a second path reproduces them (DE-062)."
+  ],
+  "paul_alignment": "No Paul entry or markup exists for this work, so there is no takeaway to check and nothing stale. Identity ladder: he highlighted false-positive-limiting matching, and the paper requires a street address where the ladder accepts name plus ZIP. Dedup: he flagged duplicate filings as a hazard; the paper shows the two conduit legs are one gift, against his R8 ruling (flagged only). Competitiveness: Bouton finds only modest close-race overweighting by individual donors and says nothing on what dollars buy.",
+  "related": [
+   {
+    "slug": "bonica-2013-mapping-ideological-marketplace",
+    "relation": "same-data",
+    "why": "Bouton et al. use Bonica's CFscores for candidate ideology terciles and describe them as built from contribution records. The paper cites Bonica 2014 (AJPS); the vault note dates the work 2013 (SSRN draft), so the year label differs. Their close-race result is Democratic-only, so it bears on Bonica's donor-steering account only for Democratic individual donors 2012-2020."
+   },
+   {
+    "slug": "kalla-nd-campaign-contributions-facilitate",
+    "relation": "complements",
+    "why": "Bouton et al. cite Kalla and Broockman (2016), a randomized field experiment titled Campaign Contributions Facilitate Access to Congressional Officials, in their introduction on elite responsiveness. Bouton et al. study where donor money goes, not whether it buys access."
+   },
+   {
+    "slug": "cagala-2021-optimal-targeting-fundraising",
+    "relation": "complements",
+    "why": "Bouton et al. describe small donors as responding to candidate fundraising requests and external events. Cagala et al. (2021, arXiv, Optimal Targeting in Fundraising) study the supply side of solicitation. Bouton et al. do not cite this work, so the link is a vault-level complement."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "ansolabehere-2002-little-money-politics",
+    "relation": "built-on-by",
+    "why": "Studies small individual donors, the consumer contributor this paper puts at the center of campaign finance. Item exists."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "ansolabehere-2002-little-money-politics",
+  "note": false,
+  "meta": {
+   "title": "Why Is There So Little Money in U.S. Politics?",
+   "authors": [
+    "Stephen Ansolabehere",
+    "John M. de Figueiredo",
+    "James M. Snyder Jr."
+   ],
+   "year": 2002,
+   "venue": "NBER Working Paper 9409 (December 2002)",
+   "doi": "",
+   "sha12s": [
+    "044a24a736e4"
+   ],
+   "category": "Campaign Politics",
+   "category_slug": "campaign-politics"
+  },
+  "extraction": {
+   "title": "Why Is There So Little Money in U.S. Politics?",
+   "authors": [
+    "Stephen Ansolabehere",
+    "John M. de Figueiredo",
+    "James M. Snyder Jr."
+   ],
+   "year": 2002,
+   "venue": "NBER Working Paper 9409 (December 2002)",
+   "doi": "",
+   "document_type": "working paper",
+   "coverage": "Read the full extracted text (1836 lines) in three chunks, all body sections, Tables 1-4 and endnotes. Figures 1A and 1B read from axis labels and prose only. Page numbers are printed NBER pages from the extraction, may be off by one. Annotations: annot_sha12s empty, n_annots 0, no _annots file read; paul_markup empty (0 items, 0 dropped). No note flag, so not a Paul note. Metadata hints checked and correct; no DOI in text. No networks, path-finding, persuasion/turnout or text measurement in paper. Key findings capped at 12.",
+   "research_question": "Why is there so little money in U.S. politics given the large value of policies at stake (Tullock 1972 puzzle), and why do organized interests give at all? The authors argue that campaign giving is mainly consumption and participation by individuals, not investment in legislation.",
+   "theory": "Campaign contributions as investments in a political market for private benefits (Snyder 1990; Grossman and Helpman 1994; Denzau and Munger 1986; monopoly-donor models of Dal-Bo 2001 and Helpman and Persson 2001) versus contributions as consumption of participation, like charitable giving (consumer contributors who are ideologically motivated, asked by friends, and civically active). For interest groups the authors list four or five possible reasons for giving: small return, buying access, electing friends, coordinating individual donors, and consumption by executives.",
+   "data": "(a) Survey of nearly 40 roll-call studies (Table 1). (b) Chamber of Commerce roll-call score, U.S. House 1978-1994, N = 3400 (Table 2). (c) FEC-era totals 1978-2000 and presidential spending 1884-2000 (Figure 1). (d) Gubernatorial state panel 1976-2000, N = 326 (Table 3), with BEA income and Census finance data. (e) House elections 1992-2000 with district income and margins (Table 4, 1735 races) and Senate spending by state size. (f) 94 executives at 12 large firms, 1997-98 cycle (ExecuComp, Center for Responsive Politics). (g) 2000 totals from FEC and PAC accounts; 2000 ANES survey.",
+   "method": "Descriptive accounting of contributions by source; tabulation of prior roll-call studies by significance and sign; OLS and two-stage IV regressions of the CCUS score on corporate and labor PAC money with year effects and either party plus district preference, district fixed effects, or member fixed effects; OLS state fixed-effects panel of log per-capita gubernatorial spending; cross-section regressions of House race spending on district income and margin with year, party and incumbency controls; time-series ratios of spending to GDP and national income.",
+   "identification": "IV for PAC money using electoral competition (opponent spending, absolute vote share minus .5, unopposed dummy) and member power (party leader, committee chair, Ways and Means or Energy and Commerce membership), following Chappell 1982 and Welch 1982. Member fixed effects absorb time-invariant member preferences. Gubernatorial estimates rely on within-state variation with state fixed effects. Time-series, executive and aggregate-share results are descriptive with no causal identification.",
+   "measures": "CCUS roll-call score 0-100 per member-year; corporate and labor PAC contributions in dollars; member party; district partisanship; per-capita personal income; per-capita state and federal government spending; population; closeness of general and primary elections (1 minus winner vote share); total campaign spending by all candidates; spending as a share of GDP or national income.",
+   "scope": "U.S. federal (House, Senate, president) and state (governor) elections under FECA, mainly 1976-2000; presidential spending 1884-2000; roll-call evidence for the U.S. House 1978-1994; PAC activity in 2000; executives in the 1997-98 cycle. Units are contributors (individuals, PACs, firms), legislators and states. Claims about the whole system are broad, drawn from these pieces.",
+   "key_findings": [
+    "Individuals gave nearly 2.4 billion of about 3 billion dollars in 1999-2000; about 21 million people (about 10 percent of adults) gave, averaging about 115 dollars (p.7).",
+    "Only 4 percent of PAC contributions to House and Senate candidates are at or near the 10000 dollar limit; the average PAC gift is 1700 dollars and the modal contribution is zero (p.8).",
+    "In 2000 PACs spent 579.4 million dollars in total; 280.8 million went to or for candidates and about 300 million to overhead and other activity that could have been paid by the sponsor's treasury (p.9).",
+    "In a survey of nearly 40 roll-call studies, PAC contributions had no significant effect or the wrong sign in three of four instances (Table 1, p.15).",
+    "CCUS model, House 1978-1994, N = 3400: an extra 60000 dollars of corporate PAC money (about one SD) moves the 0-100 score by at most 2 points, while a change of party moves it more than 30 points (pp.18-19).",
+    "District fixed effects nearly eliminate the contribution effects, and member fixed effects eliminate them entirely; coefficients are tiny and insignificant in OLS and IV (Table 2, p.19).",
+    "IV estimates shrink the effects and reverse the sign on corporate money (column 4 coefficient -0.30, Table 2); the authors conclude the evidence for substantial vote influence is rather thin (pp.19-20).",
+    "Interest groups spent about 3 billion dollars on lobbying in 1997-98, roughly ten times the 300 million they spent on PAC contributions (p.32, citing Ansolabehere Snyder and Tripathi 2002).",
+    "Tullock puzzle restated: 2000 campaign spending was about 3 billion dollars against 2 trillion of federal spending; 192000 dollars of 1985 sugar-industry contributions preceded a subsidy vote, with the subsidy worth over 5 billion dollars over five years (pp.11-13).",
+    "Executives: 94 top executives at 12 firms gave about 7500 dollars per cycle, or 51 dollars per 100000 of income (0.05 percent), close to the 0.04 percent of national income spent on campaigns in 2000 (p.22).",
+    "Real campaign spending roughly doubled 1976-2000 but has no trend relative to national income; presidential spending as a share of GDP was flat 1912-2000 and about three times higher in the 1880s and 1890s (pp.23-24).",
+    "Gubernatorial panel 1976-2000 (N = 326, state fixed effects): income elasticity about 1.07 to 1.17, government spending has no independent effect (-0.09), and closeness has a strong positive effect (2.93) (Table 3, pp.26-27). House races 1992-2000: each 1000 dollars of district income adds about 20000 dollars of spending; close races attract 60 percent of money from individuals versus 31 percent from PACs (pp.28-29)."
+   ],
+   "limitations": [
+    "Literature magnitudes are hard to compare because most studies do not report means or standard deviations (p.16).",
+    "Simultaneity between contributions and votes, and omitted district and donor-strength controls, may bias the roll-call estimates (pp.16-17).",
+    "The IV results are sensitive to instrument choice; sign and size change across specifications (p.19).",
+    "The consumption account lacks specific empirical predictions that separate it from rent-seeking; the authors say the theory is undeveloped (p.31).",
+    "The party coefficient may partly reflect party money or interest-group money routed through parties (endnote 9, p.58).",
+    "Party account transfers may double count about 10 percent of party money; the 380 million soft-money figure is estimated from FEC individual donor files; industry totals are called overestimates (endnotes 3-5).",
+    "The House regression is reported only in text, with a linear statement (20000 dollars per 1000) and a log footnote (elasticity 0.43) that are not reconciled (p.28, endnote 12).",
+    "Table 2 extraction is garbled; one labor IV cell is starred significant in the extraction while the text calls legislator-FE effects insignificant, and the text's 6-point labor effect has no matching positive coefficient.",
+    "Executive sample is 94 people at 12 firms; state data are limited to 1976-2000; the presidential series is of lower data quality by the authors' own account (p.22).",
+    "The 20 percent return on investment for a subset of PACs is an illustration, not an estimate (p.32)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "campaign contributions are not a form of policy-buying, but are rather a form of political participation and consumption",
+    "the question is not why there is so little money politics, but rather why organized interests give at all",
+    "Money has little leverage because it is only a small part of the political calculation that a reelection oriented legislator makes"
+   ],
+   "references_of_note": [
+    "Tullock 1972 The Purchase of Politicians, Western Economic Journal 10 (origin of the puzzle)",
+    "Snyder 1990 Campaign Contributions as Investments, Journal of Political Economy 98",
+    "Grossman and Helpman 1994 Protection for Sale, American Economic Review 84",
+    "Chappell 1982 and Welch 1982 (IV instrument choice)",
+    "Stratmann 1991 sugar PAC contributions, Southern Economic Journal 57",
+    "Bronars and Lott 1997 and Stratmann 2002 (member fixed effects, opposite conclusions)",
+    "Ansolabehere Snyder and Tripathi 2002 PAC contributions and lobbying, Business and Politics",
+    "Levitt 1994 repeat challengers and spending effects, Journal of Political Economy 102",
+    "Ansolabehere Gerber and Snyder 2001 corruption and the growth of campaign spending",
+    "Lott 2000 government-size explanation for spending growth",
+    "de Figueiredo and Silverman 2002 academic earmarks and lobbying",
+    "Burns et al 2001 ANES 2000 pre- and post-election survey"
+   ]
+  },
+  "summary_md": "Ansolabehere, de Figueiredo and Snyder (NBER WP 9409, 2002) restate the Tullock puzzle. In 2000 about 3 billion dollars went to campaigns, against 2 trillion of federal spending. They answer that campaign money is mostly individual consumption and participation, not policy purchase. Individuals gave about 2.4 of the 3 billion dollars. Only 4 percent of PAC gifts are near the limit. In nearly 40 roll-call studies, PAC effects are null or wrongly signed three times in four. In their own House panel (1978-1994, N = 3400), 60000 dollars of corporate PAC money moves a 0-100 Chamber score by at most 2 points, while party moves it by more than 30. District fixed effects nearly remove the money effect, member fixed effects remove it entirely, and IV reverses the corporate sign. Spending tracks income: the gubernatorial income elasticity is about 1.1, the stakes (government spending) have no effect, and closeness raises spending. Executives give about 0.05 percent of income, close to the national rate. For Paul's systems the paper is load-bearing. The Melange money engine already cites Ansolabehere to justify cutting MAXSHIFT from 40 to 18 and weighting money below peers. The paper supports that cut on votes. It does not support the access half of the code comment, and it gives no evidence that dollars buy more in competitive seats: closeness raises the supply of money, mostly small individual gifts. On the Mentat side, the consumption account fits the sector growth study's null for industry growth and suggests that donor or national income, not industry revenue, scales giving.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.money-response-defection",
+    "relation": "supports",
+    "paper_claim": "In the most common House specification (Column 1, 1978-1994, N = 3400, CCUS 0-100 score) an extra 60000 dollars of corporate PAC money (about 1 SD) changes the score by at most 2 points; 50000 dollars of labor PAC money changes it by 6; a change of party changes it by more than 30 points (40 with district FE). Member fixed effects eliminate the contribution effects, and IV reverses the sign on corporate money. Changes in donations to an individual legislator do not translate into changes in that legislator's roll-call votes.",
+    "paper_location": "Table 2 and text pp.18-20 (printed NBER pages)",
+    "system_side": "shift_lean uses MAXSHIFT times r/(r+HALF) with r = c times amount over receipts. MAXSHIFT defaults to 18 with a code comment citing Ansolabehere for the cut from 40. On median receipts recomputed from congestion.json (1743281, n = 517), a 10k gift shifts lean by about 0.98, below DTHRESH 11.25. Defection needs roughly 1/6 of receipts before the pressure_mult and 1.10 LOSSFRAME factors, which can lower that fraction.",
+    "code_ref": "fec/engine/money_response.py:15-25 and :60-80",
+    "transfer_conditions": "The paper estimates business-wide PAC money against a Chamber score at ordinary contribution sizes, pooled across the House. The defection channel fires only on scenario shocks near 1/6 of receipts, outside the paper's support. The member-FE null puts the within-member slope at zero, so any nonzero MAXSHIFT is owner judgment, not an estimate. The 2-vs-30 contrast is conditional on party and is not stratified; quote it with an UNSTRATIFIED label.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers and the member-FE null reproduce from Table 2 and pp.18-20. The system side is softened: the 0.9 figure is about 0.98 on recomputed median receipts, and the 1/6 boundary ignores pressure_mult and LOSSFRAME. Code comments and congestion.json checked read-only.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Money response (lean shift) and money-triggered defection|Money response (lean shift) and money-triggered defection]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-influence-engine.flip-model",
+    "relation": "qualifies",
+    "paper_claim": "Money is a small part of a reelection-minded legislator's calculation: party moves the score by more than 30 points against about 2 for money. The paper lists buying access as one of several group motives and does not test it. It cites 3 billion dollars of lobbying against 300 million of PAC contributions in 1997-98, and Langbein's estimate of about 10000 dollars per legislator hour. Its main thesis is consumption rather than access.",
+    "paper_location": "pp.18-20 (votes); pp.31-33 (access, lobbying totals, 20 percent illustration)",
+    "system_side": "WM 0.35 and WP 0.65 at flip_model.py:21, with a comment that money buys access and effort more than votes, citing Ansolabehere, Hall and Wayman, and Kalla and Broockman. pflip = a/(a+b) with saturating money terms, each carrying a +1 smoothing term.",
+    "code_ref": "fec/engine/flip_model.py:21 and :88-100",
+    "transfer_conditions": "The paper supports money as the minority partner on votes, not on access. The access attribution rests on Kalla and Broockman, which is outside this paper. Peer proximity (cpf_pressure) is not party; the 30-point party effect is only the nearest analogue. With peer terms zero, pflip approaches 0 or 1 only at extreme money ratios because of the +1 smoothing.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper claims reproduce from text (party 30 vs 2, access untested, 3 billion vs 300 million, Langbein 10000). The WM comment credits Ansolabehere for access, which the paper does not test; this is the citation-precision flag, and it stands. The 0-to-1 range sentence was overstated and is narrowed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Flip - winnability model|Flip - winnability model]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-influence-engine.competitiveness-multiplier",
+    "relation": "qualifies",
+    "paper_claim": "Closeness raises the quantity of money. In the gubernatorial panel (1976-2000, N = 326, state FE) the closeness coefficient on log per-capita spending is 2.93. In House races of 1992-2000, close seats (under 5 points) draw 60 percent of funds from individuals and 31 percent from PACs, while safe seats (30 points or more) draw 48 and 46 percent. Most of the gap in the individual share comes from gifts under 500 dollars.",
+    "paper_location": "Table 3 (pp.26-27); The Marginal Dollar (pp.28-29)",
+    "system_side": "c = 1 + exp(-max(lean,0)/5) scales effective dollars on both money legs; receipts stay in the denominators of pflip and shift_lean.",
+    "code_ref": "fec/moneyball_core.py:83-93 and fec/engine/flip_model.py:95-96",
+    "transfer_conditions": "The paper shows the supply side only: more money, mostly from individuals, flows to close races. It says nothing about per-dollar influence. The PAC evidence is in shares, not dollar levels. Higher receipts in close seats shrink r and partly offset c. Reciprocity is not validated (D-104..D-108), and this paper does not validate it.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "The 2.93 coefficient and the 60/31 and 48/46 splits reproduce. The marginal-dollar wording was wrong: the paper says most of the individual-share gap between close and safe seats comes from gifts under 500 dollars, not that close-race marginal dollars are mostly small gifts. PAC evidence is shares only.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-influence-engine#Competitiveness multiplier c (COMPET_MULT)|Competitiveness multiplier c (COMPET_MULT)]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.stance-money-gate",
+    "relation": "supports",
+    "paper_claim": "With member fixed effects, changes in donations to an individual legislator do not translate into changes in that legislator's roll-call voting. A third explanation for group giving is to elect sympathetic legislators rather than to change the views of sitting ones.",
+    "paper_location": "p.19; pp.32-34",
+    "system_side": "STANCE_GATE_BLOCKED (Skeptic, Highly Skeptical, Opponent) is defined at moneyball_core.py:717 and applied to money in optimize.py:52 (GATED), per_topic_flip.py:37 and per_topic_coalition.py:26. The rel claim that gated members receive zero money in every allocator, and still count in the objective, was not confirmed in this pass.",
+    "code_ref": "fec/moneyball_core.py:717 and fec/engine/optimize.py:52",
+    "transfer_conditions": "The evidence is general business and labor PAC money against CCUS scores (1978-1994), not CU-specific bills or the current Congress. It supports not paying to convert opposed members. It does not measure electoral help to allies.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper passages confirmed. The gate set and its use in optimize.py, per_topic_flip.py and per_topic_coalition.py are confirmed. The every-allocator and objective claims were not verified and are removed from the system side.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-allocation#Stance money gate (F1)|Stance money gate (F1)]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "supports",
+    "paper_claim": "In the gubernatorial panel (N = 326, state FE) the income elasticity of spending is 1.07 and 1.17 across Table 3 specifications, and per-capita state government spending has no independent effect (-0.09). Real campaign spending roughly doubled 1976-2000 but shows no trend relative to national income. 94 top executives at 12 large firms gave about 7500 dollars per cycle, or 51 dollars per 100000 of annual compensation (0.05 percent), against 0.04 percent of national income in 2000.",
+    "paper_location": "Table 3 (pp.26-27); executives and time series (pp.22-24)",
+    "system_side": "sgs_config.R lines 67-76 define the job tiers and NATIONAL_VARS (presidential and midterm year, party control, seat forecasts, GB538 margin). No income term appears there. The study's own result (no stable growth effect, no adjusted R2 gain) was not checked in this pass.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:67-76",
+    "transfer_conditions": "The paper's units are states and aggregate federal spending, not industry sectors. The consumption account predicts that employee and executive giving follows donor income rather than industry fortunes, consistent with the study's null. A real-dollar trend may partly reflect income growth. The executive figure is a share of compensation, which the paper says overstates the income share.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Numbers reproduce from Table 3 and the text. One fix: the 0.05 percent executive figure is of annual compensation, not income, and the paper says that overstates the share. The sgs_config lines match the no-income-term description. The study's own null result was not reproduced here.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-giving-forecast.cycle-model",
+    "relation": "qualifies",
+    "paper_claim": "In the gubernatorial panel, campaign spending scales with per-capita income at an elasticity of 1.07 to 1.17, and government spending adds nothing once income and state FE are included. In aggregate, campaign spending shows no trend relative to national income over 1976-2000, and presidential spending as a share of GDP was flat over 1912-2000.",
+    "paper_location": "pp.23-27, Table 3",
+    "system_side": "giving_forecast.py lines 1393-1397 hold the cycle formula M = B exp(phi dP + d_h)(1 + x/2), where x is the one-year-lagged IBISWorld real industry growth path. The D-116 exemption (company PACs take x = 0) was not checked in this pass.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:1393-1397",
+    "transfer_conditions": "The paper's evidence is aggregate and state-level spending, not industry-attributed giving. Industry revenue proxies firm size and stakes, not donor income, so the bearing is weak. The elasticity should be attributed to the gubernatorial panel, not to campaign spending in general.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Formula and cited lines confirmed in giving_forecast.py. The paper claim was too broad: the elasticity comes from the gubernatorial panel, and the flat-share finding is aggregate. D-116 was not checked.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-giving-forecast#Cycle-aware giving refit (phase and drift log models, 50-50 growth)|Cycle-aware giving refit (phase and drift log models, 50-50 growth)]]",
+    "system": "mentat-giving-forecast"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Executive figure: 0.05 percent is a share of annual compensation, not income. The paper says this overstates the income share (p.22). Summary wording should change.",
+   "Marginal-dollar wording: the paper says most of the individual-share gap between close and safe seats (60 vs 48) comes from gifts under 500 dollars. It does not say close-race marginal dollars are mostly small gifts.",
+   "Defection threshold: the code gives about 0.98 at median receipts (1743281), not 0.9. The 1/6 boundary ignores pressure_mult and LOSSFRAME.",
+   "The consumption account 'fits' the sector growth null: the study's own result was not checked in this pass, so the sentence rests only on its config.",
+   "Alexander 2009 is described as very large lobbying returns; its text reports positive, significant returns. The contradiction is a framing, not a direct test.",
+   "The de Figueiredo 2013 link's stated point (lobbying spending dwarfs PAC giving) was not found in that text.",
+   "The summary says the paper supports the MAXSHIFT cut on votes. That holds for the direction, but the paper does not estimate MAXSHIFT, so the cut stays a calibration choice."
+  ],
+  "gaps_exposed": [
+   "No component estimates a within-member money-to-position response. MAXSHIFT, HALF, DTHRESH and WM rest on citation, and this paper's member-FE estimate is zero. A check would be a member-FE panel of CU and finance PAC dollars against CU-relevant roll-call or cosponsor alignment, under single-look discipline.",
+   "The competitiveness multiplier assumes per-dollar influence rises in close seats, but the only evidence here is that money supply rises (mostly small individual gifts). The effect-heterogeneity question stays untested.",
+   "Neither the sector growth study nor the cycle model has a donor-income or national-income scale. The paper finds the spending-to-income ratio flat over 1976-2000, so a ratio-to-income baseline is the natural null.",
+   "The system has no consumption or participation channel: every CU dollar is treated as an instrument of influence. Mentat reports employer-matched individual giving as industry giving, which on this paper's account measures participation more than industry strategy.",
+   "Access is not modeled separately from votes, although the engine comments say that money buys access."
+  ],
+  "flags": [
+   "Citation precision: comments at fec/engine/money_response.py:15 and fec/engine/flip_model.py:21 credit Ansolabehere for the claim that money buys access or effort. This paper lists access as one untested explanation among four or five and argues consumption. Narrow the citation to the claim that money does not buy votes.",
+   "The 2-points-vs-30 comparison is a pooled House 1978-1994 coefficient conditional on party controls. Quote it with an UNSTRATIFIED label. The IV and FE estimates change sign and size across specifications.",
+   "The 3 billion lobbying vs 300 million PAC figure comes from LDA-era disclosure totals. Under D-021, LDA is an identity source only, so this figure must not justify an LDA-based edge or weight.",
+   "The 20 percent return for a subset of PACs (p.32) is an illustration, not an estimate. Do not cite it for an ROI floor.",
+   "The extraction notes a garbled Table 2 in which one labor IV cell is starred, against the text's statement that FE effects are insignificant. Cell-level numbers stay UNVERIFIED until a second path reproduces them (DE-062).",
+   "No SNA proposal is argued, so neither rejected proposal (dropping cosponsorship edges, per-edge volume normalization) is in play."
+  ],
+  "paul_alignment": "No Paul annotations (0 entries, 0 annotations). Melange already cites Ansolabehere for its money calibration, and the evidence agrees with MAXSHIFT 18 and WM 0.35 on votes. The paper cuts against Paul's view that money buys access and returns and against his ROI enthusiasm (Alexander 2009): it argues consumption and does not test access. It agrees with the sector growth null, which already undercuts his deep-pockets reading. His competitiveness note (no source says dollars buy more in competitive seats) still holds.",
+  "related": [
+   {
+    "slug": "kalla-nd-campaign-contributions-facilitate",
+    "relation": "complements",
+    "why": "Randomized field experiment (Kalla and Broockman) on donor access to congressional officials. It supplies the access half of the engine's citation, which this paper only hypothesizes. Item exists."
+   },
+   {
+    "slug": "alexander-2009-lobbying-analysis-under",
+    "relation": "contradicts",
+    "why": "Lobbying ROI analysis under the 2004 American Jobs Creation Act. Its text reports positive, significant lobbying returns, set against this paper's small-return account. The link is a framing contrast, not a direct test. Item exists."
+   },
+   {
+    "slug": "furnas-nd-conflating-lobbying-pacs",
+    "relation": "complements",
+    "why": "Reports minimal overlap between organizations that lobby and those that make PAC expenditures. It is a check on this paper's claim that big givers also lobby heavily. Item exists."
+   },
+   {
+    "slug": "bouton-2022-small-campaign-donors",
+    "relation": "builds-on",
+    "why": "Studies small individual donors, the consumer contributor this paper puts at the center of campaign finance. Item exists."
+   },
+   {
+    "slug": "bonica-2013-mapping-ideological-marketplace",
+    "relation": "complements",
+    "why": "Shows ideologically sorted donors, consistent with giving as ideological participation. Item exists."
+   },
+   {
+    "slug": "fouirnaies-2022-electoral-incentives-affect",
+    "relation": "complements",
+    "why": "Fouirnaies and Hall on electoral incentives in U.S. state legislatures. Bears on the competitiveness lever, but for state, not federal, legislators. Item exists."
+   },
+   {
+    "slug": "kim-2020-strategic-sequential-links",
+    "relation": "complements",
+    "why": "Links donation timing to lobbying, which complicates a pure consumption reading for organized interests. Item exists."
+   },
+   {
+    "slug": "defigueiredo-2013-advancing-empirical-research",
+    "relation": "complements",
+    "why": "A co-author's later review of lobbying empirics. The claim that lobbying spending dwarfs PAC giving was not found in its text, so only the agenda link stands. Item exists."
+   },
+   {
+    "slug": "note-sector-growth-and-political-spending-source",
+    "relation": "complements",
+    "why": "Paul's sector growth source note. The paper's null for stakes and its income elasticity bear on the growth-giving hypothesis. Item exists."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "callaway-2025-difference-differences-continuous",
+    "relation": "complements",
+    "why": "The money_response.py calibration comment cites Ansolabehere for the small MAXSHIFT, so the link is real in the code. The Ansolabehere paper text was not re-read here."
+   },
+   {
+    "slug": "fremeth-2018-spillovers-regulating-corporate",
+    "relation": "complements",
+    "why": "Real item (title: Why Is There So Little Money in U.S. Politics?). Complement claim not re-read."
+   }
+  ],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "aroyehun-2026-politics-of-feelings",
+  "note": false,
+  "meta": {
+   "title": "Politics of Feelings: Emotional Expression and Legislative Effectiveness in the U.S. Congress",
+   "authors": [
+    "Segun Aroyehun"
+   ],
+   "year": 2026,
+   "venue": "arXiv preprint arXiv:2609.10198 (v1, 9 Sep 2026); author affiliation University of Konstanz",
+   "doi": "",
+   "sha12s": [
+    "cc88a043bcb2"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "slug": "aroyehun-2026-politics-of-feelings",
+   "title": "Politics of Feelings: Emotional Expression and Legislative Effectiveness in the U.S. Congress",
+   "authors": [
+    "Segun Aroyehun"
+   ],
+   "year": 2026,
+   "venue": "arXiv preprint arXiv:2609.10198 (v1, 9 Sep 2026); author affiliation University of Konstanz",
+   "doi": "",
+   "document_type": "working paper (arXiv preprint, empirical computational social science)",
+   "coverage": "Read full text cc88a043bcb2.txt end to end (66,863 chars, 2,232 lines): front matter, abstract, intro, related work, methods, results RQ1-RQ4, discussion, limitations, references, appendices with Tables 1-9. Figures are graphics without images; only captions and printed numbers used. Paul markup: no _annots file for this sha12 (n_annots 0), so paul_markup empty, 0 dropped. Not a Paul note. Metadata hints correct (arXiv 2609.10198, Sep 2026); doi empty (arXiv id only). Brief topics: legislators and text measurement covered; lobbying, networks, allocation, elections not studied.",
+   "research_question": "RQ1: how have discrete emotions in U.S. congressional speeches evolved over time, and how do Democrats and Republicans differ? RQ2: how do discrete emotions vary across CAP policy domains? RQ3: how does legislators emotional expression vary with demographic and socio-political characteristics? RQ4: do discrete emotions and broader emotional characteristics (valence, intensity, diversity) explain variation in legislative effectiveness?",
+   "theory": "Functional appraisal accounts of emotion (Keltner and Gross 1999); emotions shape attention and persuasion in politics (Marcus 2000); emotion as social information regulating cooperation (Van Kleef 2009); emodiversity and adaptive functioning (Quoidbach et al 2014); stance and appraisal theory (Du Bois 2007; Martin and White 2005). Emotions are treated as communicative resources; the mechanism is not tested.",
+   "data": "1,766,113 Congressional Record floor speeches, 93rd to 118th Congresses (1973 to 2024), House and Senate (Sec 3.1). Duplicates, speeches under 10 words and procedural or presiding-officer speeches removed (zero-shot Llama 3). Unit: speech for emotion scores; legislator-Congress for LES (n = 13,671, Tables 7-9). Trend analysis: 26 Congress-level means per party. Each session at least 20,000 speeches (Fig 5). Topics: 21 CAP major topics, classifier macro F1 0.857 (Sec 3.2.4). LES: Volden and Wiseman, 1973 to 2024.",
+   "method": "Transformer multilabel classifier (Widmann and Wich 2023) gives continuous scores for eight emotions per speech, z-standardized over the corpus (Sec 3.2.1). RQ1: Mann-Kendall with Sen slope, Benjamini-Hochberg FDR (Table 3). RQ2: CAP topic means and Kruskal-Wallis across 21 topics (Table 4). RQ3: linear mixed-effects per emotion, legislator random intercept, Congress fixed effects, topic controls (Tables 5-6). RQ4: mixed-effects models of member-Congress LES on each emotion or on valence, intensity, diversity (Tables 7-9).",
+   "identification": "None stated. The design is associational: the paper estimates whether emotion scores co-vary with LES and does not present an instrument, natural experiment, panel design or sensitivity analysis. Congress fixed effects and topic controls absorb shared time shifts and policy domain only. Reverse direction (effective members changing how they speak) and confounding by leadership or majority status are not separately addressed beyond the included controls.",
+   "scope": "U.S. Congress floor speeches, 1973 to 2024 (93rd to 118th). Population: members of the House and Senate who speak on the floor. Not state or supranational legislatures; authors name these as future tests. Measures apply to speech text, not to behavior beyond LES.",
+   "measures": "Discrete emotion z-scores (eight). Valence (positive minus negative), intensity (sum), diversity (entropy). Outcome: LES, member-Congress (Volden and Wiseman 2014, 2018). Controls: ideology score (source and direction not stated), party, majority, Senate, female, race, Latino/a, chairs, leadership, first term, seniority, vote share, state experience, speech count and length (log), CAP topic, Congress FE. Validity: AUC on 50 hand-labeled speeches per emotion (Table 1), co-occurrence (Fig 6).",
+   "key_findings": [
+    "RQ1 trends (Sec 4.1, Table 3): Mann-Kendall finds significant increasing trends in mean emotion scores for nearly all emotions in both parties across 26 Congresses. Exception: Democratic joy (tau 0.243, FDR p 0.086). Democratic enthusiasm Sen slope 0.030 per Congress.",
+    "Parallel paths (Sec 4.1, Sec 5): Democrats and Republicans follow similar trajectories for most emotions. Authors read the rise as broad intensification of emotional expression, not a shift toward negative rhetoric, since positive and negative emotions both rise.",
+    "Anger is volatile (Sec 4.1, Fig 1): Democratic anger peaks in the early 2000s and around 2017; Republican anger is higher in 2021 to 2024. Authors link this volatility to prevailing political context.",
+    "Policy domains (RQ2, Sec 4.2, Table 4, Fig 2): Kruskal-Wallis differences significant for all eight emotions across 21 CAP topics, with small effect sizes (epsilon squared 0.013 to 0.034). International Affairs has highest mean fear; Immigration highest mean anger; Education highest pride with elevated joy and enthusiasm; Macroeconomics pairs high anger with low joy and pride.",
+    "Demographic and party correlates (RQ3, Sec 4.3, Tables 5-6): female legislators higher enthusiasm (0.020), pride (0.012), joy (0.007), sadness (0.006) and fear (0.004) in standardized units. Senators: lower anger (-0.041) and enthusiasm (-0.007), higher pride (0.009) and joy (0.008). Ideology score: higher anger (0.022), lower joy (-0.004), enthusiasm (-0.002) and pride (-0.006). Marginal R2 ranges 0.003 to 0.071.",
+    "Majority party (Tables 5-6): majority members express more joy (0.003), enthusiasm (0.006) and pride (0.009), and less anger (-0.035) and fear (-0.001). Republican coefficients are small, and Republicans express more joy (0.005) and pride (0.005) but less anger (-0.012).",
+    "LES, discrete emotions (RQ4, Sec 4.4, Figure 4, Tables 7-8, n = 13,671): enthusiasm 0.016 (95 pct CI 0.007 to 0.025, p under 0.001); pride 0.011 (CI 0.003 to 0.019, p under 0.01); anger -0.037 (CI -0.046 to -0.029, p under 0.001) is the only significant negative. Fear, disgust, sadness, joy and hope are not significant.",
+    "Broader characteristics (Sec 4.4, Table 9): emotional diversity 0.026 (CI 0.017 to 0.034) and 0.031 (CI 0.024 to 0.039) across two specifications; valence 0.020 (CI 0.011 to 0.028); intensity -0.014 (CI -0.025 to -0.004, p under 0.01). Marginal R2 is 0.118 to 0.119 in Table 9 versus 0.113 to 0.118 for discrete-emotion models; differences are small.",
+    "Classifier validation (Sec 3.2.1, App B, Table 1): in-domain AUC on 50 hand-labeled speeches per emotion (25 highest, 25 lowest scored): anger, joy and hope 1.000; sadness 0.989; enthusiasm 0.982; pride 0.981; fear 0.952; disgust 0.922. No out-of-domain test is reported.",
+    "Face validity (Sec 3.2.1, App B, Fig 6, Table 2): top-scoring texts read as plausible exemplars of each emotion (pride as acknowledging colleagues, anger as criticism). Negative emotions correlate weakly and positively with each other; cross-valence correlations are weak.",
+    "Corpus scale (Sec 3.1, Fig 5): 1,766,113 speeches; each session at least 20,000; z-standardization preserves each emotion distribution (Sec 3.2.1). Given this N, very small coefficients (0.001 to 0.02 SD) reach p under 0.001, so significance here says little about substantive size.",
+    "Interpretation limit (Sec 5): authors call emotions consequential and say expression shapes persuasion, coordination and relationships, but no mechanism, causes or targets of emotion are tested; authors list identifying causes and targets as future work."
+   ],
+   "limitations": [
+    "Stated by authors (Sec 5 Limitations): findings are for the U.S. Congress only; generalization to state legislatures or the European Parliament is open.",
+    "Stated by authors: causes and targets of emotional expression are not identified; CAP topics are the only context control.",
+    "Stated by authors: the eight emotions are a selective set; curiosity, guilt, shame and nostalgia are not examined.",
+    "Observed in text, not stated as a limitation: validation uses 50 speeches per emotion, in-domain only; annotator identity and protocol are not described.",
+    "Observed in text: the classifier source (Widmann and Wich 2023) is titled as a study of German political text; applicability to English Congressional Record speech is not tested here.",
+    "Observed in text: no identification strategy; LES models are associational and reverse causation is not addressed.",
+    "Observed in text: internal inconsistencies. Sec 3.3 says random intercepts for legislators, while Table 5-6 notes say session and topic fixed effects; Sec 4.4 wording for the Table 9 specifications does not match the table column labels; the Table 7 caption reads Tables 7, 7, and 9.",
+    "Observed in text: ideology score source and direction are not described; the effect size scale for LES coefficients is not defined beyond the regression output."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "congressional speeches are becoming emotionally expressive over time"
+   ],
+   "references_of_note": [
+    "Volden and Wiseman 2014, 2018 (LES measure, Legislative Effectiveness in Congress and Senate)",
+    "Widmann and Wich 2023, Political Analysis 31(4) (emotion classifier; German political text)",
+    "Aroyehun, Simchon, Carrella, Lasser, Lewandowsky, Garcia 2025, Nature Human Behaviour 9(6) (same corpus, evidence to intuition shift)",
+    "Aroyehun, Lewandowsky, Garcia 2026, arXiv:2604.19699 (epistemic orientation and deliberative democracy; corpus preprocessing)",
+    "Gennaro and Ash 2022, Economic Journal 132(643) (emotion and reason in political language)",
+    "Osnabrügge, Hobolt, Rodon 2021, APSR 115(3) (emotive rhetoric in parliaments)",
+    "Rheault, Beelen, Cochrane, Hirst 2016, PLoS One (emotion in parliamentary debates)",
+    "Card et al 2022, PNAS 119(31) (140 years of political speech framing)",
+    "Quoidbach et al 2014, JEP General (emodiversity)",
+    "Keltner and Gross 1999, Cognition and Emotion (functional accounts of emotion)",
+    "Du Bois 2007 and Martin and White 2005 (stance and appraisal theory)"
+   ],
+   "_provenance": "Text-only extraction from cc88a043bcb2.txt; no page images; paul_markup empty because no _annots file exists for this sha12."
+  },
+  "summary_md": "Aroyehun (arXiv 2609.10198, Sep 2026) scores 1,766,113 Congressional Record floor speeches (93rd-118th Congresses, 1973-2024) for eight discrete emotions with a transformer multilabel classifier (Widmann and Wich 2023), z-standardized over the corpus. Four questions: trends (Mann-Kendall over 26 Congress means: nearly every emotion rises in both parties, read as intensification rather than a negative turn), policy domains (all eight differ across 21 CAP topics, but epsilon squared only 0.013-0.034), member correlates (mixed models: majority members show less anger, -0.035; senators less anger, -0.041; women more enthusiasm, +0.020; ideology score more anger, +0.022; marginal R2 0.003-0.071), and legislative effectiveness. On the Volden-Wiseman LES (member-Congress, n = 13,671), enthusiasm (+0.016) and pride (+0.011) are positive, anger (-0.037) is the only negative, and emotional diversity (+0.026 to +0.031) and valence (+0.020) beat intensity (-0.014). Marginal R2 moves only from about 0.113 to 0.119, so emotion adds little beyond the controls. The design is associational: no identification strategy, reverse causation is not addressed, validation is 50 extreme-scored speeches per emotion in-domain only, the classifier was built on German political text, and the paper has internal inconsistencies (random intercepts vs fixed effects, table labels). For Paul's systems it matters in three places. It uses the same CEL LES that fec/members/lep_criterion.py pulls as an external criterion. It shows speech-emotion features vary with chamber, majority status and gender, which the affective-N slot controls only partly. And its valence vs intensity split matches the two LSD fields already computed in Draft Systems. Nothing here justifies adding an emotion feature to rank. All coefficients are UNVERIFIED in this project (DE-062).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-legislative-data.effectiveness-shadow",
+    "relation": "qualifies",
+    "paper_claim": "On member-Congress LES (n = 13,671; Tables 7-9, all models with session and topic fixed effects): anger -0.037 (95% CI -0.046 to -0.029, p < 0.001) is the only significant negative emotion term; enthusiasm +0.016 (CI 0.007 to 0.025) and pride +0.011 (CI 0.003 to 0.019, p < 0.01) are positive; fear, disgust, sadness, joy and hope are not significant. Marginal R2 is 0.113 to 0.118 in Tables 7-8 and 0.118 to 0.119 in Table 9. The paper reports no controls-only model, so an incremental R2 for emotion terms is not stated.",
+    "paper_location": "Sec 4.4, Figure 4, Tables 7-9 (text labels read 'Tables 7, 7, and 9')",
+    "system_side": "lep_criterion.py loads CEL House and Senate LES 93rd-118th and scores it against the blended score (bar B: rho >= +0.30 convergent). Its docstring says LES rewards majority and chair status. The claim that the five-stage shadow is not activated was not checked (outside the lines read).",
+    "code_ref": "fec/members/lep_criterion.py:2-22 (confirmed)",
+    "transfer_conditions": "Transfers as context only: speech tone is a small associational correlate of LES once structural controls are in, so a shadow-vs-LES gap should not be read as a rhetoric effect. No identification, so not usable as a predictor. Quote coefficients as UNSTRATIFIED with window 93rd-118th Congresses and n = 13,671 member-Congresses; the paper pools over majority-flip fault lines.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Coefficients and CIs match Tables 7-8 exactly. Softened: 'adds about 0.005 R2 beyond controls' is the analyst's inference, not reported (no nested model). Marginal R2 values corrected as above. Code claims confirmed at lep_criterion.py docstring lines 2-22 (CEL House plus Senate 93-118, bar B rho >= +0.30, LES rewards majority and chair status).",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-legislative-data#Five-stage legislative effectiveness shadow and CEL criterion|Five-stage legislative effectiveness shadow and CEL criterion]]",
+    "system": "melange-legislative-data"
+   },
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "qualifies",
+    "paper_claim": "Mixed models of speech-level emotion (Tables 5-6; n = 1,766,113 speeches; session and topic fixed effects): senators express less anger (-0.041, CI -0.043 to -0.039) and more pride (+0.009) and joy (+0.008); women express more fear (+0.004) and sadness (+0.006); majority members express less anger (-0.035); ideology score predicts more anger (+0.022). Mann-Kendall trends (Table 3, 26 Congresses): 15 of 16 party-by-emotion series increase significantly; Democratic joy does not (tau 0.243, FDR p 0.086).",
+    "paper_location": "Sec 4.1 and Table 3; Sec 4.3 and Tables 5-6",
+    "system_side": "affective_n is the mean of LLM affective facets (pessimism, anxiety, depression, volatility), residualized on E and then on a Republican dummy only; it is not residualized on chamber, gender or ideology. The LIWC-style anchor is a hand-written regex approximation (FPS, NEG, POS patterns), not the LIWC dictionary. The interview-to-floor transfer result (rho .050) was not located in this file.",
+    "code_ref": "fec/members/emit_affective_n.py:36-56 (confirmed)",
+    "transfer_conditions": "Holds only weakly. Within one Congress majority status is nearly collinear with party, so the party residual may cover it. Chamber and gender are not covered and are a plausible structural confound. The paper's coefficients are mostly 0.001 to 0.04 in standardized units. The paper's facets are fear and sadness on floor text, not the interview facets used here.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Verified: senator anger -0.041, senator pride 0.009 and joy 0.008, women fear 0.004 and sadness 0.006, majority anger -0.035, ideology anger 0.022; code residualization on E and a party dummy confirmed. Refuted sub-claim: 'all eight emotions trend upward in both parties' is wrong, since Democratic joy is not significant (Table 3). Softened: the anchor is a regex approximation of LIWC-style categories, not LIWC itself. The majority-party collinearity point is the analyst's inference.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   },
+   {
+    "component_id": "melange-stance.lsd-tone",
+    "relation": "supports",
+    "paper_claim": "In LES models (Table 9): valence (positive minus negative emotion) +0.020 (CI 0.011 to 0.028) and intensity -0.014 (CI -0.025 to -0.004, p < 0.01). The paper reads the rise in emotion since 1973 as intensification with both positive and negative emotions rising, not as a negative turn. In the paper, intensity is the sum of the eight z-scored emotion scores.",
+    "paper_location": "Sec 4.1, Sec 4.4 and Table 9, Sec 5",
+    "system_side": "stage5_lsd.R emits lsd_net (pos minus neg), lsd_net_norm (net divided by words) and lsd_charge ((pos plus neg) divided by words) per text. lsd_charge is a normalized dictionary-count magnitude, not a sum of classifier scores.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:45-60 (confirmed; lsd_charge at line 59)",
+    "transfer_conditions": "Supports keeping direction and intensity as separate fields rather than collapsing them. Weak transfer: floor speech vs press releases, dictionary vs transformer, and LES outcome vs CU stance or behavior. It does not show whether sign times intensity predicts behavior. Do not treat lsd_charge as the same construct as the paper's intensity; they are analogous only.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers match Table 9 and the Sec 4.1 reading. Softened: 'lsd_charge matches the paper intensity construct' overstates it; the paper's intensity is a sum of classifier z-scores and lsd_charge is a normalized dictionary count. Code confirmed at stage5_lsd.R lines 45-60. Not checked: the component card wording (intensity as |net|/words) since the brain card was not read.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Lexicoder LSD2015 tone intensity|Lexicoder LSD2015 tone intensity]]",
+    "system": "melange-stance"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "'The classifier was built on German political text' is inferred from the cited title of Widmann and Wich 2023; the paper does not state the training language. Say the cited source is a German-text study.",
+   "'Marginal R2 moves only from about 0.113 to 0.119, so emotion adds little beyond the controls' is not supported: no controls-only model is reported, and the 0.113 to 0.119 range comes from models that all include emotion terms.",
+   "'Its valence vs intensity split matches the two LSD fields' is overstated; see bearing 3. Analogous, not the same construct.",
+   "'It uses the same CEL LES that lep_criterion.py pulls' is plausible (code reads CEL 93-118) but equivalence to the paper's Volden-Wiseman file was not checked at data level.",
+   "'Interview-to-floor genre transfer already FAILED (rho .050)' is not in emit_affective_n.py and was not verified elsewhere.",
+   "Effect-size ranges are inconsistent: the summary-level text says 0.001 to 0.02 SD in one place and 0.004 to 0.04 SD in another; Tables 5-6 absolute coefficients run 0.000 to 0.041.",
+   "'Paul's recorded position on the effectiveness shadow' (paul_alignment) is unverified: the item has no paul_entries and the brain was not read. Drop it or verify it before use.",
+   "Summary's 'nearly every emotion rises in both parties' is correct (15 of 16 series); the one exception, Democratic joy, should be named where the trend claim is repeated.",
+   "Summary's note on internal inconsistencies (random intercepts in Sec 3.3 vs fixed-effects table notes; Table 9 text vs column labels) is correct."
+  ],
+  "gaps_exposed": [
+   "affective_n residualizes on E and party only (emit_affective_n.py:52-56). Chamber and gender, which the paper finds shift floor-speech emotion, are not controlled. Is a House/Senate offset present in affective_n? This is an untested diagnostic.",
+   "The melange-stance.lsd-tone component card says intensity = |net|/words, but stage5_lsd.R:59 computes lsd_charge = (pos+neg)/words. The card is stale relative to the code.",
+   "The system has no floor-speech discrete-emotion layer. If one is ever proposed, the paper's measures cannot be lifted directly: validation is 50 extreme speeches per emotion, in-domain only, and the classifier is German-trained.",
+   "lep_criterion bar B compares LES with the blended score but does not report how much of LES is structural (majority, chair). The paper's R2 of about 0.11-0.12 with full controls is a reminder that a weak bar-B rho may reflect LES composition rather than a score fault."
+  ],
+  "flags": [
+   "Associational only. Coefficients are pooled over 1973-2024 and over majority-flip fault lines, and LES models are not stratified by chamber or majority. Quote them only as UNSTRATIFIED, with window 93rd-118th Congresses and denominator n = 13,671 member-Congresses.",
+   "Influence language: the paper calls emotion consequential for persuasion and coordination without testing any mechanism. Do not carry that wording into Melange surfaces.",
+   "With 1.77M speeches, effects of 0.001-0.02 SD reach p < 0.001. Per the project's trend-over-significance rule, read size and consistency, not p.",
+   "The paper has internal inconsistencies: Sec 3.3 says legislator random intercepts while the table notes say fixed effects, and the Sec 4.4 wording does not match the Table 9 columns. The ideology score's source and direction are undisclosed.",
+   "Nothing here concerns the rejected SNA proposals, LDA edges or reciprocity. No conflict with D-021, D-025 or D-104..D-108.",
+   "All figures from this work are UNVERIFIED in this project until a second path reproduces them (DE-062)."
+  ],
+  "paul_alignment": "Paul has not annotated this work (no paul_entries). His recorded position on the effectiveness shadow is to highlight LES as the criterion. The paper fits that use: rhetoric adds little to LES once majority, chair and seniority are controlled, as the lep_criterion docstring already notes. For affective-N, this is a newer emotion source, but it uses floor speech, the genre where interview-derived N already failed to transfer, so it is not evidence for the slot. The LSD card describes intensity differently from the code and is stale.",
+  "related": [
+   {
+    "slug": "rheault-2016-measuring-emotion-parliamentary",
+    "relation": "cites",
+    "why": "Cited by this paper for emotion in parliamentary debates. The item uses lexicons (dictionaries), not the transformer classifier used here, so it is an earlier lexicon approach rather than a same-method link."
+   },
+   {
+    "slug": "osnabrugge-2021-playing-gallery-emotive",
+    "relation": "complements",
+    "why": "Cited for emotive rhetoric in parliaments. The item uses a dictionary-based measure. This paper mentions strategic and communicative functions of emotion in its limitations but does not test them."
+   },
+   {
+    "slug": "dietrich-2019-pitch-perfect-vocal",
+    "relation": "complements",
+    "why": "Not cited by this paper. The item measures emotional intensity of congressional floor speech from vocal pitch, an acoustic counterpart to the text intensity measure here."
+   },
+   {
+    "slug": "ramey-2016-measuring-elite-personality",
+    "relation": "complements",
+    "why": "Not cited by this paper. The item infers member traits from speech and links them to sponsorship behavior. The same-data label was not confirmed, so the relation was changed to complements."
+   },
+   {
+    "slug": "bucchianeri-2025-legislative-effectiveness-american",
+    "relation": "complements",
+    "why": "Not cited by this paper. This paper names subnational legislatures as a future test (Limitations); the item is an LES study of American state legislatures."
+   },
+   {
+    "slug": "harbridge-yong-2023-bipartisan-path-effective",
+    "relation": "same-data",
+    "why": "Not cited by this paper. The item uses the Volden-Wiseman effectiveness measure, the same outcome this paper uses, and offers a bipartisanship account that an emotion account would need to be separated from."
+   },
+   {
+    "slug": "battaglini-2018-effectiveness-connected-legislators",
+    "relation": "same-data",
+    "why": "Not cited by this paper. The item uses sponsorship networks with the Volden-Wiseman effectiveness outcome, a competing non-rhetorical correlate that this paper does not control."
+   },
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "complements",
+    "why": "Not cited by this paper. The item builds corpus-based sentiment dictionaries for specialized vocabularies, a dictionary alternative relevant to the LSD-tone vs classifier contrast."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "decter-frain-2016-impressive-words-linguistic",
+    "relation": "complements",
+    "why": "Emotional expression in congressional speech linked to legislative effectiveness at member level; this paper links language to chamber-level approval."
+   },
+   {
+    "slug": "hargrave-2022-longer-conforming-stereotypes",
+    "relation": "complements",
+    "why": "Item exists (title confirmed: emotional expression and legislative effectiveness in US Congress). Not cited by Hargrave; analyst judgement link on the US venue."
+   },
+   {
+    "slug": "montgomery-2017-effects-congressional-staff",
+    "relation": "same-method",
+    "why": "Vault item exists; uses Volden-Wiseman LES as outcome, but the same underlying data was not verified, so same-data is downgraded."
+   }
+  ],
+  "evidence_status": "verified"
+ }
+]

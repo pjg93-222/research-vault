@@ -1,0 +1,1341 @@
+{
+ "system": {
+  "slug": "melange-allocation",
+  "name": "Melange budget allocation",
+  "description": "Spending decisions made on top of the influence engine: the joint CU pot optimizer, per-topic flip and coalition allocators, the budget frontier (including electoral contest and defend modes), the workbook top-N allocator, the stance money gate, break-even CU spend and the ROI floor.",
+  "brain_notes": [
+   "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md",
+   "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+   "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md"
+  ]
+ },
+ "components": [
+  {
+   "id": "melange-allocation.joint-optimizer",
+   "system": "melange-allocation",
+   "name": "Joint CU budget optimizer",
+   "computes": "Allocation of a $2.5M pot in $500 steps maximizing total winnability, with a per-candidate cap PMAX $10k.",
+   "method": "CELF lazy greedy on per-member concave chunks. Modeled conversions rebuild the queue. Exact only in a fixed stance state. Golovin-Krause bound as a diagnostic. Knee at 20% of peak marginal.",
+   "assumptions": [
+    "The objective is separable and concave in CU dollars (checked numerically)",
+    "The pot is one PAC's budget (F2 ruling)"
+   ],
+   "empirical_questions": [
+    "Does the greedy allocation's predicted gain correlate with realized CU-aligned outcomes in funded vs comparable unfunded members?"
+   ],
+   "code_refs": [
+    "fec/engine/optimize.py:1-177"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md"
+   ],
+   "heading": "Joint CU budget optimizer"
+  },
+  {
+   "id": "melange-allocation.stance-money-gate",
+   "system": "melange-allocation",
+   "name": "Stance money gate (F1)",
+   "computes": "Members with overall tier Skeptic, Highly Skeptical or Opponent get zero money in every allocator.",
+   "method": "Applied before the top-45 shortlist. Fails open for members with no matrix row. Before the gate 10 opposed members were funded $54,500; after it, 19 were gated and none funded.",
+   "assumptions": [
+    "Overall stance should gate money; one topic cell should not"
+   ],
+   "empirical_questions": [
+    "Do contributions to opposed members change their positions (backing a counter-strategy)?"
+   ],
+   "code_refs": [
+    "fec/moneyball_core.py:713-729",
+    "fec/engine/optimize.py:44-52"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md"
+   ],
+   "heading": "Stance money gate (F1)"
+  },
+  {
+   "id": "melange-allocation.per-topic-allocators",
+   "system": "melange-allocation",
+   "name": "Per-topic flip and coalition allocators",
+   "computes": "Per-topic diagnostic allocations: greedy $1k steps on flip gain; coalition water-fill over the top-45 neutral recruits weighted by marginal spread x (1 + 0.8 bpf).",
+   "method": "Budget $2M per topic, cap $50k. Joint vs naive additive spread is reported (non-additivity).",
+   "assumptions": [
+    "Bridge-builders are better seeds",
+    "Topic budgets are diagnostic and not summable"
+   ],
+   "empirical_questions": [
+    "Is coalition spread from multiple seeds sub-additive in observed cosponsorship data?"
+   ],
+   "code_refs": [
+    "fec/engine/per_topic_flip.py:1-100",
+    "fec/engine/per_topic_coalition.py:28-130",
+    "fec/engine/build_im_allocation.py:31-47"
+   ],
+   "brain_notes": [],
+   "heading": "Per-topic flip and coalition allocators"
+  },
+  {
+   "id": "melange-allocation.budget-frontier",
+   "system": "melange-allocation",
+   "name": "Budget frontier with knee and electoral modes",
+   "computes": "Spread vs cumulative seeds per topic; knee where 4 x gain >= peak; contest factor REPFAC 0.6 x lev.",
+   "method": "Lazy greedy up to 60 seeds under CRN.",
+   "assumptions": [
+    "Diminishing marginal returns to seeds"
+   ],
+   "empirical_questions": [
+    "Where does the empirical marginal return to additional lobbied cosponsors flatten for CU bills?"
+   ],
+   "code_refs": [
+    "fec/engine/budget_frontier.py:1-188",
+    "fec/engine/mc_stability_check.py:1-44"
+   ],
+   "brain_notes": [],
+   "heading": "Budget frontier with knee and electoral modes"
+  },
+  {
+   "id": "melange-allocation.workbook-allocator",
+   "system": "melange-allocation",
+   "name": "Workbook allocator (top-133 from fixed pot)",
+   "computes": "Funds the top 133 of 533 members from a flat $2.0M in proportion to score (uncapped; max about $25.8k).",
+   "method": "A capped variant ($10k cap, top 250) exists only in a backup and was not applied.",
+   "assumptions": [
+    "Score ordering maps to funding priority"
+   ],
+   "empirical_questions": [
+    "Is proportional-to-score allocation dominated by the greedy optimizer's allocation in predicted and realized winnability?"
+   ],
+   "code_refs": [
+    "Blended Model col U",
+    "fec/apply_alloc_cap.py (not applied)"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/moneyball-workbook-rules-scoring-and-sublayer-surgery.md"
+   ],
+   "heading": "Workbook allocator (top-133 from fixed pot)"
+  },
+  {
+   "id": "melange-allocation.break-even-and-roi",
+   "system": "melange-allocation",
+   "name": "Break-even CU spend and ROI floor",
+   "computes": "The CU dollars that restore baseline flip odds against competitor spend (closed form, 'cannot offset' when q >= 1), and member ROI floor values.",
+   "method": "Solves a(CU)/(a(CU) + b(comp)) = pfbase with the saturating money term; ROI floor parity is checked by roi_verify.py.",
+   "assumptions": [
+    "Competitor and CU money enter a share-type ratio"
+   ],
+   "empirical_questions": [
+    "Are member positions responsive to the ratio of CU to opposing-industry money rather than its level?"
+   ],
+   "code_refs": [
+    "fec/templates/make_dashboard_html_00.tpl (break-even)",
+    "verify_finish/roi_verify.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md"
+   ],
+   "heading": "Break-even CU spend and ROI floor"
+  }
+ ],
+ "positions": [
+  {
+   "component_id": "melange-allocation.joint-optimizer",
+   "citations": [
+    "Golovin & Krause 2011",
+    "Leskovec et al. 2007 (CELF)",
+    "Manchanda et al. 2020 (GCOMB)",
+    "Huneeus & Kim 2018"
+   ],
+   "paul_position": "Paul calls adaptive greedy plus CELF the operational layer, and expects a learned policy (GCOMB) to replace greedy at scale. The built optimizer matches the first and lacks the second."
+  },
+  {
+   "component_id": "melange-allocation.stance-money-gate",
+   "citations": [
+    "Furnas et al. 2022"
+   ],
+   "paul_position": "Paul reads ideological money as cultivating champions rather than recruiting them. That supports funding allies over converting opponents."
+  },
+  {
+   "component_id": "melange-allocation.per-topic-allocators",
+   "citations": [
+    "Kumar et al. 2022",
+    "Kempe et al. 2003 (cited)",
+    "Golovin & Krause 2011"
+   ],
+   "paul_position": "These sit in the static and submodular tier of Paul's three-tier architecture."
+  },
+  {
+   "component_id": "melange-allocation.budget-frontier",
+   "citations": [
+    "Manchanda et al. 2020 (GCOMB)",
+    "Golovin & Krause 2011"
+   ],
+   "paul_position": "Paul says GCOMB's budget framing maps onto a political-capital budget in an orienteering formulation. That orienteering formulation is not built."
+  },
+  {
+   "component_id": "melange-allocation.workbook-allocator",
+   "citations": [
+    "Huneeus & Kim 2018"
+   ],
+   "paul_position": "Paul sees Huneeus & Kim as the basis for setting fundraising goals. No annotation addresses proportional allocation."
+  },
+  {
+   "component_id": "melange-allocation.break-even-and-roi",
+   "citations": [
+    "Huneeus & Kim 2018",
+    "Alexander et al. 2009",
+    "Bickmore et al. 2025",
+    "Kim J. et al. 2025"
+   ],
+   "paul_position": "Paul frames lobbying as ROI. He calls the Alexander figure an outlier and wants competing-industry conflict included."
+  }
+ ],
+ "citations_in_system": [
+  {
+   "citation": "Ramey, Klingler & Hollibaugh, 'Measuring Elite Personality Using Speech', Political Science Research and Methods (year conflict in repo: 2016 in PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32 and code; 2019 in big5_methods.md:12). Replication data doi:10.7910/DVN/JDH6KR",
+   "where": [
+    "fec/members/big5_traits.py:1-25",
+    "fec/members/fit_smoreg_rkh.py:5",
+    "fec/members/lep_criterion.py:5-6",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32",
+    "big5_methods.md:12",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Lexical Big Five pipeline, token shrinkage, RKH reference targets (melange-psychometrics); ceremonial-share C criterion (melange-legislative-data)"
+  },
+  {
+   "citation": "Mairesse et al. (2007), JAIR, personality from text (SMOreg on LIWC/MRC; 53-58% band)",
+   "where": [
+    "fec/members/fit_smoreg_essays.py:4",
+    "fec/members/big5_traits.py:13-16",
+    "fec/members/interaction_features.py:5-6",
+    "big5_methods.md:31",
+    "big5_audio_prereg.md:15"
+   ],
+   "used_for": "SMOreg feature weights and word-count features (melange-psychometrics); audio cues"
+  },
+  {
+   "citation": "Pennebaker & King (1999); Yarkoni (2010); Pennebaker (2003, Annual Review)",
+   "where": [
+    "fec/members/big5_traits.py:14-15",
+    "fec/members/affective_n_validate.py:10",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Published-correlate lexical weights; essays corpus; negative-emotion basis for affective N"
+  },
+  {
+   "citation": "Birkenmaier & Lechner (2025), 'Measuring Politicians' Public Personality', Political Analysis; Birkenmaier, Lechner & Wagner (2024)",
+   "where": [
+    "fec/members/agency_communion_llm.py:3,33",
+    "fec/members/big5_llm.py:10",
+    "fec/members/big5_traits.py:9",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:33",
+    "big5_behavioral_extraversion_prereg.md:239"
+   ],
+   "used_for": "Agency/communion persona cue classifier and PERSONA_W; cannot-tell coding"
+  },
+  {
+   "citation": "Lechner, Aichholzer, Birkenmaier & Bluemke (2025), 'Mapping the Political Personality' (Polipers v0.1, GESIS)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Review of politician-personality studies; external criterion search"
+  },
+  {
+   "citation": "'Personality on the Hill' Senate insider and academic gold panels (online_appendix.pdf, SHA-256 43c98926...; author/year not recorded)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "External gold for Big Five validation"
+  },
+  {
+   "citation": "Amsalem et al. (2018), media visibility of Belgian, Canadian and Israeli MPs (Eran.pdf) - provenance warning only, NOT the gold source",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Hash-mismatch provenance check"
+  },
+  {
+   "citation": "Norgaard & Klemmensen (2019), J. Personality 87(2):267-275; Schumacher & Zettler (2019), PAID 141:173-181",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Elite self-report personality benchmarks and desirability caveat"
+  },
+  {
+   "citation": "Cao & Kosinski (PNAS Nexus 2024); Peters & Matz (PNAS Nexus 2024, doi:10.1093/pnasnexus/pgae231)",
+   "where": [
+    "fec/members/big5_llm.py:12",
+    "big5_methods.md:46-49",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "De-identification before LLM trait scoring; LLM zero-shot personality benchmark"
+  },
+  {
+   "citation": "Valente (Interspeech 2012); Yu (Interspeech 2019); Rienks & Heylen (2005)",
+   "where": [
+    "fec/members/interaction_features.py:5-8",
+    "fec/members/behavioral_dispositions.py:17",
+    "big5_methods.md:30"
+   ],
+   "used_for": "Turn-statistic dominance and reactivity features"
+  },
+  {
+   "citation": "Koutsoumpis (meta-analysis, language and personality); Yang, Lau & Abbasi (ISR 2023)",
+   "where": [
+    "big5_methods.md:114",
+    "AUDIT_FINDINGS_2026-07-04.md:332",
+    "big5_behavioral_extraversion_prereg.md:221"
+   ],
+   "used_for": "Text tracks observer more than self-report; response-selection bias; PERSONA_W scope argument"
+  },
+  {
+   "citation": "Soto & John (2017) BFI-2-XS; Connelly & Ones (2010); Judge et al. (2002); Funder & Ozer (2019); Dietrich (2012); Dynes (2019); Wagner (2024); Steiger (1980); Stern et al. (2021); Harari (2022); Rubio et al. (2024); Marrero et al. (2022); Marengo et al. (2018, doi:10.1016/j.paid.2017.12.018); Hargittai (2015, doi:10.1177/0002716215570866); Hinds & Joinson (2024, doi:10.1037/bul0000430); Marengo, Montag & Settanni (2025, doi:10.1111/jopy.70019); Lau & Abbasi (2023)",
+   "where": [
+    "big5_expert_panel_prereg.md",
+    "big5_nomological_prereg.md",
+    "big5_n_matrix_prereg.md",
+    "big5_audio_prereg.md",
+    "big5_es_crossmodal_prereg.md",
+    "big5_a_coverage_prereg.md",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "Prereg designs for Big Five expert panel, nomological, audio and coverage looks (melange-psychometrics)"
+  },
+  {
+   "citation": "Salam et al. (2022), PMLR 173, personalised NAS Big Five on UDIVA",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md:132"
+   ],
+   "used_for": "Audio trait benchmark and sex-conditioning check"
+  },
+  {
+   "citation": "Mestre & Ryan (2026), validated aeneas forced alignment; Dietrich (2019)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Audio identity design (forced alignment, within-speaker F0)"
+  },
+  {
+   "citation": "ECAPA-TDNN speaker embedding (name only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Proposed speaker verification"
+  },
+  {
+   "citation": "Byrne, Silasi-Mansat & Worthy (2015), 'Who chokes under pressure?', PAID",
+   "where": [
+    "fec/members/receptivity_layer.py:6-7,189,233",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:34",
+    "AUDIT_FINDINGS_2026-07-04.md:548",
+    "fec/engine/outcome_contract.py:18"
+   ],
+   "used_for": "Susceptibility composite (only N and A supported; C and E are design priors); H2 predictor"
+  },
+  {
+   "citation": "Fouirnaies & Hall, 'How Do Electoral Incentives Affect Legislator Behavior?' (APSR)",
+   "where": [
+    "fec/members/receptivity_layer.py:15-20",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:35",
+    "fec/engine/money_response.py:27"
+   ],
+   "used_for": "Retiring-member incentive multiplier and competitiveness term"
+  },
+  {
+   "citation": "Linde & Vis (2016), 'Do Politicians Take Risks Like the Rest of Us?', Political Psychology",
+   "where": [
+    "fec/members/receptivity_layer.py:22-28",
+    "fec/engine/money_response.py:27-29",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:36"
+   ],
+   "used_for": "Prospect-theory domain multiplier and attenuated loss frame"
+  },
+  {
+   "citation": "Kahneman & Tversky (loss aversion)",
+   "where": [
+    "fec/engine/money_response.py:29",
+    "fec/members/receptivity_layer.py:27"
+   ],
+   "used_for": "LOSSFRAME 1.10"
+  },
+  {
+   "citation": "Chen, Kamarthi, Wilder & Tambe, contingency-aware influence maximization (UAI 2021, arXiv 2106.07039; venue corrected from ICML); Zareie & Sakellariou (SNAM 2023)",
+   "where": [
+    "fec/members/receptivity_layer.py:28-34",
+    "fec/engine/budget_frontier.py:72-74",
+    "fec/engine/outcome_contract.py:17",
+    "AUDIT_FINDINGS_2026-07-04.md:564-565"
+   ],
+   "used_for": "Seed take-up probability and seed gate; H1 predictor"
+  },
+  {
+   "citation": "Bharathi, Kempe & Salek, Competitive Influence Maximization",
+   "where": [
+    "fec/engine/scenario.py:6-11",
+    "fec/engine/budget_frontier.py",
+    "fec/engine/per_topic_coalition.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Competitive IC cascade and coalition submodularity"
+  },
+  {
+   "citation": "Borodin et al. (submodularity can fail in competitive LT)",
+   "where": [
+    "fec/engine/scenario.py:11-12"
+   ],
+   "used_for": "Flip side treated as heuristic"
+  },
+  {
+   "citation": "Kempe, Kleinberg & Tardos (2003, KDD) influence maximization",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:157",
+    "quant skill references"
+   ],
+   "used_for": "Cascade and threshold model assumptions"
+  },
+  {
+   "citation": "Golovin & Krause (2011), Adaptive Submodularity, JAIR (Lemma 5.3/A.9)",
+   "where": [
+    "fec/engine/optimize.py:8,108-113",
+    "fec/engine/scenario.py:8-10",
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md"
+   ],
+   "used_for": "Joint optimizer bound and framing (melange-allocation)"
+  },
+  {
+   "citation": "Leskovec et al. (KDD 2007) CELF lazy greedy; Nemhauser (1-1/e)",
+   "where": [
+    "fec/engine/optimize.py:74-96",
+    "fec/engine/budget_frontier.py:96-106",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Lazy greedy seed and budget selection"
+  },
+  {
+   "citation": "Almazaydeh et al. (2026), Scientific Reports, s41598-026-47299-8",
+   "where": [
+    "fec/engine/mc_stability_check.py:3-10",
+    "influence-modeling-reference SKILL.md"
+   ],
+   "used_for": "Noisy MC corrupts CELF; motivates CRN and stability check"
+  },
+  {
+   "citation": "Manchanda et al., GCOMB, NeurIPS 2020, arXiv:1903.03332",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Budget mode: locality, degree pruning, CELF (melange-pathfinding)"
+  },
+  {
+   "citation": "Chen & Lam, most-reliable path; Ren et al., Multi-Objective Path-Based D* Lite (MOPBD*) and RELINK",
+   "where": [
+    "fec/engine/cosponsor_route.py:3-5",
+    "fec/engine/scenario.py:13",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Pathfinder and route-finder concepts (melange-pathfinding)"
+  },
+  {
+   "citation": "Sotoudeh, Porter & Krishnagopal (2024), arXiv 2406.19554, network measure of cosponsorship influence on bill passage",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Cosponsor edge weights and path grounding"
+  },
+  {
+   "citation": "Aref & Neal (2020, 2021), signed-network optimal partitioning / generalized balance; Neal signed backbone (R backbone sdsm)",
+   "where": [
+    "fec/network/signed_coalitions.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Signed coalition partition and multi-target coalition mode"
+  },
+  {
+   "citation": "Porter, Mucha, Newman et al. (PNAS 2005), committee network community structure / normalized interlock",
+   "where": [
+    "fec/surfaces/make_member_desk.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-model-facts.md",
+    "HOLISTIC_NETWORK_DESIGN_2026-08-17.md:78"
+   ],
+   "used_for": "Committee-cluster layout; community structure in pathfinder"
+  },
+  {
+   "citation": "Fink et al. (2023), Congressional Twitter influence network, Data in Brief",
+   "where": [
+    "fec/network/social_interaction_layer.py:15-19",
+    "MATHEMATICAL_SPECIFICATION.md:44",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Author-volume normalized social and press edges"
+  },
+  {
+   "citation": "Malaterre & Lareau (2024), HCoI communities",
+   "where": [
+    "fec/press_hcoi.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Press-attention communities"
+  },
+  {
+   "citation": "Zhou & Elejalde (2026), Information Processing & Management, TWLGCN",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Stance dynamics port"
+  },
+  {
+   "citation": "Joo & Steinert-Threlkeld (2022), Computational Communication Research; Steinert-Threlkeld, Twitter as Data",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Frame alignment"
+  },
+  {
+   "citation": "Ringe, Victor & Gross (BJPS 2013), Friends and Enemies",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:599"
+   ],
+   "used_for": "Signed mention layer concept"
+  },
+  {
+   "citation": "Battaglini & Patacchini, 'Influencing Connected Legislators', NBER w22739",
+   "where": [
+    "fec/engine/kb_benchmark.py:2-18"
+   ],
+   "used_for": "Katz-Bonacich benchmark"
+  },
+  {
+   "citation": "Kim & Kunisky, lobbying networks / latent communities (local PDF)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Community structure exploited by pathfinder"
+  },
+  {
+   "citation": "Noble & Turner (2024), 'Presidential Leadership and Legislative Polarization'; Lee (2009)",
+   "where": [
+    "fec/engine/salience_shock.py:4-38",
+    "fec/surfaces/build_dashboard_bundle.py:663",
+    "fec/moneyball_core.py:731"
+   ],
+   "used_for": "Salience shock regimes; retreat regime"
+  },
+  {
+   "citation": "Furnas, LaPira, Hertel-Fernandez, Drutman & Kosar (congressional staff survey experiment); Bakker (partisan cues); Bakker, Lelkes & Malka (JOP)",
+   "where": [
+    "fec/moneyball_core.py:11",
+    "fec/engine/lt_priming.py:56-58",
+    "fec/surfaces/templates/make_dashboard_html_00.tpl:742",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "cpf_pressure 1.7/0.5; out-party cue clamp; executive cue factor; money capped, information is the lever"
+  },
+  {
+   "citation": "Ansolabehere, de Figueiredo & Snyder (2003); Fowler, Garro & Spenkuch (2020); Hall & Wayman (1990); Kalla & Broockman (2016), 'Campaign Contributions Facilitate Access'; Kalla & Broockman (general-election persuasion about zero); Coppock (persuasion about 5 pp / 0.1 SD)",
+   "where": [
+    "fec/engine/flip_model.py:21",
+    "fec/engine/money_response.py:15,20",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Money buys access not votes; WM/WP weights; MAXSHIFT calibration; access multiplier"
+  },
+  {
+   "citation": "Huneeus & Kim (lobbying distorts policy); Bombardini & Trebbi (annual review of empirical lobbying); Pritoni (lobbying coalitions); Bacik et al. / Kim, lobbying-network dynamics (arXiv 2503.11745); Azaiez & Mandel (EC lobby hypergraph); Harrison et al. (lobbying record mining)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-scenario-model-build.md"
+   ],
+   "used_for": "Calibration context for small, capped lobbying returns; pathfinder background"
+  },
+  {
+   "citation": "Trivedi & Singh (Procedia 2020) coalition modeling; Scientific Reports 2026 IM algorithm comparison (CELF++/RIS/IMM)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md"
+   ],
+   "used_for": "Coalition and IM algorithm references"
+  },
+  {
+   "citation": "Gaynor (LSQ 2022); Kim, Stuckatz & Wolters (JOP 2026); Furnas, LaPira & Brock (PS 2025)",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:706-711"
+   ],
+   "used_for": "Leadership PAC edges and donation/lobbying sequencing (identified, not implemented)"
+  },
+  {
+   "citation": "Volden & Wiseman, legislative effectiveness (five-stage LES; Center for Effective Lawmaking LES 93-118); Bucchianeri/Volden/Wiseman-style",
+   "where": [
+    "fec/members/lep_criterion.py:1-15",
+    "fec/engine/flip_model.py:142 (comment only)",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md",
+    "C:/Users/pgoff/Documents/brain/actors/codex-executor-incidents.md"
+   ],
+   "used_for": "Effectiveness shadow score and convergence criterion; uncoded passage-bonus comment"
+  },
+  {
+   "citation": "Nokken & Poole dynamic ideal points; DW-NOMINATE (Poole-Rosenthal)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Drift criterion for N (MISS); NOMINATE rejected for vote edges"
+  },
+  {
+   "citation": "Matz et al. (PNAS 2017); Simchon (2024, PNAS Nexus); Hackenburg & Margetts (2024)",
+   "where": [
+    "fec/surfaces/make_member_desk.py:846",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Persona-matched appeals (design-only) and aggregate null caution"
+  },
+  {
+   "citation": "Brysbaert concreteness norms; Guiraud index; Empath lexicon; Valente (N overlap stat 68.7%)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-record-1-big5-campaign.md"
+   ],
+   "used_for": "Big Five lexical features"
+  },
+  {
+   "citation": "Miller & Sutherland, APSR (hearing conduct; doctrine WITHDRAWN 2026-07-10)",
+   "where": [
+    "big5_methods.md:36",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics.md"
+   ],
+   "used_for": "Withdrawn hearing-antagonism doctrine"
+  },
+  {
+   "citation": "Burnham, 'Stance detection: a practical guide' (PSRM 2024.35); mlburnham/Political_DEBATE_base_v1.0 (Hugging Face)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39",
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md"
+   ],
+   "used_for": "NLI stance templates and the DEBATE base model (melange-stance)"
+  },
+  {
+   "citation": "Stanceformer, arXiv 2410.07083; ACL 2023.acl-long.560 (TSE); MDPI 2076-3417/15/21/11784",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39,63",
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md"
+   ],
+   "used_for": "Target-aware stance (planned); two-stage decoupling; neutral-class difficulty"
+  },
+  {
+   "citation": "Khan et al. (2025), IECE TACS, Roman Urdu agree/disagree/unrelated stance",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md:45"
+   ],
+   "used_for": "Multi-view augmentation (hurt classical readers)"
+  },
+  {
+   "citation": "Park, Lee & Cho (2025), 'Automatic construction of direction-aware sentiment lexicon using direction-dependent words', Language Resources & Evaluation 59:843-869",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:65"
+   ],
+   "used_for": "Direction-aware valence lexicon idea (rejected on dry run)"
+  },
+  {
+   "citation": "Soroka et al., Lexicoder Sentiment Dictionary LSD2015 (snsoroka.com LSDaug2015.zip); Haselmayer & Jenny (2017); Rice & Zorn (2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-congress-r-scrapers-graded-scoring-and-audits.md:26-28"
+   ],
+   "used_for": "Stage 5b tone intensity; graded tone and polarity normalization"
+  },
+  {
+   "citation": "Dai, Liao, Zhao et al. (2025), LLM-enhanced Logic Tensor Network for stance detection, Neural Networks 183:106956, doi:10.1016/j.neunet.2024.106956",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md:198",
+    "stance_valence_folcot_prereg.md:13"
+   ],
+   "used_for": "FOL-CoT valence proposals (not adopted)"
+  },
+  {
+   "citation": "Kim, Kim, Jeong, Oh & In Song Kim (2025), 'Measuring Interest Group Positions on Legislation' (PNAS draft); LobbyView positions dataset doi:10.7910/DVN/D0QWM2; In Song Kim LobbyView (Song 2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md",
+    "fec/lobbying/lobby_position_benchmark.py:9",
+    "fec/lobbying/collect_lobbyview.py:35"
+   ],
+   "used_for": "LDA data and interest-group positions (melange-lobbying)"
+  },
+  {
+   "citation": "Romero Moreno (2021)",
+   "where": [
+    "CONTESTED_BILLS_DESIGN.md:29-30"
+   ],
+   "used_for": "Contested-bills counterparty term"
+  },
+  {
+   "citation": "Delano, Rudkin & Kim (2025), BICAM, Scientific Data 12:1567, doi:10.1038/s41597-025-05737-8; Porter, Case & Treul (2025), CampaignView, Scientific Data 12:1237, doi:10.1038/s41597-025-05491-x; Zhan & Cai (2025), ESWA 263:125705, doi:10.1016/j.eswa.2024.125705; Cao, Gai, Wu et al. (2025), Information Fusion 120:103107, doi:10.1016/j.inffus.2025.103107",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md",
+    "CAMPAIGN_SITE_COLLECTION_2026_RUNBOOK.md:10"
+   ],
+   "used_for": "Research-integration proposals (bill-LDA linkage, campaign corpus, trust-KNN imputation, signed trust propagation)"
+  },
+  {
+   "citation": "Russo et al. (ACL 2023), 'Helping a Friend or Supporting a Cause?'; Brandenberger (2018), 'Trading Favors', Social Networks 54:238-253, doi:10.1016/j.socnet.2018.02.001; Montgomery & Nyhan (2017), doi:10.1086/690301; Shalizi & Thomas (2011); Nay (2017), PLOS ONE doi:10.1371/journal.pone.0176999",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:153-158",
+    "fec/research/cosponsor_challengers/PROTOCOL.md:44-47"
+   ],
+   "used_for": "Cosponsorship prediction and reciprocity baselines; homophily vs contagion confounding; staff exchange and policy similarity"
+  },
+  {
+   "citation": "Tiedens & Fragale (2003), doi:10.1037/0022-3514.84.3.558; Santoro & Broockman (2022), Science Advances, doi:10.1126/sciadv.abn5515",
+   "where": [
+    "fec/research/member_personal_relationships/PERSONALITY_CONTEXT_EXPLORATION.md:46"
+   ],
+   "used_for": "Context only for member personal-relationship research"
+  },
+  {
+   "citation": "DerSimonian-Laird random-effects estimator",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "used_for": "R2 partially pooled industry slope (mentat-giving-forecast)"
+  },
+  {
+   "citation": "Cameron, Gelbach & Miller (2011), two-way cluster-robust variance; Holm step-down; Newey-West HAC; Driscoll-Kraay (requested); Ball (2024)",
+   "where": [
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-8,168,210",
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:71-76,389,588",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Inference in the sector growth regressions and SEATS-W"
+  },
+  {
+   "citation": "Bross (1958) ridit; Spearman-Brown; Kendall tau-b; pool-adjacent-violators (PAV)",
+   "where": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/design/spec_rigor.md",
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "used_for": "Ridit transforms, internal consistency and sensitivity tests (terrier-row-scoring); turnout calibration (terrier-canvass)"
+  },
+  {
+   "citation": "MAST multi-agent failure taxonomy (named only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/metaloop.md"
+   ],
+   "used_for": "Failure-attribution tags (metaloop-orchestration)"
+  },
+  {
+   "citation": "SR 11-7 model risk management (superseded 2026-04-17 by SR 26-2); quant-model-evaluation skill bibliography (Cinelli & Hazlett 2020; Politis & Romano 1994; Simar & Wilson 1998; Grubesic & Matisziw 2006; Fouirnaies & Hall 2018; Powell & Grimmer 2016; others)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md",
+    ".claude/skills/quant-model-evaluation/references/sources.md"
+   ],
+   "used_for": "Audit tooling references applied to Melange (melange-validation)"
+  },
+  {
+   "citation": "Data sources (not literature): MEDSL Dataverse election returns; Cook Political Report PVI; Voteview; congress-legislators; govinfo BILLSTATUS; Ballotpedia; openFEC and FEC bulk; OpenSecrets; IBISWorld; Census ACS/CBP/LODES/cb_2024 and cb_2020; FDIC SOD; NCUA Call Reports; HMDA; Polymarket/Kalshi/IEM; Crystal Ball/538",
+   "where": [
+    "fec/engine/build_competitiveness.py",
+    "fec/district/demographic_potential.py",
+    "DEMOGRAPHIC_POTENTIAL_METHOD.md:185-191",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Model inputs across systems"
+  }
+ ],
+ "evidence": [
+  {
+   "slug": "bombardini-2020-empirical-models-lobbying",
+   "title": "Empirical Models of Lobbying",
+   "year": "2020",
+   "component_id": "melange-allocation.break-even-and-roi",
+   "relation": "qualifies",
+   "claim": "Kang's model implies an average policy value of more than $500m, and the Farm Bill comparison gives a naive return of 600,000% ($22bn in 2000 subsidies vs under $3.7m in agribusiness PAC contributions that cycle). The review says excessive returns are common in this literature. Adding an electoral-vote channel (Bombardini and Trebbi 2011: $200-$400 per vote) lowers the Farm Bill figure to $13.7 per dollar, which the authors call still high but more reasonable; B&T's simulations give average returns of 10%-20% per year. The conclusion notes some structural models display symptoms of misspecification.",
+   "system_side": "Saturating share-type money term in shift_lean (money_response.py) that break-even computations share. The dashboard template exists at fec/surfaces/templates/make_dashboard_html_00.tpl; no roi_verify.py was found in the repo, so the claim about ROI floors checked by roi_verify.py is unconfirmed.",
+   "transfer": "This is a caution about any ROI read off contribution-to-outcome ratios. It applies whenever dashboard ROI floors are presented as returns. It does not invalidate the break-even algebra, which is internal to the model. Any ROI shown should carry an UNVERIFIED or model-output label.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bombardini-2020-empirical-models-lobbying",
+   "title": "Empirical Models of Lobbying",
+   "year": "2020",
+   "component_id": "melange-allocation.stance-money-gate",
+   "relation": "supports",
+   "claim": "Hall and Deardorff (2006) treat information as a subsidy to resource-strapped legislators, which explains why lobbyists lobby friendly legislators and questions the persuasion role. Hirsch et al. (2019; FARA contacts, 219 foreign-interest lobbyists, 110th-111th Congress) find any lobbying contact is more likely for lobbyists ideologically aligned with the politician.",
+   "system_side": "Members whose overall tier is Skeptic, Highly Skeptical or Opponent are blocked as money targets in the allocators (per_topic_flip, optimize; lt_priming and dashboard hold copies). The gate fails open for members with no matrix row.",
+   "transfer": "The contact evidence concerns foreign-principal lobbyists under FARA, not domestic PAC dollars. It is consistent with funding allies but does not test whether contributions to opposed members change their positions.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "pritoni-2025-lobbying-coalitions-determinants",
+   "title": "Lobbying coalitions and their determinants: a systematic literature review",
+   "year": "2025",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "The literature finds both positive (Junk 2019; Nelson and Yackee 2012) and negative (Bunea 2013; Haider-Markel 2006; Heinz et al. 1993; Junk 2020a) links between forming a coalition and policy influence, and calls the results contradictory. The review leaves coalitions as an explanatory variable for influence to future research.",
+   "system_side": "The pot is one PAC's budget (Paul's ruling of 2026-09-30). PMAX defaults to $10k per member above existing CU money, which is that PAC's per-candidate per-cycle limit. Allied industries' money is not represented, and CU money is treated as a single actor.",
+   "transfer": "The weapon-of-the-weak evidence might tempt someone to pool allied industries' dollars into the CU money leg. The review does not support that, because the effect of coalitions on outcomes is unresolved. The single-actor pot remains defensible on this evidence.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "kumar-2022-influence-maximization-social",
+   "title": "Influence maximization in social networks using graph embedding and graph neural network",
+   "year": "2022",
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "qualifies",
+   "claim": "Introduction says greedy IM methods are generally more accurate with a theoretical performance guarantee but computationally intensive, while centrality methods are cheap but network-specific. SGNN replaces the greedy step with a learned per-node influence regressor and top-k selection. No SGNN numbers appear in the accessible preview.",
+   "system_side": "budget_frontier.py runs a lazy greedy: a heap of stale marginals, where each candidate marginal is spread(S+c) minus spread(S), clipped at zero and multiplied by a per-candidate factor fac. MC defaults to 20 edge-keyed CRN cascades. It stops at MAXSEEDS (default 60) or at zero marginal and reports a knee.",
+   "transfer": "The submodular guarantee is not shown for this two-colour engine with leverage factors, so the claim that the greedy carries a guarantee here should not be made. A learned surrogate would trade away the marginal accounting for speed. Speed matters only if per-candidate MC greedy is infeasible, and the 533-member, 60-seed setting is not shown to be infeasible.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bonica-2013-mapping-ideological-marketplace",
+   "title": "Mapping the Ideological Marketplace",
+   "year": "2013",
+   "component_id": "melange-allocation.stance-money-gate",
+   "relation": "supports",
+   "claim": "Text PDF p.18 (printed p.17): of 49,418 individuals with 25+ federal contributions (2004-2012), only 167 (0.3 percent) have money-weighted SD above the 0.577 random-giving baseline. Mean money-weighted SD is 0.20 for the sample. Descriptive evidence that active individual donors give on ideology.",
+   "system_side": "STANCE_GATE_BLOCKED = Skeptic, Highly Skeptical, Opponent, tested on overall tier. Members in this set are excluded as money targets. The gate fails open: a member with no matrix row gets tier dash and stays eligible.",
+   "transfer": "Descriptive only: donors are ideological, but the paper does not test whether funding opponents converts them. Window is individual donors 2004-2012; PAC behavior differs (Table 2).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bickmore-2025-corporate-lobbying-political",
+   "title": "Corporate lobbying, political action committees, and market concentration",
+   "year": "2025",
+   "component_id": "melange-allocation.break-even-and-roi",
+   "relation": "qualifies",
+   "claim": "Lobby on ShareAssets 0.0743 with full controls; PAC on ShareAssets 0.1100 (election years, N = 62,198). Abramoff DiD Treatment x Post on ShareAssets with full controls is -0.0265 (SE 0.0096); on ShareMcap it is -0.0336 (SE 0.0099). Post window 2006Q1-2009Q1; pre-period 2003Q1-2005Q4 per the Table 8 description.",
+   "system_side": "The dashboard head-to-head block computes CU versus industry flip odds using WM, HALFF, the competitiveness multiplier and receipts, then solves for break-even CU dollars. When q is at least 1 the displayed text reads that CU money alone cannot fully offset the competitor spend. The rel's quoted message 'cannot offset' is not the literal wording.",
+   "transfer": "The paper's return is a firm-level industry-share outcome from Compustat matched to CRP by company name, 1998-2016. It does not measure votes, cosponsorship or flips, so it cannot calibrate WM, HALFF or LOSSFRAME. It supports only a framing claim that political spending associates with firm share gains, reported in share points with the unit stated.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "alexander-2009-lobbying-analysis-under",
+   "title": "Lobbying ROI: An Analysis under the American Jobs Creation Act of 2004 (also: Measuring Rates of Return for Lobbying Expenditures)",
+   "year": "2009",
+   "component_id": "melange-allocation.break-even-and-roi",
+   "relation": "qualifies",
+   "claim": "Overall return on lobbying 220 = (46,157.5 + 15,897.0) / 282.7, i.e. about 62.05bn estimated savings on 282.7M lobbying across 93 lobbying repatriators (FY2004-2006). Coalition 257, non-coalition 154, per-company mean 869, per-company median 172.2, lobbying over 1M subsample (48 firms) 243.",
+   "system_side": "desk_roi in fec/surfaces/make_member_desk.py returns expected weighted flips gained from the next 10k increment (CHUNK) of CU money on a member. The dashboard head-to-head block solves for the CU money that offsets competitor spend. Neither is a firm return on lobbying dollars.",
+   "transfer": "No numeric transfer. The paper numerator is a firm tax benefit from a one-time provision and the denominator is LDA spend (upper bound). Melange numerator is modeled member movement and denominator is FEC PAC money. Any quote needs the window FY2004-2006, the 93-firm denominator, and the median 172 next to the mean 869. The bearing describes the PAC side as capped at 10k; the code uses 10000 as a marginal increment, so describe it as a per-10k increment.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "trivedi-2020-efficient-influence-maximization",
+   "title": "Efficient Influence Maximization in Social-Networks Under Independent Cascade Model",
+   "year": "2020",
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "supports",
+   "claim": "Under ICM with p=0.01 on two co-authorship graphs, DHICM is 12.5% (NetHept k=10) and 7.9% (NetHept k=30) below CELF, and 2.5% below CELF at k=30 on NetPhy. The paper says greedy is slow on medium-sized graphs (more than 1500 nodes) because of its high time complexity.",
+   "system_side": "budget_frontier runs exact lazy greedy: candidates are the stance-gated top-45 neutral shortlist (line 137), marginals are re-evaluated when popped from a heap (lines 159-170), and MAXSEEDS defaults to 60 and MC to 20 (line 7). Verified in code.",
+   "transfer": "The gap was measured at p=0.01 on two co-authorship graphs of 15k to 37k nodes, with no MC sample size or variance reported. It ranks algorithms under ICM only and does not validate the frontier's spread values, which are model outputs. The cost argument holds because the candidate pool is about 45, not because of a node-count threshold in the paper.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "trivedi-2020-efficient-influence-maximization",
+   "title": "Efficient Influence Maximization in Social-Networks Under Independent Cascade Model",
+   "year": "2020",
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "suggests-extension",
+   "claim": "Degree-discount (DHICM) discounts neighbours of already chosen seeds (Eq 3.2). The paper reports DHICM above plain degree by 16% at k=30 and 10.4% at k=80 on NetHept, and by 10% at k=50 on NetPhy. Plain degree therefore trails DHICM by less than those percentages, not by them.",
+   "system_side": "per_topic_coalition scores each candidate by isolated marginal spread({n}) minus base (line 115), boosts by a bridge factor with BETA_C=0.8 (lines 30, 117), water-fills the budget (line 119), and reports the joint spread only afterwards (lines 124-125). Verified: no discount for adjacency to other funded seeds.",
+   "transfer": "The paper's direction is DHICM over degree, so the gap is an extension argument, not a measured gain. The percentages are simulated, depend on k, come from one benchmark, and have no error bars. A sequential or discounted pass is a candidate for owner review only.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "golovin-2011-adaptive-submodularity-theory",
+   "title": "Adaptive Submodularity: Theory and Applications in Active Learning and Stochastic Optimization",
+   "year": "2011",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "method-source",
+   "claim": "Lazy greedy (Algorithm 2) loses no solution quality because stale marginals upper-bound current ones. Speedups were about 3.5-7x fewer evaluations on 46 sensors (temperature) and 30-38x on 357 sensors (traffic) at 50 percent failure. The Lemma 6 data-dependent bound was tighter than the worst-case bound in the sensor runs.",
+   "system_side": "Heap-based lazy greedy over $500 chunks in optimize.py re-queues a member only when its marginal is stale. dd_bound sums each member's current next-chunk marginal times the chunks left in its PMAX headroom, within BUDGET, and is computed only under the fixed-state certificate. The code comment calls exact greedy optimality stronger than the 1-1/e floor.",
+   "transfer": "Carries over in the deterministic fixed-state case where per-member chunk marginals are non-increasing, which the code's concavity check tests. It does not carry over once modeled conversions fire; the code then withholds the certificate. The code citation Golovin-Krause JAIR 11 Lemma 5.3 / A.9 does not match this text copy, which has Lemma 6 Eq.13 and Lemma 37 for costs.",
+   "strength": "strong",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "golovin-2011-adaptive-submodularity-theory",
+   "title": "Adaptive Submodularity: Theory and Applications in Active Learning and Stochastic Optimization",
+   "year": "2011",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "Theorem 5's (1-1/e) bound compares with the best adaptive policy and needs observed outcomes, an adaptive monotone submodular objective and a known prior (Def 2-3 p.8; Thm 5 p.11). Treasure-hunting instances with strong synergies fall outside the class (Sec 3.4 p.9). Theorem 26 shows no O(|E|^(1-eps/beta)) approximation for a constructed treasure-hunting family of pointwise-modular instances unless PH = Sigma_2^P (Sec 12 p.33).",
+   "system_side": "Nothing is observed (observations is an empty list). When cumulative CU dollars cross the deterministic DTHRESH threshold, the member is banked as won, the stance matrix shifts and the queue is rebuilt. The run is labelled modeled_threshold_replanning with guarantee kind none.",
+   "transfer": "The paper supports the refusal to claim a certificate in conversion mode, since a threshold jump can make a later chunk's marginal rise. Softened scope: Theorem 26 is a hardness result for one constructed family, not for every objective lacking adaptive submodularity. Sec 12 frames it more broadly, but the proof covers only that family.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "golovin-2011-adaptive-submodularity-theory",
+   "title": "Adaptive Submodularity: Theory and Applications in Active Learning and Stochastic Optimization",
+   "year": "2011",
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "qualifies",
+   "claim": "Greedy guarantees assume exact or alpha-approximate marginal evaluation; sampled marginals give only additive error (Sec 5 p.11, bound with epsilon). The adaptive IC result (Thm 19 p.21) covers a single cascade with full-adoption feedback; the myopic-feedback version was retracted with a 3-node counterexample (Sec 8.2.1 p.23).",
+   "system_side": "Lazy greedy picks up to 60 seeds (MAXSEEDS default 60). Each marginal is a 20-draw CRN Monte Carlo estimate (MC=20) on a two-colour first-to-reach cascade with money-mobilized bystanders. Marginals are clamped at zero and multiplied by a per-candidate factor fac: REPFAC times lev for contest candidates, 1.0 for defend candidates, and lev for all others. The knee is read from the raw path.",
+   "transfer": "No Golovin-Krause guarantee carries over as built. Marginals are sampled, selection uses fac-weighted marginals rather than the reported spread, and the kernel is competitive. The zero clamp signals that sampled spread is not monotone. The frontier is a non-adaptive heuristic.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "golovin-2011-adaptive-submodularity-theory",
+   "title": "Adaptive Submodularity: Theory and Applications in Active Learning and Stochastic Optimization",
+   "year": "2011",
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "qualifies",
+   "claim": "Near-optimality comes from greedy selection that conditions each pick on what has been selected or observed. For deterministic priors the notion reduces to classical submodularity, so Nemhauser et al. (1-1/e) applies (Sec 3.1-3.2 pp.6-8; Thm 5 p.11; Conclusions p.36).",
+   "system_side": "Coalition allocator ranks the top-45 neutral candidates by singleton marginals spread({n}) minus base, splits the budget by water-fill with a per-member cap and no sequential conditioning, then reports the joint spread of the funded set. A comment asserts spread is submodular. The flip allocator is an exact heap-based greedy over pflip chunks.",
+   "transfer": "Flip allocator: with fixed-state separable concave pflip, greedy is exact, so the paper adds nothing. Coalition allocator: the singleton-marginal proportional split is not greedy, so no submodular guarantee applies even if spread were submodular; reporting joint spread is the right diagnostic. Submodularity of the bystander-filtered competitive kernel is unverified.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "cagala-2021-optimal-targeting-fundraising",
+   "title": "Optimal Targeting in Fundraising: A Causal Machine-Learning Approach",
+   "year": "2021",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "Warm-list targeting rule (2014 field experiment, first-year net donations; warm list N=2,354 with 1,180 gift and 1,174 control; 20-fold cross-validated out-of-sample): gift to 33 percent of warm-list individuals; expected net donation 17.61 euro, which is +2.14 (13.8 percent) vs all-gift, +2.20 (14.3 percent) vs no-gift and +2.17 (14.1 percent) vs random-half, all significant at 1 percent (Table 2, Panel B). On the full 2015 follow-up sample (N=3,616): expected 17.16 euro, -0.88 vs all-gift and +0.45 vs no-gift, neither significant (Table 8, Panel B2).",
+   "system_side": "fec/engine/optimize.py: lazy greedy allocation of BUDGET (default 2,500,000) in INC (default 500) chunks across members, maximizing modeled winnability in a fixed stance state. The docstring calls the greedy an exact discrete optimum within that state and withholds the fixed-state certificate when a modeled money threshold changes stance. The observations list is reserved and empty; no realized-outcome comparison against uniform, random or no-spend allocation was found.",
+   "transfer": "The transferable part is the evaluation design: benchmark-relative, net-of-cost gains on held-out units under randomized treatment. Effect sizes do not transfer (1.16-euro gift to German church donors in 2014-15, vs PAC dollars to members of Congress). FEC limits and the absence of randomization mean the system cannot replicate the identification. Any optimizer gain stays model-internal and UNVERIFIED (DE-062) until outcomes are scored against a benchmark allocation.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "cagala-2021-optimal-targeting-fundraising",
+   "title": "Optimal Targeting in Fundraising: A Causal Machine-Learning Approach",
+   "year": "2021",
+   "component_id": "melange-allocation.workbook-allocator",
+   "relation": "qualifies",
+   "claim": "Treating everyone as a gift recipient is net-negative or near zero: all-gift minus no-gift is +0.05 to +0.08 euro for the warm list (not significant) and -0.97 euro per donor for the cold list (significant) (Table 1). Targeted warm-list donors differ from non-targeted donors only modestly in prior giving (8-year total 130.98 vs 123.39 euro; 787 targeted vs 1,567 non-targeted; Table 4, Panel A). The paper cautions that observed characteristics are correlates of response, not the channels through which the gift works (Section 5.4).",
+   "system_side": "The workbook sheet Blended Model has an Allocation column (column U) beside Rank (column T) and Score (column S). In the copy read here that column has no cached values, so the claim that the top 133 of 533 members are funded from a flat 2.0 million dollar pot was NOT reproduced. The cited producer fec/apply_alloc_cap.py does not exist in the repo.",
+   "transfer": "Conceptual only. The magnitudes come from donors, not legislators. The transferable point is to compare any proportional allocator against uniform and random benchmarks. The paper does not show that the allocator is wrong, and the system side is unverified.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "ma-2022-adversarial-attack-graph",
+   "title": "Adversarial Attack on Graph Neural Networks as An Influence Maximization Problem",
+   "year": "2022",
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "qualifies",
+   "claim": "Table 1: both InfMax methods beat Degree, Betweenness and PageRank in all 18 setups. The paper says both proposed methods beat all baselines in all but 3 of 18 setups. Pubmed GAT at 30 percent threshold: GC-RWCS 69.1, InfMax-Unif 64.1, no attack 85.2. In a 4-community SBM the better selectors spread seeds more evenly (qualitative).",
+   "system_side": "per_topic_coalition ranks neutral candidates by ev (engagement priority times delivery) and keeps the top 45, not by singleton marginal. Singleton marginal spread({n}) minus base is then computed over those 45 and used as the allocation weight, boosted by (1 + 0.8 times bpf). The 2M budget is water-filled with a 50k per-seed cap. The joint spread of the funded set is reported afterwards and does not shape the allocation.",
+   "transfer": "The paper's objective is GNN misclassification on citation graphs at a 1 percent node budget. The CU objective is a Monte Carlo competitive cascade on the cosponsor kernel. The structural point transfers: weighting by singleton marginals ignores overlap, so funded seeds can cluster. The code already measures the joint-vs-naive gap. The community-spread finding is qualitative. Weak to moderate.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "arya-2025-relink-edge-activation",
+   "title": "RELINK: Edge Activation for Closed Network Influence Maximization via Deep Reinforcement Learning",
+   "year": "2025",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "RELINK's learned edge policy is slower than PSNA on small and medium graphs and becomes competitive or often faster on large graphs, which the paper attributes to GPU inference and PSNA's complexity (Sec 6.2 Q3, Fig 5). Training took 6,257.329 s for 2,000 epochs because exact marginal gains are computed (Sec 6.4). The objective is non-submodular (Introduction).",
+   "system_side": "optimize.py is a lazy greedy over per-member chunks. Its docstring says that in a fixed stance state the objective is separable by member with diminishing returns, so greedy is the exact discrete allocation optimum. A Golovin-Krause bound is kept as a diagnostic. The dashboard budgetRecruit comment says no ML needed at our scale (tpl line 776).",
+   "transfer": "The paper gives no graph-size threshold, so the tens-of-thousands figure in the rel is not from the paper. RELINK's case for a learned policy rests on scale and on non-submodular edge choice. The separable allocation in optimize.py is neither, so this paper neither supports nor refutes replacing greedy there. All benchmarks are synthetic-trained IC simulations.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "chen-2021-contingency-aware-influence",
+   "title": "Contingency-Aware Influence Maximization: A Reinforcement Learning Approach",
+   "year": "2021",
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "supports",
+   "claim": "The authors attribute RL4IM's slight edge over greedy CHANGE to proactively modeling unwillingness in the reward, versus CHANGE reacting to realized willingness. The edge is called slight and gets no numbers. At T=1 (single round, T x B = 8), RL4IM and CHANGE are the two best methods. The roughly-twice-Random result is stated for the q sweep (Q3), not for T=1. All results are synthetic graphs under IC with p=0.1.",
+   "system_side": "spread() in budget_frontier.py draws each lobbied seed's activation against gate(n,cs) on a dedicated CRN stream (key offset 2^62, lines 127-128). A failed activation stays an opponent (lines 129-131). MAXSEEDS defaults to 60 (line 7). Lazy-greedy mechanics were not checked.",
+   "transfer": "Supports only the design choice of putting take-up uncertainty inside the expected-spread objective. The paper models one colour; the system has a two-colour competitive cascade. The paper's synthetic graphs (about 200 nodes) are comparable in scale to the 533-member graph, but there are no political data. The slight edge is qualitative.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "chen-2021-contingency-aware-influence",
+   "title": "Contingency-Aware Influence Maximization: A Reinforcement Learning Approach",
+   "year": "2021",
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "context",
+   "claim": "Within a round, a seed's exact expected marginal contribution depends on which earlier seeds turned out willing, giving O(2^b) cases. The paper assumes the influence function is submodular, stated as usually submodular and citing Kempe et al. 2003 (Eq. 7).",
+   "system_side": "per_topic_coalition.py gates each lobbied seed inside each spread() call (lines 102-110). Individual marginals spread({n}) minus base (line 115) feed a water-fill (line 119). The funded set's joint spread is reported (lines 124-125) because summing marginals overstates the joint gain. The allocator is one-shot, with no rounds and no observed willingness.",
+   "transfer": "The paper's O(2^b) dependence arises from realized willingness within sequential sub-steps. The coalition allocator averages willingness inside each spread() call, so there is no conditional dependence to ignore at allocation time. The shared point is only that seed non-additivity is real and the joint report exposes it. The surrogate reward needs homogeneous q and Eqs. 9-10, so it does not port to heterogeneous gates.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "borodin-nd-threshold-models-competitive",
+   "title": "Threshold Models for Competitive Influence in Social Networks",
+   "year": "",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "In the weight-proportional competitive LT model (Eq. 1) the A-spread is not monotone (Theorem 1: root A-probability 11/40 before and 103/400 after adding one A seed, Appendix A Theorem 12) and not submodular (Theorem 2). The Nemhauser-Wolsey-Fisher greedy bound does not transfer to that model.",
+   "system_side": "pflip = a/(a+b) (flip_model.py 92-97) has the form of Eq. 1, but a and b each add a money term to WP*nA/mAt, so it is not the same model. Stance is fixed inside a run, so the objective is separable by member. optimize.py checks concavity at run time (concavity_violations) and labels only the fixed-state run as fixed_state_lazy_greedy. A modeled conversion re-runs topic_setup, where mAt = max(nA) (flip_model.py 138-140), so one conversion can lower another member's WP*nA/mAt term. Such a run is labeled modeled_threshold_replanning (optimize.py 190) and carries no certificate.",
+   "transfer": "Structural analogy only. Borodin non-monotonicity runs through multi-step propagation under random thresholds, which pflip does not have. The conversion-path concern applies only when conversion_reachable is true. Whether the mAt renormalisation lowers total winnability after a conversion is not measured in this text.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "borodin-nd-threshold-models-competitive",
+   "title": "Threshold Models for Competitive Influence in Social Networks",
+   "year": "",
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "qualifies",
+   "claim": "Most natural competitive extensions lose submodularity. Monotonicity can survive while submodularity fails (Theorems 3-6). The greedy (1-1/e) guarantee is shown only for the OR model with monotone submodular decision functions (Theorems 9-11). Section 7 leaves other models open.",
+   "system_side": "budget_frontier.py runs a CELF-style lazy greedy on a heap. spread() applies the seed gate (line 128) and removes activated contest seeds from the anti set (line 131). marg() multiplies the raw gain by fac, which is REPFAC times leverage for contest seeds (line 143, applied at 156), and floors at zero. audit_frontier.py 27-35 counts marginal inversions on clamped spread and passes up to 35 percent of marginals as MC noise (tolerance 0.35 times the marginal count).",
+   "transfer": "Applies to electoral mode (contest and defend seeds). This paper gives no submodularity result for the electoral objective. Any coalition-mode greedy guarantee comes from the competitive IC literature cited to Bharathi et al. (Borodin ref 1), not from this paper, so coalition-only mode is not covered here. Separating MC noise from structure needs a read-only check of raw marginals under common random numbers.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "cai-2025-competitive-influence-maximization",
+   "title": "Competitive Influence Maximization in Voter Dynamics: The Role of Timing and Network Heterogeneity",
+   "year": "2025",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "suggests-extension",
+   "claim": "With the budget fixed, choosing a start time raises final vote share over spending from t=0 (Table 2, constant-opponent setting). For N=100 networks, per-node start times and budgets raise vote share further: the relative gain is large at small budget ratios but small in absolute terms (Fig 6a relative axis 1.00 to 1.25). A resource-limited controller starts later and a resource-rich one starts earlier (abstract; Sec 4.3.1). Under the uniform-start formula (Eq 3-5) the controller spends its budget over a short late window; the paper does not prescribe this as a rule.",
+   "system_side": "optimize.py docstring describes a lazy greedy allocator with a Golovin-Krause bound kept as a diagnostic. Defaults are a 2.5M pot in 500 increments with a 10k per-candidate cap (PMAX). It allocates amounts per member with no start time or spending schedule; the objective is time-free winnability.",
+   "transfer": "Only as a hypothesis. PAC dollars cannot be withdrawn, FEC per-cycle limits bind, and the paper's continuous gain a_i(t) has no clear counterpart in lump-sum contributions. The paper's large relative gain at small budgets means the per-node result should not be read as uniformly small. Untested on legislators.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "cai-2025-competitive-influence-maximization",
+   "title": "Competitive Influence Maximization in Voter Dynamics: The Role of Timing and Network Heterogeneity",
+   "year": "2025",
+   "component_id": "melange-allocation.break-even-and-roi",
+   "relation": "qualifies",
+   "claim": "Two settings are mixed here. The optimal start for Congress votes at T=16 falls from 14.730 at budget ratio 0.1 to 10.476 at ratio 10 (Table 2, constant-opponent setting, fixed opponent starting at 0). In the two-controller Nash game the controller with the larger budget moves first, and the second mover can only buffer the first mover's gain, never exceed its vote share (Sec 4.3.4, stage 3, p.21-22). Fig 9b shows per-node resource per unit time rising with the budget advantage.",
+   "system_side": "The head-to-head panel solves CU share against competitor share in closed form for the baseline odds. It reports that CU money alone cannot fully offset when the required money ratio q is at least 1. The solve uses the CU-to-competitor money ratio at one instant, with no sequencing.",
+   "transfer": "The paper's statement that a disadvantaged controller can offset but not overtake agrees in spirit with the cannot-offset message. The claim that a disadvantaged side does better by delaying has no counterpart in a static break-even, and it rests on the paper's abstract and simulations only. Transfer would need a model of within-cycle spending order, which the system lacks.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "cai-2025-competitive-influence-maximization",
+   "title": "Competitive Influence Maximization in Voter Dynamics: The Role of Timing and Network Heterogeneity",
+   "year": "2025",
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "qualifies",
+   "claim": "Under node-specific optimization on N=100 networks with mean degree 6 (Sec 4.3.2), the budget ratio sets the degree pattern. With small budget ratios, control gains fall and start times rise with degree, so low-degree nodes are targeted. With large ratios the pattern reverses (Fig 6b-c p.18; Appendix D Fig 10 p.26).",
+   "system_side": "The coalition water-fill boosts each candidate's marginal spread by (1 + 0.8 bpf), where bpf is a bipartisan share read from bipartisan.json divided by 100, so it favours bipartisan bridges. The ranking does not depend on budget size, although the CAP-clipped water-fill decides how far down the list money goes.",
+   "transfer": "bpf is a cross-party share, not degree, so the paper's degree result maps only indirectly. The paper's result rests on N=100 graphs with mean degree 6. Measuring the Melange cosponsor graph's degree exponent and testing whether greedy seeds move toward low-degree members at small budgets would be new analysis and stays UNVERIFIED.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "moreno-2021-shadowing-shielding-effective",
+   "title": "Shadowing and shielding: Effective heuristics for continuous influence maximisation in the voting dynamics",
+   "year": "2021",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "With a passive opponent the continuous optimum spreads widely: 111 of 1,133 nodes (H plus A) get above-average allocation and 1,013 nodes (V) are near flat with std/mean 0.11. Continuous optima beat the best discrete plan by 5-10 percent for passive K below 100 (Fig 1c, 15 samples). With two active controllers the unique pure-strategy Nash equilibrium is uniform targeting w_ai = Ba/N, reported as independent of network type and budgets (numerical result; the uniqueness proof is in S1 Appendix Section 12, not in the text file).",
+   "system_side": "optimize.py greedy spends a 2.5M pot in 500-dollar chunks with a 10k per-member cap (lines 24-27). Industry money ind = fm.ind0 is set once at line 59 and never rewritten, so industry is a frozen passive opponent. marg_at (lines 64-72) changes only the funded member's pflip. Conversion events call shift_pro (lines 93-105, 136-142), which rewrites that member's stance in MAT; the nA and nB camp totals in flip_model.topic_setup are rebuilt from MAT, so a conversion does move neighbours' pull.",
+   "transfer": "The paper's spread and shielding come from money propagating through the network's steady state. Melange's dollar term is node-local, so the paper's spread cannot arise from dollars alone; shielding-like behaviour can arise only through the b term of a/(a+b) and through conversion-driven stance moves. The Nash result implies the plan is a best response to a frozen opponent and is exploitable if industry re-optimises; qualitative only. Equal-budget and per-candidate FEC limits have no analogue in the paper.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "zeng-nd-multi-agent-reinforcement",
+   "title": "Multi-Agent Reinforcement Learning-Based Extended Boid Modeling for Drone Swarms",
+   "year": "",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "context",
+   "claim": "An RL controller (Q-learning, linear function approximation, alpha 0.1, gamma 0.75) beats a rule-based Boid baseline on one simulated drone scenario: near-collisions 45 vs 108 (-58%), ideal-range steps 3,176 vs 2,764 (+15%), heading deviation 14.3 vs 21.1, all over 3,500 steps with N = 17 UAVs. No seeds, replicates, variance or baseline specification are given.",
+   "system_side": "The built optimizer uses deterministic CELF lazy greedy over per-member concave chunks ($500 steps, PMAX $10k cap, stance-gated members excluded). It has no learned policy. Paul's notes expect a learned policy (GCOMB) to replace greedy at scale.",
+   "transfer": "Carries over only as an analogy: a learned policy versus hand-set rules in a multi-agent setting. Nothing transfers to political allocation. The agents are physical drones, the reward is hand-specified geometry, and there is no budget, submodularity, money or legislator response. The evidence is one unreplicated simulation, so it cannot show that RL would outperform greedy anywhere, let alone on the cosponsor kernel.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "zareie-2023-influence-maximization-social",
+   "title": "Influence maximization in social networks: a survey of behaviour-aware methods",
+   "year": "2023",
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "suggests-extension",
+   "claim": "Topic-aware IM (Barbieri, Bonchi and Manco 2013) represents each user's interest as a continuous topic vector. The survey says this captures preferences more realistically than binary target or label methods, but determining topic vectors needs a good record of historical activity, which may not always be available. The survey reports no accuracy comparison of any kind.",
+   "system_side": "per_topic_coalition.py:37 builds one topic-independent kernel with MBC.build_P from the CU cosponsor graph. Topics differ in target weights and industry money, not in edge probabilities. Kernel sharing was verified for per_topic_coalition only; the per_topic_flip and flip_model paths were not checked.",
+   "transfer": "Transfers only if per-category cosponsorship history is dense enough to estimate topic-specific edge weights. A topic-conditioned kernel would change ranks and engine outputs, so change-control applies. The survey gives no evidence that topic conditioning beats topic-blind IM, so any benefit is conjectural. The recorded crypto p_max of 0.23 was not checked.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "zareie-2023-influence-maximization-social",
+   "title": "Influence maximization in social networks: a survey of behaviour-aware methods",
+   "year": "2023",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "Cost-aware (budgeted) IM assumes every influenced user brings the same benefit. Profit-aware IM models per-user benefit, but data on users' monetary concerns and valuations may not always be readily available, so cost-aware methods may be more relevant in practice. Nguyen and Zheng (2013) first introduced budgeted IM.",
+   "system_side": "optimize.py runs lazy greedy over a $2.5M pot in $500 increments with a $10k per-member cap (BUDGET, INC, PMAX defaults). Member targets are weighted by the PERS and IMP tables and by engagement, direction and delivery terms. The objective is Linear-Threshold winnability on per-member flip odds, not spread from cascade seeds, so the analogy is structural only.",
+   "transfer": "Partial analogy. The optimizer allocates money that shifts per-member flip odds and does not pick cascade seeds, so the survey's spread objective does not apply. The survey's point carries over: results depend on the PERS and IMP tables, which the code labels calibrated constants. A uniform-benefit variant would be a sensitivity check, not a replacement.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "almazaydeh-2026-heuristic-centrality-methods",
+   "title": "Heuristic centrality methods challenge greedy optimization in influence maximization",
+   "year": "2026",
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "qualifies",
+   "claim": "At 1000 nodes CELF++ with 50 MC sims per marginal estimate reached 122.95 +/- 24.37 vs IMM 954.90 +/- 1.27, i.e. 12.9 percent of IMM (t = -107.78, p < 0.001). Its CV rose to 71.5 percent at 500 nodes. The authors attribute the gap to MC budget and Python implementation but do not test that. The abstract gives 11.2 percent, which conflicts with the body.",
+   "system_side": "budget_frontier.py runs lazy greedy at MC=20 (default at line 7, MAXSEEDS=60 at line 7) with edge-keyed splitmix CRN in cascade() (lines 83-94), so competing candidates share draws. The brain records MEA-7 PASS (100 percent Jaccard overlap at MC=100; 98 percent across two RNG seeds) at STATE.md lines 748-749, in a block dated 2026-08-18.",
+   "transfer": "The paper's failure mode is independent noise across candidate estimates. CRN removes that for pairwise marginal comparison, so the CRN design is supported in principle. The paper uses undirected uniform-p IC; Melange runs competitive two-colour IC with seed gating on a 533-node kernel. The paper's numbers show the mechanism only.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "almazaydeh-2026-heuristic-centrality-methods",
+   "title": "Heuristic centrality methods challenge greedy optimization in influence maximization",
+   "year": "2026",
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "suggests-extension",
+   "claim": "At 1000 nodes PageRank reaches 921.78 against IMM 954.90 (96.5 percent by Table 2 arithmetic; the paper states 96.3 percent in the abstract and discussion) in 0.4 s. Betweenness at 921.80 is indistinguishable (t = -0.01, p = 0.99). Degree reaches about 85 percent.",
+   "system_side": "The frontier and the coalition allocator pre-cut the candidate pool to the top 45 neutral members ranked by priority-engagement times delivery multiplier: budget_frontier.py line 137 and per_topic_coalition.py line 114. The code does not score a degree, PageRank or Katz-Bonacich seed set under the same CRN cascade. The claim that no such comparison exists in the brain was not verified by a repo-wide search in this pass.",
+   "transfer": "Usable only as an ablation diagnostic, labelled UNSTRATIFIED, with window, denominator (533 members) and topic named. The paper's hub-favouring importance sampling tilts results toward centrality, and its graphs are undirected uniform-p, so a near-match on spread would not justify replacing greedy. Spread is modelled cascade reach, not access or influence (D-025).",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "almazaydeh-2026-heuristic-centrality-methods",
+   "title": "Heuristic centrality methods challenge greedy optimization in influence maximization",
+   "year": "2026",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "Theoretical guarantees such as the (1-1/e) bound can diverge sharply from realized performance when marginal gains are estimated by noisy simulation. CELF++ reached 12.9 percent of IMM at 1000 nodes.",
+   "system_side": "optimize.py runs a fixed-state lazy greedy over the INC grid (INC default 500 and BUDGET default 2500000 at line 26). Its docstring says the objective is separable and concave in a fixed stance state, and that highest-next-marginal selection is the exact discrete optimum. certificate_valid = fixed_state_concave and not conversions (lines 48 and 166); a modelled conversion switches the mode to modeled_threshold_replanning (line 190). No Monte Carlo call appears in the sections read.",
+   "transfer": "The paper's gap comes from MC estimation error, which does not arise in a deterministic objective, so the paper does not undercut the optimizer's fixed-state certificate. It would become relevant only if the objective were replaced by a simulated cascade.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "madsen-2017-strategic-advantages-micro",
+   "title": "The strategic advantages of micro-targeted campaigning: A proof of principle Bayesian Agent-Based Model",
+   "year": "2017",
+   "component_id": "melange-allocation.stance-money-gate",
+   "relation": "supports",
+   "claim": "Contact spent on audiences with an unfavourable view of the source is wasted or counterproductive. The targeted campaign's advantage comes entirely from never contacting those voters.",
+   "system_side": "Members whose overall tier is Skeptic, Highly Skeptical or Opponent receive zero money in every allocator, which funds allies instead of trying to convert opponents. The gate fails open for members with no matrix row.",
+   "transfer": "An analogy only. Campaign contacts with voters are not PAC dollars to legislators, and the paper has no money mechanism. It agrees with Paul's Furnas reading ('cultivate champions') but adds no new evidence about legislator behaviour.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "bharathi-nd-competitive-influence-maximization",
+   "title": "Competitive Influence Maximization in Social Networks",
+   "year": "",
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "qualifies",
+   "claim": "Lemma 1 gives monotone submodularity of a player's expected reach in its own seeds, holding the other players' seed sets fixed. Greedy over that function gives a (1-1/e) approximation to the best response (Theorem 1).",
+   "system_side": "Lazy greedy with MAXSEEDS 60 ranks each candidate by max(0, spread gain) times fac. fac is leverage, or the competitiveness multiplier if the LEV source is set to it, and REPFAC times leverage for contest plays. Seeds are gated at random. Contest plays remove B seeds. The bystander set excludes any node already in the A seed set, so the opponent set changes with S, which Lemma 1 does not cover.",
+   "transfer": "The raw-spread guarantee applies only with a fixed opponent set and A-seed additions. Independent per-seed gating is an expectation over independent masks and keeps submodularity. The fac-weighted ranking is a heuristic, not greedy on spread. Contest removal and the S-dependent bystander exclusion fall outside Lemma 1. MC of 20 adds noise. The bound holds only with fac equal to 1, which is the LEV-off case.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "bharathi-nd-competitive-influence-maximization",
+   "title": "Competitive Influence Maximization in Social Networks",
+   "year": "",
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "qualifies",
+   "claim": "Reach is submodular in a player's own seeds, so summed single-seed marginals overstate the joint gain; the (1-1/e) guarantee belongs to greedy, not to individual marginals (Lemma 1, Theorem 1).",
+   "system_side": "The allocator computes single-seed marginals against the base, multiplies each by (1 + 0.8 times bpf), water-fills 2,000,000 dollars with a 50,000 per-member cap in proportion to those boosted values, runs no greedy, and reports the joint spread of the funded set. The code comment cites submodularity for that report.",
+   "transfer": "Submodularity implies the joint report is at most the naive additive sum, so the joint report is supported as inference. The paper gives no guarantee for a proportional water-fill. The bystander set excludes funded seeds, so the spread is not Lemma 1's fixed-opponent function. The figures are one allocation run per topic at MC 20.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "chen-2023-complex-contagion-influence",
+   "title": "Complex Contagion Influence Maximization: A Reinforcement Learning Approach",
+   "year": "2023",
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "qualifies",
+   "claim": "Complex-contagion IM is non-submodular (Thm 1) and NP-hard (Thm 2). Greedy can be arbitrarily bad: normalised influence 0.0396 for Greedy vs 0.5347 for RL4CCIM on India (202 nodes), and 0.0293 vs 0.5585 on Exhibition. Deterministic setting p0=1, p1=0, budget T=8 (T=12 on Exhibition).",
+   "system_side": "budget_frontier.py runs a lazy-greedy heap over a candidate pool with MAXSEEDS default 60 (line 7). Spread comes from an edge-keyed IC cascade over the P kernel (lines 83-94). The loop stops when the best marginal is zero (inside lines 161-172). The knee is the last seed whose gain is at least a quarter of the peak gain on the spread path (frontier_knee, lines 49-58, called at line 172). Both the stop rule and the knee presume diminishing returns.",
+   "transfer": "The zero-marginal failure bites only if real cosponsor joining is threshold-like, so that single-seed marginals are zero until K partners are joined. Under the system's per-edge IC kernel the stop rule and knee are internally coherent. The paper's numbers are simulated cascades on non-legislative networks, so they do not transfer as estimates.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "chen-2023-complex-contagion-influence",
+   "title": "Complex Contagion Influence Maximization: A Reinforcement Learning Approach",
+   "year": "2023",
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "suggests-extension",
+   "claim": "Credit sparseness in an 8-node toy (K=3, T=4): only 17 of 70 four-seed sets (24.3 percent) are effective, and the seed sequence 1,2,3,5 earns per-step rewards 1,1,1,2, so a seed's value shows only alongside specific other seeds.",
+   "system_side": "per_topic_coalition.py takes the top 45 neutral members ranked first by a priority engagement score ev (line 114), and only then computes each candidate's solo marginal over the base spread (line 115). It keeps candidates with positive marginal (line 116), boosts them by (1 + 0.8 bpf) (line 117) and water-fills the budget. The funded set's joint spread is one extra MC evaluation, printed beside the naive-additive sum. The code comment asserts spread is submodular.",
+   "transfer": "A joint gain above naive-additive on a topic would show complementarity that solo ranking cannot see. Under pure IC the joint should stay at or below naive-additive, so the printout is a real check only if threshold effects exist. The 45-candidate cut uses engagement rather than marginal value, so a seed valuable only in combination can be dropped before any marginal is computed.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "goff-nd-cross-industry-finance",
+   "title": "Cross Industry Finance and Lobbying Disclosure Report: Analysis and Recommendations",
+   "year": "",
+   "component_id": "melange-allocation.break-even-and-roi",
+   "relation": "qualifies",
+   "claim": "Crypto outspends key allies by factors of 100, so credit unions would have no chance in a monetary fight with the industry; the supporting graph is a missing placeholder.",
+   "system_side": "The head-to-head pull uses a saturating term (x+1) over (x+1) plus HALFF times rcp, weighted by WM and added to a coalition term WP (make_dashboard_html_00.tpl lines 1096-1105). The dashboard prints the cannot fully offset message only when q is at least 1. The functional form is an assumption and is not validated against outcomes.",
+   "transfer": "The factor of 100 has no source, window or denominator, so the system cannot size the disadvantage. The bounded term shows only that the form caps the monetary pull, not that money decides outcomes.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "sutton-2018-reinforcement-learning-introduction",
+   "title": "Reinforcement Learning: An Introduction (2nd ed.)",
+   "year": "2018",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "Acting greedily on current value estimates without exploration can lock onto suboptimal actions. On the 10-armed testbed (2000 independent problems, 1000 steps each), the greedy method averages about 1 reward per step against a best possible of about 1.54, and epsilon-greedy does better in the long run. Planning on an incorrect model is likely to compute a suboptimal policy (Sec. 8.3); planning uses a model, learning from experience uses observed interactions (Sec. 8.1).",
+   "system_side": "fec/engine/optimize.py allocates a CU budget (default $2.5M in $500 increments, with a per-member cap PMAX) by lazy greedy on modeled marginals of flip_value. The loop stops at the budget or when no positive marginal remains, so spend can fall short of the pot. It has no exploration term. observations is an empty list reserved for real outcomes. It replans after a modeled defection threshold is crossed (the conversions list), so it is not a one-shot plan. In RL terms it is greedy exploitation of a modeled response with no feedback from observed outcomes.",
+   "transfer": "Exploration pays only if the same allocation repeats and outcomes are observed and fed back. Per-cycle CU outcomes are sparse and confounded, so a bandit layer would learn slowly. The transferable point holds: the optimum is exact only for the model, not for the world.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "sutton-2018-reinforcement-learning-introduction",
+   "title": "Reinforcement Learning: An Introduction (2nd ed.)",
+   "year": "2018",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "suggests-extension",
+   "claim": "Greedy contextual-bandit policies maximize immediate clicks and ignore long-term effects; an MDP lifetime-value policy (Theocharous et al.) beat greedy on the LTV metric, while greedy won on CTR. In the illustrative Figure 16.8, CTR is 0.35 and LTV is 1.5.",
+   "system_side": "The objective at optimize.py line 86 is total_winnability, the sum of flip_value over issues for a single run. The printed objective is labelled expected weighted flips (line 209). The objective is single-run and does not model multi-cycle carry-over. I did not check flip_model or money_response for cross-cycle memory, so the claim that money has no modeled effect on next cycle's receptivity, relationship or stance is confirmed only for the optimizer itself.",
+   "transfer": "Holds only if repeated CU giving to the same member changes later responsiveness. That is untested here. Per D-025 it must not be phrased as access or closeness. Any multi-cycle objective needs owner authorization and a second-path reproduction (DE-062).",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "watkins-1992-q-learning",
+   "title": "Q-Learning",
+   "year": "1992",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "The convergence theorem needs a look-up table and an infinite number of episodes for every starting state and action (p.281). The look-up table caveat and the citation of Watkins 1989 (that Q-learning may not converge correctly for other representations) are on p.281. No rate or finite-sample bound is given. Section 4 (p.286) says reusing stored episodes moves Q-learning toward certainty-equivalence planning, which is the limit of re-presenting old episodes infinitely often. Certainty equivalence costs dearly early in learning, citing Barto and Singh 1990 (p.280).",
+   "system_side": "optimize.py docstring (lines 3-12): lazy greedy allocates a 2.5M pot in 500-dollar steps over a fixed modeled stance state and calls the result exact there. No learning step. observations=[] at line 58 is never appended to; it is only echoed in the output dict at line 220. Modeled threshold crossings (conversions, lines 133-144) trigger replanning and are not observed outcomes.",
+   "transfer": "The theorem covers only a finite MDP with look-up-table values and unbounded sampling, and this optimizer has neither. The item's claim that one cycle over 533 members yields at most a few observed outcomes per member-action pair is not in the code or the paper and is unverified here. GCOMB and S2V-DQN use n-step or fitted Q-learning with function approximation, which this paper does not cover (checked in their item files). The claim that exact greedy is optimal in a fixed state rests on the docstring's separability and diminishing-returns assertion, which I did not independently check.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "dai-2017-learning-combinatorial-optimization-graphs",
+   "title": "Learning Combinatorial Optimization Algorithms over Graphs",
+   "year": "2017",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "Dai et al. report that S2V-DQN beats hand heuristics by wide margins on MemeTracker MVC (ratio 1.0021 vs 1.2220 for MVCApprox-Greedy and 1.4080 for MVCApprox) and on Ising MaxCut (1.0223 vs 1.2825 for MaxcutApprox), on one MemeTracker graph and ten Ising instances. The paper does not study budget allocation or separable resource objectives.",
+   "system_side": "fec/engine/optimize.py is a lazy greedy (docstring lines 3-11) over per-member chunks of INC, default 500 dollars (line 26), with per-member cap PMAX, default 10000 (line 27). The docstring says the fixed-state objective is separable with diminishing chunk marginals, so the largest marginal is the exact discrete optimum. concavity_violations at line 73 checks this. Replanning after modeled money thresholds does not carry the certificate. The code says lazy greedy; CELF is not named.",
+   "transfer": "The paper's gains are on synthetic graphs and benchmark graph instances, scored against CPLEX best-found values with a one-hour cutoff. The paper says nothing about separable concave allocation, so it gives no support for the optimizer's exactness; that rests only on the code's own docstring and concavity check. A learned replacement would need many training instances, which the system does not have.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "manchanda-2020-gcomb-learning-budget-constrained",
+   "title": "GCOMB: Learning Budget-constrained Combinatorial Algorithms over Billion-sized Graphs",
+   "year": "2020",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "GCOMB's advantage is wall-clock speed on large graphs: about 10 times faster than greedy on MCP; speed-up over CELF on YT falls from 4.0 at b=20 to 2.01 at b=200 (Table 2b). Training saturates within 10 minutes (Fig 2a, synthetic BP 5k). Sequential and capacity-constrained problems are named as future work (Conclusion p.9).",
+   "system_side": "Joint CU budget optimizer: heap-based lazy greedy over equal $500 chunks (INC) of a $2.5M pot (BUDGET), with a per-member cap PMAX of $10k. The queue is rebuilt after each conversion. Members behind the stance gate receive nothing. This is capacity-constrained allocation over about 533 members, not set selection on a large graph.",
+   "transfer": "The 10x and 2.01 to 4.0 speed-ups are for MCP on real graphs of 1M+ nodes, not for a small capacity-constrained allocation. A GCOMB-style learned policy would fit only pure set selection without per-member caps at much larger scale. The paper reports no quality gain over greedy.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "manchanda-2020-gcomb-learning-budget-constrained",
+   "title": "GCOMB: Learning Budget-constrained Combinatorial Algorithms over Billion-sized Graphs",
+   "year": "2020",
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "qualifies",
+   "claim": "IM is evaluated with single-colour Independent Cascade, with expected spread averaged over 10,000 Monte Carlo simulations. GCOMB spread is within small differences of IMM (Table 3a, largest magnitude about 3e-3 at YT-TV b=50) and 30 to 160 times faster.",
+   "system_side": "budget_frontier.py runs a heap-based lazy greedy up to MAXSEEDS 60. Spread is a two-colour competitive cascade (pro versus anti seeds) at MC 20 with common random numbers. Knee = last seed whose marginal is at least a quarter of the peak marginal.",
+   "transfer": "The paper's 1-1/e and IC comparisons assume submodular single-cascade spread. The two-colour race with bystander mobilization need not be submodular, so those guarantees do not transfer. MC 20 has no convergence check by the paper's standard of 10,000 runs. The 30 to 160 times speed figure is versus IMM, not versus this frontier.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "kempe-2015-maximizing-spread-influence",
+   "title": "Maximizing the Spread of Influence through a Social Network (Theory of Computing extended version)",
+   "year": "2015",
+   "component_id": "melange-allocation.budget-frontier",
+   "relation": "qualifies",
+   "claim": "Greedy on a monotone submodular sigma reaches 1-1/e-eps of optimum (Thm 1.1). Submodularity follows from triggering-set (live-edge) worlds (Lemma 4.4; Thm 4.5 for IC; Thm 4.6 for LT). Each estimate uses 10000 simulations (Sec 8.3). Competing cascades are left open (Conclusions).",
+   "system_side": "Cascade draws one splitmix key per (iteration, directed edge), i.e. a live-edge world. Lazy greedy adds up to MAXSEEDS=60 seeds. Departures: pro-A vs anti-B first-to-reach race with bystander B seeds; marginal = max(0, delta) times fac, where fac is REPFAC x lev for contest seeds, 1.0 for defend seeds, lev otherwise; sigma is averaged over MC=20 worlds.",
+   "transfer": "With CRN, greedy is exact greedy on the 20-world sample objective, which is submodular only for a single cascade. The two-colour race needs a separate argument whose tie order differs from this BFS (A queued first). fac-weighted, clamped marginals optimize no stated set function. The (1-1/e) bound is context, not a certificate, unless fac = 1 and race submodularity is shown.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "kempe-2015-maximizing-spread-influence",
+   "title": "Maximizing the Spread of Influence through a Social Network (Theory of Computing extended version)",
+   "year": "2015",
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "qualifies",
+   "claim": "Seeds picked by individual degree or distance centrality ignore clustering and overlap. On the hep-th graph under LT, greedy beats high-degree by about 18% and distance centrality by over 40%. Under IC with p=10%, the centrality heuristics level off near 2415 activations and random seeds beat them beyond about 12 targets. Greedy keeps rising because it prices overlap.",
+   "system_side": "Shortlist of the top 45 neutrals by engagement priority, each scored by singleton spread({n}) minus base, boosted by (1 + 0.8 bpf), and water-filled into a 2000000 budget. Overlap is computed only afterwards, as the joint spread of the funded set.",
+   "transfer": "Evidence is one 10748-node co-authorship graph under uniform p, window winter 2002. Whether singleton ranking loses comparably on the 533-member cosponsor kernel is unverified; a check would compare the joint spread of the water-fill seed set against lazy greedy at equal seed count and the same CRN. The allocator is labelled diagnostic, which limits the harm.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "kempe-2015-maximizing-spread-influence",
+   "title": "Maximizing the Spread of Influence through a Social Network (Theory of Computing extended version)",
+   "year": "2015",
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "supports",
+   "claim": "Thm 7.1 (p.128): hill climbing with total budget k, taken in pieces of size delta, on a non-negative monotone non-decreasing g with diminishing returns, ends with g(x) >= (1 - exp(-k gamma/(k + delta m))) times g of the optimum under sum <= k. Each step picks a direction with gamma-approximately largest gradient.",
+   "system_side": "Joint CU optimizer allocates $500 increments (INC default) by lazy greedy on the largest next marginal. A concavity check verifies per-member equal-cost chunks are non-increasing in the fixed state. Code comments claim the exact grid optimum; the 1-1/e floor is printed as context only. A modeled money-triggered conversion triggers replanning and drops the certificate.",
+   "transfer": "Holds only in the fixed stance state where concavity is checked. Once money crosses a defection threshold, returns are non-concave steps and neither Thm 7.1 nor the exact certificate applies. The code states this scope.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "ansolabehere-2002-little-money-politics",
+   "title": "Why Is There So Little Money in U.S. Politics?",
+   "year": 2002,
+   "component_id": "melange-allocation.stance-money-gate",
+   "relation": "supports",
+   "claim": "With member fixed effects, changes in donations to an individual legislator do not translate into changes in that legislator's roll-call voting. A third explanation for group giving is to elect sympathetic legislators rather than to change the views of sitting ones.",
+   "system_side": "STANCE_GATE_BLOCKED (Skeptic, Highly Skeptical, Opponent) is defined at moneyball_core.py:717 and applied to money in optimize.py:52 (GATED), per_topic_flip.py:37 and per_topic_coalition.py:26. The rel claim that gated members receive zero money in every allocator, and still count in the objective, was not confirmed in this pass.",
+   "transfer": "The evidence is general business and labor PAC money against CCUS scores (1978-1994), not CU-specific bills or the current Congress. It supports not paying to convert opposed members. It does not measure electoral help to allies.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "fremeth-2018-spillovers-regulating-corporate",
+   "title": "Spillovers from regulating corporate campaign contributions",
+   "year": 2018,
+   "component_id": "melange-allocation.joint-optimizer",
+   "relation": "qualifies",
+   "claim": "Per-candidate PAC limits bind for 14.4 percent of candidates receiving any PAC money (text Section 3, p.8; not in Table 1). Firm-cycles at the limit show +549,166 dollars of lobbying per cycle (Table 3 col 1, SE 225,013; 2000-2008, 787 firms, 2,783 firm-cycles, pooled across the 2002 BCRA break). Firms at the limit show CEO giving 0.066 more likely (Table 2, 1992-2008, 950 firms). Authors say PAC limits are effectively non-binding and all estimates are partial correlations.",
+   "system_side": "The optimizer caps each member at PMAX = 10,000 dollars above existing CU money, read as one CU PAC per-candidate per-cycle limit (Paul 2026-09-30 ruling, quoted in the code comment). Nothing outside the PAC channel is modeled.",
+   "transfer": "Cap mechanics transfer if the 10,000 per-cycle limit is the same. The paper does not say the limit is unindexed; that is an assumption not stated in the paper. Spillover magnitudes come from large S&P 500 for-profit firms, not CU PACs, and are partial correlations. Supports a caveat that PMAX bounds PAC dollars only; does not justify reweighting.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "harbridge-yong-2023-bipartisan-path-effective",
+   "title": "The Bipartisan Path to Effective Lawmaking",
+   "year": 2023,
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "qualifies",
+   "claim": "Returns to bipartisan composition are nonlinear. One SD below the mean costs about 22 percent of LES in the House and 16 percent in the Senate; one SD above adds about 8 and 4 percent. Gains flatten and reverse past a 50/50 mix.",
+   "system_side": "per_topic_coalition.py line 30 sets BETA_C = 0.8. Line 117 boosts each positive marginal spread by (1 + BETA_C*bpf) before the water-fill. The boost is monotone in bpf, and the code comment says bridges get a larger seed.",
+   "transfer": "This holds only if the seed boost is meant to proxy a recruit's legislative effectiveness. The paper says nothing about diffusion seeding, so the link is an analogy and the allocators are diagnostic.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  }
+ ]
+}

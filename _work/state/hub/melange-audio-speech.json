@@ -1,0 +1,867 @@
+{
+ "system": {
+  "slug": "melange-audio-speech",
+  "name": "Melange audio and speech lane",
+  "description": "Speaker verification from captions, eGeMAPS prosody, Whisper disfluency rates, the closed acoustic speaker-ID attempt, the proposed two-check identity design, and the display-only audio descriptor layers. No rank or engine consumer.",
+  "brain_notes": [
+   "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md",
+   "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md"
+  ]
+ },
+ "components": [
+  {
+   "id": "melange-audio-speech.speaker-verification",
+   "system": "melange-audio-speech",
+   "name": "Caption-based speaker verification",
+   "computes": "Per clip: SOLO, MULTI or NOT_SPEAKING, and MATCH, MISMATCH or NONE identity, from auto-captions with Haiku 4.5. Keep = SOLO and not MISMATCH.",
+   "method": "Hard identity cues only. About 33.7% of keeps rest on weak evidence. 2,192 clips, 1,761 kept.",
+   "assumptions": [
+    "Hard cues in captions identify the speaker"
+   ],
+   "empirical_questions": [
+    "What is the false-accept rate of caption-cue verification against a hand-checked sample?"
+   ],
+   "code_refs": [
+    "fec/members/b5_audio_*.py",
+    "fec/audio_rules.py:17-39"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md"
+   ],
+   "heading": "Caption-based speaker verification"
+  },
+  {
+   "id": "melange-audio-speech.prosody-and-disfluency",
+   "system": "melange-audio-speech",
+   "name": "eGeMAPS prosody and Whisper disfluency rates",
+   "computes": "88 eGeMAPS features per clip; member descriptors (pause, pace, volume, strain, pitch); hesitation rate per 1,000 words via prompted faster-whisper.",
+   "method": "ICC and Spearman-Brown reliability: pause .92 > pace .86 > volume .85. Venue confound: live about 26 per 1k vs NPR 0.22 per 1k. The audio-prosody N pilot MISSed at N=90.",
+   "assumptions": [
+    "Vocal features carry stable between-member signal",
+    "Sex confounds pitch variability (r = -.266)"
+   ],
+   "empirical_questions": [
+    "Are disfluency rates stable within member across venues once editing is controlled?",
+    "Does prosody carry trait information beyond text (Salam et al. benchmark)?"
+   ],
+   "code_refs": [
+    "fec/members/b5_audio_build.py",
+    "fec/members/b5_speech_quirks.py",
+    "fec/members/b5_audio_align_turns.py:249"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md"
+   ],
+   "heading": "eGeMAPS prosody and Whisper disfluency rates"
+  },
+  {
+   "id": "melange-audio-speech.identity-two-check-design",
+   "system": "melange-audio-speech",
+   "name": "Acoustic speaker-ID (closed) and two-check identity design (proposed)",
+   "computes": "Closed: cosine and neural speaker ID (EER .226-.317, failed). Proposed: forced alignment AND ECAPA-TDNN verification, fail-closed, with witness-turn negative controls.",
+   "method": "Pilot bars: EER <= 5%. Awaits rulings D1-D12. Production is blocked at 0 profiles.",
+   "assumptions": [
+    "Speaker embeddings separate members at EER <= 5%"
+   ],
+   "empirical_questions": [
+    "Can ECAPA-TDNN verification reach EER <= 5% on congressional hearing audio with three enrollment clips?"
+   ],
+   "code_refs": [
+    "b5_audio_embed/enroll/verify2 (worktree branch)",
+    "DRAFT big5_audio_identity_prereg.md"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "heading": "Acoustic speaker-ID (closed) and two-check identity design (proposed)"
+  }
+ ],
+ "positions": [
+  {
+   "component_id": "melange-audio-speech.speaker-verification",
+   "citations": [
+    "Ramey et al. (auditory transcripts)"
+   ],
+   "paul_position": "Paul says a framework is needed for the format's 'contextual or auditory constraints'."
+  },
+  {
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "citations": [
+    "Ramey et al.",
+    "Joo & Steinert-Threlkeld 2022",
+    "Dietrich et al. 2019 (on disk)"
+   ],
+   "paul_position": "Paul is interested in non-textual channels (images, video, audio). Birkenmaier's highlights note paraverbal cues. The system concluded that audio is display-only."
+  },
+  {
+   "component_id": "melange-audio-speech.identity-two-check-design",
+   "citations": [],
+   "paul_position": "No annotated literature."
+  }
+ ],
+ "citations_in_system": [
+  {
+   "citation": "Ramey, Klingler & Hollibaugh, 'Measuring Elite Personality Using Speech', Political Science Research and Methods (year conflict in repo: 2016 in PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32 and code; 2019 in big5_methods.md:12). Replication data doi:10.7910/DVN/JDH6KR",
+   "where": [
+    "fec/members/big5_traits.py:1-25",
+    "fec/members/fit_smoreg_rkh.py:5",
+    "fec/members/lep_criterion.py:5-6",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32",
+    "big5_methods.md:12",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Lexical Big Five pipeline, token shrinkage, RKH reference targets (melange-psychometrics); ceremonial-share C criterion (melange-legislative-data)"
+  },
+  {
+   "citation": "Mairesse et al. (2007), JAIR, personality from text (SMOreg on LIWC/MRC; 53-58% band)",
+   "where": [
+    "fec/members/fit_smoreg_essays.py:4",
+    "fec/members/big5_traits.py:13-16",
+    "fec/members/interaction_features.py:5-6",
+    "big5_methods.md:31",
+    "big5_audio_prereg.md:15"
+   ],
+   "used_for": "SMOreg feature weights and word-count features (melange-psychometrics); audio cues"
+  },
+  {
+   "citation": "Pennebaker & King (1999); Yarkoni (2010); Pennebaker (2003, Annual Review)",
+   "where": [
+    "fec/members/big5_traits.py:14-15",
+    "fec/members/affective_n_validate.py:10",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Published-correlate lexical weights; essays corpus; negative-emotion basis for affective N"
+  },
+  {
+   "citation": "Birkenmaier & Lechner (2025), 'Measuring Politicians' Public Personality', Political Analysis; Birkenmaier, Lechner & Wagner (2024)",
+   "where": [
+    "fec/members/agency_communion_llm.py:3,33",
+    "fec/members/big5_llm.py:10",
+    "fec/members/big5_traits.py:9",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:33",
+    "big5_behavioral_extraversion_prereg.md:239"
+   ],
+   "used_for": "Agency/communion persona cue classifier and PERSONA_W; cannot-tell coding"
+  },
+  {
+   "citation": "Lechner, Aichholzer, Birkenmaier & Bluemke (2025), 'Mapping the Political Personality' (Polipers v0.1, GESIS)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Review of politician-personality studies; external criterion search"
+  },
+  {
+   "citation": "'Personality on the Hill' Senate insider and academic gold panels (online_appendix.pdf, SHA-256 43c98926...; author/year not recorded)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "External gold for Big Five validation"
+  },
+  {
+   "citation": "Amsalem et al. (2018), media visibility of Belgian, Canadian and Israeli MPs (Eran.pdf) - provenance warning only, NOT the gold source",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Hash-mismatch provenance check"
+  },
+  {
+   "citation": "Norgaard & Klemmensen (2019), J. Personality 87(2):267-275; Schumacher & Zettler (2019), PAID 141:173-181",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Elite self-report personality benchmarks and desirability caveat"
+  },
+  {
+   "citation": "Cao & Kosinski (PNAS Nexus 2024); Peters & Matz (PNAS Nexus 2024, doi:10.1093/pnasnexus/pgae231)",
+   "where": [
+    "fec/members/big5_llm.py:12",
+    "big5_methods.md:46-49",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "De-identification before LLM trait scoring; LLM zero-shot personality benchmark"
+  },
+  {
+   "citation": "Valente (Interspeech 2012); Yu (Interspeech 2019); Rienks & Heylen (2005)",
+   "where": [
+    "fec/members/interaction_features.py:5-8",
+    "fec/members/behavioral_dispositions.py:17",
+    "big5_methods.md:30"
+   ],
+   "used_for": "Turn-statistic dominance and reactivity features"
+  },
+  {
+   "citation": "Koutsoumpis (meta-analysis, language and personality); Yang, Lau & Abbasi (ISR 2023)",
+   "where": [
+    "big5_methods.md:114",
+    "AUDIT_FINDINGS_2026-07-04.md:332",
+    "big5_behavioral_extraversion_prereg.md:221"
+   ],
+   "used_for": "Text tracks observer more than self-report; response-selection bias; PERSONA_W scope argument"
+  },
+  {
+   "citation": "Soto & John (2017) BFI-2-XS; Connelly & Ones (2010); Judge et al. (2002); Funder & Ozer (2019); Dietrich (2012); Dynes (2019); Wagner (2024); Steiger (1980); Stern et al. (2021); Harari (2022); Rubio et al. (2024); Marrero et al. (2022); Marengo et al. (2018, doi:10.1016/j.paid.2017.12.018); Hargittai (2015, doi:10.1177/0002716215570866); Hinds & Joinson (2024, doi:10.1037/bul0000430); Marengo, Montag & Settanni (2025, doi:10.1111/jopy.70019); Lau & Abbasi (2023)",
+   "where": [
+    "big5_expert_panel_prereg.md",
+    "big5_nomological_prereg.md",
+    "big5_n_matrix_prereg.md",
+    "big5_audio_prereg.md",
+    "big5_es_crossmodal_prereg.md",
+    "big5_a_coverage_prereg.md",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "Prereg designs for Big Five expert panel, nomological, audio and coverage looks (melange-psychometrics)"
+  },
+  {
+   "citation": "Salam et al. (2022), PMLR 173, personalised NAS Big Five on UDIVA",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md:132"
+   ],
+   "used_for": "Audio trait benchmark and sex-conditioning check"
+  },
+  {
+   "citation": "Mestre & Ryan (2026), validated aeneas forced alignment; Dietrich (2019)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Audio identity design (forced alignment, within-speaker F0)"
+  },
+  {
+   "citation": "ECAPA-TDNN speaker embedding (name only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Proposed speaker verification"
+  },
+  {
+   "citation": "Byrne, Silasi-Mansat & Worthy (2015), 'Who chokes under pressure?', PAID",
+   "where": [
+    "fec/members/receptivity_layer.py:6-7,189,233",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:34",
+    "AUDIT_FINDINGS_2026-07-04.md:548",
+    "fec/engine/outcome_contract.py:18"
+   ],
+   "used_for": "Susceptibility composite (only N and A supported; C and E are design priors); H2 predictor"
+  },
+  {
+   "citation": "Fouirnaies & Hall, 'How Do Electoral Incentives Affect Legislator Behavior?' (APSR)",
+   "where": [
+    "fec/members/receptivity_layer.py:15-20",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:35",
+    "fec/engine/money_response.py:27"
+   ],
+   "used_for": "Retiring-member incentive multiplier and competitiveness term"
+  },
+  {
+   "citation": "Linde & Vis (2016), 'Do Politicians Take Risks Like the Rest of Us?', Political Psychology",
+   "where": [
+    "fec/members/receptivity_layer.py:22-28",
+    "fec/engine/money_response.py:27-29",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:36"
+   ],
+   "used_for": "Prospect-theory domain multiplier and attenuated loss frame"
+  },
+  {
+   "citation": "Kahneman & Tversky (loss aversion)",
+   "where": [
+    "fec/engine/money_response.py:29",
+    "fec/members/receptivity_layer.py:27"
+   ],
+   "used_for": "LOSSFRAME 1.10"
+  },
+  {
+   "citation": "Chen, Kamarthi, Wilder & Tambe, contingency-aware influence maximization (UAI 2021, arXiv 2106.07039; venue corrected from ICML); Zareie & Sakellariou (SNAM 2023)",
+   "where": [
+    "fec/members/receptivity_layer.py:28-34",
+    "fec/engine/budget_frontier.py:72-74",
+    "fec/engine/outcome_contract.py:17",
+    "AUDIT_FINDINGS_2026-07-04.md:564-565"
+   ],
+   "used_for": "Seed take-up probability and seed gate; H1 predictor"
+  },
+  {
+   "citation": "Bharathi, Kempe & Salek, Competitive Influence Maximization",
+   "where": [
+    "fec/engine/scenario.py:6-11",
+    "fec/engine/budget_frontier.py",
+    "fec/engine/per_topic_coalition.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Competitive IC cascade and coalition submodularity"
+  },
+  {
+   "citation": "Borodin et al. (submodularity can fail in competitive LT)",
+   "where": [
+    "fec/engine/scenario.py:11-12"
+   ],
+   "used_for": "Flip side treated as heuristic"
+  },
+  {
+   "citation": "Kempe, Kleinberg & Tardos (2003, KDD) influence maximization",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:157",
+    "quant skill references"
+   ],
+   "used_for": "Cascade and threshold model assumptions"
+  },
+  {
+   "citation": "Golovin & Krause (2011), Adaptive Submodularity, JAIR (Lemma 5.3/A.9)",
+   "where": [
+    "fec/engine/optimize.py:8,108-113",
+    "fec/engine/scenario.py:8-10",
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md"
+   ],
+   "used_for": "Joint optimizer bound and framing (melange-allocation)"
+  },
+  {
+   "citation": "Leskovec et al. (KDD 2007) CELF lazy greedy; Nemhauser (1-1/e)",
+   "where": [
+    "fec/engine/optimize.py:74-96",
+    "fec/engine/budget_frontier.py:96-106",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Lazy greedy seed and budget selection"
+  },
+  {
+   "citation": "Almazaydeh et al. (2026), Scientific Reports, s41598-026-47299-8",
+   "where": [
+    "fec/engine/mc_stability_check.py:3-10",
+    "influence-modeling-reference SKILL.md"
+   ],
+   "used_for": "Noisy MC corrupts CELF; motivates CRN and stability check"
+  },
+  {
+   "citation": "Manchanda et al., GCOMB, NeurIPS 2020, arXiv:1903.03332",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Budget mode: locality, degree pruning, CELF (melange-pathfinding)"
+  },
+  {
+   "citation": "Chen & Lam, most-reliable path; Ren et al., Multi-Objective Path-Based D* Lite (MOPBD*) and RELINK",
+   "where": [
+    "fec/engine/cosponsor_route.py:3-5",
+    "fec/engine/scenario.py:13",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Pathfinder and route-finder concepts (melange-pathfinding)"
+  },
+  {
+   "citation": "Sotoudeh, Porter & Krishnagopal (2024), arXiv 2406.19554, network measure of cosponsorship influence on bill passage",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Cosponsor edge weights and path grounding"
+  },
+  {
+   "citation": "Aref & Neal (2020, 2021), signed-network optimal partitioning / generalized balance; Neal signed backbone (R backbone sdsm)",
+   "where": [
+    "fec/network/signed_coalitions.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Signed coalition partition and multi-target coalition mode"
+  },
+  {
+   "citation": "Porter, Mucha, Newman et al. (PNAS 2005), committee network community structure / normalized interlock",
+   "where": [
+    "fec/surfaces/make_member_desk.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-model-facts.md",
+    "HOLISTIC_NETWORK_DESIGN_2026-08-17.md:78"
+   ],
+   "used_for": "Committee-cluster layout; community structure in pathfinder"
+  },
+  {
+   "citation": "Fink et al. (2023), Congressional Twitter influence network, Data in Brief",
+   "where": [
+    "fec/network/social_interaction_layer.py:15-19",
+    "MATHEMATICAL_SPECIFICATION.md:44",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Author-volume normalized social and press edges"
+  },
+  {
+   "citation": "Malaterre & Lareau (2024), HCoI communities",
+   "where": [
+    "fec/press_hcoi.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Press-attention communities"
+  },
+  {
+   "citation": "Zhou & Elejalde (2026), Information Processing & Management, TWLGCN",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Stance dynamics port"
+  },
+  {
+   "citation": "Joo & Steinert-Threlkeld (2022), Computational Communication Research; Steinert-Threlkeld, Twitter as Data",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Frame alignment"
+  },
+  {
+   "citation": "Ringe, Victor & Gross (BJPS 2013), Friends and Enemies",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:599"
+   ],
+   "used_for": "Signed mention layer concept"
+  },
+  {
+   "citation": "Battaglini & Patacchini, 'Influencing Connected Legislators', NBER w22739",
+   "where": [
+    "fec/engine/kb_benchmark.py:2-18"
+   ],
+   "used_for": "Katz-Bonacich benchmark"
+  },
+  {
+   "citation": "Kim & Kunisky, lobbying networks / latent communities (local PDF)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Community structure exploited by pathfinder"
+  },
+  {
+   "citation": "Noble & Turner (2024), 'Presidential Leadership and Legislative Polarization'; Lee (2009)",
+   "where": [
+    "fec/engine/salience_shock.py:4-38",
+    "fec/surfaces/build_dashboard_bundle.py:663",
+    "fec/moneyball_core.py:731"
+   ],
+   "used_for": "Salience shock regimes; retreat regime"
+  },
+  {
+   "citation": "Furnas, LaPira, Hertel-Fernandez, Drutman & Kosar (congressional staff survey experiment); Bakker (partisan cues); Bakker, Lelkes & Malka (JOP)",
+   "where": [
+    "fec/moneyball_core.py:11",
+    "fec/engine/lt_priming.py:56-58",
+    "fec/surfaces/templates/make_dashboard_html_00.tpl:742",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "cpf_pressure 1.7/0.5; out-party cue clamp; executive cue factor; money capped, information is the lever"
+  },
+  {
+   "citation": "Ansolabehere, de Figueiredo & Snyder (2003); Fowler, Garro & Spenkuch (2020); Hall & Wayman (1990); Kalla & Broockman (2016), 'Campaign Contributions Facilitate Access'; Kalla & Broockman (general-election persuasion about zero); Coppock (persuasion about 5 pp / 0.1 SD)",
+   "where": [
+    "fec/engine/flip_model.py:21",
+    "fec/engine/money_response.py:15,20",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Money buys access not votes; WM/WP weights; MAXSHIFT calibration; access multiplier"
+  },
+  {
+   "citation": "Huneeus & Kim (lobbying distorts policy); Bombardini & Trebbi (annual review of empirical lobbying); Pritoni (lobbying coalitions); Bacik et al. / Kim, lobbying-network dynamics (arXiv 2503.11745); Azaiez & Mandel (EC lobby hypergraph); Harrison et al. (lobbying record mining)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-scenario-model-build.md"
+   ],
+   "used_for": "Calibration context for small, capped lobbying returns; pathfinder background"
+  },
+  {
+   "citation": "Trivedi & Singh (Procedia 2020) coalition modeling; Scientific Reports 2026 IM algorithm comparison (CELF++/RIS/IMM)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md"
+   ],
+   "used_for": "Coalition and IM algorithm references"
+  },
+  {
+   "citation": "Gaynor (LSQ 2022); Kim, Stuckatz & Wolters (JOP 2026); Furnas, LaPira & Brock (PS 2025)",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:706-711"
+   ],
+   "used_for": "Leadership PAC edges and donation/lobbying sequencing (identified, not implemented)"
+  },
+  {
+   "citation": "Volden & Wiseman, legislative effectiveness (five-stage LES; Center for Effective Lawmaking LES 93-118); Bucchianeri/Volden/Wiseman-style",
+   "where": [
+    "fec/members/lep_criterion.py:1-15",
+    "fec/engine/flip_model.py:142 (comment only)",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md",
+    "C:/Users/pgoff/Documents/brain/actors/codex-executor-incidents.md"
+   ],
+   "used_for": "Effectiveness shadow score and convergence criterion; uncoded passage-bonus comment"
+  },
+  {
+   "citation": "Nokken & Poole dynamic ideal points; DW-NOMINATE (Poole-Rosenthal)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Drift criterion for N (MISS); NOMINATE rejected for vote edges"
+  },
+  {
+   "citation": "Matz et al. (PNAS 2017); Simchon (2024, PNAS Nexus); Hackenburg & Margetts (2024)",
+   "where": [
+    "fec/surfaces/make_member_desk.py:846",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Persona-matched appeals (design-only) and aggregate null caution"
+  },
+  {
+   "citation": "Brysbaert concreteness norms; Guiraud index; Empath lexicon; Valente (N overlap stat 68.7%)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-record-1-big5-campaign.md"
+   ],
+   "used_for": "Big Five lexical features"
+  },
+  {
+   "citation": "Miller & Sutherland, APSR (hearing conduct; doctrine WITHDRAWN 2026-07-10)",
+   "where": [
+    "big5_methods.md:36",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics.md"
+   ],
+   "used_for": "Withdrawn hearing-antagonism doctrine"
+  },
+  {
+   "citation": "Burnham, 'Stance detection: a practical guide' (PSRM 2024.35); mlburnham/Political_DEBATE_base_v1.0 (Hugging Face)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39",
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md"
+   ],
+   "used_for": "NLI stance templates and the DEBATE base model (melange-stance)"
+  },
+  {
+   "citation": "Stanceformer, arXiv 2410.07083; ACL 2023.acl-long.560 (TSE); MDPI 2076-3417/15/21/11784",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39,63",
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md"
+   ],
+   "used_for": "Target-aware stance (planned); two-stage decoupling; neutral-class difficulty"
+  },
+  {
+   "citation": "Khan et al. (2025), IECE TACS, Roman Urdu agree/disagree/unrelated stance",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md:45"
+   ],
+   "used_for": "Multi-view augmentation (hurt classical readers)"
+  },
+  {
+   "citation": "Park, Lee & Cho (2025), 'Automatic construction of direction-aware sentiment lexicon using direction-dependent words', Language Resources & Evaluation 59:843-869",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:65"
+   ],
+   "used_for": "Direction-aware valence lexicon idea (rejected on dry run)"
+  },
+  {
+   "citation": "Soroka et al., Lexicoder Sentiment Dictionary LSD2015 (snsoroka.com LSDaug2015.zip); Haselmayer & Jenny (2017); Rice & Zorn (2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-congress-r-scrapers-graded-scoring-and-audits.md:26-28"
+   ],
+   "used_for": "Stage 5b tone intensity; graded tone and polarity normalization"
+  },
+  {
+   "citation": "Dai, Liao, Zhao et al. (2025), LLM-enhanced Logic Tensor Network for stance detection, Neural Networks 183:106956, doi:10.1016/j.neunet.2024.106956",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md:198",
+    "stance_valence_folcot_prereg.md:13"
+   ],
+   "used_for": "FOL-CoT valence proposals (not adopted)"
+  },
+  {
+   "citation": "Kim, Kim, Jeong, Oh & In Song Kim (2025), 'Measuring Interest Group Positions on Legislation' (PNAS draft); LobbyView positions dataset doi:10.7910/DVN/D0QWM2; In Song Kim LobbyView (Song 2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md",
+    "fec/lobbying/lobby_position_benchmark.py:9",
+    "fec/lobbying/collect_lobbyview.py:35"
+   ],
+   "used_for": "LDA data and interest-group positions (melange-lobbying)"
+  },
+  {
+   "citation": "Romero Moreno (2021)",
+   "where": [
+    "CONTESTED_BILLS_DESIGN.md:29-30"
+   ],
+   "used_for": "Contested-bills counterparty term"
+  },
+  {
+   "citation": "Delano, Rudkin & Kim (2025), BICAM, Scientific Data 12:1567, doi:10.1038/s41597-025-05737-8; Porter, Case & Treul (2025), CampaignView, Scientific Data 12:1237, doi:10.1038/s41597-025-05491-x; Zhan & Cai (2025), ESWA 263:125705, doi:10.1016/j.eswa.2024.125705; Cao, Gai, Wu et al. (2025), Information Fusion 120:103107, doi:10.1016/j.inffus.2025.103107",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md",
+    "CAMPAIGN_SITE_COLLECTION_2026_RUNBOOK.md:10"
+   ],
+   "used_for": "Research-integration proposals (bill-LDA linkage, campaign corpus, trust-KNN imputation, signed trust propagation)"
+  },
+  {
+   "citation": "Russo et al. (ACL 2023), 'Helping a Friend or Supporting a Cause?'; Brandenberger (2018), 'Trading Favors', Social Networks 54:238-253, doi:10.1016/j.socnet.2018.02.001; Montgomery & Nyhan (2017), doi:10.1086/690301; Shalizi & Thomas (2011); Nay (2017), PLOS ONE doi:10.1371/journal.pone.0176999",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:153-158",
+    "fec/research/cosponsor_challengers/PROTOCOL.md:44-47"
+   ],
+   "used_for": "Cosponsorship prediction and reciprocity baselines; homophily vs contagion confounding; staff exchange and policy similarity"
+  },
+  {
+   "citation": "Tiedens & Fragale (2003), doi:10.1037/0022-3514.84.3.558; Santoro & Broockman (2022), Science Advances, doi:10.1126/sciadv.abn5515",
+   "where": [
+    "fec/research/member_personal_relationships/PERSONALITY_CONTEXT_EXPLORATION.md:46"
+   ],
+   "used_for": "Context only for member personal-relationship research"
+  },
+  {
+   "citation": "DerSimonian-Laird random-effects estimator",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "used_for": "R2 partially pooled industry slope (mentat-giving-forecast)"
+  },
+  {
+   "citation": "Cameron, Gelbach & Miller (2011), two-way cluster-robust variance; Holm step-down; Newey-West HAC; Driscoll-Kraay (requested); Ball (2024)",
+   "where": [
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-8,168,210",
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:71-76,389,588",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Inference in the sector growth regressions and SEATS-W"
+  },
+  {
+   "citation": "Bross (1958) ridit; Spearman-Brown; Kendall tau-b; pool-adjacent-violators (PAV)",
+   "where": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/design/spec_rigor.md",
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "used_for": "Ridit transforms, internal consistency and sensitivity tests (terrier-row-scoring); turnout calibration (terrier-canvass)"
+  },
+  {
+   "citation": "MAST multi-agent failure taxonomy (named only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/metaloop.md"
+   ],
+   "used_for": "Failure-attribution tags (metaloop-orchestration)"
+  },
+  {
+   "citation": "SR 11-7 model risk management (superseded 2026-04-17 by SR 26-2); quant-model-evaluation skill bibliography (Cinelli & Hazlett 2020; Politis & Romano 1994; Simar & Wilson 1998; Grubesic & Matisziw 2006; Fouirnaies & Hall 2018; Powell & Grimmer 2016; others)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md",
+    ".claude/skills/quant-model-evaluation/references/sources.md"
+   ],
+   "used_for": "Audit tooling references applied to Melange (melange-validation)"
+  },
+  {
+   "citation": "Data sources (not literature): MEDSL Dataverse election returns; Cook Political Report PVI; Voteview; congress-legislators; govinfo BILLSTATUS; Ballotpedia; openFEC and FEC bulk; OpenSecrets; IBISWorld; Census ACS/CBP/LODES/cb_2024 and cb_2020; FDIC SOD; NCUA Call Reports; HMDA; Polymarket/Kalshi/IEM; Crystal Ball/538",
+   "where": [
+    "fec/engine/build_competitiveness.py",
+    "fec/district/demographic_potential.py",
+    "DEMOGRAPHIC_POTENTIAL_METHOD.md:185-191",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Model inputs across systems"
+  }
+ ],
+ "evidence": [
+  {
+   "slug": "marrero-2022-evaluating-voice-samples",
+   "title": "Evaluating voice samples as a potential source of information about personality",
+   "year": "2022",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "method-source",
+   "claim": "Averaged over Big Five traits (N=614 students, 100-fold CV, out-of-sample R-squared): vocal features 6.24 percent, LIWC 3.13 percent, joint set 10.67 percent. Joint set described as exceeding the sum of the two separate sets. E, C and N reach the 10-20 percent range with the joint set.",
+   "system_side": "Pre-registered Marrero-style audio test (big5_audio_faithful_prereg.md, N=90 legislators, Pink criterion). Recorded: full eGeMAPS-88 ridge to Pink-E held-out r +0.284 (perm-p 0.030), Pink-ES +0.298 (perm-p 0.017); A and C null; super-additivity bar missed, vocal adding +0.001 for E. Round 2: vocal to diligence r -0.081 (perm-p 0.73); super-additivity for C -0.046 (missed). Round 2 also records an unregistered context result, +0.119 for E against visibility, labelled a win. Pilot: text-vs-fused delta -0.004 against visibility.",
+   "transfer": "Paper criterion is self-report BFI-2 from 18-year-old students, one prompted smartphone sample per person, out-of-sample R-squared. System criterion is Pink (reliability about 0.67, text-derived, shares source with the linguistic block) or behavioral visibility and diligence; audio is edited broadcast and floor speech from 90 legislators and the metric is held-out r. Numbers are not directly comparable. Super-additivity failed its registered bars in three looks; the +0.119 context result is exploratory and not a registered test.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "marrero-2022-evaluating-voice-samples",
+   "title": "Evaluating voice samples as a potential source of information about personality",
+   "year": "2022",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "supports",
+   "claim": "Vocal features predicted gender with over 90 percent of variance explained (N=564; 374 female, 190 male). Gender was one of two tasks where the joint set was not best (the other was Agreeableness). The paper did not use predicted gender as a feature or control when predicting personality.",
+   "system_side": "Sex-confound finding: pitch_variability_raw had r(sex=F) = -0.266 and Cohen d = -0.944 over 1,324 clips and 309 members (brain note melange-audio-pipeline). Commit 4193f0140 replaced it with plain semitone SD (stddevNorm times amean). The descriptor script converts eGeMAPS semitone F0 to Hz only for within-speaker standardization. A Salam-style test found pace and volume_dynamics sex-clean (r(F) +0.06 and -0.05).",
+   "transfer": "The paper shows gender is recoverable from its own vocal features in 564 students. It does not show this holds in other corpora, so the claim that sex is near-deterministic in any adult speech corpus is not supported by this paper and should not be cited to it. The sex-conditioning lesson applies in general terms; the r -0.266 figure is the system's own evidence.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "celli-nd-twenty-years-personality",
+   "title": "Twenty Years of Personality Computing: Threats, Challenges and Future Directions",
+   "year": "",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "suggests-extension",
+   "claim": "Biel et al. 2012 identified Extraversion and Emotional Stability as the traits with the largest and fewest informative audio-visual cues. OpenSMILE is a common tool for prosodic and technical audio features.",
+   "system_side": "b5_audio_build.py extracts eGeMAPS v02 (88 functionals, openSMILE) per clip, duration-weighted mean-pooled per member, with winsorized z-scores.",
+   "transfer": "Biel's cue counts come from vlog and video impressions, not congressional audio. The extension to prioritize Extraversion for audio is an inference: the paper also reports prosodic SVMs performing best for Extraversion and Conscientiousness. The N pilot MISS at N=90 was not checked, and the survey gives no estimate for edited broadcast audio.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "dietrich-2019-pitch-perfect-vocal",
+   "title": "Pitch Perfect: Vocal Pitch and the Emotional Intensity of Congressional Speech",
+   "year": "2019",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "method-source",
+   "claim": "Intensity is each speech's mean F0 z-scored against the speaker's own baseline, in SD units. Table 1 pitch models (N1 = 74,151 speeches, N2 = 619 members, 2009-2014 House floor): female x 'women' mentioned = 0.090 (SE 0.027) without controls and 0.112 (SE 0.027) with controls. About 120 speeches per member is only the average (74,151 / 619); the paper states no required sample size. The authors call the raw magnitude 'slight enough'.",
+   "system_side": "Candidate descriptor converts eGeMAPS semitones to Hz (code comment cites Dietrich, Hayes and O'Brien at line 210), z-scores each speech unit against the member mean and SD inside _speaker_pitch_profile, and reports topic_emotional_intensity as mean deviation per transcript topic. Floors: 5 speech units per member, 2 distinct topics, 2 units per reported topic. No comparison group. Default status CANDIDATE_CONSUMED_BY_NOTHING_AWAITING_USER_RATIFICATION (line 273). The brain's count of 0 accepted v2 clips was not checked.",
+   "transfer": "The within-speaker z transform transfers. The inference does not: the paper identifies effects from a cross-speaker contrast over 74,151 speeches, while the system computes one member's topic mean from 2-5 units. Assuming independent units, the SE of a 2-5 unit topic mean is about 0.45-0.7 SD (arithmetic; no minimum detectable effect was computed). The paper's effects are 0.09-0.38 SD.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "dietrich-2019-pitch-perfect-vocal",
+   "title": "Pitch Perfect: Vocal Pitch and the Emotional Intensity of Congressional Speech",
+   "year": "2019",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "qualifies",
+   "claim": "Pitch measures arousal, not valence (footnote 1, p. 942). The paper adds controls for speech duration, a one-minute dummy and an election-year dummy (p. 946, Table 1). It acknowledges that question intonation also moves mean F0 (footnote 8, p. 945) but does not control for it, arguing mean pitch remains reliable. The baseline is one venue: the House floor via HouseLive.",
+   "system_side": "The baseline pools all accepted units for a member across at least 2 programs. Channel (studio, remote, telephone) is recorded in the brain as uncontrolled. Neither the per-member z nor the Washington Journal subject_effects centering has a duration, question or speech-type term. The WJ table on the desk shows topic shifts from as few as 2 reactions. The brain channel note was not checked.",
+   "transfer": "Applies wherever the system compares a member's pitch across topics. The paper's controls cover duration and one-minute speeches but not question intonation, so the system's gap is wider than the analyst stated. Program or channel offsets can exceed the paper's 0.1 SD effects, so a topic concentrated on one program picks up that offset. 'Relative emotional intensity' must not be read as anger or enthusiasm.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "dietrich-2019-pitch-perfect-vocal",
+   "title": "Pitch Perfect: Vocal Pitch and the Emotional Intensity of Congressional Speech",
+   "year": "2019",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "supports",
+   "claim": "Raw F0 differs mainly by sex: Table 2 gives female means of about 203-206 Hz and male means of about 151 Hz. Deviation from each speaker's own baseline removes stable between-speaker level by construction. The authors read the measure as an emotional disposition toward an issue, and say the slight changes are consistent with pitch indicating a lawmaker's emotional disposition toward an issue.",
+   "system_side": "Output contract sets absolute_f0_enters_personality to False and audio_may_modify_big_five to False, and excludes absolute F0 or inferred gender as a personality input. The brain's sex-confound correlation (r = -0.266) and the audio-N MISS at N = 90 are brain-sourced and were not checked.",
+   "transfer": "Excluding absolute F0 from personality scores is directly supported by Table 2. The paper gives no evidence that pitch measures a between-member disposition such as N, so the closed audio-N route is consistent with it. The paper's own gloss is a topic-specific emotional disposition, which the rel calls a state; it is an interpretation the authors do not test.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "dietrich-2019-pitch-perfect-vocal",
+   "title": "Pitch Perfect: Vocal Pitch and the Emotional Intensity of Congressional Speech",
+   "year": "2019",
+   "component_id": "melange-audio-speech.speaker-verification",
+   "relation": "suggests-extension",
+   "claim": "The corpus is Clerk HouseLive video, audio and closed captions: 6,432 hours from 863 House debates, 6 Jan 2009 to 4 Aug 2014. Speeches are split on caption timestamps, giving 74,158 speeches of at least 50 words. The captioning vendor asserts about 95 percent word accuracy (footnote 11). The authors transcribed 100 random speeches and found the captions 'essentially mirrored' them. The paper does not say the chamber attributes each speech to a member.",
+   "system_side": "Clips are kept when Haiku 4.5 reads YouTube auto-captions and returns SOLO_TARGET with identity MATCH or NEUTRAL. The brain's share of kept clips with no identifying content (33.7 percent) and the pre-2026-07-09 contamination figure (38 percent) are brain-sourced and were not checked.",
+   "transfer": "Clerk speaker attribution is not established by the paper, so using it as an identity source needs a separate check of Clerk floor video metadata. If confirmed, House floor video from 2009 onward could replace guessed identity on floor clips. It does not reach interview, Sunday-show, Senate or hearing audio, where the identity gap is largest.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "mestre-2026-potential-pitfalls-audio",
+   "title": "Potential and Pitfalls of Audio as Data for Political Research: Alignment, Features, and Classification Models",
+   "year": "2026",
+   "component_id": "melange-audio-speech.identity-two-check-design",
+   "relation": "method-source",
+   "claim": "Section 4.3 and footnote 9 (p.321): one neural layer over 768-dimensional facebook/wav2vec2-base embeddings for each sentence (no pooling method stated), Adam with learning rate 0.001, cross-entropy loss, batch size 8 for wav2vec2, early stopping with patience 3. Section 4.1 (p.318): aeneas MFCC/dynamic-time-warp forced alignment. The MFCC CNN baseline is far weaker in the paper's speaker-ID results.",
+   "system_side": "b5_audio_neural_head.py implements batch 8, patience 3, Adam 0.001 and cross-entropy with no search, and is labelled RESEARCH_CANDIDATE_NOT_CONSUMED. Its docstring says the paper mean-pools embeddings, which the paper text does not state. The section 4.3 and footnote 9 citation is in b5_audio_neural_pilot.py line 225, not in the head file. ECAPA is a labelled comparator in b5_audio_embed.py. Pilot and prereg record production_consumers 0.",
+   "transfer": "The recipe transfers as a method. The paper gives no split protocol and no pooling detail, so mean pooling and max_epochs 200 with seed 0 in HYPERPARAMETERS are Melange choices. Paul position-table claim of No annotated literature was not located in Project Brain or the vault and stays UNVERIFIED.",
+   "strength": "strong",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "mestre-2026-potential-pitfalls-audio",
+   "title": "Potential and Pitfalls of Audio as Data for Political Research: Alignment, Features, and Classification Models",
+   "year": "2026",
+   "component_id": "melange-audio-speech.identity-two-check-design",
+   "relation": "qualifies",
+   "claim": "Test accuracy across all 156 speakers 0.913568 (0.914) and across 34 candidates 0.945769 (0.946); MFCC CNN 0.081 and 0.134. Per-debate wav2vec2 0.974 (+/-0.024) vs MFCC 0.888 (+/-0.085). Section 4.2 (p.319) warns that cross-speaker acoustic comparisons are confounded by microphone placement, compression and sampling. The paper does not describe its train/test split.",
+   "system_side": "Pilot docstring and prereg line 198: fresh cohort of 21 members in six distinct sources (three train, one early-stopping, one calibration, one untouched test), caption-derived MACHINE_CAPTION_HARD_SIGNAL labels. Calibration EER .226 and FAILED_WEAK_LABEL_SMOKE verified. Earlier 30-member multinomial-logistic head EER .317 (prereg line 192). The 11/30 cosine attempt was not located.",
+   "transfer": "The paper's 0.914 sets no expected level for congressional audio. The paper's confound warning concerns cross-speaker acoustic comparisons, not classifier accuracy, so the channel-leakage explanation for the EER gap is analyst hypothesis, UNVERIFIED (DE-062). Pilot wording is source-disjoint, not event-disjoint.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "mestre-2026-potential-pitfalls-audio",
+   "title": "Potential and Pitfalls of Audio as Data for Political Research: Alignment, Features, and Classification Models",
+   "year": "2026",
+   "component_id": "melange-audio-speech.identity-two-check-design",
+   "relation": "supports",
+   "claim": "Aeneas alignment validated on 500 utterances x 5 crowd ratings: PA 85.26% and DA 95.76% (Section 4.1, p.318). Only 5% of pairs rated not aligned at all, concentrated in short or interrupted sentences (Figure 2b). The paper proposes no word floor and no ASR word-match threshold.",
+   "system_side": "audio_rules.py: MIN_CLIP_TARGET_SEC 30 (line 15), MIN_CLIP_TARGET_WORDS 50 (line 16), ALIGN_MIN_TURN_WORD_MATCH 0.80 (line 38), ALIGN_MIN_HEARING_WORD_MATCH 0.70 (line 39) verified. The align_turns docstring says any Aeneas structural mismatch fails the hearing closed (verified). No calibration artifact for the 0.80/0.70 bars and no record of the 150-clip coding packet were located in the repo.",
+   "transfer": "The paper supports only that short sentences align poorly. It does not support a 50-word floor or an ASR word_match bar. Vault note concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md line 60 lists the 50-word floor as a paper method, which is wrong. The claim that debate transcripts are cleaner than hearings is analyst reasoning, UNVERIFIED.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "mestre-2026-potential-pitfalls-audio",
+   "title": "Potential and Pitfalls of Audio as Data for Political Research: Alignment, Features, and Classification Models",
+   "year": "2026",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "supports",
+   "claim": "Three of the top five candidates by average pitch are women (Palin, Harris, Clinton; 34 candidates, four women; Section 4.2 p.319). Authors suggest within-speaker deviation from each speaker's own baseline (Figure 3c, 5-s windows, p.319) or speaker-dependent human validation (p.325). The paper reports no effect size for the gender pattern and does not say pitch comparisons reflect speaker and voice.",
+   "system_side": "b5_audio_descriptors_candidate.py converts eGeMAPS semitones to Hz (lines 209-212) and standardizes within speaker. MIN_MEMBER_SPEECH_UNITS 5 and MIN_MEMBER_DISTINCT_TOPICS 2 verified (audio_rules.py lines 20-21). Commit 4193f0140 replaced stddevNorm with stddevNorm times amean, quoting r(sex=F, stddevNorm) -.266 vs -.065 for plain semitone SD. The 1,324 clips, 309 members and +.551 figures were not located in the repo.",
+   "transfer": "Carrying the direction to congressional speech rests on analyst reasoning (F0 sex differences are physiological), not paper text, and is UNVERIFIED. The paper's cross-speaker caution (p.319) says comparisons are confounded by recording factors, so the speaker-and-voice wording is not the paper's.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "mestre-2026-potential-pitfalls-audio",
+   "title": "Potential and Pitfalls of Audio as Data for Political Research: Alignment, Features, and Classification Models",
+   "year": "2026",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "qualifies",
+   "claim": "Energy is normalized by each debate's average loudness (Section 4.2, p.319). Comparisons across speakers and time are subject to confounding by microphone placement, compression and sampling (p.319). The paper recommends normalization or comparison with baselines where possible and does not say normalization leaves residual confounding. Naive cross-speaker interpretation is cautioned (p.325). The paper's own Figure 3a ranks candidates by raw cross-speaker average pitch.",
+   "system_side": "b5_audio_build.py lines 85-104: duration-weighted means per member, z-score over all pooled members (mu and sd across members), clipped at +/-5. No loudness or channel normalization appears in b5_audio_build.py. The cache note on line 104 says z-within-source, which contradicts the pooled code. volume_dynamics_raw uses loudness stddevNorm (a mean-normalized within-clip functional), so it is partly level-invariant; the blanket statement should say so.",
+   "transfer": "Applies to cross-member readings of volume dynamics, pitch level and strain. Within-member and ICC uses are less exposed. Whether pause and pace are less channel-sensitive is not tested in the paper and remains UNVERIFIED.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "salam-2022-learning-personalised-models",
+   "title": "Learning Personalised Models for Automatic Self-Reported Personality Recognition",
+   "year": "2022",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "qualifies",
+   "claim": "Gender-split fusion of the two best modalities gives AMSE 0.690 against 0.818 for generic bimodal fusion, a 0.128 reduction (abstract and Table 1). Age-split fusion gives 0.796. One challenge test split; no test N, subgroup sizes, intervals or seed variance reported.",
+   "system_side": "b5_audio_descriptors_candidate.py: pitch_variability_raw is the eGeMAPS F0 stddevNorm (lines 27, 217). Only mean F0 is z-standardized within speaker (around lines 237-252). Percentiles pool men and women within outlet+program (around lines 315-332). Brain records r(sex=F) = -0.266 for pitch_variability_raw over 1,324 clips / 309 members, dropping to -0.065 once de-normalised; jitter r = -0.260; pace and volume sex-clean. Semitone-SD fix 4193f0140 is not an ancestor of HEAD (verified with git merge-base) and sits on branch claude/melange-speech-recognition-cfa049.",
+   "transfer": "The paper has no pitch or jitter result; its audio features are MFCC band statistics. The sex-conditioning lesson transfers only as a diagnostic for features whose signal partly is sex (pitch, jitter), with the denominator (1,324 clips / 309 members) named and strata or an UNSTRATIFIED label. It is not a basis for per-sex trait models: the paper's criterion is self-report in a volunteer sample of 147 dyadic participants, while Melange gold is expert and insider ratings.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "rubio-2024-feasibility-data-analytics",
+   "title": "Feasibility of Big Data Analytics to Assess Personality Based on Voice Analysis",
+   "year": "2024",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "supports",
+   "claim": "Single-feature voice-trait correlations of about 0.30 to 0.48 in Sample 1 (n=78) did not replicate in Sample 2 (n=44, self-report only): the top features differed, and the authors say the results did not coincide. They note two different microphones may have contributed to this, alongside noise, colds and fatigue. Voice alone reached about 60 percent best-case three-class accuracy against over 75 percent for facial-expression work, and they call personality prediction multimodal.",
+   "system_side": "Lane extracts eGeMAPS v02 (88 openSMILE functionals) per verified solo clip, duration-weighted per member, z-within-source and winsorized at +/-5 (verified in code). Channel (studio, remote, telephone) is recorded as uncontrolled (brain note line 107, verified). Venue ladder in brain: live WJ about 26 per 1k fillers, NPR 0.22 per 1k (verified, lines 103 and 123). The audio N look was spent and missed on 2026-08-25 (verified, RESULT 8bf113948).",
+   "transfer": "The paper gives no effect-size estimate for channel instability. Its own wording is that microphones may have contributed, alongside other factors, so the defensible claim is that feature-level findings did not replicate across two samples recorded on different microphones. The claim that a channel change can wipe out findings overstates the paper. Cite the venue numbers from the brain ladder with their source, since the brain also gives a 21.8 per 1k live median.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "rubio-2024-feasibility-data-analytics",
+   "title": "Feasibility of Big Data Analytics to Assess Personality Based on Voice Analysis",
+   "year": "2024",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "qualifies",
+   "claim": "Top-five-feature random forest, leave-one-out on N=100, three classes at training 25th and 75th percentiles. All-cases accuracy: self-report N 50, E 46, O 46, A 53, C 43 percent; expert N 57, E 60, O 57, A 56, C 53; close others N 54, E 57, O 45, A 52, C 54. Chance is 33 percent; a constant central-class predictor gets 50 percent (p.14). The paper does not say whether feature selection ran inside each fold, and reports no multiple-comparison correction across 1941 features.",
+   "system_side": "Audio pilot ridge uses all 88 features with GridSearch inside each outer fold, repeated 5-fold CV over 5 seeds, and a 40-draw permutation null printed as diagnostic (b5_audio_eval.py). The brain says b5_audio_eval composites are mis-signed and superseded by b5_es_crossmodal.py, which uses 5000 label permutations. The +0.208 held-out r was recorded and then superseded the same day as gender-confounded (brain topic note, locked robustness look 34bf7e4). The perm p=.0002 figure could not be verified.",
+   "transfer": "Rubio accuracies are not a bar or prior for Melange looks. Self-report cells mostly sit at or below the 50 percent central-class baseline, but Agreeableness at 53 is above it, so do not say none exceed it. The Melange N look used n=110 (brain: r -0.0016, perm-p .511), not n=90. Do not present the superseded +0.208 as current evidence.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "rubio-2024-feasibility-data-analytics",
+   "title": "Feasibility of Big Data Analytics to Assess Personality Based on Voice Analysis",
+   "year": "2024",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "qualifies",
+   "claim": "All 100 participants are female: Sample 1 is 78 psychology students aged 18 to 27, Sample 2 is 44 participants aged 18 to 54. The authors list this as a limit on generalization. The paper does not estimate how sex affects F0-based features.",
+   "system_side": "Live candidate file still sets pitch_variability_raw from stddevNorm alone (PITCH_VAR at line 27, emitted at line 217, verified). Commit 4193f0140 changes it to stddevNorm times amean, the plain semitone SD, and bars stddevNorm alone (verified in git show). The commit lives on branch claude/melange-speech-recognition-cfa049 and is not an ancestor of main HEAD (verified, merge-base exit 1). Brain: r(sex=F) -0.266, d -0.944, 1324 clips over 309 members; de-normalised r -0.065. Salam check: pace and volume sex-clean, pitch and jitter not (brain line 111).",
+   "transfer": "A single-sex sample says nothing about whether pitch effects survive in a mixed-sex legislature. The transfer is the practical rule: any pitch descriptor in Melange needs sex conditioning or the de-normalised SD. The fix is not on main, so the live pipeline still carries the sex loading. Status stays UNVERIFIED under DE-062 until a second path reproduces it.",
+   "strength": "strong",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "mairesse-2007-automatic-recognition-personality",
+   "title": "Using Linguistic Cues for the Automatic Recognition of Personality in Conversation and Text",
+   "year": "2007",
+   "component_id": "melange-audio-speech.prosody-and-disfluency",
+   "relation": "supports",
+   "claim": "Prosody-only RankBoost gives extraversion ranking loss 0.26 (random 0.50), the best single feature set in ranking. Prosody-only Naive Bayes gives 67.56 percent for E, but LIWC alone (68.89) and MRC alone (68.78) are higher. Self-assessed neurotics show low and constant voice intensity (Int-mean, Int-stddev) that observers do not use.",
+   "system_side": "b5_audio_eval.py defines ES_acoustic as minus the mean of the stability columns (line 97), and a 2026-07-09 note marks the composite as mis-signed.",
+   "transfer": "The 0.26 and 67.56 figures and the self-report intensity result are verified. The strongest-single-feature-set claim holds only for ranking; in classification LIWC and MRC are higher. EAR observers rated audio, so prosody gains are partly shared-channel, as the paper does not test. The sign correction is supported only for self-reported neuroticism, which the rel states.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  }
+ ]
+}

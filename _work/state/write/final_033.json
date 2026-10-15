@@ -1,0 +1,1230 @@
+[
+ {
+  "slug": "rheault-2016-measuring-emotion-parliamentary",
+  "note": false,
+  "meta": {
+   "title": "Measuring Emotion in Parliamentary Debates with Automated Textual Analysis",
+   "authors": [
+    "Ludovic Rheault",
+    "Kaspar Beelen",
+    "Christopher Cochrane",
+    "Graeme Hirst"
+   ],
+   "year": 2016,
+   "venue": "PLOS ONE, vol 11 issue 12, e0168843 (published 22 December 2016)",
+   "doi": "10.1371/journal.pone.0168843",
+   "sha12s": [
+    "bbc43a6288d1"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "Measuring Emotion in Parliamentary Debates with Automated Textual Analysis",
+   "authors": [
+    "Ludovic Rheault",
+    "Kaspar Beelen",
+    "Christopher Cochrane",
+    "Graeme Hirst"
+   ],
+   "year": 2016,
+   "venue": "PLOS ONE, vol 11 issue 12, e0168843 (published 22 December 2016)",
+   "doi": "10.1371/journal.pone.0168843",
+   "document_type": "journal article (empirical research article)",
+   "coverage": "Full text read in one pass (1084 numbered lines, 59563 chars, file bbc43a6288d1.txt): front matter, abstract, introduction, Materials and Methods, lexicon construction with Eqs 1-3, validation, trend and robustness, long memory, stationarity, ARMAX, t-tests, Granger tests, VECM, DOLS, impulse responses, government-opposition split, conclusion, references. Not in the text file: the S1-S5 figures and the S1 Appendix tables are only referenced, so their contents are not extracted. Page images not rendered. Page numbers are from the PLOS footers in the text. Paul markup: n_annots is 0 and annot_sha12s is empty, so no _annots file was read; paul_markup is empty (0 items, 0 dropped). Not a Paul research note (no note flag); paul_entries empty. Metadata checked: title, authors, year, venue correct; doi was blank and is set from the citation.",
+   "research_question": "Can domain-adapted affective text analysis measure the emotional polarity of UK parliamentary debates over a century, and does that polarity change over time and respond to national economic conditions such as recessions and labor disputes?",
+   "theory": "Emotions shape decisions (behavioral economics, prospect theory, regret theory, neuroeconomics). Politicians represent constituents and so echo civilians' emotions in debate, so recessions and labor conflict should make debate more negative (pp.1-2, p.8). Elections raise positivity. Opposition MPs have accountability incentives to decry downturns, while government MPs avoid recognizing social ills, so the opposition is the channel (pp.13-14).",
+   "data": "UK House of Commons Hansard, all debates, oral questions and oral answers to written questions, 1909-2013 inclusive (p.2). About 956.8 million tokens, average 9.1 million per year (p.2). Lemmatized vocabulary of 108506 types with frequency 10 or more (p.3). Unit: lemma-PoS pairs for the lexicon; period-level polarity (yearly N=104 in the ARMAX; quarterly and yearly series elsewhere). Economic series, annual: log days lost to strikes, unemployment rate, misery index (unemployment plus inflation), GDP growth, plus a GDP-based recession dummy and election-year dummy. Sources: Dilipad linked parliamentary data (politicalmashup Hansard dumps); code and files on GitHub lrheault/emotion (p.2).",
+   "method": "Word vectors: GloVe, 300 dimensions per lemma-PoS pair, symmetric window of 15 tokens (p.3). Seeds: 200 hand-picked English emotion lemmas, 100 positive and 100 negative (p.3). Lexicon: each lemma scored in [-1,1] by summed cosine similarity to positive minus negative seeds (Eq 1, p.4); top and bottom 2000 kept, giving 4200 words. Polarity y_t: lexicon-weighted mean score divided by the count of all lemmas in the period, with a negation flag zeroing words between a negation cue and punctuation (Eqs 2-3, p.5). Stationarity: Dickey-Fuller and KPSS tests, unit root found (pp.8, S1 Appendix Tables A-D). Main model: ARMAX on first differences with recession and election dummies and 1 or 2 lags, maximum likelihood (Eq 5, Table 2, p.9). Group tests: one-sided t-tests on mean differences (Table 3, p.10). Granger causality: pairwise augmented VAR chi-square tests (Table 4, p.13). Cointegration: Johansen rank test; bivariate VECM with 2 lags in levels, orthogonalized impulse response with bootstrap bands (Fig 4, pp.12-13). Long-run effect: dynamic OLS with HAC standard errors (p.12). Long memory: spectral regression of log power on frequency, alpha in 1/f^alpha (p.7).",
+   "identification": "No causal design. Recession and election years enter ARMAX as exogenous binary regressors; Granger tests and VECM are time-series association tools. The authors state the cointegrating relation 'should not be interpreted as a causal effect' (p.12). The opposition mechanism is argued from theory and the group-split Granger result, not from an exogenous shock (pp.13-14).",
+   "scope": "Population: UK House of Commons debate text, 1909-2013 (one legislature, one country). Era: a century including two world wars, the 1926 general strike, the 1973-75 recession and the 1980s. Cross-domain portability is asserted and only validated on film reviews (p.5).",
+   "measures": "Polarity y_t (Eq 3): higher means more positive debate, standardized for figures; scaling irrelevant to the analysis (p.5). Recession: binary, 1 for years with two or more consecutive negative GDP quarters, annual coding where quarterly data missing (p.9). Election: binary, 1 for a general election year (p.9). Labor disputes: natural log of days lost to strikes per year (p.10). Unemployment rate; misery index; GDP growth rate, not per capita (p.10). Government versus opposition polarity, split by party in power (Fig 2, p.8).",
+   "key_findings": [
+    "Polarity rises over 1909-2013: debates become more positive in recent decades (Fig 1, p.6; text pp.5-7). The rise is robust to NRC, OpinionFinder and SentiWordNet lexicons (S1 Fig, p.7) and appears in government and opposition series (Fig 2, p.8). No slope coefficient is reported in the text.",
+    "Recession years lower the annual change in polarity: coefficient -0.198 (SE 0.062) in ARMAX Model 1 and -0.165 (SE 0.063) in Model 2, both significant at 95 percent. Autoregressive terms rho1 -0.275 (SE 0.095) and -0.313 (SE 0.098); rho2 -0.145 (SE 0.104). N=104 years (Table 2, p.9).",
+    "Election years raise polarity: coefficient 0.187 (SE 0.069) and 0.183 (SE 0.069) in the two ARMAX models (Table 2, p.9). Text says a similar order of magnitude, about 0.19.",
+    "Mean-difference t-tests (Table 3, p.10): recession years differ from other years by -0.219 (t=-2.895, p=0.002; 21 recession years against 83 others). Election years differ by 0.202 (t=2.735, p=0.004). War years differ by 0.002 (p=0.511, not significant).",
+    "Granger causality (Table 4, p.13): labor disputes Granger-cause polarity (chi2 9.424, df 1, p=0.002) but polarity does not Granger-cause labor disputes (chi2 0.056, p=0.813). Unemployment, misery index and GDP growth show no significant Granger effect in either direction (all p at least 0.12).",
+    "Cointegration (Johansen test, S1 Appendix Table F, p.12): fitted long-run relation y_t = -0.06 - 1.39 x_t (Eq 6, p.12), with x_t the labor disputes indicator. The series stay negatively related, more than one standard deviation apart; authors say this is not a causal effect.",
+    "Impulse response (Fig 4, p.13; text p.12): a one standard deviation shock to labor disputes produces a negative polarity response converging to about -0.18. Because the series is non-stationary, the shock is persistent until offset by an opposite shock.",
+    "Dynamic OLS (Table G, S1 Appendix; text p.12): long-run effect of labor disputes on polarity about -0.9, roughly 0.9 standard deviations of polarity per standard deviation of disputes, significant at the 99.9 percent level with HAC standard errors.",
+    "Party split (Table 4 bottom, p.13; S5 Fig; discussion pp.13-14): labor disputes Granger-cause opposition polarity (chi2 8.048, p=0.005) but not government polarity (chi2 0.092, p=0.761). Impulse responses are larger for opposition parties, which the authors read as the mechanism.",
+    "Long memory (pp.7-8): quarterly spectral exponent alpha 1.03 (95 percent CI 0.86-1.20), close to pink noise. Yearly alpha 1.71 (CI 1.38-2.04), closer to Brownian noise, so unit-root methods are used.",
+    "Seed-usage check (p.7, Google Books Ngram): relative frequency of the 100 positive seed lemmas fell 9 percent from 1909-1918 to 1999-2008, while the 100 negative seeds rose 2 percent. Authors conclude the trend is not an artifact of seed choice.",
+    "Validation (p.5, S1 Appendix): the polarity measure alone predicts up to 80 percent of film ratings accurately, and classifiers adding it compare favorably to other sentiment models. Validation is on film reviews, not parliamentary speech."
+   ],
+   "limitations": "Lexicon approach does not model full sentence structure, so sarcasm, irony and hyperbole are poorly captured (p.5). Negation handled only by a window to punctuation. Validation is on film reviews, not Hansard. Top-ranked lexicon entries include counterintuitive items, e.g. compound scored -1.00 as a negative verb (Table 1, p.4). Economic series are annual, and GDP growth is not per capita (p.10). ARMAX results shown only for simpler specifications; unit-root and cointegration results rest on tests in S1 Appendix. Authors note the unit-root yearly series implies persistent shocks (p.12). Causal reading is not established; no test of mood-to-decision links. Expansion to other corpora is out of scope (p.14).",
+   "paul_markup": [],
+   "short_quotes": [
+    "politicians mirror the feelings and apprehensions of civilians in the face of adversity"
+   ],
+   "references_of_note": [
+    "Bentley RA, Acerbi A, Ormerod P, Lampos V (2014) Books average previous decade of economic misery. PLOS ONE (ref 32); the link between economic conditions and book emotion",
+    "Acerbi A, Lampos V, Garnett P, Bentley RA (2013) Expression of emotions in 20th century books. PLOS ONE (ref 28)",
+    "Lansdall-Welfare T, Lampos V, Cristianini N (2012) Effects of the recession on public mood in the UK (ref 30)",
+    "Turney PD, Littman ML (2003) Measuring praise and criticism: semantic orientation from association (ref 45); seed-based lexicon logic",
+    "Pennington J, Socher R, Manning CD (2014) GloVe word vectors (ref 47)",
+    "Coviello L et al. (2014) Detecting emotional contagion in massive social networks (ref 63); suggested extension to parliamentary network",
+    "Eggers AC, Spirling A (2014) Ministerial responsiveness in Westminster systems (ref 56)",
+    "Hirst G et al. (2014) Text to ideology or text to party status? (ref 53)"
+   ]
+  },
+  "summary_md": "Rheault, Beelen, Cochrane and Hirst build a domain-adapted emotion lexicon for the UK House of Commons (Hansard 1909-2013, about 957 million tokens). They train 300-dimension GloVe vectors on lemma-PoS pairs, score each word by cosine similarity to 100 positive minus 100 negative emotion seeds, and keep the 4,200 most polar words. Period polarity is the lexicon-weighted sum divided by all lemmas, with a negation window to punctuation. Debate grows more positive over the century, and the rise holds under NRC, OpinionFinder and SentiWordNet. Recession years lower annual polarity change (ARMAX -0.198, SE 0.062, N=104 years, pooled over government and opposition, so UNSTRATIFIED). Election years raise it (+0.187). Labor disputes Granger-cause polarity (chi2 9.42, p=.002) but not the reverse. Split by side, the effect runs through the opposition (chi2 8.05, p=.005) and not the government (p=.761). The design is associational, and the authors say the cointegrating relation is not causal. The lexicon is validated only on film reviews, never on parliamentary speech. For Paul's systems the work matters in three places. It is the method source for the opt-in GloVe seed-expansion helper in the legacy press scorer. It qualifies the general-purpose LSD2015 tone intensity that feeds press_value: domain adaptation is argued for, the default intensity is |net|/words (a polarity magnitude, not a charge), and macro-period shifts in tone are not removed. And it shows that negative-emotion language in a legislature follows institutional role (opposition vs government) and economic shocks. That bears on the affective-N slot, which controls for party but not for majority status or period. All three are UNVERIFIED single-agent readings (DE-062).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-stance.legacy-regex-scorer",
+    "relation": "context",
+    "paper_claim": "Domain lexicon from 200 emotion seeds (100 positive, 100 negative lemmas) using GloVe vectors of 300 dimensions per lemma-PoS pair, symmetric window 15, 108,506 lemma types at frequency 10 or more. Each lemma score is its summed cosine to positive seeds minus summed cosine to negative seeds, scaled to [-1,1]. The top and bottom 2,000 are kept (4,200 words). Table 1 lists compound (verb) at -1.00.",
+    "paper_location": "Materials and Methods, Eq 1 and Table 1, pp.3-4",
+    "system_side": "Opt-in offline expand_tone_lexicon helper trains GloVe on the scraped CU press corpus and writes a CSV of cosine-nearest candidates to 10 positive and 10 negative seeds for analyst promotion. Live scoring stays on the curated TONE_LEXICON, per the helper's own comment.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R:2477-2496 (helper and seeds); TONE_LEXICON at :2323",
+    "transfer_conditions": "Parallel method, not the source: the helper header cites Rice and Zorn 2018 for the seed-to-vocabulary logic. Its GloVe settings differ from Rheault's (rank 50, skip-gram window 5, minimum count 5, at least 50 documents). Its seeds mix stance words (support, champion, protect) with affect words. The press corpus is far smaller than Hansard, so vectors will be noisier. Rheault's own odd top entries show the risk. The analyst review step is the safeguard; the top and bottom cut has no in-domain validation.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper numbers verified in the text (200 seeds, Eq 1, 4,200 words, Table 1 compound at -1.00). Helper, opt-in status, CSV output and seed lists verified in code. The method-source relation is not true as written: the helper cites Rice and Zorn 2018 and uses different vector settings, so Rheault is a parallel method. Relation rewritten to context.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-stance#Legacy CU press regex stance and graded tone scorer|Legacy CU press regex stance and graded tone scorer]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.lsd-tone",
+    "relation": "qualifies",
+    "paper_claim": "The long-run trend reproduces with NRC, OpinionFinder and SentiWordNet (S1 Fig, text description only; figure not extracted). Polarity is a signed weighted sum over all lemmas. Film-review validation reaches up to 80 percent accuracy; no parliamentary validation is reported in the extracted text. Recession -0.198 (SE 0.062) and election +0.187 (SE 0.069) shift the annual polarity change, pooled over government and opposition, N=104 years, Table 2 Model 1 (UNSTRATIFIED). The yearly polarity series has a unit root.",
+    "paper_location": "pp.3-7; Table 2 p.9; stationarity pp.7-8; S1 Fig p.7",
+    "system_side": "LSD2015 is applied unchanged to congressional press releases. lsd_tone returns net/words and (pos+neg)/words. run_stage5 defaults INTENSITY to net_norm, so heat is abs(net/words), multiplied by the stance sign to form press_value.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:44-60; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:45,141-143",
+    "transfer_conditions": "Rheault measures direction; Paul uses tone only as an intensity multiplier. Under net_norm a release dense in both positive and negative words scores near zero heat, so the paper gives no support for reading abs(polarity) as intensity. The lsd_charge option is closer to an intensity construct. Period effects matter only if members' release windows differ in date coverage. Westminster debate text is not US press-release text.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Table 2 coefficients, the 80 percent film-review validation, the unit-root statement and the net and charge definitions verified. Code lines verified, including the net_norm default and the heat and press_value lines. Not checked: whether any period or date demeaning exists elsewhere in the pipeline, so the no-demeaning statement stays the analyst's reading.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/melange-stance#Lexicoder LSD2015 tone intensity|Lexicoder LSD2015 tone intensity]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-psychometrics.affective-n",
+    "relation": "qualifies",
+    "paper_claim": "Labor disputes Granger-cause opposition polarity (chi2 8.048, p=0.005) but not government polarity (chi2 0.092, p=0.761), from annual pairwise augmented VAR tests on the Westminster series (Table 4 bottom). The text says the labor-dispute impulse response appears greater for opposition (S5 Fig, not extracted). The authors frame these as associations and argue the mechanism from theory, not from an exogenous shock.",
+    "paper_location": "Table 4 bottom, p.13; pp.12-14 (impulse responses and discussion); S5 Fig",
+    "system_side": "affective_n is a z-score of E-residualized LLM facets (pessimism, anxiety, depression, volatility) from interview text, then residualized on a Republican dummy. A LIWC-style count (fps + negemo - posemo) is computed only as the convergent-validity anchor. Majority status and interview date or period are not controlled.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/members/emit_affective_n.py:28-38 (LIWC anchor), :39-43 (round-7b note), :52-57 (E then party residualization)",
+    "transfer_conditions": "The paper covers one Westminster chamber, aggregated over time, not individual-level US data. The extracted text does not state the frequency of the Table 4 tests, and S5 also has quarterly models. Within one Congress, party and majority status coincide, so the party control absorbs role; the chamber-flip window in the rel is the analyst's premise, not from this paper, and is untested here. Treat it as a possible confound only.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Granger chi2 and p-values verified in Table 4. Code path verified at the cited lines, including the LIWC anchor role and the E-then-party residualization. Softened: the opposition impulse-response claim rests on S5 Fig, which is not in the extracted text, and the annual-only frame is not stated for the Table 4 party split.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/melange-psychometrics#Affective neuroticism slot and N genre-transfer tests|Affective neuroticism slot and N genre-transfer tests]]",
+    "system": "melange-psychometrics"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Overstated relation: the summary calls Rheault the method source for the opt-in GloVe helper, but the helper header cites Rice and Zorn 2018 and its GloVe settings (rank 50, window 5) differ from Rheault's 300 dimensions and window 15. Rheault is a parallel method.",
+   "Overstated validation claim: the summary says the lexicon is validated only on film reviews, never on parliamentary speech. The extracted text reports film-review validation and says it is not on Hansard, but S1 Appendix was not extracted, so never cannot be confirmed; use reported validation is on film reviews only.",
+   "Overstated causal verb: the summary says the work shows that negative-emotion language follows institutional role and economic shocks. The paper reports annual associations and says the cointegrating relation is not causal, so reports associations is the correct wording.",
+   "Figure-only claim: the statement that the rise holds under NRC, OpinionFinder and SentiWordNet rests on S1 Fig, which is not in the extracted text, so it is supported only by the paper's text description on p.7."
+  ],
+  "gaps_exposed": [
+   "LSD2015 tone has never been validated against human-coded intensity on congressional press releases. Rheault's own domain lexicon was validated only on film reviews, so neither the general nor the adapted approach has in-domain evidence here.",
+   "The default intensity, abs(net/words) via INTENSITY=net_norm, is a polarity magnitude, not a charge. Mixed-valence heated releases score low. No test compares net_norm with lsd_charge against a behaviour criterion.",
+   "Tone and affect measures carry no period or date adjustment. Rheault shows chamber-wide tone shifts with recessions and election years and persists (unit root). Whether member press and interview windows are date-balanced is unchecked.",
+   "The affective-N slot controls for party but not for majority or minority status, while Rheault finds negativity concentrated in the opposition. No test splits interview negativity by majority status across the 2019-2026 chamber flips.",
+   "The opt-in GloVe expansion helper uses stance words as seeds (support, champion, protect), which blends direction toward credit unions with affect. Rheault-style emotion-only seeds would keep tone separate from stance."
+  ],
+  "flags": [
+   "Component description drift: components.txt describes affective_n as z(LIWC) + z(LLM), but emit_affective_n.py:39-43 says LIWC was dropped as a component in round-7b (2026-07-11) and kept only as the convergent anchor (r=+.24). The description should be refreshed.",
+   "The paper's ARMAX recession and election coefficients are pooled over the government-opposition fault line that the same paper shows matters, so quote them as UNSTRATIFIED. Only the Granger tests are stratified.",
+   "The paper suggests studying emotional contagion over parliamentary networks (Coviello ref 63). Any such use in Melange would put influence-style language on network edges. Treat it as an untested idea, not a recommendation, and never on revolving-door edges.",
+   "All bearings are a single-agent reading and stay UNVERIFIED until a second path reproduces them (DE-062)."
+  ],
+  "paul_alignment": "Paul left no annotation on this work (n_annots 0, no paul_entries). The nearest stated position is on melange-stance.lsd-tone, where Paul highlighted Merkley and Stecula's use of Lexicoder with custom dictionaries. Rheault supports that direction: domain-adapted lexicons for political speech, with off-the-shelf lexicons as a robustness check. The system has partly acted on it, through the opt-in Rice-Zorn/GloVe expansion helper in the legacy scorer. The live press_value path still runs plain LSD2015, so the custom-dictionary idea has not reached production. No note is contradicted.",
+  "related": [
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "same-method",
+    "why": "Minimally supervised corpus-based dictionary built from seed words plus GloVe similarity, the same seed-to-domain-vocabulary logic the legacy helper cites as Rice and Zorn 2018. Verified in the Rice item's method text."
+   },
+   {
+    "slug": "osnabrugge-2021-playing-gallery-emotive",
+    "relation": "builds-on",
+    "why": "Measures emotive rhetoric in UK Commons speeches 2001-2019, uses Rheault et al. 2016 data for 2001-2014, and cites Rheault as the earlier emotion measure. Verified in the Osnabrugge item."
+   },
+   {
+    "slug": "aroyehun-2026-politics-of-feelings",
+    "relation": "builds-on",
+    "why": "Its text cites Rheault et al. 2016 alongside Osnabrugge et al. 2021 for emotion varying with policy issues and speaker attributes, and it moves the measurement to US Congress. Verified at paper text lines 58-61 and 126-127; line 127 also cites a separate Rheault 2016 anxiety paper, so that citation is mixed."
+   },
+   {
+    "slug": "hargrave-2022-longer-conforming-stereotypes",
+    "relation": "complements",
+    "why": "UK Commons floor debate 1997-2019 on gendered speaking style. The rel's same-data label is dropped: the text does not name its data source, and its window differs from Rheault's 1909-2013."
+   },
+   {
+    "slug": "haselmayer-2017-sentiment-analysis-political",
+    "relation": "complements",
+    "why": "Builds a political sentiment dictionary validated by crowdcoding on Austrian political text, which speaks to Rheault's film-review-only validation gap. Verified in the Haselmayer item."
+   },
+   {
+    "slug": "merkley-nd-party-cues-news",
+    "relation": "complements",
+    "why": "Uses Lexicoder plus a custom dictionary of party names and leaders to detect party cues, not sentiment, and validates that dictionary against hand-coded articles. Verified in the Merkley item; the link is about dictionary practice, not about tone measurement."
+   },
+   {
+    "slug": "dietrich-2019-pitch-perfect-vocal",
+    "relation": "complements",
+    "why": "Measures emotional intensity of congressional speech from vocal pitch rather than words, a non-lexical check on the intensity construct. Verified in the Dietrich item."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "snowberg-2006-partisan-impacts-economy",
+  "note": false,
+  "meta": {
+   "title": "Partisan Impacts on the Economy: Evidence from Prediction Markets and Close Elections",
+   "authors": [
+    "Erik Snowberg",
+    "Justin Wolfers",
+    "Eric Zitzewitz"
+   ],
+   "year": 2006,
+   "venue": "IZA Discussion Paper No. 1996 (Institute for the Study of Labor, Bonn)",
+   "doi": "",
+   "sha12s": [
+    "4e609691d10f"
+   ],
+   "category": "Campaign Politics",
+   "category_slug": "campaign-politics"
+  },
+  "extraction": {
+   "slug": "snowberg-2006-partisan-impacts-economy",
+   "title": "Partisan Impacts on the Economy: Evidence from Prediction Markets and Close Elections",
+   "authors": [
+    "Erik Snowberg",
+    "Justin Wolfers",
+    "Eric Zitzewitz"
+   ],
+   "year": 2006,
+   "venue": "IZA Discussion Paper No. 1996 (Institute for the Study of Labor, Bonn)",
+   "doi": "",
+   "document_type": "working paper (IZA discussion paper, March 2006)",
+   "coverage": "Full text read: 4e609691d10f.txt (1091 lines) in chunks, all sections through references. Page images unavailable; page numbers inferred from text footers. Paul markup: none (annot_sha12s empty; no _annots file references this sha12). Not a Paul note. Metadata corrected: venue set to IZA Discussion Paper No. 1996. Some Table 1 and Table 3 cells are garbled in extraction (e.g. a 0.0297 coefficient with SE .118), so those alignments are uncertain. Items dropped from paul_markup: none.",
+   "research_question": "Do U.S. presidential election outcomes (a Republican versus Democratic winner, and Bush versus Kerry or Gore) causally move equity prices, bond yields, oil prices and the dollar?",
+   "theory": "Partisan business-cycle models (parties have different preferences over inflation, interest rates, output and capital and labor shares) versus median-voter policy convergence (Downs 1957). The economic voting channel (Fair 1978) implies reverse causation in campaign-period data, which the paper uses to explain why naive time-series estimates differ.",
+   "data": "2004 and 2000 election-night 10- and 30-minute price changes in CME equity and currency futures, CBOT bond futures and NYMEX crude futures; Tradesports Bush contract (2004); Centrebet odds (2000). Daily closes June 2003 to October 2004 for the campaign analysis. Historical 1880-2004 event returns from Schwert (1990), CRSP and Kalinke (2004); pre-election probabilities from press reports and bookmakers. N: 104 ten-minute and 35 thirty-minute S&P observations (2004). Table 2 and historical N not stated; Figure 4 labels 34 elections.",
+   "method": "OLS of change in log financial variable on change in re-election probability, 10- and 30-minute first differences, inverse-period weights, White SEs (Scholes-Williams and 60-minute checks similar). Newey-West SEs for daily, 5-day and 20-day campaign regressions. Two-equation structural system with OLS bound. Wald ratio for yields using TIP and IEF funds. Historical event study of returns on a GOP indicator and partisan shock, plus an incumbent-party term.",
+   "identification": "Election-night shocks to the market probability of a Bush win are treated as exogenous: a leaked exit poll around 3pm that later reversed, and the 2000 Florida calls. Wald ratios divide the asset response by the probability response. For the campaign period, one further assumption on the correlation of political and economic shocks is needed; OLS is an upper bound if that correlation is non-negative. For 1880-2004 the assumption is that markets respond to election results rather than other news over a longer window.",
+   "scope": "U.S. presidential elections only. Intraday natural experiments cover 2000 and 2004; campaign-period daily data cover June 2003 to October 2004; historical event study covers 1880-2004 (Table 3 sample 1928-1996 and 1880-2004). Outcomes reflect trader expectations, not realized policy.",
+   "key_findings": [
+    "2004 election night (Table 1, p.7): Bush-versus-Kerry effect on log S&P 500 futures is 0.016 (SE 0.004, n=104) at 10-minute differences and 0.020 (SE 0.005, n=35) at 30-minute differences; text says equity prices 1.5 to 2 percent higher under Bush.",
+    "Table 1, p.7: Dow 0.014 and Nasdaq 100 0.019 at 10 minutes (both significant at 1 percent); Nasdaq 0.024 at 30 minutes. Dollar 0.004 (not significant) at 10 minutes and 0.005 (5 percent) at 30 minutes.",
+    "Table 1, p.7: December 2004 crude oil futures rise by 1.07 dollars (SE 0.35, 1 percent) at 10 minutes and 1.63 (SE 0.59) at 30 minutes; December 2006 contract is negative and insignificant.",
+    "Table 1, p.7-8: 2-year note 0.095 (10 percent) and 10-year note 0.108 (5 percent) at 10 minutes; text says 10-year yields 11-12 basis points and 2-year yields 10 basis points higher under Bush.",
+    "TIP and IEF Wald estimates, p.8-9: real yields about 16 basis points higher under Bush from the exit-poll experiment and 11 from the second; nominal about 16 and 15, so the authors conclude nominal moves mostly reflect expected real rates, consistent with expansionary fiscal policy.",
+    "Exit-poll episode, p.5-6: Bush win probability fell from about 55 to 30 percent with stocks down about one percent, then rebounded to 95 percent as the exit poll was found faulty and stocks rebounded.",
+    "Campaign-period daily closes (Table 2, p.10): S&P 0.087 (daily), 0.128 (5-day), 0.243 (20-day); text says the effect is roughly ten times the Table 1 estimate. Oil coefficients turn negative (-7.27 at 5-day, -12.57 at 20-day), read as reverse causation from oil to Bush odds.",
+    "Reverse channel, p.11: a 10 percent S&P rise raises Bush re-election probability by 2.3 points (SE 0.8) using daily differences and 3.3 points (SE 1.3) using 5-day differences; authors call these small relative to economic voting literature.",
+    "Bush versus Gore 2000 (p.13-14): with a Centrebet prior of about 60 percent for Bush, lower bounds are S&P +1.3 percent, Nasdaq 100 +3.7 percent and dollar +0.6 percent; the second Florida call gives 1.9, 3.0 and 0.7 percent.",
+    "Century of elections (Table 3, p.17; Figure 4, p.16): the market-based partisan shock is significant at 1 percent, with coefficients of about 0.025 (SE about 0.008) in the extracted specifications; authors state a 2-3 percent equity rise with a Republican president. Incumbent-party term adds nothing in the joint specification (text: -0.0046, SE 0.0084).",
+    "Bond yields (Figure 5, p.18): no reaction to elections from 1920 to 1976; from 1980 a Republican president raised the 10-year yield by about 13 basis points (p=0.15). Regression change in yields = 0.03 + 1.48 Post1980 + dProb x (0.05 + 12.79 Post1980), R-squared 0.23.",
+    "Reagan 1980 (p.18): 10-year yield rose 15 basis points when markets priced Reagan at 80 percent. Congressional control tests across margins 0.5 to 0.72 found no significant effect of winning with control (fn 19, p.17)."
+   ],
+   "limitations": [
+    "Only two close elections with overnight trading (2000 and 2004); the authors trade generality for precision (p.21).",
+    "Estimates reflect trader expectations, not actual partisan policy differences; effects are specific to Bush versus Kerry or Gore, not parties (p.21).",
+    "Cannot separate output-growth expectations from tax or capital-versus-labor policy channels; no firm welfare conclusions drawn (p.7, p.21).",
+    "Assumes traders do not hedge election wealth effects (fn 5, p.4) and that no other news moved markets on election night (fn 7, p.5).",
+    "Reverse causation within election night tested only by splitting the sample at 8pm and 10pm (fn 9, p.6); feedback from markets to votes is not fully excluded.",
+    "Campaign-period economy effect is only bounded, not identified; it needs an assumed correlation of shocks (p.11-12, fn 14). Instrument search was not completed (fn 13, p.12).",
+    "Bond evidence is thin: bond futures closed for three hours and TIP and IEF data are sparse (p.8-9); authors call these data sparser than they would like.",
+    "The 2000 Iowa market tracked the popular vote, not the electoral college, so 2000 bounds rest on Centrebet election-morning odds (p.13).",
+    "Historical event window is long and identification tenuous (p.14-15); 1964-72 probabilities are imputed from Gallup with sigma 4.9 (fn 16, p.15); partisan shock validity is questionable for 1916 and 2000 (fn 17); candidate quality varies across Republicans (p.17).",
+    "Effect of congressional control cannot be tested directly because markets did not track it before 1994 (fn 19, p.17).",
+    "Platform complexity prevents attributing effects to specific policies (p.21). Paper is a provisional IZA discussion paper (p.1)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    "markets anticipated higher equity prices, interest rates and oil prices and a stronger dollar under a Bush presidency than under Kerry",
+    "a simple time series regression of financial prices on re-election probabilities will confound the causal effects",
+    "suggesting that electing a Republican President raises equity valuations by 2-3 percent"
+   ],
+   "measures": "Tradesports last-trade probability every 10 minutes; log changes in CME, CBOT and NYMEX futures; TIP and IEF ETF price changes for yields; partisan shock equal to indicator of a Republican president minus pre-election market probability; incumbent-party probability change; Newey-West (campaign) and White (intraday, event) standard errors.",
+   "references_of_note": [
+    "Santa-Clara and Valkanov (2003), The Presidential Puzzle, Journal of Finance: no systematic relation between election outcomes and historical returns; the paper's main contrast.",
+    "Herron (2000), AJPS: 1992 British election betting odds and FTSE 100 changes.",
+    "Knight (2006), Journal of Public Economics: Bush/Gore 2000 portfolio returns and Iowa market probabilities.",
+    "Fair (1978), Review of Economics and Statistics: economic events and presidential votes (economic voting channel).",
+    "Downs (1957): median-voter policy convergence.",
+    "Wolfers and Zitzewitz (2005): interpreting prediction market prices as probabilities.",
+    "Shelton (2005): electoral surprise and the economy (cited as motivation for the surprise measure).",
+    "Schwert (1990) and Kalinke (2004): historical stock return series used for 1880-2004.",
+    "Jones and Olken (2005) and Fisman (2001): leader effects and political connections, cited as related natural-experiment work."
+   ]
+  },
+  "summary_md": "Snowberg, Wolfers and Zitzewitz (IZA DP 1996, 2006; later QJE 2007) estimate how U.S. presidential outcomes move asset prices. Their key move is identification: on election nights 2004 and 2000, shocks to the market probability of a Bush win (a faulty afternoon exit poll that cut his odds from about 55 to 30 percent and then reversed; the Florida calls in 2000) are treated as exogenous, and asset changes are divided by probability changes (Wald ratios). In 2004 a Bush win raised S&P futures about 1.5-2 percent (0.016 at 10-minute differences, n=104), 10-year yields 11-12 basis points and December 2004 oil about 1.07 dollars. Over 1880-2004 a market-based partisan surprise (Republican indicator minus pre-election probability) implies 2-3 percent higher equities under a Republican president. The methodological lesson matters most for Paul: a daily campaign-period regression of prices on win probabilities gave equity coefficients about ten times the election-night estimate and flipped the oil sign, because the economy moves the odds (reverse causation) and common news moves both. OLS is only an upper bound if political and economic shocks correlate non-negatively. For Mentat this bears on the sector growth study: SEATS-W regresses weekly Democratic giving share on prior-week changes in 538 expected seats (2022 House, -3.47 pp per seat, one election, EXPLORATORY), and SHIFT uses expected-minus-current control. Lagging the forecast fixes ordering but not common shocks, so SEATS-W is a correlation, not a donor response. The paper also suggests a sharper design: event windows around discrete forecast jumps and a surprise-coded shock. It says nothing about networks, lobbying or ranks.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "mentat-sector-growth-study.seats-weekly-test",
+    "relation": "qualifies",
+    "paper_claim": "Table 2 daily-close campaign regressions give S&P coefficients 0.087 (daily), 0.128 (5-day) and 0.243 (20-day); oil -7.269 (5-day) and -12.570 (20-day). Text says the Table 2 equity effect is roughly a factor of ten larger than Table 1 (0.016 at 10-min differences, n=104). Authors attribute the gap to bias from reverse causation and common shocks. The OLS upper-bound statement (p.11, fn 14) concerns the reverse regression of the Bush probability on the S&P (2.3 and 3.3 pp per 10 percent rise), and holds if the shock correlation is non-negative, a sufficient condition.",
+    "paper_location": "Table 1 p.7; Table 2 p.10; text p.10-11 and fn 14 p.11",
+    "system_side": "SEATS-W regresses the week's Democratic share of giving on the prior week's change in 538 expected Democratic seats, pairing each week with the latest forecast available strictly before the week starts. 2022 House, 17 weeks, -3.47 pp per seat, EXPLORATORY. The code header presents it as a correlation and does not address common shocks.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:15-21 (design and as-of pairing); sgs_seats.R:52-54 (SEATS-W gate); sgs_seats.R:66-75 (inference notes)",
+    "transfer_conditions": "The size of the bias does not transfer to PAC giving (lumpy, deadline-driven, different series), but the existence of a common-shock confound does: the as-of lag removes within-week ordering, not shared news moving forecasts and giving together. The negative slope cannot be read as donors moving toward or away from the expected winner. An upper-bound argument needs a stated correlation sign, which SEATS-W does not supply.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Numbers, the factor-of-ten statement and the reverse-causation attribution check out against the text (Table 2 p.10, p.10-11). The OLS upper-bound sentence was attached to the Table 2 regression and stated as only-if; corrected in paper_claim. The 55 to 30 to 95 percent exit-poll path is in the text at p.5-6 and p.9.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#SEATS-W weekly seat-gain test (2022 House)|SEATS-W weekly seat-gain test (2022 House)]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.seats-weekly-test",
+    "relation": "context",
+    "paper_claim": "Identification uses two discrete election-night jumps in the Bush probability: the 2004 exit-poll leak (about 55 to 30 percent, then 95) and the 2000 Florida calls. Equity effects are 10- and 30-minute regressions (Table 1); a Wald estimator is stated explicitly only for yields (TIP and IEF, p.8-9). Footnote 9 splits the sample at 8pm and 10pm to test feedback. The paper does not recommend event-window designs; footnote 13 names instrumental variables as the ideal and leaves it open.",
+    "paper_location": "p.4-9; Figures 1-3; Table 1 p.7; fn 9 p.6; fn 13 p.12",
+    "system_side": "SEATS-W uses every pre-election week as an observation, with a residual block bootstrap conditional on the forecast path. No event-window design around large forecast moves exists in sgs_seats.R.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:66-75 (bootstrap and inference notes); sgs_seats.R:93-94 (dated 2022 forecast histories in hand)",
+    "transfer_conditions": "An event-window design needs forecast jumps from news plausibly unrelated to donor behaviour, and transaction-dated giving fine enough around each jump. The 2022 538 run timestamps could support a search, which stays UNVERIFIED until a second path reproduces it (DE-062) and names its window and denominator. A Wald ratio needs a donor-side response series that the paper does not have.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "The exit-poll path and the fn 9 split are verified. The event-window recommendation is the analyst's inference, not the paper's; the Wald ratio is explicit only for yields. Rewritten to what the paper says.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#SEATS-W weekly seat-gain test (2022 House)|SEATS-W weekly seat-gain test (2022 House)]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "method-source",
+    "paper_claim": "Partisan shock is the indicator of a Republican president minus the pre-election prediction-market probability of a Republican president. Table 3, 1880-2004: coefficient 0.0255 (SE 0.0082) without the incumbent term and 0.0248 (SE 0.0084) with it; incumbent-party term -0.0046 (SE 0.0084). Congressional control could not be tested because markets did not track it before 1994 (fn 19).",
+    "paper_location": "Historical evidence section p.15-17; Table 3 p.17; fn 19 p.17",
+    "system_side": "SHIFT in sgs_panel.R builds exp_shift as expected Democratic control minus current Democratic control, the Democratic-sign version. The brain study contract defines Shift as P minus RMajNow with P the Republican majority probability. Preview: chamber-stacked -0.04, p 0.76 (2021-25).",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_panel.R:230-235; brain topics/2026-09-feature-sector-growth-study.md (SHIFT preview lines near 268-270)",
+    "transfer_conditions": "Shift is an expected change in control before the election. The paper's shock is realized outcome minus prior expectation, so it transfers only to post-election giving. Independent shocks equal the number of elections, so any estimate is few-cluster and must say so. The sign convention must be stated as Democratic control, not Republican P.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Coefficients, SEs and the shock definition reproduce from the paper, although Table 3 column alignment is garbled in extraction. The rel's description of the code as Shift = P minus RMajNow with P Republican is a sign-convention mismatch: code uses Democratic expected minus current.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "paul_alignment says the sector growth plan cites the 2007 QJE version and lists it as a missing source. Unsupported: no Snowberg or Zitzewitz reference found in C:/Users/pgoff/Mentat/sector_growth_study or the brain topics folder. Strike or source it.",
+   "summary_md says OLS is only an upper bound if shocks correlate non-negatively. The paper states this for the reverse regression of the Bush probability on the S&P (p.11), and non-negative correlation is sufficient, not only-if.",
+   "summary_md says asset changes are divided by probability changes (Wald ratios) for identification. The paper uses a Wald estimator explicitly only for bond yields (p.8-9); equity effects are 10- and 30-minute regressions (Table 1).",
+   "summary_md's sharper design (event windows around forecast jumps, surprise-coded shock) is the analyst's inference. The paper does not recommend it and names instrumental variables as the ideal (fn 13).",
+   "summary_md and bearing 3 describe SHIFT as Shift = P minus RMajNow with P Republican. sgs_panel.R:230-235 uses Democratic expected minus current control; the sign convention must be stated.",
+   "Extraction garbles some Table 1 and Table 3 cells, so column alignment is uncertain; only cleanly aligned coefficients are verified here.",
+   "Version: the file is the IZA DP 1996 (March 2006) draft, not the QJE 2007 version. Cite numbers as the 2006 draft.",
+   "Scope: the Melange repo was not searched for the 2007 citation; the sector growth plan was searched in Mentat and the brain only."
+  ],
+  "gaps_exposed": [
+   "SEATS-W states no identifying assumption about common shocks between forecasts and giving; the as-of lag handles ordering only. The -3.47 pp per seat slope (2022 House, 17 weeks, one election) is a correlation until an exogenous-jump design or a second cycle reproduces it.",
+   "The sector growth study has no event-window or surprise-coded design; 538 run timestamps for 2022 would allow one.",
+   "SHIFT and SEATS use expected control or seats but never the post-election surprise (realized minus expected), the quantity with the cleanest identification in this literature.",
+   "The plan cites the QJE 2007 version; the file on disk is the IZA 2006 working paper, and numbers may differ between versions."
+  ],
+  "flags": [
+   "Any reading of the SEATS-W negative slope as donors moving toward or away from the expected winner would conflict with this paper's evidence that campaign-period time-series slopes can be inflated about tenfold or sign-reversed; keep it EXPLORATORY and quote it with its window (2022 House, 17 weeks) and denominator.",
+   "Version mismatch: the plan and missing_sources.md cite Snowberg, Wolfers and Zitzewitz 2007 QJE 122(2); this file is the 2006 IZA DP 1996 draft. Cite numbers as the 2006 draft.",
+   "No conflict with the SNA, LDA (D-021), D-025 or reciprocity rules: the paper concerns asset prices, not networks, edges or lobbying weights."
+  ],
+  "paul_alignment": "Paul has no annotated entry and no markup for this work. His sector growth plan cites the 2007 published version as background on seat-gain and control effects (it was listed as a missing source). The evidence supports using forecast probabilities as the predictor, as SEATS and SHIFT already do, but cuts against a causal reading of the weekly slope: the paper's core point is that campaign-period regressions mix effect and feedback. The current build answers his seat-gain question descriptively, matching the EXPLORATORY label in sgs_seats.R; nothing in his notes is stale.",
+  "related": [
+   {
+    "slug": "furnas-2019-partisan-ties-lobbying",
+    "relation": "complements",
+    "why": "Furnas et al. estimate revenue effects for party-tied lobbying firms after House-control flips, a control-shock design close to the SEATS and SHIFT question; the outcome is firm revenue, not donations."
+   },
+   {
+    "slug": "imai-2021-fixed-effects-regression",
+    "relation": "complements",
+    "why": "Imai and Kim show that two-way fixed-effects estimates rely on linearity for a causal reading, which bounds what the SHIFT and SEATS-W panel regressions can claim."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "note-request-for-review-industry-economic-performance",
+  "note": true,
+  "meta": {
+   "title": "Request for Review: Industry Economic Performance and Political Spending",
+   "authors": [
+    "Paul Goff"
+   ],
+   "year": "2026",
+   "venue": "Research note, Georgetown University affiliation, dated September 24, 2026, addressed to an advisor",
+   "doi": "",
+   "sha12s": [
+    "bc2c16a312a8"
+   ],
+   "category": "Paul's Research Notes",
+   "category_slug": "paul-s-research-notes"
+  },
+  "extraction": {
+   "title": "Request for Review: Industry Economic Performance and Political Spending",
+   "authors": [
+    "Paul Goff"
+   ],
+   "year": "2026",
+   "venue": "Research note, Georgetown University affiliation, dated September 24, 2026, addressed to an advisor",
+   "doi": "",
+   "document_type": "Internal research design note requesting review; no models estimated yet",
+   "coverage": "Full text read in one pass (18,889 chars, 282 lines): all sections 1-10 and data links. Lobbying, elections and projected control, legislators (committee jurisdiction) and sector allocation are covered in Sections 4-8. Networks, path-finding, persuasion/turnout and text measurement are not discussed. No annotation files exist (annot_sha12s is empty), so paul_markup is empty and 0 items were dropped. Text-only; no page images. Author treated as Paul because p.note is true. Metadata hints checked: title, author and year 2026 are correct; venue and document type are corrected here.",
+   "research_question": "Does a U.S. industry's year-over-year economic performance predict how much it spends on federal politics, through campaign contributions and through lobbying? How does expected partisan control of Congress shape both the amount and the partisan direction of that spending?",
+   "theory": "Competing accounts: deep pockets (H1, better years mean more spending); distress (H1-alt, bad years mean more lobbying for relief, as in 2008-09 bailouts); access-seeking (H2, contributions shift toward the party expected to hold the majority); stakes (H3, total contributions rise when a chamber is a toss-up); lobbying tracks current power (H4). Majority status is treated as worth access (committee chairs, agenda control), citing Cox and Magar 1999. Section 8 cites Grier, Munger and Roberts 1994 on potential government benefits and collective-action limits.",
+   "data": "Five initial sectors: commercial banks, credit unions, life insurance, auto manufacturing, crypto (crypto analyzed separately). Unit: sector by year, with sector by chamber by year for RShare. Proposed period 2008-2025, annual; extension to 1998 possible. About 9 elections in sample, six of which flipped a chamber (House 2010, 2018, 2022; Senate 2014, 2020, 2024). Sources: OpenSecrets bulk data, DIME v4.0 (1979-2024), FEC bulk data, OpenSecrets lobbying, LDA.gov API (quarterly LD-2 since 2008), Iowa Electronic Markets, Cook Political Report ratings (1984-present), 538 generic-ballot averages (back to 1996), FRED. N is not stated; the text implies about 18 observations per sector, roughly 90 sector-years (computed here, not stated).",
+   "method": "Pooled panel with sector fixed effects, not per-sector regressions. (1) log contributions on prior-year growth, same-year growth, negative-growth dummy, Midterm, Pres, Tossup, trend. (2) RShare by chamber on growth, Shift, RMajNow, Midterm, Pres. (3) log lobbying on lagged log lobbying, growth, Neg, Unified, Midterm, Pres, sample from 2008. Growth is real, z-scored within sector. Robustness: year fixed effects; Shift x RLean; expected seat change. Inference: wild cluster bootstrap by sector; Driscoll-Kraay where year-level terms enter. Forecasts are used only after estimation, to predict 2026.",
+   "identification": "No causal claims (Section 7). Prior-year growth is the main test because same-year growth may be caused by the spending and early-year money precedes most growth (Section 4.1). Sector fixed effects absorb time-invariant differences. Year fixed effects give the cleanest growth test but absorb projected control. Projected control rests on about 9 elections; Shift x RLean adds sector-by-year variation. Lobbying uses current control (unified vs divided) because lobbyists work on the sitting Congress.",
+   "scope": "Federal campaign contributions and federal lobbying (LDA) only. Five sectors, possibly expanded to every BEA industry matchable to OpenSecrets codes (about 70 BEA industries). Era 2008-2025 proposed, with possible extension to 1998. Life insurance is mainly state-regulated (McCarran-Ferguson), so federal-only scope is an open question (Section 8D). Fairshake outside spending is not candidate contributions.",
+   "key_findings": [
+    {
+     "finding": "No models estimated yet; the note reports design decisions only, with no empirical results.",
+     "location": "Header, Stage line",
+     "numbers": "0 models"
+    },
+    {
+     "finding": "Projected control is measured as probability of majority, not raw expected seat gains; seat change kept as robustness check.",
+     "location": "Section 4.3",
+     "numbers": ""
+    },
+    {
+     "finding": "Prior-year growth is the main test; same-year growth is secondary because it can be caused by the spending itself.",
+     "location": "Section 4.1, item 1",
+     "numbers": ""
+    },
+    {
+     "finding": "Cook Political Report final ratings (1984-2022) were correct about 94 percent of the time for Lean, 97 percent for Likely, about 100 percent for Solid.",
+     "location": "Section 6.3",
+     "numbers": "94 / 97 / 100 percent"
+    },
+    {
+     "finding": "Cox and Magar (1999) estimate House majority status worth about 36,000 dollars per member in corporate and trade PAC receipts around the 1994 switch; cited in the note, not verified.",
+     "location": "Section 4.3",
+     "numbers": "36,000 dollars per member"
+    },
+    {
+     "finding": "Only about 9 elections in the sample; six flipped one chamber.",
+     "location": "Section 7",
+     "numbers": "9 elections; 6 flips"
+    },
+    {
+     "finding": "Fairshake super PAC raised roughly 260 million dollars over 2023-24, mostly from a handful of firms and founders; outside spending, not contributions.",
+     "location": "Section 7",
+     "numbers": "about 260 million dollars"
+    },
+    {
+     "finding": "OpenSecrets API was discontinued April 15, 2025; bulk data remain free for non-commercial use.",
+     "location": "Section 6.3",
+     "numbers": "April 15, 2025"
+    }
+   ],
+   "measures": [
+    "Contrib: sector contributions by calendar year, CPI-deflated, summed by transaction date",
+    "RShare: Republican share of the sector's two-party contributions to chamber c candidates",
+    "Lobby: reported federal lobbying spending, CPI-deflated",
+    "G: real year-over-year growth, z-scored within sector; Neg: 1 if prior-year growth negative",
+    "P: probability Republicans hold chamber c after next election, measured before the money is given",
+    "Shift = P minus RMajNow; Tossup = 1 minus absolute value of (2P minus 1)",
+    "RLean: sector average Republican share over the sample",
+    "Pres and Midterm dummies (odd years baseline); Unified control",
+    "Growth candidates: bank assets and net income (FDIC); credit union assets, loans, membership (NCUA); life premiums and assets (ACLI, NAIC, BEA); auto real value added (BEA) and industrial production (Fed G.17); crypto market cap (CoinGecko, Coin Metrics)"
+   ],
+   "limitations": [
+    "Few elections (about 9); projected-control estimates rest on few independent observations (Section 7)",
+    "Few sectors (5 clusters) make inference fragile; wild cluster bootstrap proposed (Sections 5, 7)",
+    "Reverse causality for same-year growth (Section 7)",
+    "Growth measures not comparable across sectors (Section 7)",
+    "OpenSecrets codes do not match NAICS; BEA combines banks with credit unions and life insurers with other carriers (Section 7)",
+    "Regime changes: Citizens United and SpeechNow (2010), McCutcheon (2014), 2008 LDA reporting change, CUNA and NAFCU merger effective January 1, 2024 (Section 7)",
+    "Crypto: short history and very concentrated donors (Section 7)",
+    "Unobserved spending: 501(c) dark money and unregistered lobbying (Section 7)",
+    "Correlational design; no causal claims (Section 7)",
+    "Post-2007-08 drop in registered lobbyists, possibly shadow lobbying (Section 8C.8)",
+    "Odd-year prediction markets often not open, so P is hard to measure in odd years (Section 8B.5)",
+    "Open question whether 5 to 10 sectors allow reliable inference (Section 8E.13)"
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Ansolabehere, S., de Figueiredo, J. M., and Snyder, J. M., Jr. (2003). Why is there so little money in U.S. politics? Journal of Economic Perspectives, 17(1), 105-130.",
+    "Bonica, A. (2024). Database on Ideology, Money in Politics, and Elections: Public version 4.0. Stanford University Libraries.",
+    "Cox, G. W., and Magar, E. (1999). How much is majority status in the U.S. Congress worth? American Political Science Review, 93(2), 299-309. A 2023 corrigendum does not change the main findings.",
+    "de Figueiredo, J. M., and Richter, B. K. (2014). Advancing the empirical research on lobbying. Annual Review of Political Science, 17, 163-185.",
+    "Grier, K. B., Munger, M. C., and Roberts, B. E. (1994). The determinants of industry political activity, 1978-1986. American Political Science Review, 88(4), 911-926.",
+    "Kerr, W. R., Lincoln, W. F., and Mishra, P. (2014). The dynamics of firm lobbying. American Economic Journal: Economic Policy, 6(4), 343-379.",
+    "Snowberg, E., Wolfers, J., and Zitzewitz, E. (2007). Partisan impacts on the economy: Evidence from prediction markets and close elections. Quarterly Journal of Economics, 122(2), 807-829."
+   ],
+   "short_quotes": [
+    {
+     "quote": "Growth is correlated from year to year, so separate models would each pick up part of the other's effect.",
+     "location": "Section 4.1, item 1"
+    },
+    {
+     "quote": "Access comes with majority status: committee chairs and control of the agenda.",
+     "location": "Section 4.3"
+    },
+    {
+     "quote": "Actual election results would be hindsight, and they are partly caused by the money.",
+     "location": "Section 4.3"
+    }
+   ]
+  },
+  "summary_md": "Paul's September 24, 2026 design memo to a secondary advisor (Astra) asks whether a sector's year-over-year economic performance predicts its federal campaign giving and lobbying, and how expected partisan control shapes the amount and direction of that money. It reports no estimates. It sets out five hypotheses (deep pockets, distress, access-seeking, stakes, lobbying tracks current power) and three pooled sector fixed-effects models. Model 1 is log contributions on prior- and same-year growth together (a distributed lag), a negative-growth dummy, Midterm/Pres, a Tossup term and a trend. Model 2 is Republican two-party share on Shift = P minus RMajNow. Model 3 is log lobbying with a lagged dependent variable and Unified control. Inference is a wild sector-cluster bootstrap with Driscoll-Kraay errors. The proposed panel is 2008-2025 with five sectors, about 9 elections and 6 chamber flips. The memo is the method source for the Mentat sector growth study, and the Codex ORIGINAL_MODEL_CONTRACT transcribes it. The R build diverges from it. Each growth timing enters its own model (C1/C2/C3) rather than one distributed lag. Totals carry a signed exp_dem control where the memo calls for Tossup. There is no negative-growth dummy, trend or lagged lobbying term. The primary window is 2020-2025 (three elections), not 2008-2025. Results so far are null or fragile: no stable partisan shift (-0.04, p .76), and the lobbying growth lead flips sign under year FE. The memo's leverage worries therefore apply to the build with more force. The only within-cycle access-seeking signal, SEATS-W (-3.47 pp per expected D seat, House 2022), comes from one election and uses expected seats, the measure the memo demoted to a robustness check. All agent readings here are UNVERIFIED (DE-062).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "method-source",
+    "paper_claim": "Pooled sector-FE models: (1) log Contrib on G(t-1), G(t), Neg(t-1), Midterm, Pres, Tossup, Trend; (2) RShare by chamber on growth, Shift, RMajNow, Midterm, Pres; (3) log Lobby on lagged log Lobby, growth, Neg, Unified. Growth z-scored within sector; CPI-deflated dollars; wild cluster bootstrap by sector; proposed sample 2008-2025 with 5 initial sectors (expansion to about 70 BEA industries allowed).",
+    "paper_location": "Sections 4.1, 4.2, 4.3 and 5 (equations 1-3); Section 6.1",
+    "system_side": "sgs_registry.R builds C1-C3 and L1-L3 as sector-FE tests with wild cluster restricted bootstrap by sector (Webb six-point weights); sgs_estimate.R header confirms this inference. Growth z-scoring and log DVs not checked in code here (the registry default DV is levels; see next bearing).",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:112-120; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:1-10",
+    "transfer_conditions": "Holds only as a statement of the memo design. The build departs from it (next bearing), so build results must not be read as memo tests.",
+    "strength": "strong",
+    "verdict": "reproduced",
+    "verifier_note": "Equations 1-3, z-scoring, CPI deflation, wild cluster bootstrap and 2008-2025 window confirmed in text Sections 4.1-4.3, 5 and 6.1. Memo model 2 also includes Midterm and Pres, which the rel omits. Code lines confirmed: C and L loops at registry 112-120; WCR with Webb six-point weights at estimate.R 1-10.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "contradicts",
+    "paper_claim": "Both growth timings belong in one regression (distributed lag) because separate models would each pick up part of the other effect. Totals get Tossup = 1 - abs(2P - 1), not a signed Republican-gains term. A Neg dummy, a Trend and lagged log lobbying are included. Lobbying uses Unified control.",
+    "paper_location": "Section 4.1 items 1, 7 and 8; Section 4.3; Section 5 equations 1 and 3",
+    "system_side": "Registry runs C1, C2 and C3 as separate single-growth models, not jointly. Contribution controls are pres_year, midterm_year, exp_dem_house, exp_dem_senate; the core has no Tossup, Neg or Trend term. Lobbying adds cur_dem_house and cur_dem_senate and has no lagged DV. Contribution DV defaults to real dollar levels (contributions_real_m), with logs only in robustness. Primary window 2020-2025 (R8). The g_pos/g_neg asymmetry split is an EXTENSION family from the 2026-09-26 rulings, not the core spec, so the rel statement that decline years use it as the core is softened. The expected-control terms are not P in levels: per year they come from an IEM annual mean, a binary forecaster final call (Democrats at or above 218 House or 51 Senate seats), or a market snapshot. The 2023 value is a final call flagged as measured Nov 2024, after the year.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:30-34, 112-114, 313-316; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:38-41; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_run.R:29, 190; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_panel.R:638, 1380; C:/Users/pgoff/Mentat/sector_growth_study/results/report_analysis-R-20260926T221444Z.md (input flags)",
+    "transfer_conditions": "Applies to every CORE C and L result. Rulings R4-R8 and the 2026-09-26 rulings may supersede parts of the memo, but results from separate-timing, signed-control models should not be reported as tests of memo H1 or H3.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Memo text (Section 4.1 items 1, 7, 8; 4.3; equations 1 and 3) confirmed. Code confirms separate C1-C3, no core Neg, Trend, Tossup or lagged DV, and window 2020-2025. Softened: ASYM is an extension family, and exp_dem is a per-year method mix (including a 0/1 call measured after the year), not P levels as the rel summary says.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.seats-weekly-test",
+    "relation": "qualifies",
+    "paper_claim": "Probability of majority control is the preferred projected-control measure because access comes with majority status (Cox and Magar 1999, about 36,000 USD per member, cited and not verified here). Expected seat change is kept only as a robustness check. Q4 asks how quickly PAC giving tracks changing expectations within a cycle; Q7 asks about an event study around expected flips.",
+    "paper_location": "Section 4.3; Section 8B questions 4 and 7",
+    "system_side": "SEATS-W is a weekly test in report 221444: 17 weeks, 2022 House only (2020 and 2024 not usable yet). Dependent variable is the Democratic share of gross positive receipts. Regressor is the prior-week change in 538 Lite expected Democratic seats, with a week-of-cycle trend. House level, pooled-dollar (the first row of the primary table): -3.36 pp per seat, block-bootstrap p 0.11 and 0.10, not significant. The -3.47 pp figure with p 0.0086 and 0.0174 (Holm 0.034 and 0.070) is the equal-sector variant. Senate level is null in both weightings (equal-sector +6.23, p 0.65; pooled-dollar +3.99, p 0.81).",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:13-22, 270-285; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:195-206; C:/Users/pgoff/Mentat/sector_growth_study/results/report_analysis-R-20260926T221444Z.md (primary table, lines 338-352; House level blocks near lines 613-640 and 723-735)",
+    "transfer_conditions": "Exploratory, one-cycle reading only, 2022 House. The report itself calls it EFFECTIVELY A ONE-ELECTION TEST. Any headline must state the weighting; the pooled-dollar result is not significant.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Memo Section 4.3 and Section 8B items 4 and 7 confirmed. The rel coefficient and p-values match the equal-sector row, but not the pooled-dollar row that the report lists first in its primary table. The rel also calls the regressor expected seats in level; the model uses the prior-week change.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#SEATS-W weekly seat-gain test (2022 House)|SEATS-W weekly seat-gain test (2022 House)]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-giving-forecast.cycle-model",
+    "relation": "supports",
+    "paper_claim": "Election-cycle controls use Pres and Midterm dummies with odd years as the baseline. Industry forecasts (IBISWorld, trade outlooks) are used only to predict 2026 spending after estimation and are never mixed into the estimated growth variable.",
+    "paper_location": "Section 4.2 (cycle controls); Section 4.1 item 6 (forecasts used only at prediction)",
+    "system_side": "The cycle model projects with M = B exp(phi dP + d_h) (1 + x/2), where dP = Pres(c) minus Pres(c-2) is a presidential-cycle difference, not a Midterm dummy with odd-year baseline. The IBISWorld real growth path, lagged one year, enters only through the projection term x. Forecast growth is kept out of estimation in this model. The sector study does put predicted_growth_pct on the right-hand side in C3 and L3 (sgs_registry.R:30), which the memo prohibits; that departure is outside this bearing.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:1391-1397; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:30",
+    "transfer_conditions": "Supports only the forecast product split between estimation and projection. Does not cover the sector study C3 and L3 tests, and the presidential-difference term is not the memo Midterm and Pres dummy set.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Memo Section 4.1 item 6 and 4.2 confirmed. Code comment at giving_forecast.py 1391-1397 confirmed for the IBIS one-year lag and projection-only role. The Pres and Midterm dummy wording is not what the code uses, so the system side is corrected. Ruling R6 was not opened.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-giving-forecast#Cycle-aware giving refit (phase and drift log models, 50-50 growth)|Cycle-aware giving refit (phase and drift log models, 50-50 growth)]]",
+    "system": "mentat-giving-forecast"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "SEATS-W headline -3.47 pp (p 0.0086 and 0.0174) is the equal-sector variant. The pooled-dollar primary row is -3.36 pp with p 0.11 and 0.10 and is not significant. The rel does not say which weighting it reports.",
+   "SEATS-W regressor is the prior-week change in 538 Lite expected Democratic seats with a week-of-cycle trend, not the level of expected seats as the summary states.",
+   "The no-stable-shift figure (-0.04, p 0.76) is the SHIFT-Chamber-PV preview: 80 rows, 4 residual df, below the 6-year minimum. Core SHIFT-Chamber and SHIFT-House are NOT ESTIMABLE in report 221444 (5 of 6 years). The SATURATED at 2 years wording does not match that report.",
+   "Majority probability P is not what enters as exp_dem levels. The panel uses per-year IEM annual means, a binary forecaster final call (Democrats at or above 218 House or 51 Senate seats), or a market snapshot. The 2023 value is a final call measured Nov 2024, after the year, which departs from the memo measured-before-money rule (Section 4.3). The rel does not record this.",
+   "L3-LV year-FE coefficient -0.4765 (rel -0.477) is not significant (p 0.15, CI -1.02 to 0.73). The rel presents the sign flip without that qualifier.",
+   "The within-cycle signal claim is overstated: equal-sector House lag (-3.05, p 0.014) and 538 Classic equal-sector level (-3.59, p 0.036) are also negative. All rest on one cycle, as the report itself says.",
+   "Related link anon-2025-cross-industry-political is not same-data. The memo covers executive and CEO giving for the top ten firms by revenue in four industries and has no lobbying measure. Dropped from related.",
+   "Imai and Kim (2021) text has no discussion of lagged dependent variables with fixed effects; the rel attribution is unsupported and was removed.",
+   "The ORIGINAL_MODEL_CONTRACT note and its transcription claim were not located in the sector_growth_study folder. Unverified.",
+   "Confirmed by absence in code/R: no Tossup, Driscoll-Kraay or Shift x RLean term in the registry tests. Not checked: the paul_alignment claim that growth adds no adjusted R2.",
+   "Coverage: all 4 bearings and all 9 related links checked; 8 kept, 1 dropped. Text-only review; page images not available."
+  ],
+  "gaps_exposed": [
+   "No distributed-lag core model: the build never enters G(t-1) and G(t) jointly in one regression, which the memo's main argument (Section 4.1 item 1) requires; C1 and C2 each risk absorbing the other's effect.",
+   "No Tossup (stakes, H3) term exists anywhere in the R study code; contribution totals carry signed exp_dem controls, which the memo argues against for total-dollar outcomes.",
+   "Lobbying models lack the lagged dependent variable the memo specifies (Kerr et al. persistence), and the memo's open question Q13 on Nickell bias with FE plus a lagged DV over about 18 years is unaddressed.",
+   "Driscoll-Kraay errors for year-level terms are not implemented; the build uses two-way cluster SE as its sensitivity check instead (contract: neither may be silently replaced).",
+   "The primary window of 2020-2025 gives about 3 elections against the memo's 9, so the projected-control leverage the memo already calls weak is thinner still; SHIFT House is SATURATED at 2 years.",
+   "The Shift x RLean interaction, which the memo calls the stronger test because it survives year FE, is not among the registry tests located here.",
+   "Majority probability P is used as exp_dem levels; the memo's Shift = P - RMajNow appears only as the derived exp_shift reparametrisation, not as the primary SHIFT focal term.",
+   "C3/L3 regress spending on IBISWorld predicted growth in estimation, contrary to the memo's rule that forecasts never enter the growth variable; this is ruled (R6) but not labelled as a departure from the memo."
+  ],
+  "flags": [
+   "Pooled coefficients across sectors with incomparable growth sources (crypto market cap vs bank assets) cross a known fault line; quote them with per-sector strata (the SLOPES family) or label them UNSTRATIFIED.",
+   "Every figure from the build must name its window (2020-2025 primary, 2021-2025 preview, 2022-only SEATS-W) and its denominator (sector-years or unit-weeks); the memo's 2008-2025 framing does not describe the built results.",
+   "Cox and Magar's 36,000 USD per member figure and Cook's 94/97/100 percent accuracy figures are cited and were not verified against sources on disk.",
+   "LDA spending as a dependent variable is consistent with D-021, since it is not an edge or weight; the memo's issue-code alternative (Q8) would still be a measurement choice and must not become a member-level lobbying edge.",
+   "No conflict with the rejected SNA proposals or the reciprocity rule; the memo does not touch networks.",
+   "This reading is new agent analysis and stays UNVERIFIED until a second path reproduces it (DE-062)."
+  ],
+  "paul_alignment": "No annotations; this is Paul own design memo. Evidence so far does not back his deep-pockets or access-seeking hypotheses: growth adds no adjusted R2, L3-LV +0.352 flips to -0.477 under sector plus year FE, SHIFT shows no stable partisan move (-0.04, p .76), matching the memo own caution (no causal claims, few elections, 5 clusters). The memo is stale against the build: window moved to a 2020-2025 primary (R8), scope grew to nine sectors, and joint timings, Tossup, Neg, lagged lobbying and Driscoll-Kraay are not what the R registry runs.",
+  "related": [
+   {
+    "slug": "imai-2021-fixed-effects-regression",
+    "relation": "complements",
+    "why": "Imai and Kim (2021) on two-way fixed effects for causal inference supports caution about the memo year FE plan. The text has no lagged-dependent-variable discussion, so the rel attribution about a lagged DV with few units is not carried over."
+   },
+   {
+    "slug": "kim-2020-strategic-sequential-links",
+    "relation": "complements",
+    "why": "Kim, Stuckatz and Wolters (2020) find interest-group donations directly tied to subsequent lobbying, supporting separate modeling of giving and lobbying. The unit is interest group, not firm as the rel says."
+   },
+   {
+    "slug": "furnas-nd-conflating-lobbying-pacs",
+    "relation": "complements",
+    "why": "Finds minimal overlap between organizations that lobby and organizations making campaign expenditures. Bears on memo questions 2 and 8."
+   },
+   {
+    "slug": "huneeus-2018-effects-firms-lobbying",
+    "relation": "complements",
+    "why": "Estimates firm-level returns to lobbying (abstract and counterfactuals). Relevant to the deep-pockets reading; the link to H1 is interpretive."
+   },
+   {
+    "slug": "bonica-2013-mapping-ideological-marketplace",
+    "relation": "complements",
+    "why": "Introduces the common-space CFscores that DIME uses for the RShare outcome."
+   },
+   {
+    "slug": "bacik-2025-measuring-dynamical-evolution",
+    "relation": "complements",
+    "why": "Reports lobbying network dynamics with periodicity synchronized with the presidential election cycle, supporting the memo Pres and Midterm controls in the lobbying model."
+   },
+   {
+    "slug": "chohan-2025-crypto-oligarchy-cryptocurrency",
+    "relation": "complements",
+    "why": "Covers Fairshake and the concentrated crypto lobby, supporting the memo choice to analyze crypto separately."
+   },
+   {
+    "slug": "goff-nd-cross-industry-finance",
+    "relation": "complements",
+    "why": "Paul earlier report on five financial sectors using FEC, FDIC, SEC and LDA data. Overlapping sectors and sources, but a snapshot report, not the sector-year panel."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "note-industry-growth-and-political-spending-research",
+  "note": true,
+  "meta": {
+   "title": "Industry Growth and Political Spending: Research Plan",
+   "authors": [
+    "Paul Goff"
+   ],
+   "year": "2026",
+   "venue": "Research note",
+   "doi": "",
+   "sha12s": [
+    "46495cfa916e"
+   ],
+   "category": "Paul's Research Notes",
+   "category_slug": "paul-s-research-notes"
+  },
+  "extraction": {
+   "title": "Industry Growth and Political Spending: Research Plan",
+   "authors": [
+    "Paul Goff"
+   ],
+   "year": "2026",
+   "venue": "Research note",
+   "doi": "",
+   "document_type": "Research plan (Paul's own research note; specifies tests and sources, reports no estimated results)",
+   "coverage": "Full text read in one pass: all 301 lines of the 29,981-character file (_text/46495cfa916e.txt), Sections 1-9. No annotation files exist (annot_sha12s is empty), so paul_markup is empty and nothing was dropped. p.note is true, so the author is treated as Paul. No ext/rel override files existed. Metadata hints verified: title, author, 2026 date and research-note venue are correct; the document is a plan, not a results paper.",
+   "research_question": "Do industries spend differently on politics (federal campaign contributions and lobbying) when they have grown, are growing, or expect to grow? Does a published industry growth forecast predict subsequent spending, and do expectations about House and Senate control help explain spending?",
+   "theory": "Better performance could supply more money for political spending; weak performance or a weak forecast could instead prompt spending to seek favorable policy. The sign of the relationship is to be estimated, not assumed.",
+   "data": "Target panel of annual sector-year observations, 2008-2025, for nine sectors where comparable data exist: commercial banks, credit unions, life insurance, auto manufacturing, crypto, Credit Arms, Fintech, Property and Casualty insurance, Telecom. Odd years retained; incomplete 2026 excluded. Unit is sector-year; spending in millions of 2025 dollars. Sources: IBISWorld revenue and archived forecasts; Mentat/FEC contributions split by job tier; Melange LDA and LobbyView lobbying; IEM congressional control forecasts; Minneapolis Fed CPI. Final N is not yet fixed: verified contribution years overlap the congressional forecasts only in 2021-2022. Strict annual growth inputs: 53 in the original collection, 86 in the expanded nine-sector grid.",
+   "method": "Multiple linear regression by OLS with a separate intercept per sector (sector fixed effects). Contributions: Y_it = a_i + b X_it + c Pres_t + d Midterm_t + e ExpectedDemHouse_t + f ExpectedDemSenate_t + error. Lobbying adds CurrentDemHouse_t and CurrentDemSenate_t. X is prior actual growth, same-year actual growth, or predicted growth (tests C1-C3 and L1-L3). Growth in percentage points. Job-tier extension: pooled model with sector-by-tier baselines and growth x tier terms, Employee as reference. Chamber extension: linear model of Democratic share of contributions. Further extensions: prior and predicted growth together; year indicators in place of national controls; logged spending for positive observations. Simple regression only to illustrate scatterplots.",
+   "identification": "No causal identification is claimed. Identifying variation is within-sector over time, after election-cycle and congressional-expectation controls. Predicted growth is taken from the latest IBISWorld report published by December 31 of the prior year, so it precedes the spending year. Congressional expectations are concurrent IEM averages and may not be known before all spending in a year. Results are framed as associations consistent with a response to public forecasts, not knowledge of firms' private expectations.",
+   "scope": "US federal political spending by nine industry sectors, 2008-2025: candidate-committee contributions (personal versus organizational/PAC channels) and lobbying expenditures. Sector membership follows workbook rosters (40 company names) and industry proxies: Credit Arms is a proxy for workbook companies, Telecom is analyzed at component level, and Fintech lacks a comparable annual series. Life insurance and auto manufacturing are not among the published workbooks checked.",
+   "key_findings": [
+    {
+     "finding": "Design is OLS with sector fixed effects and six core tests: C1-C3 explain contributions and L1-L3 explain lobbying, each with prior actual, same-year actual, or predicted growth as the growth regressor.",
+     "location": "Section 2 (table) and Section 3 (equations)",
+     "numbers": "6 core tests; growth in percentage points; spending in millions of 2025 dollars"
+    },
+    {
+     "finding": "Predicted growth must come from the latest IBISWorld report published by December 31 of year t-1 that forecasts year t, using numerator and denominator from the same vintage.",
+     "location": "Section 4, Predicting growth: preserve the original forecast date",
+     "numbers": "Example: report estimates 2019 revenue at 100 and 2020 at 105, giving 5 percent"
+    },
+    {
+     "finding": "Readiness check: verified contribution years overlap the prepared congressional forecasts only in 2021-2022, too little annual variation to identify the full control specification.",
+     "location": "Section 8, Readiness check",
+     "numbers": "overlap years 2021 and 2022 only"
+    },
+    {
+     "finding": "IBISWorld collection size: 63 original reports yielding 53 strict annual sector-year values; the expanded nine-sector grid has 86 strict annual revenue-growth inputs with explicit missing rows.",
+     "location": "Section 4 (predicted growth) and Section 9",
+     "numbers": "63 reports; 53 then 86 strict annual inputs; 12 supplemental observations kept separate"
+    },
+    {
+     "finding": "Banking and credit-union revenue include 2006, while life insurance and auto extracts start in 2007, leaving their 2008 lagged-growth observation incomplete.",
+     "location": "Section 6A, final paragraph",
+     "numbers": "2006 start for banks and credit unions; 2007 for life and auto"
+    },
+    {
+     "finding": "Crypto has only one verified original forecast: a Statista U.S. cryptocurrency-platform revenue forecast for 2025 of minus 3.78 percent, available by December 26, 2024, kept as a separate proxy.",
+     "location": "Section 6A, table row for Crypto",
+     "numbers": "-3.78 percent for 2025"
+    },
+    {
+     "finding": "Telecom is kept at component level (wireless and cable archives, 36 reports) because cable's revenue definition changes; Fintech has only dated multi-year projections and no comparable annual series.",
+     "location": "Section 6A, table rows for Telecom and Fintech",
+     "numbers": "36 Telecom reports"
+    },
+    {
+     "finding": "Congressional control forecasts (IEM) are available 2008-2022 only; 2023-2025 are missing, and the later election result must never substitute for a missing forecast.",
+     "location": "Section 6D, forecast meaning paragraph",
+     "numbers": "available 2008-2022; 2023-2025 missing"
+    },
+    {
+     "finding": "Job-tier test uses a pooled model with sector-by-tier baselines and growth-by-tier interactions, Employee as reference; the existing Employee class includes unrecognized-title fallbacks that must be flagged.",
+     "location": "Section 5, Job-level comparisons; Section 6B",
+     "numbers": "Chief slope term q; Middle Management slope term r"
+    },
+    {
+     "finding": "Partisan direction is tested with a per-chamber Democratic share outcome, D/(D+R), with zero denominators set to missing; party, presidential and other committee flows are not assigned to a chamber without a defensible mapping.",
+     "location": "Section 5, Partisan direction",
+     "numbers": "bounded 0 to 1 outcome"
+    },
+    {
+     "finding": "Lobbying outcome must keep expenses_total and income_total distinct, since client reports and outside-registrant receipts can refer to overlapping money; the four-sector LDA aggregate does not cover all nine sectors.",
+     "location": "Section 6C, Lobbying",
+     "numbers": "2 recorded measures analyzed separately; LDA annual rows 2021-2025 plus partial 2026"
+    },
+    {
+     "finding": "Inference caution: with few independent sector groups, ordinary independent-row OLS standard errors are not sufficient for strong significance claims, so repeated observations and small-sample uncertainty must be assessed.",
+     "location": "Section 5, final paragraph",
+     "numbers": "9 planned sectors; fewer usable"
+    }
+   ],
+   "measures": "Dependent variables: annual federal candidate contributions (personal and organizational/PAC channels) and lobbying expenditures, in millions of inflation-adjusted 2025 dollars using annual CPI multiplier 321.9 over CPI. Independent variables: actual growth as 100 times (revenue ratio minus 1); prior-year growth; predicted growth from the report vintage; expected Democratic House and Senate control on a 0-1 scale (IEM, converted from Republican probability); current Democratic House and Senate control (1/0); presidential and midterm indicators. Job tiers: Chief, Middle Management, Employee. Partisan outcome: Democratic share of contributions per chamber.",
+   "limitations": [
+    "Plan only: no estimated results are reported in the document.",
+    "Few independent sector groups (nine planned, fewer usable); ordinary OLS standard errors understate uncertainty; repeated observations must be accounted for.",
+    "Verified contribution years overlap congressional forecasts only in 2021-2022, so the full control specification is not yet identified.",
+    "IEM congressional forecasts are concurrent averages, not necessarily known before all spending in the year, and are missing for 2023-2025.",
+    "IBISWorld forecasts proxy public expectations only; they do not reveal private firm forecasts or whether a donor read the report.",
+    "Credit Arms is an industry proxy for workbook companies with OneMain and equipment-finance scope differences needing sensitivity checks.",
+    "Telecom is component-level; Fintech lacks a comparable annual series; crypto has one verified forecast.",
+    "Auto 2011-2012 uses a car and light-truck component reconstruction and needs a check excluding it; several forecast price bases differ and some values are inferred.",
+    "Chief classification uses a non-date-specific executive-name override; historical tier comparisons need role at donation date or a sensitivity test.",
+    "Employee tier includes unrecognized-title fallbacks; lobbying has no donor job-tier split in verified sources.",
+    "Lobbying: expenses_total and income_total measure overlapping money and cannot be simply added; older undifferentiated amount totals are not comparable without checking.",
+    "Historical contribution coverage before 2021 is not established in the local workbook extracts; FEC bulk data may be needed.",
+    "Sources cover only the selected sectors and are not an exhaustive archive of forecasts."
+   ],
+   "references_of_note": [
+    "IBISWorld Key Statistics and Industry Archives (sector reports 52211, 52213, 52411a, 33611, 52222, 52412, 51721, 51711a)",
+    "IBISWorld glossary on constant publication-year prices",
+    "FEC bulk data for historical contributions",
+    "LobbyView reports and clients exports",
+    "Minneapolis Fed annual CPI series",
+    "IEM House and Senate control forecasts (2002-2022 archive)",
+    "House and Senate party history pages for actual control",
+    "statsmodels OLS documentation (implementation only)"
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "Do not add a full set of year indicators to these equations while retaining the national annual controls",
+     "location": "Section 3, Control variables (paragraph after table)"
+    },
+    {
+     "quote": "IBISWorld forecasts proxy public expectations; they do not establish each company's private forecast or whether a donor read the report.",
+     "location": "Section 4, Predicted growth (paragraph on expanded collection)"
+    },
+    {
+     "quote": "Prioritize effect size, uncertainty and consistency over whichever model produces the smallest p-value.",
+     "location": "Section 5, final paragraph"
+    }
+   ]
+  },
+  "summary_md": "Paul's own research plan (dated 2026-09-25) for testing whether industries spend more or less on federal politics when they have grown, are growing, or expect to grow. It specifies OLS with a separate intercept per sector, six core tests (C1-C3 contributions, L1-L3 lobbying, each with prior actual, same-year actual, or IBISWorld predicted growth), election-cycle dummies and IEM expected-control covariates, plus job-tier and per-chamber Democratic-share extensions. Its strongest contributions are discipline rules: predicted growth must come from a report vintage published before the spending year, missing forecasts stay missing, null results are kept, and independent-row OLS errors are ruled insufficient with nine or fewer sector clusters. It reports no estimates, and its own readiness check says contributions overlap the IEM forecasts only in 2021-2022. The document is the north star of the built sector growth study (Mentat sector_growth_study, in R). The build honours the inference caution with a wild cluster restricted bootstrap by sector and Holm adjustment, but departs from the plan in three places: log outcomes rather than dollar levels, a retrospective 2023-2026 expected-control series plus 538 robustness filling the IEM gap, and added Tossup and trend terms. Results recorded in the brain (UNVERIFIED, single path): L3 on LobbyView lobbying b 0.242 million 2025 USD per pp (p 0.033, Holm 0.1125) flips to -0.477 under year FE, growth adds no adjusted R2, and the annual partisan SHIFT is -0.04 (p 0.76). So far the plan's question is answered as no stable growth signal, which bears directly on the live giving forecast that still feeds IBISWorld growth into general giving at 50/50.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "method-source",
+    "paper_claim": "Six core tests C1-C3 (contributions) and L1-L3 (lobbying), each with prior actual, same-year actual or predicted growth as the regressor; Y in millions of 2025 USD; X in percentage points; keep all six results including nulls; nine planned sectors give few independent groups so ordinary independent-row OLS errors are not sufficient for strong significance claims.",
+    "paper_location": "Section 2 (six core tests table), Section 3 (equations and units), Section 5 (final paragraph)",
+    "system_side": "R build runs C1-C3 on contributions_real_m and L1-L3 on lobbying DVs with the growth regressors in SGS_GROWTH; controls are pres_year, midterm_year, exp_dem_house, exp_dem_senate, plus cur_dem_house and cur_dem_senate for lobbying; sector baselines; inference is wild cluster restricted bootstrap-t by sector with Webb six-point weights, enumerated when 6^G is at most 9999; Holm adjustment across pre-specified families. Main outcomes are levels in millions; log DVs appear only as robustness variants R-log and R-logFE on L-LV. No Tossup or trend regressor is in either control set.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:31-36,105-150; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:1-12,194-212; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_run.R:706-731",
+    "transfer_conditions": "Direct for the six-test design and the inference rules. The plan asks for dollar levels as the main outcome, and the build keeps levels as the main outcome too, so the log departure is a robustness addition, not the main model. Label any log-based figure as robustness.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "Plan design, the WCR bootstrap with Webb weights and the Holm step are confirmed in code. The rel claims the build models log giving with Tossup and trend terms; the code contradicts both. Main DVs are levels, log is robustness only (sgs_registry.R:113-150), and no Tossup or trend regressor exists in SGS_C_CONTROLS or SGS_L_CONTROLS (sgs_registry.R:33-34). Trend exists only as a diagnostic section label (sgs_config.R:298).",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "qualifies",
+    "paper_claim": "Readiness check: verified contribution years overlap the IEM congressional forecasts only in 2021-2022; IEM covers 2008-2022 with 2023-2025 missing; a later election result must never substitute for a missing forecast.",
+    "paper_location": "Section 8 (readiness check); Section 6D (forecast meaning)",
+    "system_side": "Build fills 2023-2026 expected control from the 02 expected_control_2023_2026 sheet on Paul's ruling, labelled RETROSPECTIVE / NOWCAST (RETRO_LABEL), with exp_dem_*_after_year flags; STRICT variants drop values measured after their year; the 538 generic-ballot margin is robustness family H4-538 only, replacing exp_dem_house there and never the main measure.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:182-191,259-264,315-320; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_panel.R:211-232,260-264,387-415",
+    "transfer_conditions": "Holds for the main series only as the labelled RETROSPECTIVE / NOWCAST measure that Paul ruled. Any quoted main-series result using 2023-2026 expectations must carry that label. The STRICT variant is the timing-clean check that the plan's rule supports, and it should be quoted beside any main-series result.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Plan text confirmed. The build is not a silent breach: sgs_config.R:185 labels the series retrospective per Paul's ruling and STRICT variants exclude such values. The rel calls this a possible conflict to verify; the code answers that question with an explicit ruling and label, so the flag should cite it. The rel's description of 538 as filling the IEM gap is wrong: 538 is robustness only, and the 2023-2026 fill is the expected-control sheet.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "qualifies",
+    "paper_claim": "Do not add a full set of year indicators while keeping national annual controls because year effects absorb them; a separate check may swap the controls for year indicators to see whether the growth relationship survives common yearly shocks.",
+    "paper_location": "Section 3, paragraph after the control table",
+    "system_side": "Build runs a year-FE variant of L1-LV..L3-LV as robustness (R-yearFE). Recorded reference values for L3-LV in sgs_review.R: base +0.352 (n 77); year-FE -0.477; log-FE -0.006; first-difference -0.537 (n 71); adjusted R2 0.884717 with growth and 0.884690 without, on the same rows. Other year-effect strata are marked insufficient because year effects leave no within-sector variation in a sector-only regression.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:30-35; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:385-398; C:/Users/pgoff/Mentat/sector_growth_study/code/R/tests/testthat/test-review-0926.R:250",
+    "transfer_conditions": "The recorded figures are hard-coded reference values from the Codex methodology review of run analysis-R-20260926T070630Z, which the pipeline must reproduce; they are not a fresh re-estimation in this check. The pooled slope is UNSTRATIFIED unless the per-sector SLOPES strata are quoted beside it. Single analysis path, so UNVERIFIED under DE-062.",
+    "strength": "strong",
+    "verdict": "softened",
+    "verifier_note": "The plan's check design is confirmed. The bearing's +0.352 and -0.477 match sgs_review.R:33. The rel summary's 0.242 (p 0.033) does not appear anywhere in the code; the code gives p 0.0375, and Holm 0.1125 equals 3 x 0.0375, consistent with Holm over three tests. The bearing's code_ref should point to sgs_review.R:30-35 because 385-398 is the year-effects guard, not the flip itself.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-giving-forecast.cycle-model",
+    "relation": "qualifies",
+    "paper_claim": "Predicted industry growth is the variable of direct interest, and the sign of the growth-spending relation is to be estimated, not assumed; IBISWorld forecasts proxy public expectations only and do not establish any company's private forecast or whether a donor read the report.",
+    "paper_location": "Section 1 (research logic); Section 4 (IBISWorld proxy caveat)",
+    "system_side": "Live cycle model: M = B exp(phi dP + d_h) (1 + x/2), with x the IBISWorld real-growth budget change with a one-year lag. Company PACs (pac_to_candidates) are on the panel nowcast with x = 0 under D-116 (PANEL_NOWCAST); general giving keeps the x term. The 50/50 weight is taken from the 2026-10-07 owner ruling named in the code header.",
+    "code_ref": "C:/Users/pgoff/Mentat/mentat/app/giving_forecast.py:1391-1411,1594,1668-1673",
+    "transfer_conditions": "The plan supplies a design principle, not evidence for the 50/50 term. The rel's claim that Paul ruled roster mismatch a stated limitation does not appear in the plan and is unverified. The build's no-stable-effect reading is single path and UNVERIFIED under DE-062. No backtest of the 50/50 term was checked here.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Code confirmed: general giving still carries (1 + x/2) and company PACs were moved off the growth term under D-116. The rel formula omits the exp(phi dP + d_h) factor and the P1 conditioning, so write the full cycle form. The rel's transfer claim about Paul's roster ruling is not supported by the plan text.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-giving-forecast#Cycle-aware giving refit (phase and drift log models, 50-50 growth)|Cycle-aware giving refit (phase and drift log models, 50-50 growth)]]",
+    "system": "mentat-giving-forecast"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.seats-weekly-test",
+    "relation": "context",
+    "paper_claim": "Partisan direction is tested with a per-chamber Democratic share D over (D plus R), with zero denominators set missing; party, presidential and other committee flows are not assigned to a chamber without a defensible mapping.",
+    "paper_location": "Section 5, Partisan direction",
+    "system_side": "SHIFT and DS families use per-chamber Democratic share. In the latest R report the core SHIFT-House and SHIFT-Senate are NOT ESTIMABLE; only the preview SHIFT-Chamber-PV is estimable (-0.0425, p 0.7576, 80 rows, 4 residual df, below the 6-year minimum and labelled post-result exploratory). SEATS-W House level on 538 lite, exploratory, 17 weeks, gives -3.4686 in one row of the report; 538 classic gives -3.58 in the same report.",
+    "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_config.R:195-216; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:270-290; C:/Users/pgoff/Mentat/sector_growth_study/results/report_analysis-R-20260926T221444Z.md",
+    "transfer_conditions": "The plan supplies only the outcome definition. SEATS-W and the SHIFT tests are extensions beyond the plan's annual design. The SHIFT preview is exploratory and below the 6-year minimum, so it must not be quoted as an annual test result. The 2022-only window for SEATS-W is not confirmed by the report.",
+    "strength": "weak",
+    "verdict": "softened",
+    "verifier_note": "Outcome definition matches the plan. The rel presents the annual SHIFT of -0.04 (p 0.76) as the answer to the plan's partisan question; it is a preview estimate only, and the core annual SHIFT tests are not estimable. The -3.47 figure is in the report as an exploratory House row, but the 2022-only window is not confirmed.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#SEATS-W weekly seat-gain test (2022 House)|SEATS-W weekly seat-gain test (2022 House)]]",
+    "system": "mentat-sector-growth-study"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "Rel summary gives L3 on LobbyView as b 0.242 with p 0.033 and Holm 0.1125. The reference record in sgs_review.R gives base 0.352, p 0.0375, Holm 0.1125. Holm 0.1125 equals 3 x 0.0375, consistent with Holm over three tests; 3 x 0.033 would be 0.099. Correct the summary.",
+   "Rel summary says the build models log giving with Tossup and trend terms. Code: main DVs are levels in millions; log is only the R-log and R-logFE robustness family; no Tossup or trend regressor is in the growth control sets. Remove or rewrite this departure.",
+   "Rel flags a possible conflict between the 2023-2026 retrospective expectation series and the plan's timing rule. Code (sgs_config.R:185) records it as Paul's explicit ruling, labelled RETROSPECTIVE / NOWCAST, with STRICT variants. State it that way.",
+   "Rel says the annual partisan SHIFT is -0.04 with p 0.76 and that the plan's partisan question is answered as no stable shift. Only the preview SHIFT-Chamber-PV gives that, below the 6-year minimum and labelled post-result exploratory. Core SHIFT-House and SHIFT-Senate are NOT ESTIMABLE in report_analysis-R-20260926T221444Z.md. Rewrite as not estimable.",
+   "Rel says the plan names statsmodels and IEM only. This is false: the plan also names IBISWorld, Mentat and FEC workbooks, Melange LDA and LobbyView, Minneapolis Fed CPI, and the Georgetown and IBISWorld sources (Sections 4, 6A to 6D, 9).",
+   "The pooled L3-LV coefficient is quoted without strata. Wording rules require either the SLOPES per-sector strata or an UNSTRATIFIED label. The year-FE flip conclusion should also cite the first-difference value of -0.537 (n 71) from sgs_review.R.",
+   "Rel calls the growth results a single analysis path. The sgs_review.R figures are the Codex methodology review of run analysis-R-20260926T070630Z, which the pipeline is meant to reproduce. They remain UNVERIFIED under DE-062 until an independent path reproduces them, and the summary should say so.",
+   "SEATS-W -3.47 comes from an EXPLORATORY 17-week House row. The rel's 2022-only window is not confirmed by the report, and 538 classic gives -3.58 in the same report. Quote with window, denominator and exploratory status.",
+   "Rel says 538 robustness fills the IEM gap. Code uses 538 only as robustness H4-538, replacing exp_dem_house there (sgs_config.R:259-264); the 2023-2026 fill is the expected-control sheet.",
+   "Rel's gaps and paul_alignment use the phrase nine or fewer sector clusters. The plan gives nine planned sectors with fewer usable and no numeric threshold. Use the plan's wording.",
+   "Related links were checked for existence and title only. All nine item records exist. The substantive claims in the why text for Huneeus, Furnas, Kim, Alexander, Bacik, Bickmore and the two same-data items were not re-read and should be checked before use.",
+   "Coverage: the plan (301 lines, 29,981 characters) was read in full from the text file. No annotation files exist, so paul_markup is empty and nothing was dropped. The rel's 'Paul's own research plan (dated 2026-09-25)' metadata is correct; the item metadata marks it as a note by Paul Goff."
+  ],
+  "gaps_exposed": [
+   "The plan prescribes dollar-level outcomes; the build models log giving, so reported coefficients are not in the plan's millions-of-2025-USD units and the original-vs-amended label needs to be explicit per contract row.",
+   "Contribution history before 2021 is not established locally (plan Section 6B; the brain records no pre-2021 cycle beyond the 2020 extension), so C1-C3 rest on very few years per sector and the full control specification stays weakly identified.",
+   "The live giving forecast keeps an IBISWorld growth term at 50/50 for general giving although the growth study found no stable growth effect; no recorded backtest shows whether that term beats the cycle-only model.",
+   "Credit Arms, P and C, Telecom, life insurance and auto lack LDA sector totals; the four-sector LDA aggregate does not cover the nine-sector design, so L1-L3 run on LobbyView with fewer clusters.",
+   "The Chief tier uses a non-date-specific executive-name override and the Employee tier absorbs unrecognized titles; no dated-role sensitivity test is recorded in the build.",
+   "With G sectors the wild cluster bootstrap cannot reach p below 2/6^G; tests with few sectors return no inference by design, which the plan anticipated but did not size."
+  ],
+  "flags": [
+   "Possible conflict with the plan's own rule: 2023-2026 expected control in the build is described as retrospective, while the plan says the later election result must never substitute for a missing forecast; verify the series is dated pre-election before quoting H4 exp_dem results.",
+   "Recorded growth-study results (L3-LV 0.242, Holm 0.1125; year-FE flip to -0.477; SHIFT -0.04) come from a single analysis path and stay UNVERIFIED under DE-062.",
+   "Any pooled common growth slope across the nine sectors must be quoted with the SLOPES strata or labelled UNSTRATIFIED.",
+   "LDA expenditure is used here as a spending outcome, not as an SNA edge or weight, so D-021 is not breached; LDA totals from this lane should not flow into network weights.",
+   "No paul_entries and no annotations exist; the document itself is Paul's, so alignment is judged against the brain record."
+  ],
+  "paul_alignment": "Agrees: the plan says estimate the sign, keep nulls and distrust small-cluster OLS errors; the build did so and found no stable growth effect and no stable annual partisan shift. Partly stale: it names statsmodels and IEM only, while the study runs in R with log outcomes, 538 robustness, a 2023-2026 expected-control series and a 2020 extension; the 2021-2022 overlap warning is only partly resolved. The live 50/50 IBISWorld growth term in general giving (ruled 2026-10-07) is not supported by this plan's results.",
+  "related": [
+   {
+    "slug": "imai-2021-fixed-effects-regression",
+    "relation": "complements",
+    "why": "Item record exists (Imai and Kim 2021, two-way fixed effects for causal inference with panel data); fits the plan's sector-FE and year-FE check. Title checked only."
+   },
+   {
+    "slug": "huneeus-2018-effects-firms-lobbying",
+    "relation": "complements",
+    "why": "Item record exists (Huneeus and Kim 2018, effects of firms' lobbying on resource misallocation). Title checked only; the rel's link to deep-pockets and seek-relief hypotheses was not re-read."
+   },
+   {
+    "slug": "bickmore-2025-corporate-lobbying-political",
+    "relation": "complements",
+    "why": "Item record exists as an ext file only. Content and the rel's market-concentration link were not re-read."
+   },
+   {
+    "slug": "furnas-nd-conflating-lobbying-pacs",
+    "relation": "complements",
+    "why": "Item record exists (Furnas, LaPira and Brock, low overlap of lobbying and PAC spending). Title checked only; supports the plan's separate-outcomes rule as the rel states."
+   },
+   {
+    "slug": "kim-2023-systemic-sequential-links",
+    "relation": "complements",
+    "why": "Item record exists (Kim, Stuckatz and Wolters Freiheyt 2023, donations and lobbying links). Title checked only."
+   },
+   {
+    "slug": "bacik-2025-measuring-dynamical-evolution",
+    "relation": "complements",
+    "why": "Item record exists (Bacik et al. 2025, dynamical evolution of the US lobbying network). Title checked only; election-cycle synchronization claim not re-read."
+   },
+   {
+    "slug": "anon-2025-cross-industry-political",
+    "relation": "same-data",
+    "why": "Item record exists (Cross-Industry Political Spending memo, 2025). Authorship unknown; the same-data claim was not re-read."
+   },
+   {
+    "slug": "goff-nd-cross-industry-finance",
+    "relation": "same-data",
+    "why": "Item record exists (Goff, Cross Industry Finance and Lobbying Disclosure Report). Title checked only; the same-data claim was not re-read."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ },
+ {
+  "slug": "note-review-industry-growth-and-political-spending",
+  "note": true,
+  "meta": {
+   "title": "Review: industry growth and political spending",
+   "authors": [
+    "Paul Goff"
+   ],
+   "year": "2026",
+   "venue": "Research note",
+   "doi": "",
+   "sha12s": [
+    "1cb2685ab2e7"
+   ],
+   "category": "Paul's Research Notes",
+   "category_slug": "paul-s-research-notes"
+  },
+  "extraction": {
+   "title": "Review: industry growth and political spending",
+   "authors": [
+    "Paul Goff"
+   ],
+   "year": "2026",
+   "venue": "Research note",
+   "doi": "",
+   "document_type": "Internal research-design review note (self-described as not an empirical result; no models estimated)",
+   "coverage": "Full text read in one pass (30,563 chars, 221 lines): front matter, overall verdict, risk ranking, starting formula, sections 1-14, data and citation corrections table, literature list, design steps. No _annots files exist (annot_sha12s empty), so paul_markup is empty. Author taken from metadata per note:true instruction; the text itself names no author and reviews a brief titled Astra_Review_Brief_Sector_Growth_and_Political_Spending.md. Cited URLs were not fetched; claims are taken as stated in the text. Metadata title and venue judged correct. key_findings capped at 12 of 13 candidates; dropped the Section 12 policy-salience finding (hearing-count control; catalog listed through 2021, which is in limitations).",
+   "research_question": "Does prior-year real industry growth predict subsequent organizational political spending (corporate and trade-association PAC contributions to congressional candidates, and reported LDA lobbying expenditure), and do election expectations (probability of chamber control) predict where PAC giving goes across parties, incumbents and committee members? The growth association is the main question; expectations are a separate, exploratory question.",
+   "theory": "Three mechanisms, not a predetermined sign: favorable performance can expand capacity; poor performance can raise demand for relief while reducing resources; threatened policy losses can induce spending in either economic state. Majority status has value (Cox and Magar). Committee access drives reallocation (Powell and Grimmer). Regulatory shocks can lower output and raise lobbying at once, producing a negative association without distress-driven behavior.",
+   "data": "Not yet assembled; no N estimated. Unit: industry-year. Case analysis uses five sectors; broad panel may use five to ten sectors or all insurance carriers. Proposed common panel 2008-2024 (about 18 annual observations; 2025 only after source audit). Outcomes: FEC committee-to-candidate PAC disbursements (DIME v4.0 covers 1979-2024 public itemized files, excluding CRP/NIMSP-sourced records); LDA LD-2 lobbying, quarterly from 2008. Growth: BEA real value added. Expectations: chamber-control markets (Iowa Electronic Markets, incomplete odd-year coverage) or archived forecasts, about nine elections, six realized chamber flips. Salience: Policy Agendas hearings catalog (listed through 2021) and Unified Agenda editions.",
+   "method": "Main model: log S_it = alpha_i + lambda_t + beta g_{i,t-1} + e, with sector and year effects, estimated separately for PAC contributions and lobbying (never summed). Growth g = 100 (V_t / V_{t-1} - 1) on raw real value added. Alternatives: PPML exponential conditional mean if genuine zeros exist; log initial sector size at t-2 as a control; split growth into g+ = max(g,0) and g- = max(-g,0) for asymmetry; dynamic FE only as sensitivity (Bruno bias correction; Arellano-Bond or system GMM not recommended with five to ten sectors). Expectations study: RShare = sector/chamber baseline + coefficient times earlier P + coefficient times current control + limited calendar controls, with a fractional-response sensitivity. Inference: small-sample cluster corrections, restricted wild-cluster bootstrap, cluster leverage, leave-one-sector-out, Driscoll-Kraay only as sensitivity, randomization inference only with a defensible assignment argument.",
+   "identification": "Identification rests on within-sector variation in lagged real growth net of sector means and common year shocks. Lagging fixes ordering but does not establish causality; the Bruno correction does not solve endogeneity in current-year growth. Expectations identification comes from election-cycle variation in earlier control probabilities, with roughly nine elections and six realized flips, so the review treats those estimates as exploratory. Chamber-by-year effects absorb chamber-specific probabilities in a pooled panel.",
+   "measures": "Spending: inflation-adjusted PAC contributions and lobbying expenditure (logs). Growth: raw percent change in BEA real value added; standardized growth only as secondary presentation. P: earlier probability of Republican chamber control. M: current Republican control. RShare: Republican share of candidate giving (undefined when total partisan giving is zero). Secondary: incumbent share, committee-member share, expected seat change, lagged count of relevant congressional hearings, pending regulatory proceedings (sensitivity).",
+   "scope": "Prospective design for US federal politics: corporate and trade-association PAC disbursements to congressional candidates, LDA lobbying, BEA-classified industries, 2008-2024 (2025 if audited). Excludes unregistered advocacy, state politics, and industry-affiliated individual giving, party contributions, super PAC financing and independent expenditures, which are to be analyzed as separate channels.",
+   "key_findings": [
+    {
+     "finding": "Make prior real industry growth the main analysis; treat election expectations and partisan allocation as a separate, more exploratory analysis because more industries add information about growth but not more national elections.",
+     "location": "Overall verdict",
+     "numbers": "No estimates; 14 numbered sections of recommendations"
+    },
+    {
+     "finding": "The measures (asset growth, profits, premiums, production, crypto valuations) do not yet share a common economic mechanism; z-scores change scale, not meaning.",
+     "location": "Overall verdict, ranked risk 1",
+     "numbers": ""
+    },
+    {
+     "finding": "Repeating a national forecast across industries adds no independent forecast shocks; coverage, timing, common shocks and roughly nine elections matter more than total row count.",
+     "location": "Overall verdict, ranked risk 2; section 7",
+     "numbers": "About 9 elections; 6 realized chamber flips"
+    },
+    {
+     "finding": "Shift plus current control is a reparameterization of probability plus current control; the current-control coefficient holding P fixed is g minus f.",
+     "location": "Section 4, equation after 'Use P and current control directly'",
+     "numbers": "f(P-M)+gM = fP+(g-f)M"
+    },
+    {
+     "finding": "A contraction indicator is not an asymmetric slope; define contraction on raw real growth below zero and use g+ and g- with separate coefficients to test asymmetry.",
+     "location": "Section 14, bullets 2 and 3",
+     "numbers": "Raw growth below 0 defines contraction"
+    },
+    {
+     "finding": "Majority status has value: Cox and Magar estimate an approximately 36,000 dollar majority premium around the 1994 House switch, but this does not establish a response speed to forecast changes.",
+     "location": "Section 4",
+     "numbers": "About 36,000 dollars"
+    },
+    {
+     "finding": "Illustration only: beta of 0.03 would correspond to about 3.05 percent higher typical spending per one-point growth increase, computed as 100(e^beta - 1); this is not an estimated result.",
+     "location": "Overall formula section, paragraph on interpretation",
+     "numbers": "3.05 percent for beta = 0.03"
+    },
+    {
+     "finding": "Corporate PAC donations come from voluntary segregated funds, so a direct financial-capacity mechanism fits lobbying more naturally than PAC donations; PAC profits are not the contribution budget.",
+     "location": "Section 2",
+     "numbers": ""
+    },
+    {
+     "finding": "In-house lobbying totals can double-count retained-firm payments and association dues; use documented deduplication and report trade-association totals separately or with an overlap adjustment.",
+     "location": "Section 8",
+     "numbers": ""
+    },
+    {
+     "finding": "No seamless 2008-2025 probability series is verified; build a chamber-by-election inventory and leave unavailable IEM observations missing rather than filling with 0.5 or actual results.",
+     "location": "Section 5",
+     "numbers": "2010 House IEM market opened November 2009"
+    },
+    {
+     "finding": "Fairshake receipts are not outside spending; the FEC table reports about 260.071 million dollars receipts, 195.827 million disbursements and 40.662 million direct independent expenditures for Fairshake itself, with related committees needing consolidation.",
+     "location": "Data and citation corrections table, row 5",
+     "numbers": "260.071m receipts; 195.827m disbursements; 40.662m IE"
+    },
+    {
+     "finding": "Keep life insurance as a federal case with exclusion sensitivity; state data added only for insurers would change outcome scope, and broad insurance growth must not be labeled life-insurance growth.",
+     "location": "Section 11",
+     "numbers": ""
+    }
+   ],
+   "limitations": [
+    "Design review only: no models estimated and no panel assembled; numbers are documentary or illustrative.",
+    "Claims about the OpenSecrets API end date (April 15, 2025) and bulk access could not be verified from primary pages and are treated as unconfirmed.",
+    "DIME public itemized files exclude CRP/NIMSP-sourced records; separate academic request needed for those.",
+    "The 538 generic-ballot historical CSV covers November 1995 to November 2016 and is not a contemporaneous forecast archive.",
+    "Policy Agendas hearing catalog is incomplete and listed through 2021 only.",
+    "Roughly nine elections and six realized chamber flips limit the expectations analysis; results would be exploratory.",
+    "With five sectors and 18 annual observations, bootstrap and Driscoll-Kraay inference are unreliable; cluster corrections also have limits.",
+    "Registered lobbying does not capture unregistered advocacy; a registration drop does not mechanically imply lower political effort.",
+    "Fairshake related committees require separate consolidation before totals are used."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Grier, Munger and Roberts, determinants of industry political activity (APSR)",
+    "Cox and Magar, how much is majority status in the US Congress worth (APSR; 2023 corrigendum on freshman control)",
+    "McCarty and Rothenberg, time to give: PAC motivations and electoral timing (Political Analysis)",
+    "Powell and Grimmer, committee reassignment and industry reallocation of contributions (doi 10.1086/686615)",
+    "Kerr, Lincoln and Mishra, persistence and entry dynamics (AEA id 10.1257/pol.6.4.343)",
+    "Box-Steffensmeier, Radcliffe and Bartels, timing of PAC contributions (doi 10.3162/036298005X201671)",
+    "Wolfers and Zitzewitz, prediction markets (NBER w12200)",
+    "Santos Silva and Tenreyro, PPML for nonnegative dollar outcomes",
+    "MacKinnon, Nielsen and Webb, cluster-robust inference (doi 10.1002/jae.2969)",
+    "Bruno, bias-corrected dynamic panel estimation (Stata Journal, 2005)",
+    "Driscoll and Kraay, nonparametric panel covariance (doi 10.1162/003465398557825)",
+    "de Figueiredo and Richter, lobbying review (named in text, no link given)"
+   ],
+   "short_quotes": [
+    {
+     "quote": "The measures do not yet represent a common economic mechanism.",
+     "location": "Overall verdict, ranked risk 1"
+    },
+    {
+     "quote": "Repeating a national forecast across industries does not add independent forecast shocks.",
+     "location": "Overall verdict, ranked risk 2"
+    },
+    {
+     "quote": "A contraction indicator is not an asymmetric slope",
+     "location": "Overall verdict, ranked risk 3"
+    }
+   ]
+  },
+  "summary_md": "A design review dated 2026-09-24, filed as Paul's research note, of the Astra brief that became the Mentat sector growth study. It estimates nothing. Its core advice: make prior-year real growth the main question and fit log spending on sector and year fixed effects plus lagged raw percent growth (g(t-1)), separately for organizational PAC giving and LDA lobbying, never summed. Treat election expectations as a separate, exploratory study, because more sectors do not create more elections (about 9 elections, 6 chamber flips). It also says three of the brief's specifications do not test their hypotheses: a contraction dummy is not an asymmetric slope (use g+ and g-); Shift = P - M plus current control only reparameterizes P plus M; and a unified-government term cannot separate expected from current control. On data, it says not to fill missing control probabilities with realized results. It says 538 models that use fundraising create a feedback loop, so a polls-only sensitivity is better. It warns that LDA in-house totals already include retained-firm payments and association dues. With five sectors, it says, use the restricted wild-cluster bootstrap and leave-one-sector-out checks. Against the system as built, several points were adopted: raw percent growth, g_pos/g_neg splits, the restricted wild-cluster bootstrap with a few-cluster guard, LOSO/LOYO, the 538 Lite seat forecasts, and lobbying series that are never summed. Others were not. The primary models use dollar levels with national phase and expected-control controls, and year fixed effects and logs are only robustness checks. The giving outcome is Mentat general giving across all recipient types. The 2023/2025 expected control was filled after the fact by Paul's ruling. The later Codex audit vindicated the review's main warning: the L3-LV lobbying slope of +0.352 flipped to -0.477 under sector and year fixed effects (UNSTRATIFIED, 5 sectors, 2008-2023).",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "contradicts",
+    "paper_claim": "Main model should be log S_it = alpha_i + lambda_t + beta g_(i,t-1) with sector effects and full year effects, raw percent growth and log dollars; dynamic and other terms only as sensitivities.",
+    "paper_location": "Boxed formula and design step 4; sections 1, 3 and 13",
+    "system_side": "Core tests use lagged raw growth (growth_previous_year_pct) on dollar-level outcomes with national controls pres_year, midterm_year, exp_dem_house, exp_dem_senate and no year effects. Year-FE, log and log-FE forms exist only as ROBUSTNESS variants R-yearFE, R-log, R-logFE. The L3-LV sign flip (+0.352 to -0.477 with sector+year FE; log-FE -0.006) is recorded in the brain note of 2026-09-26, not in code.",
+    "code_ref": "sgs_registry.R:33-34 (SGS_GROWTH, SGS_C_CONTROLS); sgs_registry.R:636-682 (R-yearFE, R-log, R-logFE, LOSO, LOYO robustness family); sgs_config.R:79-82",
+    "transfer_conditions": "Same study and panel. The review predates the 2026-09-25 rulings; promoting the year-FE log model to primary is Paul's decision, as the review itself says.",
+    "strength": "strong",
+    "verdict": "reproduced",
+    "verifier_note": "Text confirmed (boxed formula, design step 4, section 13 sensitivities). Registry confirms dollar-level primary with national controls and year-FE and log only as robustness. Flip numbers are from the brain note, not re-derived from output; the L3-LV window is disputed in summary_issues.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "supports",
+    "paper_claim": "A contraction indicator estimates a level jump at zero, not an asymmetric slope; define contraction on raw growth below zero and use g+ = max(g,0) and g- = max(-g,0) with separate coefficients.",
+    "paper_location": "Overall verdict risk 3; section 14 bullets 2-3",
+    "system_side": "The ASYM family splits growth into _pos = max(g,0) and _neg = min(g,0) with a bootstrap equality test. CONTRACT-a and CONTRACT-b keep contracted_prior = 1(g<0) and the registry labels it a level shift. Contraction is defined on raw growth_previous_year_pct. Built _neg is non-positive, so the distress hypothesis predicts a negative slope, the opposite sign to the review's g- coefficient.",
+    "code_ref": "sgs_registry.R:311-316 (family header); sgs_registry.R:381-416 (CONTRACT-a, CONTRACT-b, ASYM-SLOPES); sgs_panel.R:1007-1015 (_pos and _neg construction)",
+    "transfer_conditions": "Direct. The sign must be flipped when comparing the built _neg slope with the review's g- coefficient. Both ASYM and CONTRACT are EXTENSION labels, not primary.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Verdict risk 3 and section 14 bullets 2-3 match the code, including the sign convention and the level-shift labelling of the indicator.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "qualifies",
+    "paper_claim": "f(P-M)+gM equals fP+(g-f)M, so Shift adds no information beyond P and current control M; a test of current versus expected power needs both terms in the model.",
+    "paper_location": "Section 4 equation; section 14 bullet 4 (H4)",
+    "system_side": "exp_shift = exp_dem minus cur_dem is built per chamber (sgs_panel.R:230-235). The contribution core controls carry exp_dem but not cur_dem, so H4shift-C enters exp_shift alone and cannot separate P from M in that model. For lobbying the code notes that cur_dem is retained and the shift terms reparametrise the core model. SHIFT preview over 2021-25, chamber-stacked: -0.04, p 0.76 (brain note, run analysis-R-20260926T070630Z).",
+    "code_ref": "sgs_panel.R:230-235; sgs_registry.R:33 (SGS_C_CONTROLS); sgs_registry.R:747-756 (H4shift notes)",
+    "transfer_conditions": "Holds whenever a year-level probability enters with or without current control; within-chamber year effects would absorb both terms anyway. H4shift is labelled EXPLORATORY in code.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "The algebra and the lobbying reparametrisation note are confirmed. The original phrase restricted contrast was an inference, not a code note; reworded here to say the contribution model cannot separate P from M without cur_dem.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "contradicts",
+    "paper_claim": "The main campaign outcome should be corporate and trade-association PAC disbursements to congressional candidates, with individual, party, super PAC and independent-expenditure channels separate; never combine donor-to-PAC receipts with PAC-to-candidate payments.",
+    "paper_location": "Section 2; overall verdict risk 1 (different decisions)",
+    "system_side": "Ruling R4 sets contributions = Mentat general giving across all recipient categories (DV label general giving (04), all recipient categories). The 2026-09-26 ruling keeps non_giving other-receipt rows, for example Stripe 464K to NRSC in 2021-22, in every test. Workbook 08 (README window 2019-2026, 2019-2020 missing): 5.6 percent of general-giving dollars reach House or Senate candidate committees. Company-PAC gifts are 8.84 percent of 2021-25 nominal giving, per the overlap check.",
+    "code_ref": "sgs_config.R:79; sector_growth_study README lines 83 and 87 (data 04 and 08 notes); brain topic note lines 96, 127, 194",
+    "transfer_conditions": "Paul's rulings govern scope. The review's point bears on how C1-C3 are read as a capacity mechanism and on the mixed receipt types, not on whether the series is collected.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Ruling text and DV label confirmed in config and notes. The contradiction stands; the non_giving receipts are the case the never-combine rule addresses most directly.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+    "relation": "supports",
+    "paper_claim": "With five to ten sectors, report small-sample cluster corrections, restricted wild-cluster inference, cluster leverage and leave-one-sector-out checks; bootstrap p-values are not a guarantee; Driscoll-Kraay only as sensitivity with about 18 years.",
+    "paper_location": "Section 13",
+    "system_side": "Every focal term uses a wild cluster restricted bootstrap-t with Webb six-point weights, clusters = sectors. sgs_descriptive_note marks a term descriptive when p below 2/6^G cannot be reached with G sectors. LOSO and LOYO variants are built. No Driscoll-Kraay estimator appears in sgs_estimate.R (grep returned no match). Cluster leverage was not located in the lines read.",
+    "code_ref": "sgs_estimate.R:1-10 (header); sgs_estimate.R:250-260 (stratification label and descriptive note); sgs_registry.R:676-682 (LOSO and LOYO)",
+    "transfer_conditions": "Direct. The review's point that no method repairs few independent units applies to every pooled growth coefficient.",
+    "strength": "strong",
+    "verdict": "reproduced",
+    "verifier_note": "Header, descriptive note and LOSO and LOYO confirmed. Driscoll-Kraay absence confirmed by grep. The brief's D-K request is in the brain note of 2026-09-25 (line 271).",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-sector-growth-study#Sector growth vs giving, partisan share and lobbying regressions|Sector growth vs giving, partisan share and lobbying regressions]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-sector-growth-study.seats-weekly-test",
+    "relation": "supports",
+    "paper_claim": "Some 538 models use fundraising, so explaining contributions with them creates a feedback problem; prefer polls-only. More monthly rows improve timing resolution, not the number of independent elections (about 9 elections, 6 flips): exploratory.",
+    "paper_location": "Section 5 last paragraph; section 7",
+    "system_side": "SEATS-W uses 538 Lite as primary. The code says Lite is not polls-only (it imputes unpolled races) but omits the Classic and Deluxe fundraising fundamentals. Rows are gated on available_at. Reported estimate, House 2022, 17 weeks, Lite: -3.47 pp D share per expected D seat, block-bootstrap p 0.0086 (3-week) and 0.0174 (5-week); the Holm-adjusted values 0.034 and 0.070 are in the brain note. Labelled one election and EXPLORATORY in code notes.",
+    "code_ref": "sgs_seats.R:18-22 (header); sgs_seats.R:86-96 (Lite labelling and primary rationale); sgs_seats.R:763-771 (538 Lite availability gating)",
+    "transfer_conditions": "Holds until 2018 and 2020 weekly money joins; even then each further cycle adds one independent election, per the code notes.",
+    "strength": "strong",
+    "verdict": "reproduced",
+    "verifier_note": "Code labelling and gating confirmed. The -3.47 estimate and p-values come from the brain run record, not re-derived. Section 5 and section 7 text confirmed.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-sector-growth-study#SEATS-W weekly seat-gain test (2022 House)|SEATS-W weekly seat-gain test (2022 House)]]",
+    "system": "mentat-sector-growth-study"
+   },
+   {
+    "component_id": "mentat-giving-forecast.cycle-model",
+    "relation": "qualifies",
+    "paper_claim": "Value added, gross output, profits and assets are different quantities; output growth is not spare cash; corporate PAC budgets come from voluntary SSF contributions, so a capacity mechanism fits lobbying more than PAC giving.",
+    "paper_location": "Overall verdict risk 1; sections 2 and 10; BEA definitions paragraph",
+    "system_side": "The cycle model's 50/50 budget term uses IBISWorld REAL annual revenue growth with a one-year lag (_ibis_path). D-116 (2026-10-08) sets x = 0 for company PACs and documents the drop; the term remains for other measures. The sector-study backtest (last-year naive MAE 3.63 vs +growth 3.99, LobbyView targets 2014-2023, brain note) tests the study growth term, not the IBIS budget rule.",
+    "code_ref": "giving_forecast.py:1389-1401 (D-116 and cycle-model documentation); giving_forecast.py:1490-1493 (_ibis_path); giving_forecast.py:1881-1884 (x = 0 for company PACs)",
+    "transfer_conditions": "The backtest does not isolate any revenue-to-spending link, so it cannot be cited as evidence that the IBIS budget rule is weak. Use only as a fact about the growth term's forecast error in that window.",
+    "strength": "moderate",
+    "verdict": "softened",
+    "verifier_note": "Paper claims and the D-116 and IBIS lag details are confirmed. The original transfer condition read the backtest as showing a weak revenue-to-spending link; that does not follow because the backtest tests a different term over 2014-2023 targets.",
+    "status": "VERIFIED-SOFTENED",
+    "component_link": "[[systems/mentat-giving-forecast#Cycle-aware giving refit (phase and drift log models, 50-50 growth)|Cycle-aware giving refit (phase and drift log models, 50-50 growth)]]",
+    "system": "mentat-giving-forecast"
+   },
+   {
+    "component_id": "mentat-giving-forecast.calculator-and-nowcast",
+    "relation": "supports",
+    "paper_claim": "LDA in-house expenses include retained-firm payments and lobbying-related association dues, so adding client expenses, firm revenues and association expenses double-counts; keep the series separate or deduplicate.",
+    "paper_location": "Section 8",
+    "system_side": "The Mentat notice states that PAC, candidate-share and lobbying amounts are separate accounts and that the two lobbying series are never summed (giving_forecast.py:2074). The sector study keeps lobby_income (outside-firm) and lobby_expenses (self-filer) as separate DVs (sgs_config.R:80-81). Trade-association overlap is not handled separately in the config read. The side-by-side display claim comes from a Melange commit message and was not read in code.",
+    "code_ref": "giving_forecast.py:2074; sgs_config.R:80-81",
+    "transfer_conditions": "Direct for any sector total. Trade-association overlap is not yet handled separately, per the bearing; not confirmed by code read here.",
+    "strength": "moderate",
+    "verdict": "reproduced",
+    "verifier_note": "Never-summed notice and separate DVs confirmed. The display claim and association-overlap status were not confirmed in code and are not needed for the verdict.",
+    "status": "VERIFIED",
+    "component_link": "[[systems/mentat-giving-forecast#Calculator rules, company-PAC nowcast and BLEND|Calculator rules, company-PAC nowcast and BLEND]]",
+    "system": "mentat-giving-forecast"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [
+   "The L3-LV window 2008-2023 is not supported. The code's LobbyView primary window rule is 2020-2025 with a fallback (sgs_registry.R:27), and the only window in the notes is the 2014-2023 backtest. Treat the window as unverified and likely wrong.",
+   "The UNSTRATIFIED label for the L3-LV slope was not checked against any run output; the labelling function exists (sgs_estimate.R:250-257) but no printed result was read.",
+   "The phrase the later Codex audit vindicated the review's main warning overstates the record. The brain note shows the sign flip and that growth adds nothing to fit (adj R2 0.884717 vs 0.884690), on 5 sectors. Say consistent with the warning instead.",
+   "The claim that the note reads as an external AI reviewer's output filed under Paul's name is unsupported speculation. The text is first person, the metadata names Paul, and Paul's own project notes call it the 09-24 review (memory sector-growth-study-lane-2026-09-25, line 90). Remove it.",
+   "Paul's recorded position as returns literature and deep-pockets reading is not found in the brain note. The brain note supports only his seems to confirm reading for lobbying and champions (brain line 230), and the summary should keep only that.",
+   "The Huneeus link was dropped: the review does not cite Huneeus or any deep-pockets motivation (zero matches in the text), so the related rationale was false."
+  ],
+  "gaps_exposed": [
+   "No primary sector+year-FE log-dollar growth model: year FE and logs exist only as robustness variants, though the Codex audit showed the lobbying slope flips sign under them.",
+   "Contribution core models carry expected control without current control, so H4 cannot compare current versus expected power for giving.",
+   "Expected control for 2023 and 2025 is post-period (Crystal Ball Nov-2024 call, Sep-2026 snapshot); no available_at gate in the main spec.",
+   "Trade-association LDA spending is not reported separately or overlap-adjusted; issue-code dollars must not be split across topics.",
+   "No count of active contributors/clients or concentration measure to separate participation changes from per-actor spending.",
+   "No policy-salience proxy (lagged hearing counts or Unified Agenda proceedings) in the built specs.",
+   "Driscoll-Kraay sensitivity named in the transcribed original contract is not visible in sgs_estimate.R."
+  ],
+  "flags": [
+   "Conflict with Paul's ruling (2026-09-25 ~19:40, reversing 1a): the review says not to fill unavailable control probabilities with results or later information; the built 2023 value uses the Nov-2024 Crystal Ball call. Paul's ruling governs; label those rows retrospective.",
+   "Conflict with Paul's rulings R4 and Keep those receipts: the review wants organizational PAC-to-candidate giving as the main outcome; the built outcome is all-recipient general giving including non-giving receipts.",
+   "Authorship: the text reviews the Astra brief and reads as an external (likely AI) reviewer's output filed under Paul's name; treat its recommendations as advice, not Paul's rulings.",
+   "The review estimates nothing; any claim that it validates or refutes the growth effect is UNVERIFIED (DE-062). Its 3.05 percent figure is an illustration for beta = 0.03, not a result.",
+   "Pooled growth coefficients quoted here (L3-LV +0.352 / -0.477) span 5 sectors with no sector-only estimates: UNSTRATIFIED.",
+   "LDA is used here as a spending outcome only, never an edge or weight source (D-021)."
+  ],
+  "paul_alignment": "No annotated-bibliography entry exists for this note. Paul's recorded position on the study (returns literature, deep-pockets reading) and his early 'seems to confirm' reading of the lobbying result are not supported by this review, which predicts no sign, or by the later year-FE check, where the slope flipped. The note is partly stale relative to the system: the build adopted raw percent growth, g_pos/g_neg, a few-cluster wild bootstrap, LOSO/LOYO, Lite seat forecasts and never-summed lobbying. Its main-spec, outcome-scope and no-post-period-fill advice was overridden or left as robustness, and those choices still stand.",
+  "related": [
+   {
+    "slug": "imai-2021-fixed-effects-regression",
+    "relation": "complements",
+    "why": "Imai and Kim (Political Analysis 2021) caution what two-way fixed effects identify for causal claims; the review makes sector and year FE its primary design, so the caution applies."
+   },
+   {
+    "slug": "furnas-nd-conflating-lobbying-pacs",
+    "relation": "complements",
+    "why": "Title reports surprisingly low overlap between organizational lobbying and campaign expenditures, which supports modelling PAC giving and lobbying separately. The review does not cite it."
+   },
+   {
+    "slug": "bickmore-2025-corporate-lobbying-political",
+    "relation": "complements",
+    "why": "Title covers corporate lobbying, PACs and market concentration; the review asks for concentration and active-actor counts, so the topical link holds."
+   },
+   {
+    "slug": "bacik-2025-measuring-dynamical-evolution",
+    "relation": "complements",
+    "why": "Paper text reports lobbying patterns synchronized with electoral cycles, which is the phase pattern full year effects absorb. The review does not cite it; the link is topical."
+   },
+   {
+    "slug": "goff-nd-cross-industry-finance",
+    "relation": "same-data",
+    "why": "Paul's client report on LD-2 lobbying disclosure is plausibly built on the same LDA filings. The review does not mention it and no data-level match was checked."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "verified"
+ }
+]

@@ -1,0 +1,81 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-influence-engine.competitive-cascade-crn",
+      "relation": "qualifies",
+      "paper_claim": "Many simulations follow three steps: model the system as PDFs, sample from them repeatedly, and tally the statistics of interest. Drawbacks: simulation can need huge computing resources, gives no exact solutions, is only as good as the model and inputs, and its software is prone to bugs. Analytic and experimental alternatives should be considered before committing to simulation.",
+      "paper_location": "p.2, end of the 'History of Monte Carlo Simulation' section (drawbacks and analytic-first advice); p.2, 'The Monte Carlo Method' (three-step pattern); pp.2-3 'Defining The Model'",
+      "system_side": "The cascade fits the three-step pattern. Each edge is a Bernoulli draw with p = x/(x+6), x = w * cpf_diffusion(u,v) * edge_mult(v), from build_P. An edge fires when the splitmix64 draw keyed by (iteration, edge) is below p. Each run counts A-coloured nodes (seeds included) and the spread is tot/MC over iterations (MC = 20 default in budget_frontier.py, 40 in scenario.py). Unestimated inputs: the saturation constant 6, the bystander rule min(0.9, $/400k), and the 0.4 + 0.6 sqrt(bpf_u bpf_v) cross-party factor.",
+      "code_ref": "fec/moneyball_core.py:543-562; fec/engine/scenario.py:27,44-61; fec/engine/budget_frontier.py:6-7,85-94",
+      "transfer_conditions": "The recipe and caveats are generic, so they carry over fully. They say nothing about whether the cascade parameters are right, which IC model to use, or whether MC = 20 is enough. The paper does not cover common random numbers or variance reduction. Read it as a warning about inputs, not as support for the design.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper text confirmed (lines 65-75). Location corrected: the drawbacks and analytic-first sentence sit at the end of the History section, not the Introduction. Code confirmed: build_P x/(x+6.0), sm64 edge-keyed draw, bystander min(0.9,ind/BSCALE) with BSCALE=400000, cpf_diffusion 0.4+0.6*sqrt, MC defaults 20 and 40, tot/MC. The tally counts all 'A' nodes including seeds."
+    },
+    {
+      "component_id": "terrier-row-scoring.uncertainty-draws",
+      "relation": "method-source",
+      "paper_claim": "Inversion method: draw u uniform on [0,1), locate it on the CDF, and take the corresponding x. The paper demonstrates it on the exponential distribution and says it works for any distribution with an invertible CDF. It does not discuss discrete or binary cases; extending it to a categorical inverse CDF (and u < p for binary) is standard but is the analyst's extension, not the paper's text.",
+      "paper_location": "pp.4-5 ('Sampling From The Exponential Distribution Using The Inversion Method'); p.3 (PDF non-negative, integrates to 1)",
+      "system_side": "C0 draws give each (replicate, field, row) one PCG64 uniform via numpy default_rng; C3 draws give one uniform per (replicate, household), and only under C3 do the four negative lean fields use 1 - u. A binary cell is set when u < p. A categorical cell takes idx = count of cumulative thresholds at or below u, with codes ordered highest exposure first (docstring), i.e. inverse-CDF sampling. Results feed streamed accumulators (Welford moments, histograms, cut counters, top-10 counts).",
+      "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/rowfw/draws.py:1-7,58-91",
+      "transfer_conditions": "The sampling mechanics transfer because the math is the same. Correct mechanics do not make the output correct: the draws are only as good as the imputation class probabilities, whose calibration remains open (the paper's input-quality caveat). Independence across cells in C0 is a model assumption the paper does not address.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Original paper_claim attributed 'discrete ones included' and the binary u<p equivalence to the paper; the paper says neither. Original system_side said C0 and C3 both draw per (replicate, field, row); C3 is per household and the 1-u rule is C3 only (draws.py lines 74-79)."
+    },
+    {
+      "component_id": "melange-validation.sensitivity-and-mc",
+      "relation": "context",
+      "paper_claim": "The paper reports no error analysis, convergence diagnostic or comparison of samplers. On randomness quality it says LCGs do not do well on many Diehard-type tests and that the Mersenne Twister is becoming the generator of choice, passing most tests except some for encryption RNGs.",
+      "paper_location": "p.4 ('Random Number Generators'); whole paper (absence of error analysis)",
+      "system_side": "mc_stability_check.py reruns the single-topic frontier at MC = 100 (SEED 7) and at MC = 20 with SEED 1 and 13, comparing picked seed sets by Jaccard overlap, first-k identical picks and final-spread delta. It sets no numeric pass bar. Bystander rolls in scenario.py use Python random (Mersenne Twister). Edge draws use splitmix64, which the paper does not discuss.",
+      "code_ref": "fec/engine/mc_stability_check.py:3-44; fec/engine/scenario.py:56-61",
+      "transfer_conditions": "The system goes further than the source. The paper can endorse the generator choice but supplies no criterion for MC budget or stability. The ROBUST bar (top-20 overlap >= 18) lives in fec/members/receptivity_sensitivity.py:113, a constant-sensitivity check, not in mc_stability_check.py; any MC-stability bar would have to come from elsewhere (the script's docstring cites Almazaydeh et al. 2026 as motivation only).",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "mc_stability_check.py is 44 lines, not 46. The original transfer_conditions implied a ROBUST >= 18 bar attached to MC stability; grep finds it only in receptivity_sensitivity.py. Paper RNG statements confirmed at lines 162-170."
+    },
+    {
+      "component_id": "melange-influence-engine.scenario-runner",
+      "relation": "context",
+      "paper_claim": "Monte Carlo is a key tool for analytically intractable problems. Some feel it is overused as a lazy way out, and analytic and experimental alternatives should be considered before committing to simulation.",
+      "paper_location": "p.2 (end of History section); p.6 (Summary)",
+      "system_side": "The scenario runner reruns the competitive cascade at MC = 40 under edge-keyed CRN for money, defection and stance moves. The sibling flip channel is closed-form: flip_model.pflip returns a/(a+b). The in-browser desk computes break-even/marginal effects as tgt * (pflip_new - pfbase) from the same closed form. Simulation is used for the cascade spread.",
+      "code_ref": "fec/engine/scenario.py:27,44-61; fec/engine/flip_model.py:92-97; fec/surfaces/staffer_live/approved/network.html:1087",
+      "transfer_conditions": "The split between closed-form flip math and MC spread fits the paper's advice. The paper offers nothing on which analytic proxy (Viral Centrality, Katz-Bonacich) might replace the cascade MC; that comparison would need its own test.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "pflip = a/(a+b) confirmed in flip_model.py:97 (not in the cited scenario.py lines). The stated break-even equation a(CU)/(a(CU)+b(comp)) = pfbase was not found in fec/engine; only a pfbase difference in the browser JS. Rewritten to what the code shows."
+    }
+  ],
+  "related": [
+    {
+      "slug": "weimer-2023-causal-approach-detecting",
+      "relation": "complements",
+      "why": "Weimer runs a Monte Carlo simulation as a negative control for an empirical momentum estimator, an applied use of the sample-and-tally recipe Harrison describes. Weimer's own analysis notes it does not validate the forward cascade MC."
+    },
+    {
+      "slug": "almazaydeh-2026-heuristic-centrality-methods",
+      "relation": "complements",
+      "why": "It evaluates CELF++ with 50 Monte Carlo simulations per estimate (capturing 11.2% of sampling-based spread), the MC-budget noise evidence that motivates mc_stability_check.py and that Harrison's tutorial does not cover."
+    },
+    {
+      "slug": "bharathi-nd-competitive-influence-maximization",
+      "relation": "complements",
+      "why": "It defines the competitive extension of the independent cascade model whose spread the engine estimates with the Monte Carlo recipe Harrison describes."
+    },
+    {
+      "slug": "trivedi-2020-efficient-influence-maximization",
+      "relation": "complements",
+      "why": "It states that IC spread is approximated by large Monte-Carlo simulations whose accuracy scales with the number of runs, the computing cost Harrison flags as a drawback."
+    }
+  ],
+  "summary_issues": [
+    "The analytic-first advice and the drawbacks list are in the History section (p.2), not the Introduction as the bearings imply.",
+    "The paper presents inversion only for distributions with an invertible CDF (exponential example); calling Terrier's categorical and binary draws 'the paper's inversion method' is a fair extension but not something the paper states.",
+    "'Paul's wish to test an analytic proxy such as Viral Centrality' and 'his Fink note' cannot be checked from this item: Paul's only entry here (Raychaudhuri 2008) is empty. Treat as UNVERIFIED cross-item context.",
+    "The no-MC-standard-error gap is supported for scenario.py, budget_frontier.py and per_topic_coalition.py (each returns tot/MC) but remains UNVERIFIED system-wide, as the summary itself says.",
+    "Bearing 4's break-even equation is not in the engine code as written; only pflip = a/(a+b) (flip_model.py) and a pfbase difference in the browser desk were found."
+  ]
+}

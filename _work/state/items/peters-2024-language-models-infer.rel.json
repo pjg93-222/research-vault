@@ -1,0 +1,78 @@
+{
+ "summary_md": "Peters and Matz test whether off-the-shelf chat models can read Big Five personality from ordinary social media text with no training. They took 1,000 MyPersonality Facebook users (2007-2012, mean age 24, 63 percent women) who had completed the 100-item IPIP and had at least 200 status updates. GPT-3.5 and GPT-4 (2023 snapshots) were asked zero-shot for a 1-5 score on each trait. Text went in 20-message chunks, chunk scores were averaged, and each call was repeated three times and averaged. Inferred scores correlate with self-report at a mean r of .29: .31 for GPT-4 and .27 for GPT-3.5, with a per-trait range of .22-.33. Supervised in-domain models reach about .37. Accuracy is mostly reached by about 20 messages. Both models shift levels: they underestimate Conscientiousness and Agreeableness and overestimate Neuroticism. Absolute errors are larger for men on C, A and N, and for older users under GPT-3.5. Within-group correlations do not differ, so the bias is in level, not rank order. In a subsample of 68 users rated by friends, LLM-observer agreement (about .27) is close to self-observer agreement (.30). For Conscientiousness the LLM agrees more with observers than with self-report. For Melange, the paper backs the design of the display-only LLM item reader (chunk, then average) and sets a realistic ceiling for zero-shot accuracy. It also warns that agreement with observer panels may reflect shared impressions rather than traits. And it gives a reason to check the live affective-N input, which is partly LLM-derived, for gender as well as party bias. The population, text genre and criterion are all far from congressional speech, so none of its numbers can stand in as validity evidence for Melange.",
+ "category": "Machine Learning & Sentiment Analysis",
+ "bearings": [
+  {
+   "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+   "relation": "qualifies",
+   "paper_claim": "Zero-shot holistic 1-5 trait ratings from GPT-4 on 200 Facebook updates (20-message chunks, chunk mean, three queries averaged) correlate with IPIP-100 self-report at mean r .31 (GPT-3.5 .27; per-trait .22-.33; n = 1,000), below supervised in-domain models at about .37.",
+   "paper_location": "Sec 2.2, Sec 3.1, Sec 4.1",
+   "system_side": "big5_llm.py is an item-level reader: 20 IPIP-style observer-keyed items, a 3-point scale, de-identified text, Claude, and up to 6 chunks of 1,200 words per genre, averaged up to a within-pool z. It is display-only. Its diagonal against the behavioural basis averages +0.064, which fails the 0.12 bar.",
+   "code_ref": "fec/members/big5_llm.py:3-18,84-94,206-221,354-361",
+   "transfer_conditions": "This holds only for informal first-person posts by ordinary young users, scored against self-report. Member floor speech and interviews are partly staff-drafted public text, and the system has no self-report criterion. The paper sets a plausible ceiling of about r .3, not a validity claim for the system. The item-level and de-identified design differs from the paper's holistic prompt.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+   "relation": "suggests-extension",
+   "paper_claim": "Each inference was queried three times and averaged. Between-round correlations ran from .73 to .96, so single-call noise is not negligible.",
+   "paper_location": "Sec 2.2",
+   "system_side": "The primary score uses rep 0, a single call per chunk. The --rep flag runs reliability passes on the same chunks to compute ICC across reps, but those reps are not averaged into the published score.",
+   "code_ref": "fec/members/big5_llm.py:40",
+   "transfer_conditions": "This applies if the item-level Claude ratings show between-rep variance like the paper's. It costs extra API calls, and any change to the scores would be new agent analysis: UNVERIFIED until a second path reproduces it.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-psychometrics.gold-panel-validation",
+   "relation": "qualifies",
+   "paper_claim": "In 68 users rated by Facebook friends, LLM-observer agreement averaged r .269 (GPT-3.5) and .276 (GPT-4), against .304 for self-observer agreement. For Conscientiousness, LLM-observer agreement exceeded either source's agreement with self-report.",
+   "paper_location": "Sec 3.3, Sec 4.1",
+   "system_side": "Big Five validity is anchored to observer panels: the Personality on the Hill appendix (129 Senate insiders and 125 academics). There is no self-report criterion.",
+   "code_ref": "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md:19",
+   "transfer_conditions": "If LLM readings track the same outward impressions that observers form, then convergence with expert or insider panels may index shared reputation or presentation rather than the underlying trait. The evidence is preliminary (n = 68) and comes from friends rating peers, not experts rating senators.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-psychometrics.affective-n",
+   "relation": "qualifies",
+   "paper_claim": "Inferred Neuroticism correlates with self-report at r .29 (GPT-4) and .26 (GPT-3.5). Both models overestimate N levels. Absolute N residuals are larger for men, while within-gender correlations do not differ, so the bias is in level, not rank order.",
+   "paper_location": "Sec 3.1 Fig 1, Sec 3.2.1 Fig 4",
+   "system_side": "The live receptivity N-slot defaults to affective N (RECEPT_N=affective). That measure is LLM affective facets (Haiku), E-residualized and party-controlled, and it enters susceptibility at weight .30.",
+   "code_ref": "fec/members/receptivity_layer.py:74,179,186; fec/members/emit_affective_n.py:3-7,39-43",
+   "transfer_conditions": "The paper's pattern suggests within-pool z removes common level bias, but a demographic level offset would pass into a mixed-gender roster. It is relevant only if the Haiku facet prompts on interview text share GPT's level bias by gender. The model, genre and facet prompts all differ from the paper.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-psychometrics.shrinkage-and-weighting",
+   "relation": "context",
+   "paper_claim": "Correlations rise with message volume, but most of the maximum is reached by about 20 messages (one chunk, roughly 340 words at a mean of 17 words per update). Conscientiousness levels off earliest.",
+   "paper_location": "Sec 3.1 Fig 2",
+   "system_side": "P6 gated shrinkage pulls members with fewer than 8 chunks toward 0. Interview chunks get double weight (C_INT_W 2.0) for Conscientiousness only.",
+   "code_ref": "fec/members/big5_llm.py:352-353,362-387",
+   "transfer_conditions": "The saturation volume comes from personal, cue-dense posts. Political text carries few personality cues, so saturation probably needs far more text, and the paper's curve should not be used to relax the n_chunks gate.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "No self-report or friend-rating criterion exists for members, so LLM trait accuracy cannot be compared with the paper's r .29 benchmark on the same footing.",
+  "The affective-N input (live via RECEPT_N=affective) is party-controlled but not checked for gender-dependent level bias, which the paper documents for LLM-inferred N, A and C.",
+  "The primary LLM pass is a single call per chunk. Between-rep variance is measured via --rep, but reps are not averaged into the score.",
+  "Whether LLM agreement with the Senate insider and academic panels reflects shared impression rather than trait is untested. The paper's C result (LLM-observer agreement above self agreement) makes this a live alternative."
+ ],
+ "flags": [
+  "The paper's motivation includes psychological targeting and persuasion at scale (Matz 2017, 2024). Its accuracy numbers must not be quoted as validity for Melange member traits, and any new analysis built on it stays UNVERIFIED until a second path reproduces it (DE-062).",
+  "The near-observer accuracy claim rests on n = 68 and should not be generalized to expert-panel convergence.",
+  "No conflict with the SNA, LDA or reciprocity rules: the paper is silent on networks, lobbying and elections."
+ ],
+ "paul_alignment": "Paul has no annotation on this work. His recorded position on the LLM reader is that LLM-based trait reading is endorsed, with GPT-4o and DeepSeek-V3 the only validated models (from Birkenmaier and Lechner). Peters supports feasibility, but only at modest accuracy (r about .3) on non-elite users, against self-report, with demographic level bias. That is weaker than an endorsement implies. The system's own record (reader display-only, diagonal +0.064) is already more cautious. The note is stale: an LLM-derived N facet now feeds live receptivity via affective N.",
+ "related": [
+  {"slug": "cao-2024-language-models-personality", "relation": "complements", "why": "Cao and Kosinski show LLMs recover perceived personality of public figures from the name alone. That is the reputational-prior risk the system's de-identification guards against, and it bears on the observer-agreement reading of Peters Sec 3.3."},
+  {"slug": "azucar-2017-predicting-personality-traits", "relation": "cites", "why": "Peters cites the Azucar meta-analysis of digital-footprint Big Five prediction (ref 15) as the supervised benchmark context for its zero-shot accuracy."},
+  {"slug": "birkenmaier-2025-measuring-politicians-public", "relation": "complements", "why": "Birkenmaier and Lechner validate LLM coding of politicians' agency and communion cues on elite text, the genre Peters does not cover. Paul's LLM-reader position rests on it."},
+  {"slug": "koutsoumpis-2024-kernel-truth-text", "relation": "complements", "why": "The meta-analysis of LIWC-Big Five relations gives the closed-vocabulary baseline that zero-shot LLM inference is implicitly compared against, and that the lexical reader uses."},
+  {"slug": "mondak-nd-online-appendix-personality", "relation": "complements", "why": "The Senate insider and academic observer panels are the system's criterion. Peters' observer-agreement result bears on how to read LLM convergence with them."},
+  {"slug": "lemens-2025-positioning-political-texts", "relation": "same-method", "why": "This is a repeated-query asking-and-averaging LLM measurement design for political texts, parallel to Peters' three-query averaging."},
+  {"slug": "ramey-2016-measuring-elite-personality", "relation": "complements", "why": "Ramey measures elite personality from speech with closed vocabulary. Peters gives the open-ended LLM alternative on non-elite text."},
+  {"slug": "palm-2025-influence-personality-traits", "relation": "complements", "why": "This reviews how traits moderate persuasion effects, the downstream use that motivates Peters and that the receptivity layer assumes."}
+ ]
+}

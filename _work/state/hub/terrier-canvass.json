@@ -1,0 +1,858 @@
+{
+ "system": {
+  "slug": "terrier-canvass",
+  "name": "Terrier canvass targeting and walk planning",
+  "description": "Door-level targeting for candidate districts. Covers candidate support s, calibrated chance of voting t, the untapped-potential formula, street-plan presets, the one-click turf planner and walk routing over TIGER streets.",
+  "brain_notes": [
+   "C:/Users/pgoff/Documents/brain/terrier/terrier.md",
+   "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md",
+   "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-blueprint.md"
+  ]
+ },
+ "components": [
+  {
+   "id": "terrier-canvass.candidate-support",
+   "system": "terrier-canvass",
+   "name": "Candidate support score s",
+   "computes": "Equal-weight average of oriented partisan score, presidential support, registration and recent primary ballot (0-100).",
+   "method": "Missing signals drop out of the denominator. Primary mode awaits a spec.",
+   "assumptions": [
+    "Vendor scores and registration point toward party"
+   ],
+   "empirical_questions": [
+    "How well does a composite of vendor partisanship and registration predict candidate vote choice (validated against survey or precinct returns)?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/tools/support.py"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/terrier/terrier.md"
+   ],
+   "heading": "Candidate support score s"
+  },
+  {
+   "id": "terrier-canvass.turnout-calibration",
+   "system": "terrier-canvass",
+   "name": "Chance of voting t with PAV calibration",
+   "computes": "Raw t = mean of five turnout scores / 100, then a weighted PAV monotone curve per district fitted to own general-election records. OR mean 0.58 -> 0.83; CT 0.48 -> 0.74.",
+   "method": "Ranking unchanged. Refused below 1000 people.",
+   "assumptions": [
+    "The past general record is the target",
+    "Turnout is monotone in score"
+   ],
+   "empirical_questions": [
+    "Are vendor turnout scores well calibrated to actual turnout, and does isotonic calibration on past records predict future turnout?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:109-277"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "heading": "Chance of voting t with PAV calibration"
+  },
+  {
+   "id": "terrier-canvass.untapped-potential",
+   "system": "terrier-canvass",
+   "name": "Untapped potential",
+   "computes": "potential = (wp (1 - |2s-1|) t + (1-wp) s (1-t)) x (1 + wi x i), where i = sphere percentile / 100. Knocked doors are excluded.",
+   "method": "VERIFIED in untapped.py:9-10: the supporter weight is tied to 1 - wp, not a separate wR as the brain note describes. Defaults wp 0.5, wi 0.5.",
+   "assumptions": [
+    "Persuasion value peaks at s = 0.5 among likely voters",
+    "Mobilization value is in supporters unlikely to vote"
+   ],
+   "empirical_questions": [
+    "Do canvass contacts move vote choice more among undecided likely voters than among partisans (persuasion RCT heterogeneity)?",
+    "Is get-out-the-vote contact most effective among low-to-middle propensity supporters?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/untapped.py:1-455"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/terrier/terrier.md",
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "heading": "Untapped potential"
+  },
+  {
+   "id": "terrier-canvass.street-presets-and-turf",
+   "system": "terrier-canvass",
+   "name": "Street-plan presets, turf planner and walk routing",
+   "computes": "Block value per 100 m (mixed-support, supporter turnout or identification). The turf grows along connected streets to 60 doors (400 m jump). Dijkstra routing on the noded TIGER network.",
+   "method": "Blocks need at least 5 doors; length floored at 50 m.",
+   "assumptions": [
+    "Value per walking distance is the efficiency criterion"
+   ],
+   "empirical_questions": [
+    "Does contacts-per-hour rise with value-per-100 m turf construction relative to precinct-order lists?"
+   ],
+   "code_refs": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/walk_turf.py",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/walk_views.py:636-774",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/tools/districts.py:57-64"
+   ],
+   "brain_notes": [
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-blueprint.md"
+   ],
+   "heading": "Street-plan presets, turf planner and walk routing"
+  }
+ ],
+ "positions": [
+  {
+   "component_id": "terrier-canvass.candidate-support",
+   "citations": [
+    "Broockman & Kalla 2026"
+   ],
+   "paul_position": "Paul highlighted that returns to moderation are issue-specific, with no annotation."
+  },
+  {
+   "component_id": "terrier-canvass.turnout-calibration",
+   "citations": [],
+   "paul_position": "No literature."
+  },
+  {
+   "component_id": "terrier-canvass.untapped-potential",
+   "citations": [
+    "Kalla & Broockman 2020",
+    "Broockman & Kalla 2026"
+   ],
+   "paul_position": "Paul highlighted the door-canvass protocol extensively (nonjudgmental exchange, perspective-getting, 7-minute version). It is not encoded in the persuasion term."
+  },
+  {
+   "component_id": "terrier-canvass.street-presets-and-turf",
+   "citations": [
+    "Lawande et al. 2022 (grid/waypoint pathfinding)"
+   ],
+   "paul_position": "Indirect only."
+  }
+ ],
+ "citations_in_system": [
+  {
+   "citation": "Ramey, Klingler & Hollibaugh, 'Measuring Elite Personality Using Speech', Political Science Research and Methods (year conflict in repo: 2016 in PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32 and code; 2019 in big5_methods.md:12). Replication data doi:10.7910/DVN/JDH6KR",
+   "where": [
+    "fec/members/big5_traits.py:1-25",
+    "fec/members/fit_smoreg_rkh.py:5",
+    "fec/members/lep_criterion.py:5-6",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:32",
+    "big5_methods.md:12",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Lexical Big Five pipeline, token shrinkage, RKH reference targets (melange-psychometrics); ceremonial-share C criterion (melange-legislative-data)"
+  },
+  {
+   "citation": "Mairesse et al. (2007), JAIR, personality from text (SMOreg on LIWC/MRC; 53-58% band)",
+   "where": [
+    "fec/members/fit_smoreg_essays.py:4",
+    "fec/members/big5_traits.py:13-16",
+    "fec/members/interaction_features.py:5-6",
+    "big5_methods.md:31",
+    "big5_audio_prereg.md:15"
+   ],
+   "used_for": "SMOreg feature weights and word-count features (melange-psychometrics); audio cues"
+  },
+  {
+   "citation": "Pennebaker & King (1999); Yarkoni (2010); Pennebaker (2003, Annual Review)",
+   "where": [
+    "fec/members/big5_traits.py:14-15",
+    "fec/members/affective_n_validate.py:10",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Published-correlate lexical weights; essays corpus; negative-emotion basis for affective N"
+  },
+  {
+   "citation": "Birkenmaier & Lechner (2025), 'Measuring Politicians' Public Personality', Political Analysis; Birkenmaier, Lechner & Wagner (2024)",
+   "where": [
+    "fec/members/agency_communion_llm.py:3,33",
+    "fec/members/big5_llm.py:10",
+    "fec/members/big5_traits.py:9",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:33",
+    "big5_behavioral_extraversion_prereg.md:239"
+   ],
+   "used_for": "Agency/communion persona cue classifier and PERSONA_W; cannot-tell coding"
+  },
+  {
+   "citation": "Lechner, Aichholzer, Birkenmaier & Bluemke (2025), 'Mapping the Political Personality' (Polipers v0.1, GESIS)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Review of politician-personality studies; external criterion search"
+  },
+  {
+   "citation": "'Personality on the Hill' Senate insider and academic gold panels (online_appendix.pdf, SHA-256 43c98926...; author/year not recorded)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md",
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "External gold for Big Five validation"
+  },
+  {
+   "citation": "Amsalem et al. (2018), media visibility of Belgian, Canadian and Israeli MPs (Eran.pdf) - provenance warning only, NOT the gold source",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Hash-mismatch provenance check"
+  },
+  {
+   "citation": "Norgaard & Klemmensen (2019), J. Personality 87(2):267-275; Schumacher & Zettler (2019), PAID 141:173-181",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-external-criteria-and-open-a-search.md"
+   ],
+   "used_for": "Elite self-report personality benchmarks and desirability caveat"
+  },
+  {
+   "citation": "Cao & Kosinski (PNAS Nexus 2024); Peters & Matz (PNAS Nexus 2024, doi:10.1093/pnasnexus/pgae231)",
+   "where": [
+    "fec/members/big5_llm.py:12",
+    "big5_methods.md:46-49",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "De-identification before LLM trait scoring; LLM zero-shot personality benchmark"
+  },
+  {
+   "citation": "Valente (Interspeech 2012); Yu (Interspeech 2019); Rienks & Heylen (2005)",
+   "where": [
+    "fec/members/interaction_features.py:5-8",
+    "fec/members/behavioral_dispositions.py:17",
+    "big5_methods.md:30"
+   ],
+   "used_for": "Turn-statistic dominance and reactivity features"
+  },
+  {
+   "citation": "Koutsoumpis (meta-analysis, language and personality); Yang, Lau & Abbasi (ISR 2023)",
+   "where": [
+    "big5_methods.md:114",
+    "AUDIT_FINDINGS_2026-07-04.md:332",
+    "big5_behavioral_extraversion_prereg.md:221"
+   ],
+   "used_for": "Text tracks observer more than self-report; response-selection bias; PERSONA_W scope argument"
+  },
+  {
+   "citation": "Soto & John (2017) BFI-2-XS; Connelly & Ones (2010); Judge et al. (2002); Funder & Ozer (2019); Dietrich (2012); Dynes (2019); Wagner (2024); Steiger (1980); Stern et al. (2021); Harari (2022); Rubio et al. (2024); Marrero et al. (2022); Marengo et al. (2018, doi:10.1016/j.paid.2017.12.018); Hargittai (2015, doi:10.1177/0002716215570866); Hinds & Joinson (2024, doi:10.1037/bul0000430); Marengo, Montag & Settanni (2025, doi:10.1111/jopy.70019); Lau & Abbasi (2023)",
+   "where": [
+    "big5_expert_panel_prereg.md",
+    "big5_nomological_prereg.md",
+    "big5_n_matrix_prereg.md",
+    "big5_audio_prereg.md",
+    "big5_es_crossmodal_prereg.md",
+    "big5_a_coverage_prereg.md",
+    "AUDIT_FINDINGS_2026-07-12_BEHAVIORAL_CRITERIA.md"
+   ],
+   "used_for": "Prereg designs for Big Five expert panel, nomological, audio and coverage looks (melange-psychometrics)"
+  },
+  {
+   "citation": "Salam et al. (2022), PMLR 173, personalised NAS Big Five on UDIVA",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-audio-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-audio-and-speech-lane-n-audio-route-and-measurements.md:132"
+   ],
+   "used_for": "Audio trait benchmark and sex-conditioning check"
+  },
+  {
+   "citation": "Mestre & Ryan (2026), validated aeneas forced alignment; Dietrich (2019)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Audio identity design (forced alignment, within-speaker F0)"
+  },
+  {
+   "citation": "ECAPA-TDNN speaker embedding (name only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/single-look-holdout-discipline-cases-2-3-n-slot-and-gold-template.md"
+   ],
+   "used_for": "Proposed speaker verification"
+  },
+  {
+   "citation": "Byrne, Silasi-Mansat & Worthy (2015), 'Who chokes under pressure?', PAID",
+   "where": [
+    "fec/members/receptivity_layer.py:6-7,189,233",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:34",
+    "AUDIT_FINDINGS_2026-07-04.md:548",
+    "fec/engine/outcome_contract.py:18"
+   ],
+   "used_for": "Susceptibility composite (only N and A supported; C and E are design priors); H2 predictor"
+  },
+  {
+   "citation": "Fouirnaies & Hall, 'How Do Electoral Incentives Affect Legislator Behavior?' (APSR)",
+   "where": [
+    "fec/members/receptivity_layer.py:15-20",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:35",
+    "fec/engine/money_response.py:27"
+   ],
+   "used_for": "Retiring-member incentive multiplier and competitiveness term"
+  },
+  {
+   "citation": "Linde & Vis (2016), 'Do Politicians Take Risks Like the Rest of Us?', Political Psychology",
+   "where": [
+    "fec/members/receptivity_layer.py:22-28",
+    "fec/engine/money_response.py:27-29",
+    "PERSONALITY_RECEPTIVITY_LAYER_2026-07-02.md:36"
+   ],
+   "used_for": "Prospect-theory domain multiplier and attenuated loss frame"
+  },
+  {
+   "citation": "Kahneman & Tversky (loss aversion)",
+   "where": [
+    "fec/engine/money_response.py:29",
+    "fec/members/receptivity_layer.py:27"
+   ],
+   "used_for": "LOSSFRAME 1.10"
+  },
+  {
+   "citation": "Chen, Kamarthi, Wilder & Tambe, contingency-aware influence maximization (UAI 2021, arXiv 2106.07039; venue corrected from ICML); Zareie & Sakellariou (SNAM 2023)",
+   "where": [
+    "fec/members/receptivity_layer.py:28-34",
+    "fec/engine/budget_frontier.py:72-74",
+    "fec/engine/outcome_contract.py:17",
+    "AUDIT_FINDINGS_2026-07-04.md:564-565"
+   ],
+   "used_for": "Seed take-up probability and seed gate; H1 predictor"
+  },
+  {
+   "citation": "Bharathi, Kempe & Salek, Competitive Influence Maximization",
+   "where": [
+    "fec/engine/scenario.py:6-11",
+    "fec/engine/budget_frontier.py",
+    "fec/engine/per_topic_coalition.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Competitive IC cascade and coalition submodularity"
+  },
+  {
+   "citation": "Borodin et al. (submodularity can fail in competitive LT)",
+   "where": [
+    "fec/engine/scenario.py:11-12"
+   ],
+   "used_for": "Flip side treated as heuristic"
+  },
+  {
+   "citation": "Kempe, Kleinberg & Tardos (2003, KDD) influence maximization",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:157",
+    "quant skill references"
+   ],
+   "used_for": "Cascade and threshold model assumptions"
+  },
+  {
+   "citation": "Golovin & Krause (2011), Adaptive Submodularity, JAIR (Lemma 5.3/A.9)",
+   "where": [
+    "fec/engine/optimize.py:8,108-113",
+    "fec/engine/scenario.py:8-10",
+    "C:/Users/pgoff/Documents/brain/concepts/influence-vs-alignment-axes.md"
+   ],
+   "used_for": "Joint optimizer bound and framing (melange-allocation)"
+  },
+  {
+   "citation": "Leskovec et al. (KDD 2007) CELF lazy greedy; Nemhauser (1-1/e)",
+   "where": [
+    "fec/engine/optimize.py:74-96",
+    "fec/engine/budget_frontier.py:96-106",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Lazy greedy seed and budget selection"
+  },
+  {
+   "citation": "Almazaydeh et al. (2026), Scientific Reports, s41598-026-47299-8",
+   "where": [
+    "fec/engine/mc_stability_check.py:3-10",
+    "influence-modeling-reference SKILL.md"
+   ],
+   "used_for": "Noisy MC corrupts CELF; motivates CRN and stability check"
+  },
+  {
+   "citation": "Manchanda et al., GCOMB, NeurIPS 2020, arXiv:1903.03332",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Budget mode: locality, degree pruning, CELF (melange-pathfinding)"
+  },
+  {
+   "citation": "Chen & Lam, most-reliable path; Ren et al., Multi-Objective Path-Based D* Lite (MOPBD*) and RELINK",
+   "where": [
+    "fec/engine/cosponsor_route.py:3-5",
+    "fec/engine/scenario.py:13",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-troubleshooting-melange-audits-and-reviews-july-runs-4-5-and-integrity.md"
+   ],
+   "used_for": "Pathfinder and route-finder concepts (melange-pathfinding)"
+  },
+  {
+   "citation": "Sotoudeh, Porter & Krishnagopal (2024), arXiv 2406.19554, network measure of cosponsorship influence on bill passage",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Cosponsor edge weights and path grounding"
+  },
+  {
+   "citation": "Aref & Neal (2020, 2021), signed-network optimal partitioning / generalized balance; Neal signed backbone (R backbone sdsm)",
+   "where": [
+    "fec/network/signed_coalitions.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks.md",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Signed coalition partition and multi-target coalition mode"
+  },
+  {
+   "citation": "Porter, Mucha, Newman et al. (PNAS 2005), committee network community structure / normalized interlock",
+   "where": [
+    "fec/surfaces/make_member_desk.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-model-facts.md",
+    "HOLISTIC_NETWORK_DESIGN_2026-08-17.md:78"
+   ],
+   "used_for": "Committee-cluster layout; community structure in pathfinder"
+  },
+  {
+   "citation": "Fink et al. (2023), Congressional Twitter influence network, Data in Brief",
+   "where": [
+    "fec/network/social_interaction_layer.py:15-19",
+    "MATHEMATICAL_SPECIFICATION.md:44",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Author-volume normalized social and press edges"
+  },
+  {
+   "citation": "Malaterre & Lareau (2024), HCoI communities",
+   "where": [
+    "fec/press_hcoi.py",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Press-attention communities"
+  },
+  {
+   "citation": "Zhou & Elejalde (2026), Information Processing & Management, TWLGCN",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Stance dynamics port"
+  },
+  {
+   "citation": "Joo & Steinert-Threlkeld (2022), Computational Communication Research; Steinert-Threlkeld, Twitter as Data",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md"
+   ],
+   "used_for": "Frame alignment"
+  },
+  {
+   "citation": "Ringe, Victor & Gross (BJPS 2013), Friends and Enemies",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:599"
+   ],
+   "used_for": "Signed mention layer concept"
+  },
+  {
+   "citation": "Battaglini & Patacchini, 'Influencing Connected Legislators', NBER w22739",
+   "where": [
+    "fec/engine/kb_benchmark.py:2-18"
+   ],
+   "used_for": "Katz-Bonacich benchmark"
+  },
+  {
+   "citation": "Kim & Kunisky, lobbying networks / latent communities (local PDF)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "Community structure exploited by pathfinder"
+  },
+  {
+   "citation": "Noble & Turner (2024), 'Presidential Leadership and Legislative Polarization'; Lee (2009)",
+   "where": [
+    "fec/engine/salience_shock.py:4-38",
+    "fec/surfaces/build_dashboard_bundle.py:663",
+    "fec/moneyball_core.py:731"
+   ],
+   "used_for": "Salience shock regimes; retreat regime"
+  },
+  {
+   "citation": "Furnas, LaPira, Hertel-Fernandez, Drutman & Kosar (congressional staff survey experiment); Bakker (partisan cues); Bakker, Lelkes & Malka (JOP)",
+   "where": [
+    "fec/moneyball_core.py:11",
+    "fec/engine/lt_priming.py:56-58",
+    "fec/surfaces/templates/make_dashboard_html_00.tpl:742",
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md"
+   ],
+   "used_for": "cpf_pressure 1.7/0.5; out-party cue clamp; executive cue factor; money capped, information is the lever"
+  },
+  {
+   "citation": "Ansolabehere, de Figueiredo & Snyder (2003); Fowler, Garro & Spenkuch (2020); Hall & Wayman (1990); Kalla & Broockman (2016), 'Campaign Contributions Facilitate Access'; Kalla & Broockman (general-election persuasion about zero); Coppock (persuasion about 5 pp / 0.1 SD)",
+   "where": [
+    "fec/engine/flip_model.py:21",
+    "fec/engine/money_response.py:15,20",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md"
+   ],
+   "used_for": "Money buys access not votes; WM/WP weights; MAXSHIFT calibration; access multiplier"
+  },
+  {
+   "citation": "Huneeus & Kim (lobbying distorts policy); Bombardini & Trebbi (annual review of empirical lobbying); Pritoni (lobbying coalitions); Bacik et al. / Kim, lobbying-network dynamics (arXiv 2503.11745); Azaiez & Mandel (EC lobby hypergraph); Harrison et al. (lobbying record mining)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-melange-scenario-model-build.md"
+   ],
+   "used_for": "Calibration context for small, capped lobbying returns; pathfinder background"
+  },
+  {
+   "citation": "Trivedi & Singh (Procedia 2020) coalition modeling; Scientific Reports 2026 IM algorithm comparison (CELF++/RIS/IMM)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cosponsor-and-sector-networks-june-network-plan.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-moneyball-excel-model-build-scenario-tools-and-calibration.md"
+   ],
+   "used_for": "Coalition and IM algorithm references"
+  },
+  {
+   "citation": "Gaynor (LSQ 2022); Kim, Stuckatz & Wolters (JOP 2026); Furnas, LaPira & Brock (PS 2025)",
+   "where": [
+    "AUDIT_FINDINGS_2026-07-04.md:706-711"
+   ],
+   "used_for": "Leadership PAC edges and donation/lobbying sequencing (identified, not implemented)"
+  },
+  {
+   "citation": "Volden & Wiseman, legislative effectiveness (five-stage LES; Center for Effective Lawmaking LES 93-118); Bucchianeri/Volden/Wiseman-style",
+   "where": [
+    "fec/members/lep_criterion.py:1-15",
+    "fec/engine/flip_model.py:142 (comment only)",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-legislative-pillar-acu-review-effectiveness-shadow-lane.md",
+    "C:/Users/pgoff/Documents/brain/actors/codex-executor-incidents.md"
+   ],
+   "used_for": "Effectiveness shadow score and convergence criterion; uncoded passage-bonus comment"
+  },
+  {
+   "citation": "Nokken & Poole dynamic ideal points; DW-NOMINATE (Poole-Rosenthal)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Drift criterion for N (MISS); NOMINATE rejected for vote edges"
+  },
+  {
+   "citation": "Matz et al. (PNAS 2017); Simchon (2024, PNAS Nexus); Hackenburg & Margetts (2024)",
+   "where": [
+    "fec/surfaces/make_member_desk.py:846",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md"
+   ],
+   "used_for": "Persona-matched appeals (design-only) and aggregate null caution"
+  },
+  {
+   "citation": "Brysbaert concreteness norms; Guiraud index; Empath lexicon; Valente (N overlap stat 68.7%)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-receptivity-layer.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics-record-1-big5-campaign.md"
+   ],
+   "used_for": "Big Five lexical features"
+  },
+  {
+   "citation": "Miller & Sutherland, APSR (hearing conduct; doctrine WITHDRAWN 2026-07-10)",
+   "where": [
+    "big5_methods.md:36",
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-personality-psychometrics.md"
+   ],
+   "used_for": "Withdrawn hearing-antagonism doctrine"
+  },
+  {
+   "citation": "Burnham, 'Stance detection: a practical guide' (PSRM 2024.35); mlburnham/Political_DEBATE_base_v1.0 (Hugging Face)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39",
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md"
+   ],
+   "used_for": "NLI stance templates and the DEBATE base model (melange-stance)"
+  },
+  {
+   "citation": "Stanceformer, arXiv 2410.07083; ACL 2023.acl-long.560 (TSE); MDPI 2076-3417/15/21/11784",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-cu-stance-and-sentiment-stance-stack-design-and-accuracy.md:39,63",
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md"
+   ],
+   "used_for": "Target-aware stance (planned); two-stage decoupling; neutral-class difficulty"
+  },
+  {
+   "citation": "Khan et al. (2025), IECE TACS, Roman Urdu agree/disagree/unrelated stance",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/topics/2026-07-feature-influence-engine-internals-salience-sna-wave.md:45"
+   ],
+   "used_for": "Multi-view augmentation (hurt classical readers)"
+  },
+  {
+   "citation": "Park, Lee & Cho (2025), 'Automatic construction of direction-aware sentiment lexicon using direction-dependent words', Language Resources & Evaluation 59:843-869",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:65"
+   ],
+   "used_for": "Direction-aware valence lexicon idea (rejected on dry run)"
+  },
+  {
+   "citation": "Soroka et al., Lexicoder Sentiment Dictionary LSD2015 (snsoroka.com LSDaug2015.zip); Haselmayer & Jenny (2017); Rice & Zorn (2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-06-feature-congress-r-scrapers-graded-scoring-and-audits.md:26-28"
+   ],
+   "used_for": "Stage 5b tone intensity; graded tone and polarity normalization"
+  },
+  {
+   "citation": "Dai, Liao, Zhao et al. (2025), LLM-enhanced Logic Tensor Network for stance detection, Neural Networks 183:106956, doi:10.1016/j.neunet.2024.106956",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md:198",
+    "stance_valence_folcot_prereg.md:13"
+   ],
+   "used_for": "FOL-CoT valence proposals (not adopted)"
+  },
+  {
+   "citation": "Kim, Kim, Jeong, Oh & In Song Kim (2025), 'Measuring Interest Group Positions on Legislation' (PNAS draft); LobbyView positions dataset doi:10.7910/DVN/D0QWM2; In Song Kim LobbyView (Song 2018)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/lobbyview-collector.md",
+    "fec/lobbying/lobby_position_benchmark.py:9",
+    "fec/lobbying/collect_lobbyview.py:35"
+   ],
+   "used_for": "LDA data and interest-group positions (melange-lobbying)"
+  },
+  {
+   "citation": "Romero Moreno (2021)",
+   "where": [
+    "CONTESTED_BILLS_DESIGN.md:29-30"
+   ],
+   "used_for": "Contested-bills counterparty term"
+  },
+  {
+   "citation": "Delano, Rudkin & Kim (2025), BICAM, Scientific Data 12:1567, doi:10.1038/s41597-025-05737-8; Porter, Case & Treul (2025), CampaignView, Scientific Data 12:1237, doi:10.1038/s41597-025-05491-x; Zhan & Cai (2025), ESWA 263:125705, doi:10.1016/j.eswa.2024.125705; Cao, Gai, Wu et al. (2025), Information Fusion 120:103107, doi:10.1016/j.inffus.2025.103107",
+   "where": [
+    "RESEARCH_INTEGRATION_2026-08-14.md",
+    "CAMPAIGN_SITE_COLLECTION_2026_RUNBOOK.md:10"
+   ],
+   "used_for": "Research-integration proposals (bill-LDA linkage, campaign corpus, trust-KNN imputation, signed trust propagation)"
+  },
+  {
+   "citation": "Russo et al. (ACL 2023), 'Helping a Friend or Supporting a Cause?'; Brandenberger (2018), 'Trading Favors', Social Networks 54:238-253, doi:10.1016/j.socnet.2018.02.001; Montgomery & Nyhan (2017), doi:10.1086/690301; Shalizi & Thomas (2011); Nay (2017), PLOS ONE doi:10.1371/journal.pone.0176999",
+   "where": [
+    "fec/research/cosponsor_refinement/write_cosponsor_refinement_report.py:153-158",
+    "fec/research/cosponsor_challengers/PROTOCOL.md:44-47"
+   ],
+   "used_for": "Cosponsorship prediction and reciprocity baselines; homophily vs contagion confounding; staff exchange and policy similarity"
+  },
+  {
+   "citation": "Tiedens & Fragale (2003), doi:10.1037/0022-3514.84.3.558; Santoro & Broockman (2022), Science Advances, doi:10.1126/sciadv.abn5515",
+   "where": [
+    "fec/research/member_personal_relationships/PERSONALITY_CONTEXT_EXPLORATION.md:46"
+   ],
+   "used_for": "Context only for member personal-relationship research"
+  },
+  {
+   "citation": "DerSimonian-Laird random-effects estimator",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/giving-forecast-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/projects/forecast-redesign.md"
+   ],
+   "used_for": "R2 partially pooled industry slope (mentat-giving-forecast)"
+  },
+  {
+   "citation": "Cameron, Gelbach & Miller (2011), two-way cluster-robust variance; Holm step-down; Newey-West HAC; Driscoll-Kraay (requested); Ball (2024)",
+   "where": [
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_review.R:7-8,168,210",
+    "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:71-76,389,588",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Inference in the sector growth regressions and SEATS-W"
+  },
+  {
+   "citation": "Bross (1958) ridit; Spearman-Brown; Kendall tau-b; pool-adjacent-violators (PAV)",
+   "where": [
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json",
+    "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/design/spec_rigor.md",
+    "C:/Users/pgoff/Documents/brain/terrier/2026-10-06-terrier-rulings.md"
+   ],
+   "used_for": "Ridit transforms, internal consistency and sensitivity tests (terrier-row-scoring); turnout calibration (terrier-canvass)"
+  },
+  {
+   "citation": "MAST multi-agent failure taxonomy (named only)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/metaloop.md"
+   ],
+   "used_for": "Failure-attribution tags (metaloop-orchestration)"
+  },
+  {
+   "citation": "SR 11-7 model risk management (superseded 2026-04-17 by SR 26-2); quant-model-evaluation skill bibliography (Cinelli & Hazlett 2020; Politis & Romano 1994; Simar & Wilson 1998; Grubesic & Matisziw 2006; Fouirnaies & Hall 2018; Powell & Grimmer 2016; others)",
+   "where": [
+    "C:/Users/pgoff/Documents/brain/actors/quant-model-evaluation-skill.md",
+    ".claude/skills/quant-model-evaluation/references/sources.md"
+   ],
+   "used_for": "Audit tooling references applied to Melange (melange-validation)"
+  },
+  {
+   "citation": "Data sources (not literature): MEDSL Dataverse election returns; Cook Political Report PVI; Voteview; congress-legislators; govinfo BILLSTATUS; Ballotpedia; openFEC and FEC bulk; OpenSecrets; IBISWorld; Census ACS/CBP/LODES/cb_2024 and cb_2020; FDIC SOD; NCUA Call Reports; HMDA; Polymarket/Kalshi/IEM; Crystal Ball/538",
+   "where": [
+    "fec/engine/build_competitiveness.py",
+    "fec/district/demographic_potential.py",
+    "DEMOGRAPHIC_POTENTIAL_METHOD.md:185-191",
+    "C:/Users/pgoff/Documents/brain/actors/draft-systems-r-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/actors/mentat-fec-pipeline.md",
+    "C:/Users/pgoff/Documents/brain/topics/2026-09-feature-sector-growth-study.md"
+   ],
+   "used_for": "Model inputs across systems"
+  }
+ ],
+ "evidence": [
+  {
+   "slug": "broockman-2026-should-moving-middle",
+   "title": "Should Moving to the Middle Win Candidates Votes? It Depends Where Voters Are",
+   "year": "2026",
+   "component_id": "terrier-canvass.untapped-potential",
+   "relation": "qualifies",
+   "claim": "Voters who are moderate on average reward a candidate's move to the elite middle only on issues where they disagree with the party. Among general moderates holding the Republican position, the Republican-candidate effect is -0.0524 (SE 0.0112), against +0.0381 (SE 0.0072) among moderates holding the Democratic position (Table A9). Fewer than 10% of respondents gave consistently Democratic, Republican or elite-middle answers across five issues. Persuadability is therefore issue-specific and two-signed, not a property of sitting at the partisan midpoint.",
+   "system_side": "The code computes undecided = (1 - |2s - 1|) x t, which peaks at s = 0.5. Here s is the support score, a composite of partisan, presidential, registration and primary-ballot signals, and the persuasion weight wp defaults to 0.5 (DEFAULT_WEIGHTS and the district entries). Persuadability is assumed to be highest at the partisan midpoint, scaled by turnout. The term has no issue or message dimension.",
+   "transfer": "The paper measures response to candidate issue positions in a survey conjoint: a hypothetical 2028 presidential race, a national sample of 2024 voters, and partial equilibrium. It does not measure the effect of a canvass contact, and it does not cover the OR-05 or CT-01 House electorates. It shows that a mid-scale partisan score mixes voters who move in opposite directions on any given issue. That implies a midpoint score ranks people by how cross-pressured they are, not by how persuadable they are by an arbitrary message. It does not show that the midpoint is the wrong target overall. The 1-2 pp pooled magnitudes are labeled UNSTRATIFIED and are not a canvass effect size.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "broockman-2026-should-moving-middle",
+   "title": "Should Moving to the Middle Win Candidates Votes? It Depends Where Voters Are",
+   "year": "2026",
+   "component_id": "terrier-canvass.candidate-support",
+   "relation": "qualifies",
+   "claim": "Vote choice responds to a candidate's specific issue positions, and the response depends on where the voter stands on each issue. Effects range from -4.2 pp (transgender sports) to +7.3 pp (gay and lesbian rights) by issue for Republican candidates and from -1.7 pp (Social Security) to +4.5 pp (affirmative action) for Democratic candidates. On majority-supported issues, moderating hurts Republicans (-0.0237, SE 0.0048); the Democratic estimate is negative but not significant (-0.0042, SE 0.0041).",
+   "system_side": "Support s is an equal-weight (all weights 1 in districts.py _SUPPORT) average of direction signals oriented toward the candidate's party: partisan score, presidential (Harris/Trump) support, party registration and primary ballot. It has no input for the candidate's own positions, so every same-party candidate in a district gets the same s.",
+   "transfer": "The paper partly supports a party-only baseline: issue effects are modest next to partisanship, and the authors themselves say not to over-read the point estimates. It also shows that a moderate or out-of-step candidate's support is not well proxied by party lean among cross-pressured voters. The evidence comes from the presidential level and a national sample, and candidates were shown without records. Carrying it over to a specific House candidate requires knowing that candidate's issue profile, which Terrier does not hold.",
+   "strength": "moderate",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "kalla-2023-which-narrative-strategies",
+   "title": "Which Narrative Strategies Durably Reduce Prejudice? Evidence from Field and Survey Experiments Supporting the Efficacy of Perspective-Getting",
+   "year": "2023",
+   "component_id": "terrier-canvass.untapped-potential",
+   "relation": "qualifies",
+   "claim": "Durable persuasion at the door depends on the conversation content. Perspective-getting narratives drive the effect, while analogic and vicarious steps add nothing reliable. Study 1 dichotomized health-policy items rose 5-9 pp. Study 2 overall index: Full minus PG-only 95% CI -0.05 to 0.09 SD; scholarships +12.7 pp, in-state tuition +7.4 pp. Study 3 DiD about 0.12 SD (p<.01, non-randomized). Effects held at least 11 weeks (Study 2) and 4.5 months (Study 1). Estimates are ITT among door-openers, about 81-82% of whom engaged (multiplier about 1.22-1.23). The main text reports no heterogeneity by baseline attitude.",
+   "system_side": "For each unknocked person, persuade = (1-|2s-1|) x t, which peaks at candidate support s=0.5 among likely voters, and remind = s x (1-t). Potential = (wp x persuade + (1-wp) x remind) x (1 + wi x i), with agent defaults wp = wi = 0.5. This treats the value of a contact as a property of the target only. The formula has no term for contact protocol, script, or effect size per conversation, and it has no decay.",
+   "transfer": "The evidence is weak for this formula. The outcomes are explicit issue attitudes toward outgroups (immigrants, transgender people) in 2019-2020, delivered by trained advocacy-org canvassers. They are not candidate vote choice or turnout, which are what s and t encode. The paper neither supports nor refutes the peak at s=0.5 because it does not report effects by prior position. What carries over is narrower: if Terrier canvasses run a persuasion script, the expected per-contact lift depends on the script, and effects of a few tenths of an SD can last for months. The value of the persuade term is therefore conditional on the protocol, not fixed by target selection. The DiD and within-subject results are observational (UNVERIFIED-grade), so only the randomized Study 1 and Study 2 contrasts should be quoted.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "kalla-2023-which-narrative-strategies",
+   "title": "Which Narrative Strategies Durably Reduce Prejudice? Evidence from Field and Survey Experiments Supporting the Efficacy of Perspective-Getting",
+   "year": "2023",
+   "component_id": "terrier-canvass.street-presets-and-turf",
+   "relation": "suggests-extension",
+   "claim": "A perspective-getting-only conversation averaged 7.3 minutes, against 17.1 minutes for the full intervention, with statistically indistinguishable effects (Study 2). In Study 1, removing the analogic step gave 15.5 vs 18.5 minutes with no loss of effect.",
+   "system_side": "One-click turf grows along connected blocks until it reaches a fixed door count (default 60, adjustable). Blocks are ranked by total untapped potential, and efficiency is judged as value per walking distance. Time spent per conversation is not modeled, so the planner cannot trade script length against doors per shift.",
+   "transfer": "This holds only if Terrier volunteers deliver a persuasion conversation, not a reminder or ID knock. The timings come from trained canvassers on an issue-attitude script, so they bound door throughput only roughly. A fixed 60-door target implicitly assumes a constant time per contact. The paper suggests that a conversation-minutes parameter, or a mode switch between remind and persuade, would change feasible list size by about 2x.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "blackwell-2026-effect-political-advertising",
+   "title": "The Effect of Political Advertising after Citizens United: Adjusting for Unmeasured Confounding in Marginal Structural Models",
+   "year": "2026",
+   "component_id": "terrier-canvass.untapped-potential",
+   "relation": "qualifies",
+   "claim": "Democratic interest-group TV ads raise the Democratic two-party share mainly by raising Democratic turnout, with a weaker negative effect on Republican turnout. Republican interest-group ads have no estimated effect on any outcome. The Democratic effect is concentrated after Trump's candidacy; the pre/post-Trump effect differences are significant at alpha 0.1 (no level is stated in the text for the pooled effects). No point estimates are given in the text.",
+   "system_side": "potential = (wp x (1-|2s-1|) x t + (1-wp) x s x (1-t)) x (1 + wi x i). The weights on persuasion of undecided likely voters and on mobilization of supporters unlikely to vote are symmetric across parties, with module default wp 0.5 used only when the district entry names none (DEFAULT_WEIGHTS, untapped.py:53,71-73); no party term enters the formula.",
+   "transfer": "Weak. The treatment is broadcast TV ads aggregated to the media market in Senate and gubernatorial races, 2010-2020. It is not door-to-door contact, and the outcome is not individual. The finding suggests that mobilization effects can dominate and can differ by party and era, so a fixed, party-symmetric wp is a judgment call that this paper neither validates nor sets. It does not transfer to US House districts (OR-05, CT-01) or to canvassing without field-experiment evidence.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "lawande-2022-systematic-review-analysis",
+   "title": "A Systematic Review and Analysis of Intelligence-Based Pathfinding Algorithms in the Field of Video Games",
+   "year": "2022",
+   "component_id": "terrier-canvass.street-presets-and-turf",
+   "relation": "supports",
+   "claim": "With obstacles (Table 4, single run), A* expands fewer blocks than Dijkstra at 16x16 (140 vs 177) and 32x32 (587 vs 754) with the same path length (31, 75); at 8x8 A* expands more (32 vs 30). Execution times at 32x32 are 3975.34 vs 5678.25 ms. A* uses F(n)=G(n)+H(n).",
+   "system_side": "walk_route._astar searches the street graph with estimate max(0, straight-line distance to nearest goal - NODE_SLACK_M); when any goal lacks coordinates (or a node lacks a position) the estimate is 0, i.e. Dijkstra, so it stays admissible. A plain dijkstra() helper sits at lines 176-197.",
+   "transfer": "Closest match in the system (spatial graph, metric estimate). Road networks are not uniform grids; paper figures are single runs with unreported hardware; gains appear only from 16x16 up. Supports the design choice, gives no measured speedup for street networks.",
+   "strength": "weak",
+   "status": "VERIFIED"
+  },
+  {
+   "slug": "cagala-2021-optimal-targeting-fundraising",
+   "title": "Optimal Targeting in Fundraising: A Causal Machine-Learning Approach",
+   "year": "2021",
+   "component_id": "terrier-canvass.untapped-potential",
+   "relation": "suggests-extension",
+   "claim": "Responsiveness to a costly contact is heterogeneous. Warm-list gift effects (2014, first-year net donations) run from -11.59 euro at the 5th percentile to +17.99 euro at the 95th, and 45 percent of warm-list individuals have estimated effects above the 1.16-euro cost (Section 5.2, Figure 2). A rule built on 300-m geospatial counts, distances and elevation (17.40 euro expected net donation) does not significantly differ from the full-covariate rule (17.61 euro; Table 6, column 6 difference -0.22, not significant).",
+   "system_side": "potential = (wp x undecided + (1 - wp) x supporter) x (1 + wi x i), with undecided = (1 - |2s - 1|) x t and supporter = s x (1 - t). The weights wp and wi come from a per-district entry; 0.5 is the default used only when that entry names none (DEFAULT_WEIGHTS). The module as read computes a formula and does not estimate contact response; saved walk results are used only to exclude doors already worked.",
+   "transfer": "Applies to individual-level targeting of a costly contact, which is structurally closest to Terrier. The numbers do not transfer: they come from charitable gifts, not canvass persuasion or GOTV. A learned rule would need randomized contact assignment, such as held-out control households per turf, because saved walk results may be selected on who was knocked (plausible, not checked against walk data).",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "luo-2020-path-planning-algorithm",
+   "title": "A UAV Path Planning Algorithm Based on an Improved D* Lite Algorithm for Forest Firefighting",
+   "year": "2020",
+   "component_id": "terrier-canvass.street-presets-and-turf",
+   "relation": "context",
+   "claim": "Multiple targets are visited greedily, each time taking the nearest remaining target by Euclidean distance (Eq. 3). Multiple static targets took 0.23 to 0.91 s on 394.8 to 752.6 m paths (Table 2). No comparison to an ordering optimizer is reported.",
+   "system_side": "walk_route.py solves up to 8 runs exactly. Larger groups use 20 nearest-next starts, then 2-opt with direction flips and or-opt, with double-bridge kicks under a deterministic evaluation cap. Groups are joined by A* on the walk road network with a straight-line heuristic.",
+   "transfer": "Nothing to adopt directly. The paper's single greedy pass is weaker than the ordering already built. A geometric heuristic is valid for street routing, and the system already uses one.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "simchon-2024-persuasive-effects-political",
+   "title": "The persuasive effects of political microtargeting in the age of generative artificial intelligence",
+   "year": "2024",
+   "component_id": "terrier-canvass.untapped-potential",
+   "relation": "context",
+   "claim": "Personality-matched messaging produces small attitudinal increments (b = -0.03 to -0.08 per SD of mismatch on a 1-5 self-report), which the authors translate to 2,490 to 11,405 extra persuaded per 100,000 under a midpoint cutoff, with no behavioural outcome.",
+   "system_side": "Untapped potential values persuasion as (1 - |2s - 1|) x t, a function of the voter's support position and turnout only; it is message-invariant and uses no personality data.",
+   "transfer": "Only relevant if Terrier ever tailors canvass scripts by inferred voter traits; the paper's effects are on perceived persuasion of ads in a UK online panel, not doorstep vote choice, so it does not argue for changing the potential formula.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "tappin-2023-quantifying-potential-persuasive",
+   "title": "Quantifying the potential persuasive returns to political microtargeting",
+   "year": "2023",
+   "component_id": "terrier-canvass.untapped-potential",
+   "relation": "suggests-extension",
+   "claim": "Study 1 (Lucid, Feb 2022; 5,284 analyzed across both modules). Citizenship Act: microtargeting 5.17 pp vs single-best-message 2.41 vs naive random message -0.96 (P=0.016 and P<0.001). Precision-weighted across both modules: 5.96 vs 3.48 vs 1.79. UBI module: microtargeting 7.16 vs single-best-message 5.03 vs naive 5.70, not significant. Profiles were ranked with generalized random forests (grf R package) over 250 Monte Carlo 75/25 splits. The advantage was qualitatively largest for one-covariate targeting, though differences were slight.",
+   "system_side": "Untapped potential ranks each person by (wp x (1-|2s-1|) x t + (1-wp) x s x (1-t)) x (1 + wi x i), with module defaults wp=0.5 and wi=0.5 that a district can override. It chooses whom to contact, not what to say. It has no message or script variant and no effect-size term, and the (1-|2s-1|) term peaks at s=0.5 by construction.",
+   "transfer": "Tappin's effects are online survey estimates from Feb 2022 U.S. respondents with forced exposure on low-salience policy attitudes. They are not field or door-canvass effects. The paper says candidate-centered and non-U.S. settings are untested, and it says survey estimates may overstate the relative advantage of microtargeting in the field. A party or ideology split is the coarse covariate the paper found sufficient in-sample, and Terrier holds registration and partisan scores. Any gain stays UNVERIFIED until Terrier runs its own pretest.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "tappin-2023-quantifying-potential-persuasive",
+   "title": "Quantifying the potential persuasive returns to political microtargeting",
+   "year": "2023",
+   "component_id": "terrier-canvass.untapped-potential",
+   "relation": "qualifies",
+   "claim": "The authors say persuasion returns may be highly context dependent. Study 1 Citizenship Act significant (5.17 vs 2.41, P=0.016); UBI not significant (7.16 vs 5.03, P=0.12). Study 2 across 36 issues: per-person issue targeting was directionally below one best-issue ad (12.30 vs 15.42, P=0.11). The authors say survey estimates may overstate the relative persuasive advantage of microtargeting. Candidate-centered and non-U.S. campaigns are untested.",
+   "system_side": "The persuade term (1-|2s-1|) x t assumes that people near s=0.5 who will vote carry persuasion value, with no magnitude attached. Its balance weight wp=0.5 is a module default, not a ruling. The score therefore treats persuadability and reminder value as comparable units with no effect-size evidence behind either.",
+   "transfer": "The paper does not estimate effects by distance from s=0.5, so it neither supports nor refutes the peak assumption. It says effect sizes vary by issue and setting and are likely smaller in high-salience contexts with countermessaging. Treat wp as unanchored until Terrier has local contact results.",
+   "strength": "weak",
+   "status": "VERIFIED-SOFTENED"
+  },
+  {
+   "slug": "esmalian-2022-characterizing-equitable-access",
+   "title": "Characterizing equitable access to grocery stores during disasters using location-based data",
+   "year": "2022",
+   "component_id": "terrier-canvass.street-presets-and-turf",
+   "relation": "context",
+   "claim": "\"Approaches focused on physical distance ... is not a reliable measure of accessibility during disasters\". Trip time and trip distance diverged by income group during preparation: lower-income zones with long baseline trips saw the largest increase in trip time, and high-income zones with short baseline trips saw the largest increase in distance.",
+   "system_side": "The turf planner ranks blocks by preset value per 100 m of street length (length floored at 50 m). It grows a turf along connected streets with a 400 m jump allowance and routes on the TIGER street network, so cost is physical distance only.",
+   "transfer": "Carries over only if canvassing happens under disrupted conditions, such as flooding or road closures, when walk time stops tracking distance. For normal door-to-door canvassing on foot, distance is an adequate cost, and the paper offers no evidence against it. This is recorded as context, not a proposed change.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "madsen-2017-strategic-advantages-micro",
+   "title": "The strategic advantages of micro-targeted campaigning: A proof of principle Bayesian Agent-Based Model",
+   "year": "2017",
+   "component_id": "terrier-canvass.untapped-potential",
+   "relation": "qualifies",
+   "claim": "Persuasion contact with voters who give the messenger credibility at or below 0.5 is inefficient or harmful. Targeting only receptive voters (signal factor above 0.5) beats random contact at equal reach; random contact needs about 2x the reach to break even. Simulation only: N=10,000 agents, 50 ticks, targeted reach 20 per tick.",
+   "system_side": "potential = (wp x (1-|2s-1|) x t + (1-wp) x s x (1-t)) x (1 + wi x i). The persuasion weight peaks for undecided likely voters (s = 0.5). The formula has no term for how credible the canvasser or candidate is to the person being contacted, and no term for backfire.",
+   "transfer": "Partial transfer. Both concern voter-level persuasion targeting in a two-candidate race. The paper, however, uses unconnected simulated agents, a single proposition and no turnout, and its credibility values are drawn from distributions, not measured. It supports adding a messenger-credibility or backfire guard as a hypothesis to test against canvass results. It does not support any particular weight. Strength is weak because these are uncalibrated ABM outputs with no replications reported.",
+   "strength": "weak",
+   "status": "UNVERIFIED"
+  },
+  {
+   "slug": "sverdrup-nd-introduction-grf-causal-forests",
+   "title": "An introduction to grf",
+   "year": "",
+   "component_id": "terrier-canvass.untapped-potential",
+   "relation": "suggests-extension",
+   "claim": "RATE/TOC tests whether a ranking sorts units by treatment effect. In the Brazil RCT (n about 17,000 students, 850 schools), ranking by low financial autonomy gave AUTOC 0.69 (SE 0.22, t about 3.2). Ranking by out-of-bag forest CATE gave one-sided p = 0.65 (the text says this rejects, which the printed p-value does not). Qini curves for budgeted targeting and depth-1 policy trees from doubly robust scores are described (pp.7-10).",
+   "system_side": "Untapped potential (untapped.py docstring): undecided = (1 - |2s-1|) x t; supporter = s x (1-t); potential = (wp x undecided + (1-wp) x supporter) x (1 + wi x i), with s candidate support, t turnout, i sphere percentile. wp and wi come from the district settings (module default 0.5, 0.5). The score is a fixed formula with no effect-heterogeneity estimate and no RATE or Qini check.",
+   "transfer": "Needs randomized or known-propensity knock vs no-knock assignment with logged outcomes (support ID or validated turnout), scored as RATE on held-out doors. Without randomized contacts, any test is an observational CATE that assumes unconfoundedness. Not transferable from this tutorial as evidence about the formula.",
+   "strength": "moderate",
+   "status": "VERIFIED-SOFTENED"
+  }
+ ]
+}

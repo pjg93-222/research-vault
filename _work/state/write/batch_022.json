@@ -1,0 +1,1189 @@
+[
+ {
+  "slug": "park-2025-automatic-construction-direction",
+  "note": false,
+  "meta": {
+   "title": "Automatic construction of direction-aware sentiment lexicon using direction-dependent words",
+   "authors": [
+    "Jihye Park",
+    "Hye Jin Lee",
+    "Sungzoon Cho"
+   ],
+   "year": "2025",
+   "venue": "Language Resources and Evaluation, vol. 59, pp. 843-869 (accepted 28 Mar 2024; published online 25 May 2024)",
+   "doi": "10.1007/s10579-024-09737-9",
+   "sha12s": [
+    "f4189702e9ad"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "Automatic construction of direction-aware sentiment lexicon using direction-dependent words",
+   "authors": [
+    "Jihye Park",
+    "Hye Jin Lee",
+    "Sungzoon Cho"
+   ],
+   "year": "2025",
+   "venue": "Language Resources and Evaluation, vol. 59, pp. 843-869 (accepted 28 Mar 2024; published online 25 May 2024)",
+   "doi": "10.1007/s10579-024-09737-9",
+   "document_type": "Journal article (original paper)",
+   "coverage": "Read the full extracted text (all ~1,684 lines: front matter, abstract, Sections 1-6, Appendix 1, data/funding statements, references, author affiliations). Tables 1-9 were read from the extracted text, which garbles some table layouts; the numbers quoted below are as they appear in that text and should be checked against the PDF table before reuse. Paul's markup: no markup files were listed for this item, so paul_markup is empty. The _annots folder was not opened for this paper. Scope relevance: text measurement (lexicon construction, PMI co-occurrence, sentence classification) only. Nothing in the paper concerns lobbying, networks, path-finding, allocation, elections, persuasion/turnout, or legislators.",
+   "research_question": "Can a financial sentiment lexicon be built automatically so that each entry is a pair of a directional word (up/down) and a direction-dependent word, so that sentiment flips correctly with direction (e.g., \"cost\" negative, but \"cost decrease\" positive)? Does adding these pairs to the Loughran-McDonald (LM) word list improve sentence-level sentiment classification of financial headlines? (Sect. 1, pp. 845-846)",
+   "theory": "Lexicon-based explainability: sentiment lexicons are preferred in finance because they expose the words that drive a decision, whereas supervised deep models are black boxes (Sect. 1, pp. 845-846). Domain-specific polarity: a word's sentiment depends on domain and on directional modifiers. Direction-dependency is operationalized as a word whose sentiment orientation changes with \"up\" or \"down\" words (Sect. 1, p. 846; Sect. 3.1, p. 850). No formal economic theory is stated beyond the market-sentiment and media literature cited in the introduction (Tetlock 2007; Engelberg and Parsons 2011; Garcia 2013).",
+   "data": "Unit: sentence or economic news headline. Construction corpus: DS50 subset of the Financial PhraseBank (FPB), 4,835 English sentences labelled by 16 finance experts; 691 sentences tagged \"proportional\" and 28 tagged \"inversely proportional\" after the direction-score step; 56 direction-dependent words extracted; Senti-DD lexicon of 1,767 pairs (1,077 positive, 690 negative) (Sect. 4.1, p. 853; Table 1, p. 848). Evaluation corpora: FPB subsets DS50 (4,835), DS66 (4,209), DS75 (3,447), DS100 (2,259); SemEval-2017 Task 5 subtask 2 (960 messages, continuous scores converted to three classes); FiQA Task 1 (436 sentences) (Sect. 4.3, pp. 855-856; Table 6, p. 856). Directional word lists: 20 \"up\" and 11 \"down\" terms seeded from HGI word lists (Table 3, p. 853). Time period: not stated for the corpora; the appendix examples are dated roughly 2006-2010. Evaluation uses stratified five-fold cross-validation repeated five times (Sect. 4.3, p. 856).",
+   "method": "Stage 1 (direction tagging, Sect. 3.1): each polar sentence gets a direction score = count of \"up\" words minus count of \"down\" words (Porter stemming, NLTK). Sentences are tagged \"proportional\" (positive with score > 0, or negative with score < 0) or \"inversely proportional\" (the reverse). Neutral sentences are excluded. Stage 2 (association, Sect. 3.2): nouns are lemmatized (NLTK); nouns occurring in fewer than 1% of sentences are dropped. PMI(w,t) = log2 [p(w,t) / (p(w) p(t))] is computed for each noun and tag. Dependency score (Eq. 1) keeps PMI(w,tp) if PMI(w,tp) - PMI(w,ti) > delta, uses -PMI(w,ti) if the difference is below -delta, and 0 otherwise; delta = 0 in this study. Stage 3 (extraction, Sect. 3.3): from each sentence, the highest-scoring proportional word or the lowest-scoring inversely proportional word is kept as the direction-dependent word; words with non-alphabetic characters or fewer than k = 3 letters are removed. Stage 4 (Senti-DD, Sect. 3.4): pairs of directional and direction-dependent words are labelled positive-context or negative-context. Stage 5 (evaluation, Sect. 4.2): LM sentiment score = PosScore - NegScore (Eq. 2); ContextScore = ContPosScore - ContNegScore (Eq. 3); RefinedScore = SentimentScore + ContextScore (Eq. 4); sign of the refined score gives positive, neutral or negative. Baselines: Sentiment140, SentiWordNet, SO-CAL, MPQA, TextBlob, VADER, SentiStrength, AFINN, LM. Pretrained comparators: Word2Vec with logistic regression (word2vec-google-news-300), BERT-base-uncased and RoBERTa-base fine-tuned (Adam, weight decay 0.01, batch 8, 500 warm-up steps, 3 epochs; Sect. 4.4, pp. 856-857). Hyperparameters were set heuristically, and the authors state that tuning is left to future work (p. 857).",
+   "identification": "None in the causal sense. The paper does not identify any causal effect. Validity rests on the downstream classification F1 of the augmented lexicon against baselines, with the explainability of individual pairs checked by inspection (Appendix 1, pp. 863-866; Table 9, p. 861). The paper says that evaluating lexicon quality directly needs inter-annotator agreement that it did not collect (Sect. 4.2, p. 854).",
+   "scope": "Population: English-language economic and financial news headlines (FPB, SemEval-2017 Task 5, FiQA), mainly company-performance headlines from Finnish and other European firms that reflect the FPB corpus. Institution: Seoul National University (Industrial Engineering). Era: the corpora are dated to the mid-2000s to 2010s; the paper does not state a period for its sample. The method is claimed for other domains such as electronics reviews, and for central-bank communications (FOMC) as future work (Sect. 6, pp. 862-863). These extensions were not tested.",
+   "key_findings": [
+    {
+     "finding": "Senti-DD construction yields 56 direction-dependent words (49 proportional, 7 inversely proportional), e.g., proportional: profit, revenue, growth, net; inversely proportional: cost, plant, traffic.",
+     "location": "Sect. 4.5 text / Table 9, p. 861",
+     "numbers": "56 words; 49 proportional, 7 inversely proportional"
+    },
+    {
+     "finding": "The lexicon has 1,767 directional/direction-dependent pairs, 1,077 positive and 690 negative.",
+     "location": "Sect. 1, p. 846; Table 1, p. 848",
+     "numbers": "1,767 pairs; 1,077 positive; 690 negative"
+    },
+    {
+     "finding": "Worked PMI example for profit: PMI(profit, proportional) = 0.05 and PMI(profit, inversely proportional) = -3.0, giving dependency score 0.05.",
+     "location": "Table 2, p. 851",
+     "numbers": "PMI 0.05 and -3.0; dependency score 0.05; 217 sentences contain profit"
+    },
+    {
+     "finding": "On the four FPB subsets, LM + Senti-DD raises weighted F1 over the LM list alone. The reported F1 values are DS50 0.5914 to 0.7057, DS66 0.6023 to 0.7322, DS75 0.6174 to 0.7788 and DS100 0.5982 to 0.8233. The paper says it beats all lexicon baselines.",
+     "location": "Table 7, pp. 858-859; Sect. 5, p. 857",
+     "numbers": "F1 LM 0.5914/0.6023/0.6174/0.5982 vs LM+Senti-DD 0.7057/0.7322/0.7788/0.8233 (DS50/DS66/DS75/DS100)"
+    },
+    {
+     "finding": "On DS100, LM+Senti-DD roughly doubles the negative-class F1 of LM (text says nearly twice). Table values: negative F1 0.4087 (LM) to 0.7260; positive F1 0.2596 (LM) to 0.7361.",
+     "location": "Table 8, p. 860; text p. 860",
+     "numbers": "negative F1 0.4087 -> 0.7260; positive F1 0.2596 -> 0.7361"
+    },
+    {
+     "finding": "On the SemEval and FiQA sets, LM+Senti-DD is still below 0.5 F1 (0.4789 SemEval; 0.4937 FiQA). Pretrained models do better on nearly all measures, and the authors attribute this to lexicon methods needing explicit sentiment words.",
+     "location": "Table 7, pp. 858-859; text p. 858",
+     "numbers": "F1 SemEval LM 0.3632 -> LM+Senti-DD 0.4789; FiQA LM 0.3635 -> LM+Senti-DD 0.4937"
+    },
+    {
+     "finding": "The DS100 pretrained models score higher than LM+Senti-DD (e.g., RoBERTa F1 0.9620 on DS100 in the Table 7 text), so the lexicon does not reach state-of-the-art accuracy. The paper says this is an explainability trade-off.",
+     "location": "Table 7 p. 859; Sect. 5 p. 858; Sect. 6 p. 862",
+     "numbers": "RoBERTa DS100 weighted F1 0.9620 as extracted"
+    },
+    {
+     "finding": "Worked example: LM labels 'Profit for the period was EUR 10.9 mn, down from EUR 14.3 mn in 2009' neutral, but LM+Senti-DD labels it negative via the (profit, down) pair (refined score -1).",
+     "location": "Sect. 5 p. 857; Table 5 p. 855; Fig. 3 p. 858",
+     "numbers": "SentimentScore 0; ContextScore -1; RefinedScore -1"
+    },
+    {
+     "finding": "In a 20-sentence DS100 sample, 10 predictions are correct and 10 are wrong. Failures mainly come from context pairs the lexicon counts as non-neutral, e.g., (company, increase).",
+     "location": "Sect. 5 p. 862; Appendix 1 pp. 863-866",
+     "numbers": "10 of 20 correct"
+    },
+    {
+     "finding": "Only 28 of 719 sentences in the construction corpus are inversely proportional, and this imbalance produces noisy direction-dependent words such as beer and day.",
+     "location": "Sect. 4.1 p. 853; Sect. 5 p. 862",
+     "numbers": "28 inversely proportional sentences; 691 proportional"
+    }
+   ],
+   "limitations": [
+    "Directional word lists are chosen manually by the researchers, which the authors call time-consuming and subjective; the directional vocabulary may also go out of date (Sect. 6, p. 863).",
+    "Imbalance between proportional (691) and inversely proportional (28) tagged sentences yields noisy words such as beer and day (Sect. 5, p. 862).",
+    "Neutrality is detected passively (equal positive and negative counts), not by a dedicated neutrality step (Sect. 6, p. 863).",
+    "Lexicon methods degrade when sentiment is not explicitly expressed; SemEval and FiQA F1 stay below 0.5 (Sect. 5, p. 858).",
+    "Pretrained model inference is treated as black box; the paper's statements about why pretrained models succeed are speculative (Sect. 5, p. 858).",
+    "Hyperparameters, including the number of epochs and delta = 0, k = 3, were set heuristically; no hyperparameter tuning was done (Sect. 4.4, p. 857).",
+    "Evaluation relies on downstream classification F1 without inter-annotator agreement measures; the authors say lexicon quality is hard to assess directly (Sect. 4.2, p. 854).",
+    "Sentence-level only, English-only, and mostly headline-length texts; generalization to other domains (electronics reviews, FOMC minutes) is proposed but untested (Sect. 6, pp. 862-863).",
+    "Table 7 and Table 8 values in the extracted text are layout-garbled; the reported results have no significance tests or confidence intervals in the text read.",
+    "Appendix examples show the lexicon can flag a context pair (company, increase) as a negative cue, which reduces accuracy on some headlines (Sect. 5, p. 862)."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "sentiment orientation of a word can change depending on the application of directional expressions",
+     "location": "Sect. 1 Introduction, p. 844"
+    }
+   ],
+   "measures": [
+    "Weighted precision, recall and F1 for three-class (positive/neutral/negative) sentence classification on FPB subsets, SemEval-2017, and FiQA",
+    "Per-class precision, recall and F1 (DS100, Table 8)",
+    "Pointwise mutual information PMI(w,t) between nouns and direction-dependency tags (p. 850)",
+    "Dependency score (Eq. 1) with delta threshold (delta = 0) (p. 851)",
+    "SentimentScore, ContextScore and RefinedScore (Eqs. 2-4, pp. 854-855)"
+   ],
+   "references_of_note": [
+    "Loughran and McDonald (2011), 'When is a liability not a liability?', Journal of Finance 66(1), 35-65: the LM word list used as base lexicon and the main manual financial lexicon.",
+    "Oliveira, Cortez and Areal (2016), Decision Support Systems 85: StockTwits lexicon built with modifier-association statistics; the closest prior work on directional modifiers (pp. 847, 848).",
+    "Malo, Sinha, Korhonen, Wallenius and Takala (2014), JASIST 65(4): Financial PhraseBank, and a manual lexicon of 177 entities combined with up/down motion verbs.",
+    "Moreno-Ortiz, Fernandez-Cruz and Hernandez (2020), SentiEcon, LREC: manual financial lexicon of 6,470 entries with directional multi-word expressions.",
+    "Krishnamoorthy (2018), Knowledge and Information Systems 56(2): manual lagging and leading performance-indicator lexicon (directional word lists).",
+    "Yekrangi and Abdolvand (2021), Journal of Intelligent Information Systems 57(1): PMI-based financial lexicon construction from Bloomberg and Reuters text.",
+    "Tetlock (2007), Journal of Finance 62(3); Engelberg and Parsons (2011), Journal of Finance 66(1): media and market sentiment, cited as motivation.",
+    "Taboada et al. (2011), Computational Linguistics 37(2): SO-CAL lexicon method used as a baseline.",
+    "Cortis et al. (2017), SemEval-2017 Task 5, and Maia et al. (2018), FiQA challenge: evaluation datasets."
+   ]
+  },
+  "summary_md": "Park, Lee and Cho build a financial sentiment lexicon in which each entry pairs a directional word (\"up\" or \"down\" family) with a noun whose polarity depends on that direction. Their example is \"cost\", which is negative alone but positive in \"cost decrease\". Sentences in the Financial PhraseBank are tagged proportional or inversely proportional from an up-count minus down-count score. PMI between nouns and the two tags picks out 56 direction-dependent words, and these yield 1,767 pairs. Adding the pairs to Loughran-McDonald raises weighted F1 on the PhraseBank subsets from about 0.59-0.62 to 0.71-0.82. On SemEval and FiQA it stays below 0.5, and fine-tuned RoBERTa is far ahead (about 0.96 on DS100). The construction set was heavily imbalanced (28 inversely proportional sentences against 691 proportional), which produced noisy words. Evaluation covers headline-length sentences only, with no significance tests.\n\nThis paper has already been used in Paul's system. The brain notes say he adapted it as a \"directional verb x CU-valenced target\" override for the CFPB sign-flip problem. A whole-text version made 46 sign changes on gold: 3 good and 43 bad. It was rejected because releases defending the CFPB describe the attack with \"shrink\" verbs. The idea that survives in the built system is a curated, direction-separated target registry (cfpb_reform +1, cfpb_expansion -1, cfpb_institution 0), not an automatic lexicon. The paper explains both results. Its pairs work on short headlines where the direction word modifies the noun, and press releases are long, multi-actor texts. The paper's own failure cases (pairs like company/increase) and its class imbalance match the churn seen in Paul's dry run. The open question in the system (restrict the rule to the sentence or headline that names the bill) is the condition under which the paper's evidence would actually transfer. Nothing here concerns networks, money or allocation.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-stance.bill-sign-handling",
+    "relation": "qualifies",
+    "paper_claim": "Direction-aware (directional word, direction-dependent word) pairs fix polarity flips like (profit, down), taking LM's neutral to negative. LM+Senti-DD weighted F1 is 0.7057-0.8233 on the FPB subsets, but on headline-length, single-actor sentences only. It stays below 0.5 on SemEval (0.4789) and FiQA (0.4937), and the 20-sentence error sample is 10/20 correct, with failures from spurious pairs such as (company, increase).",
+    "paper_location": "Table 7 pp. 858-859; Table 5 p. 855; Sect. 5 pp. 857-862; Appendix 1 pp. 863-866",
+    "system_side": "Sign comes from DEBATE or the human overlay for text-bearing releases, and from the bill table only for text-less billstatus rows (run_stage5.R:135-143). The naive directional-verb x target override adapted from this paper over whole release text gave 3 good / 43 bad sign changes on gold and was rejected. The 'defend the CFPB' releases describe the attack with shrink verbs, so the verb count reads the wrong direction. The brain note's recorded pivot is a high-precision headline or named-bill-only rule, or using the signal as a DEBATE feature rather than an override.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:105-108,128-143; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R:1642 (BILLS), :2600 (score_bill_signals); C:/Users/pgoff/Documents/brain/concepts/two-hop-stance-decomposition.md:65-67",
+    "transfer_conditions": "The evidence carries over only when the directional word syntactically governs the target noun within one short sentence, as in FPB headlines. It does not carry over to whole-release counting over multi-actor congressional press text. There, the speaker's attitude toward the direction (defending vs attacking) is a second hop the paper never models. The paper's own domain shift (FPB to SemEval/FiQA) already drops F1 below 0.5. This supports the system's open question about restricting the rule to the sentence naming the bill. It does not support reviving a blanket override, and any such variant is UNVERIFIED until a held-out gold look.",
+    "strength": "strong",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#Bill-sign valence (direction table, prose matcher; override rejected)|Bill-sign valence (direction table, prose matcher; override rejected)]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.two-hop-decomposition",
+    "relation": "method-source",
+    "paper_claim": "Polarity is a property of a (direction, target) pair, not of the target alone. Direction-dependent nouns are typed proportional or inversely proportional by PMI against direction-tagged sentences (dependency score Eq. 1, delta = 0). Only 28 of 719 tagged sentences were inversely proportional, and the imbalance produced noisy entries such as beer and day.",
+    "paper_location": "Sect. 3.1-3.3 pp. 850-852; Eq. 1 p. 851; Table 2 p. 851; Sect. 4.1 p. 853; Sect. 5 p. 862",
+    "system_side": "Valence is attached per target family, with separate entries per direction: cfpb_reform +1, cfpb_expansion -1, cfpb_institution 0, cfpb_general 0. Families are derived from Paul's gold labels at at least 75% consistency, and the docstring records 'no flip heuristics (those failed)'. The brain note records a PMI auto-typing pass on gold (CFPB 64% inverse at sentence level vs 41% at release level). Auto-registry variants all fell below the flat baseline of 0.677, while the gold-derived registry reached 0.782 accuracy in 5-fold CV.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Melange Systems/fec/stance/derive_valence_registry.py:10-13,22-40,110-130",
+    "transfer_conditions": "Paul's registry is in effect a hand-curated, gold-derived version of the paper's direction-pair lexicon, and the paper's automatic PMI step is the part that failed here. Two things are consistent with the paper's own imbalance warning. Inverse targets are a small minority on both sides, and the system's sentence-level typing beat release-level typing. Transfer is limited by corpus size: 400 tweet golds and 238 distinct targets, against the paper's 4,835 sentences with a 1% noun-frequency floor. A PMI typing pass on this corpus would also need a held-out look before any claim (DE-062).",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#Two-hop stance x valence decomposition with curated registry|Two-hop stance x valence decomposition with curated registry]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.lsd-tone",
+    "relation": "qualifies",
+    "paper_claim": "General and finance dictionaries miss or misread polarity when sentiment is carried by direction plus noun. LM alone labels 'Profit ... down from EUR 14.3 mn' neutral (SentimentScore 0). On DS100, negative-class F1 for LM alone is 0.4087, against 0.7260 with direction pairs.",
+    "paper_location": "Sect. 5 p. 857; Table 5 p. 855; Table 8 p. 860",
+    "system_side": "LSD2015 counts are direction-blind word and negation-phrase sums. Press intensity = |net|/words (or charge) and is multiplied by the DEBATE or human sign, so LSD contributes magnitude only.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:10-15,46-58; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:9,45,141-143",
+    "transfer_conditions": "The bearing is weak because LSD's sign is discarded here. The paper's flips matter for sign, and for magnitude only when directional pairs cancel or inflate |net|. That happens in releases like 'cut costs / reduce fees', where an LSD negative word sits in a positive context. The paper tests no effect on intensity, and Paul's system has no human-coded intensity criterion to test it against.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#Lexicoder LSD2015 tone intensity|Lexicoder LSD2015 tone intensity]]",
+    "system": "melange-stance"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "No sentence- or headline-scoped direction rule. Every directional-lexicon test in the system counted over whole release text, while the paper's evidence is sentence-level and its pairs require the direction word to govern the noun.",
+   "No representation of speaker attitude toward the direction ('defend against efforts to dismantle the CFPB'). The paper does not model this either, and it is the dominant failure mode in Paul's dry run. A direction-pair feature would need dependency or clause scoping before it could help DEBATE.",
+   "The direction-pair signal was never tried as a soft feature into the stacked stance readers. That was the recorded pivot option, and it has no held-out measurement.",
+   "LSD intensity ignores direction-dependent polarity. Whether this distorts |net| on CU press releases is untested, and there is no human-coded intensity gold."
+  ],
+  "flags": [
+   "The system has already tested and rejected this paper's method as adapted: naive directional-verb x target override, 3 good / 43 bad on gold. Do not re-propose a whole-text direction-aware override. Any sentence-scoped revival stays UNVERIFIED until a held-out gold look reproduces it (DE-062).",
+   "The paper's F1 values come from layout-garbled table text and have no significance tests or confidence intervals. Check them against the PDF before quoting, and attach the corpus and denominator, e.g. 'weighted F1 on FPB DS100, 2,259 sentences, 5x5-fold CV'.",
+   "The paper's domain (European company-performance headlines, mid-2000s to 2010s) is not congressional press. Its evidence does not transfer to the multi-topic releases that dominate the Stage 5 corpus."
+  ],
+  "paul_alignment": "There are no annotations, but Paul acted on the paper. He adapted it for the CFPB sign-flip problem (memory note cu-signflip-directionality; brain two-hop note). The built system agrees with the paper's core idea, that polarity belongs to the pair and not the word: the direction-separated CFPB families in derive_valence_registry.py are a hand-curated Senti-DD. It disagrees on automation, because the automatic and naive version churned (3 good / 43 bad), and the paper's own headline-only scope and class-imbalance warnings predict that. Paul's memory note's present-tense line ('user pursuing a direction-aware sentiment lexicon') is stale. That line of work ended in rejection of the override and the curated registry. The remaining live question is the sentence-scoped or feature-only variant.",
+  "related": [
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "complements",
+    "why": "Both build domain-specific sentiment dictionaries from corpus co-occurrence rather than general word lists. Rice & Zorn is the political-text analogue that the legacy regex scorer's polarity formula cites."
+   },
+   {
+    "slug": "haselmayer-2017-sentiment-analysis-political",
+    "relation": "complements",
+    "why": "A dictionary approach for political communication validated with crowdcoding. It supplies the human-agreement lexicon check that Park et al. say they lack (Sect. 4.2)."
+   },
+   {
+    "slug": "b-2025-comparing-fine-tuned",
+    "relation": "contradicts",
+    "why": "Fine-tuned RoBERTa beats classical and lexicon methods on political stance, consistent with Park's own Table 7 gap (RoBERTa about 0.96 vs lexicon 0.82 on DS100). This favours the system's DEBATE reader over a lexicon override."
+   },
+   {
+    "slug": "kim-2025-measuring-interest-group",
+    "relation": "complements",
+    "why": "LLM position extraction (Support/Oppose) on lobbying reports is the transformer alternative to directional lexicons for bill-level sign. Paul ties it to bill-sign handling."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "dai-2025-large-language-model",
+    "relation": "complements",
+    "why": "A direction-aware lexicon addresses clause-level polarity direction, which is one of FOLAR's two error types. The system rejected a whole-text version of that lexicon in bill-sign handling."
+   },
+   {
+    "slug": "h-2023-artificial-intelligence-sentiment",
+    "relation": "complements",
+    "why": "A direction-aware lexicon (the one behind the rejected verb lexicon) addresses the sentiment-versus-direction distinction that the review collapses."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "haselmayer-2017-sentiment-analysis-political",
+  "note": false,
+  "meta": {
+   "title": "Sentiment analysis of political communication: combining a dictionary approach with crowdcoding",
+   "authors": [
+    "Martin Haselmayer",
+    "Marcelo Jenny"
+   ],
+   "year": "2017 (print, Qual Quant 51:2623-2646); published online 21 September 2016",
+   "venue": "Quality & Quantity (Quality & Quantity 51, 2017)",
+   "doi": "10.1007/s11135-016-0412-4",
+   "sha12s": [
+    "e0ba4d46f68b",
+    "3fdf2702887c"
+   ],
+   "category": "Machine Learning & Sentiment Analysis",
+   "category_slug": "machine-learning-sentiment-analysis"
+  },
+  "extraction": {
+   "title": "Sentiment analysis of political communication: combining a dictionary approach with crowdcoding",
+   "authors": [
+    "Martin Haselmayer",
+    "Marcelo Jenny"
+   ],
+   "year": "2017 (print, Qual Quant 51:2623-2646); published online 21 September 2016",
+   "venue": "Quality & Quantity (Quality & Quantity 51, 2017)",
+   "doi": "10.1007/s11135-016-0412-4",
+   "document_type": "Journal article (open access, CC BY 4.0)",
+   "coverage": "Read the full text file (1027 lines, PDF pages 1-23): front matter, abstract, introduction, measurement section, crowdcoding and dictionary construction, validation, both applications, conclusions, Appendices 1-6 and the full reference list. Paul supplied no markup files (the \"(none)\" list is empty), so paul_markup is empty and no highlights, underlines or sticky notes were read. The paper has no content on lobbying, networks, path-finding, resource allocation, persuasion or turnout as analysis topics; it touches elections only through negative campaigning and media tone, and it touches legislators only through party press releases and parliamentary debates as corpus sources.",
+   "research_question": "Can a negative sentiment dictionary for a language and domain of choice be built cheaply through crowdcoding, and does its word-based tonality score validly measure fine-grained negativity relative to expert and crowd coding? The authors illustrate use with (a) negative campaigning among Austrian parties in the 2013 national election and (b) media tonality toward parties and candidates.",
+   "theory": "Sentiment as gradual negativity or tonality (not binary polarity), with a bag-of-words assumption and only the neutral-to-negative range covered because of negativity asymmetry (Peeters 1971; Baumeister et al. 2001; Rozin and Royzman 2001). Negativity bias in news (Galtung and Ruge 1965). Negative campaigning intensity matters for voters (Mutz and Reeves 2005; Fridkin and Kenney 2011). Government and coalition-partner restraint in attacks (Walter and Van der Brug 2013; Dolezal et al. 2015); electoral losers attack more (Damore 2002).",
+   "data": "Unit of rating: sentences (coded by crowd coders); word-level scores are derived from sentences. Source corpus: about 470,000 sentences from Austrian party press releases, parliamentary debate minutes and media reports on election campaigns, 1995-2013 (Sec. 4.1). Seed-word prefilter reduced it to about 215,000 sentences; 13,000 were randomly drawn; 12,713 remained after removing duplicates and incomplete sentences (fn 5). Crowd sample: about 130,000 valid codings, 10 per sentence, from 480 coders on CrowdFlower (Austria/Germany only), cost about 2,000 EUR (about 2,200 USD; Table 7 sums to about 2,198 USD). Resulting dictionary: 5,001 unique word forms (Sec. 4.5). Validation sample: 200 sentences from party press releases of four national campaigns (2002-2013) plus media reports from the most recent campaign, coded by two expert authors and ten lay coders (Sec. 6). Extended validation: 755 negative party press release statements from the 2013 campaign, single expert coder (App. 3). Application 1: 1,958 party press releases from the final 6 weeks of the 2013 campaign, of which 755 are directed negative relations between two parties (612 with a tonality score per Table 2; 619 observations in Table 3). Application 2: 15,096 news reports from 15 Austrian dailies, final 8 weeks of the 2013 campaign, 439,954 sentences, about one in five referring to a party or top candidate.",
+   "method": "Five-step procedure (Sec. 4): (1) sample sentences containing seed negative words; (2) crowdcode each sentence on a 0-4 negativity scale (0 not negative to 4 very strongly negative) plus an \"uncodable\" option, with test questions (4 initial, 1 in 5 later; two adjacent categories accepted); coders below 75% test accuracy excluded; (3) sentence score = mean of 10 coder ratings; (4) word score = mean of sentence scores in which the word occurs; word forms lemmatized with TreeTagger and POS-tagged, with manual post-processing; (5) remove words under 3 characters, high-frequency function words, names of persons, parties and organizations (AUTNES list), positive words from existing lexicons, and words occurring in only one sentence. Scoring of new texts (Sec. 5): bag-of-words; sentence tonality = most negative dictionary word (max rule); negation word immediately before a dictionary word excludes that word (no polarity flip); intensifier before a word multiplies its score by 1.25, capped at the scale maximum. Validation (Sec. 6, App. 2-3): Pearson correlations with expert and crowd means, coverage, and comparison with two translated German dictionaries (SentiWS, Momtazi). Applications: OLS regression of press-release tonality with government/opposition and coalition-pair indicators, party fixed effects, poll-performance and days-to-election controls, standard errors clustered by party pair (Table 3); descriptive comparison of mean sentence tonality with and without an actor reference, by day (Sec. 7.2, Fig. 6).",
+   "identification": "None causal. Observational OLS with party fixed effects and standard errors clustered across party pairs; controls for net poll change and days to election. Robustness is expert-coded dependent variable (App. 3, Table 6).",
+   "scope": "Population: German-language political communication in Austria (party press releases, parliamentary debates, and 15 Austrian daily newspapers). Era: corpus 1995-2013; the two applications cover the 2013 national election campaign. Institutions: six parliamentary parties (SPO, OVP, FPO, Greens, BZO, Team Stronach). The procedure is presented as portable to other languages and domains, but no other language or domain is tested.",
+   "measures": [
+    "Negativity/tonality: 0-4 crowd ordinal scale (0 not negative to 4 very strongly negative), aggregated as means of ten coder ratings per sentence",
+    "Word tonality score: mean of sentence scores containing the word (range 0.06-3.8 in the 5,001-word dictionary)",
+    "Sentence tonality: maximum (most negative) dictionary word score in the sentence (max rule), with negation exclusion and 1.25 intensifier amplification",
+    "Validation: Pearson correlation with expert and crowd coding; coverage (share of sentences with a matching dictionary word); binary accuracy 0.85 and F-score 0.91 for negative vs not negative (fn 8)",
+    "Application 1 dependent variable: tonality of a directed negative press release statement; independent variables: sender/target/pair government indicators, electoral losses (net poll change), days to election",
+    "Application 2: mean sentence tonality for sentences with vs without a party or candidate reference"
+   ],
+   "key_findings": [
+    {
+     "finding": "Crowd sentence scores: 480 coders passed the tests with 92% mean accuracy (SD 0.07); about 130,000 valid codings, ten per sentence, for 12,713 sentences; the test-question design implies a 4% chance of passing by guessing.",
+     "location": "Sec. 4.2, p. 2628 (fn 5-6); Table 7, p. 2640",
+     "numbers": "480 coders; 92% (SD 0.07); ~130,000 codings; 12,713 sentences; ~2,000 EUR (~2,200 USD)"
+    },
+    {
+     "finding": "Dictionary scope and size: the rated bag of words falls from about 40,000 initial words to about 5,000 after removing short, frequent, rare, positive, and named-entity words.",
+     "location": "Sec. 4.5, p. 2630",
+     "numbers": "5,001 dictionary words; scores 0.06-3.8 on the 0-4 scale; mean 2.04 (SD 0.65)"
+    },
+    {
+     "finding": "Lay crowd aggregates replicate expert coding of the 200-sentence test sample, with a slight centrist bias.",
+     "location": "Sec. 6, p. 2631",
+     "numbers": "Pearson r = 0.82 (aggregated expert vs aggregated crowd, n = 200)"
+    },
+    {
+     "finding": "Dictionary validity against expert coding: a moderate correlation at 84% coverage. Setting the 32 uncovered sentences to zero lowers the correlation.",
+     "location": "Sec. 6, pp. 2631-2632",
+     "numbers": "r = 0.65, coverage 84% (n = 200); r = 0.6 after assigning zero to 32 uncovered sentences"
+    },
+    {
+     "finding": "Replication on a larger sample: single expert coding of 755 statements gives similar coverage and correlation; the dictionary-based estimates are described as more conservative than manual-coding estimates.",
+     "location": "App. 3, p. 2639",
+     "numbers": "n = 755; coverage 82%; r = 0.63"
+    },
+    {
+     "finding": "Generic German dictionaries perform far worse on the same sample, which the authors take as evidence that customization is needed.",
+     "location": "Table 1, p. 2633; Sec. 6, pp. 2630-2632",
+     "numbers": "Momtazi: r = 0.13, coverage 46%; SentiWS: r = 0.19, coverage 31%; political dictionary: r = 0.65, coverage 84%"
+    },
+    {
+     "finding": "Preprocessing and aggregation choices matter: stemming alone gives the lowest correlation; the best combination uses lemmatization, POS tagging, stop-word and named-entity deletion, mean word scores, the max rule for sentences, and booster/negation handling.",
+     "location": "App. 1-2, Tables 4-5, p. 2638",
+     "numbers": "Table 4 r: stemming 0.13; lemmatizing 0.34; stemming+POS/deletion 0.42; lemmatizing+POS/deletion 0.65 (coverage 84%). Table 5 best: mean word score, max sentence, booster/negation yes: r = 0.65 (n = 168)"
+    },
+    {
+     "finding": "Application 1, negative campaigning 2013: government parties are less negative than opposition parties, and government-coalition pairs are less negative than other pairs. Electoral losers attack more; no escalation toward the end of the campaign.",
+     "location": "Sec. 7.1, Table 3, Fig. 5, p. 2634-2635",
+     "numbers": "Government sender -0.10 (p < 0.05); government pair -0.13 (p < 0.001); electoral losses +0.12 (p < 0.001) in Model 1, not significant in Model 2 (0.10, SE 0.06); proximity -0.01 (n.s.); constant 2.28; n = 619; adjusted R2 = 0.03"
+    },
+    {
+     "finding": "Application 1 descriptive counts: the three largest parties issue most negative releases. Government parties SPO and OVP and opposition FPO together account for about 4 in 5 negative releases.",
+     "location": "Sec. 7.1, Table 2, p. 2634",
+     "numbers": "755 negative statements; FPO 232 (30.7%), OVP 199 (26.4%), SPO 164 (21.7%), BZO 68 (9.0%), Greens 59 (7.8%), Team Stronach 33 (4.4%); mean tonality 2.23; dictionary matched 82% of the 755 statements"
+    },
+    {
+     "finding": "Application 2, media tone: sentences that mention a party or candidate are more negative than sentences that do not. Coverage was slightly negative on average.",
+     "location": "Sec. 7.2, Fig. 6, pp. 2635-2636",
+     "numbers": "15,096 reports in 15 dailies; 439,954 sentences; about 1 in 5 references an actor; 55% contain a dictionary word (rest coded neutral); mean tonality 1.23 with actor reference vs 1.00 without"
+    },
+    {
+     "finding": "Appendix 3 check: the sign pattern of the Table 3 coefficients is the same whether scored with the dictionary or with expert coding, but dictionary-based effect sizes are weaker.",
+     "location": "App. 3, Table 6, p. 2639",
+     "numbers": "Dictionary vs expert, government-pair coefficient -0.13*** vs -0.40***; electoral losses 0.12*** vs 0.23***"
+    }
+   ],
+   "limitations": [
+    "Bag-of-words scoring cannot handle irony, sarcasm, rhetorical questions, or separable verbs; the authors say these are rare enough that coverage is acceptable, but do not measure their share.",
+    "Validation rests on 200 sentences rated by two expert authors and ten lay coders, plus a single-coder extension of 755 statements, from one country and language.",
+    "Mean aggregation of ordinal ratings produces a centrist bias and decimal scores; the authors acknowledge that purists may object.",
+    "Lemmatization and POS tags needed manual cleaning; current German NLP tools were judged unsatisfactory for separable verbs, compounds, dialect and neologisms.",
+    "Negation excludes the following word rather than flipping polarity; the procedure focuses on negativity only and does not model positive sentiment.",
+    "Non-matching sentences in the media application (45% of sentences) are coded neutral on the assumption that the dictionary covers overtly negative statements; this is not validated for that subset beyond the 200-sentence test.",
+    "Application 2 is explicitly illustrative; the authors state it cannot by itself show a critical or cynical journalistic perspective.",
+    "Sample size and budget (about 2,000 EUR) were set by a budget limit, not a power calculation.",
+    "Reporting inconsistency: Table 2 gives 612 statements with a tonality score, while its party counts sum to 619 and Table 3 reports 619 observations.",
+    "Table 3 is text-extracted and its column layout is ambiguous, so the coefficient-to-model assignment above follows the text, not the table grid.",
+    "The dictionary's generalization to other domains, languages, or time periods is not tested; the authors recommend custom dictionaries and cautious use of general-purpose ones."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Monroe, Colaresi and Quinn 2008, Fightin' words (Pol. Anal.): lexical feature selection for political conflict, applied to legislative debate; the paper's bag-of-words and polarity framing builds on it",
+    "Laver, Benoit and Garry 2003, Extracting policy positions from political texts using words as data (APSR): the bag-of-words assumption used for scoring",
+    "Laver and Garry 2000, Estimating policy positions from political texts (AJPS): cited for the procedure of deriving a dictionary",
+    "Benoit, Conway, Lauderdale, Laver and Mikhaylov 2016, Crowd-sourced text analysis (APSR): crowd coding of political texts; the 'means of means' aggregation the paper follows",
+    "Grimmer and Stewart 2013, Text as data (Pol. Anal.): validation standards and the call for custom dictionaries",
+    "Lowe and Benoit 2013, Validating estimates of latent traits from textual data using human judgment (Pol. Anal.): human-coding benchmark",
+    "Hopkins and King 2010, automated nonparametric content analysis (AJPS): public opinion from text",
+    "Slapin and Proksch 2008, scaling model for party positions from texts (AJPS): cited for the bag-of-words scoring",
+    "Soroka, Young and Balmas 2015a, Bad news or mad news? (Ann. AAPSS): dictionary vs machine learning trade-off in English",
+    "Walter 2014, Choosing the enemy (Party Polit.): attack behaviour in multiparty systems",
+    "Walter and Van der Brug 2013, When the gloves come off (Acta Polit.): negative campaigning across Dutch elections; government-opposition asymmetry",
+    "Dolezal, Ennser-Jedenastik and Muller 2015, When do parties attack their competitors? (Austria 2002-2008): coalition partners attacking each other",
+    "Geer 2006, In Defence of Negativity: negative campaigns and voter knowledge and turnout (cited as a reason to measure tonality)",
+    "Lau and Pomper 2004, Negative Campaigning (US Senate): negativity and political knowledge and turnout",
+    "Damore 2002, Candidate strategy and the decision to go negative: electoral losers attack more",
+    "Mutz and Reeves 2005, The new videomalaise (APSR): effects of televised incivility on political trust",
+    "Fridkin and Kenney 2011, variability in citizens' reactions to negative campaigns (AJPS)",
+    "Galtung and Ruge 1965, The structure of foreign news (J. Peace Res.): negativity and newsworthiness",
+    "Soroka 2012, The gatekeeping function (J. Polit.) and Soroka 2014, Negativity in Democratic Politics: media negativity distributions",
+    "Benoit et al. 2016 and Berinsky, Huber and Lenz 2012: crowdsourcing data quality for political science",
+    "Thelwall et al. 2012, Sentiment strength detection for the social web: maximum-word and negation rules used in the scoring",
+    "Taboada et al. 2011, Lexicon based methods for sentiment analysis: intensifier amplification (factor 1.25) used here"
+   ],
+   "short_quotes": [
+    {
+     "quote": "The crowdbased dictionary provides efficient and valid measurement of sentiment.",
+     "location": "Abstract, p. 2623 (PDF p. 1)"
+    }
+   ]
+  },
+  "summary_md": "Haselmayer and Jenny build a negativity dictionary for German-language Austrian political text. About 480 CrowdFlower coders rated 12,713 sentences on a 0-4 negativity scale, ten ratings per sentence, for about 2,000 EUR. Each word's score is the mean score of the sentences it appears in, which yields 5,001 lemmatized words. To score a new sentence, the method takes its single most negative dictionary word (the max rule). A negator drops the word that follows it, and an intensifier multiplies a word's score by 1.25.\n\nValidation on 200 sentences:\n- The averaged lay crowd agrees with expert coding at r = 0.82.\n- The dictionary agrees with experts at r = 0.65, matching 84% of sentences.\n- On 755 statements coded by a single expert, the dictionary gives r = 0.63 at 82% coverage.\n- Two translated general-purpose German dictionaries score r = 0.13 and 0.19. The authors read this as evidence that a domain-built dictionary is needed.\n- Preprocessing and aggregation choices move r from 0.13 to 0.65.\n- In a regression on the 2013 campaign, dictionary scores keep the expert-coded signs but shrink the effects. The government-pair coefficient is -0.13 with the dictionary versus -0.40 with expert coding.\n\nThe paper matters here in two places:\n1. The live press intensity is stock English Lexicoder LSD2015, scored per release as |net| / words. Its only recorded validation is a three-case smoke test, and it has never been compared with human-coded intensity. The paper's design would supply that test cheaply.\n2. Paul's retired graded tone scorer cites this paper by name, but its code departs from the paper. It sums weighted cues across sentences where the paper takes the strongest cue, uses a two-token negator window, adds a downtoner, and uses about 45 hand-weighted patterns rather than crowd-derived word scores.\n\nThe evidence is about Austrian German, covers negativity only, and comes from 2013. None of it validates the US congressional tone measures directly.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-stance.lsd-tone",
+    "relation": "measurement-source",
+    "paper_claim": "A dictionary's tone scores should be validated against human intensity ratings. Here crowd vs expert r = 0.82 (n = 200), and the domain dictionary vs expert r = 0.65 at 84% coverage, or r = 0.60 when the 32 unmatched sentences are set to zero. Two translated general-purpose dictionaries score far lower: Momtazi r = 0.13 (46% coverage) and SentiWS r = 0.19 (31%). The authors conclude that each domain needs its own dictionary.",
+    "paper_location": "Sec. 6 pp. 2631-2632; Table 1 p. 2633; App. 3 p. 2639",
+    "system_side": "The tone intensity behind press_value comes from the stock LSD2015 dictionary, used without customization. It counts positive and negative hits, with negated phrases removed first, and scores each release as lsd_net_norm = (pos - neg) / words. run_stage5 uses its absolute value as 'heat'. The brain records only a three-case smoke test (pro +4 / negated 0 / neutral 0), so the measure has never been correlated with human-coded intensity on congressional press releases.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:47-61; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:45,141-143; C:/Users/pgoff/Documents/brain/actors/debate-stance-model.md:102",
+    "transfer_conditions": "The validation protocol transfers: about 200 releases rated 0-4 by roughly 10 lay coders plus 2 experts, then a correlation with |lsd_net_norm|. The magnitude of the generic-dictionary penalty does not transfer directly. The paper's generic dictionaries were machine-translated German lexicons, while LSD2015 is a native English dictionary already validated on English news (Young & Soroka). The gap for US congressional press may therefore be smaller than r = 0.13-0.19 versus 0.65. The paper also measures negativity only and scores sentences, whereas LSD here is bidirectional and scores whole documents.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#Lexicoder LSD2015 tone intensity|Lexicoder LSD2015 tone intensity]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "melange-stance.legacy-regex-scorer",
+    "relation": "contradicts",
+    "paper_claim": "Sentence tonality is the single most negative dictionary word in the sentence (the max rule). A negator immediately before a word excludes that word, and an intensifier multiplies it by 1.25. Word scores are crowd-derived means on a 0-4 scale. Mean word scores plus the max rule plus booster and negation handling gave the best result (r = 0.65, n = 168). Aggregation and preprocessing choices move r between 0.13 and 0.65.",
+    "paper_location": "Sec. 5 pp. 2630-2631; App. 1-2, Tables 4-5 p. 2638",
+    "system_side": "The graded layer cites Haselmayer & Jenny and its header says 'Sentence tonality follows the strongest cue'. The code does something else. weighted_tone sums every fired cue across all CU sentences into Wp and Wn, and graded_from_signed buckets the surplus |Wp - Wn| with GRADED_CUTS. That is a summed, volume-sensitive measure, not the max rule. The negator window reaches two tokens, not one. A downtoner factor of 0.75 is added, which the paper does not have. The lexicon is about 45 hand-weighted patterns (weights 1/2/3), not crowd-derived scores. This layer is superseded and display-only: run_stage5 4b reuses its |score_graded| magnitude as a display label, and press_value does not consume it.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R:125-131,146,2323-2357,2443-2475,2786-2803; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:146-160",
+    "transfer_conditions": "This is a fidelity finding, not an empirical one. The code claims the paper's method but does not implement it. It matters only for the display score_label magnitude and the comparison column, because press_value and the press pillar do not use it. Any external claim that the graded labels follow Haselmayer & Jenny would be inaccurate.",
+    "strength": "strong",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-stance#Legacy CU press regex stance and graded tone scorer|Legacy CU press regex stance and graded tone scorer]]",
+    "system": "melange-stance"
+   },
+   {
+    "component_id": "moneyball-rank-pillars.press-pillar",
+    "relation": "qualifies",
+    "paper_claim": "Dictionary tonality runs in the same direction as expert coding, but it compresses effects. In App. 3 Table 6 the government-pair coefficient is -0.13 with the dictionary versus -0.40 with expert coding, and electoral losses are 0.12 versus 0.23. The authors call dictionary estimates more conservative than manual coding. The dictionary-based model explains little variance (adjusted R2 = 0.03, n = 619; pooled across parties with party fixed effects, standard errors clustered by party pair).",
+    "paper_location": "App. 3 Table 6 p. 2639; Sec. 7.1 Table 3 pp. 2634-2635",
+    "system_side": "The press pillar sums, by category, stance sign x LSD intensity x tiered weight, using own-domain releases only. It then normalizes by signed extrema (raw/max). The intensity multiplier has never been tested against stance sign alone; that is open question two on the lsd-tone component.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/run_stage5.R:141-143; fec/moneyball_core.py:214-237",
+    "transfer_conditions": "The evidence comes from one Austrian campaign, in German, on negativity only. It indicates that dictionary intensity carries a weaker, noisier version of the human-coded signal. Multiplying stance sign by that intensity may therefore add more noise than information to member ranks. Raw/max normalization does not remove that noise. The paper does not test a stance x intensity product, so this is a caution, not a refutation. The ablation (sign alone vs sign x intensity) against a behavioural criterion remains untested here.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/moneyball-rank-pillars#Press pillar (own-domain, signed raw-max)|Press pillar (own-domain, signed raw-max)]]",
+    "system": "moneyball-rank-pillars"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "The LSD2015 intensity used in press_value has never been correlated with human-coded intensity on congressional press releases. The paper's protocol (about 200 items, a 0-4 scale, about 10 lay coders, 2 experts, reporting r and coverage) is a cheap test the system has not run.",
+   "The release-level metric |pos - neg| / words cancels mixed praise and attack, and it penalizes long releases. The paper shows that the aggregation rule alone moves validity (mean vs max; App. 2 Table 5). No alternative aggregation (max per sentence, CU-sentence-only scoring) has been compared.",
+   "There is no domain-specific tone dictionary for CU or financial policy. The Rice & Zorn corpus-expansion helper is opt-in and offline, and live scoring uses a generic dictionary, which is the configuration the paper warns about.",
+   "LSD hits are counted over the whole release body, not restricted to the sentences that mention credit unions. Releases where LSD finds no tone words get zero intensity, so press_value becomes 0 even when DEBATE assigns a stance. That implicit 'non-match = neutral' rule is the one the paper flags as unvalidated outside its test sample.",
+   "No ablation has tested stance sign x intensity against stance sign alone, using a behavioural criterion such as later CU cosponsorship or votes."
+  ],
+  "flags": [
+   "CODE/DOC MISMATCH: the header of cu_press_release_scraper.R (lines 125-131) cites Haselmayer & Jenny and says 'Sentence tonality follows the strongest cue', but weighted_tone (lines 2443-2475) sums cues across sentences. The layer is display-only, and run_stage5 4b still uses its magnitude in score_label. Do not describe those labels as following Haselmayer & Jenny.",
+   "The brain note debate-stance-model.md:102 calls LSD 'validated' on the basis of a three-case smoke test. By this paper's standard that is a functional check, not a validity result. Under DE-062, any claim that LSD intensity measures how heated a release is should stay UNVERIFIED until it has been compared with human coding.",
+   "The paper's Table 3 coefficients are pooled across six parties with party fixed effects. If quoted, label them as from a pooled model with no party strata. Reporting is also inconsistent: Table 2 says 612 statements while its counts sum to 619, the n in Table 3.",
+   "Nothing in the paper argues for either rejected SNA proposal, and it does not touch LDA, graph ranks or reciprocity, so there is no conflict with D-021, D-025 or D-104..D-108."
+  ],
+  "paul_alignment": "Paul has no annotation of this paper. It agrees with his highlighted reading of Merkley & Stecula, who used Lexicoder with custom dictionaries: both argue for tailoring dictionaries to the domain, while the system runs stock LSD2015 without customization. His note on Birkenmaier, which calls bag-of-words methods dated next to LLMs, is consistent with the system moving stance to DEBATE. This paper adds a further point: intensity is still bag-of-words, and its validity has never been measured. Paul's earlier graded scorer adopted this paper's vocabulary (ordinal bands, 1.25 amplifier, negator exclusion) but not its max rule or crowd-derived weights. His components list is stale relative to the system in one respect: it says nothing about that departure or about the display-only reuse in run_stage5 4b.",
+  "related": [
+   {
+    "slug": "rice-2018-corpus-based-dictionaries",
+    "relation": "complements",
+    "why": "Both papers argue for domain-specific sentiment dictionaries. Rice & Zorn derive one from the corpus with word vectors, while this paper derives one from crowd ratings. The legacy scorer cites both (polarity from Rice & Zorn, intensity bands from this paper), and the offline expansion helper implements Rice & Zorn."
+   },
+   {
+    "slug": "merkley-nd-party-cues-news",
+    "relation": "complements",
+    "why": "Uses Lexicoder with custom dictionaries, which is the remedy this paper's validation supports. Paul highlighted it under lsd-tone."
+   },
+   {
+    "slug": "park-2025-automatic-construction-direction",
+    "relation": "same-method",
+    "why": "Another domain-lexicon construction method. Its naive directional-verb version was tested in bill-sign-handling and rejected (3 good / 43 bad), which shows the paper's warning that preprocessing and aggregation choices dominate validity."
+   },
+   {
+    "slug": "ornstein-2024-train-your-stochastic",
+    "relation": "complements",
+    "why": "Offers LLM coding of political text as a cheaper alternative to the crowdcoding step used here for intensity gold labels."
+   },
+   {
+    "slug": "b-2025-comparing-fine-tuned",
+    "relation": "contradicts",
+    "why": "Fine-tuned RoBERTa beats traditional feature-based models on political stance, which argues against dictionary and bag-of-words scoring of the kind this paper defends as efficient."
+   },
+   {
+    "slug": "h-2023-artificial-intelligence-sentiment",
+    "relation": "complements",
+    "why": "A review that places lexicon methods such as this one beside machine-learning sentiment approaches."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "pennebaker-2003-psychological-aspects-natural",
+    "relation": "complements",
+    "why": "It pairs a dictionary with crowd-coded judgments, in line with this review's finding that judge ratings track language more closely than self-reports."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "zareie-2023-influence-maximization-social",
+  "note": false,
+  "meta": {
+   "title": "Influence maximization in social networks: a survey of behaviour-aware methods",
+   "authors": [
+    "Ahmad Zareie",
+    "Rizos Sakellariou"
+   ],
+   "year": "2023",
+   "venue": "Social Network Analysis and Mining, 13:78 (published online 25 April 2023; received 23 May 2022, revised 12 March 2023, accepted 27 March 2023)",
+   "doi": "10.1007/s13278-023-01078-9",
+   "sha12s": [
+    "0bc326441250"
+   ],
+   "category": "Adaptive Influence Maximization",
+   "category_slug": "adaptive-influence-maximization"
+  },
+  "extraction": {
+   "title": "Influence maximization in social networks: a survey of behaviour-aware methods",
+   "authors": [
+    "Ahmad Zareie",
+    "Rizos Sakellariou"
+   ],
+   "year": "2023",
+   "venue": "Social Network Analysis and Mining, 13:78 (published online 25 April 2023; received 23 May 2022, revised 12 March 2023, accepted 27 March 2023)",
+   "doi": "10.1007/s13278-023-01078-9",
+   "document_type": "Review paper (literature survey with a proposed taxonomy; no empirical study)",
+   "coverage": "Read the full extracted text (all 2,484 lines, about 114k characters, in seven chunks), including front matter, Sections 1 to 4, all four summary tables (Tables 1 to 4, rendered as check-mark grids), author contributions, declarations and the full reference list (pp. 18-21). The metadata hint is correct on title, authors, year, venue and DOI. The text does not discuss lobbying, elections, legislators, text measurement or turnout; the closest content is money-aware (cost and budget) and opinion-aware (trust, opinion) seed selection, covered below. No Paul markup exists: the _annots and annotations folders contain no file matching 0bc326441250, so paul_markup is empty.",
+   "research_question": "No empirical question is posed. The paper asks what behaviour-aware methods for influence maximization (IM) exist in social networks, and proposes to classify and review them as a separate family from behaviour-agnostic, purely structural methods (Sec. 1, pp. 1-3). It also states that previous surveys covered behaviour-agnostic approaches or touched behaviour-aware ones only briefly (p. 2).",
+   "theory": "No formal social or economic theory is tested. The framing is IM as discrete optimisation (Eq. 1, p. 4): select a seed set S of size k or under budget B that maximises spread phi(S), with query Q = (M, AM, B) and graph G = (V, E, BV, BE). Behaviour-aware methods use user features BV, relationship features BE and message features AM. Diffusion models are Independent Cascade and Linear Threshold (Kempe et al. 2003; Granovetter 1978), with voter and opinion-formation models used for opinion dynamics.",
+   "data": "None. This is a narrative review with no sample, unit of analysis, N or data period. Cited works span roughly 1977 to 2023, but the paper states no explicit inclusion window or search protocol.",
+   "method": "Narrative classification and review. The authors propose a two-level taxonomy (pp. 2-5, Fig. 2). Level 1 splits IM methods into behaviour-agnostic and behaviour-aware. Level 2 splits behaviour-aware methods into four families: interest-aware (target-aware, label-aware, topic-aware; Sec. 3.1), opinion-aware (trust-agnostic, trust-aware; Sec. 3.2), money-aware (cost-aware, profit-aware; Sec. 3.3) and physical-world-aware (physical relationship-aware, location-aware; Sec. 3.4). Summary tables code each surveyed paper by behavioural features (AM, BV, BE), influence-detection method (centrality measure CM, spreading simulation SS, reverse influence sampling RIS, maximum influence arborescence MIA) and spreading process type (simple or complex). Section 2.2 ranks influence-detection families by time complexity: simulation-based, then MIA, then RIS, then centrality (p. 4).",
+   "identification": "Not applicable. The paper makes no causal or statistical identification claim. It classifies published methods and does not estimate effects.",
+   "scope": "Population: social-network IM research, covering online graphs (friendship, follow, trust) and, for physical-world-aware methods, check-in and location-based social networks (Sec. 3.4). No institution or era restriction beyond the cited literature. Behaviour-agnostic methods are explicitly excluded as already surveyed elsewhere (pp. 3, 5).",
+   "key_findings": [
+    {
+     "finding": "Behaviour-agnostic methods dominate current IM work because they have a longer history, but behaviour-aware formulations are argued to be more realistic. No previous survey had treated behaviour-aware methods as a class of their own.",
+     "location": "Sec. 1, pp. 2-3",
+     "numbers": "None; qualitative claim"
+    },
+    {
+     "finding": "Interest-aware methods split into target-aware (binary interest), label-aware (label sets) and topic-aware (continuous topic vectors). Topic-aware models are judged to capture preferences most realistically but need good historical records. Partly offline topic-aware methods trade offline storage and precomputation for faster online queries.",
+     "location": "Sec. 3.1.3-3.1.4, pp. 6-8; Table 1 on p. 8",
+     "numbers": "Table 1 codes the interest-aware papers; no numeric results"
+    },
+    {
+     "finding": "Opinion-aware methods split into trust-agnostic (all ties positive) and trust-aware (signed friend or foe ties). Trust-agnostic models assume all relationships are positive, which the authors call unrealistic; opinion dynamics under friend and foe influence need more work.",
+     "location": "Sec. 3.2.1-3.2.3, pp. 9-11; Table 2 on p. 12",
+     "numbers": "None; Table 2 codes the opinion-aware papers"
+    },
+    {
+     "finding": "Cost-aware (budgeted) IM assumes every activated user yields the same benefit. Profit-aware methods model per-user benefit and cost, but users' valuations may often be unavailable, so the authors suggest cost-aware methods may be more practical.",
+     "location": "Sec. 3.3.1-3.3.3, pp. 11-14; Table 3 on p. 13",
+     "numbers": "Nguyen and Zheng (2013) introduced budgeted IM; Table 3 codes the money-aware papers"
+    },
+    {
+     "finding": "Physical-world-aware methods add offline ties (co-location, check-in) to the online graph, or use location and attendance probability as the target. Binary physical-tie models and fixed distance thresholds miss the dynamics of user location, and tracking locations over time adds processing and storage cost.",
+     "location": "Sec. 3.4.1-3.4.3, pp. 14-16; Table 4 on p. 16",
+     "numbers": "None; qualitative comparison"
+    },
+    {
+     "finding": "Five open challenge areas are identified: data availability, data processing, data modelling (numeric encodings of attitude and friend or foe ties), data dynamicity, and user reaction modelling. Research directions cover network size and time complexity, network diversity (temporal, multilayer, dynamic), data preparation, and adaptive diffusion models that feed behaviour changes back into spread.",
+     "location": "Sec. 4, pp. 17-18",
+     "numbers": "None"
+    }
+   ],
+   "measures": [
+    "Not applicable to the paper's own analysis. Reviewed methods use centrality measures, spreading simulation, reverse influence sampling (Borgs et al. 2012) and maximum influence arborescence (Chen et al. 2010). Tables 1-4 code features as AM, BV, BE and detection as CM, SS, RIS or MIA, with simple or complex spreading."
+   ],
+   "limitations": [
+    "The paper states no methodological limitations of its own review: no search protocol, inclusion rule, or count of surveyed papers.",
+    "Stated scope limit: it reviews behaviour-aware methods only and defers behaviour-agnostic methods to earlier surveys (pp. 3, 5).",
+    "Stated challenge: behaviour data may not exist, may be incomplete or noisy, or may be governed by privacy rules (Sec. 4, p. 17).",
+    "Stated challenge: many behaviour-aware models encode attitudes and friend or foe ties as numbers, which may not capture personality or attitude (Sec. 4, p. 17).",
+    "Stated challenge: most methods use conventional IC or LT diffusion models that may not emulate real spreading; changing the model can significantly change accuracy (Sec. 4, p. 18).",
+    "The paper classifies methods and does not benchmark or compare their accuracy."
+   ],
+   "references_of_note": [
+    "Kempe, Kleinberg and Tardos (2003), first discrete-optimisation formulation of IM; basis of IC and LT models",
+    "Chen, Wang and Wang (2010), maximum influence arborescence (MIA), a time-efficient influence estimator used across many families",
+    "Borgs, Brautbar, Chayes and Lucier (2012, 2014), reverse influence sampling (RIS)",
+    "Nguyen and Zheng (2013), budgeted IM, IEEE JSAC; origin of cost-aware IM",
+    "Lu and Lakshmanan (2012), profit maximisation over social networks; basis of profit-aware IM",
+    "Li, Wang et al. (2011), labelled IM for target marketing; origin of label-aware IM",
+    "Barbieri, Bonchi and Manco (2013), topic-aware social influence propagation models; origin of online topic-aware IM",
+    "Gionis, Terzi and Tsaparas (2013), opinion maximisation with internal and expressed opinions",
+    "Li, Chen, Wang and Zhang (2013), influence diffusion with friend and foe relationships",
+    "Arora, Galhotra and Ranu (2017), benchmarking study of structural IM methods",
+    "Aral and Walker (2012), identifying influential and susceptible members of social networks, Science",
+    "Golbeck et al. (2011a,b), predicting personality from Twitter and social media; cited for online networks and personality",
+    "Song, Hsu and Lee (2016), targeted IM with time constraints; location-aware IM",
+    "Li, Fan, Wang and Tan (2018), survey of IM on social graphs, IEEE TKDE"
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "behaviour-aware methods have not been considered in any previous survey as a class on their own",
+     "location": "Sec. 1, p. 2"
+    },
+    {
+     "quote": "opinion change depends on the trust between the users",
+     "location": "Sec. 3.2, p. 9"
+    },
+    {
+     "quote": "Lots of users may be silent or may have no significant activities in a network",
+     "location": "Sec. 4, p. 17"
+    }
+   ]
+  },
+  "summary_md": "Zareie and Sakellariou (2023, SNAM 13:78) is a narrative survey with no data. It proposes a two-level taxonomy of influence maximization (IM). Level 1 separates behaviour-agnostic methods, which use structure only, from behaviour-aware methods. Level 2 splits behaviour-aware methods into four families: interest-aware (target, label, topic), opinion-aware (trust-agnostic vs signed friend/foe), money-aware (cost-aware budgeted IM vs profit-aware) and physical-world-aware. Tables 1-4 code each surveyed method by which features it uses: message (AM), user (BV) or relationship (BE). They also code how it detects influence (centrality, simulation, RIS or MIA) and whether spreading is simple or complex. The useful content is qualitative. Topic-aware edge probabilities are judged the most realistic, but they need rich history. Trust-agnostic models, which treat every tie as positive, are called unrealistic. Profit-aware IM needs per-user valuations that are rarely available, so cost-aware IM may be more practical. The authors also warn that changing the diffusion model can change accuracy a lot, and that many users are silent.\n\nFor Melange the paper is mainly a lens on design choices that were already made. The code cites it directly: receptivity_layer.py:29-31 and outcome_contract.py:17 ('Chen/SNAM') use it to back contingency-aware seeding. But the survey gives no estimate of seed take-up and no magnitudes, so it supports only the general idea that member features belong in IM. Against the built engine, the survey exposes three choices. First, one topic-independent cascade kernel serves all 18 CU categories. Second, the kernel is trust-agnostic: partisan factors change edge magnitude, never sign, and the signed reference layer is display-only. Third, the optimizer has a profit-aware shape, weighting members by owner-set values (PERS, IMP), which is the exact data the survey calls usually unavailable. All of these are design-level bearings. Nothing in the paper validates or refutes any constant in the system.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-influence-engine.seed-gate",
+    "relation": "qualifies",
+    "paper_claim": "Behaviour-aware IM adds user features (BV), relationship features (BE) and message features (AM) to the structural seed-selection problem (Eq. 1, query Q=(M, AM, B)). The survey reports no take-up rate, no effect size and no benchmark: it 'classifies methods and does not benchmark'. It also warns that numeric encodings of attitude may not capture personality, and that many users are silent.",
+    "paper_location": "Sec. 2-3 (pp. 3-5, Fig. 2); Sec. 4, p. 17",
+    "system_side": "gate(n) = max(0.15, seed_prob(n) x SGATE[tier]). seed_prob = clip(0.60 + .10 coop + .06 breadth + .04 visibility, 0.30, 0.90) on the behavioural basis (A/O/E on the lexical basis). The docstring cites 'Chen et al. (UAI 2021) + the behaviour-aware IM survey (Zareie & Sakellariou SNAM 2023)' as the basis. The H1 contract is labelled 'Chen/SNAM'.",
+    "code_ref": "fec/members/receptivity_layer.py:29-35; fec/members/receptivity_layer.py:210-216; fec/moneyball_core.py:626; fec/engine/budget_frontier.py:72-74; fec/engine/outcome_contract.py:17",
+    "transfer_conditions": "Supports only the framing that member attributes may enter seed activation. It does not support the 0.60 baseline, the trait or behaviour coefficients, or the 0.30-0.90 clip, which are design priors. The survey covers online social graphs (friendship, follow, trust), not legislators being lobbied. H1 (Spearman of seed_prob vs new cosponsorship, which needs at least 150 movers; F5 found 72) is the only route to evidence. Until it is scored, the seed_prob magnitudes stay unvalidated.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Contingent seed activation gate|Contingent seed activation gate]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.per-topic-allocators",
+    "relation": "suggests-extension",
+    "paper_claim": "Topic-aware IM (Barbieri, Bonchi and Manco 2013) makes influence probabilities depend on the message's topic vector. The authors judge it the most realistic interest-aware formulation, but say it needs good historical records. Partly offline variants trade precomputation and storage for faster queries.",
+    "paper_location": "Sec. 3.1.3-3.1.4, pp. 6-8; Table 1, p. 8",
+    "system_side": "Every per-topic engine builds the same topic-independent kernel, P = build_P(load_network()), from the CU cosponsor graph. Topics differ only in target weights (IMP, PERS, engagement) and in industry money, never in edge probabilities. Sector graphs (bank_reg, crypto) exist as separate NET_CONFIGs but are not used per CU category.",
+    "code_ref": "fec/engine/per_topic_coalition.py:33-37; fec/engine/per_topic_flip.py:39; fec/moneyball_core.py:555-561",
+    "transfer_conditions": "Transfers only if per-category cosponsorship history is dense enough to estimate topic-specific edge weights. The recorded crypto p_max of 0.23, below the engine floor, suggests thin categories would fail. Any topic-conditioned kernel would also change ranks and engine outputs, so change-control applies. The survey reports no accuracy gain over topic-blind IM, so the benefit is conjectural.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-allocation#Per-topic flip and coalition allocators|Per-topic flip and coalition allocators]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.cascade-kernel",
+    "relation": "suggests-extension",
+    "paper_claim": "Trust-agnostic opinion-aware models assume every relationship is positive, which the authors call unrealistic. Trust-aware models use signed friend/foe ties (Li, Chen, Wang and Zhang 2013), on the premise that 'opinion change depends on the trust between the users'. The authors also note that numeric friend/foe encodings may not capture attitudes, and that IC/LT may not emulate real spreading; changing the model can change accuracy significantly.",
+    "paper_location": "Sec. 3.2-3.2.3, pp. 9-11; Table 2, p. 12; Sec. 4, pp. 17-18",
+    "system_side": "p(u->v) = x/(x+6), with x = w x cpf x edge_mult(v). cpf_diffusion (0.4-1.0) and cpf_pressure (1.7/0.5) change edge magnitude by party, but every edge stays positive, so the kernel is trust-agnostic in the survey's terms. The signed member-reference layer (LLM valence) is display-only and does not feed the kernel.",
+    "code_ref": "fec/moneyball_core.py:543-548; fec/moneyball_core.py:555-561",
+    "transfer_conditions": "This is a design taxonomy, not evidence that signed edges improve prediction in Congress. Any foe-edge adoption would need a second path showing that negative references or signed-backbone ties predict lower future cosponsorship (DE-062). The survey's own warning about numeric attitude encodings applies to the LLM valence scores. It would also break the 'two cpf physics, never merge' architecture, so this is owner policy.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Cascade activation kernel build_P and partisan edge factors|Cascade activation kernel build_P and partisan edge factors]]",
+    "system": "melange-influence-engine"
+   },
+   {
+    "component_id": "melange-allocation.joint-optimizer",
+    "relation": "qualifies",
+    "paper_claim": "Cost-aware (budgeted) IM (Nguyen and Zheng 2013) assumes every activated user yields the same benefit. Profit-aware IM (Lu and Lakshmanan 2012) models per-user benefit and cost, but users' valuations are often unavailable, so the authors suggest cost-aware methods may be more practical.",
+    "paper_location": "Sec. 3.3.1-3.3.3, pp. 11-14; Table 3, p. 13",
+    "system_side": "CELF lazy greedy spends a $2.5M pot in $500 chunks (PMAX $10k) to maximize separable winnability, sum of tgt x pflip. Here tgt = engagement x PERS x (1+0.3 bpf) x delivery_mult, weighted by IMP. Structurally this is a profit-aware objective whose per-member benefits are owner-set tables, not estimated valuations.",
+    "code_ref": "fec/engine/optimize.py:3-11; fec/engine/optimize.py:24-26; fec/moneyball_core.py:564-568",
+    "transfer_conditions": "The analogy is partial. The optimizer allocates money that shifts per-member flip odds; it does not pick cascade seeds. So the survey's spread-objective guarantees do not apply, and the fixed-state concavity certificate is the system's own. The survey's point carries over directly: the result is only as good as the PERS and IMP valuations, which no literature here estimates. A uniform-benefit variant (cost-aware) would be a sensitivity check, not a replacement.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-allocation#Joint CU budget optimizer|Joint CU budget optimizer]]",
+    "system": "melange-allocation"
+   },
+   {
+    "component_id": "melange-influence-engine.competitive-cascade-crn",
+    "relation": "qualifies",
+    "paper_claim": "Most behaviour-aware methods still use conventional IC or LT diffusion. These may not emulate real spreading, and changing the diffusion model can significantly change accuracy. Simulation-based influence estimation is the most expensive family; RIS, MIA and centrality are cheaper.",
+    "paper_location": "Sec. 2.2, p. 4; Sec. 4, p. 18",
+    "system_side": "Competitive IC with common random numbers (MC 20, scenario 40). Bystanders turn anti with probability min(0.9, industry$/400000), and the saturation constant is 6. None of these model choices has been checked against observed cosponsorship accumulation.",
+    "code_ref": "fec/engine/budget_frontier.py:83-94; fec/engine/per_topic_coalition.py:101; fec/moneyball_core.py:555-561",
+    "transfer_conditions": "The survey gives no numbers, so this is only a caution that outputs are model-conditional. The compute ranking matters little at N=533. RIS for two-colour competitive IC is not standard, so cost is not a reason to switch. The binding issue is validation of the diffusion model, not speed.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-influence-engine#Competitive independent cascade with common random numbers|Competitive independent cascade with common random numbers]]",
+    "system": "melange-influence-engine"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "No topic-conditioned edge probabilities: one cosponsor kernel serves all 18 CU categories (per_topic_coalition.py:37), whereas topic-aware IM treats topic-dependent influence as the realistic case.",
+   "The cascade has no signed (foe) edges. The LLM-valence reference layer and the signed-coalition partition exist but stay outside the kernel, and neither has a validation that it predicts reduced cosponsorship.",
+   "Per-member benefit valuations in the allocator (PERS, IMP, delivery_mult) are owner tables. The survey names unavailable valuations as the main weakness of profit-aware IM, and no uniform-benefit sensitivity run is recorded.",
+   "No adaptive-diffusion feedback: the survey's research direction feeds behaviour changes back into spread, while stance dynamics stay a separate proposals-only module whose co-movement test was null.",
+   "No empirical check that IC or LT diffusion fits observed cosponsor join sequences, which the survey flags as a source of large accuracy changes."
+  ],
+  "flags": [
+   "Citation overreach in code: receptivity_layer.py:29-31, budget_frontier.py:73 and outcome_contract.py:17 ('Chen/SNAM') cite this survey as grounds for contingency-aware seed activation. The survey is a taxonomy with no take-up estimates, and its four families do not include contingency-aware seeding as such. It supports only including member features, not the seed_prob magnitudes. Suggested wording: 'framing per Zareie & Sakellariou 2023; magnitudes are design priors, UNVERIFIED pending H1'.",
+   "Name collision: Paul's position for melange-sna.co-appearance-and-references cites 'Zareie & Sakellariou 2020' (similarity-based link prediction), which is a different paper from this 2023 IM survey. The two should not be conflated in notes or citations.",
+   "Any move to trust-aware (signed) cascade edges based on this survey would be new agent analysis and stays UNVERIFIED until a second path reproduces it (DE-062). The survey itself warns that numeric friend/foe encodings may not capture attitudes.",
+   "The survey's 'influence' and 'spread' are model outputs of IC or LT on online graphs. Using this vocabulary for member ranks or route scores must follow D-025: heuristic outputs, never access or introduction probabilities.",
+   "The paper does not argue for either rejected SNA proposal (dropping regular cosponsorship edges; per-edge volume normalization), so there is nothing to flag on that front."
+  ],
+  "paul_alignment": "Paul has no annotations on this paper, and it is not cited in his component positions; his co-appearance note cites the 2020 Zareie link-prediction paper instead. The survey still fits his stated direction. It supports behaviour-aware seeding, which is Paul's mapping of Chen's contingency-aware IM to legislators who may not move when approached. It also matches his call to model rival industries and sign, and his emphasis on directionality. It qualifies his receptivity ambitions without contradicting them. The survey's own challenges (silent users, crude numeric attitude encodings, model sensitivity) echo the system's poor validity record for trait-based receptivity, which his notes underweight. His GCOMB and learned-policy expectations sit in the behaviour-agnostic tier, which this survey deliberately excludes. The system cites this paper more strongly than its content supports: in code it stands as a basis for seed_prob, which is a design prior.",
+  "related": [
+   {
+    "slug": "chen-2021-contingency-aware-influence",
+    "relation": "complements",
+    "why": "The code pairs the two papers ('Chen/SNAM') for seed_prob. Chen supplies the contingency-aware seeding model; this survey supplies only the behaviour-aware framing."
+   },
+   {
+    "slug": "zareie-2020-similarity-based-link",
+    "relation": "complements",
+    "why": "Same authors, different task (latent-tie link prediction). Paul's notes cite the 2020 paper for the signed reference layer, so the two must be kept distinct."
+   },
+   {
+    "slug": "leskovec-2010-predicting-positive-negative",
+    "relation": "complements",
+    "why": "Trust-aware IM needs signed edges. Leskovec gives the method for predicting positive and negative links that such a kernel would need."
+   },
+   {
+    "slug": "tang-2015-negative-link-prediction",
+    "relation": "complements",
+    "why": "Negative link inference is the data prerequisite for the friend/foe IM family the survey reviews."
+   },
+   {
+    "slug": "bharathi-nd-competitive-influence-maximization",
+    "relation": "complements",
+    "why": "The competitive IC behind Melange's two-colour cascade is outside this survey's behaviour-aware scope. Bharathi covers the competitive side."
+   },
+   {
+    "slug": "moreno-2021-shadowing-shielding-effective",
+    "relation": "complements",
+    "why": "Voter-dynamics influence maximization is an opinion-aware formulation of the kind the survey groups under opinion dynamics, and it is already cited for the contested-bills counterparty term."
+   },
+   {
+    "slug": "kumar-2022-influence-maximization-social",
+    "relation": "complements",
+    "why": "A behaviour-agnostic, embedding-based IM method from the family this survey explicitly excludes and defers to earlier surveys."
+   },
+   {
+    "slug": "chen-nd-complex-contagion-influence",
+    "relation": "complements",
+    "why": "The survey's tables separate simple from complex spreading. Chen's complex-contagion IM is the complex-spreading counterpart to Melange's LT priming."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "palm-2025-influence-personality-traits",
+    "relation": "complements",
+    "why": "A survey of behaviour-aware influence maximization, cited by the receptivity layer for seed_prob. Palm & Tims supply the trait-moderation evidence that such models assume."
+   },
+   {
+    "slug": "trivedi-2020-efficient-influence-maximization",
+    "relation": "complements",
+    "why": "A survey of behaviour-aware IM methods that places degree-discount heuristics and edge-probability modelling within the wider literature."
+   },
+   {
+    "slug": "almazaydeh-2026-heuristic-centrality-methods",
+    "relation": "complements",
+    "why": "A survey of behavior-aware IM. It covers the receiver-susceptibility and seed-probability extensions that the uniform-p setup here leaves out."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "aref-2020-detecting-coalitions-optimally",
+  "note": false,
+  "meta": {
+   "title": "Detecting coalitions by optimally partitioning signed networks of political collaboration",
+   "authors": [
+    "Samin Aref",
+    "Zachary Neal"
+   ],
+   "year": "2020",
+   "venue": "Scientific Reports, 10:1506 (published online 30 January 2020)",
+   "doi": "10.1038/s41598-020-58471-z",
+   "sha12s": [
+    "507d7619f455"
+   ],
+   "category": "Social Network Analysis",
+   "category_slug": "social-network-analysis"
+  },
+  "extraction": {
+   "title": "Detecting coalitions by optimally partitioning signed networks of political collaboration",
+   "authors": [
+    "Samin Aref",
+    "Zachary Neal"
+   ],
+   "year": "2020",
+   "venue": "Scientific Reports, 10:1506 (published online 30 January 2020)",
+   "doi": "10.1038/s41598-020-58471-z",
+   "document_type": "Journal article (open access, CC BY 4.0)",
+   "coverage": "Full text read end to end from the extracted file (all journal pages 1-10 including the abstract, introduction, signed-graph preliminaries, bounding and computation sections, results, conclusions, methods, data availability and the 52-item reference list). Metadata hint was correct. Figures 1-6 were read from their captions and surrounding text only; plotted values were not visible in the extraction. Supplementary Information (Tables S2, S4 and data/code) is referenced but was not in the file and was not read. No Paul markup files existed for this PDF, so paul_markup is empty.",
+   "research_question": "Can the members of internally cohesive, mutually antagonistic coalitions in a signed network of legislators be identified exactly by optimally partitioning the network to minimize frustration? And does the partisan composition of the largest such coalition explain changes in legislative effectiveness (bill passage) better than party control or party affiliation does?",
+   "theory": "Structural balance theory (Heider 1944; Cartwright and Harary 1956), with the frustration index (Harary 1959) as the global balance measure, and coalition theory (Riker 1962). Substantive framing draws on the legislative effectiveness literature (Volden and Wiseman; Frantzich; Olson and Nonidez) and on Mayhew's claim that parties are not sufficient analytic units. Central substantive hypothesis: a more partisan, ideologically unified controlling coalition improves passage rates (protective factor), while party majority size does not.",
+   "data": "Signed networks of US House and Senate members, one network per chamber per Congressional session, sessions 96th to 114th (1979-2016), i.e. 19 sessions per chamber and about 38 networks (derived count). Edges are signed dyads built from bill co-sponsorship: a negative edge is a dyad whose joint co-sponsorships are significantly few under a stochastic degree sequence model null (two-tailed alpha 0.05); a positive edge is significantly many. Unit of analysis: legislator dyads within a session-chamber network, with session-level aggregates for the regressions. Network data are from Neal (2019, figshare, reference 4). Legislator counts per chamber are not stated in the main text. Example scale: the 113th House graph has m = 75,771 edges and 7,102,625 triangles. Pre-96th sessions were excluded because of the 25-cosponsor House rule before 1979. Bill passage rate is the share of introduced bills that become law, per chamber per session. Party data come from exogenous legislator party affiliation. The printed size bound for the dense-graph method appears as \"|E| ... 50000\" with the relation symbol lost in extraction, so the exact bound is unverified.",
+   "method": "Two partial-balance measures on each network: the triangle index T(G) (Eq. 3, trace-based, fraction of positive triangles) and the normalized frustration index F(G) = 1 - 2L(G)/m (Eq. 6), where L(G) is the frustration index, i.e. the minimum number of intra-group negative plus inter-group positive edges over all two-group partitions (Eqs. 4-5). Exact computation uses (a) a continuous LP relaxation with triangle inequality constraints (Eq. 7) to give a lower bound Y*, solved in Gurobi 8.0; (b) a warm start that initializes each node's group from party affiliation, which also gives an upper bound; and (c) a binary linear program (Eq. 8, XOR-style frustration variables with the lower bound added as a constraint) that returns the exact frustration index and the optimal partition X*. The larger side of X* is the controlling coalition, and coalition partisanship is the fraction of its non-independent members who belong to its dominant party. Inference is cross-sectional, session by session. Two models: a commonsense model (party control = absolute difference between Republican and Democratic seat counts) and a coalition model (coalition partisanship). Each is estimated as a structural equation mediation model with time as the predictor and passage rate as the outcome, using bivariate regressions and standardized betas (unstandardized percentage-point slopes reported for context).",
+   "identification": "None causal. The mediation models use time and session-level cross-sections, so the indirect effect (time to coalition partisanship to passage rate) is a statistical decomposition, not an identified causal effect. Exogenous party labels are used to warm-start the solver and as a comparison benchmark, not as an instrument.",
+   "scope": "US Congress (House and Senate), 96th-114th sessions, 1979-2016. Population is legislators in co-sponsorship networks; the inferred ties cover only that period. Results are claimed for the House only on the effectiveness question; the Senate shows no support for the coalition model. The computational method is general to signed graphs with up to a stated dense-graph size. The Senate networks are small enough that exact solves took 4 seconds on average.",
+   "key_findings": [
+    {
+     "finding": "Triangle index and normalized frustration index both show high partial balance that rose over 1979-2016 in both chambers, read as increasing polarization. The two measures are highly correlated.",
+     "location": "Results, Partial balance (p.5), Fig. 2; Summary (p.7)",
+     "numbers": "Correlation of T(G) and F(G) is 0.95 for the House and 0.91 for the Senate (as printed, 'respectively for House and Senate')."
+    },
+    {
+     "finding": "Exact frustration index and optimal partition are computable for dense House networks, but the cost is large. The Senate is cheap.",
+     "location": "Results, Computation (p.5-6); Bounding (p.4-5)",
+     "numbers": "113th House: LP bound (Eq. 7) takes 5,300 s with 28,486,271 constraints; binary model (Eq. 8) has n+m = 76,218 binary variables and 2m+1 = 151,543 constraints and takes 43,523 s; total 48,823 s (about 13.5 h), the longest House instance. House average 17,763 s (SD 15,411 s). Senate average 4 s (SD 6 s)."
+    },
+    {
+     "finding": "Controlling coalitions (largest side of the optimal partition) became more partisan (more homogeneous) over 1979-2016 in both chambers.",
+     "location": "Results, Partial balance and optimal partitioning (p.6), Fig. 3",
+     "numbers": "No regression coefficient reported in the text for this descriptive trend; Fig. 3 shows counts of the two main parties in the controlling coalition."
+    },
+    {
+     "finding": "Bill passage rates declined over time in both chambers.",
+     "location": "Results, Mediation in bill passage (p.6), Fig. 5(A)",
+     "numbers": "House: -0.11 percentage points per session (standardized beta = -0.528, p < 0.05). Senate: -0.35 percentage points per session (beta = -0.852, p < 0.01)."
+    },
+    {
+     "finding": "The commonsense explanation fails: party control (absolute majority size) does not mediate the time-passage relation in either chamber.",
+     "location": "Results (p.7), Fig. 5(B)",
+     "numbers": "No significant mediation reported; text says party control does not mediate the relationship between time and passage rate."
+    },
+    {
+     "finding": "In the House, coalition partisanship mediates the decline in passage rates. Greater partisan homogeneity of the controlling coalition is a protective factor, so the decline would have been worse without it.",
+     "location": "Results, Mediation (p.7), Fig. 5(C); Conclusions (p.7-8)",
+     "numbers": "Time to coalition partisanship: beta = 0.771, p < 0.01. Coalition partisanship to passage: beta = 0.661, p < 0.05. Indirect effect of time on passage via coalition partisanship: beta = 0.510, p < 0.05. Direct effect: beta = -1.038, p < 0.01 (as printed; a standardized beta above 1 in magnitude is unusual, so verify against Fig. 5(C))."
+    },
+    {
+     "finding": "The coalition-partisanship mediation is not supported in the Senate. The authors tie this to Senate procedure, where lack of majority control of procedure negates party or group effects.",
+     "location": "Results (p.7); Conclusions (p.8), citing Monroe, Roberts and Rohde (ref 43)",
+     "numbers": "No significant Senate mediation effect reported."
+    },
+    {
+     "finding": "The composition of the largest cohesive coalition matters more than the size of the majority party's majority in a chamber where a large group can shape procedure. The authors frame this as a claim about analytic units beyond parties.",
+     "location": "Conclusions (p.8)",
+     "numbers": "Qualitative conclusion; no additional statistics."
+    }
+   ],
+   "limitations": [
+    "The paper has no separate limitations section. Limits stated in the text: (1) legislator ties are inferred from co-sponsorship and are not observed collaboration; co-sponsorship can also indicate avoidance (p.8). (2) Networks are analyzed cross-sectionally, one per session, because of joiners and leavers and the difficulty of estimating dynamic models; the authors argue each session's effectiveness can be evaluated independently (p.9). (3) Pre-96th sessions are excluded because of the 25-cosponsor House rule, and the co-sponsor data do not separate sponsors from co-sponsors (p.8-9). (4) The coalition effect holds only for the House, not the Senate (p.8). (5) The exact method is computationally heavy for large House graphs (13.5 h for one instance), and the authors note heuristic methods are not guaranteed to be optimal (p.2). (6) The mediation models are bivariate and session-level, so they support association and not causation. (7) Figure values and the large direct-effect coefficient (beta = -1.038) were read from captions and printed text only and should be checked against the figures and supplement."
+   ],
+   "paul_markup": [],
+   "short_quotes": [
+    {
+     "quote": "the dominance of an ideologically homogeneous coalition (i.e. partisan polarization) can be a protective factor that enhances legislative effectiveness.",
+     "location": "Abstract, p.1"
+    },
+    {
+     "quote": "the composition of the largest coalition is more important than the size of the majority party's majority.",
+     "location": "Conclusions, p.8"
+    },
+    {
+     "quote": "coalitions, which are a protective factor against declines in legislative effectiveness.",
+     "location": "Results, Mediation in bill passage, p.7"
+    }
+   ],
+   "references_of_note": [
+    "Neal, Z. (2014). The backbone of bipartite projections: Inferring relationships from co-authorship, co-sponsorship, co-attendance and other co-behaviors. Social Networks 39, 84-97. (Source of the SDSM-based signed backbone used to define edges.)",
+    "Neal, Z. (2020). A sign of the times? Weak and strong polarization in the U.S. Congress, 1973-2016. Social Networks 60, 103-112. (Same signed data; triangle-index polarization results.)",
+    "Aref, S. & Wilson, M. C. (2018). Measuring partial balance in signed networks. Journal of Complex Networks 6, 566-595. (Normalized frustration index framing.)",
+    "Aref, S. & Wilson, M. C. (2019). Balance and frustration in signed networks. Journal of Complex Networks 7, 163-189. (Earlier computational methods the paper extends to dense graphs.)",
+    "Aref, S., Mason, A. J. & Wilson, M. C. (2020). A modeling and computational study of the frustration index in signed networks. Networks 75, 95-110. (Source of the LP and binary models, Eqs. 7-8.)",
+    "Terzi, E. & Winkler, M. (2011). A spectral algorithm for computing social balance. (Triangle-index formula, Eq. 3.)",
+    "Facchetti, G., Iacono, G. & Altafini, C. (2011). Computing global structural balance in large-scale signed social networks. PNAS 108, 20953-20958.",
+    "Cartwright, D. & Harary, F. (1956). Structural balance: a generalization of Heider's theory. Psychological Review 63, 277-293.",
+    "Harary, F. (1959). On the measurement of structural balance. Behavioral Science 4, 316-323. (Frustration index as line index of balance.)",
+    "Brusco, M. J. & Doreian, P. (2019). Partitioning signed networks using relocation heuristics, tabu search, and variable neighborhood search. Social Networks 56, 70-80. (Heuristic partitioning comparator.)",
+    "Traag, V. A., Doreian, P. & Mrvar, A. (2018). Partitioning signed networks. In Advances in network clustering and blockmodeling. (Heuristic partitioning comparator.)",
+    "Fowler, J. H. (2006). Legislative cosponsorship networks in the US House and Senate. Social Networks 28, 454-465. (Co-sponsorship network basis.)",
+    "Andris, C. et al. (2015). The rise of partisanship and super-cooperators in the U.S. House of Representatives. PLoS ONE 10. (Network partisanship in the House.)",
+    "Waugh, A. S. et al. (2011). Party polarization in Congress: A network science approach. arXiv 0907.3509. and Moody, J. & Mucha, P. J. (2013). Portrait of political party polarization. Network Science 1, 119-121. (Network polarization, cited for the trend.)",
+    "Porter, M. A. et al. (2005). A network analysis of committees in the U.S. House of Representatives. PNAS 102, 7057-7062. (Committee-based networks, considered and rejected in favor of co-sponsorship.)",
+    "Desmarais, B. A. et al. (2015). Measuring legislative collaboration: The Senate press events network. Social Networks 40, 43-54. (Press-event networks, an alternative collaboration measure.)",
+    "Volden, C. & Wiseman, A. E. (2014). Legislative Effectiveness in the United States Congress: The Lawmakers. (Legislative effectiveness measure and framing.)",
+    "Mayhew, D. R. (2005). Divided We Govern. and Mayhew, D. R. (1974). Congress: The Electoral Connection. (Parties as analytic units; claims the paper tests.)",
+    "Monroe, N. W., Roberts, J. M. & Rohde, D. W. (2008). Why Not Parties? Party Effects in the United States Senate. (Senate procedure explanation for the null Senate result.)",
+    "Moore, D. W. (1969). Legislative effectiveness and majority party size: A test in the Indiana House. Journal of Politics 31. (Majority-size hypothesis.)",
+    "Layman, G. C., Carsey, T. M. & Horowitz, J. M. (2006). Party polarization in American politics. Annual Review of Political Science 9, 83-110.",
+    "Thomas, S. & Grofman, B. (1993). The effects of congressional rules about bill cosponsorship on duplicate bills. Public Choice 75, 93-98. (Basis for the pre-96th exclusion.)",
+    "Latapy, M., Magnien, C. & Del Vecchio, N. (2008). Basic notions for the analysis of large two-mode networks. Social Networks 30, 31-48. (Bipartite projection caveats.)",
+    "Serrano, M. A., Bogunya, M. & Vespignani, A. (2009). Extracting the multiscale backbone of complex weighted networks. PNAS 106, 6483-6488. (Backbone extraction alternatives.)"
+   ],
+   "measures": [
+    "Triangle index T(G): fraction of positive triangles, computed as (Tr(A^3) + Tr(|A|^3)) / (2 Tr(|A|^3)) (Eq. 3). Normalized frustration index F(G) = 1 - 2L(G)/m (Eq. 6). Frustration count f(X) and frustration index L(G) (Eqs. 4-5). Coalition partisanship: fraction of non-independent members of the largest coalition affiliated with its dominant party. Party control: absolute difference between Republican and Democratic seat counts. Bill passage rate: share of introduced bills that become law, per chamber per session. Time (session). Standardized betas for model comparison; percentage-point slopes for context."
+   ]
+  },
+  "summary_md": "Aref and Neal build one signed network per chamber per Congress (96th to 114th, 1979-2016). Each network comes from a stochastic-degree-sequence (SDSM) backbone of bill cosponsorship: a dyad that cosponsors together significantly more often than the null predicts gets a positive edge, and one that does so significantly less often gets a negative edge. They then solve the two-group frustration-minimization problem exactly. An LP relaxation with triangle constraints gives a lower bound, a party-label warm start gives an upper bound, and a binary program returns the exact frustration index and the optimal partition. Both balance measures are high and rising over the period (the triangle and normalized frustration indices correlate at 0.95 in the House and 0.91 in the Senate), which the authors read as polarization. Exact solves are cheap for the Senate (about 4 s) and expensive for the House (up to about 13.5 h for the 113th Congress, which has 75,771 edges). The larger side of the optimal partition, the controlling coalition, became more partisan over time. In session-level bivariate mediation models (19 sessions per chamber; association, not cause), coalition partisanship partly offsets the House decline in passage rates (indirect beta 0.510). Majority size does not mediate it, and the Senate shows no effect.\n\nFor Paul's systems the paper matters mainly for the diagnostic signed-coalition layer. That layer cites the 2021 follow-up, runs a heuristic local search with no lower bound on an LLM-valenced mention graph, and pools both chambers. At its size (520 members, 7,153 edges) the paper's exact binary program looks tractable. That estimate is derived here and is UNVERIFIED. The paper also gives an outside reading of the project's earlier result that a vote SDSM backbone is about 95% party: under structural balance that is expected, not a defect. It does not license the SDSM null as a fix for the network's degree artifact. That would amount to the per-edge volume normalization the project already measured and rejected.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-sna.signed-coalitions",
+    "relation": "method-source",
+    "paper_claim": "The exact two-group frustration index and optimal partition come from a binary linear program (Eq. 8: n+m binary variables, 2m+1 constraints) warm-started from party labels and bounded below by an LP relaxation with triangle constraints (Eq. 7). Heuristic partitioning is 'not guaranteed to be optimal'. Senate instances solve in about 4 s on average (SD 6 s). The 113th House (m = 75,771) takes 48,823 s, of which 5,300 s is the LP with 28,486,271 constraints.",
+    "paper_location": "Methods, Eqs. 4-8 (pp.3-5); Results, Computation (pp.5-6); Introduction (p.2)",
+    "system_side": "Minimizes weighted frustration by single-node best-move local search from a party seed plus 60 random restarts (default) for k=2, and then for k=3 seeded from the k=2 answer. It reports only an upper bound ('F(2)<=') with no lower bound, so the optimality gap is unknown. Live artifact: 520 nodes, 7,153 signed edges; F(1)=1,092.3, F(2)<=1,040.8 (15.31% of total weight), F(3)<=1,039.8. Diagnostic only; the chain does not consume it, and the member desk reads splinter_k2 as an 'antag' marker.",
+    "code_ref": "fec/network/signed_coalitions.py:41-79,111-118; fec/surfaces/make_member_desk.py:826,1153",
+    "transfer_conditions": "The objective carries over directly. The paper's version is unweighted, and the system's |net| weights enter Eq. 8 linearly. At the system's scale, Eq. 8 would have about 7.7k binary variables and about 14.3k constraints, an order of magnitude below the 113th House instance. These counts are derived here, not run, so they stay UNVERIFIED until a solve reproduces them (DE-062). The Eq. 7 triangle LP grows as O(n^3), roughly 23M constraints at n=520, so the lower bound is the costly step. The warm start plus Eq. 8 alone would already certify optimality for k=2. For k=3 the system follows Aref & Neal 2021 (generalized balance), which this paper does not cover.",
+    "strength": "strong",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-sna#Signed-network coalition partition|Signed-network coalition partition]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-sna.signed-coalitions",
+    "relation": "qualifies",
+    "paper_claim": "The edges are a significance-tested SDSM cosponsorship backbone (two-tailed alpha 0.05), analyzed separately for each chamber and Congress. The paper's substantive results (a near-party partition, a controlling coalition whose partisanship mediates House passage) hold for the House and not for the Senate, and it reports the normalized index F(G) = 1 - 2L/m so networks can be compared.",
+    "paper_location": "Data and Methods (pp.8-9); Results (pp.5-7); Eq. 6",
+    "system_side": "The substrate is member_references.json, cross-media mentions with LLM-assigned valence: edge sign = sign(net), weight = |net|. It is 83% positive weight. House and Senate members go into ONE partition. At k=2 the result is a single bloc plus a 14-member splinter, and party_agreement_k2 is null because the party-recovery check does not apply. The layer reports raw weighted frustration as a percent of total weight, not F(G). The component card says 'R backbone sdsm ... seeded by positive Louvain', but the current Python uses the mention layer with party and random seeds. The SDSM backbone exists only for votes, in Draft Systems/_vote_backbone.R.",
+    "code_ref": "fec/network/signed_coalitions.py:24-31,74-77,92-107",
+    "transfer_conditions": "The paper's party-structure and coalition-partisanship findings rest on cosponsorship backbones within one chamber and session, for 1979-2016. They do not transfer to a mention-valence graph that is mostly positive and pools both chambers. The pooled partition crosses the House/Senate fault line, where the paper finds opposite results, so any coalition reading from it should carry an UNSTRATIFIED label. The splinter is a heuristic partition output, not measured antagonism.",
+    "strength": "strong",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-sna#Signed-network coalition partition|Signed-network coalition partition]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-sna.signed-coalitions",
+    "relation": "supports",
+    "paper_claim": "Signed congressional networks show high partial balance that rose over 1979-2016 in both chambers, and the optimal two-group partition aligns closely with party. Triangle index and normalized frustration correlate at 0.95 (House) and 0.91 (Senate).",
+    "paper_location": "Results, Partial balance (p.5), Fig. 2; Fig. 3 (p.6)",
+    "system_side": "The workbook lane ran Neal's sdsm(alpha=.05, signed=TRUE, mtc='BH') on member x (vote, side) for 205 cleaned CU roll calls (117th-119th Congresses). It found the backbone about 95% party (positive edges 93% same-party, negative edges 99% cross-party) and rejected it as 'useless as-is' for finding persuadable members. A party-controlled null (Option C) was built instead.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/_vote_backbone.R:21-31",
+    "transfer_conditions": "The substrate differs (roll-call agreement, not cosponsorship) and so does the era (2021-2026, not 1979-2016). The system also applied a BH correction, which the paper does not report. Under structural balance theory, near-party structure is the expected state of a polarized chamber, not an artifact, so the paper supports the diagnosis that the raw backbone mostly measures party. The project's move to a party-controlled null is a separate design choice that the paper does not test.",
+    "strength": "moderate",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-sna#Signed-network coalition partition|Signed-network coalition partition]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-sna.cosponsor-network",
+    "relation": "qualifies",
+    "paper_claim": "A positive or negative tie is defined by whether a dyad's joint cosponsorships are significantly many or few relative to an SDSM null that preserves each legislator's cosponsorship volume and each bill's cosponsor count. Raw co-cosponsorship counts are not used as tie strengths. The authors note that cosponsorship ties are inferred, not observed, and may reflect avoidance.",
+    "paper_location": "Methods, Data (pp.8-9); Limitations (p.8)",
+    "system_side": "Edge weight = role (original 1.0 / regular 0.5) x SUCCESS x 0.8^(119-congress) / sqrt(C), summed per pair and symmetrized for cascades. There is no significance test, and no negative ties come from cosponsorship.",
+    "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/congress_member_scraper.R:1774-1778; fec/moneyball_core.py:461-542",
+    "transfer_conditions": "SDSM answers a different question: whether a tie is significant, not how strong it is. It conditions on member volume, which makes it functionally a degree-corrected edge filter. The project MEASURED and REJECTED per-edge volume normalization as a fix for the summed-edge degree artifact (Katz vs volume stayed at +0.552). So this paper should not be read as a reason to re-weight the cascade graph. Its relevance is limited to a possible significance-filtered signed overlay, which would need its own validation.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-sna#Cosponsorship network construction|Cosponsorship network construction]]",
+    "system": "melange-sna"
+   },
+   {
+    "component_id": "melange-legislative-data.effectiveness-shadow",
+    "relation": "supports",
+    "paper_claim": "Bill passage rates (share of introduced bills that become law) fell over 1979-2016 at different speeds by chamber: House -0.11 pp per session (standardized beta -0.528, p<0.05), Senate -0.35 pp per session (beta -0.852, p<0.01). What mediates passage differs between the chambers.",
+    "paper_location": "Results, Mediation in bill passage (pp.6-7), Fig. 5(A)",
+    "system_side": "The shadow normalizes stage credit N/5 within each originating chamber and Congress before applying the 0.8 per-Congress decay ('normalize each chamber-term first, then Congress decay'). Base-rate drift therefore does not leak into cross-Congress aggregates.",
+    "code_ref": "fec/engine/legislative_effectiveness.py:158-204,354,500-504",
+    "transfer_conditions": "The paper's measure is a chamber-level aggregate over 19 sessions per chamber, not member-level effectiveness, and covers the period through 2016. It supports normalizing within chamber and term, not the 0.8 decay constant or the stage weights. It is bivariate time-series association, not causal.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-legislative-data#Five-stage legislative effectiveness shadow and CEL criterion|Five-stage legislative effectiveness shadow and CEL criterion]]",
+    "system": "melange-legislative-data"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "No certified optimum. signed_coalitions.py reports only local-search upper bounds, with no lower bound or exact solve, although the paper's binary program (Eq. 8) with a party warm start appears tractable at 520 nodes and 7,153 edges. That scale estimate is UNVERIFIED.",
+   "No comparable balance metric over time. The layer does not compute the normalized frustration index F(G) = 1 - 2L/m or the triangle index T(G) per Congress or per window, so balance trends cannot be tracked. This matches the 'no tracking over time' gap in Paul's notes.",
+   "No separation by chamber. The House and Senate go into one partition, although the paper's central substantive result differs between the chambers.",
+   "No signed cosponsorship backbone in the Python chain. The SDSM signed backbone exists only for roll-call votes in Draft Systems (_vote_backbone.R), and the Phase 2 cosponsor x stance signed blend lives only in the workbook 'Signed Coalitions' sheet.",
+   "No coalition-level outcome test. Nothing links partition composition (for example, the partisanship of the largest coalition) to CU-bill advancement or passage, which is the paper's validation step for using a partition at all."
+  ],
+  "flags": [
+   "REJECTED-PROPOSAL OVERLAP: the SDSM backbone conditions each tie on member cosponsorship volume and bill size, so in effect it is a per-edge volume and degree correction. The project measured and rejected per-edge volume normalization (STATE.md ~908-912; layer-toggles note line 41). Do not recommend SDSM as a fix for the cascade or Katz weights. At most it is a significance-filtered signed overlay.",
+   "DOC DRIFT: the component card says 'R backbone sdsm (alpha .05, signed) ... seeded by positive Louvain'. The live fec/network/signed_coalitions.py:24-31,74-77 partitions an LLM-valenced MENTION graph from party and random seeds. The SDSM backbone exists only for votes (Draft Systems/_vote_backbone.R, with a BH correction), and the Louvain seed belonged to the June workbook Phase 2 version.",
+   "CITATION: the code docstring and Paul's notes cite Aref & Neal 2021. This 2020 paper covers only the two-group case and the controlling coalition, not the 2021 'hidden third coalition'.",
+   "WORDING: the k=2 splinter appears on the member desk as an 'antag' marker. It is an uncertified heuristic partition of mention valence, pooled across chambers, and should carry an UNSTRATIFIED label. It is not measured antagonism or closeness (D-025 spirit).",
+   "EVIDENCE GRADE: the paper's mediation results are bivariate and session-level (19 sessions per chamber), with no causal identification. The printed direct effect, beta = -1.038, exceeds 1 in magnitude and should be checked against Fig. 5(C) before anyone quotes it.",
+   "UNVERIFIED (DE-062): the tractability estimates in this note (about 7.7k binary variables, about 14.3k constraints, about 23M triangle constraints at n=520) are derived here, not run."
+  ],
+  "paul_alignment": "The evidence partly agrees with Paul's takeaway. He reads the Aref and Neal line as an alternative network layer that is 'computationally efficient'. This 2020 paper shows that the exact method is cheap for Senate-sized graphs (about 4 s) and very costly for dense House graphs (up to about 13.5 h). The system's graph (520 members, 7,153 edges) falls on the cheap side, so his efficiency reading holds for the system as built, but not for a full House cosponsorship backbone. His stated gap of 'no tracking over time' is exactly what the paper models: one network per session plus a normalized frustration index that can be compared across sessions. The system still lacks both. His notes are stale against the system in two ways. First, he has not recorded that the project already ran Neal's SDSM signed backbone on CU roll calls and found it about 95% party; the paper's balance results predict that outcome. Second, the live signed layer runs on mention valence rather than cosponsorship. His undervaluation-lens reading (the 'hidden effective bloc') comes from the 2021 paper, not this one. This paper's 'controlling coalition' is the large partisan bloc, not an underdog set.",
+  "related": [
+   {
+    "slug": "aref-2021-identifying-hidden-coalitions",
+    "relation": "extends",
+    "why": "Same authors and the same signed cosponsorship data. It extends the two-group frustration partition to k groups (generalized balance) to find the third House coalition that signed_coalitions.py actually cites and approximates with its k=3 run."
+   },
+   {
+    "slug": "sotoudeh-2024-network-based-measure",
+    "relation": "complements",
+    "why": "Also links House cosponsorship network structure to bill passage, but at the member and bill level with a weighted influence measure. Aref and Neal work at the session level with coalition partisanship. Together they bound what cosponsorship structure can say about effectiveness."
+   },
+   {
+    "slug": "porter-2005-network-analysis-committees",
+    "relation": "cites",
+    "why": "Aref and Neal cite committee networks as an alternative substrate and choose cosponsorship instead. That bears on whether committee structure or signed cosponsorship should anchor coalition detection."
+   },
+   {
+    "slug": "poole-1999-nominate-after-years",
+    "relation": "complements",
+    "why": "Roll-call scaling (DW-NOMINATE) is the conventional polarization measure that the signed-balance indices offer an alternative to. The project rejected NOMINATE edges in favor of a signed backbone."
+   },
+   {
+    "slug": "leskovec-2010-predicting-positive-negative",
+    "relation": "complements",
+    "why": "Uses structural balance on signed online networks to predict edge signs. It is the link-level counterpart to Aref and Neal's global frustration partition, relevant to the system's LLM-signed mention edges."
+   },
+   {
+    "slug": "ringe-nd-pinpointing-powerful-voting",
+    "relation": "complements",
+    "why": "Builds legislator networks from co-voting rather than cosponsorship, which is the same substrate the project's SDSM vote backbone used when it found the result about 95% party."
+   },
+   {
+    "slug": "bucchianeri-2025-legislative-effectiveness-american",
+    "relation": "complements",
+    "why": "Brings the Volden-Wiseman effectiveness framing that Aref and Neal invoke to the state level. Relevant to whether coalition-composition effects on effectiveness generalize beyond the US House."
+   }
+  ],
+  "backlinks": [
+   {
+    "slug": "pritoni-2025-lobbying-coalitions-determinants",
+    "relation": "complements",
+    "why": "This is the earlier signed-partition method behind melange-sna.signed-coalitions. It works at the legislator level, so Pritoni's determinants do not transfer to it."
+   },
+   {
+    "slug": "tang-2015-negative-link-prediction",
+    "relation": "complements",
+    "why": "This is the same frustration-minimization approach applied to signed political collaboration. Tang supplies the balance-prevalence evidence that motivates it and the caution about interaction-derived signs."
+   }
+  ],
+  "evidence_status": "unverified"
+ },
+ {
+  "slug": "esmalian-2022-characterizing-equitable-access",
+  "note": false,
+  "meta": {
+   "title": "Characterizing equitable access to grocery stores during disasters using location-based data",
+   "authors": [
+    "Amir Esmalian",
+    "Natalie Coleman",
+    "Faxi Yuan",
+    "Xin Xiao",
+    "Ali Mostafavi"
+   ],
+   "year": "2022",
+   "venue": "Scientific Reports 12:20203 (Nature Portfolio, open access CC BY 4.0). Received 27 April 2022, accepted 31 October 2022.",
+   "doi": "10.1038/s41598-022-23532-y",
+   "sha12s": [
+    "c82f74711258"
+   ],
+   "category": "Adjacent",
+   "category_slug": "adjacent"
+  },
+  "extraction": {
+   "title": "Characterizing equitable access to grocery stores during disasters using location-based data",
+   "authors": [
+    "Amir Esmalian",
+    "Natalie Coleman",
+    "Faxi Yuan",
+    "Xin Xiao",
+    "Ali Mostafavi"
+   ],
+   "year": "2022",
+   "venue": "Scientific Reports 12:20203 (Nature Portfolio, open access CC BY 4.0). Received 27 April 2022, accepted 31 October 2022.",
+   "doi": "10.1038/s41598-022-23532-y",
+   "document_type": "Empirical journal article (location-based mobility data, network analysis and time-series clustering)",
+   "coverage": "Full text read in one pass (all 938 lines of _text/c82f74711258.txt): front matter, abstract, introduction, methods, results, discussion, data and code availability, 51 references, funding and author notes. Metadata hint confirmed (title, authors, 2022, Scientific Reports, DOI all match the PDF text). Paul's markup: no markup files were listed for this item, so paul_markup is empty and no highlights, underlines or sticky notes were checked. Page numbers are inferred from the journal page-number lines in the extracted text and should be checked against the PDF. Coverage of the lobbying, elections, persuasion/turnout, legislator and text-measurement topics: none of these appear in the paper. Its network content is limited to population-facility (TAZ-to-store) trip networks and accessibility metrics.",
+   "research_question": "(1) What are the characteristics of access to grocery stores for different sub-populations at different stages of disasters? (2) What is the extent of disparity in access among different sociodemographic groups in different disaster phases? (3) What are the contributing factors to unequal access to grocery stores, and to what extent are facility distribution inequities, such as food deserts, indicative of access disparities? (p.2, lines 106-112)",
+   "theory": "Access to facilities is treated as three complementary dimensions: redundancy (number of distinct stores visited), rapidity (trip duration, reflecting traffic and road disruption and restoration of system function), and proximity (trip distance). The paper argues that physical-distance and food-desert measures are inadequate in disasters because disruption changes store availability and trip time, and because household capabilities and protective behavior shape access. Framing draws on accessibility and resilience literature (refs 6, 22-28, 33-35). It is not a formal behavioral or economic theory.",
+   "data": "Unit of analysis: census-tract-aggregated traffic analysis zones (TAZs) as population nodes, linked to grocery points-of-interest (POIs) as facility nodes. Sample: 1,804 TAZs, 920 grocery stores, 6,052 TAZ-POI links in Harris County, Texas (Fig. 2a caption, p.4). Period: StreetLight O-D trips for 1 Aug to 30 Sep 2017. Analysis window 1 Aug to 15 Sep 2017 (p.6). Baseline 1-20 Aug 2017 (weekday-matched). Normal-period clustering window is stated as 5-16 Aug in the text and 7-16 Aug in the Fig. 3 caption, so it is inconsistent. Sources: StreetLight Data (anonymized cell and GPS trips, not individual-level counts reported; the paper cites more than 40 billion records nationally per month); SafeGraph POIs (grocery, specialty food and general merchandise categories, manually filtered); ACS 2015-2019 5-year estimates; FEMA Harvey flood depth grid; USDA Food Access Research Atlas. The StreetLight penetration rate is given as \"approximately 23 penetration rate\" in the extracted text, which appears garbled and should be verified in the PDF. Data access is restricted by license and code is available on request.",
+   "method": "Descriptive population-facility network analysis plus unsupervised time-series clustering. (1) Build directed bipartite TAZ-to-POI networks (unweighted; weighted by trip duration; weighted by trip distance) from daily aggregated trips (Table 1, Eqs. 1-3). (2) Compute three TAZ-level indicators: unweighted degree (unique POIs visited), average weighted degree for duration (seconds), and average weighted degree for distance (miles). (3) Express each indicator as percentage change from the weekday baseline, Pc = (M - B)/B (Eq. 4, p.5). (4) Impute gaps with a Kalman filter via R imputeTS after dropping TAZs with 5+ consecutive missing days. (5) Smooth with a 3-day moving average, then run partitional multivariate DTW clustering (dtwclust, R). Cluster number is chosen with COP and modified Davies-Bouldin indices, and the chosen k and the cluster sizes are not reported in the text. (6) Compare sociodemographic and facility characteristics across clusters and income groups (ANOVA, Tukey, chi-square, a two-sample proportion test, and a correlation between number of POIs in a TAZ and each percentage change). Phases: normal (pre-event), preparation (single focal day 24 Aug 2017, the largest percentage change, before landfall on 25 Aug), and impact/short-term recovery (flood-affected TAZs). Flooded TAZ = flood extent above 6.5% of TAZ area (the 75th percentile in Harris County).</method>\n<parameter name=\"identification\">None. The study is descriptive and associational. Group comparisons (income tertiles, food-desert status, clusters) and phase comparisons are not causal. The paper uses causal language in places (\"disproportionately exacerbated\", \"flooding disproportionally affects\"), which the design does not support. The text mentions a \"multivariate analysis\" (p.13) but no model, coefficients or specification are reported.",
+   "scope": "Population: residents of Harris County, Texas (Houston metro), identified by home TAZ, who visited grocery stores in August-September 2017. Institutions: grocery stores and supermarkets (including warehouse clubs, supercenters and eating places in the category filter). Era: a single event, Hurricane Harvey (landfall 25 Aug 2017, over 60 inches of rain). Single county, single storm, single month window. The paper's own claim about generalizing beyond this event is not present.",
+   "key_findings": [
+    {
+     "finding": "Normal-period clusters on the three access indicators show spatial clustering, and the three sets of clusters barely overlap. Areas with low redundancy are concentrated in the east and south of the county, and large northern TAZs have poor proximity and rapidity.",
+     "location": "Results, pre-disaster normal period, pp.6-8 (Fig. 3)",
+     "numbers": "Three clusters per indicator; Fig. 3d shows group counts in parentheses, which are not extracted in the text."
+    },
+    {
+     "finding": "The normal-period cluster with the highest redundancy is described as lower socioeconomic status. This conflicts with the Table 3 values as extracted (see limitations).",
+     "location": "Results p.7 (text) vs Table 3 p.8-9",
+     "numbers": "Table 3 extracted: per-capita income for the highest-redundancy cluster C1 = $36,008.19 (starred, significant) vs $28,305.49 and $28,305.94; food-desert share 0.45* vs 0.38 and 0.34; stores per TAZ 0.67 vs 1.03 and 1.87*."
+    },
+    {
+     "finding": "Preparation phase (24 Aug 2017): high-income TAZs had a significantly larger increase in unique stores visited than low-income TAZs (ANOVA and Tukey, alpha 0.05). Lower-income TAZs with long normal-period trips had a disproportionately larger increase in trip duration. High-income TAZs with short normal-period distances had the largest increase in distance.",
+     "location": "Results, Preparation, pp.8-9 (lines 479-491; Figs. 4-5)",
+     "numbers": "No effect sizes, means or test statistics for these comparisons appear in the text, only boxplots."
+    },
+    {
+     "finding": "Correlation between number of POIs in a TAZ and each percentage change in access indicators during preparation is very weak. The text reads it as a slight association for redundancy only, and no association for duration or distance.",
+     "location": "Results, Table 4, p.10",
+     "numbers": "Visited-POI % change r = -0.06, p = 0.007; duration % change r = -0.01, p = 0.448; distance % change r = -0.03, p = 0.100."
+    },
+    {
+     "finding": "Within food deserts, high-income TAZs visited more POIs during preparation without significantly longer trips or distances than low-income TAZs in food deserts. The authors conclude food-desert status alone does not capture preparation access.",
+     "location": "Results, income x food desert, pp.9-10 (lines 630-657; Fig. 5)",
+     "numbers": "No counts or test statistics for the four income x food-desert groups in the text."
+    },
+    {
+     "finding": "Among flood-affected TAZs during impact and short-term recovery, two access clusters emerge. Cluster 2 shows a larger increase in unique POIs visited and a smaller loss of proximity and rapidity. Cluster 2 has higher income, a lower minority share, a higher chance of food-desert status, and fewer POIs per TAZ.",
+     "location": "Results, Impact/short-term recovery, pp.10-11 (lines 658-714; Figs. 6-7)",
+     "numbers": "Two clusters; cluster sizes not reported in the text."
+    },
+    {
+     "finding": "Income and food-desert status interact in the recovery clusters. Among cluster 2 TAZs, high-income TAZs are a larger share of food-desert TAZs than low-income ones. This pattern is absent in cluster 1.",
+     "location": "Results p.11 (lines 715-721; proportion test)",
+     "numbers": "Cluster 2: high-income share in food deserts 0.53 vs low-income 0.25 (p < 0.001). Cluster 1: 0.57 vs 0.47 (p = 0.76)."
+    },
+    {
+     "finding": "Flood extent does not differ significantly between the two recovery clusters. The authors argue that diminished access extends beyond flooding and is explained by sociodemographic and facility-distribution characteristics. This works against the abstract's claim that flooding disproportionally affects socially vulnerable populations.",
+     "location": "Results p.11 (lines 724-728); Abstract p.1 (lines 22-23)",
+     "numbers": "p = 0.33 for flooding extent, cluster 1 vs cluster 2; flood threshold 6.5% of TAZ area."
+    },
+    {
+     "finding": "Discussion conclusion: during recovery, higher-income, lower-minority areas kept higher redundancy with smaller losses in proximity and rapidity. Lower-income, higher-minority areas had longer commutes and fewer store visits.",
+     "location": "Discussion pp.12-13 (lines 752-768)",
+     "numbers": "None beyond the results above."
+    }
+   ],
+   "measures": [
+    "Unweighted degree of TAZ = number of distinct grocery POIs visited by residents of the TAZ (redundancy; Eq. 1, Table 1)",
+    "Average weighted degree, duration = mean trip duration in seconds across a TAZ's POI links (rapidity; Eq. 2)",
+    "Average weighted degree, distance = mean trip distance in miles across a TAZ's POI links (proximity; Eq. 3)",
+    "Percentage change of each indicator vs the weekday-matched baseline (Eq. 4)",
+    "Food desert flag from the USDA Food Access Research Atlas: at least 500 people or 33% of residents beyond 1 mile (urban) or 10 miles (rural) from a supermarket",
+    "Flooded TAZ: flood extent above 6.5% of TAZ area (75th percentile in Harris County, FEMA Harvey depth grid)",
+    "Income tertiles (bottom and top 33%) and income quintiles (map only); ACS 2015-2019 per-capita income, % below poverty, % without diploma, % over 65, % disability, % minority, % crowded housing, % no vehicle",
+    "Number of POIs per TAZ (facility density)",
+    "Clusters: DTW-based partitional clusters on 3-day smoothed time series, k chosen by COP and modified Davies-Bouldin"
+   ],
+   "limitations": [
+    "Authors' stated: household-level metrics that drive food inaccessibility are complex and are not captured. Future work should add financial ability and household purchasing power (p.13, lines 793-797).",
+    "Authors' stated: the data are licensed from SafeGraph and StreetLight, access is by request only, and code is available from the corresponding author on request (Data and Code availability, p.14).",
+    "Observed, not stated by authors: one storm, one county and one month. The study does not test generalization beyond Harvey or Harris County.",
+    "Observed: the design is descriptive and associational. No causal identification, no multivariate model reported, and no effect sizes or test statistics for the preparation and recovery comparisons (only boxplots and p-values).",
+    "Observed: Table 3 as extracted contradicts the text. The text says the highest-redundancy cluster has lower socioeconomic status and more stores, but the table values show higher per-capita income ($36,008 starred) and fewer stores (0.67). Column alignment may be lost in extraction; verify against the PDF before citing.",
+    "Observed: the abstract says flooding disproportionally affects socially vulnerable populations. The paper's own test finds no significant flood-extent difference between recovery clusters (p = 0.33), so the flooding claim rests on a weaker basis than the abstract states.",
+    "Observed: date inconsistency. The normal-period window is 5-16 Aug in the text and 7-16 Aug in the Fig. 3 caption. The analysis window is 1 Aug-15 Sep in the text but the data run to 30 Sep.",
+    "Observed: the mobility sample is undescribed. StreetLight's penetration rate is garbled in the text, home-TAZ inference is a black box, and the number of TAZs dropped for 5+ missing days is not reported.",
+    "Observed: clustering choices are not reported (chosen k, validity index values, cluster sizes, and sensitivity to the 3-day smoothing and DTW settings).",
+    "Observed: the 6.5% flood threshold (75th percentile) is a single arbitrary cut and is not tested for sensitivity.",
+    "Observed: sociodemographic data are 2015-2019 ACS estimates, which post-date parts of the 2017 event's baseline. Their timing relative to the storm is not discussed.",
+    "Observed: the food-desert and income-tertile comparisons rest on small and unreported subgroup sizes, and the text does not report N per group."
+   ],
+   "paul_markup": [],
+   "references_of_note": [
+    "Dong, X., Ben-Akiva, M. E., Bowman, J. L. & Walker, J. L. (2006). Moving from trip-based to activity-based measures of accessibility. Transp. Res. A 40(2), 163-180 (ref 6). Accessibility measurement; the paper cites it for trip-based limits.",
+    "Talen, E. & Anselin, L. (1998). Assessing spatial equity: measures of accessibility to public playgrounds. Environ. Plan. A 30(4), 595-613 (ref 26). Spatial-equity accessibility measures; closest to the paper's network-based access framing.",
+    "Simini, F. et al. (2021). A deep gravity model for mobility flows generation. Nat. Commun. 12(1), 6576 (ref 25). Population-to-destination mobility flow modeling.",
+    "Li, Q. et al. (2021). Disparate patterns of movements and visits to points of interest in urban hotspots during COVID-19. R. Soc. Open Sci. 8(1), 201209 (ref 44). Source for the TAZ-POI network construction from geographic coordinates.",
+    "Liu, Y., Sui, Z., Kang, C. & Gao, Y. (2014). Uncovering patterns of inter-urban trip and spatial interaction from social media check-in data. PLoS ONE 9(1), e86026 (ref 24). Spatial interaction networks from check-in data.",
+    "Podesta, C. et al. (2021). Quantifying community resilience based on fluctuations in visits to points-of-interest derived from digital trace data. J. R. Soc. Interface 18(177), 20210158 (ref 5). Same research group; POI visit fluctuations as a resilience measure.",
+    "Barbosa, H. et al. (2021). Uncovering the socioeconomic facets of human mobility. Sci. Rep. 11(1) (ref 9). Mobility and socioeconomic disparities.",
+    "Deng, H. et al. (2021). High-resolution human mobility data reveal race and wealth disparities in disaster evacuation patterns. Humanit. Soc. Sci. Commun. 8(1) (ref 10). Mobility-based disparity evidence in disasters.",
+    "Sardá-Espinosa, A. (2019). Time-series clustering in R using the dtwclust package. R J. 11(1), 1-45 (ref 49). The clustering package used.",
+    "Arbelaitz, O. et al. (2013). An extensive comparative study of cluster validity indices. Pattern Recogn. 46(1), 243-256 (ref 51). Basis for the COP and modified Davies-Bouldin k choice.",
+    "Moritz, S. & Bartz-Beielstein, T. (2017). imputeTS: Time series missing value imputation in R. R J. 9(1), 207-218 (ref 45). Imputation package used.",
+    "Faturechi, R. & Miller-Hooks, E. (2014). Travel time resilience of roadway networks under disaster. Transp. Res. B 70, 47-64 (ref 27). Network travel-time resilience under disaster."
+   ],
+   "short_quotes": [
+    {
+     "quote": "Approaches focused on physical distance, as done in the majority of current studies, is not a reliable measure of accessibility during disasters",
+     "location": "p.2, lines 70-72 (Introduction)"
+    },
+    {
+     "quote": "in the aftermath of disasters, the socially vulnerable population (low-income and minority groups) has lesser access to grocery stores",
+     "location": "p.10, lines 679-681 (Impact/short-term recovery, Fig. 7)"
+    },
+    {
+     "quote": "The insignificant difference in flooding shows that the diminishment of access to grocery stores goes beyond the extent of flooding",
+     "location": "p.11, lines 724-727"
+    }
+   ]
+  },
+  "summary_md": "Esmalian et al. use StreetLight origin-destination trips and SafeGraph store locations to build bipartite networks linking traffic zones to grocery stores in Harris County during Hurricane Harvey (Aug-Sep 2017). The sample is 1,804 zones, 920 stores and 6,052 links. Each zone gets three access measures: redundancy (how many distinct stores its residents visit), rapidity (mean trip time) and proximity (mean trip distance). Each measure is expressed as percentage change from a weekday baseline and clustered with dynamic time warping (DTW).\n\nIn the preparation phase, high-income zones added more distinct stores than low-income zones. During recovery, the cluster that held up better had higher incomes and a lower minority share. The number of stores in a zone barely tracks the change in access: r = -0.06 for stores visited, -0.01 for trip time and -0.03 for trip distance. Food-desert status alone does not separate the groups. The paper's own test finds no flood-extent difference between the recovery clusters (p = 0.33), which undercuts the abstract's flooding claim.\n\nThe design is descriptive: one storm, one county, about six weeks. It reports no effect sizes. As extracted, Table 3 contradicts the text about which cluster is lower-income.\n\nFor Paul's systems this is an Adjacent paper with almost no transfer. It says nothing about lobbying, legislators, persuasion, turnout or influence networks. Its \"network degree\" counts distinct stores visited; it is not a centrality or influence measure. The only real point of contact: counting facilities on the supply side, or measuring plain distance, is a weak stand-in for the access people actually get. That bears weakly on Demographic Potential v3.0, which scores CU branch share and deposit share as \"potential\". It bears more weakly still on the Terrier turf planner, which ranks blocks by walking distance. Both transfers are by analogy across domains (grocery stores in a disaster vs CU branches and canvass walks in normal conditions). They are UNVERIFIED as evidence for either component.",
+  "paul_entries": [],
+  "bearings": [
+   {
+    "component_id": "melange-demographic-potential.footprint-v30",
+    "relation": "qualifies",
+    "paper_claim": "How many facilities a zone has is a poor indicator of realized access. Correlation of stores per zone with the preparation-phase % change: stores visited r = -0.06 (p = 0.007), trip time r = -0.01 (p = 0.448), trip distance r = -0.03 (p = 0.100). Window: 24 Aug 2017. Denominator: Harris County zones in the analysis, N not reported. Food-desert status alone did not separate high- from low-income access.",
+    "paper_location": "Results, Table 4, p.10; income x food desert, pp.9-10",
+    "system_side": "The default Demographic Potential (footprint, ruling R7, D-035) scores a district on supply-side presence. Weights: CU employment LQ .30, establishment LQ .20, CU branch share .25, CU deposit share .25. It treats current footprint as the potential and makes no use-based or access-based measure.",
+    "code_ref": "fec/district/demographic_potential.py:160-165",
+    "transfer_conditions": "Weak analogy only. The paper covers grocery trips in a disaster in one county, with access measured from mobility traces. Demographic Potential is a national, district-level market score under normal conditions. It is explicitly not a measure of support or access, and the footprint choice is an owner ruling. The paper's lesson (supply counts are not realized use) would matter only if footprint were read as members' or constituents' access to CUs. It does not challenge the owner's choice to treat footprint as potential. The same caution applies to the growth_room branch-whitespace term (demographic_potential.py:152).",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/melange-demographic-potential#Demographic Potential v3.0 (CU footprint, default)|Demographic Potential v3.0 (CU footprint, default)]]",
+    "system": "melange-demographic-potential"
+   },
+   {
+    "component_id": "terrier-canvass.street-presets-and-turf",
+    "relation": "context",
+    "paper_claim": "\"Approaches focused on physical distance ... is not a reliable measure of accessibility during disasters\". Trip time and trip distance diverged by income group during preparation: lower-income zones with long baseline trips saw the largest increase in trip time, and high-income zones with short baseline trips saw the largest increase in distance.",
+    "paper_location": "Introduction p.2 lines 70-72; Results, Preparation pp.8-9",
+    "system_side": "The turf planner ranks blocks by preset value per 100 m of street length (length floored at 50 m). It grows a turf along connected streets with a 400 m jump allowance and routes on the TIGER street network, so cost is physical distance only.",
+    "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography-v3/server/research/walk_views.py:701-718; walk_turf.py:73",
+    "transfer_conditions": "Carries over only if canvassing happens under disrupted conditions, such as flooding or road closures, when walk time stops tracking distance. For normal door-to-door canvassing on foot, distance is an adequate cost, and the paper offers no evidence against it. This is recorded as context, not a proposed change.",
+    "strength": "weak",
+    "status": "UNVERIFIED",
+    "component_link": "[[systems/terrier-canvass#Street-plan presets, turf planner and walk routing|Street-plan presets, turf planner and walk routing]]",
+    "system": "terrier-canvass"
+   }
+  ],
+  "refuted": [],
+  "summary_issues": [],
+  "gaps_exposed": [
+   "Demographic Potential (footprint v3.0 and growth_room v2.1) uses only supply-side measures: branch and deposit share, LQ and whitespace. It has no measure of realized use, such as CU visits or membership per resident, to test whether presence equals access. The paper shows that facility counts track use changes only weakly (|r| <= 0.06). This matters only if footprint is ever read as access.",
+   "No component checks whether its scores differ across sociodemographic strata such as income or minority share. The paper's main finding is heterogeneity by income tertile. Any future use of a pooled district score over income strata should be quoted with those strata or labelled UNSTRATIFIED."
+  ],
+  "flags": [
+   "The paper does not argue for either rejected SNA proposal (dropping regular cosponsorship edges; per-edge volume normalization). Its 'networks' are bipartite zone-to-store trip graphs, and 'degree' means distinct stores visited, not influence, closeness or access probability. Do not port its 'weighted degree' language into Melange SNA wording (D-025).",
+   "The causal language in the paper ('disproportionately exacerbated', 'flooding disproportionally affects') is not supported by its descriptive design, and its own test finds no flood-extent difference between clusters (p = 0.33). Do not cite it for causal claims.",
+   "As extracted, Table 3 contradicts the text: the highest-redundancy cluster shows a higher per-capita income ($36,008, starred) and fewer stores (0.67). Check against the PDF before quoting.",
+   "The normal-period window is inconsistent: 5-16 Aug in the text vs 7-16 Aug in the Fig. 3 caption. Any figure quoted from it must name which window it uses.",
+   "Both bearings are this agent's analogy across domains. They stay UNVERIFIED until a second path reproduces them (DE-062)."
+  ],
+  "paul_alignment": "Paul has not annotated this paper, and no component lists it among his citations. Nothing in his positions to agree or disagree with, and no stale note to update. His one related idea is the state or industry-presence targeting layer, which became Demographic Potential (Huneeus & Kim). The paper gently cautions that presence differs from realized access. It does not touch the owner ruling that footprint is the potential.",
+  "related": [
+   {
+    "slug": "hargittai-2015-bigger-always-better",
+    "relation": "complements",
+    "why": "Hargittai documents sampling biases in big data drawn from digital traces. Esmalian rests on StreetLight cell/GPS traces with an undescribed penetration rate and black-box home-zone inference, which is exactly that kind of bias. Read together, this limits how far its findings by income can be trusted."
+   },
+   {
+    "slug": "zeller-2016-step-path-selection",
+    "relation": "complements",
+    "why": "Both papers infer movement cost or access from observed movement rather than straight-line distance: Zeller estimates resistance to movement with step and path selection functions, and Esmalian uses trip time vs trip distance. Both are relevant to any travel-cost weighting in the Terrier turf planner."
+   }
+  ],
+  "backlinks": [],
+  "evidence_status": "unverified"
+ }
+]

@@ -1,0 +1,128 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-lobbying.lobbied-member-link",
+      "relation": "supports",
+      "paper_claim": "Lobbying reports need not identify the politicians contacted, so the network is built indirectly: A_ij = number of bills group i lobbied that politician j sponsored (113th Congress, k = 8). The authors call this 'a type of political connection' and read recurring co-occurrence as 'shared involvement on specific political issues', while stating that lobbying a bill 'does not necessarily imply political ties to its sponsor'. They make no claim that the link is contact or that lobbying causes sponsorship. Window: 113th Congress; denominator: lobbied bills with an identified sponsor.",
+      "paper_location": "p. 2 (dataset framing); p. 6 (Sec. 3.1, 'organizations need not identify their political contacts'); p. 7 (A_ij definition, k = 8)",
+      "system_side": "build_network_2021_rebuild.py credits every legislator who sponsored OR cosponsored each lobbied bill and emits lob_id x bioguide_id x year x n_bills rows. Project memory records this link as circular: P(joined | lobbied) = 1 by construction, so it cannot serve as influence evidence.",
+      "code_ref": "fec/lobbying/build_network_2021_rebuild.py:13; fec/lobbying/build_network_2021_rebuild.py:67",
+      "transfer_conditions": "Same bill-roster construction, but the system's is broader (adds cosponsors) while the paper uses sponsors only, so the dyads are not identical. The paper avoids circularity only because it makes no lobbying-predicts-sponsorship claim; any Melange reuse must stay descriptive. Under D-021 the matrix is an identity source, not an edge or weight source.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Paper side holds (pp. 2, 6, 7), but the analyst's 'never as contact or influence' overstated it: the paper does label the link 'a type of political connection'. Code side: line 13 docstring confirms sponsor+cosponsor crediting, line 67 confirms the count fields. The '63,991 member-years' figure could not be found in the repo, brain or memory and was removed. Circularity confirmed in memory note lobbying-member-link-is-circular-2026-08-19."
+    },
+    {
+      "component_id": "melange-pathfinding.multi-target-and-budget-modes",
+      "relation": "qualifies",
+      "paper_claim": "Communities are latent memberships in the bipartite interest-group x politician lobbying network (k = 8, 113th Congress). Legislators with the most community memberships are often senior politicians or party leaders; legislators with entropy at least 2 (roughly 4+ communities) sit on power committees. The dc-biSBM, being a hard partition, assigns mixed actors (CHAMBER OF COMMERCE, BRITISH PETROLEUM, MCAFEE) to only one community, and the LSM places high-entropy actors in an undifferentiated centre region.",
+      "paper_location": "p. 8 (Table F.1 reference); p. 10 (Figure 4, entropy >= 2); pp. 13-16 (LSM and dc-biSBM comparison, Figures 5-7)",
+      "system_side": "The brain-vault note actors/melange-dashboard-june-capstone.md (line 83) cites Kim-Kunisky for 'the cosponsor network has real community structure the pathfinder exploits'. The template itself carries no Kim-Kunisky citation; budgetRecruit's comment cites GCOMB only. budgetRecruit is a max-coverage greedy over member-member cosponsor edges with Noisy-OR coverage and degree pruning and contains no community term.",
+      "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:773-795; C:/Users/pgoff/Documents/brain/actors/melange-dashboard-june-capstone.md:83",
+      "transfer_conditions": "Does not carry over as cited: the paper's communities belong to an organisation x member lobbying graph, not the member-member cosponsor graph, and the code uses no communities. The brain note's citation should be re-scoped. If a community term is ever added, the paper argues for mixed membership over a hard partition because hub actors are the ones a partition misassigns.",
+      "strength": "strong",
+      "verdict": "softened",
+      "verifier_note": "Paper: the analyst merged two separate findings ('senior members and party leaders typically span at least 4 communities'); the paper says leaders have the most memberships (p. 8) and separately that entropy >= 2 legislators sit on power committees (p. 10). Code: no 'Kunisky' string exists anywhere under fec/surfaces; the citation lives only in the brain-vault note, so 'the grounding comment' cites it was false. budgetRecruit description verified at tpl:779-795."
+    },
+    {
+      "component_id": "moneyball-rank-pillars.committee-pillar",
+      "relation": "supports",
+      "paper_claim": "Legislators who interact with probability at least 40% in the 'Finance & Insurance' community have committee memberships concentrated in relevant committees such as House Financial Services; high-entropy legislators sit on power committees (House Ways and Means, Senate Appropriations), and broad groups such as the CHAMBER OF COMMERCE target them. Window: 113th Congress; lobbying-attention counts, not outcomes.",
+      "paper_location": "p. 2 (introduction); p. 10 (Figure 4 and text)",
+      "system_side": "Committee score = (Membership + Leadership) / 2, with seat base weights set by the owner-judged CU-relevance tier marker (Highly 3.0, Moderately 1.8, Slightly 0.9), subcommittee seats at 1/6, and Chair/Ranking/Vice leadership multipliers. The score feeds the Influence pillar.",
+      "code_ref": "fec/engine/committee_scores.py:125",
+      "transfer_conditions": "Supports the premise that lobbying attention is organised by jurisdiction. It does not show seats produce CU outcomes. One Congress, descriptive. The power-committee finding suggests checking how tax-writing and appropriations seats are tiered; not verified here.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper side reproduced exactly (40% threshold, Financial Services, Ways and Means, Senate Appropriations). Code side: tier weights confirmed at line 125 and docstring lines 30-36; the analyst's '/ max' normalisation was not found in committee_scores.py and was removed."
+    },
+    {
+      "component_id": "melange-labels-and-tiers.industry-boards-crown",
+      "relation": "qualifies",
+      "paper_claim": "'Finance & Insurance' is one of the eight named legislation communities. The paper states the data 'do not distinguish between lobbying for or against' a bill, and therefore analyses domain broadening rather than alliances. (That co-lobbying would place rival finance interests in one community is an inference, not a paper finding.)",
+      "paper_location": "p. 7 (community naming); p. 10 ('Lobbying Beyond Specific Interests')",
+      "system_side": "champions_v2.py builds direction-aware, mutually exclusive champion boards over sectors credit_union, bank, crypto, fintech, telecom, with the crown law: Tier-1 crowns never eligible for any threat board. primacy_factors.py validates a signed industry-axis valence in [-1, 1].",
+      "code_ref": "fec/lobbying/champions_v2.py:7-8; fec/lobbying/champions_v2.py:32; fec/engine/primacy_factors.py:175-181",
+      "transfer_conditions": "The biLCM cannot supply rival-industry champions because it carries no sign. Separating banks from CUs needs a signed position source (e.g. Kim J. et al. 2025). The paper neither supports nor refutes the crown law.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper quote confirmed (p. 10), but the paper never says co-lobbying places rivals together; reworded as inference. Code: crown law confirmed lines 7-8, SECTORS tuple line 32, valence check lines 175-181. 'Opposition priors' was not verified and was dropped."
+    },
+    {
+      "component_id": "melange-legislative-data.ballotpedia-leadership-scores",
+      "relation": "qualifies",
+      "paper_claim": "Legislators with the most legislation-community memberships are often senior politicians or party leaders, and high-entropy legislators (entropy >= 2, roughly 4+ communities) sit on power committees. The paper measures breadth of lobbying interaction, not leverage.",
+      "paper_location": "p. 8; p. 10 (Figure 4)",
+      "system_side": "Hand-set constants: committee leadership Chair 1.0, Ranking 0.8, Vice Chair 0.6, Vice Ranking 0.4, Member 0.2; party leadership Speaker 1, President pro tempore 1, Majority Leader 0.8, Minority Leader 0.6, Majority Whip 0.4, Minority Whip 0.2.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/ballotpedia_119th_cu_scraper.R:30-42",
+      "transfer_conditions": "Consistent with scoring leadership as general reach rather than CU-specific leverage; the 'diluted industry share' reading is the analyst's inference. Says nothing about effectiveness on CU bills. One Congress, descriptive.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Both sides verified; only the interpretive 'diluted share' clause is inference, so it was moved out of paper_claim into transfer_conditions."
+    },
+    {
+      "component_id": "melange-sna.sector-networks",
+      "relation": "suggests-extension",
+      "paper_claim": "Legislation communities (Healthcare, Veterans' Affairs, Technology & Telecommunications, Energy, Finance & Insurance, and others) are estimated from interest-group x politician lobbying counts and named ex post. A permutation test against random networks with similar actor activity distributions finds interest groups in the null have many more community memberships, indicating strong community structure.",
+      "paper_location": "p. 7; p. 12 ('Significance of Communities')",
+      "system_side": "Sector networks (bank_reg defined by CRS subject terms, among others) are member-member cosponsor graphs over hand-defined sector bill universes, configured in the NETWORKS dict.",
+      "code_ref": "fec/moneyball_core.py:391-402",
+      "transfer_conditions": "A biLCM on the existing org x bioguide counts could only be a descriptive diagnostic of whether hand-drawn sector boundaries appear in lobbying. Under D-021 its outputs must not become edges or weights; UNVERIFIED until a second path reproduces it (DE-062).",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Paper p. 7 and p. 12 confirmed; NETWORKS dict with bank_reg sector by CRS subject terms confirmed at moneyball_core.py:391-402."
+    },
+    {
+      "component_id": "melange-lobbying.fec-lda-bridge",
+      "relation": "suggests-extension",
+      "paper_claim": "Table 1 lists the 10 dyads whose observed interactions most exceed biLCM predictions (e.g. Shaheen-NOVO NORDISK 12 observed vs 1.61 estimated; Marino-CVS 10 vs 0.55). The authors suggest explanations from geography, campaign contributions (IHEARTMEDIA with Conaway and Barrasso) and bill-specific stakes, without testing them.",
+      "paper_location": "p. 11, Table 1 and 'Anomalous Connections'",
+      "system_side": "The preregistered round-3 FEC x LDA bridge test found money contributes -0.0002 beyond structural controls, so FEC data is excluded as a feature of the lobbying champions residual rank. Project memory records the raw rho as +0.153 and the result as UNCORROBORATED.",
+      "code_ref": "fec/lobbying/lobby_champions.py:13-15",
+      "transfer_conditions": "Suggests testing whether FEC money concentrates on dyads with positive community-model residuals rather than correlating levels. Hypothesis only; anecdotes from one Congress. Residuals on a bill-roster join inherit its circularity for any join outcome; a different control set on the same window is not a successor test.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers confirmed. Original code_ref (build_network_2021_rebuild.py:67) is just the network field list and shows nothing about the bridge; replaced with lobby_champions.py:13-15, which states the -0.0002. The +0.153 rho appears only in memory notes, not code. 'Closed pending a new vintage' was not verified and was dropped."
+    }
+  ],
+  "related": [
+    {
+      "slug": "kim-2018-lobbyview-firm-level",
+      "relation": "same-data",
+      "why": "The paper's lobbying dataset is distilled from LobbyView (cited as Kim 2018) and shares its NLP bill-identification pipeline."
+    },
+    {
+      "slug": "kim-2025-measuring-interest-group",
+      "relation": "complements",
+      "why": "Supplies signed bill positions from LDA text, which Kim-Kunisky say their data lack (no for/against distinction)."
+    },
+    {
+      "slug": "porter-2005-network-analysis-committees",
+      "relation": "cites",
+      "why": "Kim-Kunisky cite Porter et al. 2005 when proposing biLCM for networks of legislators and committees; both are also cited together in the brain-vault dashboard capstone note (not in dashboard code)."
+    },
+    {
+      "slug": "bacik-2025-measuring-dynamical-evolution",
+      "relation": "same-data",
+      "why": "Also built from LobbyView (co-authored by In Song Kim), as a yearly multi-layer network over time, where Kim-Kunisky give a single-Congress (113th) snapshot."
+    },
+    {
+      "slug": "azaiez-2025-hypergraph-analysis-european",
+      "relation": "complements",
+      "why": "A hypergraph treatment of a lobby network; Kim-Kunisky list multi-partite (group-politician-bill) extension as future work."
+    },
+    {
+      "slug": "aref-2021-identifying-hidden-coalitions",
+      "relation": "complements",
+      "why": "Signed partitioning of the House co-sponsorship network supplies a sign Kim-Kunisky's co-lobbying lacks, but is a hard partition without mixed membership."
+    }
+  ],
+  "summary_issues": [
+    "'The paper never treats that link as contact or influence' overstates it: the paper calls the bill-roster link 'a type of political connection' and reads recurring co-occurrence as shared issue involvement, while cautioning it does not necessarily imply political ties. It makes no contact or causal claim, but it does not disclaim connection.",
+    "'The dashboard cites the paper for exploitable community structure' is wrong: no Kim-Kunisky citation exists anywhere in fec/surfaces (budgetRecruit's comment cites GCOMB). The citation is in the brain-vault note actors/melange-dashboard-june-capstone.md:83. The same error appears in flags[0] ('the dashboard's budget-mode grounding').",
+    "gaps_exposed item 3 ('the system has no residual or anomaly view' of organisation-member dyads) is wrong: fec/lobbying/lobby_champions.py already publishes a residual rank of organisation-filing x member-bill association after structural adjustment, and champions_v2.py references that 'direction-blind residual attention'.",
+    "Bearing 1 system_side cited '63,991 member-years'; the figure was not found in the repo, brain or memory and was removed.",
+    "Bearing 2 attributed 'senior members and party leaders typically span at least 4 communities' to the paper; the paper reports leaders have the most memberships and, separately, that entropy >= 2 legislators sit on power committees.",
+    "'A latent space model and a dc-biSBM recover the same blocks' is loose: the paper says LSM and dc-biSBM communities are well aligned with each other and the dc-biSBM discerns more structure than the LSM; both lack mixed membership."
+  ]
+}

@@ -1,0 +1,116 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-influence-engine.cascade-kernel",
+   "relation": "qualifies",
+   "paper_claim": "Pooled over all staff, minimal evidence that think-tank evidence raises siding with the requester (if anything, less likely than 'own analysis'). Split by party, aligned think-tank evidence raises siding and non-aligned lowers it, and for both parties the non-aligned penalty is roughly twice the aligned benefit (Fig. 4). The reference category is stated inconsistently: 'own analysis' in the p.12 prose, 'supportive polling' in the Fig. 4 note. Stated intentions; N=441 staff (5.2% response), 549 ratings per factor; party subgroup Ns not reported.",
+   "paper_location": "Results, Figure 4, pp.12-14; Discussion p.16",
+   "system_side": "cpf_pressure multiplies co-partisan member-to-member pressure by 1.7 and out-partisan pressure by 0.5. The kernel docstring cites 'Furnas/Bakker source-alignment' as the basis. Relative to 1.0, the system's gain (+0.7) is larger than its penalty (-0.5).",
+   "code_ref": "fec/moneyball_core.py:8-12, fec/moneyball_core.py:546-548",
+   "transfer_conditions": "The paper randomises the ideology of an outside requester's evidence and records DC staffers' stated likelihood of siding with it (2017, single hypothetical). The system applies the factor to legislator-to-legislator cosponsor edges, where the partisan relation is between two Members, not an evidence source. That supports the direction of a source-alignment term, but not its 3.4 ratio or the gain-over-penalty asymmetry. If anything, the paper points to a penalty larger than the gain. The pooled estimate is null over the party fault line, so any figure taken from the paper must be quoted by party stratum or labelled UNSTRATIFIED.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Text p.12 (line 497) and p.14 (line 564) confirm: pooled all-staff effect minimal; by party aligned up / non-aligned down; penalty 'roughly twice' the benefit for both parties. But the paper is internally inconsistent on the baseline: the p.12 prose calls 'own analysis' the reference category while the Fig. 4 note says 'supportive polling'. N=441 (5.2% of 8,485) and 549 per factor (131+128+154+136) confirmed; party subgroup Ns not reported. Code: moneyball_core.py:8-12 docstring cites 'Furnas/Bakker source-alignment'; cpf_pressure at :546-548 returns 1.7 / 0.5. Any pooled figure must carry the UNSTRATIFIED label."
+  },
+  {
+   "component_id": "melange-influence-engine.flip-model",
+   "relation": "qualifies",
+   "paper_claim": "Donors are not granted meetings more readily than geographic constituents; Democratic staff are less likely to meet donors. This is contrary to Kalla & Broockman 2016 and consistent with Chin, Bond & Geva 2000. Staff say they are much less likely to use information from donors. They are relatively more likely to side with donors than to meet them or use their information, which the authors leave unresolved. The authors also find no preferential access for donors qua donors.",
+   "paper_location": "Results, Figures 2-3, pp.9-12; Discussion pp.16-17",
+   "system_side": "WM 0.35 vs WP 0.65 makes money the minority partner, justified by 'money buys access/effort > votes (Ansolabehere; Hall & Wayman; Kalla & Broockman)'. Peer proximity nA/nB uses party-only cpf_pressure.",
+   "code_ref": "fec/engine/flip_model.py:21, fec/engine/flip_model.py:92-96, fec/engine/flip_model.py:138-139",
+   "transfer_conditions": "The evidence agrees that money is a minor lever on positions. It contradicts the access half of the code comment, at least for stated staff intentions in 2017: a request framed as coming from a donor gets no meeting premium. The vignette varies requester identity, not dollar amounts, so it says nothing about the shape of the saturating money term or about HALFF. Social desirability may push stated donor meetings down, as the authors warn, and that limits how far the evidence carries.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Confirmed p.9 (line 369: consistent with Chin and Geva 2000, contrary to Kalla and Broockman 2016b, donors not granted more meetings; Democratic staff less likely to meet donors), p.12 ('much less likely to use information provided by donors'), p.17 (more likely to side with donors than to meet/use their info; 'merits further inquiry'), p.3 (no preferential access to donors qua donors), p.16 social-desirability caveat. Code: flip_model.py:21 WM,WP=0.35,0.65 with the Kalla&Broockman access comment; :58 cpf=MC.cpf_pressure; :138-139 nA/nB use cpf. Minor: the text cites 'Chin and Geva 2000' (reference list: Chin, Bond and Geva)."
+  },
+  {
+   "component_id": "melange-pathfinding.member-recruitment-path",
+   "relation": "contradicts",
+   "paper_claim": "The paper tests requester identity (donor vs constituent vs lobbyists) and information source, never dollar amounts; it makes no claim that money is capped. It does say staff want information and analysis from ideologically aligned experts and defer to requesters who bring think-tank research (pp.3, 18), so 'info is the lever' is a loose paraphrase, not a fabrication.",
+   "paper_location": "Introduction p.3; Discussion pp.16-18",
+   "system_side": "recruitCost(p) = 1000 + 9000(1-p), clamped to $1k-$10k. The comment justifying it reads 'Furnas et al.: money is capped, info is the lever'. The per-hop align() factor uses SRCPRO/SRCANTI for co-/out-partisan pairs.",
+   "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:585, fec/surfaces/templates/make_dashboard_html_00.tpl:742-744",
+   "transfer_conditions": "The $1k-$10k bound rests on FEC contribution limits, which are law, not on this paper. The citation is a misattribution, and the cost function stands or falls without it. The paper's own result (aligned evidence earns staff side-taking) concerns what an outside requester brings to a staffer. It does not cover member-to-member asks along cosponsor paths.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "tpl:742 comment 'Furnas et al.: money is capped, info is the lever' and :744 recruitCost=1000+9000(1-p) confirmed; :585 align() SRCPRO/SRCANTI confirmed. The paper has no money-cap claim (it varies donor identity, never amounts), so the 'money is capped' half is a misattribution. The 'info is the lever' half is not foreign to the paper: p.18 says staff 'do want information and analysis' from ideologically aligned experts, and p.3 says staff defer to actors bringing think-tank research. The contradiction holds only for the money-cap half."
+  },
+  {
+   "component_id": "melange-influence-engine.lt-priming",
+   "relation": "supports",
+   "paper_claim": "Evidence from the other party's think tank lowers the chance that staff side with the requester (a penalty about twice the aligned benefit). Republican staff also rate presenters of center-left evidence as less representative of their district.",
+   "paper_location": "Results, Figures 4-5, pp.12-15",
+   "system_side": "Cross-party pro cues pass through sqrt(bpf_u bpf_v). Cues between members who are not bridge-builders fall to about 0, and the term is clamped at 0, 'never negative — backfire magnitude not invented' (Bakker-Lelkes-Malka).",
+   "code_ref": "fec/engine/lt_priming.py:57-64, fec/engine/lt_priming.py:103",
+   "transfer_conditions": "Directionally, this backs a non-positive out-party cue, and it hints that a negative (backfire) term could be defended. The evidence is about outside information sources judged by staff, not Member-to-Member cosponsor cues, and it is stated intention from an underpowered design. It does not justify inventing a backfire magnitude. Keeping the clamp at 0 remains the conservative reading.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Confirmed p.14 (non-aligned penalty roughly twice aligned benefit) and p.14 (Republican staff rate center-left presenters as less representative). Code lt_priming.py:57-64 Bakker cross-cue comment incl. 'clamped at 0, never negative' and xf(); the pressure line sits at about :102-103. Strength weak is appropriate."
+  },
+  {
+   "component_id": "melange-pathfinding.staffer-closeness-routes",
+   "relation": "qualifies",
+   "paper_claim": "Staff are gatekeepers for Members' time and recommend bills and cosponsorships. Taking a meeting, though, is the lowest-commitment step: it barely varies with requester identity, and whether staff side with a requester depends on the evidence's ideological alignment, not on access.",
+   "paper_location": "Introduction p.4; Results pp.9-12",
+   "system_side": "Finds the least-cost loopless work route (bidirectional Dijkstra, heuristic 0) from an origin to a virtual sink reached through staff anchored at a member office, with hop costs from absolute size-adjusted exposure. The route ends at an anchored staffer; nothing models what happens after contact.",
+   "code_ref": "fec/surfaces/staffer_closeness_routes.py:1-30",
+   "transfer_conditions": "This supports treating staffer routes as routes to a contact point only. Under D-025, route cost is a heuristic and not an access or introduction probability. The paper adds that even a secured meeting predicts little about action, so route outputs should never be labelled as influence or outcome. It is limited to DC staff in 2017 and to stated responses.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper side confirmed: p.4 (lines 145-150) staff are gatekeepers who recommend whether to introduce or co-sponsor; taking a meeting is the 'low risk' weakest outcome (p.9); siding tracks source alignment (pp.12-14). The 'not on access' contrast is the analyst's inference. Code docstring (staffer_closeness_routes.py:1-30) describes 'complete loopless work routes using absolute size-adjusted exposure', bidirectional Dijkstra to a virtual sink over anchored staff; it does not call them introduction routes. Rewrote system_side. Per D-025, route cost is a heuristic, not closeness, access or introduction probability."
+  },
+  {
+   "component_id": "terrier-row-scoring.sphere-of-influence",
+   "relation": "qualifies",
+   "paper_claim": "Relative to a constituent, a requester presented as a campaign donor gets no meeting advantage, staff are less likely to use the donor's information, and all-staff ratings put donors as less representative of the district or state (null among Republican staff).",
+   "paper_location": "Results, Figures 2, 3 and 5, pp.9-15",
+   "system_side": "Sphere = 0.45 Giving + 0.45 Volunteer + 0.10 Household. Within Giving, contrib_high carries half the weight, on the assumption that givers and volunteers engage Members.",
+   "code_ref": "C:/Users/pgoff/Documents/Codex/2026-09-27/we-are-going-to-have-an/outputs/cu-geography/.local/row-framework-20260930/build/rowfw-1.0.0/framework_config.json:2556",
+   "transfer_conditions": "Terrier's people are constituents. The paper sets 'donor' against 'constituent' as alternative identities, so it cannot say whether a constituent who also gives is received better or worse. At most it suggests that a request framed around giving buys no extra staff access. It gives no reason to change the 45/45/10 split (recorded as Paul ruling (leaning), PR3), and it supports volunteer and constituent standing as the more credible channel.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Paper side confirmed (Figs 2, 3, 5; p.14 lines 579-581: all staff view donors as less representative; not distinguishable among Republicans for donors or business lobbyists). Config framework_config.json ~:2555 formula soi=100*(1/10 H + 9/20 G + 9/20 V), G=(charitable+cpi_donor)/4 + contrib_high/2 confirmed. But weights_status is 'Paul ruling (leaning)', not 'ratified'; corrected transfer_conditions."
+  }
+ ],
+ "related": [
+  {
+   "slug": "kalla-nd-campaign-contributions-facilitate",
+   "relation": "contradicts",
+   "why": "Kalla & Broockman's field experiment finds revealed donors get more senior-staff access. This paper's survey experiment finds donors get no meeting advantage over constituents (p.9) and sets itself explicitly against Kalla and Broockman; it cites them (p.17) for the chief of staff being the most likely to grant donor meetings."
+  },
+  {
+   "slug": "bakker-nd-understanding-partisan-receptivity",
+   "relation": "complements",
+   "why": "The system pairs the two papers as 'Furnas/Bakker source-alignment' for cpf_pressure and the lt-priming cross-party cue gate. Bakker covers partisan cue receptivity; Furnas covers staff reception of evidence from aligned and non-aligned sources."
+  },
+  {
+   "slug": "anon-2019-partisan-ties-lobbying",
+   "relation": "complements",
+   "why": "Same lead author. It covers the partisan ties of lobbying firms, the supply side of the partisan-alignment effect this paper finds among staff."
+  },
+  {
+   "slug": "furnas-nd-conflating-lobbying-pacs",
+   "relation": "complements",
+   "why": "Same author. It shows low overlap between lobbying and PAC spending, which is consistent with this paper's separation of donor identity from information-based lobbying."
+  },
+  {
+   "slug": "boxsteffensmeier-2018-taking-congress-interest",
+   "relation": "complements",
+   "why": "Both study interest-group signals as cues inside Congress: Dear Colleague endorsements there, think-tank evidence here."
+  },
+  {
+   "slug": "holyoke-2015-learnable-skills-unteachable",
+   "relation": "complements",
+   "why": "Holyoke et al. treat lobbying as largely relationship building. This paper adds staff-side evidence that the information a lobbyist brings, and its ideological source, shapes siding; its point that lobbyists are more persistent than donors is the authors' speculation (p.17), not a finding."
+  }
+ ],
+ "summary_issues": [
+  "Summary says the system attributes 'district-relevant information' to the paper as a claim it does not make. Overstated: every information arm in the vignette was constituency-specific (jobs in 'your constituency' or constituency polling), and the paper's own discussion (p.3) speaks of staff responsiveness to co-partisan information about public opinion in their districts. The defensible criticism is narrower: aligned think-tank evidence beat constituency polling, and the brain line's '95% CI +/- MOE' conflates the survey-level 4.5% MOE with AMCE intervals the text does not report.",
+  "Flag 'CITATION SCOPE' names a 'flip-model align factor'. align() (SRCPRO/SRCANTI) lives in fec/surfaces/templates/make_dashboard_html_00.tpl:585; the flip model uses MC.cpf_pressure (flip_model.py:58) and does not itself cite Furnas.",
+  "Summary omits that the paper is internally inconsistent about the information baseline ('own analysis' in the p.12 prose vs 'supportive polling' in the Fig. 4 note), which matters for any 'vs polling' reading.",
+  "'Info is the lever' is called a misattribution alongside 'money is capped'; only the money-cap half is absent from the paper. The information half is a loose paraphrase of pp.3 and 18.",
+  "The sphere-of-influence bearing calls Terrier's 45/45/10 split 'ratified'; the config records it as 'Paul ruling (leaning)'.",
+  "Any calibration drawn from this paper stays UNVERIFIED (DE-062); this pass checked text and code reads only."
+ ]
+}

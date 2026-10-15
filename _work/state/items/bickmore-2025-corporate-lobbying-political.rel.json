@@ -1,0 +1,99 @@
+{
+ "summary_md": "Bickmore, Blau, Griffith and Whitby (Public Choice, 2025) ask whether corporate lobbying and PAC giving raise a firm's share of its NAICS industry. They merge Compustat with Center for Responsive Politics lobbying and PAC data for 1998-2016 (237,849 firm-years; 116,242 with full controls). Lobbying appears in 4.23 percent of firm-years. With industry and year fixed effects, firm-clustered errors and no firm fixed effects, a lobbying firm's share of industry assets is 0.0743 higher (Table 3, full controls; 0.0907 without controls). Because the outcome is a 0-1 share with mean 0.0727 and median 0.0010, that is 7.4 percentage points, about the size of the mean share. It is not a 7.4 percent relative rise. Results for market-cap and sales shares are similar. PAC contributors show about 0.11 higher share (election years, N = 62,198). Democratic and Republican giving show similar coefficients. Money to winning candidates is significant (0.062, SE 0.027) and money to losing candidates is not (0.040, SE 0.036), but the paper never tests the difference between the two. For causal evidence the authors use a difference-in-differences around the January 2006 Abramoff plea, 2003Q1-2009Q1. Lobbying firms' share falls 2.65 points (assets) and 3.36 points (market cap) relative to non-lobbyists. However, the pre-trend begins to bend in late 2004, and the placebo results appear only in figures. For Paul's systems this is firm-level evidence about economic returns to political activity. It does not measure member behaviour, and nothing in Melange measures market concentration. Its main use is as a caution on how the ROI and deep-pockets readings in Mentat's sector growth study and Melange's break-even widget are worded. The pooled estimate is UNSTRATIFIED by industry (interaction checks are described but not tabulated).",
+ "category": "Lobbying",
+ "bearings": [
+  {
+   "component_id": "mentat-sector-growth-study.growth-spending-regressions",
+   "relation": "qualifies",
+   "paper_claim": "Lobbying firms hold a larger industry share: Lobby coefficient 0.0743 on ShareAssets (SE 0.0094), 0.0804 on ShareMcap and 0.0759 on ShareSales, with industry and year fixed effects but no firm fixed effects, 1998-2016, N = 116,242 firm-years. The coefficients are percentage points of a 0-1 share (mean 0.0727, median 0.0010).",
+   "paper_location": "Section 4.2, Tables 2-5; summary statistics table",
+   "system_side": "The lobbying regressions in the sector growth study run at sector x year: LobbyView real dollars on lagged, same-year or predicted growth, with sector baselines and L-controls. The year-FE sensitivity flipped L3-LV from +0.352 to -0.477, and growth added no adjusted R2. That result cuts against a confident deep-pockets reading.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_registry.R:34,155; C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_estimate.R:386",
+   "transfer_conditions": "Bickmore's estimate is a between-firm cross-sectional association within industries, with lobbying on the right-hand side. The study's question is within-sector and over time, with lobbying as the outcome. The paper carries no within-firm or within-sector-over-time evidence, so it should not be cited as support for the growth-to-lobbying lead. Imai and Kim's two-way FE caution applies to both.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-allocation.break-even-and-roi",
+   "relation": "qualifies",
+   "paper_claim": "Political activity goes with higher firm market share (Lobby +7.4 pp of industry assets share; PAC +0.11). The Abramoff-plea DiD shows a relative decline of 2.65 pp (assets) and 3.36 pp (market cap) for lobbying firms, 2006Q1-2009Q1 against 2003Q1-2005Q4.",
+   "paper_location": "Sections 4.2-4.4, Tables 3, 6, 9, 10",
+   "system_side": "The dashboard break-even solves for the CU dollars that restore baseline flip odds against competitor money. A member-level share ratio uses WM, HALFF, the competitiveness multiplier and receipts. It prints 'cannot offset' when q >= 1.",
+   "code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:1096-1105; fec/engine/money_response.py:31",
+   "transfer_conditions": "The paper's return is a firm-level economic outcome (industry share). It does not measure member votes, cosponsorship or flips, so it cannot calibrate WM, HALFF or LOSSFRAME. It supports only a framing claim that political spending associates with firm gains, stated in percentage points over 1998-2016 Compustat-matched firms.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "mentat-sector-growth-study.seats-weekly-test",
+   "relation": "qualifies",
+   "paper_claim": "PAC money to winning candidates is significant (WinPAC 0.0620, SE 0.0267, ShareAssets), money to losing candidates is not (LosePAC 0.0404, SE 0.0356), and the authors read the return as coming from winners. No test of WinPAC = LosePAC is reported.",
+   "paper_location": "Section 4.3, Table 7",
+   "system_side": "SEATS-W (2022 House, 17 weeks, EXPLORATORY) estimates -3.47 pp Democratic share of giving per +1 expected Democratic seat, with block-bootstrap p 0.0086-0.0174. Donors did not tilt toward the expected gainer in that cycle. The Senate result is null.",
+   "code_ref": "C:/Users/pgoff/Mentat/sector_growth_study/code/R/sgs_seats.R:15-18",
+   "transfer_conditions": "Bickmore classifies money by realised election outcome after the fact. It does not measure donors' response to forecasts, so it predicts winner-following only if firms anticipate returns. The WinPAC versus LosePAC contrast is a significant-versus-nonsignificant comparison with overlapping intervals. Treat it as a hypothesis, not evidence against the SEATS-W sign.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-lobbying.fec-lda-bridge",
+   "relation": "context",
+   "paper_claim": "Lobbying (Tables 3-5) and PAC activity (Tables 6-7) are each associated with higher firm industry share. The two are estimated in separate regressions on different samples (annual N = 116,242; election-year N = 62,198), never jointly or in sequence.",
+   "paper_location": "Sections 4.2-4.3",
+   "system_side": "The bridge test relates FEC giving to change in the LDA lobbying network with four member-level controls (party, chamber, volume, committee). Round 3 had raw rho +0.153 and a four-control partial of -0.0002. It is closed pending a new vintage.",
+   "code_ref": "fec/lobbying/fec_lda_bridge3_look.py:57,1066-1085",
+   "transfer_conditions": "The paper gives no evidence on whether PAC giving leads lobbying or on how much the two overlap, so it neither revives nor refutes the bridge. Furnas et al. on low lobbying-PAC overlap is the sharper relation.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "No Melange or Mentat component measures firm or sector market concentration. The paper's outcome has no counterpart, and Paul's inferred link to 'competitiveness and concentration measures' points at the competitiveness multiplier, which is electoral (Cook PVI, fec/engine/build_competitiveness.py:6-7), not market structure.",
+  "The ROI framing in break-even and the sector growth study has no firm-level outcome. Mentat's roster companies could be joined to Compustat or a share-of-sector measure to test returns directly, but that would be new agent analysis and stays UNVERIFIED until a second path reproduces it (DE-062).",
+  "Neither system separates political money by realised winner versus loser at the donor level. Mentat's beneficiary direction partition (support, oppose, party) could carry that cut, but the attributed-estimate producer is unbuilt.",
+  "The system has no event-study instrument for lobbying returns. The Abramoff plea design (after Borisov, Goldman and Gupta 2016) is a possible template for credit-union versus bank exposure, though Paul has not ruled on it."
+ ],
+ "flags": [
+  "Unit misreading: the coefficients are percentage points of a 0-1 industry share (mean 0.0727, median 0.0010, 1998-2016 Compustat-CRP firms). They are not relative percent increases. Paul's '7.5% to 10.5% higher market concentration' reads them as relative, and the low end in the paper is 7.4 (0.0743).",
+  "Paul's 'comparable-size firms' overstates the control: size enters as an Assets control while the outcome is an assets share, and there are no firm fixed effects, so residual size confounding is likely. Lobbying is concentrated in the largest firms (4.23 percent of firm-years).",
+  "The pooled coefficient spans all NAICS industries. Industry-by-lobbying interactions and the SIC robustness check are described in footnotes but not tabulated, so any figure quoted should carry an UNSTRATIFIED label.",
+  "The causal claim rests on one event with three post years. Lobbying firms' share starts falling in late 2004, before the January 2006 plea, and placebo values appear only in figures.",
+  "Internal inconsistencies: 'roughly 250,000' versus 237,849 observations; the Table 6-7 notes say 1998-2018 while the text says 2000-2016; the introduction gives 1.8-3.4 percent versus the -2.65 and -3.36 coefficients.",
+  "The WinPAC versus LosePAC conclusion ('only when directed toward successful candidates') is not backed by an equality test.",
+  "No brain-rule conflict: the paper uses CRP lobbying (LDA-derived) as firm-level spending, not as a member edge (consistent with D-021). It proposes none of the rejected SNA changes, and its influence wording is not about revolving-door edges."
+ ],
+ "paul_alignment": "The direction agrees: lobbying and PAC firms hold larger industry shares under industry and year FE. Three details are off: the figures are percentage points of share, not percent; the low end is 7.4, not 7.5; and 'comparable-size' overstates a design without firm FE. His note omits the Abramoff DiD, which carries the causal claim and has a pre-trend. It is stale against the system: the sector growth study found the lobbying lead flips under year FE and growth adds no fit. No built component measures market concentration, so his inferred link has no target.",
+ "related": [
+  {
+   "slug": "huneeus-2018-effects-firms-lobbying",
+   "relation": "complements",
+   "why": "Same question at firm level: lobbying raises firm size and revenue. Huneeus and Kim add the economy-wide misallocation cost, and Paul cross-references the two."
+  },
+  {
+   "slug": "alexander-nd-lobbying-analysis-under",
+   "relation": "complements",
+   "why": "A firm-level lobbying return estimated in dollars per dollar from a single tax provision. Bickmore estimates the return as a market-share outcome. Paul pairs them as ROI evidence."
+  },
+  {
+   "slug": "furnas-nd-conflating-lobbying-pacs",
+   "relation": "complements",
+   "why": "Bickmore treats lobbying and PAC activity as parallel measures in separate regressions. Furnas et al. show that organizational overlap between the two is low, which bears on reading them as one strategy."
+  },
+  {
+   "slug": "kim-2020-strategic-sequential-links",
+   "relation": "complements",
+   "why": "Kim et al. model the sequence from donations to lobbying, which Bickmore does not test. Their result is the basis for the system's FEC-LDA bridge expectation."
+  },
+  {
+   "slug": "kim-2018-lobbyview-firm-level",
+   "relation": "same-data",
+   "why": "An alternative firm-level lobbying source. Bickmore name-matches CRP to Compustat, while LobbyView supplies firm identifiers and bill links, and Melange uses LobbyView as its LDA identity source."
+  },
+  {
+   "slug": "imai-2021-fixed-effects-regression",
+   "relation": "complements",
+   "why": "Bickmore relies on industry plus year fixed effects with no firm fixed effects. Imai and Kim's two-way FE caution governs how far either that or the sector growth study's year-FE results support causal claims."
+  },
+  {
+   "slug": "bombardini-2020-empirical-models-lobbying",
+   "relation": "complements",
+   "why": "A survey of empirical lobbying models that places firm-return studies like this one among the identification strategies available."
+  }
+ ]
+}

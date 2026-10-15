@@ -1,0 +1,118 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+      "relation": "qualifies",
+      "paper_claim": "Zero-shot holistic 1-5 Big Five ratings by GPT-4 from the last 200 Facebook updates (20-message chunks, chunk means, three queries averaged) correlate with IPIP-100 self-report at mean r .31 for GPT-4 and .27 for GPT-3.5 (n = 1,000 users; pooled average .29; per-trait range .22-.33 across both models). Supervised in-domain models reach about .37 (Park et al., as cited in Sec 4.1).",
+      "paper_location": "Abstract; Sec 2.2; Sec 3.1; Sec 4.1",
+      "system_side": "big5_llm.py is an item-level reader: 20 IPIP-style observer-keyed items (4 per trait), 3-point responses (-1/0/+1), de-identified author text, default model Claude Sonnet (Opus and Haiku optional), chunks of 1,200 words with up to 6 chunks per genre, chunk scores averaged and then z-scored within the scored pool. The vault topic note records a diagonal mean over A, E and O of +0.064 for the Opus run (ES sign-flipped), below the 0.12 bar.",
+      "code_ref": "fec/members/big5_llm.py:3-18,51,84-94,206-221,354-361",
+      "transfer_conditions": "Holds only for informal first-person posts by ordinary young users scored against self-report. Member floor speech and interviews differ in genre and have no self-report criterion. The paper reports one accuracy level for one holistic prompt on one sample. It does not state a ceiling, so the figure is a reference point, not a bound. The item-level, de-identified design differs from the paper's holistic prompt.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers checked at the abstract and Sec 2.2, 3.1 and 4.1; all correct. The paper does not state a ceiling of about .3, so that wording is removed from transfer_conditions. big5_llm.py lines 3-18, 51 and 84-94 match the description. Display-only status was not confirmed in the code read; the +0.064 figure comes from the vault topic note, not from code."
+    },
+    {
+      "component_id": "melange-psychometrics.llm-and-hybrid-readers",
+      "relation": "suggests-extension",
+      "paper_claim": "Each inference was queried three times and averaged. Between-round correlations ranged from .73 (GPT-4, Openness) to .96 (GPT-3.5, Agreeableness), so single-call noise is not negligible.",
+      "paper_location": "Sec 2.2",
+      "system_side": "The primary score uses rep 0, a single call per chunk. The --rep flag reruns the same chunks with fresh calls to compute ICC across reps; those reps are not averaged into the published score.",
+      "code_ref": "fec/members/big5_llm.py:40",
+      "transfer_conditions": "Applies if the item-level Claude ratings show between-rep variance like the paper's. The paper is a holistic prompt on GPT models, so the size does not transfer directly. Any change to published scores would be new agent analysis, UNVERIFIED until a second path reproduces it (DE-062).",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Paper range .73-.96 confirmed at Sec 2.2 (the .73 and .96 values are GPT-4 Openness and GPT-3.5 Agreeableness). big5_llm.py line 40 confirms rep 0 is the primary pass and that --rep reps are for reliability."
+    },
+    {
+      "component_id": "melange-psychometrics.gold-panel-validation",
+      "relation": "qualifies",
+      "paper_claim": "In 68 users rated by Facebook friends on a 10-item IPIP, LLM-observer agreement averaged r .269 (GPT-3.5) and .276 (GPT-4), against .304 for self-report-observer agreement. For Conscientiousness, LLM-observer agreement exceeded the agreement of either the LLM or observers with self-report. The analysis is described as preliminary.",
+      "paper_location": "Sec 3.3; Sec 4.1",
+      "system_side": "Big Five validity is anchored to observer panels: the Personality on the Hill appendix, given in the vault gold-set note as 129 Senate insiders and 125 academics. The research note on that appendix counts about 126 academic rows from the text. The gold-set note names observer panels as the only anchor.",
+      "code_ref": "C:/Users/pgoff/Documents/brain/concepts/gold-set-validation.md:19; C:/Users/pgoff/Documents/research/papers/mondak-nd-online-appendix-personality.md",
+      "transfer_conditions": "If LLM readings track the same outward impressions that observers form, convergence with expert or insider panels may index shared reputation or presentation rather than the underlying trait. The evidence is preliminary (n = 68) and rests on friends rating peers, not experts rating senators.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers verified at Sec 3.3 and 4.1 (n = 68; means .304, .269, .276; Conscientiousness pattern). The panel counts are the analyst's; the gold-set note line 19 gives 129 and 125, but the appendix note counts about 126 academic rows, so the bearing should carry both. The statement that no self-report criterion exists is an inference from the gold-set note, not a quote from it. Validator code was not read."
+    },
+    {
+      "component_id": "melange-psychometrics.affective-n",
+      "relation": "qualifies",
+      "paper_claim": "Inferred Neuroticism correlates with self-report at r .29 for GPT-4 and .26 for GPT-3.5 (n = 1,000). Both models overestimate N. Absolute N residuals are larger for men (t = -4.55 GPT-3.5; t = -2.39, p = .017 GPT-4), while within-gender correlations do not differ significantly, so the bias is in level, not rank order.",
+      "paper_location": "Sec 3.1 and Fig 1; Sec 3.2.1 and Fig 4",
+      "system_side": "RECEPT_N defaults to affective. The N slot takes an LLM affective-facet measure (the sum of Haiku pessimism, anxiety, depression and volatility labels), E-residualized and party-controlled, and enters the trait susceptibility term at weight .30. Missing values are set to a neutral 0.",
+      "code_ref": "fec/members/receptivity_layer.py:74,179,186; fec/members/emit_affective_n.py:3-7,39-43",
+      "transfer_conditions": "The paper's pattern suggests within-pool z removes common level bias, but a demographic level offset would pass into a mixed-gender roster. Relevant only if the Haiku facet prompts on interview text share GPT's level bias by gender. The paper's N is an IPIP trait score on social media posts; the system input is a facet sum on interview text.",
+      "strength": "weak",
+      "verdict": "reproduced",
+      "verifier_note": "Paper numbers verified at Sec 3.1 and 3.2.1. receptivity_layer.py line 74 default confirmed; the susceptibility term uses .30 times Nn; missing values are neutral 0; E-residualization and party control are stated in the comments. Stale point: the emit_affective_n.py docstring still describes a LIWC base averaged into the score, but the round-7b comment and the llm-only score line show LIWC is an anchor, not a component. The docstring should not be cited as the description of the default path."
+    },
+    {
+      "component_id": "melange-psychometrics.shrinkage-and-weighting",
+      "relation": "context",
+      "paper_claim": "Correlations rise with message volume from one 20-message chunk to ten chunks, but a substantial share of variance is captured with 20 messages and most correlations are close to their maximum well before 200 messages. Conscientiousness levels off earliest (Sec 3.1, Fig 2).",
+      "paper_location": "Sec 3.1; Fig 2 (caption and text)",
+      "system_side": "P6 gated shrinkage pulls members with fewer than 8 chunks toward 0. Interview chunks get double weight (C_INT_W 2.0) for Conscientiousness only.",
+      "code_ref": "fec/members/big5_llm.py:352-353,362-387",
+      "transfer_conditions": "The saturation volume comes from personal, cue-dense posts. Political text carries few personality cues, so saturation probably needs far more text. The paper's curve should not be used to relax the n_chunks gate. 20 messages at 17.10 words each is about 342 words, one 1,200-word chunk is much larger.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "The bearing's 'most of the maximum is reached by about 20 messages' is not in the paper. The paper says a substantial share of variance is captured at 20 messages, and Fig 2 is a caption-only read. The gate, shrinkage and 2.0 interview weight are confirmed in big5_llm.py. The 342-word arithmetic is 20 x 17.10."
+    }
+  ],
+  "related": [
+    {
+      "slug": "cao-2024-language-models-personality",
+      "relation": "complements",
+      "why": "Cao and Kosinski show that LLM-derived perceptions of public figures can be predicted from name embeddings alone (text check of the paper). That is the reputational-prior risk the de-identification step guards against, and it bears on how observer agreement is read."
+    },
+    {
+      "slug": "azucar-2017-predicting-personality-traits",
+      "relation": "cites",
+      "why": "The note confirms Azucar, Marengo and Settanni as the meta-analysis Peters cites as ref 15. Published 2018 (online Dec 2017); the slug year is 2017, a naming difference only."
+    },
+    {
+      "slug": "birkenmaier-2025-measuring-politicians-public",
+      "relation": "complements",
+      "why": "The note reports few-shot prompting of DeepSeek-V3 and GPT-4o reaching macro-F1 0.74-0.77 on elite text for agency and communion cues. This is the elite-text genre Peters does not cover."
+    },
+    {
+      "slug": "koutsoumpis-2024-kernel-truth-text",
+      "relation": "complements",
+      "why": "Meta-analysis of Big Five and LIWC relations, the closed-vocabulary baseline against which zero-shot LLM inference is compared. Published 2022; the slug year is 2024, a naming difference only."
+    },
+    {
+      "slug": "mondak-nd-online-appendix-personality",
+      "relation": "complements",
+      "why": "The appendix gives the Senate insider and academic observer panels used as the system criterion. Its text-count of academic rows (about 126) differs from the 125 in the gold-set note."
+    },
+    {
+      "slug": "lemens-2025-positioning-political-texts",
+      "relation": "same-method",
+      "why": "Title and text confirm a design of asking an LLM about each text and averaging the responses, parallel to Peters' three-query averaging."
+    },
+    {
+      "slug": "ramey-2016-measuring-elite-personality",
+      "relation": "complements",
+      "why": "Ramey et al. run floor speech through LIWC and MRC features with pre-trained Mairesse SMOreg models, a closed-vocabulary approach on elite speech. Peters is the open-ended LLM alternative on non-elite text."
+    },
+    {
+      "slug": "palm-2025-influence-personality-traits",
+      "relation": "complements",
+      "why": "Palm and Tims is a systematic review of whether Big Five traits moderate persuasion strategies. The research note lists its evidence status as unverified, so this link is kept on the note's abstract only."
+    }
+  ],
+  "summary_issues": [
+    "Summary says accuracy is mostly reached by about 20 messages. The paper says a substantial share of variance is captured at 20 messages and most correlations are near maximum well before 200. The stronger wording is not supported.",
+    "Summary says absolute errors are larger for older users under GPT-3.5. That holds only for Openness and Conscientiousness; Agreeableness residuals are smaller for older users under GPT-3.5 (t = -2.64, Sec 3.2.2).",
+    "Summary says the paper backs the design of the display-only item reader. The paper tests one holistic prompt and never evaluates item-level or chunked designs; chunk-then-average is only its procedure. Endorsement is overstated.",
+    "Summary says the paper sets a realistic ceiling for zero-shot accuracy. The paper reports one zero-shot level and states no ceiling.",
+    "Summary and item key_findings quote the pooled r .29 for the whole sample (63.1 percent women, mean age 24.2) without strata. Unless labeled UNSTRATIFIED, it should be quoted with the within-gender and within-age values, which the text reports only as not significantly different; the stratum values sit in S2-S5, not in the text file.",
+    "Summary says the paper warns that observer agreement may reflect shared impressions. The paper says cues may not be valid predictors of self-perception and LLMs may replicate human judgment biases. Shared impressions is the analyst's gloss and should be labeled as such.",
+    "paul_alignment says Paul's recorded position names GPT-4o and DeepSeek-V3 as the only validated models. No such statement was found in the vault concepts; DeepSeek-V3 appears in the Birkenmaier research note and in vault framework and psychometrics notes, but not as an 'only validated' claim. Paul's position is unverified here.",
+    "The academic observer count differs: the gold-set note gives 125 and the appendix note counts about 126 rows from text. Summary and bearings should state which source they use.",
+    "Slug years differ from publication years for azucar-2017 (published 2018) and koutsoumpis-2024 (published 2022). Naming only; the links point to the right papers.",
+    "Summary says Peters is a reason to check the live affective-N input for gender bias. This is a reasonable inference from the paper's N-residual gender pattern, but it is the analyst's inference, not a finding of the paper."
+  ]
+}

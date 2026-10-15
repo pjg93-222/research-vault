@@ -1,0 +1,51 @@
+{
+ "slug": "peters-2024-language-models-infer",
+ "title": "Large Language Models Can Infer Psychological Dispositions of Social Media Users",
+ "authors": [
+  "Heinrich Peters",
+  "Sandra Matz"
+ ],
+ "year": 2024,
+ "venue": "arXiv preprint arXiv:2309.08631v2 (cs.CL); authors at Columbia University",
+ "doi": "",
+ "document_type": "preprint",
+ "coverage": "Full text read in one pass (49,030 chars; text file lines 1-638): front matter, abstract, introduction, method (2.1 data, 2.2 measures and prompting), results (3.1 correlations, 3.2 gender and age groups, 3.3 observer ratings), discussion (4.1-4.4), limitations, acknowledgments, author contributions and references. Paul annotations: none (annot_sha12s empty, n_annots 0, paul_entries empty), so paul_markup is empty. Page numbers are not recoverable from the text file, so locations are given by section number. Figures 1-4 were read from captions only (no images). Supplementary tables S1-S6 are not in the text file. Topics checked and absent: lobbying, legislators, networks, path-finding, allocation, elections, turnout. Persuasion appears only as motivation and citation (refs 8, 47, 50). Text measurement is central. Metadata hints: title, authors and venue are correct. Year 2024 kept as the v2 date (5 Jun 2024); first arXiv posting was 2023. DOI empty because none appears in the text.",
+ "research_question": "Can zero-shot GPT-3.5 and GPT-4 infer the Big Five personality traits of social media users from their Facebook status updates, and does inference accuracy vary across gender and age groups?",
+ "theory": "Zero-acquaintance judgment accuracy: people can judge strangers traits from behavioral traces (refs 9-13). Digital footprints predict traits when supervised models are trained on self-reports (refs 14-19). Authors propose LLMs may have a human-like ability to profile people from text without direct interaction. Bias explanations considered: training-data bias versus differences in online self-expression by group. Neither is tested.",
+ "data": "Sample of 1,000 adult MyPersonality Facebook app users, randomly subsampled (Sec 2.1). Mean age 24.2 (SD 8.8); 63.1 percent female. Eligible users completed the full 100-item IPIP and had at least 200 status updates; the most recent 200 were used. Unit is the user. Mean update length 17.10 words (SD 15.03). App active 2007-2012 (Sec 4.2). Self-report: IPIP 100-item Big Five. Third-person subsample: 68 users rated by Facebook friends on a 10-item IPIP (Sec 3.3). Models: gpt-3.5-turbo-0301 and gpt-4-0314 via API. IRB approval Columbia protocol AAAU8559.",
+ "method": "Zero-shot prompting with default system prompt 'You are a helpful assistant' and an inference prompt asking for 1-5 scores on each Big Five trait, numbers only (Sec 2.2). Text fed in chunks of 20 messages; chunk scores averaged. Each inference queried three times and averaged (inter-round r from .73 to .96). Analyses: Pearson correlations between inferred and self-reported scores with Bonferroni correction; mean comparisons across gender and a median-split age groups by t-tests on inferred scores and on absolute residuals; within-group correlations and within-group z-standardization to test whether bias is in level versus rank order (Sec 3.2); correlations by message volume from 20 to 200 messages (Sec 3.1); observer-rating comparison (Sec 3.3).",
+ "identification": "None causal. Zero-shot design means no training or test split; accuracy is a correlation with self-report. Group bias claims rest on mean differences and residual t-tests. Not controlled for demographics passed to the model, since none were provided.",
+ "scope": "Facebook users who took MyPersonality psychometric tests in 2007-2012, mostly young adults, with 63 percent women. Country and language are not stated. Models are 2023 GPT versions. Authors state the sample may not represent the wider population.",
+ "measures": "Inferred Big Five scores (1-5, averaged over chunks and three queries). Self-reported IPIP 100-item scores. Third-person IPIP 10-item observer ratings. Residual is inferred minus self-reported; absolute residual used for accuracy by group.",
+ "key_findings": [
+  "Average Pearson r between inferred and self-reported traits: GPT-3.5 .27, GPT-4 .31 (Sec 3.1). Abstract reports average .29, range .22-.33 across both models.",
+  "GPT-4 per-trait r: Openness .33, Extraversion .32, Agreeableness .32, Neuroticism .29, Conscientiousness .26. GPT-3.5: Openness .28, Extraversion .29, Agreeableness .30, Neuroticism .26, Conscientiousness .22 (Sec 3.1).",
+  "All correlations significant at p below .001 after Bonferroni correction. Differences between GPT-3.5 and GPT-4 not significant for any single trait (Sec 3.1).",
+  "Accuracy rises with message volume; most of the maximum is reached by about 20 messages. Conscientiousness levels off earlier (Sec 3.1, Fig 2).",
+  "Score distributions: both models underestimate Conscientiousness and Agreeableness and overestimate Neuroticism. GPT-3.5 underestimates Openness and Extraversion; GPT-4 overestimates Extraversion (Sec 3.1, Fig 1).",
+  "Gender: inferred Openness, Conscientiousness, Extraversion and Agreeableness are higher for women in both models (Agreeableness t=13.63 for GPT-4). No significant inferred Neuroticism difference (Sec 3.2.1, Fig 3).",
+  "Gender accuracy: absolute residuals are larger for men on Conscientiousness, Agreeableness and Neuroticism in both models (Agreeableness t=-9.22 for GPT-3.5). Within-gender correlations do not differ significantly (Sec 3.2.1, Fig 4).",
+  "Age: inferred Conscientiousness and Agreeableness are higher and Neuroticism lower for older users in both models. Openness and Extraversion are lower for older users only in GPT-3.5 (Sec 3.2.2, Fig 3).",
+  "Age accuracy: GPT-3.5 residuals are larger for older users on Openness (t=4.78) and Conscientiousness (t=2.64). GPT-4 shows no residual age difference. Within-age correlations do not differ (Sec 3.2.2, Fig 4).",
+  "Observer comparison (n=68): self-report versus observer mean r .304; LLM versus observer mean r .269 for GPT-3.5 and .276 for GPT-4. Authors call LLM accuracy on par with human observers (Sec 3.3).",
+  "For Conscientiousness, LLM-observer agreement exceeds the agreement of either LLM or observers with self-reports (Sec 3.3, Sec 4.1).",
+  "Against supervised models: Park et al. report average r .37 (range .26-.41) with in-domain training; zero-shot LLM average .29 is slightly lower (Sec 4.1)."
+ ],
+ "limitations": "Black box: cue utilization and origin of gender and age biases unexamined (Sec 4.2). Data from MyPersonality, 2007-2012 language may differ from current text, possibly understating accuracy. Non-representative sample of curious users; Openness underestimation may reflect this. Only the 200 most recent posts; chunking due to token limits. Only zero-shot prompting with default settings; no chain-of-thought or fine-tuning tested. Demographics not supplied to models; authors suggest this could help or amplify bias. Observer analysis is preliminary with n=68. Live interaction not studied. Privacy and misuse recommendations deferred to future research. Supplementary statistics S1-S6 not reviewed.",
+ "paul_markup": [],
+ "short_quotes": [
+  "a level of accuracy that is similar to that of supervised machine learning models specifically trained to infer personality",
+  "The findings suggest that GPT's personality inferences are less accurate for men than women.",
+  "these biases seem to be limited to the absolute measures of accuracy"
+ ],
+ "references_of_note": [
+  "Park et al. 2015, JPSP, automatic personality assessment through social media language (ref 17): supervised baseline r .37",
+  "Kosinski, Stillwell, Graepel 2013, PNAS, private traits predictable from digital records (ref 14)",
+  "Youyou, Kosinski, Stillwell 2015, PNAS, computer-based judgments more accurate than human (ref 31)",
+  "Matz et al. 2017, PNAS, psychological targeting as digital mass persuasion (ref 47)",
+  "Matz et al. 2024, Sci Rep, generative AI for personalized persuasion at scale (ref 8)",
+  "Peters, Cerf, Matz 2024, OSF preprint, LLMs infer personality from free-form interactions (ref 43)",
+  "Back et al. 2010, Psychological Science, Facebook profiles reflect actual personality (ref 13)",
+  "Azucar, Marengo, Settanni 2018, meta-analysis of digital footprint Big Five prediction (ref 15)"
+ ]
+}

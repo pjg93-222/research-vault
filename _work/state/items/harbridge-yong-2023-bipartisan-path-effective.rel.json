@@ -1,0 +1,90 @@
+{
+ "summary_md": "Harbridge-Yong, Volden and Wiseman ask whether bipartisanship pays for individual lawmakers. They use all House and Senate members in the 93rd-114th Congresses (1973-2016; about 9,000 House and 2,170 Senate legislator-Congress rows) and regress the Volden-Wiseman Legislative Effectiveness Score on the share of a member's cosponsors who come from the other party. The design uses legislator fixed effects. That attracted share predicts effectiveness: within member, the coefficient is 0.433 in the House and 0.330 in the Senate, so one SD is worth about 6-8 percent of mean LES. The share members offer to the other party's bills does not predict effectiveness once controls are in. The effect holds across eras, majority margins and polarization levels, and in majority and minority strata. It is an inverted U that peaks near a 50/50 cosponsor mix (0.496 House, 0.512 Senate). In the House the attracted share also predicts each later stage, from committee action to law. Offering cross-party cosponsorships predicts attracting them, at 0.317 within member in the House and 0.547 in the Senate. The evidence is observational, with one-tailed tests and no design-based identification. For Paul's system, the sharpest point concerns direction. bpf is an undirected, symmetrized cross-party tie share. Cooperation v2's directional component measures offered support. Nothing in the system measures attracted support, which is the side the paper ties to effectiveness. The flip model's (1+0.3 bpf) passage bonus and the coalition seed boost (1+0.8 bpf) are monotone, but the paper finds a peak and then a decline. The paper's reciprocity is cosponsorship exchange. It does not validate the money reciprocity in D-104..D-108. Any transfer is UNVERIFIED until it is reproduced on Paul's data.",
+ "category": "Causal & Methodological",
+ "bearings": [
+  {
+   "component_id": "melange-sna.bipartisanship-bpf",
+   "relation": "qualifies",
+   "paper_claim": "Effectiveness gains run through the ATTRACTED share, the mean per bill of other-party cosponsors over all cosponsors. Within-member coefficients are House 0.433 (SE 0.097) and Senate 0.330 (SE 0.147). The OFFERED share is not significant with controls (House -0.234, Senate -0.420). Window: 93rd-114th Congresses, legislator-Congress rows.",
+   "paper_location": "Table 1, Models 1.2, 1.3, 1.5 and 1.6, p.16-18",
+   "system_side": "bpf is computed on the symmetrized cosponsor graph. Each pair takes the mean of its two directed weights. bpf is the member's cross-party weight over total weight, shrunk toward a global prior with ALPHA 6. Offered and attracted ties are mixed, so the direction the paper ties to effectiveness cannot be recovered.",
+   "code_ref": "fec/legislation/materialize_legislation_base_and_bipartisan.py:737,769,786; fec/moneyball_core.py:68-72",
+   "transfer_conditions": "The transfer holds only if bpf is used as a proxy for a member's ability to advance bills. As a bridging heuristic for diffusion, the undirected form may be appropriate. The paper's measure is a per-bill average over a member's sponsored bills. bpf is a weighted tie share over the current-roster graph, so window and denominator differ.",
+   "strength": "strong"
+  },
+  {
+   "component_id": "melange-influence-engine.flip-model",
+   "relation": "qualifies",
+   "paper_claim": "The effect is an inverted U. House linear 1.828 and squared -1.844 peak at a share of 0.496; Senate 1.666 and -1.626 peak at 0.512. Effectiveness falls on both sides of a 50/50 mix. Linear within-member slopes are 0.33-0.43 LES per unit share against a mean LES of about 1.0, and one SD is worth 6-8 percent.",
+   "paper_location": "Table 3, p.22-24; footnote 21; p.16",
+   "system_side": "The target value multiplies by (1+0.3*bpf). The inline comment labels this a Volden-Wiseman passage bonus of +8-14 percent. The bonus rises monotonically, reaching +7.2 percent at the 0.24 default and +30 percent at bpf 1.0. The 0.3 slope is close to the paper's linear coefficients. The +8-14 percent in the comment does not match the paper's 6-8 percent per SD, and the shape ignores the peak.",
+   "code_ref": "fec/engine/flip_model.py:142",
+   "transfer_conditions": "Below a share of about 0.5, where most members sit (paper mean 0.29 House, 0.35 Senate), a linear bonus approximates the paper. Above 0.5 the paper predicts decline. The paper measures effectiveness on a member's own sponsored bills, not the value of flipping that member's vote, and its share is the attracted share, not bpf.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "suggests-extension",
+   "paper_claim": "In the House, the bipartisan attracted share predicts each stage: action in committee 0.894, action beyond committee 0.853, passing the chamber 0.800 and becoming law 0.485 (all p<0.001). In the Senate the committee stage (A9.2) is not significant, and law is 0.589 (p<0.05). The LES outcome is the CEL score.",
+   "paper_location": "Appendix Tables A8-A9, Appendix p.12-13",
+   "system_side": "The shadow score credits five stages (BILL, AIC, ABC, PASS, LAW) with role weights 3/2/1 and timing decay, and it is checked against CEL LES. No cross-party coalition term is used and no such convergence test exists. The stages match the paper's stage ladder.",
+   "code_ref": "fec/engine/legislative_effectiveness.py:152",
+   "transfer_conditions": "If the shadow score tracks LES, it should reproduce a positive within-member association with the attracted share, peaking near 0.5. That would be a cheap convergent-validity check. It needs a per-Congress attracted share, which the system does not build, and it stays a diagnostic, not a pillar input.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-psychometrics.cooperation-v2",
+   "relation": "supports",
+   "paper_claim": "Offering bipartisan cosponsorships predicts attracting them. House pooled 0.626 (SE 0.039) and with member FE 0.317; Senate pooled 0.739 and FE 0.547; all p<0.001. Distance from the median predicts fewer attracted bipartisan cosponsors in pooled House models (-0.154) but not within member (0.005).",
+   "paper_location": "Table 4, p.25-27",
+   "system_side": "The composite is the mean of z(c1) and z(c2). c1 is the undirected bpf tie share. c2 is the directional OFFERED cross-party share, from the bills a member chose to join. c3 reciprocity is reported only. The recorded rho of .888 between the composite and bpf fits the paper's strong offered-to-attracted link.",
+   "code_ref": "fec/members/coop_v2_candidate.py:9-17,108-118",
+   "transfer_conditions": "This is the paper's member-level aggregate over 1973-2016. The pooled coefficient roughly halves under member FE, which points to substantial stable between-member variance. That bears on the trait-like stability question but does not answer it for the current roster.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-allocation.per-topic-allocators",
+   "relation": "qualifies",
+   "paper_claim": "Returns to bipartisan composition are nonlinear. One SD below the mean costs about 22 percent of LES in the House and 16 percent in the Senate. One SD above adds about 8 and 4 percent. Gains flatten and reverse past a 50/50 mix.",
+   "paper_location": "Table 3 and p.24",
+   "system_side": "The coalition water-fill boosts each candidate's marginal spread by (1+BETA_C*bpf), with BETA_C 0.8. The comment says bridges get a larger seed. The boost is monotone in bpf.",
+   "code_ref": "fec/engine/per_topic_coalition.py:30,117",
+   "transfer_conditions": "This holds only if the seed boost is meant to proxy a recruit's legislative effectiveness. The paper says nothing about diffusion seeding, and the allocators are diagnostic.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-influence-engine.cascade-kernel",
+   "relation": "context",
+   "paper_claim": "Cross-party cosponsorship is exchanged. Members who offer support across the aisle draw it back, within member at 0.317 in the House and 0.547 in the Senate.",
+   "paper_location": "Table 4, p.27",
+   "system_side": "Cross-party diffusion uses cpf_diffusion = 0.4 + 0.6 sqrt(bpf_u bpf_v), a symmetric product of the two members' bipartisan shares.",
+   "code_ref": "fec/moneyball_core.py:543-545",
+   "transfer_conditions": "The paper gives member-level aggregate associations only. It tests no dyadic diffusion or join timing, so it neither supports nor tests the sqrt-product form or the 0.4 floor.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "No ATTRACTED-direction bipartisan share exists anywhere in the system. bpf is undirected and symmetrized, and cooperation v2 c2 measures offered support. The paper ties only the attracted share to effectiveness.",
+  "Every bpf consumer is monotone: the flip passage bonus (1+0.3 bpf) and the coalition seed boost (1+0.8 bpf). The paper finds an inverted U peaking near a 0.5 share in both chambers.",
+  "The flip-model comment cites a Volden-Wiseman bonus of +8-14 percent, but this paper reports 6-8 percent of mean LES per SD. The component card says the code line has no bonus, yet flip_model.py:142 carries (1+0.3*bpf), so the card is stale.",
+  "bpf is a single current-roster snapshot. The paper's effects are within member across Congresses, and the system has no per-Congress bipartisan series to test them.",
+  "The effectiveness shadow has never been checked against bipartisan coalition composition, which is a ready convergent-validity test against CEL LES."
+ ],
+ "flags": [
+  "The paper's reciprocity is cosponsorship exchange between members. It does not validate the money or competitiveness reciprocity in D-104..D-108, which stays NOT validated. Do not cite this paper for it.",
+  "The paper controls for average cosponsors attracted in its regressions. That is not per-edge volume normalization and gives no support to the rejected per-edge normalization proposal.",
+  "The evidence is observational with legislator FE and one-tailed tests, and it has no design-based identification, so it supports associational language only. The Table A9 note overstates the Senate committee-stage result (A9.2 is not significant).",
+  "Coefficients are reported by chamber and by majority/minority strata. Quote them by chamber with the 1973-2016 window, never as one pooled number.",
+  "bpf and any attracted-share variant are heuristic model outputs, not closeness or access probabilities (D-025).",
+  "Transfer of any of these effects to Paul's current-roster data is UNVERIFIED until reproduced by a second path (DE-062)."
+ ],
+ "paul_alignment": "Paul has no annotated entry for this work. The evidence agrees in direction with his bpf position, which cites Bacik on bipartisan teams earning more, and with his choice of LES as the effectiveness criterion for the shadow lane. It refines rather than contradicts both. The payoff is to bipartisan support attracted, not offered, and it is nonlinear. No Paul note is stale because of this paper. The flip-model comment and the component card describing it are out of step with the code and with the paper's magnitudes.",
+ "related": [
+  {"slug": "sotoudeh-2024-network-based-measure", "relation": "complements", "why": "Sotoudeh builds a cosponsorship-network measure of influence on bill passage and contrasts it with the Volden-Wiseman LES. This paper uses LES as the outcome and cosponsor party composition as the predictor."},
+  {"slug": "battaglini-2018-effectiveness-connected-legislators", "relation": "complements", "why": "Both explain legislative effectiveness from cosponsorship structure. Battaglini uses network centrality, and this paper uses cross-party composition of a member's cosponsors."},
+  {"slug": "bucchianeri-2025-legislative-effectiveness-american", "relation": "same-method", "why": "Both apply the Volden-Wiseman effectiveness-score framework. Bucchianeri extends it to state legislatures."},
+  {"slug": "aroyehun-2026-politics-of-feelings", "relation": "same-data", "why": "Both regress Congressional LES on a member-level behavioural predictor, emotional expression in one case and bipartisan cosponsor share in the other."},
+  {"slug": "noble-2024-presidential-leadership-legislative", "relation": "complements", "why": "Noble studies drivers of legislative polarization. This paper shows the bipartisan effectiveness payoff holding steady across polarization levels."},
+  {"slug": "aref-2021-identifying-hidden-coalitions", "relation": "complements", "why": "Aref and Neal find that cross-party coalition structure in House signed networks relates to effectiveness. This paper gives the member-level regression counterpart."}
+ ]
+}

@@ -1,0 +1,92 @@
+{
+ "summary_md": "Montgomery and Nyhan ask whether House members linked by shared personal staff become alike in legislative effectiveness (Volden-Wiseman LES) and roll-call ideology (CJR ideal points). A tie between two members is the count of senior or policy staffers who worked for both offices in the current or previous two Congresses, row-standardized, over the 105th-111th Congresses (435-446 members per Congress). They fit a Bayesian heteroskedastic spatial autoregressive model per Congress and pool the seven estimates. Senior-staff ties show a small positive LES lag (pooled rho 0.043, 95% CI 0.0095 to 0.096; positive in 5 of 7 Congresses). Adding policy staff weakens it (0.013, CI -0.015 to 0.037). For ideology, senior ties show nothing (-0.003). Senior plus policy ties show a small positive lag (0.028, CI 0.013 to 0.047), but covariates already explain R2 above 0.88. Placebo tests help only partly. Lower-level staff ties give a null LES lag. Future senior ties (CI -0.033 to 0.071) and the lower-level ideology placebo overlap the headline estimates, so homophily is not ruled out. The authors conclude that staff may act as extensions of their members. For Paul's systems the paper is most useful as a comparison for the staffer network. Montgomery's tie is an office-to-office sequence link, which the system already emits as directed office moves and shared_with counts. The system deliberately does not treat that link as a person-to-person edge. In this paper the link carries only a weak signal of similarity, and the signal is partly confounded by homophily. It supports showing these counts as descriptive data. It does not support treating them as transmission channels. All findings are observational and House-only. The window is 1997-2010 and excludes committee staff.",
+ "category": "Social Network Analysis",
+ "bearings": [
+  {
+   "component_id": "melange-staffer-network.overlap-edge-rule",
+   "relation": "supports",
+   "paper_claim": "A member-member tie built from staff SEQUENCE (staffer worked for both offices within a 3-Congress window) is an office-level link; its outcome signal is small (LES pooled rho 0.043, CI 0.0095-0.096; ideology senior-only -0.003) and not cleanly separated from homophily (future-tie placebo CI -0.033 to 0.071).",
+   "paper_location": "p.18 (W construction); Tables 1-5, p.22-30",
+   "system_side": "The system rules that sequence is a trajectory, never a person-person edge, and emits it only as directed office-to-office moves flagged SEQUENCE IS NOT A SOCIAL EDGE, canonical_eligible false. Montgomery uses the same sequence as an office-office link, not a person-person tie, so the two designs agree.",
+   "code_ref": "audits/staffer_network/build_staffer_social_network.py:2544-2550,2630-2641",
+   "transfer_conditions": "Holds for House personal offices, 105th-111th Congresses. The paper's tie is member-level, so it says nothing about person-person staffer edges. The evidence is observational, with homophily unresolved.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-staffer-network.overlap-edge-rule",
+   "relation": "qualifies",
+   "paper_claim": "Only senior (chief of staff, director) and policy (LA, counsel) staff carry signal. Lower-level staff ties act as a placebo with a null LES lag (pooled about -0.016, CI -0.070 to 0.027). Adding policy staff to senior ties dilutes the LES effect (0.013, CI -0.015 to 0.037).",
+   "paper_location": "p.4 note 2; Table 2 p.24; Table 5 p.29-30; Online Appendix keyword lists",
+   "system_side": "shared_staff counts any person attached to two or more member offices anywhere in the payroll record, current or historic. The count has no title filter and no time window. shared_with lists the top partner members by count. SHARED EMPLOYEE titles are removed only from the top_staff ranking, not from the shared counts.",
+   "code_ref": "fec/surfaces/build_staffer_network_section.py:160-162,1251-1255",
+   "transfer_conditions": "Applies if shared_with is ever read as a member-to-member relationship signal. Montgomery's role filter and 3-Congress window are the comparison specification. As shipped, the count is descriptive only.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-staffer-network.access-uncertainty",
+   "relation": "context",
+   "paper_claim": "Ties built over the current plus two prior Congresses (roughly 6 years) carry the LES signal. Narrowing the window to two Congresses leaves the senior LES interval barely including zero (-0.0006 to 0.1088). This is a window-sensitivity result, not a decay estimate.",
+   "paper_location": "p.18; Online Appendix Table A1",
+   "system_side": "The access-uncertainty cost uses a fixed 5-year staleness half-life on years since joint overlap. The constant is labelled exploratory, not a calibrated probability.",
+   "code_ref": "fec/staffer_network/relationship_uncertainty.py:10-14,36-38,49-55",
+   "transfer_conditions": "Weak. The paper's window is about member-member outcome similarity, not about whether staffer-staffer relationships remain usable. It cannot calibrate the half-life.",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "suggests-extension",
+   "paper_claim": "Members sharing senior staff have modestly correlated LES net of seniority, majority, chair, leadership and power-committee covariates (pooled rho 0.043). Committee chair indirect effect via ties is 0.442 (90% CI 0.131-0.826) against a direct effect of 1.853.",
+   "paper_location": "Table 1 p.22-23; p.24",
+   "system_side": "The five-stage shadow effectiveness score is a shadow candidate that still needs calibration. It is validated against CEL LES for ceremonial share only. No network-similarity check exists.",
+   "code_ref": "fec/engine/legislative_effectiveness.py:17-31",
+   "transfer_conditions": "An optional second criterion: shadow scores should show a similar small spatial lag on shared-senior-staff ties if they track LES. This is UNVERIFIED and would need office_moves restricted to senior titles. It is not evidence that the shadow score is valid.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "No member-level staff-sharing measure matches the paper's specification (senior/policy titles only, current plus two prior Congresses, row-standardized). shared_with counts every shared person with no window, so a published-style replication on the system's payroll data is not possible as shipped.",
+  "No check exists for homophily versus transmission on staff-move links (for example, a future-ties placebo). Any use of office_moves beyond description lacks a falsification design.",
+  "Committee staff are excluded in the paper, but the system's co-tenure layer gives committee containers kappa 0.75/0.60/0.40. No literature here addresses committee-staff ties.",
+  "The paper does not test multiplex combination with cosponsorship (its own limitation, p.31). Whether staff-move ties add information beyond the cosponsor kernel edges is untested in the system."
+ ],
+ "flags": [
+  "Causal wording (effects, indirect effects transmitted through ties) outruns the design. Placebos do not exclude homophily (p.29-31). If cited in Melange, staff-sharing ties must not be described as influence, access or introduction channels (D-025). The paper's figures are similarity estimates on 1997-2010 House data.",
+  "Pooled rho values pool seven per-Congress estimates spanning a majority flip (110th). Quote them with the per-Congress strata in Tables 1-4, not as a single pooled coefficient.",
+  "The source text is internally inconsistent. p.19 says 105th to 112th Congress while the data end at the 111th. p.27 calls the 110th ideology rho reliably positive, but Table 4 gives 0.024 (SE 0.021). The lower-level ideology placebo point 0.006 sits oddly inside its interval [-0.016, 0.067].",
+  "The row-standardized W is a SAR convention (per-row normalization), not the rejected per-edge volume normalization. The paper does not argue for either rejected SNA proposal.",
+  "The paper cites Drutman 2012 and Bertrand et al. 2014 on staff becoming lobbyists but does not analyze revolving-door edges. Nothing here licenses influence language on revolving-door edges or the use of LDA as an edge source (D-021)."
+ ],
+ "paul_alignment": "No Paul entry for this work. His staffer position (staffers as gatekeepers, professional ties as conduits) is tempered here. Shared senior staff predict only small LES similarity, ideology barely moves beyond covariates, and homophily is not excluded. The system as built agrees: sequence stays an office-move property, never a person-person edge, and shared-staff counts are descriptive. His overlap note is not stale; this paper adds the empirical reason sequence links should stay descriptive.",
+ "related": [
+  {
+   "slug": "haythornthwaite-1996-social-network-analysis",
+   "relation": "complements",
+   "why": "Supplies the information-exchange framing of ties that Montgomery tests at member level; Montgomery finds only weak transmission evidence for staff-move ties."
+  },
+  {
+   "slug": "sotoudeh-2024-network-based-measure",
+   "relation": "complements",
+   "why": "Both relate House network structure to effectiveness-style outcomes. Sotoudeh uses cosponsorship and contrasts with LES; Montgomery uses staff ties with LES as outcome."
+  },
+  {
+   "slug": "bucchianeri-2025-legislative-effectiveness-american",
+   "relation": "same-method",
+   "why": "Uses the Volden-Wiseman legislative effectiveness framework that supplies Montgomery's LES outcome."
+  },
+  {
+   "slug": "aroyehun-2026-politics-of-feelings",
+   "relation": "same-data",
+   "why": "Also uses LES as the outcome for House members, so it is a second LES-based correlate study to set beside staff-network similarity."
+  },
+  {
+   "slug": "bacik-2025-measuring-dynamical-evolution",
+   "relation": "complements",
+   "why": "Network of lobbying actors over time; Montgomery is the Hill-side staff network. The two bracket the revolving-door pathway that neither models directly."
+  },
+  {
+   "slug": "furnas-2019-moneyed-interests-information",
+   "relation": "complements",
+   "why": "Experimental evidence on congressional staff as information processors, which complements Montgomery's observational staff-as-extension conclusion."
+  }
+ ]
+}

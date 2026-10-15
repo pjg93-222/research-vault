@@ -1,0 +1,61 @@
+{
+ "summary_md": "Aroyehun (arXiv 2609.10198, Sep 2026) scores 1,766,113 Congressional Record floor speeches (93rd-118th Congresses, 1973-2024) for eight discrete emotions with a transformer multilabel classifier (Widmann and Wich 2023), z-standardized over the corpus. Four questions: trends (Mann-Kendall over 26 Congress means: nearly every emotion rises in both parties, read as intensification rather than a negative turn), policy domains (all eight differ across 21 CAP topics, but epsilon squared only 0.013-0.034), member correlates (mixed models: majority members show less anger, -0.035; senators less anger, -0.041; women more enthusiasm, +0.020; ideology score more anger, +0.022; marginal R2 0.003-0.071), and legislative effectiveness. On the Volden-Wiseman LES (member-Congress, n = 13,671), enthusiasm (+0.016) and pride (+0.011) are positive, anger (-0.037) is the only negative, and emotional diversity (+0.026 to +0.031) and valence (+0.020) beat intensity (-0.014). Marginal R2 moves only from about 0.113 to 0.119, so emotion adds little beyond the controls. The design is associational: no identification strategy, reverse causation is not addressed, validation is 50 extreme-scored speeches per emotion in-domain only, the classifier was built on German political text, and the paper has internal inconsistencies (random intercepts vs fixed effects, table labels). For Paul's systems it matters in three places. It uses the same CEL LES that fec/members/lep_criterion.py pulls as an external criterion. It shows speech-emotion features vary with chamber, majority status and gender, which the affective-N slot controls only partly. And its valence vs intensity split matches the two LSD fields already computed in Draft Systems. Nothing here justifies adding an emotion feature to rank. All coefficients are UNVERIFIED in this project (DE-062).",
+ "category": "Machine Learning & Sentiment Analysis",
+ "bearings": [
+  {
+   "component_id": "melange-legislative-data.effectiveness-shadow",
+   "relation": "qualifies",
+   "paper_claim": "On member-Congress LES 1973-2024 (n = 13,671, Tables 7-9), anger -0.037 (CI -0.046 to -0.029), enthusiasm +0.016, pride +0.011, diversity +0.026 to +0.031. Marginal R2 is 0.113-0.119 across models, so emotion terms add about 0.005 R2 beyond majority, chair, leadership, seniority and Congress fixed effects.",
+   "paper_location": "Sec 4.4, Figure 4, Tables 7-9",
+   "system_side": "lep_criterion.py loads CEL House and Senate LES 93rd-118th, the same Volden-Wiseman data, and scores it against the blended score (bar B: rho >= +0.30). Its docstring already notes that LES rewards majority and chair status. The five-stage shadow is a candidate and is not activated.",
+   "code_ref": "fec/members/lep_criterion.py:2-22",
+   "transfer_conditions": "Transfers only as context for what LES absorbs. Speech tone is a small, associational correlate of LES once structural controls are in. Use it as a reason not to read a shadow-vs-LES gap as a rhetoric effect. Do not use it as a predictor: there is no identification, the LES coefficient scale is undefined, and the window is 1973-2024 pooled over Congresses.",
+   "strength": "moderate"
+  },
+  {
+   "component_id": "melange-psychometrics.affective-n",
+   "relation": "qualifies",
+   "paper_claim": "In mixed models of speech-level emotion (Tables 5-6), senators express less anger (-0.041) and more pride (+0.009) and joy (+0.008). Women express more fear (+0.004) and sadness (+0.006). Majority members express less anger (-0.035). Ideology score predicts more anger (+0.022). All eight emotions also trend upward across 26 Congresses in both parties (Table 3).",
+   "paper_location": "Sec 4.1 Table 3; Sec 4.3 Tables 5-6",
+   "system_side": "affective_n is the LLM affective facets (pessimism, anxiety, depression and volatility). It is residualized on E and then on a Republican dummy only, and is not residualized on chamber, gender or ideology. LIWC negemo/posemo serves as the convergent anchor. Interview-to-floor genre transfer already FAILED (rho .050).",
+   "code_ref": "fec/members/emit_affective_n.py:36-56",
+   "transfer_conditions": "Holds only weakly. Within one Congress, majority status is collinear with party, so the party residual covers it. Chamber and gender are not covered and are a plausible structural confound in a cross-chamber 533-member score. The paper's facets are fear and sadness on floor text, not pessimism or anxiety on interviews, and its effect sizes are tiny (0.004-0.04 SD).",
+   "strength": "weak"
+  },
+  {
+   "component_id": "melange-stance.lsd-tone",
+   "relation": "supports",
+   "paper_claim": "Valence (positive minus negative emotion) and intensity (sum of emotions) separate empirically against LES: valence +0.020 (CI 0.011 to 0.028) and intensity -0.014 (CI -0.025 to -0.004). The paper reads the rise in emotion since 1973 as intensification with both positive and negative emotions rising, not as a negative turn.",
+   "paper_location": "Sec 4.1, Sec 4.4 Table 9, Sec 5",
+   "system_side": "stage5_lsd.R already emits both lsd_net_norm (net/words, direction) and lsd_charge ((pos+neg)/words, intensity) per press release. The component card describes intensity as |net|/words, but the code computes charge, which matches the paper's intensity construct.",
+   "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_lsd.R:45-60",
+   "transfer_conditions": "Supports keeping direction and intensity as separate fields rather than collapsing them. The transfer is weak: the genre differs (floor speech vs press releases), the instrument differs (transformer vs LSD2015 dictionary), and the outcome is LES rather than CU stance or behaviour. It does not answer whether sign times intensity predicts behaviour.",
+   "strength": "weak"
+  }
+ ],
+ "gaps_exposed": [
+  "affective_n residualizes on E and party only (emit_affective_n.py:52-56). Chamber and gender, which the paper finds shift floor-speech emotion, are not controlled. Is a House/Senate offset present in affective_n? This is an untested diagnostic.",
+  "The melange-stance.lsd-tone component card says intensity = |net|/words, but stage5_lsd.R:59 computes lsd_charge = (pos+neg)/words. The card is stale relative to the code.",
+  "The system has no floor-speech discrete-emotion layer. If one is ever proposed, the paper's measures cannot be lifted directly: validation is 50 extreme speeches per emotion, in-domain only, and the classifier is German-trained.",
+  "lep_criterion bar B compares LES with the blended score but does not report how much of LES is structural (majority, chair). The paper's R2 of about 0.11-0.12 with full controls is a reminder that a weak bar-B rho may reflect LES composition rather than a score fault."
+ ],
+ "flags": [
+  "Associational only. Coefficients are pooled over 1973-2024 and over majority-flip fault lines, and LES models are not stratified by chamber or majority. Quote them only as UNSTRATIFIED, with window 93rd-118th Congresses and denominator n = 13,671 member-Congresses.",
+  "Influence language: the paper calls emotion consequential for persuasion and coordination without testing any mechanism. Do not carry that wording into Melange surfaces.",
+  "With 1.77M speeches, effects of 0.001-0.02 SD reach p < 0.001. Per the project's trend-over-significance rule, read size and consistency, not p.",
+  "The paper has internal inconsistencies: Sec 3.3 says legislator random intercepts while the table notes say fixed effects, and the Sec 4.4 wording does not match the Table 9 columns. The ideology score's source and direction are undisclosed.",
+  "Nothing here concerns the rejected SNA proposals, LDA edges or reciprocity. No conflict with D-021, D-025 or D-104..D-108.",
+  "All figures from this work are UNVERIFIED in this project until a second path reproduces them (DE-062)."
+ ],
+ "paul_alignment": "Paul has not annotated this work (no paul_entries). His recorded position on the effectiveness shadow is to highlight LES as the criterion. The paper fits that use: rhetoric adds little to LES once majority, chair and seniority are controlled, as the lep_criterion docstring already notes. For affective-N, this is a newer emotion source, but it uses floor speech, the genre where interview-derived N already failed to transfer, so it is not evidence for the slot. The LSD card describes intensity differently from the code and is stale.",
+ "related": [
+  {"slug": "rheault-2016-measuring-emotion-parliamentary", "relation": "same-method", "why": "Earlier automated measurement of emotion in parliamentary debates. A lexicon-based predecessor of the transformer emotion scoring used here."},
+  {"slug": "osnabrugge-2021-playing-gallery-emotive", "relation": "complements", "why": "Emotive rhetoric in parliamentary speech as audience-driven. Gives the strategic-display reading that this paper names but does not test."},
+  {"slug": "dietrich-2019-pitch-perfect-vocal", "relation": "complements", "why": "Measures the emotional intensity of congressional floor speech from vocal pitch, an acoustic counterpart to the text intensity measure here."},
+  {"slug": "ramey-2016-measuring-elite-personality", "relation": "same-data", "why": "Also infers member traits from Congressional Record speech and also links speech traits to bill-sponsorship behaviour."},
+  {"slug": "bucchianeri-2025-legislative-effectiveness-american", "relation": "complements", "why": "State-legislature LES. The author names state legislatures as the next test of the emotion-LES association."},
+  {"slug": "harbridge-yong-2023-bipartisan-path-effective", "relation": "same-data", "why": "Uses the same Volden-Wiseman LES outcome and offers a bipartisanship explanation of effectiveness, against which an emotion account would need to be separated."},
+  {"slug": "battaglini-2018-effectiveness-connected-legislators", "relation": "same-data", "why": "Uses the LES outcome with a network-connectedness predictor. It is a competing non-rhetorical correlate that this paper does not control."},
+  {"slug": "rice-2018-corpus-based-dictionaries", "relation": "complements", "why": "Corpus-built sentiment dictionaries for specialized political vocabularies. A dictionary alternative relevant to the LSD-tone vs classifier contrast."}
+ ]
+}

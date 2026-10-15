@@ -1,0 +1,188 @@
+{
+ "title": "A Congressional Twitter network dataset quantifying pairwise probability of influence",
+ "authors": [
+  "Christian G. Fink",
+  "Nathan Omodt",
+  "Sydney Zinnecker",
+  "Gina Sprint"
+ ],
+ "year": "2023",
+ "venue": "Data in Brief 50 (2023) 109521",
+ "doi": "10.1016/j.dib.2023.109521",
+ "document_type": "data article",
+ "coverage": "Full text read in one pass (18,192 chars): front matter, specifications table, data description, methods, limitations, ethics, references. All 23 Paul highlights returned from annot 445139e681c1 (matches n_annots 23); none carry sticky notes; paul_entries was empty. Figures not rendered; companion Physica A centrality paper not available, so its claims are unverified here. Metadata corrected: doi and venue were blank; authors expanded from the article header.",
+ "research_question": "Can a public Twitter dataset quantify empirical pairwise probabilities of influence among members of the 117th US Congress, for use in information diffusion and centrality research? Descriptive data article; no hypothesis is tested.",
+ "theory": "Information diffusion on complex networks: Independent Cascade Model and SIR epidemic models, with the influential-spreader centrality literature as motivation (Sec 1, p.2). Political theory is not engaged; the authors suggest political scientists may find it useful.",
+ "data": "Twitter API v2, most recent 3,200 tweets per account, for 530 active member accounts of 535, collected June 9 2022. Window Feb 9 to June 9 2022: 179,974 tweets from 525 accounts (Sec 3, p.4). Members with at least 100 window tweets kept: N = 475 nodes. Unit: directed member-to-member dyad. Section 2 (p.3) lists 117,974 tweet IDs, conflicting with 179,974 in Sec 3 and Ethics (p.4-5). Shared: user IDs, tweet IDs, network JSON and edgelist on Zenodo, DOI 10.5281/zenodo.8253486.",
+ "method": "Descriptive dataset construction; no statistical model. Tweepy and Twitter /2/users endpoints fetched tweets with referenced_tweets, in_reply_to_user_id and entities parameters (Sec 3, p.4-5). For each ordered pair, retweets, quote tweets, replies and mentions of member i tweets by member j are summed, then divided by the total tweets issued by member i. Viral Centrality code from the companion paper is applied to the network; its ICM-approximation claim is asserted here (p.4), not tested.",
+ "identification": "None. Descriptive data article with no causal or inferential identification strategy.",
+ "scope": "Members of the 117th United States Congress with active Twitter accounts on June 9 2022 (530 of 535); a four-month 2022 window; Twitter interactions only, not Congressional behavior overall.",
+ "measures": "Edge weight w(i,j) = (retweets + quote tweets + replies + mentions by j of i tweets) / tweets issued by i in the window; read as an empirical transmission probability. Node = Twitter user ID and username. Formats: directed weighted NetworkX edgelist; JSON with inList, inWeight, outList, outWeight, usernameList.",
+ "key_findings": [
+  "530 active congressional Twitter accounts identified of 535 members; 525 yielded tweets in the window (Sec 3, p.4).",
+  "179,974 tweets from 525 accounts in the Feb 9 to June 9 2022 window (Sec 3, p.4); conflicts with 117,974 IDs in Sec 2 (p.3).",
+  "475 members with at least 100 window tweets form the final network nodes (Sec 3, p.4).",
+  "Network is directed and weighted; each edge is an empirical influence probability from summed interactions over source tweet count (Sec 3, p.4).",
+  "Authors contrast with the Higgs dataset (ref 2): no interaction-to-probability synthesis there, and most users tweeted only a few times (Sec 1, p.2). Motivating comparison, not a measured result.",
+  "Claim: Viral Centrality approximates ICM Monte Carlo results without extensive simulation (Sec 3, p.4). Supported only by the companion paper; not shown in this article.",
+  "Authors note the network is a single snapshot and the probabilities may not be stationary (Sec 4, p.5)."
+ ],
+ "limitations": [
+  "API tweets can change over time through deletion, edits or privacy changes; network reflects June 9 2022 only (Sec 4, p.4-5).",
+  "Probabilities come from one four-month window and may not be statistically stationary (Sec 4, p.5).",
+  "Only 475 of 530 active members are retained after the 100-tweet threshold, which the authors justify on estimate reliability (Sec 3, p.4).",
+  "Summing retweets, quotes, replies and mentions with equal weight is assumed; no uncertainty intervals are reported for edge probabilities (Sec 3, p.4).",
+  "Tweet count conflict between 117,974 (Sec 2, p.3) and 179,974 (Sec 3, p.4; Ethics p.5) is not reconciled in the article.",
+  "Redistribution is limited to IDs under Twitter terms, so full content requires rehydration through API access (Ethics, p.5).",
+  "The 3,200-tweet API cap limits how far back the common window can reach (Sec 3, p.4)."
+ ],
+ "references_of_note": [
+  "Fink et al. 2023, A centrality measure for quantifying spread on weighted, directed networks, Physica A 626, 129083 (companion paper, Viral Centrality).",
+  "De Domenico et al. 2013, The anatomy of a scientific rumor, Sci Rep 3, 2980 (Higgs Twitter dataset).",
+  "Lu et al. 2016, Vital nodes identification in complex networks, Phys Rep 650, 1.",
+  "Das, Samanta and Pal 2018, Study on centrality measures in social networks: a survey, Soc Netw Anal Min 8, 13."
+ ],
+ "short_quotes": [
+  "the only publicly available Twitter dataset that empirically quantifies pairwise influence between users"
+ ],
+ "paul_markup": [
+  {
+   "page": 1,
+   "type": "Highlight",
+   "text": "Twitter’s application programming interface (API) V2 was used to determine the number of times each member of Congress retweeted, quote tweeted, replied to, or mentioned other Congressional members, and the probability of influence was found by normalizing the summed influence",
+   "note": ""
+  },
+  {
+   "page": 2,
+   "type": "Highlight",
+   "text": "Tweepy Python package to interact with Twitter’s AP",
+   "note": ""
+  },
+  {
+   "page": 2,
+   "type": "Highlight",
+   "text": "most recent 3,200 tweets of all members of the 117 th United States Congress.",
+   "note": ""
+  },
+  {
+   "page": 2,
+   "type": "Highlight",
+   "text": "We also excluded any Congressional member who tweeted less than 100 times during this window of time.",
+   "note": ""
+  },
+  {
+   "page": 2,
+   "type": "Highlight",
+   "text": "(through retweets, quote tweets, replies, or mentions)",
+   "note": ""
+  },
+  {
+   "page": 2,
+   "type": "Highlight",
+   "text": "the only publicly available Twitter dataset that empirically quantifies pairwise influence between users.",
+   "note": ""
+  },
+  {
+   "page": 2,
+   "type": "Highlight",
+   "text": "but it does not synthesize these data into influence probabilities.",
+   "note": ""
+  },
+  {
+   "page": 2,
+   "type": "Highlight",
+   "text": "most users in the dataset only tweeted a few times, making the inference of empirical probabilities problematic.",
+   "note": ""
+  },
+  {
+   "page": 2,
+   "type": "Highlight",
+   "text": "There is a vast literature on identifying ‘influential spreaders’ within social or epidemiological networks",
+   "note": ""
+  },
+  {
+   "page": 2,
+   "type": "Highlight",
+   "text": "The centrality measure’s performance is often compared with 'ground truth' results from Monte Carlo simulations of a simple epidemiological mode",
+   "note": ""
+  },
+  {
+   "page": 2,
+   "type": "Highlight",
+   "text": "these Monte Carlo simulations typically just assume a homogeneous transmission probability, set to an arbitrarily chosen value",
+   "note": ""
+  },
+  {
+   "page": 3,
+   "type": "Highlight",
+   "text": "All data files and code are hosted on the Zenodo repository linked above",
+   "note": ""
+  },
+  {
+   "page": 4,
+   "type": "Highlight",
+   "text": "he tweet IDs are provided in the congress_tweet_ids.txt file described previously in the Data Description sectio",
+   "note": ""
+  },
+  {
+   "page": 4,
+   "type": "Highlight",
+   "text": "so we went as far back in time as possible before first exhausting the 3,200-tweet limit for any one Congressional member.",
+   "note": ""
+  },
+  {
+   "page": 4,
+   "type": "Highlight",
+   "text": "Furthermore, in order for probabilities of influence to be meaningful, we required that a given Congressional member issue at least 100 tweets over this timeframe in order to be included in this dataset",
+   "note": ""
+  },
+  {
+   "page": 4,
+   "type": "Highlight",
+   "text": "475 Congressional members with tweets included in the social network",
+   "note": ""
+  },
+  {
+   "page": 4,
+   "type": "Highlight",
+   "text": "Our Twitter API rehydration code is available in a Zenodo repository at this URL: https://zenodo.org/record/8253486 .",
+   "note": ""
+  },
+  {
+   "page": 4,
+   "type": "Highlight",
+   "text": "To quantify influence of member i on member j , we considered the number of times member j retweeted, quoted tweeted, replied to, or mentioned a tweet by member i .",
+   "note": ""
+  },
+  {
+   "page": 4,
+   "type": "Highlight",
+   "text": "Code that calculates influence using this technique and produces a directed, weighted network given tweets IDs is available at the repository URL provided above",
+   "note": ""
+  },
+  {
+   "page": 4,
+   "type": "Highlight",
+   "text": "Viral Centrality efficiently approximates Monte Carlo simulations of the Independent Cascade Model",
+   "note": ""
+  },
+  {
+   "page": 4,
+   "type": "Highlight",
+   "text": "Our Viral Centrality algorithm provides very good approximation to ICM results without the need for extensive Monte Carlo simulation, drastically cutting down on computation time.",
+   "note": ""
+  },
+  {
+   "page": 5,
+   "type": "Highlight",
+   "text": "Congressional Twitter Network (Original data) (Zenodo).",
+   "note": ""
+  },
+  {
+   "page": 5,
+   "type": "Highlight",
+   "text": "Furthermore, it should be understood that the probabilities of influence which constitute edge weights are empirical estimates taken from a particular window of time, and may not represent their statistically stationary values.",
+   "note": ""
+  }
+ ]
+}

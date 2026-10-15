@@ -1,0 +1,94 @@
+{
+"bearings": [
+{
+"component_id": "melange-allocation.budget-frontier",
+"relation": "supports",
+"paper_claim": "Under ICM with p=0.01 on two co-authorship graphs, DHICM is 12.5% (NetHept k=10) and 7.9% (NetHept k=30) below CELF, and 2.5% below CELF at k=30 on NetPhy. The paper says greedy is slow on medium-sized graphs (more than 1500 nodes) because of its high time complexity.",
+"paper_location": "Sec 4.1 p.321 (lines 348-357); Sec 2 p.318 (lines 185-186, 1500-node threshold); Fig 4.2 p.322 (times shown only as figures)",
+"system_side": "budget_frontier runs exact lazy greedy: candidates are the stance-gated top-45 neutral shortlist (line 137), marginals are re-evaluated when popped from a heap (lines 159-170), and MAXSEEDS defaults to 60 and MC to 20 (line 7). Verified in code.",
+"code_ref": "fec/engine/budget_frontier.py:7,137,159-170",
+"transfer_conditions": "The gap was measured at p=0.01 on two co-authorship graphs of 15k to 37k nodes, with no MC sample size or variance reported. It ranks algorithms under ICM only and does not validate the frontier's spread values, which are model outputs. The cost argument holds because the candidate pool is about 45, not because of a node-count threshold in the paper.",
+"strength": "moderate",
+"verdict": "softened",
+"verifier_note": "Gap figures and the CELF baseline check out. Rejected wording: 'only drawback' and a 10^4-node threshold. The paper gives about 1500 nodes as the threshold for slowness and calls time complexity 'one drawback of high time complexity'. Dataset sizes and the 45-candidate pool are correct."
+},
+{
+"component_id": "melange-allocation.per-topic-allocators",
+"relation": "suggests-extension",
+"paper_claim": "Degree-discount (DHICM) discounts neighbours of already chosen seeds (Eq 3.2). The paper reports DHICM above plain degree by 16% at k=30 and 10.4% at k=80 on NetHept, and by 10% at k=50 on NetPhy. Plain degree therefore trails DHICM by less than those percentages, not by them.",
+"paper_location": "Sec 3.1 Eq 3.2 and Algorithm 3, p.319-320; Sec 4.1 p.321 (lines 349-350, 355-356)",
+"system_side": "per_topic_coalition scores each candidate by isolated marginal spread({n}) minus base (line 115), boosts by a bridge factor with BETA_C=0.8 (lines 30, 117), water-fills the budget (line 119), and reports the joint spread only afterwards (lines 124-125). Verified: no discount for adjacency to other funded seeds.",
+"code_ref": "fec/engine/per_topic_coalition.py:30,114-125; coal_waterfill defined at line 68",
+"transfer_conditions": "The paper's direction is DHICM over degree, so the gap is an extension argument, not a measured gain. The percentages are simulated, depend on k, come from one benchmark, and have no error bars. A sequential or discounted pass is a candidate for owner review only.",
+"strength": "moderate",
+"verdict": "softened",
+"verifier_note": "Code claims verified. The rel says degree trails the discount method by 16%, which inverts the paper's sentence: DHICM is 16% above degree at k=30. The overlap-discount mechanism itself is in the paper."
+},
+{
+"component_id": "melange-pathfinding.multi-target-and-budget-modes",
+"relation": "qualifies",
+"paper_claim": "Under MICM on NetPhy the paper reports percent gains over ICM: DHICM +23.7% at k=30 and CELF +55.55% at k=10. These are different k values and gains over ICM, so they do not measure a head-to-head DHICM vs CELF gap under MICM. The paper does not say its discount assumes small p, and it does not test one-hop versus multi-hop spread.",
+"paper_location": "Sec 4.2 p.322 (lines 382-387); Sec 3.1 Eq 3.2 p.320",
+"system_side": "budgetRecruit greedy: gain = (1 minus cov[c]) plus the sum over direct neighbours of PE[c][v] times (1 minus cov[v]), with pruning of nodes below 0.1 times mean degree and a 1+2dT multiplier when a target is set. The coverage update touches direct neighbours only, so the objective is one-hop. Verified.",
+"code_ref": "fec/surfaces/templates/make_dashboard_html_00.tpl:773-791",
+"transfer_conditions": "The paper's MICM is a different edge-probability form from the kernel, so it cannot say how one-hop coverage fares at the kernel's p-range. The claim that the kernel reaches p of about 0.52 was not checked: the cited sector-networks note is not in the repo. Any approximation-quality claim stays UNVERIFIED until a second path reproduces it (DE-062).",
+"strength": "weak",
+"verdict": "softened",
+"verifier_note": "The one-hop structure of budgetRecruit is verified in code. The rel's claims that the paper's discount assumes small p, that one-hop discounting degrades as p rises, and that the DHICM approximation weakens under MICM are not in the paper, which gives no DHICM-vs-CELF comparison under MICM. Rewritten to the reported numbers only."
+},
+{
+"component_id": "melange-influence-engine.cascade-kernel",
+"relation": "qualifies",
+"paper_claim": "Structure-derived edge probabilities p_ij = 0.01 + (d_i+d_j)/n + CN(i,j)/n raise spread for every algorithm on the co-authorship graphs, e.g. Degree +32.60% (NetPhy, k=20) and CELF +55.55% (NetPhy, k=10). The form is asserted to reflect real propagation dynamics and is not fitted to or validated against observed diffusion.",
+"paper_location": "Sec 3.2 Eq 3.3 p.320-321; Sec 4.2 p.322 (lines 385-387)",
+"system_side": "build_P sets p(u to v) = x/(x+6) with x = cosponsor weight times cpf_diffusion(u,v) times the receiver edge_mult term. The constant 6 is a fixed design value in code, not estimated. Verified.",
+"code_ref": "fec/moneyball_core.py:555-562 (build_P)",
+"transfer_conditions": "The paper gives no calibration or validation, so it cannot support tuning or replacing the constant 6. Its gains are percent increases over a 0.01 baseline that it says gives very little influence and does not favour real-world dynamics; calling the gains mechanical is this analysis's reading, not the paper's. The common-neighbour term is a candidate covariate only. The degree term raises probability for hubs and must not be presented as support for the REJECTED per-edge volume normalization.",
+"strength": "weak",
+"verdict": "softened",
+"verifier_note": "Kernel formula and the figures Degree +32.6% and CELF +55.55% on NetPhy check out. 'Mechanical' and 'unrealistically low' go beyond the paper's wording. The docstring calls the receiver term sigma_v (receiver susceptibility), not edge_mult."
+},
+{
+"component_id": "melange-sna.katz-bonacich-benchmark",
+"relation": "qualifies",
+"paper_claim": "PrKatz (Katz-based, Alshahrani et al. ref [1]) does worse than plain degree under ICM and on NetHept falls below Random for some k. The authors partly blame pre-processing that splits the graph into components. Katz centrality alone matches degree at small k and declines as k grows.",
+"paper_location": "Sec 2.1 p.318-319 (lines 204-215); Sec 4.1 p.321 (lines 351-360)",
+"system_side": "kb_benchmark computes Katz-Bonacich b = sum over k of (delta A)^k 1 on the live kernel P, with delta = 0.85 divided by the spectral radius (lines 33-53), and documents itself as a diagnostic. The optimizer does not read it. Verified.",
+"code_ref": "fec/engine/kb_benchmark.py:1-24,33-53",
+"transfer_conditions": "The paper concerns Katz as a seed-selection proxy for cascade spread and finds it weak. The system uses KB as an equilibrium-pricing benchmark, so the evidence only discourages promoting KB into seed choice. The rel's claim that nothing in the chain consumes KB is wrong: refresh_table.py:261 runs it as a DIAG step, surfaces/make_member_desk.py:825 reads kb_benchmark.json for display, legislation/run_legislation_shadow_recompute.py:403 holds an immutable-input contract on it, and audit/dashboard_integrity.py:625 checks it. KB values are heuristic model outputs, never access or closeness probabilities (D-025).",
+"strength": "weak",
+"verdict": "softened",
+"verifier_note": "Paper side reproduced. System side: the docstring and delta rule check out, but nothing in the chain consuming KB is false. The member desk, legislation contracts and integrity check read its output; only the optimizer does not."
+},
+{
+"component_id": "moneyball-rank-pillars.network-centrality-influencescore",
+"relation": "context",
+"paper_claim": "The paper says selecting maximum-degree vertices gives higher simulated influence than other centrality measures, and that degree-discount and greedy beat plain degree. Katz equals degree at small k and falls as k grows. The paper does not test betweenness, eigenvector or any weighted composite.",
+"paper_location": "Sec 3.1 p.319 (lines 229-230); Sec 4.1 p.321 (lines 346-353)",
+"system_side": "InfluenceScore is built as 0.60 weighted out-degree plus 0.25 betweenness plus 0.15 eigenvector, scaled to 0-100. The Python builder is in fec/legislation/build_legislation_base_network.py (lines 826-840, weights at lines 833-835). The 2026-06-25 retirement (AB13=0) was not checked; it sits in the workbook.",
+"code_ref": "fec/legislation/build_legislation_base_network.py:826-840,833-835",
+"transfer_conditions": "The paper measures simulated cascade spread on co-authorship graphs, not legislative influence or bill passage. It does not test the composite, so it cannot support or contradict the retirement or the underdog lens. Degree beating other centralities is a simulated ordering, not evidence about influence on outcomes.",
+"strength": "weak",
+"verdict": "softened",
+"verifier_note": "The degree-over-other-centralities sentence is in the paper, but 'supports' overreaches because the composite was not tested, and 'Katz is weaker still' holds only at larger k. The rel's 'no Python line' is wrong: the weights are in build_legislation_base_network.py."
+}
+],
+"related": [
+{"slug": "almazaydeh-2026-heuristic-centrality-methods", "relation": "complements", "why": "Same question: centrality heuristics versus greedy in influence maximization. Title and question match. The CELF MC-noise point and its link to mc_stability_check.py were not verified here."},
+{"slug": "golovin-2011-adaptive-submodularity-theory", "relation": "builds-on", "why": "Title and question match: adaptive submodularity extends the diminishing-returns guarantee that the paper's greedy argument relies on."},
+{"slug": "kumar-2022-influence-maximization-social", "relation": "complements", "why": "Also an IC-model seed-selection benchmark, but it uses graph embeddings and a GNN rather than degree discount, so the rel's same-method label is wrong."},
+{"slug": "chen-2021-contingency-aware-influence", "relation": "extends", "why": "Title matches contingency-aware seeding, where invited nodes accept only probabilistically, which the plain DHICM and CELF comparison does not model."},
+{"slug": "bharathi-nd-competitive-influence-maximization", "relation": "extends", "why": "Competitive IC with multiple cascades is the setting of the system's competitive cascade, which Trivedi does not test."},
+{"slug": "zareie-2023-influence-maximization-social", "relation": "complements", "why": "A survey of behaviour-aware IM methods that places degree-discount and edge-probability modelling in wider context."},
+{"slug": "kamarthi-2019-influence-maximization-unknown", "relation": "complements", "why": "Targets cheap seed selection with unknown topology, whereas Trivedi assumes the network topology is known."}
+],
+"summary_issues": [
+"Summary and paul_alignment say DHICM costs 8 to 12% of spread. The paper's gaps to CELF at p=0.01 are 12.5% and 7.9% on NetHept (k=10, k=30) and 2.5% on NetPhy (k=30), so the range is 2.5 to 12.5%.",
+"Summary says the MICM rise mostly follows mechanically from the 0.01 baseline. The paper does no decomposition; this is the analysis's inference and should be labelled as such.",
+"Summary says DHICM beats degree by 10 to 16% without naming datasets or k values. Paper: 16% at NetHept k=30, 10.4% at NetHept k=80, 10% at NetPhy k=50. These are DHICM above degree, not degree below DHICM.",
+"paul_alignment's claims about Paul's positions (joint optimizer, Fink-derived cheap-simulation wish, Ardekani Katz highlight) cannot be traced: paul_entries is empty, and the annotations folder has only bibliographic lines for Ardekani and Fink with no highlight text. Unverified; remove or source them.",
+"Rel bearing 4 and the summary's KB context say nothing in the chain consumes KB. Member desk, legislation shadow contracts and the integrity check read kb_benchmark.json; only the optimizer does not.",
+"Rel bearing 0 transfer conditions cite a CELF slowness threshold of 10^4 or more nodes. The paper's threshold is about 1500 nodes (p.318).",
+"The 533-member count in paul_alignment was not verified in this pass."
+]
+}

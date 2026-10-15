@@ -1,0 +1,81 @@
+{
+  "bearings": [
+    {
+      "component_id": "melange-stance.two-hop-decomposition",
+      "relation": "method-source",
+      "paper_claim": "FOL rules elicited from an LLM (Table 5 bike-lane rule links congestion to Against) are made differentiable with soft-logic operators: negation 1-U, conjunction U1*U2, implication 1-U1+U1*U2 (Eqs 2-5), and trained end to end with cross-entropy (Eq 12). Zero-shot VAST all-class F_avg: 81.0 vs 76.8 for KASD with 100 percent training data (+4.2); 80.2 vs 74.0 for MPPT with 10 percent (+6.2). Error analysis of 50 VAST errors (Sec 4.8) names LLM over-inference that links a positive clause to the target, and clause-level polarity conflicts.",
+      "paper_location": "Sec 3.1-3.2, Eqs 2-6; Table 4 (VAST columns); Table 5; Sec 4.8 and Table 6",
+      "system_side": "compose() in apply_two_hop_stance.py is a hard sign flip: support with positive valence stays support, and the reverse flips; neutral and unrelated pass through. lookup() takes the first registry entry whose match substring appears in target plus text, and the flat model alignment is the fallback on a miss (line 55). The file docstring reports stance-hop 0.915, valence-hop 0.689 and oracle ceiling 0.872, and the eval prints a flat baseline of 0.677. The composed 0.782 and F1 0.754 and the claim that every automatic-registry variant fell below the flat baseline are not in the cited code.",
+      "code_ref": "fec/stance/apply_two_hop_stance.py:18-33,53-55",
+      "transfer_conditions": "Transfer is limited to the decomposition idea. FOLAR targets are benchmark targets, whereas the valence hop needs CU-specific, owner-judged knowledge that LLM priors do not supply. The paper's over-inference failure matches the automatic-registry failure in the system. LLM-elicited valence rules stay UNVERIFIED (DE-062) until scored against the 400 tweet golds under single-look rules. The paper gives no evidence that a soft operator beats an exact registry lookup where the registry has coverage.",
+      "strength": "moderate",
+      "verdict": "softened",
+      "verifier_note": "Paper side holds: the equations, the 81.0 vs 76.8 and 80.2 vs 74.0 comparisons and the error analysis all check against Tables 4 and 6 and Sec 4.8. The paper example is a bike-lane rule rather than a general negative-consequence rule, so the paraphrase is loosened. Code side holds for the hard sign flip and substring lookup with fallback. The 0.782 and 0.754 composed scores and the all-variants-below-baseline claim are not in the cited file, so the system side is trimmed to what the code and its docstring show."
+    },
+    {
+      "component_id": "melange-stance.debate-nli-classifier",
+      "relation": "suggests-extension",
+      "paper_claim": "Fusing decisions from three LLMs (GPT-3.5-turbo-0301, Claude-2-100k, LLaMA-2-70b-chat) by attention-based routing (Eqs 7-11) beats a single-GPT-3.5 variant: 81.0 vs 75.2 on zero-shot VAST with 100 percent training data (+5.8), and 80.2 vs 74.9 with 10 percent (+5.3). The authors say LLMs often exhibit bias in knowledge elicitation that varies with training data and methods.",
+      "paper_location": "Sec 3.3, Eqs 7-11; Sec 4.2 (model list); Table 4 wo/MDF row; Sec 4.6; Introduction (line 101-103)",
+      "system_side": "stage5_debate.py is zero-shot: the Political DEBATE base model (mlburnham/Political_DEBATE_base_v1.0) runs through a zero-shot-classification pipeline with hypothesis template 'This text is {}.' (line 31), and no training code appears in the file. claude_stance.py defaults to claude-sonnet-4-6 (line 32) and asks for a reason of at most 15 words (line 25). Its docstring calls the ensemble member a fine-tuned DEBATE and says the Claude pre-labels are corrected by a person. The 552-label training set and 87.2 percent agreement are not in the cited files.",
+      "code_ref": "C:/Users/pgoff/OneDrive/Desktop/Draft Systems/claude_stance.py:25,32; C:/Users/pgoff/OneDrive/Desktop/Draft Systems/stage5_debate.py:31,64-65",
+      "transfer_conditions": "The paper's ablation confounds fusion with the number of LLMs (one versus three), so it does not isolate a fusion effect, and no variance is reported. The benchmark inputs are tweets for SEM16 and ISD, while the paper does not describe VAST's source text and gives no collection dates, so a 2016-2020 framing is unsupported. The named model snapshots are the paper's choices; their retirement is not checked here. A second LLM rater would expose labeller-specific bias before human override, but the evidence is weak and new agent output stays UNVERIFIED (DE-062).",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper claim checks against Table 4 (81.0, 75.2, 80.2, 74.9) and the Sec 4.6 text. The system side does not match as written: the cited stage5_debate.py has no training, so DEBATE is not shown to be fine-tuned on Claude labels or to distil them. The 552-label and 87.2 percent figures do not appear in the cited files. The docstring is the only place that calls DEBATE fine-tuned."
+    },
+    {
+      "component_id": "melange-stance.supervised-stance-stack",
+      "relation": "qualifies",
+      "paper_claim": "In-target (Table 3): FOLAR beats the best competitor by 1.7 on LA (72.7 vs COLA 71.0) and by 2.0 on DT_I (73.3 vs MPPT 71.3), but trails KEprompt on FM (70.6 vs 72.1). Zero-shot (Table 4): gains of +4.2 on VAST with 100 percent training data and +6.2 with 10 percent. The baselines include statistical, PLM, prompt and LLM methods. No TF-IDF or SVM baseline is reported.",
+      "paper_location": "Table 3; Table 4; Sec 4.4 (baseline list); Sec 4.5.1-4.5.2",
+      "system_side": "train_tweet_stance.py grids LinearSVC and LogReg over word plus char TF-IDF (lines 31-40) and scores by 5-fold stratified CV over the tweet golds (lines 42-54). The file docstring cites 400 golds. The file has no untouched test split. The figures 83.9 percent, macro-F1 0.816 on an untouched n=87 test, and 0.737 CV on 399 golds are not in the cited code and were not checked.",
+      "code_ref": "fec/stance/train_tweet_stance.py:31-40,42-54",
+      "transfer_conditions": "The paper cannot settle SVM versus LLM for this corpus because it runs no bag-of-words baseline. Its pattern (small in-target gains, larger low-data or new-target gains) suggests an LLM-rule reader would help most on new or rare CU targets, which has not been tested for CU stance. The evidence is benchmark-level, rests on three runs and gives no confidence intervals.",
+      "strength": "weak",
+      "verdict": "softened",
+      "verifier_note": "Paper numbers check against Tables 3 and 4 (72.7, 71.0, 73.3, 71.3, 70.6, 72.1, +4.2, +6.2). The baseline wording is narrowed because statistical baselines (Bicond, CrossNet, SEKT, TPDG) are also included. The system side mentions an n=87 untouched test and 399 golds that the cited file does not contain, so those figures are dropped as unverified. The code path (TF-IDF plus LinearSVC, 5-fold CV) does match."
+    }
+  ],
+  "related": [
+    {
+      "slug": "b-2025-comparing-fine-tuned",
+      "relation": "complements",
+      "why": "Same task (stance in political tweets), comparing fine-tuned RoBERTa with traditional ML. Its title supports the framing as a source of the SVM and PLM comparison Dai omits; the full paper was not checked for those numbers."
+    },
+    {
+      "slug": "park-2025-automatic-construction-direction",
+      "relation": "complements",
+      "why": "A direction-aware lexicon addresses clause-level polarity direction, one of FOLAR's two named error types. The claim that the system rejected a whole-text version in bill-sign handling was not checked against the repo."
+    },
+    {
+      "slug": "ornstein-2024-train-your-stochastic",
+      "relation": "complements",
+      "why": "General guidance on using LLMs to label political text. It bears on validating FOLAR-style LLM-elicited labels and rationales."
+    },
+    {
+      "slug": "zhou-2026-measuring-stance-dynamics",
+      "relation": "complements",
+      "why": "Zhou models stance dynamics over time with temporal graph neural networks in Information Processing and Management. The earlier note that it is from the same journal as Dai is wrong; Dai is in Neural Networks. Dai classifies static stance."
+    },
+    {
+      "slug": "kim-2025-measuring-interest-group",
+      "relation": "same-method",
+      "why": "Both use LLMs to extract positions toward a named target. Kim reports 96.9 percent agreement with two human coders, but only on the 391 items both coders agreed. Dai reports no equivalent agreement for its stance outputs."
+    }
+  ],
+  "summary_issues": [
+    "summary_md says the fusion result points to a check on the Claude pre-labels that the DEBATE reader distils. The cited stage5_debate.py is zero-shot NLI with no training, so distillation is not shown. The 'fine-tuned on 552 labels' and 87.2 percent claims in bearing 2 are not in the cited files.",
+    "summary_md cites 87 to 156 held-out CU press items. The 87 appears only in the bearing 3 system_side, which does not match train_tweet_stance.py (5-fold CV, no untouched split). The 156 appears in no cited file.",
+    "The composed two-hop score 0.782 / F1 0.754 and the claim that every automatic-registry variant fell below the flat baseline are not in apply_two_hop_stance.py. The 0.915, 0.689, 0.677 and 0.872 figures are in the file docstring or eval output.",
+    "Pre-labeller identity is inconsistent across system files: claude_stance.py defaults to claude-sonnet-4-6, train_tweet_stance.py calls its api labels Opus prelabel, and its docstring cites Fable API labels. The single Claude rater claim needs the model and version named.",
+    "summary_md and bearing 2 describe the benchmarks as 2016-2020 tweets. The paper gives no collection dates, calls only SEM16 and ISD inputs tweets, and does not describe VAST's source text.",
+    "Paul-alignment statements are unverified: the item has no paul_entries, so Paul's notes (stale, Birkenmaier endorsement) cannot be checked. The claim that the system already records the stance-times-valence rule in a registry is consistent with apply_two_hop_stance.py.",
+    "Related link zhou-2026-measuring-stance-dynamics is said to come from the same journal, but its item lists Information Processing and Management. The Kim 96.9 percent figure covers only the 391 items both coders agreed, not all items.",
+    "Extraction errors (ext, not rel) to fix before reuse: zero-shot SEM16 best competitors are wrong. MPPT HC 83.6 beats Ts-CoT 83.2; COLA LA 71.0 beats MPPT 70.1; COLA DT 71.2 beats FOLAR DT 70.9, so FOLAR does not win zero-shot DT. The 85.5 HC value is the w/o MDF row, not FOL-CoT, whose HC is 83.6.",
+    "Kappa: the paper reports kappa scores above 70 percent with an average of 76 percent, with the variant unnamed. Writing kappa about 0.76 in gaps_exposed misstates the paper's reporting.",
+    "The retirement of gpt-3.5-turbo-0301 and Claude-2 snapshots is not stated in the paper and was not checked here, so treat it as unverified.",
+    "The paper's interpretability claim is asserted, not tested. The only check is 100 items rated by three raters, plus qualitative Table 5 examples. Both the summary and the flags say this correctly; no change needed.",
+    "Coverage: all 3 bearings and all 5 related links were re-checked against the text and the cited code. Not covered: the 552-label set, the 87.2 percent agreement, the n=87 and 156 counts, and Paul's annotations, none of which appear in the cited files."
+  ]
+}

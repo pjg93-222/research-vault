@@ -1,0 +1,53 @@
+{
+  "title": "Q-Learning",
+  "authors": [
+    "Christopher J. C. H. Watkins",
+    "Peter Dayan"
+  ],
+  "year": "1992",
+  "venue": "Machine Learning, 8, 279-292",
+  "doi": "",
+  "document_type": "Technical note (convergence theorem and proof)",
+  "coverage": "Full text read in one chunk (28,661 chars): front matter, abstract, sections 1-4, appendix (action-replay process, Lemmas A and B, B.1-B.4), notes, references. Paper is purely theoretical, so there are no data or empirical sections. Some equations (theorem learning-rate conditions, equation 3, several ARP formulas) are garbled in the text extraction; the text's own descriptions of them were used and no missing formula was reconstructed. Paul markup: none (item has n_annots 0 and empty annot_sha12s, so no _annots file was read). Page images not rendered. Metadata hints checked against the text: title, authors, year and venue (Machine Learning, 8, 279-292) confirmed; DOI is not printed in the text and is left empty.",
+  "research_question": "Under what conditions does Q-learning, an incremental model-free method for learning optimal action-values in controlled Markov processes, converge to the optimal Q values?",
+  "data": "None. Theoretical paper. Setting is a finite discrete controlled Markov process with finite state and action sets and bounded rewards; no sample, unit, N or period.",
+  "method": "Formal convergence proof. An artificial action-replay process (ARP) is built from the episode sequence. Lemma A (p.282, proof p.288) shows the Q_n values are optimal ARP action values, by backward induction. Lemma B (p.282-284, appendix p.289-291) has four parts: B.1 discounting of infinite sequences, B.2 probability of straying below a level, B.3 stochastic convergence of ARP transition and reward estimates via Kushner and Clark (1978), B.4 close rewards and transitions imply close values. Section 3.2 (p.284-285) combines these with epsilon bounds on s-step values.",
+  "theory": "Dynamic programming and Bellman optimality; Sutton's temporal differences (TD); stochastic approximation (Kushner and Clark 1978).",
+  "identification": "Not statistical identification. Convergence holds with probability 1 under: every state and action tried infinitely often (p.281); bounded rewards; discount 0 < gamma < 1; learning rates 0 < alpha_n < 1 satisfying conditions on their sums and sums of squares (equation 3, formula garbled in extraction, p.282-283).",
+  "scope": "Finite discrete Markov decision processes with a look-up table representation of Q values; bounded rewards; discounting. Section 4 sketches (does not prove) two extensions: undiscounted processes with absorbing goal states (p.285-286), and updating many Q values per iteration (p.286). Excluded: function approximation and multi-step updates such as TD(lambda) (p.286). Era: 1992, following Watkins (1989).",
+  "measures": "Action-value Q(x,a): expected discounted reward for action a in state x followed by a policy thereafter (p.280). Convergence criterion: Q_n(x,a) tends to Q*(x,a) for all x,a with probability 1 as n tends to infinity. Bounds on value differences grow at most quadratically in the number of actions s (p.283).",
+  "key_findings": [
+    "Theorem (p.282): with bounded rewards, learning rates in (0,1) meeting the stated conditions, and all state-action pairs sampled infinitely often, Q_n(x,a) converges to Q*(x,a) for all x and a, with probability 1. Section 3.2, p.284-285.",
+    "Lemma A (p.282, appendix p.288): the Q_n values are the optimal action values of the ARP at every level n, proved by induction on n.",
+    "Lemma B.3 (p.283-284, appendix p.290): ARP transition probabilities and expected rewards converge with probability 1 to those of the real process as the level grows.",
+    "B.4 (p.283, appendix p.291): if transitions and rewards of s chained steps are within eta of the true values, the value of the s actions differs by at most a term growing quadratically in s, so close models give close values.",
+    "B.1 (p.283, appendix p.289): with discount gamma below 1 and bounded rewards, the effect of truncating an infinite sequence after s actions tends to 0 as s grows.",
+    "Section 4 (p.285-286): the theorem extends to undiscounted processes with absorbing goal states, because a bound on steps to trap and a minimum trap probability replace discounting. Sketched, not fully proved.",
+    "Section 4 (p.286): updating many Q values per iteration preserves convergence with no non-trivial change to the proof, since the ARP still estimates the same quantities from more episodes.",
+    "Section 4 (p.286): reusing stored episodes interpolates between Q-learning and certainty equivalence; in the limit of re-presenting old episodes infinitely often, reuse equals the certainty-equivalence step on the observed sample.",
+    "Section 4 (p.286): the proof covers only a restricted form of Watkins (1989) because it does not allow updates from rewards of more than one iteration; the TD(lambda) extension does not follow trivially and may need other proof methods."
+  ],
+  "limitations": [
+    "Look-up table representation only; Watkins (1989) shows convergence may fail for other representations (p.282).",
+    "Requires an infinite number of episodes for each starting state and action (p.281-282). The authors call this strong but argue no method could do better under the stochastic conditions.",
+    "Convergence is asymptotic (n tends to infinity) with probability 1; no rates or finite-sample bounds are given.",
+    "Undiscounted and multi-update cases are sketched only (p.285-286).",
+    "Multi-step (TD(lambda)-style) updates are not covered by the proof (p.286).",
+    "Several appendix formulas are garbled in the extracted text, so exact statements of equations 3 and the ARP definitions could not be confirmed from the text.",
+    "Assumes the set of available actions is the same in every state; the authors note in footnote 1 that the general case extends straightforwardly."
+  ],
+  "paul_markup": [],
+  "short_quotes": [
+    "converges to the optimum action-values with probability 1"
+  ],
+  "references_of_note": [
+    "Watkins 1989, Learning from delayed rewards, PhD thesis, Cambridge (original Q-learning and convergence outline)",
+    "Sutton 1988, Learning to predict by the methods of temporal difference, Machine Learning 3 (TD)",
+    "Sato, Abe and Takeda 1988, IEEE Trans. SMC 18 (certainty-equivalence contrast)",
+    "Kushner and Clark 1978, Stochastic approximation methods (theorem 2.3.1 used in B.3)",
+    "Barto and Singh 1990, On the computational economics of reinforcement learning (certainty equivalence cost)",
+    "Barto, Bradtke and Singh 1991, Real-time learning and control using asynchronous DP, COINS TR 91-57",
+    "Lin 1992, Self-improving reactive agents, Machine Learning 8 (independent development)",
+    "Mahadevan and Connell 1991, Automatic programming of behavior-based robots using RL, AAAI"
+  ]
+}

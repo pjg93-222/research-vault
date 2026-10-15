@@ -1,0 +1,747 @@
+{
+ "name": "Adjacent",
+ "slug": "adjacent",
+ "paul_notes": [],
+ "works": [
+  {
+   "slug": "noble-2024-presidential-leadership-legislative",
+   "title": "Presidential Leadership and Legislative Polarization",
+   "year": "2024",
+   "summary": "Noble and Turner build a formal model with no data. A partisan president decides whether to \"go public\" on one binary issue before two party pivots vote. Going public activates both party bases. The bases then rally, retreat (co-partisans move toward the president, out-partisans away) or backfire. It also ties the president's reelection to the outcome, which gives co-partisans an electoral stake (delta).\n\nResults:\n- Going public always widens the gridlock interval (Prop 1).\n- Because the status quo matters, presidents go public over a wider range of costs when the status quo already favors them (c(-1) > c(1), Prop 2). The authors call this a \"defensive appeal\" aimed at fair-weather co-partisans.\n- Under partisan retreat the president never goes public against an unfavorable status quo.\n- Higher sincere polarization (z) makes going public more attractive in defense and less attractive on offense (Prop 4).\n- Higher uncertainty (psi) weakly reduces going public and blunts its sensitivity to the status quo (Prop 5).\n- The authors propose these as predictions to test. Nothing in the paper estimates them.\n\nThis matters because Melange implements the paper almost line for line in fec/engine/salience_shock.py and the dashboard's exec cue. The party asymmetry carries over faithfully. Several mappings do not. The estimator ties rally and retreat odds to the elite stance gap, psi is built from missing stance data, and the paper's presidential-reelection channel is moved onto legislators and onto a CU advocacy actor.\n\nThe sharpest problem is in the live advisory. It credits \"defections prevented\" on every issue, whatever its status quo, so its four GO PUBLIC verdicts (written 2026-10-08) all fall on offense issues. That reverses the paper's central prediction. This finding comes from one agent analysis path and stays UNVERIFIED until a second path reproduces it (DE-062).",
+   "question": "How can presidential leadership, specifically going public, both raise issue salience to move Congress toward the president's policy and increase legislative polarization? And how does this tension shape a president's decision to go public in the first place? (p.1-2)",
+   "method": "Game-theoretic model. Pure-strategy subgame perfect equilibrium solved by backward induction (p.11, p.13). Players are a president P, a left party L, a right party R, and a non-strategic challenger. The preference shock is theta ~ Uniform[-psi, psi]. Gridlock regions and cost thresholds for going public (c(1), c(-1)) are derived in closed form (Prop. 1-2, App. A.1-A.2). Comparative statics are reported as propositions (Prop. 3-5). Figures 1, 3, 4, and 5 give numerical illustrations at stated parameter values. Section 4 extends the model so the president's silent-reelection probability rho(x_sq) differs by status quo (Prop. 6, App. A.4).",
+   "findings": [
+    {
+     "finding": "Going public always widens the gridlock region, even when both party bases rally behind the president. Silent gridlock region is (-z, z). Public gridlock region is bounded by (-z + beta_R - delta)/2 and (z + beta_L + delta)/2 (bar notation on beta lost in extraction). Asymmetric base influence drives this 'effective polarization.'",
+     "location": "Prop. 1 (p.13); Fig. 1 and note (p.14); proof in App. A.1 (p.38)",
+     "numbers": "Fig. 1 illustrative values: z = 1; beta_L > 0 = 0.75; beta_L < 0 = -0.5; beta_R > 0 = 0.5; beta_R < 0 = -0.75; delta = 0.5"
+    },
+    {
+     "finding": "Going public can raise presidential legislative success, not only polarization, because co-partisans move further toward the president than out-partisans under a Rally. This harmonizes Canes-Wrone (2006) with Lee (2009).",
+     "location": "Intro (p.4); Sec. 2.1 (p.14-15); Conclusion (p.29-30)",
+     "numbers": ""
+    },
+    {
+     "finding": "The president goes public for a wider range of opportunity costs when the status quo is favorable: c(-1) > c(1) always. Three regions result: c <= c(1) always goes public; c in (c(1), c(-1)] goes public only if status quo favorable; c > c(-1) never goes public.",
+     "location": "Eqs. (7)-(8) (p.16-17); Prop. 2 (p.17); proof App. A.2 (p.39-40)",
+     "numbers": "c(-1) - c(1) is shown to be positive for 0<p<1, 0<q<1, ps i > z > 0, delta > 0 (App. A.2, p.40)"
+    },
+    {
+     "finding": "Defensive appeal: under Partisan Retreat (q = 1), the president never goes public when the status quo is unfavorable (c_q(1) strictly negative), but always has an incentive to go public when the status quo is favorable (c_q(-1) strictly positive).",
+     "location": "Partisan Retreat, p.22-23",
+     "numbers": ""
+    },
+    {
+     "finding": "Under Backfire (1-p-q = 1), the president never goes public with an unfavorable status quo (c_b(1) = c_q(1)). With a favorable status quo she sometimes profits from going public even though it is certain to backfire. The threshold is beta_L < -delta(delta + 2z + 2) / (2(delta + 2)), which falls as z and delta rise.",
+     "location": "Backfire, p.24",
+     "numbers": ""
+    },
+    {
+     "finding": "Rally Around the President (p = 1): c_p(-1) and c_p(1) rise with the out-party base's support beta_R (for unfavorable status quo). The gap c_p(-1) - c_p(1) falls as beta_R rises. c_p(1) need not be positive, so the president may not go public even under the most favorable base reactions, because a high delta lets the out-party resist.",
+     "location": "Rallying Around the President, p.21-22",
+     "numbers": ""
+    }
+   ],
+   "related": [
+    {
+     "slug": "merkley-nd-party-cues-news",
+     "relation": "complements",
+     "why": "Merkley and Stecula give empirical evidence of out-party backlash to elite party cues (a Republican backlash to Democratic elite cues on climate). That is the Backfire/Retreat behavior Noble and Turner model only in theory. (The analyst's claim that the two are cited together in the salience-shock component is not supported: no Merkley citation appears in salience_shock.py, moneyball_core.py or the dashboard template.)"
+    },
+    {
+     "slug": "bakker-nd-understanding-partisan-receptivity",
+     "relation": "complements",
+     "why": "Bakker et al. test why partisans accept co-partisan cues and reject out-party cues. That is the micro-foundation for Noble and Turner's assumed beta_L > beta_R, which the system's steps_for and cpf_pressure both encode."
+    },
+    {
+     "slug": "fouirnaies-2022-electoral-incentives-affect",
+     "relation": "complements",
+     "why": "Fouirnaies and Hall supply the empirical support (state legislators' effort responds to electoral incentives) that the VULN x1.35 amplifier needs and that Noble and Turner's Sec. 4 does not provide. Their evidence comes from state legislatures, so it bears on but does not settle federal salience response."
+    },
+    {
+     "slug": "linde-2016-politicians-take-risks",
+     "relation": "complements",
+     "why": "Linde and Vis give experimental evidence on politicians' risk-taking in the loss domain. That is a behavioral basis for the 'gambling for reelection' logic Noble and Turner borrow from Downs and Rocke, but it applies to legislators rather than to the president who goes public."
+    },
+    {
+     "slug": "poole-1999-nominate-after-years",
+     "relation": "complements",
+     "why": "NOMINATE offers a roll-call measure of elite ideological polarization. It is an alternative, independent estimate of z to the system's stance-tier D-R gap, and it is separate from the base-reaction odds the system derives from that same gap."
+    }
+   ],
+   "bearings": [
+    "melange-influence-engine.salience-shock:contradicts:VERIFIED-SOFTENED",
+    "melange-influence-engine.salience-shock:qualifies:VERIFIED",
+    "melange-influence-engine.salience-shock:qualifies:VERIFIED",
+    "melange-influence-engine.salience-shock:qualifies:VERIFIED-SOFTENED",
+    "melange-influence-engine.salience-shock:method-source:VERIFIED-SOFTENED",
+    "melange-influence-engine.salience-shock:qualifies:VERIFIED"
+   ]
+  },
+  {
+   "slug": "linde-2016-politicians-take-risks",
+   "title": "Do Politicians Take Risks Like the Rest of Us? An Experimental Test of Prospect Theory Under MPs",
+   "year": "2016",
+   "summary": "Linde and Vis ran an incentivized online experiment with 46 sitting Dutch MPs in 2014-2015, about 30% of the Tweede Kamer. They asked whether politicians depart from expected utility theory the way prospect theory predicts.\n\n**What holds up**\n- **Reflection effect in the paid lottery task.** The risky option was chosen by 39.1% under a gain frame and 76.1% under a loss frame (p = 0.0002, n = 46).\n- **Asian disease problem.** The risky option was chosen by 88.5% under a loss frame and 30% under a gain frame (odds ratio 14.6).\n\n**What does not hold up**\n- **Political scenarios.** Reflection appears only in the scenario where votes and economic outcomes are both at stake: 85% vs 69%, Fisher p = 0.30. It reaches 5% significance only when all four scenarios are pooled (odds ratio 8.68, p = 0.033, n = 164 rather than the expected 184, which is unexplained). That pooled figure combines scenario types, three of which show no effect. On this basis the authors say, as suggestive evidence, that votes rather than policy set politicians' reference point.\n- **Other effects.** No common ratio effect was found. The lottery-valuation tasks (n = 28) show nothing significant. Neither sample shows loss aversion (fn 4, p.105). Age, tenure, sex and ideology predict nothing.\n- **\"Smaller than other people.\"** This claim rests on comparison with earlier literature, not on a test in the main text.\n\n**Why it matters here**\nMelange cites this paper twice:\n- **Receptivity layer.** Members in a live race are put in a \"loss domain\" with pt_mult 1.15, and safe members get 0.92.\n- **Money response.** LOSSFRAME = 1.10 makes competitor money move a member's lean more than equal CU money. The comment describes this as loss aversion \"elite-attenuated per Linde-Vis\".\n\nThe paper supports the reflection effect itself. It does not support:\n- loss aversion, which it did not find;\n- treating seat insecurity as a loss frame, since framing was randomly manipulated and Dutch MPs are elected from national party lists, not single-member seats;\n- equating risk-seeking (preferring higher-variance outcomes) with being easier to move by money;\n- any of the constants 1.15, 0.92 or 1.10.",
+   "question": "(1) Does prospect theory describe decisions by politicians as it does those of other people, or are politicians unlike the rest of us? (2) When outcomes span several dimensions (votes and economic policy), which dimension serves as the reference point for politicians?",
+   "method": "Lab-style online experiment, individually completed with at least one researcher present (p.107). Thirteen decision tasks in three parts, with part order and task order within parts randomized (p.107). Part I: six lottery-choice tasks (common ratio tasks 1-2, reflection tasks 5-6, and others) testing EUT deviations. Part II: three lottery-valuation tasks using a multiple-price list (p.109). Part III: four hypothetical political scenarios, each with a gain or loss frame (p.111). Task-related incentives: one randomly selected task (from the lottery-choice or lottery-valuation part) determines a donation to one of seven charities (p.107). For loss frames, the maximum possible loss is added to the donation so that gain and loss frames have identical payoffs (p.109). Analysis: binomial tests (Tables 1 and 3), Fisher's exact tests (Table 4), and logistic regression with robust standard errors clustered by individual (Table 5, p.112).",
+   "findings": [
+    {
+     "finding": "Strong reflection effect in the incentivized lottery-choice task: the risky option is chosen far more often when outcomes are framed as losses.",
+     "location": "Table 3, p.110; text p.110",
+     "numbers": "39.13% (gain frame, task 5) vs 76.09% (loss frame, task 6); difference 36.96 pp; binomial p = 0.0002; n = 46"
+    },
+    {
+     "finding": "No common ratio effect for politicians, which the authors read as a departure from prospect theory's probability-weighting account and a similarity to other people in this respect.",
+     "location": "Table 1, p.108; conclusion p.114",
+     "numbers": "63.04% (task 1) vs 71.74% (task 2); difference 8.70 pp; binomial p = 0.4545; n = 46"
+    },
+    {
+     "finding": "Lottery valuations show the predicted direction of probability weighting and the reflection pattern, but no differences are statistically significant, and the authors call the probability-weighting evidence weak.",
+     "location": "Table 2, p.109; text p.109-110",
+     "numbers": "Average valuation minus expected value, gain treatment: EUR +0.16 (10%), +0.28 (50%), -0.41 (90%); loss treatment: EUR -0.25 (10%), +0.75 (50%), +1.13 (90%); n = 28; no significant differences"
+    },
+    {
+     "finding": "Asian disease scenario (classic reflection problem) shows a strong, significant reflection effect in the political sample.",
+     "location": "Table 4, p.112; text p.111",
+     "numbers": "Risky option: 88.46% under loss frame vs 30% under gain frame; Fisher's exact p < 0.001; logistic loss-frame odds ratio 14.633 (p = 0.001), Table 5"
+    },
+    {
+     "finding": "Hypothetical political scenarios: reflection effect appears only in the votes-plus-economic scenario, and only when pooled with the other scenarios at the 5% level; the single-scenario gap is not significant.",
+     "location": "Table 4 p.112; Table 5 p.112; text p.111",
+     "numbers": "Economic outcomes: 45% (loss) vs 50% (gain), Fisher p = 0.774. Votes: 45.83% vs 40.91%, p = 0.774. Votes and economic (loss in votes): 85% vs 69.23%, p = 0.302; pooled logistic loss-frame odds ratio 8.684, p = 0.033 (n = 164)."
+    },
+    {
+     "finding": "Reference point: votes appear to be the dimension that drives politicians' reflection effect when votes and economic outcomes are both at stake, with the effect weaker than in the single-dimension lottery tasks.",
+     "location": "Abstract p.101; text p.113-114; conclusion p.114",
+     "numbers": "Votes-plus-economic scenario: loss frame 85% vs gain 69.23% risky; authors call the evidence 'less strong but nevertheless suggestive'"
+    }
+   ],
+   "related": [
+    {
+     "slug": "fouirnaies-2022-electoral-incentives-affect",
+     "relation": "complements",
+     "why": "The receptivity layer pairs the two papers as separate channels reading the same seat-security input (incent_mult from Fouirnaies & Hall, pt_mult from Linde & Vis); the code records the resulting security-squared component as a design choice (receptivity_layer.py:200-204)."
+    },
+    {
+     "slug": "noble-2024-presidential-leadership-legislative",
+     "relation": "complements",
+     "why": "salience_shock.py:56-60,104 amplifies members with a defend/contest play by 1.35 ('gambling for reelection', Noble A.4). Linde & Vis's suggestive finding that votes set the reference point is an individual-level prospect-theory analogue of the same electoral-stakes idea."
+    },
+    {
+     "slug": "byrne-2014-chokes-under-pressure",
+     "relation": "complements",
+     "why": "Byrne's choking-under-pressure composite (susc_mult) and Linde-Vis's pt domain are multiplied together in pressure_mult (receptivity_layer.py:227). Neither paper estimates the combined product."
+    }
+   ],
+   "bearings": [
+    "melange-influence-engine.money-response-defection:contradicts:VERIFIED-SOFTENED",
+    "melange-influence-engine.receptivity-layer:qualifies:VERIFIED-SOFTENED",
+    "melange-validation.sensitivity-and-mc:suggests-extension:VERIFIED-SOFTENED"
+   ]
+  },
+  {
+   "slug": "anon-2022-simulating-role-knowledge",
+   "title": "Simulating the role of knowledge brokers in policy making in state agencies: An agent-based model",
+   "year": "2022",
+   "summary": "This item is a 2022 Health Services Research supplement article (DOI 10.1111/1475-6773.13916). Per its title, it builds an agent-based model of how knowledge brokers move research evidence into policy decisions inside state agencies. The only text copy on this machine (c3b27ebe7fb5.txt, 5,082 chars) holds nothing but about 14 repeated Wiley download and licence header lines. There is no abstract, model description, parameters, calibration or results. Paul's 82 highlights (pages 1-5, 7, 8, 10) also carry no covered text and no notes. A check of _annots/c3b27ebe7fb5.json found 0 non-empty text or note fields. Because nothing in the paper's argument can be read, no claim from it can be checked against Paul's systems. Mapping by title alone does not meet the rule that each bearing must state a paper claim with its numbers. The closest topics in Paul's systems are the influence engine's agent-style cascade simulation (melange-influence-engine) and the brokerage and bridging measures in the staffer network (melange-staffer-network.layer-balanced-pagerank). But the target domain differs: the paper looks at evidence use inside state health agencies, while Paul's systems model congressional member persuasion. We cannot tell whether the paper's brokers are network positions, roles or information channels, so any transfer would be guesswork. No bearings are asserted. The useful next step is to re-extract the PDF text, for example with Poppler pdftotext in a new session, and re-run this relation stage. Paul's heavy highlighting (25 marks on page 4 and 17 on page 10) suggests he read the methods and discussion closely, so this paper may matter to him more than the empty record shows.",
+   "question": "",
+   "method": "",
+   "findings": [],
+   "related": [
+    {
+     "slug": "madsen-2017-strategic-advantages-micro",
+     "relation": "same-method",
+     "why": "Both build agent-based simulation models of a political process (micro-targeted campaigning in Madsen; knowledge brokering in state agencies here), so they are the vault's two ABM references for any future agent-level extension of the influence engine."
+    },
+    {
+     "slug": "jacoby-2025-mathematical-modeling-analysis",
+     "relation": "complements",
+     "why": "Both simulate how outside actors shape policy outcomes (lobbying in Jacoby, evidence brokers here); read together once this paper's text is recovered to compare their simulation designs."
+    }
+   ],
+   "bearings": []
+  },
+  {
+   "slug": "byrne-2014-chokes-under-pressure",
+   "title": "Who chokes under pressure? The Big Five personality traits and decision-making under pressure",
+   "year": "2014",
+   "summary": "Byrne, Silasi-Mansat and Worthy ran two lab experiments with Texas A&M undergraduates. Experiment 1 had N = 127, randomised to low or high social pressure. Experiment 2 had about 61 to 62 analysed, under social plus time pressure, with no control arm. The task was a dynamic two-choice task in which picking the option that pays less now but more later is optimal. Big Five traits came from the self-report BFI. Neuroticism was the pre-specified trait, and it was the only effect that held in both experiments. In Experiment 1 it had no effect at low pressure but predicted worse performance under pressure: condition x N b = .45, p = .02; added R2 for the interaction step = .06. Experiment 2 repeated it (N b = .31, p < .05). Agreeableness was exploratory. Its Experiment 1 interaction was only a trend (p = .08); it was significant only in the uncontrolled Experiment 2 (b = .36, p < .01). The conscientiousness correlation (r = .27 under pressure) did not survive regression and did not replicate. Extraversion was null. The paper itself flags that money and social pressure are confounded, that there was no manipulation check, and that the working-memory mechanism was never measured.\n\nWhy it matters here: this is the citation behind the receptivity layer's susceptibility composite (`.40A + .30N - .20C - .10E`). It reads that composite as how much a legislator moves under lobbying pressure. The paper only partly supports that. Its outcome is worse choices on a delayed-reward task, not giving in to persuasion. Its sample is students, not legislators. Its strongest trait (N) gets a smaller weight than its weakest positive trait (A). The project's own well-powered test of Byrne's mechanism came back null: H5, N x loss domain, partial r = +0.036, n = 441. So the N slot is cited to theory with no validation behind it, and should keep the UNVERIFIED label.",
+   "question": "Whether the Big Five personality traits predict who thrives or chokes under pressure during dynamic decision-making, i.e., which traits predict performance decrements under social pressure (Exp 1) and under combined social plus time pressure (Exp 2). Neuroticism was the a priori focus; the other four traits were treated as exploratory (Intro, p. 23; Sections 2.2.3 and 4).",
+   "method": "Lab experiments with a dynamic two-option decision task (Gureckis & Love, 2009; Worthy et al., 2011, 2012). The Increasing option pays less immediately but raises both options' future payoffs, so it is optimal. The Decreasing option pays more immediately but lowers future payoffs. Trial-by-trial foregone payoffs are shown. Dependent variable: average proportion of Increasing-option selections over 250 trials. Personality was measured with the 44-item Big Five Inventory. Experiment 1 analysis: Pearson correlations within each condition (Table 2); a two-step hierarchical regression (Step 1: condition dummy and five traits; Step 2: condition x trait interactions), then separate regressions within each condition to locate the interaction (Section 2.2.3; Table 3). Balance check: t-tests on the five traits by condition, Bonferroni-corrected, none significant at p > .01 (Section 2.2.1). Experiment 2: same task plus a 1705 s time limit with live On Pace / Behind Pace feedback; correlations with completion time and performance (Table 4) and a multiple regression of the five traits on performance (Table 5). There was no low-pressure arm in Experiment 2.",
+   "findings": [
+    {
+     "finding": "Exp 1 condition x neuroticism interaction: neuroticism had no significant relation to performance in the low-pressure condition but negatively predicted performance under social pressure.",
+     "location": "Section 2.2.3; Table 3; Section 4",
+     "numbers": "Interaction DR2 = .06, F(11,115) = 1.96, p = .04; condition x N b = .45, p = .02; high-pressure N b = .50, p < .01; low-pressure N not significant."
+    },
+    {
+     "finding": "Exp 1 main effects: pressure lowered performance; neuroticism negatively predicted performance in the first-step model. The first-step model only approached significance.",
+     "location": "Section 2.2.3; Table 3",
+     "numbers": "Step 1 R2 = .10, F(6,120) = 2.14, p = .054; condition b = .43, p = .02; neuroticism b = .25, p = .01; conscientiousness b = .16, p = .09 (trend)."
+    },
+    {
+     "finding": "Exp 1 correlations within condition: no trait correlated significantly with performance in the low-pressure condition; under pressure, conscientiousness and neuroticism were negatively correlated with performance. The conscientiousness link did not survive the regression and was not replicated in Exp 2.",
+     "location": "Section 2.2.2; Table 2; Sections 2.3 and 3.3",
+     "numbers": "High pressure: C r = .27, p < .05; N r = .34, p < .01. Low pressure: none significant."
+    },
+    {
+     "finding": "Exp 1 agreeableness interaction was a non-significant trend. Higher agreeableness was associated with lower performance under pressure, but not significantly.",
+     "location": "Section 2.2.3; Section 2.3",
+     "numbers": "Condition x A b = .33, p = .08 (trend); high-pressure A b = .18, p = .17 (ns)."
+    },
+    {
+     "finding": "Exp 2 (social plus time pressure) replicated the neuroticism effect. Neuroticism and agreeableness both negatively predicted performance; the overall model was significant. Conscientiousness did not predict performance under time pressure.",
+     "location": "Section 3.2.2; Table 5; Section 3.3",
+     "numbers": "Model R2 = .19, F(5,55) = 2.61, p < .05; N b = .31, p < .05; A b = .36, p < .01; O, C and E not significant (Table 5 reports b = .16, .16, .06 without significance marks)."
+    },
+    {
+     "finding": "Exp 2 correlations: agreeableness negatively correlated with performance; neuroticism and conscientiousness were negative but non-significant; completion time correlated strongly with performance.",
+     "location": "Section 3.2.1; Table 4",
+     "numbers": "A r = .29, p < .05; N r = .16 (ns); C r = .16 (ns); completion time x performance r = .62, p < .01."
+    }
+   ],
+   "related": [
+    {
+     "slug": "linde-2016-politicians-take-risks",
+     "relation": "complements",
+     "why": "Supplies the loss-domain pt_mult in the same receptivity layer. The H5 test crossed Byrne's N with the loss domain. Both papers test decisions under pressure or risk in elites or students; effects in elites are smaller or unproven."
+    },
+    {
+     "slug": "palm-2025-influence-personality-traits",
+     "relation": "complements",
+     "why": "Systematic review of how Big Five traits moderate persuasion-strategy effects. That is the persuadability construct the receptivity layer needs, which Byrne's choking task does not measure."
+    },
+    {
+     "slug": "fouirnaies-2022-electoral-incentives-affect",
+     "relation": "complements",
+     "why": "Supplies the incent_mult term multiplied into the same pressure_mult product as Byrne's susceptibility term (receptivity_layer.py:6-21)."
+    },
+    {
+     "slug": "mondak-nd-online-appendix-personality",
+     "relation": "complements",
+     "why": "Expert ratings of US senators' traits, including N. Could test whether the system's N-slot measure tracks neuroticism, which Byrne's mechanism needs before transfer."
+    },
+    {
+     "slug": "celli-2012-role-emotional-stability",
+     "relation": "complements",
+     "why": "Text-based emotional-stability measure. Bears on whether affective-content N captures the anxiety facet Byrne's mechanism relies on."
+    },
+    {
+     "slug": "ramey-2016-measuring-elite-personality",
+     "relation": "complements",
+     "why": "Speech-based elite personality measurement. The lexical Big Five basis that fills the composite at receptivity_layer.py:189 comes from this family of measures; Byrne used the self-report BFI."
+    }
+   ],
+   "bearings": [
+    "melange-influence-engine.receptivity-layer:qualifies:VERIFIED-SOFTENED",
+    "melange-influence-engine.receptivity-layer:qualifies:VERIFIED-SOFTENED",
+    "melange-psychometrics.affective-n:qualifies:VERIFIED",
+    "melange-psychometrics.persona-agency-communion:qualifies:VERIFIED"
+   ]
+  },
+  {
+   "slug": "palm-2025-influence-personality-traits",
+   "title": "The influence of personality traits on the effect of persuasion strategies: A systematic literature review",
+   "year": "2025",
+   "summary": "Palm and Tims (2025) is a PRISMA-guided systematic review of 80 studies published between 1982 and September 2024. It asks whether Big Five traits moderate the effect of persuasion strategies, nearly always Cialdini's six principles. Most included studies are one-off self-report surveys of perceived persuasiveness. Samples are mainly the general public (62.5%) and students (31.25%), and the main domains are health (41.25%) and business (25%). The synthesis is narrative only: it counts studies and their reported directions, with no pooled effect sizes and no risk-of-bias appraisal.\n\n**Main claims:**\n- Strategies matched to a trait outperform no strategy, and mismatched strategies can backfire.\n- Ranked by susceptibility to persuasion, agreeableness is highest, then extraversion, conscientiousness and openness, with neuroticism lowest (Table 2).\n- Even so, one included study (Oyibo & Vassileva 2019) found neuroticism the trait most consistently correlated with responsiveness to social-influence strategies.\n- Only a few political studies are included (Zarouali 2022, Gerber 2013, Decker & Kramer 2023), and they disagree.\n\n**Why it matters here:** the receptivity layer turns personality into a single susceptibility scalar. Neuroticism gets a positive weight (+.30) and extraversion or dominance a negative one (-.10). The review's ranking runs against both signs, while it supports the +.40 agreeableness slot. The caveat is that the constructs differ. Byrne's composite, which the code cites, is about decisions breaking down under pressure, not about responding to a persuasion message. The review's evidence also comes from consumers and students, not legislators. So the review is weak evidence against the N and E signs, not a calibration source.\n\n**What it exposes:** the engine has no strategy dimension. It models one generic pressure, so the review's main result, which is about matching a strategy to a trait, has nothing in the system to attach to. This analysis is UNVERIFIED until a second path reproduces it (DE-062).",
+   "question": "What is the influence of personality traits on the effect of persuasion strategies on influencing individual behavior? (Abstract; Sec 1, p.2)",
+   "method": "PRISMA-guided systematic review of Web of Science using AND-combined keyword pairs (Persuasion Strategies/Technologies with Personality Traits/Big Five/Five Factor Model) plus reference-list snowballing (Sec 3.2). Title/abstract then full-text screening; English only; journal ranking not used (Sec 3.3). Deductive coding of 6 dimensions (strategy type, author, moderators, mediators, outcomes, results) plus search term, method, research type, domain; inductive coding of study duration and sample (Sec 3.4). Synthesis is narrative: counts of studies and direction of reported effects. No pooled effect sizes, meta-analysis, or formal quality/risk-of-bias appraisal is described.",
+   "findings": [
+    {
+     "finding": "Matching trait-tailored strategies are more effective than non-matching (no strategy); contra-matching (random, non-ideal strategy) is often counterproductive, not merely ineffective. No effect sizes reported.",
+     "location": "Abstract p.1; Sec 4.1 p.3; Sec 5 p.6",
+     "numbers": "Count-based narrative; Jankovic et al. 2022 found no significant difference (n=27)"
+    },
+    {
+     "finding": "Susceptibility differs by Big Five trait: agreeableness most susceptible, neuroticism least.",
+     "location": "Abstract p.1; Table 2 p.4; Sec 4.2.1 and 4.2.5 pp.4-5",
+     "numbers": "Table 2: agreeableness High; extraversion Above average; conscientiousness Average; openness Below average; neuroticism Low"
+    },
+    {
+     "finding": "Extraversion positively associated with susceptibility (Gkika 2016; Ndulue 2022); Decker & Kramer (2023) found no high-vs-low difference in political microtargeting.",
+     "location": "Sec 4.2.2 p.5",
+     "numbers": "n/a"
+    },
+    {
+     "finding": "Conscientiousness generally average; Halko & Kientz (2010) found it most strongly correlated with responsiveness in health mobile apps.",
+     "location": "Sec 4.2.3 p.5",
+     "numbers": "n/a"
+    },
+    {
+     "finding": "Openness generally below average in health and tech contexts but context-dependent: positive in education (Ghorbani & Rashvand Semiyari 2022) and voter mobilization (Gerber et al. 2013).",
+     "location": "Sec 4.2.4 p.5",
+     "numbers": "n/a"
+    },
+    {
+     "finding": "Neuroticism least susceptible overall, yet Oyibo & Vassileva (2019) found it most consistently correlated with responsiveness to social-influence strategies; Gkika et al. (2016) found greater acceptance of social proof.",
+     "location": "Sec 4.2.5 p.5",
+     "numbers": "n/a"
+    }
+   ],
+   "related": [
+    {
+     "slug": "byrne-2014-chokes-under-pressure",
+     "relation": "contradicts",
+     "why": "Byrne is the cited source for the positive N weight, based on N degrading decisions under pressure. Palm & Tims rank N least susceptible to persuasion. Same trait, opposite practical direction, because the two constructs differ."
+    },
+    {
+     "slug": "birkenmaier-2025-measuring-politicians-public",
+     "relation": "complements",
+     "why": "Provides the agency and communion measurement that feeds the persona channel. Palm & Tims give weak evidence on whether communion and agency should raise or lower susceptibility."
+    },
+    {
+     "slug": "tappin-2023-quantifying-potential-persuasive",
+     "relation": "complements",
+     "why": "Quantifies the returns to political microtargeting, which tests the practical claim (profile, then match) that Palm & Tims assert without effect sizes."
+    },
+    {
+     "slug": "simchon-2024-persuasive-effects-political",
+     "relation": "extends",
+     "why": "Studies personality-tailored political messaging made with generative AI, the frontier Palm & Tims point to through Matz et al. 2024."
+    },
+    {
+     "slug": "zareie-2023-influence-maximization-social",
+     "relation": "complements",
+     "why": "A survey of behaviour-aware influence maximization, cited by the receptivity layer for seed_prob. Palm & Tims supply the trait-moderation evidence that such models assume."
+    },
+    {
+     "slug": "koutsoumpis-2024-kernel-truth-text",
+     "relation": "complements",
+     "why": "Palm & Tims rely on self-reported traits. Koutsoumpis meta-analyses how weakly text-based (LIWC) traits track self-reports, which limits any transfer to the system's text-derived traits."
+    }
+   ],
+   "bearings": [
+    "melange-influence-engine.receptivity-layer:qualifies:UNVERIFIED",
+    "melange-influence-engine.receptivity-layer:qualifies:UNVERIFIED",
+    "melange-influence-engine.receptivity-layer:suggests-extension:UNVERIFIED",
+    "melange-psychometrics.persona-agency-communion:qualifies:UNVERIFIED"
+   ]
+  },
+  {
+   "slug": "zhan-2025-cost-minimized-stage",
+   "title": "A cost-minimized two-stage three-way dynamic consensus mechanism for social network-large scale group decision-making: Utilizing K-nearest neighbors for incomplete fuzzy preference relations",
+   "year": "2025",
+   "summary": "Zhan and Cai (ESWA 2025) propose a consensus procedure for large groups whose members state incomplete fuzzy preference matrices and are linked by a trust network. It has four parts. (1) Missing preference entries are filled from the K most trusted neighbours who have that entry. Each neighbour is weighted by trust and preference similarity, the most reliable gaps are filled first, and filling repeats until stable. (2) Members are clustered with an adaptive k-means whose distance combines trust and unit adjustment cost (UAC). (3) A three-way decision rule sorts members into Pos, Bnd and Neg regions. (4) A two-stage linear program makes the cheapest preference adjustments, first per member and then per subgroup, until group consensus reaches 0.92.\n\nAll evidence is either one worked case or synthetic. The case has 20 decision-makers and 5 alternatives; its UAC values are random, and its trust network and preference data come from an earlier paper and are not reproduced. Group consensus rises from 0.9117 to 0.9368 over 11 rounds. The imputation MSE of 0.09 to 0.13 is measured only on randomly generated matrices. The paper compares numerically against one method, in a figure only. There is no causal identification, no holdout and no proof that the procedure converges.\n\nThe paper models committee-style preference aggregation. It does not model lobbying, legislators or influence, so most of Paul's systems are unaffected. Its one useful contact is network-neighbour imputation. The paper's estimator weights neighbours by tie strength and similarity and orders fills by reliability. The system's stance-dynamics proposer takes a plain mean over binary cosponsor neighbours. The extension is only worth testing because that same component found co-movement null on cosponsor ties. That null undercuts the homophily premise this whole imputation family relies on, and the paper never tests the premise on real data. Its \"trust\" is an elicited trust score, not cosponsorship. Reading cosponsor weights as trust would break D-025.",
+   "question": "How to reach a consensus in large-scale group decision-making (LSGDM) with social networks (SN-LSGDM) when decision-makers (DMs) submit incomplete fuzzy preference relations (IFPRs), while minimizing unit adjustment cost (UAC) and keeping trust relations dynamic. Sub-questions: (a) estimate missing preference entries using K-nearest neighbours in the trust network; (b) cluster DMs into subgroups using trust, preference similarity and UAC; (c) run a two-stage (individual and subgroup) feedback consensus process based on three-way decision (TWD) with a cost-minimizing optimization step.",
+   "method": "Four-part model. (1) Missing-value estimation (Sec. 3.1, Defs 3.1-3.6, Eqs 11-19): find K trusted neighbours with known entry; similarity sim_K (Eqs 12-13) and membership mu (Eq 14, mu = (t + sim)/(1 + sim)); normalize to weights (Eq 15); reliability r (Eq 16); impute f = sum of weights times neighbour values (Eqs 17-18), filling highest-reliability entries first and iterating to convergence. Complexity O(K^2 n p) (Remark 3.2). (2) Improved k-means on the trust network (Sec. 3.2, Defs 3.7-3.8, Eqs 20-30): trust influence Int(e_u) (Eq 20); adaptive k and initial centroids via a trust-discrepancy threshold (Eqs 21-23, Algorithm 1); distance = comprehensive difference combining (1 - mutual influence) and |UAC_u - UAC_v| / 2 (Eqs 24-29); iterate to SSE convergence (Algorithm 2, Eq 30). Complexity O(k n p^2) (Remark 3.5). (3) TWD consensus (Sec. 4.1, Def 4.1, Eqs 31-33): Pos = DMs with CD >= theta_ideal; CAP_r = beta(1 - UAC_r) + ((1-beta)/2) t_r + ((1-beta)/2)(1 - CD_r) (Eq 32); threshold CAP_lambda = CAP_min + lambda(CAP_max - CAP_min) (Eq 33); Neg if CAP >= CAP_lambda else Bnd. (4) Two-stage optimization (Sec. 4.2, Eqs 34-40): stage 1 minimizes sum of UAC_u times sum |h_ij - f_ij| over Neg DMs subject to Pos-based trust-weighted adjustment constraints, solved as a linear program (Python linprog); trust update t* = t^(1 - t) (Eqs 35-36, 39-40); stage 2 repeats with subgroups as units (Eq 38). Stop when group consensus degree (GCD) >= theta_ideal. Overall complexity stated as O(k n p^2) (Remark 4.2). Parameters: beta = 0.4, lambda = 0.5, theta_ideal = 0.92, K = 4 (Sec. 5.1, p.11).</method>\n<parameter name=\"identification\">None. This is a design-and-simulation paper with no causal identification strategy. Support comes from one worked numerical example (p.11-14), sensitivity sweeps over K and beta (Sec. 6.1, Figs 3-5, p.14-15), synthetic DM-scaling simulations (Figs 6-7, p.15-16), a missing-value robustness grid (Fig 8, p.16), and one quantitative comparison with method M1 (Fig 9, p.16).",
+   "findings": [
+    {
+     "finding": "Missing entry f10_45 is estimated from four trusted neighbours (e1, e8, e16, e4) with normalized weights 0.2549, 0.2507, 0.2503, 0.2440; the estimate is 0.4033.",
+     "location": "Sec. 5.2 Step 2, p.11-12 (Eq. 17 worked example)",
+     "numbers": "weights sum to 0.9999; f10_45 = 0.4033"
+    },
+    {
+     "finding": "Twenty IFPRs contain 39 missing entries; the most reliable missing value is f10_45 with reliability 3.8683, estimated first.",
+     "location": "Sec. 5.2 Steps 2.1-2.2, p.11",
+     "numbers": "39 missing; reliabilities range about 3.16 to 3.87 (list at Step 2.2); max 3.8683"
+    },
+    {
+     "finding": "Adaptive k-means on the trust network with comprehensive difference yields six subgroups.",
+     "location": "Sec. 5.2 Step 3, p.12",
+     "numbers": "C1={e3,e4,e10,e12}; C2={e2,e8,e13}; C3={e5,e7}; C4={e9,e18}; C5={e1,e17,e19,e20}; C6={e6,e11,e14,e15,e16}; sizes 4,3,2,2,4,5 (total 20)"
+    },
+    {
+     "finding": "Before feedback, all six subgroup consensus degrees fall below the threshold 0.92.",
+     "location": "Sec. 5.2 Step 3, p.12",
+     "numbers": "CD(1)=0.8474, CD(2)=0.8683, CD(3)=0.8692, CD(4)=0.8814, CD(5)=0.8405, CD(6)=0.8601"
+    },
+    {
+     "finding": "Stage-1 feedback brings subgroup C1 above threshold after two rounds; authors report all subgroups are then adjusted, with no per-subgroup table given.",
+     "location": "Sec. 5.2 Step 4, p.12-13",
+     "numbers": "C1: 0.8474 -> 0.9084 (round 1) -> 0.9220 (round 2); threshold 0.92"
+    },
+    {
+     "finding": "Group consensus degree (GCD) passes the threshold only after the second stage-2 round.",
+     "location": "Sec. 5.2 Step 5, p.13-14",
+     "numbers": "GCD 0.9117 before stage 2; 0.9188 after round 1 (below 0.92); 0.9368 after round 2 (above 0.92). Total 11 rounds across both stages (Remark 5.2)"
+    }
+   ],
+   "related": [
+    {
+     "slug": "zhou-2026-measuring-stance-dynamics",
+     "relation": "complements",
+     "why": "The system's stance-dynamics imputer cites Zhou-Elejalde silent-actor collaborative filtering as its template (fec/stance/stance_dynamics.py:147). Zhan-Cai gives a trust- and similarity-weighted alternative to the same neighbour-imputation idea."
+    },
+    {
+     "slug": "cao-2025-social-network-group",
+     "relation": "complements",
+     "why": "Cao 2025 is a survey of social-network group decision making, the field this paper belongs to. It places the paper's trust-driven consensus and minimum-cost feedback among related designs."
+    }
+   ],
+   "bearings": [
+    "melange-stance.stance-dynamics:suggests-extension:UNVERIFIED"
+   ]
+  },
+  {
+   "slug": "thakur-2025-matching-theory-perspective",
+   "title": "A matching theory perspective on legislative organization: assignment of committees",
+   "year": "2025",
+   "summary": "Thakur (PSRM 2025) applies matching theory to US Senate committee assignment. He argues that the two parties fill seats through different mechanisms. Senate Republicans use a seniority-ordered Serial Dictatorship, which works in practice like the strategyproof, individually rational and Pareto-efficient TTC/YRMH-IGYT. Senate Democrats use something close to the Boston mechanism, with secret tie-breaking votes by the committee-on-committees (COC). Under the Boston mechanism, members have reason to misreport their preferences.\n\nThe evidence is explicitly suggestive.\n- Freshman Democrats list Prestige committees as first choice 8% less often than non-freshmen (p = 0.15, 1947-1995 request data). Republicans show no such gap (p = 0.80).\n- Mean seniority at appointment differs across parties on some committees (e.g., Environment & Public Works: R 3.80, N=30, vs D 1.00, N=14; t=3.05). The author reads this as possible COC discipline on the Democratic side.\n- A reduced-form structural model for Republicans only (426 new assignments, 104th-114th) finds high common value and small idiosyncratic variance for Finance and Appropriations. Constituency committees such as Small Business have low common value and depend on constituency particulars.\n- Seniority on a committee mixes revealed value with queuing benefits.\n\nFor Paul's system, the paper speaks mainly to the committee/Influence pillar. That pillar prices seats by CU-relevance tier, with fixed chair and ranking multipliers. It does not distinguish chamber or party. The paper suggests that who holds a seat is partly an artifact of party-specific mechanisms, seniority queues and COC discipline. This bears on Paul's chicken-or-egg note about partisanship and committee selection. It also argues against treating committee office as a costly, member-chosen signal, which agrees with the system dropping committee gatekeeping (path J) from the say-do gate.\n\nScope limits: Senate only (about 100 of 533 members), data from 1947-2017, the House not studied, and no causal identification. None of this validates the tier weights. Any test of the committee pillar against outcomes should be stratified by party and chamber, or labelled UNSTRATIFIED.",
+   "question": "How do the US Senate parties actually assign members to committees, i.e., what matching mechanism does each party use to turn rank-ordered committee requests into assignments, and what do those mechanisms imply for strategic reporting, party discipline by the committee-on-committees (COC), incumbents' property rights, and the validity of canonical theories of legislative organization (Distributive, Informational, Cartel-Agenda)? (Sec. 1, pp. 2-3.)",
+   "method": "Primarily theoretical and descriptive. (a) Institutional reconstruction of the two procedures from CRS reports (Schneider 2003, 2006, 2014) and Shepsle (1978), with archival correspondence exhibits (Tables 1-2). (b) Mechanism-design analysis: static properties of SD, SD with squatting rights, SD with waiting list, TTC/YRMH-IGYT, and the Boston mechanism (Table 3, citing Abdulkadiroglu-Sonmez 1999, 2003; Kojima-Unver 2014). (c) A two-committee partial-equilibrium model of a single Democrat's rank-order choice against a stochastic environment with an existing-tenant guarantee u(x)>0, yielding Proposition 1 (higher guaranteed payoff implies weakly higher rank positions, p. 15; proof in Online Appendix A.2). (d) Descriptive comparisons: share of rank-1 requests by committee type, freshman vs non-freshman Democrats (Figure 1, p-values); Republican freshman vs non-freshman (Figure A1); average chamber seniority at request (Table A4); cross-party difference in means of seniority at appointment with t-stats and difference in SDs (Table A5); revealed-preference ranking of committee value using average seniority with the 1-3 most senior members excluded (Table A6). (e) Reduced-form structural model u_ic = delta_c + eps_i with eps_i mean 0 and variance sigma_eps^2, identifying committee common value and idiosyncratic variance from the mean and variance of chamber seniority at appointment (and minimum-seniority moments mu_min, sigma_min) for Republicans only (Tables A7-A8), justified by the seniority-based TTC/YRMH-IGYT mechanism. Cross-party comparisons assume the true preference distributions of Republicans and Democrats are the same (p. 19).",
+   "findings": [
+    {
+     "finding": "Senate Republicans assign committees via a seniority-based Serial Dictatorship approximated in practice by the TTC/YRMH-IGYT mechanism; it is strategyproof, individually rational and Pareto efficient. Senate Democrats use an approximation of the Boston mechanism with COC tie-breaking votes, which is not strategyproof. The two parties therefore use structurally different mechanisms.",
+     "location": "Abstract p. 1; Introduction pp. 2-3; Sec. 3.1-3.3 pp. 7-9; Table 3 p. 14; Sec. 3.5.1 pp. 12-14",
+     "numbers": "Table 3: Democrat Boston mechanism is not strategyproof; Republican SD with seniority is strategyproof but not IR; SD with squatting rights is strategyproof but neither IR nor PE; SD with waiting list is strategyproof and IR but not PE; TTC/YRMH-IGYT is strategyproof, IR and PE."
+    },
+    {
+     "finding": "Prediction 1 (Republicans request truthfully, Democrats strategically) is supported only by archival anecdote and a CRS quote; the paper says it lacks enough data to test Prediction 1 directly.",
+     "location": "Sec. 3.3 pp. 8-9 (Exhibit #4, Gregg letter 1992); Sec. 5.1 p. 18",
+     "numbers": "No test statistic. Paper states it cannot test Predictions 1, 2(a) and 3(b) (p. 18)."
+    },
+    {
+     "finding": "Freshman Senate Democrats request fewer popular, highly sought-after Prestige committees than non-freshmen, consistent with hedging against the Boston mechanism when they lack an existing-assignment guarantee.",
+     "location": "Sec. 5.2.1 p. 19; Figure 1 p. 18; Table A4 p. 23",
+     "numbers": "8% fewer Prestige first-choice requests for freshmen vs non-freshmen, p = 0.15 (Frisch-Kelly 1947-1995 data). Average chamber seniority at request: Prestige 3.88 yrs, Policy 2.89 yrs, Constituency 2.58 yrs."
+    },
+    {
+     "finding": "No comparable substitution away from Prestige committees appears among Republican freshmen vs non-freshmen, consistent with strategyproofness of the Republican mechanism.",
+     "location": "Sec. 5.2.1 p. 19; Figure A1 p. 25",
+     "numbers": "p = 0.80 for the difference (Dole Archives, 91st and 103rd Congresses). First-choice comparison only, because 76% of Republican non-freshmen rank only one choice."
+    },
+    {
+     "finding": "Cross-party differences in seniority at appointment (Predictions 2b, 2c) point to possible party discipline or non-seniority tie-breaking by the Democratic COC on certain committees, not on Prestige and Constituency committees as a group. Environment, Commerce and Governmental Affairs are the flagged policy committees; the text also flags Budget and Rules.",
+     "location": "Sec. 5.2.2 p. 19; Table A5 pp. 23-25",
+     "numbers": "Environment & Public Works: R mean 3.80 (N=30) vs D 1.00 (N=14), diff 2.80, t=3.05, SD diff 5.03. Commerce, Science & Transport: diff -1.74, t=-2.09, SD diff -2.87. Governmental Affairs: diff 4.93, t=1.76, SD diff 1.59. Budget and Rules are called significant in the text under Prediction 2(c), with SD diffs of -6.43 and -4.05 (mean diffs -0.33 and -1.62); the table shows no starred t-stats for these rows."
+    },
+    {
+     "finding": "Revealed-preference ranking of committee value (Prediction 4): Rules, Finance, Governmental Affairs and Appropriations are the most sought-after committees, even after excluding the most senior members.",
+     "location": "Sec. 5.2.3 p. 19; Table A6 p. 24 (extraction partly garbled)",
+     "numbers": "Table A6 reports Republican average chamber seniority by committee for all members and excluding the 1, 2 and 3 most senior. Rules is highest in the all-members column at about 16.6 years on the readable entries; per-committee cell mapping is not recoverable from the extraction."
+    }
+   ],
+   "related": [
+    {
+     "slug": "porter-2005-network-analysis-committees",
+     "relation": "complements",
+     "why": "Porter et al. (PNAS 2005) map House committee shared-membership networks. Thakur's account of party-specific seat allocation bears on whether such ties reflect member choice or mechanism. Item exists with text; link is topical."
+    },
+    {
+     "slug": "huneeus-2018-effects-firms-lobbying",
+     "relation": "complements",
+     "why": "Verified: Huneeus and Kim use politicians' committee assignments as an instrument, assuming firms cannot influence committee membership. Thakur's finding that placement follows party mechanisms bears on that exogeneity assumption."
+    },
+    {
+     "slug": "gaynor-2022-financial-ties-bind",
+     "relation": "complements",
+     "why": "Gaynor studies caucus membership and party leaders' donations to members. Thakur models party control of seat allocation through a different channel. The link is topical only; the insulation framing in the source note was not found in the text."
+    }
+   ],
+   "bearings": [
+    "moneyball-rank-pillars.committee-pillar:qualifies:VERIFIED-SOFTENED",
+    "moneyball-rank-pillars.committee-pillar:qualifies:VERIFIED-SOFTENED",
+    "melange-labels-and-tiers.say-do-gate:supports:VERIFIED-SOFTENED"
+   ]
+  },
+  {
+   "slug": "best-2022-redistricting-commissions-avoid",
+   "title": "Do Redistricting Commissions Avoid Partisan Gerrymanders?",
+   "year": "2022",
+   "summary": "Best, Lem, Magleby and McDonald test whether the redistricting commissions of the 2010 round drew congressional maps that are biased toward one party. For each of 34 states, they compare the enacted plan with 10,000 partisan-blind plans drawn by graph partitioning on the voter tabulation district (VTD) map. Each simulated plan is contiguous and keeps district populations within about 1% of each other. The paper uses three indicators:\n\n- the observed vs expected spread (SD) of district vote shares, as a test for cracking;\n- the median minus the mean of district vote shares, as a test for packing and entrenchment;\n- turnout bias, the mean district vote share minus the statewide share.\n\nOverall, commission maps sit closer to the neutral baseline than maps drawn by legislatures. Still, 3 of the 7 commission states are suspect. Arizona added about 1.5 points of pro-Democratic asymmetry, and its districts were more spread out (less competitive) than neutral plans. New Jersey shows 1.7-3.7 points of anti-Democratic bias. Virginia shows 2.7-4.0 points against Democrats in 10 of 10 elections, and fewer than 1% of neutral plans are that skewed. The design is descriptive and within-state; the paper makes no causal claim about commissions.\n\nFor Paul's systems the paper is adjacent. It says nothing about lobbying, networks, path-finding or money effects. Its one real point of contact is the competitiveness multiplier c, which reads district lean from Cook PVI. The paper shows that how the lines are drawn can move district partisanship by several points, which is about the size of the multiplier's 5-point scale constant. So lean is partly a product of the map, not only of voters. The paper does not test, and cannot validate, the premise that dollars buy more in competitive seats. A smaller point: the paper treats out-of-date boundaries as a measurement limitation, which echoes the Census scraper's mix of 116th- and 119th-Congress district boundaries.",
+   "question": "Do redistricting commissions used in the 2010 round produce congressional district maps that are biased toward one party compared with a neutral, partisan-blind standard drawn within the same state? The paper asks how well commissions perform as neutral decision makers, using the 2010 round as the test.",
+   "method": "Descriptive counterfactual-comparison design with a simulated neutral baseline. Each enacted map is compared with the distribution of outcomes from 10,000 partisan-blind plans per state, generated with the Magleby and Mosesson (2018) multi-level weighted graph-partitioning algorithm (rook contiguity, population balance within about plus or minus 1%, compactness considered in the appendix). Indicators: observed vs expected standard deviation of Democratic district vote share (exclusion); observed vs expected gerrymandering bias (median minus mean district vote share, skew/entrenchment); turnout bias (mean district vote share minus statewide vote share); observed vs expected number of districts won by the statewide Democratic candidate (majority-rule test). Evaluation is on average values across states and elections (Figures 2-3), then state-by-state (Table 4, Figure 4 traces of observed vs expected district vote shares, sorted low to high). For Arizona, the two Hispanic majority-minority districts were held fixed in all simulated plans (Appendix, VRA section). Compactness compared via dispersion (area / minimum circumscribing circle) and perimeter (Niemi et al. 1990) ratios for 1,000 simulated maps vs the commission map.",
+   "findings": [
+    {
+     "finding": "Three of seven commission states produced suspect results benefiting one party: Arizona pro-Democratic; New Jersey and Virginia pro-Republican. Commissions generally produce less partisan bias than legislatures, but do not always eliminate it.",
+     "location": "Abstract p. 379; Introduction pp. 380-381; Evaluations p. 385-386",
+     "numbers": "3 of 7 commission states flagged; 34 states evaluated; 10,000 simulated maps per state"
+    },
+    {
+     "finding": "Across the 34 evaluated states, maps enacted by commission states generally perform better (closer to neutral baseline) than maps enacted by states without commissions.",
+     "location": "Evaluations p. 384 (Figures 2-3)",
+     "numbers": "Qualitative; commission states mostly near or below the 45-degree lines; AZ, NJ, VA above the line in Figure 2"
+    },
+    {
+     "finding": "Arizona (independent commission): turnout bias favored Democrats about 2 points across all 10 statewide 2008-2012 elections. Enacted plan added roughly 1.5 points of pro-Democratic asymmetry bias beyond what residential patterns would produce, erasing a neutral pro-Republican asymmetry. Republicans charged mistreatment and the commission's map was judged a pro-Democratic gerrymander.",
+     "location": "Suspect 1, pp. 387-388; Table 4 p. 387; Conclusion p. 390",
+     "numbers": "turnout bias about +2 points; added asymmetry about +1.5 points; expected asymmetry balanced by pro-Republican bias under neutral drawing"
+    },
+    {
+     "finding": "Arizona: enacted standard deviations were consistently larger than expected (more dispersed, less competitive districts), with packing in both directions; Democrats carried the three CDs they were described as making more competitive. The contramajoritarian result was limited: Republicans won 5 of 9 seats in 2014 and 2016, so Democrats were not entrenched.",
+     "location": "Suspect 1, pp. 388-389; Figure 4 p. 388",
+     "numbers": "Obama 2012 at 45.4% of two-party vote carried 5 of 9 seats; Democratic Senate candidate 48.4% in 2012 would have carried 5 of 9 seats with CDs 1, 2, 9 over 50%; Republicans won 5 of 9 House seats in 2014 and 2016"
+    },
+    {
+     "finding": "New Jersey (political commission, party-line 7-6 vote favored the Republican plan): enacted lines show an anti-Democratic gerrymander bias of 1.7 to 3.7 points, partly offset by 1.3 to 2.5 points of pro-Democratic turnout bias. Standard deviations uniformly larger than the neutral average.",
+     "location": "Suspect 2, p. 389; Table 4 p. 387; Conclusion p. 391",
+     "numbers": "gerrymander bias against Democrats 1.7-3.7 points; turnout bias +1.3 to +2.5; 2013 Senate special: Democrat 55.5% carried 6 of 12 districts"
+    },
+    {
+     "finding": "Virginia (advisory commission, plan actually chosen by the legislature after an inconclusive session and a 20-20 Senate tie broken by the Republican Lieutenant Governor): a pro-Republican gerrymander, persistently biased against Democrats in all 10 observed elections; asymmetry of 2.7-4.0 points; fewer than 1% of partisan-blind plans exceed the observed asymmetry, except Warner's abnormally lopsided 2008 Senate win.",
+     "location": "Suspect 3, pp. 389-390; Table 4 p. 387; Conclusion p. 390",
+     "numbers": "asymmetry bias 2.7-4.0 points against Democrats in 10 of 10 elections; Obama 2012 won 52% of two-party vote and carried 4 of 11 districts; Democrats won 3 of 11 House races in 2012 and 2014; 4 of 5 elections with Democratic vote share 50-54% failed to carry a majority of districts"
+    }
+   ],
+   "related": [
+    {
+     "slug": "becker-nd-gameability-redistricting-criteria",
+     "relation": "complements",
+     "why": "Becker shows that formal redistricting criteria can be gamed. Best et al. find that commissions satisfy their formal charges (compactness, contiguity) yet still produced partisan bias in 3 of 7 states, an empirical case of the same weakness."
+    },
+    {
+     "slug": "deluca-2022-validating-applicability-bayesian",
+     "relation": "complements",
+     "why": "Same domain: method validation for redistricting analysis. DeLuca validates BISG race estimates for VRA work. Best et al. hold Arizona's majority-minority districts fixed in their neutral ensemble and validate their VTD vote estimates (r = 0.87-0.97)."
+    },
+    {
+     "slug": "report-2024-2024-house-glance",
+     "relation": "complements",
+     "why": "Cook's district partisanship ratings are the type of measure the competitiveness multiplier consumes. Best et al. show that such district partisanship shifts by 1.5-4 points depending on how the map is drawn."
+    }
+   ],
+   "bearings": [
+    "melange-influence-engine.competitiveness-multiplier:qualifies:UNVERIFIED",
+    "melange-demographic-potential.census-cd-metrics:qualifies:UNVERIFIED"
+   ]
+  },
+  {
+   "slug": "amsalem-2018-effect-politicians-personality",
+   "title": "The Effect of Politicians' Personality on Their Media Visibility",
+   "year": "2018",
+   "summary": "Amsalem, Zoizner, Sheafer, Walgrave and Loewen (2018) linked a 2015 elite survey of 339 legislators in Belgium, Canada (federal and Ontario) and Israel to counts of how often each was named in national newspapers, news websites and TV. Personality was measured with the 10-item TIPI. Window: media counted over country-specific periods between 2011 and 2015. Denominator: n = 306 in the pooled model.\n\nIn a pooled cross-sectional OLS with country dummies, four traits predict visibility, each with a standardized beta of about 0.1:\n- extraversion: positive (beta .117)\n- agreeableness: negative (-.116)\n- neuroticism: negative (-.111)\n- openness: positive (.098)\n\nConscientiousness is null in the pooled model and splits by country. Office matters far more: being a minister has beta .369 and being a party leader .195, with R² = .483. The measures are weak. Agreeableness has alpha .15 and its two items correlate at only r = .09 (not significant). Response rates are 26-57%. The paper does not identify a causal effect, so its \"effect\" is a covariate-adjusted association.\n\nFor Melange the paper matters in three places:\n1. The behavioural visibility disposition is counted from interviews and labelled extraversion-sociability. The paper's extraversion result supports that label, but the paper also shows visibility loads on low agreeableness, emotional stability and, mostly, office.\n2. That disposition raises seed_prob in the receptivity layer. The lexical susceptibility weights point the other way on agreeableness and neuroticism, so the two disagree.\n3. Interview-derived traits, including affective N, exist only for members who get airtime. Everyone else is set to neutral. If airtime selects on temperament, as this paper finds, that missingness is not random.\n\nNone of this has been tested on US Congress data.",
+   "question": "Do politicians' Big Five personality traits predict how often they are covered in national news media, beyond institutional power and other individual-level explanations (political power, activity, communication skill, demographics)? The paper focuses on agreeableness and extraversion as interpersonal traits, and also tests openness, neuroticism and conscientiousness (pp. 2-3, lines 74-78 and 146-156).",
+   "method": "Dependent variable: count of mentions of each MP's full name in each country's major outlets, rescaled per country and medium to 0-1 (min-max, note 4), summed and rescaled again to 0-1 (M = .08, SD = .14, skewness 3.77). Log-transformed for OLS (p. 13); note 11 gives an alternative that adds half the smallest nonzero value. Personality: 10-item TIPI (Gosling et al. 2003), 7-point scale, two items per trait, reverse-coded where needed, averaged per trait (pp. 11-12). Main model: multivariate OLS with standardized betas on all five traits plus controls. Robustness: separate OLS models by medium (Models 2-4); a parsimonious demographic-only model and per-country parsimonious models (Online Appendix E); a randomization inference test (Malesky et al. 2014) for joint significance (pp. 16-17). Controls (pp. 12-13): gender, age, parliamentary experience, coalition membership, minister, party leader, house speaker, conservatism (binary), federal vs regional MP, parliamentary activity (standardized counts of bills, questions, etc.), Facebook posts (standardized), country dummies. Note 10: VIF below 1.63.",
+   "findings": [
+    {
+     "finding": "H1 supported: agreeableness is negatively associated with national media visibility (less agreeable MPs covered more).",
+     "location": "Results p. 13; Table 1 Model 1 p. 14; Discussion p. 17",
+     "numbers": "b = -0.184 (SE 0.075), standardized beta = -.116, p < .05"
+    },
+    {
+     "finding": "H2 supported: extraversion is positively associated with national media visibility.",
+     "location": "Results p. 13; Table 1 Model 1 p. 14",
+     "numbers": "b = 0.129 (SE 0.052), beta = .117, p < .05"
+    },
+    {
+     "finding": "H3 supported: openness to experience is positively associated with visibility.",
+     "location": "Results p. 15; Table 1 Model 1 p. 14",
+     "numbers": "b = 0.153 (SE 0.070), beta = .098, p < .05"
+    },
+    {
+     "finding": "H4 supported: neuroticism (emotional instability) is negatively associated with visibility; more emotionally stable MPs are covered more.",
+     "location": "Results p. 15; Table 1 Model 1 p. 14",
+     "numbers": "b = -0.157 (SE 0.068), beta = -.111, p < .05"
+    },
+    {
+     "finding": "H5 not supported in the pooled model: conscientiousness has a near-zero, insignificant association with visibility.",
+     "location": "Results p. 15; Table 1 Model 1 p. 14",
+     "numbers": "b = -0.008 (SE 0.066), beta = -.006, p = .91"
+    },
+    {
+     "finding": "Institutional power dominates. Being a minister has the largest standardized effect. The personality effects are about one-third as large, and a party leader's effect is only slightly larger than the personality effects.",
+     "location": "Results pp. 16-17 (lines 819-829)",
+     "numbers": "Minister beta = .369 (b = 3.122, p < .001); party leader beta = .195 (b = 1.836, p < .001); house speaker not significant; overall R2 = .483"
+    }
+   ],
+   "related": [
+    {
+     "slug": "ramey-2016-measuring-elite-personality",
+     "relation": "complements",
+     "why": "Item title confirms Ramey measures elite Big Five from floor speech text. Amsalem uses self-reported TIPI and links it to media visibility, an outcome text-based traits could be checked against."
+    },
+    {
+     "slug": "mondak-nd-online-appendix-personality",
+     "relation": "complements",
+     "why": "Item title confirms expert evaluations of US senators' traits. These are an alternative to the low-reliability TIPI self-report (agreeableness alpha .15) that Amsalem depends on."
+    },
+    {
+     "slug": "birkenmaier-2025-measuring-politicians-public",
+     "relation": "complements",
+     "why": "Item title confirms measurement of politicians' public agency and communion from text. Amsalem's finding that low agreeableness and high extraversion go with coverage is relevant to the persona channel."
+    },
+    {
+     "slug": "byrne-2014-chokes-under-pressure",
+     "relation": "complements",
+     "why": "Item confirms neuroticism was the a priori focus of a pressure-decision study. Amsalem's negative neuroticism-visibility link points the same way, and both bear on the receptivity N-slot."
+    },
+    {
+     "slug": "lechner-2025-mapping-political-personality",
+     "relation": "complements",
+     "why": "Item confirms PoliPers as a facet-level inventory of ideal and actual politician personality. It is a measurement alternative, but nothing in the item shows it addresses TIPI brevity or social desirability as Amsalem's limitations do."
+    }
+   ],
+   "bearings": [
+    "melange-psychometrics.behavioral-dispositions:qualifies:VERIFIED-SOFTENED",
+    "melange-influence-engine.receptivity-layer:qualifies:VERIFIED-SOFTENED",
+    "melange-psychometrics.affective-n:suggests-extension:VERIFIED",
+    "moneyball-rank-pillars.undervaluation-lens:qualifies:VERIFIED-SOFTENED",
+    "melange-psychometrics.lexical-big5:qualifies:VERIFIED-SOFTENED"
+   ]
+  },
+  {
+   "slug": "zeng-nd-multi-agent-reinforcement",
+   "title": "Multi-Agent Reinforcement Learning-Based Extended Boid Modeling for Drone Swarms",
+   "year": "",
+   "summary": "Zeng and Nait-Abdesselam (IEEE ICC 2024) train simulated drones with Q-learning and linear function approximation to reproduce Reynolds' Boid flocking rules: cohesion, alignment and separation, plus a leader-follow rule and a connectivity band. They compare this controller with an unspecified rule-based Boid baseline. The setup is one Pygame scenario with 17 UAVs and 3,500 steps. Training is sequential: one leader, one follower and one learner. Reward weights are fixed by hand (collision -20, alignment +5/-1, cohesion +2, connectivity +1).\n\nTable II favours the RL controller on every count:\n- proximity advances: 2,097 vs 1,976\n- steps within the 20-40 unit ideal range: 3,176 vs 2,764\n- near-collision events: 45 vs 108\n- mean heading deviation: 14.3 vs 21.1\n\nThe evidence is thin. There is one scenario, with no seeds, replicates, variance or test. The baseline is never described. The counts are not normalised for swarm size. The abstract claims robustness to perturbations, but no perturbation experiment is reported.\n\nFor Paul's systems the paper is essentially out of scope. It contains no legislators, lobbying, money, text, elections or social-network structure. Its only network-like element is distance-based neighbour interaction among physical agents. The one thin link is methodological. It is another case of a learned policy beating a hand-set rule baseline, which is the kind of claim Paul's notes make when they expect GCOMB or contingency-aware RL to replace greedy allocation. On its own evidence the paper cannot support that expectation. A single uncontrolled, unreplicated comparison would not pass the project's single-look discipline, so it should be read only as an example of the claim type. It is not evidence for it. No component's assumptions, constants or code paths are tested, supported or contradicted by this work.",
+   "question": "Can drones trained with multi-agent reinforcement learning (Q-learning with function approximation) reproduce bird-flock behaviour (cohesion, alignment, separation, following) more adaptively than rule-based Boid models? The text states the aim as this comparison rather than as a formal question.",
+   "method": "Simulation comparison of two controllers: (a) Q-learning/MARL-trained drones with linear function approximation (learning rate initialised at alpha=0.1 and said to adapt across iterations; discount gamma=0.75) and (b) a rule-based Boid baseline. Reward weights from Table I: collision -20, connectivity +1, alignment with leader +5 (closer) and -1 (farther), cohesion +2. Sequential training: follower V2 learns to trail the leader at about 30 units; learner V3 learns to trail V1 while staying near V2 and avoiding collisions. Performance is reported as four counts or averages over the run: proximity advances, ideal-range tracking (20-40 units), near-collision events (within 20 units), and heading consistency (mean heading-angle difference, Eqs. 15-16). The rule-based baseline is not specified in the text beyond being a Boid-type rule model.",
+   "findings": [
+    {
+     "finding": "Abstract claims the MARL Boid surpasses rule-based models in cohesion, alignment and separation, and shows robustness to perturbations. Section IV reports only the Table II comparison; no perturbation experiment is reported in the text.",
+     "location": "Abstract, p.1551; contributions, p.1552",
+     "numbers": "Not applicable (qualitative claim)"
+    },
+    {
+     "finding": "Both methods completed the task over the same horizon.",
+     "location": "Table II, Section IV-B, p.1556",
+     "numbers": "Steps 3,500 for RL and rule-based"
+    },
+    {
+     "finding": "RL drones recorded more proximity advances than rule-based drones.",
+     "location": "Table II, Section IV-B, p.1556",
+     "numbers": "2,097 vs 1,976 (+121, about +6.1%)"
+    },
+    {
+     "finding": "RL drones spent more instances within the ideal 20-40 unit range.",
+     "location": "Table II, Section IV-B, p.1556",
+     "numbers": "3,176 vs 2,764 (+412, about +14.9%)"
+    },
+    {
+     "finding": "RL drones had far fewer near-collision events, which the authors read as improved safety.",
+     "location": "Table II and text, Section IV-B, p.1556",
+     "numbers": "45 vs 108 (-63, about -58.3%)"
+    },
+    {
+     "finding": "RL heading consistency is reported as better (lower average heading deviation, assuming the metric is a deviation, as defined on p.1556).",
+     "location": "Table II, Section IV-B, p.1556",
+     "numbers": "14.3 vs 21.1 (-6.8, about -32.2%)"
+    }
+   ],
+   "related": [
+    {
+     "slug": "chen-2021-contingency-aware-influence",
+     "relation": "complements",
+     "why": "Both use reinforcement learning to replace a hand-set rule policy. Chen et al. do it for seeding legislators-as-nodes under take-up uncertainty, which is the literature actually behind the SGATE seed gate. Zeng applies RL only to physical swarm control."
+    },
+    {
+     "slug": "luo-2020-path-planning-algorithm",
+     "relation": "complements",
+     "why": "Same UAV application domain. Luo plans paths for single drones with D* Lite, while Zeng controls a swarm with RL. Both are engineering simulations relevant to Paul's pathfinding reading only by analogy."
+    }
+   ],
+   "bearings": [
+    "melange-allocation.joint-optimizer:context:UNVERIFIED"
+   ]
+  },
+  {
+   "slug": "zeller-2016-step-path-selection",
+   "title": "Using step and path selection functions for estimating resistance to movement: pumas as a case study",
+   "year": "2016",
+   "summary": "Zeller et al. (2016) used GPS tracks from ten pumas in the Santa Ana Mountains (75,716 fixes at 5-minute intervals, 2011-2014) to fit two kinds of conditional-logistic movement model. Step selection functions (SSFs) compare each observed step with available alternatives. Path selection functions (PathSFs) do the same for whole 24-hour paths. Both were fitted at 19 Pareto-kernel scales from 532 m to 7,390 m. The predicted relative probability was inverted to give a resistance surface, which CircuitScape then used to locate road-crossing candidates on I-15.\n\nMain results:\n- **Scale.** Coefficients are very sensitive to scale. Some cover types change sign, and PathSF urban coefficients run from about -10 to -30.\n- **Method.** PathSFs fit better under 10-fold cross-validation (CCC 0.992 vs 0.976 for SSFs).\n- **Sampling interval.** Coarsening fixes to 60 minutes shifts coefficients 3-4 fold and flips some signs.\n- **Crossing locations.** These change with method, scale and prediction framework, and scale is the biggest driver.\n- **Unvalidated core step.** The authors say no empirical evidence supports treating resistance as the inverse of probability.\n\nThe paper has nothing on lobbying, legislators or political networks. It matters here only by analogy, and only in one place: the path-finding layer turns modelled tie strength or probability into an additive cost (-log p or -ln(0.8·strength)) and then takes the cheapest route. The paper is a close case study showing that this kind of probability-to-cost inversion is an assumption, and that the routes it produces depend on scale and sampling choices. It also gives a template for testing such costs: compare the routes actually used against available alternatives in a case-control design. The staffer-route search already labels its cost as \"not a probability of access\", which fits both the paper's caution and D-025. What it lacks is any used-vs-available calibration, which PathSF would supply if an outreach log ever exists. All transfer is analogical (animals on land cover, not people in organisations). Strength is weak throughout. This analysis is UNVERIFIED until a second path reproduces it (DE-062).",
+   "question": "Can step selection functions (SSFs) and path selection functions (PathSFs) be extended to model habitat selection during movement at multiple spatial scales, and how sensitive are the regression coefficients and predicted resistance surfaces to (a) SSF vs PathSF, (b) scale, (c) paired vs unpaired prediction framework, and (d) GPS acquisition interval (5 min vs 60 min)?",
+   "method": "Multi-scale SSF and PathSF with Pareto-weighted kernels. 19 time intervals (5 min, 20 min, then every 20 min to 360 min); generalized Pareto fitted per interval with gpd.fit (gPdtest); kernel radius = min(97.5th percentile of displacement, maximum observed displacement), giving scales of 532 to 7,390 m. Available area for each step/path = mean land cover proportion across kernels placed along the step/path. Predictors = differences in land cover proportion between used and available (no intercept, response always 1). Simple single-variable conditional logistic models at each scale; multiple models using the weakest-effect class as reference; characteristic scale = scale with largest absolute coefficient in simple models; multi-scale model combines characteristic scales. Mixed-effects (random puma) conditional logistic models failed to converge, so glm was used. Model performance: 10-fold cross-validation (Johnson et al. 2006) with Lin's concordance correlation coefficient (CCC). AIC compared only within SSF and within PathSF (equal sample sizes). Resistance predicted in unpaired (pixel-only) and paired (pixel plus kernel context) frameworks; resistance = 1/probability, not rescaled. Acquisition-interval bias: 60-min pseudo steps and paths treated against 5-min truth; bias = mean absolute difference in coefficients per cover type, averaged per scale. Connectivity: CircuitScape current density between protected areas on either side of I-15 (Temecula corridor); top 20 current-flow pixels along I-15 compared across resistance models.",
+   "findings": [
+    {
+     "finding": "Regression coefficients are highly sensitive to the scale of analysis. Annual grassland and agriculture change sign across scales. For PathSFs, urban coefficients range about -10 to -30 and chaparral about -4 to -15.",
+     "location": "Results, Characteristic scales, Fig. 3 (p. ~1326); Discussion (p. 1331)",
+     "numbers": "PathSF urban -10 to -30; chaparral -4 to -15; 19 scales from 532 to 7,390 m"
+    },
+    {
+     "finding": "Pumas show multiple characteristic scales of response during movement, described as mostly bi-modal. Coarse scales characterize urban and agriculture; fine scales characterize the remaining cover types (annual grassland, barren, chaparral, coastal scrub, perennial grassland, and others).",
+     "location": "Results p. 1326; Discussion p. 1331",
+     "numbers": "Scales 532 to 7,390 m; 19 time intervals from 5 min to 360 min"
+    },
+    {
+     "finding": "PathSFs generally produced larger-magnitude coefficients than SSFs. Characteristic scales also differed between the two methods for every cover type except chaparral, most for coastal oak woodland and riparian. Annual grassland was the exception to the larger-PathSF pattern.",
+     "location": "Results p. 1326; Discussion p. 1331",
+     "numbers": "Differences in characteristic scale for all types except chaparral"
+    },
+    {
+     "finding": "Predictive performance (10-fold CCC) rose with scale and PathSFs outperformed SSFs at all scales except the finest (532 m PathSF was the weak case). Best SSF CCC 0.976 at 6,555 m; best PathSF CCC 0.992 at 7,390 m. The multi-scale model did not have the highest CCC but was close: 0.943 (SSF) and 0.982 (PathSF).",
+     "location": "Results, Model performance, Fig. 4 (p. 1326); Discussion p. 1331",
+     "numbers": "SSF best 0.976 (6,555 m); PathSF best 0.992 (7,390 m); multi-scale 0.943 SSF, 0.982 PathSF"
+    },
+    {
+     "finding": "Within each method, AIC decreased with increasing scale. The multi-scale model had the lowest AIC for SSFs; the 6,555 m model had the lowest AIC for PathSFs. AIC could not be compared between SSFs and PathSFs because sample sizes differed.",
+     "location": "Results, Model performance (pp. 1326-1328, Appendix 3 not in text)",
+     "numbers": "SSF lowest AIC = multi-scale; PathSF lowest AIC = 6,555 m"
+    },
+    {
+     "finding": "Acquisition interval bias: 60-min pseudo data produced a consistent 3-4-fold difference in regression coefficients relative to 5-min data. Bias was larger for PathSFs than SSFs. Some cover types changed sign. Annual grassland and barren were preferred in 5-min steps but avoided in 60-min pseudo steps. Coastal scrub, avoided in the true steps, appeared preferred in the pseudo steps.",
+     "location": "Results, Acquisition interval bias, Fig. 5 (p. 1328); Discussion (p. 1331)",
+     "numbers": "3-4-fold consistent difference; 60-min vs 5-min"
+    }
+   ],
+   "related": [
+    {
+     "slug": "chen-2016-most-reliable-path",
+     "relation": "complements",
+     "why": "The recruitment chain runs a most-reliable-path search (Dijkstra on -log p). Zeller shows that the probability-to-cost inversion behind such searches is an assumption whose route outputs depend on how the probabilities were estimated."
+    },
+    {
+     "slug": "ahmad-nd-shortest-path-algorithms",
+     "relation": "complements",
+     "why": "Both turn tie strength into path cost for shortest-path search. Zeller adds a way to fit that transform empirically (used vs available paths) rather than setting it by hand."
+    },
+    {
+     "slug": "lawande-2022-systematic-review-analysis",
+     "relation": "complements",
+     "why": "Lawande covers grid and waypoint path-finding algorithms on a given cost surface. Zeller covers how such a cost surface is estimated and how sensitive the resulting routes are to it."
+    }
+   ],
+   "bearings": [
+    "melange-pathfinding.staffer-closeness-routes:qualifies:UNVERIFIED",
+    "melange-pathfinding.staffer-closeness-routes:suggests-extension:UNVERIFIED",
+    "melange-pathfinding.member-recruitment-path:qualifies:UNVERIFIED"
+   ]
+  },
+  {
+   "slug": "esmalian-2022-characterizing-equitable-access",
+   "title": "Characterizing equitable access to grocery stores during disasters using location-based data",
+   "year": "2022",
+   "summary": "Esmalian et al. use StreetLight origin-destination trips and SafeGraph store locations to build bipartite networks linking traffic zones to grocery stores in Harris County during Hurricane Harvey (Aug-Sep 2017). The sample is 1,804 zones, 920 stores and 6,052 links. Each zone gets three access measures: redundancy (how many distinct stores its residents visit), rapidity (mean trip time) and proximity (mean trip distance). Each measure is expressed as percentage change from a weekday baseline and clustered with dynamic time warping (DTW).\n\nIn the preparation phase, high-income zones added more distinct stores than low-income zones. During recovery, the cluster that held up better had higher incomes and a lower minority share. The number of stores in a zone barely tracks the change in access: r = -0.06 for stores visited, -0.01 for trip time and -0.03 for trip distance. Food-desert status alone does not separate the groups. The paper's own test finds no flood-extent difference between the recovery clusters (p = 0.33), which undercuts the abstract's flooding claim.\n\nThe design is descriptive: one storm, one county, about six weeks. It reports no effect sizes. As extracted, Table 3 contradicts the text about which cluster is lower-income.\n\nFor Paul's systems this is an Adjacent paper with almost no transfer. It says nothing about lobbying, legislators, persuasion, turnout or influence networks. Its \"network degree\" counts distinct stores visited; it is not a centrality or influence measure. The only real point of contact: counting facilities on the supply side, or measuring plain distance, is a weak stand-in for the access people actually get. That bears weakly on Demographic Potential v3.0, which scores CU branch share and deposit share as \"potential\". It bears more weakly still on the Terrier turf planner, which ranks blocks by walking distance. Both transfers are by analogy across domains (grocery stores in a disaster vs CU branches and canvass walks in normal conditions). They are UNVERIFIED as evidence for either component.",
+   "question": "(1) What are the characteristics of access to grocery stores for different sub-populations at different stages of disasters? (2) What is the extent of disparity in access among different sociodemographic groups in different disaster phases? (3) What are the contributing factors to unequal access to grocery stores, and to what extent are facility distribution inequities, such as food deserts, indicative of access disparities? (p.2, lines 106-112)",
+   "method": "Descriptive population-facility network analysis plus unsupervised time-series clustering. (1) Build directed bipartite TAZ-to-POI networks (unweighted; weighted by trip duration; weighted by trip distance) from daily aggregated trips (Table 1, Eqs. 1-3). (2) Compute three TAZ-level indicators: unweighted degree (unique POIs visited), average weighted degree for duration (seconds), and average weighted degree for distance (miles). (3) Express each indicator as percentage change from the weekday baseline, Pc = (M - B)/B (Eq. 4, p.5). (4) Impute gaps with a Kalman filter via R imputeTS after dropping TAZs with 5+ consecutive missing days. (5) Smooth with a 3-day moving average, then run partitional multivariate DTW clustering (dtwclust, R). Cluster number is chosen with COP and modified Davies-Bouldin indices, and the chosen k and the cluster sizes are not reported in the text. (6) Compare sociodemographic and facility characteristics across clusters and income groups (ANOVA, Tukey, chi-square, a two-sample proportion test, and a correlation between number of POIs in a TAZ and each percentage change). Phases: normal (pre-event), preparation (single focal day 24 Aug 2017, the largest percentage change, before landfall on 25 Aug), and impact/short-term recovery (flood-affected TAZs). Flooded TAZ = flood extent above 6.5% of TAZ area (the 75th percentile in Harris County).</method>\n<parameter name=\"identification\">None. The study is descriptive and associational. Group comparisons (income tertiles, food-desert status, clusters) and phase comparisons are not causal. The paper uses causal language in places (\"disproportionately exacerbated\", \"flooding disproportionally affects\"), which the design does not support. The text mentions a \"multivariate analysis\" (p.13) but no model, coefficients or specification are reported.",
+   "findings": [
+    {
+     "finding": "Normal-period clusters on the three access indicators show spatial clustering, and the three sets of clusters barely overlap. Areas with low redundancy are concentrated in the east and south of the county, and large northern TAZs have poor proximity and rapidity.",
+     "location": "Results, pre-disaster normal period, pp.6-8 (Fig. 3)",
+     "numbers": "Three clusters per indicator; Fig. 3d shows group counts in parentheses, which are not extracted in the text."
+    },
+    {
+     "finding": "The normal-period cluster with the highest redundancy is described as lower socioeconomic status. This conflicts with the Table 3 values as extracted (see limitations).",
+     "location": "Results p.7 (text) vs Table 3 p.8-9",
+     "numbers": "Table 3 extracted: per-capita income for the highest-redundancy cluster C1 = $36,008.19 (starred, significant) vs $28,305.49 and $28,305.94; food-desert share 0.45* vs 0.38 and 0.34; stores per TAZ 0.67 vs 1.03 and 1.87*."
+    },
+    {
+     "finding": "Preparation phase (24 Aug 2017): high-income TAZs had a significantly larger increase in unique stores visited than low-income TAZs (ANOVA and Tukey, alpha 0.05). Lower-income TAZs with long normal-period trips had a disproportionately larger increase in trip duration. High-income TAZs with short normal-period distances had the largest increase in distance.",
+     "location": "Results, Preparation, pp.8-9 (lines 479-491; Figs. 4-5)",
+     "numbers": "No effect sizes, means or test statistics for these comparisons appear in the text, only boxplots."
+    },
+    {
+     "finding": "Correlation between number of POIs in a TAZ and each percentage change in access indicators during preparation is very weak. The text reads it as a slight association for redundancy only, and no association for duration or distance.",
+     "location": "Results, Table 4, p.10",
+     "numbers": "Visited-POI % change r = -0.06, p = 0.007; duration % change r = -0.01, p = 0.448; distance % change r = -0.03, p = 0.100."
+    },
+    {
+     "finding": "Within food deserts, high-income TAZs visited more POIs during preparation without significantly longer trips or distances than low-income TAZs in food deserts. The authors conclude food-desert status alone does not capture preparation access.",
+     "location": "Results, income x food desert, pp.9-10 (lines 630-657; Fig. 5)",
+     "numbers": "No counts or test statistics for the four income x food-desert groups in the text."
+    },
+    {
+     "finding": "Among flood-affected TAZs during impact and short-term recovery, two access clusters emerge. Cluster 2 shows a larger increase in unique POIs visited and a smaller loss of proximity and rapidity. Cluster 2 has higher income, a lower minority share, a higher chance of food-desert status, and fewer POIs per TAZ.",
+     "location": "Results, Impact/short-term recovery, pp.10-11 (lines 658-714; Figs. 6-7)",
+     "numbers": "Two clusters; cluster sizes not reported in the text."
+    }
+   ],
+   "related": [
+    {
+     "slug": "hargittai-2015-bigger-always-better",
+     "relation": "complements",
+     "why": "Hargittai documents sampling biases in big data drawn from digital traces. Esmalian rests on StreetLight cell/GPS traces with an undescribed penetration rate and black-box home-zone inference, which is exactly that kind of bias. Read together, this limits how far its findings by income can be trusted."
+    },
+    {
+     "slug": "zeller-2016-step-path-selection",
+     "relation": "complements",
+     "why": "Both papers infer movement cost or access from observed movement rather than straight-line distance: Zeller estimates resistance to movement with step and path selection functions, and Esmalian uses trip time vs trip distance. Both are relevant to any travel-cost weighting in the Terrier turf planner."
+    }
+   ],
+   "bearings": [
+    "melange-demographic-potential.footprint-v30:qualifies:UNVERIFIED",
+    "terrier-canvass.street-presets-and-turf:context:UNVERIFIED"
+   ]
+  }
+ ]
+}

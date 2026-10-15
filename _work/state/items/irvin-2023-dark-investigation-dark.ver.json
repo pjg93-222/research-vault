@@ -1,0 +1,56 @@
+{
+ "bearings": [
+  {
+   "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+   "relation": "qualifies",
+   "paper_claim": "Two high-opacity C4s are described as moving money into political committees as grants. One Nation gave 21.7 million dollars to the Senate Leadership Fund, a PAC at the same address, out of 63.3 million spent in 2016. Freedom Frontier made a 4.4 million dollar grant to a PAC, with almost 75 percent of its expenses political. The paper presents these as anecdotes, not a sample-wide pattern. Grants between C4s are not classified as political, so such flows fall outside its C6 component.",
+   "paper_location": "Introduction p.101-102 (anecdote list); Section 9.6 (C6) p.115-116; limitations list",
+   "system_side": "Header line 3 states OTH 24G/24K outgoing records only. CASH_CODES (line 22) and the COMMITTEE regex (line 23) accept only a C plus eight digits, so a non-committee contributor such as a 501(c)(4) gets no node and its money appears only as a receipt into the Super PAC. allocate() conserves each root's funding forward over observed edges, so upstream attribution past a committee is not available. The earlier 89 percent oppose figure was not found by grep in fec_transfer_graph.py or report.R and is not confirmed here.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/tools/fec_transfer_graph.py:3,22-23,484-571 (header, cash codes and committee regex, allocate)",
+   "transfer_conditions": "The structural point holds for the graph as read. The paper covers 2016 economic-policy C4s and gives no size estimate for C4 money reaching Super PACs, so no magnitude may be inferred. Mentat scope (2022-2026 industry PACs) was not checked here.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "All anecdote figures match the text (63.3, 7.1, 21.7, 35.8, 5.9, 873,707, 6.2, 4.4, about 75 percent). The generalization that high-opacity C4s send money into FEC committees as grants is not in the paper; it rests on two cases. Code claims match the header, regex and allocate docstring; the full ingest path was not traced."
+  },
+  {
+   "component_id": "mentat-fec-attribution.transfer-graph-and-direction",
+   "relation": "supports",
+   "paper_claim": "Beckel 2018, cited and not re-analysed, is reported as showing that political spending routed through dark money organizations is strongly negative, asking voters to defeat candidates, per FEC filings. Section 12 calls the dark-money media financing overwhelmingly negative. The paper gives no count or share, and the claim concerns dark money vehicles in general, not this C4 sample specifically.",
+   "paper_location": "Section 4 p.106; Section 12 p.124-125",
+   "system_side": "allocate() docstring keeps opposition money on the named target, never its rivals (line 489). The 89 percent beneficiary oppose share cited in the earlier analysis was not found in fec_transfer_graph.py or report.R, so it is unconfirmed and must not be cited as corroboration.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/tools/fec_transfer_graph.py:489 (allocate docstring)",
+   "transfer_conditions": "Qualitative, second-hand, 2016 C4-linked spending. Mentat's beneficiary split is a modelled conditional scenario for a different period and denominator. At most directional agreement; no numeric confirmation.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Quoted characterization is present in Sections 4 and 12 with no count, as the bearing says. The phrase 'this C4 sample' overstates scope. The 89 percent number has no support in the code files checked."
+  },
+  {
+   "component_id": "mentat-fec-attribution.receipt-role-and-exclusion",
+   "relation": "suggests-extension",
+   "paper_claim": "Opacity scores run from 0.8 (Fix the Debt Coalition) to 8.3 (Majority Forward) on a 0-9 scale. Scores above 7 are described as very opaque, including many large advocacy groups with very small boards, paltry websites and no staff. Scores up to 3 could be characterized as transparent. Donations average 92 percent of revenue. The total index does not predict the OpenSecrets dark-money label once controls are added (N=54, Nagelkerke R2 0.529, only ln total expenses significant).",
+   "paper_location": "Section 10 p.118-119; Section 9.9 p.116-117; Section 11 p.123-124",
+   "system_side": "The earlier analysis describes Paul's 2026-07-18 ruling excluding 527 and 501c recipients; that ruling was not found in the memory index or in the analyst files checked, so its date is unverified here. The code keeps 501c-marked recipients as classified rows, tags them EXCLUDED_527_501C, and drops them from reported totals as one block. No transparency distinction is made among 501c recipients.",
+   "code_ref": "C:/Users/pgoff/Mentat/mentat/R/ingest.R:722-744; C:/Users/pgoff/Mentat/mentat/R/report.R:33,3042,3176-3177,3213",
+   "transfer_conditions": "Any change to the exclusion is Paul's decision; this bearing recommends none. The index is unvalidated in this sample, so at most a display-only heuristic label carrying its 2016 and N=54 window. Form 990 data is published two or more years late and Mentat does not collect it.",
+   "strength": "weak",
+   "verdict": "softened",
+   "verifier_note": "Scores, 92 percent, N, R2 and the single significant control all match the text. The claim that the excluded group contains political conduits is not in the paper, which discusses C4s generally and never examines Mentat's excluded set. Below 3 look like transparent policy organizations softens could be characterized as transparent. Code refs verified."
+  }
+ ],
+ "related": [
+  {"slug": "christopher-2016-mathematical-modeling-analysis", "relation": "complements", "why": "Item title confirms a model of a dark money network (Couch, Fox, Everton). Real link; the clause that both papers draw on OpenSecrets/Choma evidence was not checked."},
+  {"slug": "furnas-nd-conflating-lobbying-pacs", "relation": "complements", "why": "Furnas item confirms a finding of low overlap between organizational lobbying and PAC spending. Real link; Irvin adds C4 grants as a third channel."},
+  {"slug": "blackwell-2026-effect-political-advertising", "relation": "complements", "why": "Blackwell item is about estimated effects of political advertising after Citizens United. Real link; the framing fits, though Blackwell does not measure C4 opacity."},
+  {"slug": "chohan-2025-crypto-oligarchy-cryptocurrency", "relation": "complements", "why": "Chohan item covers the crypto lobby and the Fairshake super PAC. Real link; Irvin supplies an organization-level opacity measure that Chohan does not."},
+  {"slug": "bonica-2025-money-campaign-finance", "relation": "complements", "why": "Item is Bonica and Grumbach on age and campaign finance, and it explicitly excludes dark money. Real link, but the concentration rationale is narrower than stated; keep only as a loose complement."}
+ ],
+ "summary_issues": [
+  "summary_md says the most opaque groups had one or two board members. The paper says token boards of three or even fewer (Section 12 p.124-125) and very small boards in the above-7 band, with no one-or-two figure.",
+  "summary_md says the most opaque groups had large grants to affiliated PACs as a general pattern. The paper gives two examples (One Nation, Freedom Frontier) and no sample-wide count.",
+  "summary_md says the paper describes political spending as mostly negative. The paper says strongly negative (Section 4) and overwhelmingly negative (Section 12), citing Beckel 2018 without a count.",
+  "summary_md says the paper shows the excluded 501c group mixes transparent shops with near-shell vehicles. The paper does not examine Mentat's excluded set and discusses C4s generally.",
+  "summary_md attributes a 2026-07-18 ruling to Paul. That ruling was not found in the memory index or the analyst files checked; the date remains unverified.",
+  "summary_md and bearings 1 and 2 rely on an 89 percent oppose figure for Mentat that the code files checked do not contain. Drop it or label it unverified.",
+  "Ext notes say the author concludes high-index C4s are elite issue entrepreneurs in a strict sense. The paper hedges this with may be illustrating (Section 12, p.125); the stronger wording should not be carried forward."
+ ]
+}

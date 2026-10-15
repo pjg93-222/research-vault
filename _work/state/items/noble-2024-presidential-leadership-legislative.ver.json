@@ -1,0 +1,109 @@
+{
+ "bearings": [
+  {
+   "component_id": "melange-influence-engine.salience-shock",
+   "relation": "contradicts",
+   "paper_claim": "Going public is more attractive when the status quo is favorable: c(-1) > c(1) always (Prop 2). Under Partisan Retreat the president never goes public against an unfavorable status quo (c_q(1) < 0) but always has an incentive to defend a favorable one. The model predicts that going public occurs more often in defense of a favorable status quo than to win policy change (p.25). The defensive appeal logic depends on the co-partisan being the relevant pivot, which holds only when the status quo is favorable (p.15, p.22-23).",
+   "paper_location": "Eqs. 7-8 and Prop. 2 (p.17); veto-pivot logic (p.15, p.22-23); Partisan Retreat (p.22); Prop. 4 discussion (p.25); App. A.2 (p.39-40)",
+   "system_side": "defensive_appeal_value() runs for every issue with no status-quo check. The advisory value is E_dspread + 1.5 x len(defections_prevented) for offense and defend issues alike. In the live salience_advisory.json (2026-10-08 15:37, 18 issues), the four GO PUBLIC verdicts (top quartile, cut 68.27) are all sq=offense, and each is driven by held counts: Technology & Emerging (E_dspread -3.87, held 67, q=0.83), Member Business Lending (+5.83, held 60), Data Privacy (-19.35, held 68) and Fraud Prevention (-9.73, held 52). The three defend issues rank 13th to 15th. Tech & Emerging is close to the paper's pure-retreat case on an unfavorable status quo, where the paper says never go public, yet it is ranked first. The dashboard bundle surfaces these verdicts as 'GO PUBLIC · holds N'. The figures were reproduced by the verifier from the same 2026-10-08 file and code. They are heuristic advisory scores over 18 issues, not measured effects.",
+   "code_ref": "fec/engine/salience_shock.py:127-138,162,224,229-238; fec/surfaces/build_dashboard_bundle.py:677-682",
+   "transfer_conditions": "No empirical transfer is needed. This is an internal-consistency check against the model the code claims to implement. The contradiction holds whenever the defensive credit is added on sq='offense' issues. Gating held to sq=='defend' would restore the paper's ordering. Whether the paper's ordering is right for a CU advocacy campaign is a separate, untested question.",
+   "strength": "strong",
+   "verdict": "softened",
+   "verifier_note": "Paper side reproduced: Prop 2 (p.17) c(-1)>c(1); c_q(1)<0 and c_q(-1)>0 under Partisan Retreat (p.22); 'more often in defense of a favorable status quo' (p.25, Prop 4 discussion, not p.26). Pivot logic is stated on p.15 and p.22-23, not p.24. Code side reproduced from the live salience_advisory.json (2026-10-08 15:37): 18 issues; cut = vals[18//4-1] = 68.27; top four (Tech & Emerging 96.63, MBL 95.83, Data Privacy 82.65, Fraud Prevention 68.27) all sq=offense, with the E_dspread and held counts as stated; defend issues rank 13-15. salience_shock.py:224 adds 1.5*len(held) with no sq gate (the sq=='defend' check on line 238 only edits the verdict text). Recomputing with held gated to defend puts CU Tax Status, Credit Card Mandates and Interchange in the top four, so the counterfactual holds. This verifier reproduced the figures from the file and the code (a second read path, same artifact). These are heuristic model outputs over the 18-issue advisory as of 2026-10-08, not measured campaign effects."
+  },
+  {
+   "component_id": "melange-influence-engine.salience-shock",
+   "relation": "qualifies",
+   "paper_claim": "Sincere legislative polarization z and base-pressure reactions (beta_L, beta_R, with probabilities p, q, 1-p-q) are separate primitives that the authors vary independently. The infrastructure illustration (Pew 2019 partisan gap of 7 points vs 46 on health care) is presented as a case where elite polarization exceeds mass polarization and a Rally is still possible.",
+   "paper_location": "Sec. 1 and Table 1 (p.8-9); Prop. 3 Rally discussion (p.22); Prop. 4 (p.25)",
+   "system_side": "salience_issue_params estimates z as the absolute D-R gap in mean legislator stance tier. It then sets q = (1-b) x min(1, z/3) and p = (1-b)(1 - z/3). The elite stance gap therefore sets the mass-base reaction odds. The resulting regime mixture drives both the advisory and the dashboard exec cue.",
+   "code_ref": "fec/moneyball_core.py:736-750; fec/surfaces/build_dashboard_bundle.py:670-672",
+   "transfer_conditions": "The mapping is a design choice, not something the paper implies. It holds only if base reactions on CU issues track legislator stance gaps. That would need a base-side or mass-opinion measure, such as a partisan gap in public or credit-union-member opinion per issue, which the system does not have. The paper's own example warns that the two can diverge.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "The paper keeps z, beta and p/q as separate primitives (Sec. 1, Table 1 p.8). The infrastructure/Pew example (7 vs 46 points) sits in the Rally discussion on p.22. moneyball_core.py:742-749 sets z = |mean_D - mean_R| tier score, zn=min(1,z/3), q=(1-b)*zn, p=(1-b)*(1-zn). build_dashboard_bundle.py:670-672 ships p, q and b to the exec cue. Minor note: p uses the capped zn, not z/3."
+  },
+  {
+   "component_id": "melange-influence-engine.salience-shock",
+   "relation": "qualifies",
+   "paper_claim": "psi bounds a common preference shock and stands for informational policy uncertainty. Higher psi makes the president weakly less likely to go public and shrinks the favorable-vs-unfavorable gap (Prop 5). The paper never links psi to the probability of Backfire. Under a favorable status quo, going public can pay even when backfire is certain (the threshold on beta_L falls as z and delta rise).",
+   "paper_location": "Prop. 5 (p.26-28); Backfire (p.24); App. A.3.3 (p.42-43)",
+   "system_side": "psi = 1 - (share of members with a stance tier) + 0.3 x (True-Neutral share). This measures missing posture data, not uncertainty about preferences. Backfire is b = min(0.35, 0.05 + 0.10 psi), labelled 'Prop 5 caution'. The actual Prop 5 effect (damping go-public value) sits behind SAL_PSI_DAMP, which defaults to 0, so it appears only as a text tag at psi >= 0.8. Backfire steps are always non-positive, so the favorable-status-quo case where backfire still pays is not represented.",
+   "code_ref": "fec/moneyball_core.py:744-747; fec/engine/salience_shock.py:92-93,109-110,219,224,239",
+   "transfer_conditions": "Data missingness stands in for psi only if a member's lack of a stance label reflects real preference uncertainty rather than collection gaps. Coverage is known to differ by party and chamber (press collector). The b-psi link has no support in this paper and should be cited as a design prior.",
+   "strength": "moderate",
+   "verdict": "reproduced",
+   "verifier_note": "Prop 5 is on p.26 and the shrinking favorable-vs-unfavorable gap on p.27. The backfire threshold is 'decreasing in z and delta' (p.24). p and q are exogenous and independent of psi in the model. Code: moneyball_core.py:744-747 (psi = 1 - tiered share + 0.3*True-Neutral share among tiered, capped at 1; b=min(0.35, 0.05+0.10*psi)). salience_shock.py:92-93 sets the labels, 109-110 holds the non-positive backfire steps, 219 sets SAL_PSI_DAMP default 0, and 239 adds the psi>=0.8 text tag."
+  },
+  {
+   "component_id": "melange-influence-engine.salience-shock",
+   "relation": "qualifies",
+   "paper_claim": "Section 4 lets the president's silent-reelection probability rho(x_sq) vary. A higher rho lowers the go-public range. When rho(-1) > rho(1) and psi > psi*, the president may 'gamble for reelection' by going public on an unfavorable status quo (Prop 6, Eq. 15). Legislators' delta is their stake in their party winning the White House, not in their own seats. Caveat: Prop 6's first bullet (p.44) states the opposite direction for an electorally weak President, so the paper is internally inconsistent on the rho direction.",
+   "paper_location": "Sec. 4 (p.28-29); Prop. 6 and Eq. 15 (p.44-45); utilities (p.10-11)",
+   "system_side": "VULN multiplies every legislator's salience step by 1.35 if the member has a defend or contest electoral play, with the comment 'Noble A.4: gambling for reelection'. In backfire, co-partisans with a live race are held at 0 ('delta dominates base: Sec 3.1').",
+   "code_ref": "fec/engine/salience_shock.py:56-63,104,110",
+   "transfer_conditions": "This paper does not support the amplifier. Its rho and the gambling logic concern the actor who goes public (the president), not the responsiveness of rank-and-file legislators. Any support for 'electorally vulnerable members respond more' has to come from elsewhere (for example, the electoral-incentives literature), and the 1.35 constant is uncalibrated.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Code reproduced: salience_shock.py:56-63 (1.35 if play in defend/contest, comment 'Noble A.4'), 104, 110. Paper reproduced for the Sec. 4 main text (p.28-29) and for Eq. 15 / psi* (p.45). Delta is the payoff from a co-partisan President (p.9). Caveat: the paper is internally inconsistent here. The Sec. 4 text and the A.4 derivation say both c_rho thresholds are decreasing in rho (weak means more likely to go public), but Prop 6's first bullet (p.44) says an electorally weak President is LESS likely to go public than in the baseline. Prop 6's third bullet also prints 'psi < psi*' twice, which is a typo; Eq. 15 gives psi > psi*. Cite the main-text direction with this caveat."
+  },
+  {
+   "component_id": "melange-influence-engine.salience-shock",
+   "relation": "method-source",
+   "paper_claim": "There are three base-reaction regimes: Rally (both toward), Partisan Retreat (co toward, out away) and Backfire (both away, out more). The single restriction is beta_L > beta_R: co-partisans always favor the president's proposal more than out-partisans do. Going public adds the electoral stake delta to the thresholds as z + beta_L + delta/2 and -z + beta_R - delta/2 (Eqs. 1-2).",
+   "paper_location": "Table 1 (p.8-9); p.12; Prop. 1 (p.13-14); App. A.1 (p.38)",
+   "system_side": "steps_for() sets the base co-partisan step above the out-partisan step in all three regimes. Per-member VULN and susc_mult multipliers apply before rounding, so the ordering can fail for individual members. Rally is co +1, out +0.5 only if bpf >= 0.30. Retreat is co +1, out -1. Backfire is co 0 or -0.5, out -1. The dashboard exec cue (EXECP='R') applies the same p, q, b mixture to bystander mobilization. The defensive channel instead scales the money-defection threshold multiplicatively, by DTHRESH x (1 + DELTA/2) with DELTA = 0.5. The actor is generalized from the president to a CU-side campaign whose party is set by --party.",
+   "code_ref": "fec/engine/salience_shock.py:99-111,127-138; fec/surfaces/templates/make_dashboard_html_00.tpl:657-661",
+   "transfer_conditions": "The regime structure transfers most cleanly to the dashboard's executive cue, which matches the paper's presidential actor in a federal two-party Congress. It transfers less well to an ACU or industry 'going public' actor, which has no reelection tied to the outcome. The delta channel exists only because co-partisans share the president's electoral fate. The bpf >= 0.30 cutoff, the step sizes and the multiplicative delta are the code's own design, not the paper's. The paper's delta is additive in the vote threshold and has no money-defection analog.",
+   "strength": "moderate",
+   "verdict": "softened",
+   "verifier_note": "Table 1 (p.8), the beta_L > beta_R restriction (p.7) and Prop 1 (p.13) are reproduced. Correction: the paper's thresholds are z + beta_L + delta/2 and -z + beta_R - delta/2 (Eqs. 1-2, p.12-13; derived from u_L = x(theta - z - s*beta_L) + 1_I*delta), not (z + beta_L + delta)/2. Code reproduced at salience_shock.py:99-111 and 127-138, and template make_dashboard_html_00.tpl:657-661 (sal p/q/b mixture in efm). The base steps s keep co above out in each regime, but the realized integer step is round(|s|*intensity*VULN*susc_mult), and those multipliers vary by member. A low-susceptibility co-partisan can therefore round to a step no larger than a high-multiplier out-partisan's."
+  },
+  {
+   "component_id": "melange-influence-engine.salience-shock",
+   "relation": "qualifies",
+   "paper_claim": "'Gridlock region' means the range of the common preference shock theta over which two pivots keep the status quo. Going public always widens it, even under a Rally, because asymmetric base pressure creates 'effective polarization'.",
+   "paper_location": "Prop. 1 (p.13); Fig. 1 (p.14); Sec. 2.1 (p.14-15)",
+   "system_side": "gridlock_width counts members whose tier sits in a five-rung MIDBAND, and E_dmidband reports its change. The comments read a falling count as 'Prop 1 hollowing' and a rising count on defend issues as a win. The count is reported but not used in the verdict.",
+   "code_ref": "fec/engine/salience_shock.py:50,125,159,174-177",
+   "transfer_conditions": "Occupancy of a middle band among 533 members is a different quantity from a shock interval between two pivots. Prop 1 makes no prediction about its sign, so the metric cannot be read as testing or reproducing Prop 1.",
+   "strength": "weak",
+   "verdict": "reproduced",
+   "verifier_note": "Prop 1 (p.13), Fig. 1 and 'effective polarization' (p.14). Code: salience_shock.py:50 (5-rung MIDBAND), 125, 159, 174-177. The advisory value (line 224) excludes E_dmidband."
+  }
+ ],
+ "related": [
+  {
+   "slug": "merkley-nd-party-cues-news",
+   "relation": "complements",
+   "why": "Merkley and Stecula give empirical evidence of out-party backlash to elite party cues (a Republican backlash to Democratic elite cues on climate). That is the Backfire/Retreat behavior Noble and Turner model only in theory. (The analyst's claim that the two are cited together in the salience-shock component is not supported: no Merkley citation appears in salience_shock.py, moneyball_core.py or the dashboard template.)"
+  },
+  {
+   "slug": "bakker-nd-understanding-partisan-receptivity",
+   "relation": "complements",
+   "why": "Bakker et al. test why partisans accept co-partisan cues and reject out-party cues. That is the micro-foundation for Noble and Turner's assumed beta_L > beta_R, which the system's steps_for and cpf_pressure both encode."
+  },
+  {
+   "slug": "fouirnaies-2022-electoral-incentives-affect",
+   "relation": "complements",
+   "why": "Fouirnaies and Hall supply the empirical support (state legislators' effort responds to electoral incentives) that the VULN x1.35 amplifier needs and that Noble and Turner's Sec. 4 does not provide. Their evidence comes from state legislatures, so it bears on but does not settle federal salience response."
+  },
+  {
+   "slug": "linde-2016-politicians-take-risks",
+   "relation": "complements",
+   "why": "Linde and Vis give experimental evidence on politicians' risk-taking in the loss domain. That is a behavioral basis for the 'gambling for reelection' logic Noble and Turner borrow from Downs and Rocke, but it applies to legislators rather than to the president who goes public."
+  },
+  {
+   "slug": "poole-1999-nominate-after-years",
+   "relation": "complements",
+   "why": "NOMINATE offers a roll-call measure of elite ideological polarization. It is an alternative, independent estimate of z to the system's stance-tier D-R gap, and it is separate from the base-reaction odds the system derives from that same gap."
+  }
+ ],
+ "summary_issues": [
+  "The DE-062 single-path caveat is now partly met. This verifier re-derived the four GO PUBLIC offense verdicts, the 68.27 cut and the defend ranks 13-15 from the live salience_advisory.json and salience_shock.py:224,229-238. The source artifact is the same, so the finding should be called 'reproduced on a second read' rather than independently replicated.",
+  "The summary omits the paper's internal inconsistency on electoral strength: the Sec. 4 text says a weak President is more likely to go public, while Prop 6's first bullet (p.44) says less likely.",
+  "Not in summary_md, but in the bearing method-source: the paper's go-public thresholds are z + beta_L + delta/2 and -z + beta_R - delta/2, not (z + beta_L + delta)/2.",
+  "Not in summary_md, but in paul_alignment: it says 'both annotation files', while p.annot_sha12s lists one annotation file (ext coverage also says a single file)."
+ ]
+}
