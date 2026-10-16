@@ -1,0 +1,20 @@
+---
+type: inbox-item
+title: "Final report (1)"
+status: raw
+source_path: "C:\\Users\\pgoff\\Downloads\\Final report (1).pdf"
+sha256: 638fa6b533b59768134cc49373a8a1fe608631076b85b80d3febfbf82adbaca0
+downloaded_at: "2026-10-12T14:32:12-05:00"
+size: 199496
+copy: "_sources/inbox/2026-10-15/Final report (1).pdf"
+tags: [inbox, type/inbox]
+---
+
+# Final report (1)
+
+Raw inbox item picked up from Downloads by `vaultlink/research_inbox.py`. No bibliographic metadata has been extracted or inferred; the title above is the file name.
+
+- [ ] Paul: classify this item as **paper**, **coursework** or **other**.
+
+> [!quote] Text snippet (first characters, unverified extraction)
+> 1. Executive Summary Canterra faces a significant attrition problem that strains resources and talent; about 1 in 6 Canterra employees leave the company each year. This analysis identifies the workplace factors most closely linked to employee attrition at Canterra, so management can focus retention efforts where they will matter most. Of the 4,337 employees analyzed, 16.1% left the company. Attrition varies sharply by business travel: 24.7% of frequent travelers left, compared with 8.1% of emplo

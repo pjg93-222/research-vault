@@ -1,0 +1,19 @@
+---
+type: inbox-item
+title: "Paul Goff - MSBA FT Standard Resume Template.docx (5) (1)"
+status: raw
+source_path: "C:\\Users\\pgoff\\Downloads\\Paul Goff - MSBA FT Standard Resume Template.docx (5) (1).pdf"
+sha256: a785762f18b7ac21fbb6c113967b9ae806711cfaed0285b263f0b9d768ccff72
+downloaded_at: "2026-09-16T17:43:48-05:00"
+size: 134407
+copy: "_sources/inbox/2026-10-15/Paul Goff - MSBA FT Standard Resume Template.docx (5) (1).pdf"
+tags: [inbox, type/inbox]
+---
+
+# Paul Goff - MSBA FT Standard Resume Template.docx (5) (1)
+
+Raw inbox item picked up from Downloads by `vaultlink/research_inbox.py`. No bibliographic metadata has been extracted or inferred; the title above is the file name.
+
+- [ ] Paul: classify this item as **paper**, **coursework** or **other**.
+
+_No text snippet available for this file type._
