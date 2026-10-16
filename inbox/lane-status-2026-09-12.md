@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "LANE_STATUS_2026-09-12"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\LANE_STATUS_2026-09-12.md"
 sha256: 792e4204fd378464b5678664073c23d4ba06de20908a46944acfd87369449f47
 downloaded_at: "2026-09-12T19:04:58-05:00"
 size: 6219
 copy: "_sources/inbox/2026-10-15/LANE_STATUS_2026-09-12.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Flegislative-effectiveness-lane-status-record-2026-09-12-b9e6ff8414"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # LANE_STATUS_2026-09-12

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "STAFFER_NETWORK_MATH_ADJUDICATION_20260831"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\STAFFER_NETWORK_MATH_ADJUDICATION_20260831.md"
 sha256: 611c62913ca2f168e0c83fc1e040ec264a95952f1a830fb5dd96665fb61ef29e
 downloaded_at: "2026-09-01T14:04:48-05:00"
 size: 11330
 copy: "_sources/inbox/2026-10-15/STAFFER_NETWORK_MATH_ADJUDICATION_20260831.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fstaffer-network-mathematical-adjudication-2026-08-31-27105cbe0b"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # STAFFER_NETWORK_MATH_ADJUDICATION_20260831

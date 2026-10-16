@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Project 1 - Guidelines"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Project 1 - Guidelines.docx"
 sha256: 77ddde30c28c66bbed617c9927786a8a2fbc10625299d429f133fc017df1d111
 downloaded_at: "2026-08-11T13:42:58-05:00"
 size: 10050
 copy: "_sources/inbox/2026-10-15/Project 1 - Guidelines.docx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fproject-1-getting-started-through-data-wrangling-670c72e51b"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Project 1 - Guidelines

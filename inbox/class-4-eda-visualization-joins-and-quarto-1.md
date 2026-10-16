@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Class 4 - EDA, Visualization, Joins and Quarto (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Class 4 - EDA, Visualization, Joins and Quarto (1).pptx"
 sha256: 4db0d38b8bf3dabf2a1328247b73cdb816544101a1c9d50791dea58d150c5c64
 downloaded_at: "2026-08-11T19:26:19-05:00"
 size: 3144682
 copy: "_sources/inbox/2026-10-15/Class 4 - EDA, Visualization, Joins and Quarto (1).pptx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fassigning-it-keeps-the-outlier-list-not-just-the-picture-48aaea502d"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Class 4 - EDA, Visualization, Joins and Quarto (1)

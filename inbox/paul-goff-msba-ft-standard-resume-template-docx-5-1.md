@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Paul Goff - MSBA FT Standard Resume Template.docx (5) (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Paul Goff - MSBA FT Standard Resume Template.docx (5) (1).pdf"
 sha256: a785762f18b7ac21fbb6c113967b9ae806711cfaed0285b263f0b9d768ccff72
 downloaded_at: "2026-09-16T17:43:48-05:00"
 size: 134407
 copy: "_sources/inbox/2026-10-15/Paul Goff - MSBA FT Standard Resume Template.docx (5) (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpersonal%2Fgeneral%2Fgeorgetown-university-mcdonough-school-of-business-0a2018c859"
+collection: "personal"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Paul Goff - MSBA FT Standard Resume Template.docx (5) (1)

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "computers-12-00037"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\computers-12-00037.txt"
 sha256: 438624201824e8c530a3ce1b2e62634a3fd48fdd00e3cd280cc9cedeb2b989cb
 downloaded_at: "2026-06-14T17:09:37-05:00"
 size: 59208
 copy: "_sources/inbox/2026-10-15/computers-12-00037.txt"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=research%2Fpapers%2Fmachine-learning-sentiment-analysis%2Ftaherdoost-2023-artificial-intelligence-sentiment"
+collection: "research"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # computers-12-00037

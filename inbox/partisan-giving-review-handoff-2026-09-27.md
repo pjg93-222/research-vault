@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "PARTISAN_GIVING_REVIEW_HANDOFF_2026-09-27"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\PARTISAN_GIVING_REVIEW_HANDOFF_2026-09-27.md"
 sha256: 9971da463411f77f8090b01006b9ba93c0eac7deac95baf64f3e860502fe9ac3
 downloaded_at: "2026-09-27T17:46:50-05:00"
 size: 21856
 copy: "_sources/inbox/2026-10-15/PARTISAN_GIVING_REVIEW_HANDOFF_2026-09-27.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fpolitical-giving-and-election-expectations-review-handoff-6076ca0f43"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # PARTISAN_GIVING_REVIEW_HANDOFF_2026-09-27

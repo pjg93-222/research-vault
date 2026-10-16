@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "graph-top-candidates-20261008-1556"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\graph-top-candidates-20261008-1556.pdf"
 sha256: 4a041186263c9198cb865cd15f7e88c7be0357de9933c6164036e38ca6fee70c
 downloaded_at: "2026-10-08T14:56:03-05:00"
 size: 208470
 copy: "_sources/inbox/2026-10-15/graph-top-candidates-20261008-1556.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Ftelecom-all-companies-all-levels-all-giving-20252026-mentat-complete-files-completed--90157d1d15"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # graph-top-candidates-20261008-1556

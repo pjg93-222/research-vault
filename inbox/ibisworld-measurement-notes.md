@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "ibisworld_measurement_notes"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Sector_Research_Source_Check_2026-09-25\\ibisworld_measurement_notes.md"
 sha256: 255b1b9d3aac7147c12c651bd7a7dd63983b878e55a0213be0b29e8d73f7eafb
 downloaded_at: "2026-09-25T14:02:13-05:00"
 size: 2484
 copy: "_sources/inbox/2026-10-15/ibisworld_measurement_notes.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fibisworld-revenue-measurement-e3519f1f4a"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # ibisworld_measurement_notes

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "SESSION_RECORD_20260902"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\SESSION_RECORD_20260902.md"
 sha256: de4465ba2314c0e5762ecc13f55f55fad4594ee5007ff6ab6cc6ea1a15d22d6f
 downloaded_at: "2026-09-02T18:19:57-05:00"
 size: 7360
 copy: "_sources/inbox/2026-10-15/SESSION_RECORD_20260902.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Femployment-tenure-lane-session-record-2026-09-02-2603628cc1"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # SESSION_RECORD_20260902

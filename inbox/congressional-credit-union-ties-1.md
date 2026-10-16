@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Congressional Credit Union Ties(1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Congressional Credit Union Ties(1).md"
 sha256: 315a1c3d254c861ce814cf74e9fd5fd2051dd4b577385dbf9cfbc8607d9f7558
 downloaded_at: "2026-10-09T10:22:30-05:00"
 size: 8524
 copy: "_sources/inbox/2026-10-15/Congressional Credit Union Ties(1).md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpolicy-reference%2Fgeneral%2Fcredit-union-ties-in-congress-52795d16f0"
+collection: "policy-reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Congressional Credit Union Ties(1)

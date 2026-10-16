@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "STAFFER_NETWORK_CONFIRMATION_LADDER_20260901"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\STAFFER_NETWORK_CONFIRMATION_LADDER_20260901.md"
 sha256: ad8d54c89f5785bde0b7d9eb652eb52988ddf33677488e51c4ce9081167b3054
 downloaded_at: "2026-09-01T22:44:14-05:00"
 size: 19177
 copy: "_sources/inbox/2026-10-15/STAFFER_NETWORK_CONFIRMATION_LADDER_20260901.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fstaffer-network-confirmation-ladder-2026-09-01-d6384f21c6"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # STAFFER_NETWORK_CONFIRMATION_LADDER_20260901

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "House Credit Union Ties (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\House Credit Union Ties (1).pdf"
 sha256: 020e405e5ec6f91fc46f2817efe03675ba6cfed4141e34f73bfad57198a8fe52
 downloaded_at: "2026-10-02T13:20:41-05:00"
 size: 1602173
 copy: "_sources/inbox/2026-10-15/House Credit Union Ties (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpolicy-reference%2Fgeneral%2Fhouse-credit-union-ties-fd3db76936"
+collection: "policy-reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # House Credit Union Ties (1)

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "porter_text"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\porter_text.txt"
 sha256: 5a004189de66269b3e4b4fe8f4935b0e61a71f209fffdff8521d0545140eacf5
 downloaded_at: "2026-06-29T14:17:47-05:00"
 size: 29998
 copy: "_sources/inbox/2026-10-15/porter_text.txt"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpolicy-reference%2Fgeneral%2Fa-network-analysis-of-committees-in-the-u-s-house-ed0d65f64b"
+collection: "policy-reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # porter_text

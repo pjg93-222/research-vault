@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "American J Political Sci - 2026 - Buzard - Mitigating policy uncertainty  What financial markets reveal about firm‐level"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\American J Political Sci - 2026 - Buzard - Mitigating policy uncertainty  What financial markets reveal about firm‐level.pdf"
 sha256: 67cbbfb5b72ee54dcc9d074e1a693fb3fe919023f2d73de0ccbd388ccec45152
 downloaded_at: "2026-10-13T22:09:50-05:00"
 size: 439874
 copy: "_sources/inbox/2026-10-15/American J Political Sci - 2026 - Buzard - Mitigating policy uncertainty  What financial markets reveal about firm‐level.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Famerican-j-political-sci-2026-buzard-mitigating-policy-uncertainty-what-financial-mar-68a1e9faab"
+collection: "research"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # American J Political Sci - 2026 - Buzard - Mitigating policy uncertainty  What financial markets reveal about firm‐level

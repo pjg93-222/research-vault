@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Final Project Guidelines - Fall 2026-1 (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Final Project Guidelines - Fall 2026-1 (1).docx"
 sha256: 554a181d3cae81c86fdbff0ff4e0b8f5160ae22d0d21434f8680722b004a8ee1
 downloaded_at: "2026-08-24T22:10:59-05:00"
 size: 4170679
 copy: "_sources/inbox/2026-10-15/Final Project Guidelines - Fall 2026-1 (1).docx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Ffinal-project-fall-2026-a8a7ee955f"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Final Project Guidelines - Fall 2026-1 (1)

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Chen_Pandas_for_Everyone (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Chen_Pandas_for_Everyone (1).pdf"
 sha256: 721e4ae2203cd169121b1c5c42ee05c6914613aa530d5985b7933a379c3e7be3
 downloaded_at: "2026-09-20T16:10:27-05:00"
 size: 5906814
 copy: "_sources/inbox/2026-10-15/Chen_Pandas_for_Everyone (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fby-default-the-read-csv-function-will-read-a-comma-separated-file-our-gapminder-data--1b24e28203"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Chen_Pandas_for_Everyone (1)

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "graph-where-telecom-money-went-four-steps-20261008-1557"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\graph-where-telecom-money-went-four-steps-20261008-1557.pdf"
 sha256: b6c2211b085a64a0fd84a67aa5e3f68e84b35e2b4b8bfa4577d798380c8e4451
 downloaded_at: "2026-10-08T14:57:04-05:00"
 size: 250068
 copy: "_sources/inbox/2026-10-15/graph-where-telecom-money-went-four-steps-20261008-1557.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fwhere-telecom-money-went-four-steps-f4436b83a4"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # graph-where-telecom-money-went-four-steps-20261008-1557

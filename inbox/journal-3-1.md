@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Journal 3 (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Journal 3 (1).pdf"
 sha256: d486a53937cffb2be90e1a6dd22f97461ce283b708ec5ade2f4cc828583466c6
 downloaded_at: "2026-06-04T23:32:52-05:00"
 size: 558363
 copy: "_sources/inbox/2026-10-15/Journal 3 (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fapril-11th-2026-a-restart-02db873b89"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Journal 3 (1)

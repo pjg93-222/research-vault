@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Assignment_3"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Assignment_3.pdf"
 sha256: 58f7ad88a7f798c6b7162e569ed2d1331ba3dbb24ece0affb339851cb5c52154
 downloaded_at: "2026-08-09T19:54:56-05:00"
 size: 172271
 copy: "_sources/inbox/2026-10-15/Assignment_3.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fstatistics-for-business-analytics-assignment-3-57d889a726"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Assignment_3

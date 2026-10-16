@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Canterra_Appendix"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Canterra_Appendix.docx"
 sha256: aa3081c8f15bb2978469216ebe7f39fc78e7c5ea3ba093ba30d650f8e25d16df
 downloaded_at: "2026-10-13T01:05:17-05:00"
 size: 725236
 copy: "_sources/inbox/2026-10-15/Canterra_Appendix.docx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Ftable-a1-data-dictionary-canterra-employee-dataset-3c3484c33b"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Canterra_Appendix

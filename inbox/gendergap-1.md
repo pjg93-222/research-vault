@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "GenderGap (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\GenderGap (1).pdf"
 sha256: 1c6c11798814b2f738432d660e302a9d0f080f5a8a126859d74f4bf892a863cd
 downloaded_at: "2026-08-18T14:28:25-05:00"
 size: 242988
 copy: "_sources/inbox/2026-10-15/GenderGap (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fsetup-885d313029"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # GenderGap (1)

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Class 3 - MCQ Practice - Answers Explained"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Class 3 - MCQ Practice - Answers Explained.md"
 sha256: a299b47773d331dae1fc62757b97b4b5d8cd6515159ced21d3e99946ee59838c
 downloaded_at: "2026-08-05T19:47:54-05:00"
 size: 15036
 copy: "_sources/inbox/2026-10-15/Class 3 - MCQ Practice - Answers Explained.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fclass-3-practice-quiz-data-wrangling-opan-6606-8f66174173"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Class 3 - MCQ Practice - Answers Explained

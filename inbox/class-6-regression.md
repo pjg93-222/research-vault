@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Class 6 - Regression"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Class 6 - Regression.pptx"
 sha256: b43cd33ea09eac49ca1dc1a071979337149267505d23f7a7ec0e4f0567a63fda
 downloaded_at: "2026-08-19T17:12:50-05:00"
 size: 3051312
 copy: "_sources/inbox/2026-10-15/Class 6 - Regression.pptx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fopan-6606-programming-i-6b4887d09a"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Class 6 - Regression

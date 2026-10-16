@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Demographic Expansion outline"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Demographic Expansion outline.pdf"
 sha256: 2fb3280f0647c33cf07ab5c8c54c07615fe3caefe319f95aa4be9e3fc27647ae
 downloaded_at: "2026-07-24T17:30:58-05:00"
 size: 197726
 copy: "_sources/inbox/2026-10-15/Demographic Expansion outline.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpolicy-reference%2Fgeneral%2Frun-at-2-digit-and-4-digit-levels-compare-and-use-contradictions-to-weed-out-false-po-ad30f02792"
+collection: "policy-reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Demographic Expansion outline

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Journal"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Journal.pdf"
 sha256: 89585db1de4d673f3e28a29b1b9049408af539a18bfbaab83fe3a3ae9025bd93
 downloaded_at: "2026-09-06T15:41:32-05:00"
 size: 1846951
 copy: "_sources/inbox/2026-10-15/Journal.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fmeditation-has-never-really-worked-for-me-maybe-because-of-my-adhd-or-maybe-418318041b"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Journal

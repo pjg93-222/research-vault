@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "NeurIPS-2025-dave-diagnostic-benchmark-for-audio-visual-evaluation-Paper-Datasets_and_Benchmarks_Track"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\NeurIPS-2025-dave-diagnostic-benchmark-for-audio-visual-evaluation-Paper-Datasets_and_Benchmarks_Track.pdf"
 sha256: a95f044f89f38211de31354d9527f8e9b8c887f01f301f55e4925affb008993f
 downloaded_at: "2026-07-26T17:11:50-05:00"
 size: 8702889
 copy: "_sources/inbox/2026-10-15/NeurIPS-2025-dave-diagnostic-benchmark-for-audio-visual-evaluation-Paper-Datasets_and_Benchmarks_Track.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fdiagnostic-benchmark-for-cc1fd054ef.md"
+collection: "research"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # NeurIPS-2025-dave-diagnostic-benchmark-for-audio-visual-evaluation-Paper-Datasets_and_Benchmarks_Track

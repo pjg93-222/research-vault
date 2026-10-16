@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Telecom Lobbying & Contributions"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Telecom Lobbying & Contributions.pptx"
 sha256: 056f6783a1f2be928e920c383eba6161b718bee9e5478ae1ba119755751f6bff
 downloaded_at: "2026-10-09T11:53:16-05:00"
 size: 2077296
 copy: "_sources/inbox/2026-10-15/Telecom Lobbying & Contributions.pptx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Findustry-briefing-202526-cycle-32bade5b0c"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Telecom Lobbying & Contributions

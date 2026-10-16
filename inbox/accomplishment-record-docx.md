@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Accomplishment Record.docx"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Accomplishment Record.docx.pdf"
 sha256: bcb9006d1c7647cac82ae4cdabb737a6d40864421f3c861dd0a02920ada9dd8f
 downloaded_at: "2026-07-31T14:06:50-05:00"
 size: 285180
 copy: "_sources/inbox/2026-10-15/Accomplishment Record.docx.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpersonal%2Fgeneral%2Fyour-name-paul-goff-6e13f17cf1"
+collection: "personal"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Accomplishment Record.docx

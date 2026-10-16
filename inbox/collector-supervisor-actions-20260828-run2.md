@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "COLLECTOR_SUPERVISOR_ACTIONS_20260828_RUN2"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\COLLECTOR_SUPERVISOR_ACTIONS_20260828_RUN2.md"
 sha256: 57442125be4cabf27293ea2fe84756999dac48e2317a79e496523d4cc1531088
 downloaded_at: "2026-08-28T12:54:22-05:00"
 size: 7270
 copy: "_sources/inbox/2026-10-15/COLLECTOR_SUPERVISOR_ACTIONS_20260828_RUN2.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpersonal%2Fgeneral%2Fcollector-supervisor-arc-done-next-run-2-6d2a5edb37"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # COLLECTOR_SUPERVISOR_ACTIONS_20260828_RUN2

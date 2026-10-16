@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "MENTAT_CHART_STUDIO_FIELDS_LANE_REPORT_2026-09-12"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\MENTAT_CHART_STUDIO_FIELDS_LANE_REPORT_2026-09-12.md"
 sha256: 0c4b1cab2b0a5839622f93939ad0e003e370d6bbe6b145691d63986c471bb843
 downloaded_at: "2026-09-12T18:02:25-05:00"
 size: 15071
 copy: "_sources/inbox/2026-10-15/MENTAT_CHART_STUDIO_FIELDS_LANE_REPORT_2026-09-12.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fmentat-chart-studio-field-granularity-lane-close-out-report-b942456df0"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # MENTAT_CHART_STUDIO_FIELDS_LANE_REPORT_2026-09-12

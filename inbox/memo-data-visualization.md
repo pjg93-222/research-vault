@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Memo (Data Visualization)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Memo (Data Visualization).pdf"
 sha256: 5333d1d7a85dad55876fbf67493210cc2cd21823352b814c87f447f2b2ba3e3a
 downloaded_at: "2026-10-05T19:45:14-05:00"
 size: 59711
 copy: "_sources/inbox/2026-10-15/Memo (Data Visualization).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fbsr-memo-closing-the-gender-pay-gap-in-leadership-526e294fc4"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Memo (Data Visualization)

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "SENTINEL_COLLECTORS_20260901"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\SENTINEL_COLLECTORS_20260901.md"
 sha256: 1841e63bb1dc550da98893f533b01c39297a227655fc15c9e3929cc83f793b66
 downloaded_at: "2026-09-01T12:05:59-05:00"
 size: 5290
 copy: "_sources/inbox/2026-10-15/SENTINEL_COLLECTORS_20260901.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fsentinel-collectors-and-the-data-refresh-chain-summary-0c3e343f72"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # SENTINEL_COLLECTORS_20260901

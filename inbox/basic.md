@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "basic"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\basic.pdf"
 sha256: de17881d27f7c11e1b31c1a1f97495ee784ae52b7ca702925b015a80d571e611
 downloaded_at: "2026-10-02T14:14:16-05:00"
 size: 9976
 copy: "_sources/inbox/2026-10-15/basic.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fprecinct-02012-generated-10-2-2026-689b486ab1"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # basic

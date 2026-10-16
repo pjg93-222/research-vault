@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Outline for Business Analytics Reports"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Outline for Business Analytics Reports.pdf"
 sha256: 40b260ba4f719ff870c7605128b514aa4058752d50ecbdcabcc08d7e1c43d92f
 downloaded_at: "2026-10-10T16:47:22-05:00"
 size: 79470
 copy: "_sources/inbox/2026-10-15/Outline for Business Analytics Reports.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fopan-6602-machine-learning-i-9b74afe1af"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Outline for Business Analytics Reports

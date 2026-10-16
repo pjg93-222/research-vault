@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "STAFFER_NETWORK_EMPLOYMENT_TENURE_DATA_ADJUDICATION_20260901"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\STAFFER_NETWORK_EMPLOYMENT_TENURE_DATA_ADJUDICATION_20260901.md"
 sha256: 11658f129cc512d4e34928e78a2a7a1de58047256bd3b1cf61f464b77f4fff94
 downloaded_at: "2026-09-01T21:26:03-05:00"
 size: 34503
 copy: "_sources/inbox/2026-10-15/STAFFER_NETWORK_EMPLOYMENT_TENURE_DATA_ADJUDICATION_20260901.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fstaffer-network-employment-tenure-data-adjudication-2026-09-01-eae6a16a41"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # STAFFER_NETWORK_EMPLOYMENT_TENURE_DATA_ADJUDICATION_20260901

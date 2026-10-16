@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "forecast_archive_findings"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Sector_Research_Source_Check_2026-09-25\\forecast_archive_findings.md"
 sha256: fc71d95c58a8905e2aa890640ff09e9349af75f3d8ebb1977829dd81ca1ef99e
 downloaded_at: "2026-09-25T11:02:13-05:00"
 size: 10897
 copy: "_sources/inbox/2026-10-15/forecast_archive_findings.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fhouse-and-senate-control-source-check-0300d21c0d"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # forecast_archive_findings

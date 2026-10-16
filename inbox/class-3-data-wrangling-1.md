@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Class 3 - Data Wrangling (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Class 3 - Data Wrangling (1).pptx"
 sha256: 7b4c2c9301a0cbace96af255ba8c6fe84c02d83f0d3f7e06f279298fb94b4063
 downloaded_at: "2026-08-18T00:42:09-05:00"
 size: 2900918
 copy: "_sources/inbox/2026-10-15/Class 3 - Data Wrangling (1).pptx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fjust-the-under-30s-672f387502"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Class 3 - Data Wrangling (1)

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Measuring_Politicians_Public_Personality_Traits_U"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Measuring_Politicians_Public_Personality_Traits_U.txt"
 sha256: 293fae304e71f31119e4f4bfa189c69c1b9983959bbeccb181c7841fe32276d3
 downloaded_at: "2026-06-14T17:09:37-05:00"
 size: 73179
 copy: "_sources/inbox/2026-10-15/Measuring_Politicians_Public_Personality_Traits_U.txt"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=research%2Fpapers%2Fpersonality-psychometrics%2Fbirkenmaier-2025-measuring-politicians-public"
+collection: "research"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Measuring_Politicians_Public_Personality_Traits_U

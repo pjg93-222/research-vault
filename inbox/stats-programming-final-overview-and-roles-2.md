@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Stats_Programming Final Overview and Roles (2)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Stats_Programming Final Overview and Roles (2).pdf"
 sha256: b0e779e83e9cb9ee6675cb1ac0f4ef163b4c9f089ec1b4107a114f5f8d66e5db
 downloaded_at: "2026-08-21T19:41:22-05:00"
 size: 1769091
 copy: "_sources/inbox/2026-10-15/Stats_Programming Final Overview and Roles (2).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fsource-7400eff814"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Stats_Programming Final Overview and Roles (2)

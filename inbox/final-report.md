@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Final report"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Final report.docx"
 sha256: 58036c5ca1310c46318e06840b3ff8e504f9f31419943739aa76b6470bd22c83
 downloaded_at: "2026-10-10T16:43:27-05:00"
 size: 166067
 copy: "_sources/inbox/2026-10-15/Final report.docx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Ffinal-report-62c78db596"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Final report

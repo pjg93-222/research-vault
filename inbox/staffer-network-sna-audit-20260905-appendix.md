@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "STAFFER_NETWORK_SNA_AUDIT_20260905_APPENDIX"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\STAFFER_NETWORK_SNA_AUDIT_20260905_APPENDIX.md"
 sha256: ee034e9395a07f3632ff0c06f947872971381228d558372c4d3ef82fd0503372
 downloaded_at: "2026-09-05T12:23:15-05:00"
 size: 162215
 copy: "_sources/inbox/2026-10-15/STAFFER_NETWORK_SNA_AUDIT_20260905_APPENDIX.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fstaffer-social-network-audit-appendix-2026-09-05-cee3cef843"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # STAFFER_NETWORK_SNA_AUDIT_20260905_APPENDIX

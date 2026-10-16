@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "STAFFER_LIVE_NEXT_STEPS_20260905"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\STAFFER_LIVE_NEXT_STEPS_20260905.md"
 sha256: 7a54e7304f9856df9a70bdb0e896acf7ef24891e955c3a4cb376a8ed2a8ecef7
 downloaded_at: "2026-09-05T12:16:53-05:00"
 size: 10564
 copy: "_sources/inbox/2026-10-15/STAFFER_LIVE_NEXT_STEPS_20260905.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fstaffer-live-surface-next-steps-2026-09-05-b8d06a90ca"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # STAFFER_LIVE_NEXT_STEPS_20260905

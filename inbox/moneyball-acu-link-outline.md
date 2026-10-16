@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Moneyball ACU link Outline"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Moneyball ACU link Outline.pdf"
 sha256: 4b9a8355edec77069c386dd0338d43c3389e5e768099dab9358266edb613fd81
 downloaded_at: "2026-06-05T15:34:06-05:00"
 size: 72080
 copy: "_sources/inbox/2026-10-15/Moneyball ACU link Outline.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Flayer-2-and-3-categories-dc2a6efe90"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Moneyball ACU link Outline

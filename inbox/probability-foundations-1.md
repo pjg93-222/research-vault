@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Probability-foundations (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Probability-foundations (1).pdf"
 sha256: 57fc195e15fcea75ce017354d7f5d9c0c3abb6eced97b7c3fec8dcec9be28745
 downloaded_at: "2026-08-07T15:32:37-05:00"
 size: 9371338
 copy: "_sources/inbox/2026-10-15/Probability-foundations (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fof-outcomes-in-s-b5492872fc"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Probability-foundations (1)

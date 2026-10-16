@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "CONTINUATION_MENTAT_CONNECTION"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\CONTINUATION_MENTAT_CONNECTION.md"
 sha256: 070ab88a6e245c594e00a65123937246846e36a44f6a706eeb834e6f2306fd68
 downloaded_at: "2026-09-30T17:48:35-05:00"
 size: 14378
 copy: "_sources/inbox/2026-10-15/CONTINUATION_MENTAT_CONNECTION.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fforecasting-audit-and-mentat-connection-continuation-d216dc4f48"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # CONTINUATION_MENTAT_CONNECTION

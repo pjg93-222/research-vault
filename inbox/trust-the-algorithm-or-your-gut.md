@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Trust The Algorithm or Your Gut"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Trust The Algorithm or Your Gut.pdf"
 sha256: f19441ad3b16ae90e989ecc7b848d695a2d5aff9b004b3a83700c7737f3332f2
 downloaded_at: "2026-09-22T19:22:33-05:00"
 size: 1203712
 copy: "_sources/inbox/2026-10-15/Trust The Algorithm or Your Gut.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fhbr-case-study-and-e15ff9f02c"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Trust The Algorithm or Your Gut

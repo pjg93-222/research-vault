@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Assignment 2 (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Assignment 2 (1).docx"
 sha256: 4c5fddd35347de9e47e885719ae510ebe4ee6708a3fdfb17992dfc3cf54712ac
 downloaded_at: "2026-08-12T08:32:03-05:00"
 size: 2343192
 copy: "_sources/inbox/2026-10-15/Assignment 2 (1).docx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fassignment-2-1-238abef961"
+collection: "coursework"
+extraction_status: "ocr-extracted-unverified"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Assignment 2 (1)

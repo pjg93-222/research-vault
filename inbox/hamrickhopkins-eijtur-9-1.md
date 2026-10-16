@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "HamrickHopkins.eIJTUR-9-1"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\HamrickHopkins.eIJTUR-9-1.pdf"
 sha256: b9ad2cf3ea4e66ced4bcae3660deb37c1825e662d87b3df1ecc482435a0a994d
 downloaded_at: "2026-09-30T13:37:33-05:00"
 size: 326241
 copy: "_sources/inbox/2026-10-15/HamrickHopkins.eIJTUR-9-1.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Felectronic-international-journal-of-time-use-research-2012-vol-9-no-1-28-58-7ea7501370.md"
+collection: "research"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # HamrickHopkins.eIJTUR-9-1

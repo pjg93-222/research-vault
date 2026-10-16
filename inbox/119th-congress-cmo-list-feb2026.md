@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "119th_Congress_CMO_List_Feb2026"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\119th_Congress_CMO_List_Feb2026.docx"
 sha256: ddd986e79b181f2014827f8aa28729f2af8cbdf568104206298b17d5430c407e
 downloaded_at: "2026-06-16T21:03:26-05:00"
 size: 59250
 copy: "_sources/inbox/2026-10-15/119th_Congress_CMO_List_Feb2026.docx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpolicy-reference%2Fgeneral%2Fcongressional-member-organizations-cmos-7569bb45c2"
+collection: "policy-reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # 119th_Congress_CMO_List_Feb2026

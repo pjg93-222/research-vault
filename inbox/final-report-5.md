@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Final report (5)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Final report (5).pdf"
 sha256: 0c71cf9a5ac92056a1eb6733134788858322d2b6f03fa809e6313ed3c193bb46
 downloaded_at: "2026-10-13T16:56:44-05:00"
 size: 808089
 copy: "_sources/inbox/2026-10-15/Final report (5).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Funderstanding-employee-attrition-at-canterra-key-drivers-and-retention-4ad174879a"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Final report (5)

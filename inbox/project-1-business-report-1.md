@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Project 1 - Business Report (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Project 1 - Business Report (1).pdf"
 sha256: d4939087e783471b9a41c2050eb5473bcbb23b7b5d10c737bc7e3d691d65f3f8
 downloaded_at: "2026-10-13T23:39:53-05:00"
 size: 339588
 copy: "_sources/inbox/2026-10-15/Project 1 - Business Report (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fproject-1-business-report-toyota-corollas-2b79a3288a"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Project 1 - Business Report (1)

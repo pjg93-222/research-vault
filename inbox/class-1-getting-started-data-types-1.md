@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Class 1 - Getting Started + Data Types (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Class 1 - Getting Started + Data Types (1).pptx"
 sha256: bfd0beff62e401357976c26f851958666dd19b0cb8afabb0fc15fef01ffb0f72
 downloaded_at: "2026-08-19T16:52:09-05:00"
 size: 3281147
 copy: "_sources/inbox/2026-10-15/Class 1 - Getting Started + Data Types (1).pptx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fna-one-missing-value-poisons-the-whole-calculation-13ab2f89e9"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Class 1 - Getting Started + Data Types (1)

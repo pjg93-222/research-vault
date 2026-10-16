@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Tableau NFL Tutorial 2024"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Tableau NFL Tutorial 2024.pdf"
 sha256: 465f00693ca9e2f52bd7b357df022a1ca1c9be7f5631517ede2b6a743910c25c
 downloaded_at: "2026-09-06T23:08:00-05:00"
 size: 1604458
 copy: "_sources/inbox/2026-10-15/Tableau NFL Tutorial 2024.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fthis-tutorial-will-help-you-jump-into-learning-tableau-it-covers-the-basics-accessing-94f33de61d"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Tableau NFL Tutorial 2024

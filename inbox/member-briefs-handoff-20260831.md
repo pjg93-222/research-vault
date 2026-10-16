@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "MEMBER_BRIEFS_HANDOFF_20260831"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\MEMBER_BRIEFS_HANDOFF_20260831.md"
 sha256: 2a78f4b89046b3eec2a1780befa9dd664453ec7baa8b1eaec8428f14dc80ccd3
 downloaded_at: "2026-08-31T22:57:31-05:00"
 size: 13715
 copy: "_sources/inbox/2026-10-15/MEMBER_BRIEFS_HANDOFF_20260831.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fmember-approach-briefs-handoff-v2-365c992aac"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # MEMBER_BRIEFS_HANDOFF_20260831

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "project_1_paul_goff_FINAL_fixed (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\project_1_paul_goff_FINAL_fixed (1).md"
 sha256: a7535c56cca868d24213f01589b298bf9c3960e78c0e03d6e1663d5a44bcbe23
 downloaded_at: "2026-09-16T11:16:08-05:00"
 size: 17822
 copy: "_sources/inbox/2026-10-15/project_1_paul_goff_FINAL_fixed (1).md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fcoding-utf-8-f5deb72ca0"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # project_1_paul_goff_FINAL_fixed (1)

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Project 2 (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Project 2 (1).pdf"
 sha256: 694c09fc862c177a92c9b982702a463a6863fea6c602bcfe91ec3bc19cc8bce2
 downloaded_at: "2026-08-16T22:49:23-05:00"
 size: 73027
 copy: "_sources/inbox/2026-10-15/Project 2 (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fthis-function-shows-a-table-of-all-the-separate-fuel-types-within-the-dataframe-ce939e14dc"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Project 2 (1)

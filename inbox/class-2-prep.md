@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Class 2 Prep"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Class 2 Prep.pdf"
 sha256: adf111b1d41deea83b2b034b02108396069977aeb7b0e38f8b08d8430249ccc7
 downloaded_at: "2026-09-08T23:48:59-05:00"
 size: 47787
 copy: "_sources/inbox/2026-10-15/Class 2 Prep.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fclass-2-prep-5bd24b3a9b"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Class 2 Prep

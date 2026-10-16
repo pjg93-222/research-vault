@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "price_basis_recheck"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Sector_Research_Source_Check_2026-09-25\\price_basis_recheck.md"
 sha256: 8bdefaceffc6ab91308f4ca686e1ec7848f7d63c4fe8ce2bf66b4ccee08e42e5
 downloaded_at: "2026-09-25T13:59:05-05:00"
 size: 12077
 copy: "_sources/inbox/2026-10-15/price_basis_recheck.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpolicy-reference%2Fgeneral%2Findependent-price-basis-recheck-c78e95d522"
+collection: "policy-reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # price_basis_recheck

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "CONTINUATION_FORECAST_INTEGRITY_2026-10-01"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\CONTINUATION_FORECAST_INTEGRITY_2026-10-01.md"
 sha256: 65d57f3a09720d61a8fb908058660b2325f73b95a787c59d42e2846107f7a43e
 downloaded_at: "2026-09-30T21:46:38-05:00"
 size: 19156
 copy: "_sources/inbox/2026-10-15/CONTINUATION_FORECAST_INTEGRITY_2026-10-01.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fcontinuation-mentat-giving-forecast-integrity-reconciliation-then-the-f2-redesign-32d26a8e46"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # CONTINUATION_FORECAST_INTEGRITY_2026-10-01

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "CHART_STUDIO_SESSION_CLOSEOUT_2026-09-12"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\CHART_STUDIO_SESSION_CLOSEOUT_2026-09-12.md"
 sha256: 5aaea54c9f0290471ab0c35618108f123450036636b7d6341af93ea3f4e6a49b
 downloaded_at: "2026-09-12T18:02:19-05:00"
 size: 4774
 copy: "_sources/inbox/2026-10-15/CHART_STUDIO_SESSION_CLOSEOUT_2026-09-12.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fmentat-chart-studio-session-close-out-2026-09-12-92a0d32689"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # CHART_STUDIO_SESSION_CLOSEOUT_2026-09-12

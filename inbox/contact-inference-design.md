@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "CONTACT_INFERENCE_DESIGN"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\CONTACT_INFERENCE_DESIGN.md"
 sha256: 925d8c0ebca0ad15498c270dcbfb6a0239e6aad2093fc3e247836875f89607b3
 downloaded_at: "2026-08-27T23:16:07-05:00"
 size: 23665
 copy: "_sources/inbox/2026-10-15/CONTACT_INFERENCE_DESIGN.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fcontact-inference-layer-implementation-override-specification-15263a4688.md"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # CONTACT_INFERENCE_DESIGN

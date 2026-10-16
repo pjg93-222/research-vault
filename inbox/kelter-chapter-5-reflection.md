@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Kelter Chapter 5_ Reflection"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Kelter Chapter 5_ Reflection.pdf"
 sha256: 375bb5a9208df5c69ed43e40e131595ee317e48ba1af215358a2cd2a819d2a12
 downloaded_at: "2026-08-25T21:56:42-05:00"
 size: 51048
 copy: "_sources/inbox/2026-10-15/Kelter Chapter 5_ Reflection.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fkeltner-chapter-5-reflection-d9da2bb2a4"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Kelter Chapter 5_ Reflection
