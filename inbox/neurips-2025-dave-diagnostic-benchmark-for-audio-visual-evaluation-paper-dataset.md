@@ -8,7 +8,7 @@ downloaded_at: "2026-07-26T17:11:50-05:00"
 size: 8702889
 copy: "_sources/inbox/2026-10-15/NeurIPS-2025-dave-diagnostic-benchmark-for-audio-visual-evaluation-Paper-Datasets_and_Benchmarks_Track.pdf"
 tags: [inbox, type/inbox]
-canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fdiagnostic-benchmark-for-cc1fd054ef.md"
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fresearch%2Fgeneral%2Fdiagnostic-benchmark-for-cc1fd054ef"
 collection: "research"
 extraction_status: "text-extracted"
 evidence_status: "UNVERIFIED"

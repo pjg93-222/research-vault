@@ -8,7 +8,7 @@ downloaded_at: "2026-09-30T13:37:33-05:00"
 size: 326241
 copy: "_sources/inbox/2026-10-15/HamrickHopkins.eIJTUR-9-1.pdf"
 tags: [inbox, type/inbox]
-canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Felectronic-international-journal-of-time-use-research-2012-vol-9-no-1-28-58-7ea7501370.md"
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fresearch%2Fgeneral%2Felectronic-international-journal-of-time-use-research-2012-vol-9-no-1-28-58-7ea7501370"
 collection: "research"
 extraction_status: "text-extracted"
 evidence_status: "UNVERIFIED"

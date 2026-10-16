@@ -8,7 +8,7 @@ downloaded_at: "2026-08-27T23:16:07-05:00"
 size: 23665
 copy: "_sources/inbox/2026-10-15/CONTACT_INFERENCE_DESIGN.md"
 tags: [inbox, type/inbox]
-canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fcontact-inference-layer-implementation-override-specification-15263a4688.md"
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fresearch%2Fgeneral%2Fcontact-inference-layer-implementation-override-specification-15263a4688"
 collection: "project-records"
 extraction_status: "text-extracted"
 evidence_status: "UNVERIFIED"

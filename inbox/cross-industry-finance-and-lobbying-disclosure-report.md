@@ -8,7 +8,7 @@ downloaded_at: "2026-08-04T13:36:23-05:00"
 size: 182215
 copy: "_sources/inbox/2026-10-15/Cross Industry Finance and Lobbying Disclosure Report.docx"
 tags: [inbox, type/inbox]
-canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fcross-industry-finance-and-lobbying-disclosure-report-analysis-recommendations-5f4e69cc7b.md"
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fresearch%2Fgeneral%2Fcross-industry-finance-and-lobbying-disclosure-report-analysis-recommendations-5f4e69cc7b"
 collection: "project-records"
 extraction_status: "text-extracted"
 evidence_status: "UNVERIFIED"

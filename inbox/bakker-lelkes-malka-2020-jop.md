@@ -8,7 +8,7 @@ downloaded_at: "2026-05-26T15:18:26-05:00"
 size: 1764161
 copy: "_sources/inbox/2026-10-15/bakker-lelkes-malka-2020-jop.pdf"
 tags: [inbox, type/inbox]
-canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Funderstanding-partisan-cue-receptivity-tests-of-predictions-from-the-bounded-rational-62bad61789.md"
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fresearch%2Fgeneral%2Funderstanding-partisan-cue-receptivity-tests-of-predictions-from-the-bounded-rational-62bad61789"
 collection: "research"
 extraction_status: "text-extracted"
 evidence_status: "UNVERIFIED"
