@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Moneyball_BUG_REPORT_2026-07-14"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Moneyball_BUG_REPORT_2026-07-14.md"
 sha256: fb613f9da71fb720f2302e9c97678911499a9221dfe4faa5f989fed0e97121ac
 downloaded_at: "2026-07-14T23:05:13-05:00"
 size: 24012
 copy: "_sources/inbox/2026-10-15/Moneyball_BUG_REPORT_2026-07-14.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fmoneyball-independent-bug-report-for-cross-check-7a8695c732"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Moneyball_BUG_REPORT_2026-07-14

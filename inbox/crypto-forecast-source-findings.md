@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "crypto_forecast_source_findings"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Sector_Research_Source_Check_2026-09-25\\crypto_forecast_source_findings.md"
 sha256: e85e5873a239abf4efc7eac723db07866a9f1fd9db69c60858704387ee7b940a
 downloaded_at: "2026-09-25T13:09:26-05:00"
 size: 2582
 copy: "_sources/inbox/2026-10-15/crypto_forecast_source_findings.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fhistorical-crypto-growth-forecast-collected-814c83645d"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # crypto_forecast_source_findings

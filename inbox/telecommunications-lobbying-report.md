@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Telecommunications_Lobbying_Report"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Telecommunications_Lobbying_Report.docx"
 sha256: 50d6dbca2389fd5a1f21368a03b15582b5e24ece681bfaa50259eb294ae3b102
 downloaded_at: "2026-10-09T13:09:01-05:00"
 size: 2390605
 copy: "_sources/inbox/2026-10-15/Telecommunications_Lobbying_Report.docx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpolicy-reference%2Fgeneral%2Ftelecommunications-lobbying-contribution-report-6f4e9f155c"
+collection: "policy-reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Telecommunications_Lobbying_Report

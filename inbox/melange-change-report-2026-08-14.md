@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "MELANGE_CHANGE_REPORT_2026-08-14"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\MELANGE_CHANGE_REPORT_2026-08-14.pdf"
 sha256: ecd85a6debc8bc0bb700a2d5f602475e95f92402ed55a3e5b0c424d43e0e55ec
 downloaded_at: "2026-08-14T13:58:24-05:00"
 size: 176603
 copy: "_sources/inbox/2026-10-15/MELANGE_CHANGE_REPORT_2026-08-14.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fmelange-change-report-research-integration-approvals-0109cdccf5"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # MELANGE_CHANGE_REPORT_2026-08-14

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Lyon_prog2_pandas_slides (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Lyon_prog2_pandas_slides (1).pdf"
 sha256: c944310ba45985a9b986816e82e4e8d099ecd67fcd288f430ef00d0a001c6a3c
 downloaded_at: "2026-09-20T16:10:44-05:00"
 size: 239776
 copy: "_sources/inbox/2026-10-15/Lyon_prog2_pandas_slides (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fcolumn-74221afc80"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Lyon_prog2_pandas_slides (1)

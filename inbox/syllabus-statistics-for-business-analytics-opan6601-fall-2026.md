@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Syllabus Statistics for Business Analytics - OPAN6601_Fall 2026"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Syllabus Statistics for Business Analytics - OPAN6601_Fall 2026.pdf"
 sha256: d1d0efe48a97f73f6cd152d03fa9d1acd3a4880dba5b8138405efcb72e94965a
 downloaded_at: "2026-08-19T12:41:22-05:00"
 size: 319923
 copy: "_sources/inbox/2026-10-15/Syllabus Statistics for Business Analytics - OPAN6601_Fall 2026.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fopan-6601-statistics-for-business-analytics-826fb19d07"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Syllabus Statistics for Business Analytics - OPAN6601_Fall 2026

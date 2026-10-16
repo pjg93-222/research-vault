@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "NEXT_STEPS_20260905"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\NEXT_STEPS_20260905.md"
 sha256: 012c52949130235068964663f0d3a83d7f4d0e0291aad2b67ea58da590500eba
 downloaded_at: "2026-09-05T12:17:43-05:00"
 size: 10743
 copy: "_sources/inbox/2026-10-15/NEXT_STEPS_20260905.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpersonal%2Fgeneral%2Fstaffer-network-and-dashboard-next-steps-6d70f02b9c"
+collection: "personal"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # NEXT_STEPS_20260905

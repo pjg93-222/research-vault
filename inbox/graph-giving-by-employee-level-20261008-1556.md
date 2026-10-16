@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "graph-giving-by-employee-level-20261008-1556"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\graph-giving-by-employee-level-20261008-1556.pdf"
 sha256: 8571b2d603dbbd2f5a9a0f03b12c1d42dc10c3fbd1e0c70050bed1344c866392
 downloaded_at: "2026-10-08T14:56:34-05:00"
 size: 143444
 copy: "_sources/inbox/2026-10-15/graph-giving-by-employee-level-20261008-1556.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fgiving-by-employee-level-d5581fccff"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # graph-giving-by-employee-level-20261008-1556

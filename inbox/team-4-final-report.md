@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Team 4 Final Report"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Team 4 Final Report.pdf"
 sha256: 9ad7189874580e8806451d6ed3d7b5cc723a358d38346f6c77948e63cf3582e4
 downloaded_at: "2026-10-13T22:52:53-05:00"
 size: 808488
 copy: "_sources/inbox/2026-10-15/Team 4 Final Report.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Funderstanding-employee-attrition-at-e3054c9c71"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Team 4 Final Report

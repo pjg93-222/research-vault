@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "CONTACT_INFERENCE_EVALUATION"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\CONTACT_INFERENCE_EVALUATION.md"
 sha256: 53328006614aac7d57220abbd185c69e59a8559af4ce6fb0251c4283dfad08ac
 downloaded_at: "2026-08-27T23:16:12-05:00"
 size: 16563
 copy: "_sources/inbox/2026-10-15/CONTACT_INFERENCE_EVALUATION.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fcontact-inference-layer-effectiveness-evaluation-plan-e251f0d18a"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # CONTACT_INFERENCE_EVALUATION

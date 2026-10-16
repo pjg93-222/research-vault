@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Final report (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Final report (1).pdf"
 sha256: 638fa6b533b59768134cc49373a8a1fe608631076b85b80d3febfbf82adbaca0
 downloaded_at: "2026-10-12T14:32:12-05:00"
 size: 199496
 copy: "_sources/inbox/2026-10-15/Final report (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fattrition-rate-of-frequent-travelers-42de419a00"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Final report (1)

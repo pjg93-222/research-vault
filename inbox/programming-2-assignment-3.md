@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Programming_2_Assignment_3"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Programming_2_Assignment_3.md"
 sha256: bd551e66aa5d3793c1b7bf616aa6d884dd21d4ca9d51cd6514ee8cc87aa627a1
 downloaded_at: "2026-10-01T22:21:08-05:00"
 size: 3629
 copy: "_sources/inbox/2026-10-15/Programming_2_Assignment_3.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fprogramming-2-assignment-3-ae5772609b"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Programming_2_Assignment_3

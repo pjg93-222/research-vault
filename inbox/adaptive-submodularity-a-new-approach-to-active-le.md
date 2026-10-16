@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Adaptive_Submodularity_A_New_Approach_to_Active_Le"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Adaptive_Submodularity_A_New_Approach_to_Active_Le.pdf"
 sha256: a028905d6226acfaeff8e27406ffcbe870d9eb1176fae604a333d520b99c3c79
 downloaded_at: "2026-06-06T19:21:22-05:00"
 size: 351392
 copy: "_sources/inbox/2026-10-15/Adaptive_Submodularity_A_New_Approach_to_Active_Le.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fadaptive-submodularity-a-new-approach-to-active-learning-and-stochastic-optimization-54ab85b5a0.md"
+collection: "research"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Adaptive_Submodularity_A_New_Approach_to_Active_Le

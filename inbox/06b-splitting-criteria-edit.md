@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "06b-Splitting-Criteria_EDIT"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\06b-Splitting-Criteria_EDIT.pptx"
 sha256: 3ddc2fb1cbf99d607369773ad83dcc95ba4ffa7d6dd86b92537c507612577019
 downloaded_at: "2026-10-06T09:23:40-05:00"
 size: 3889834
 copy: "_sources/inbox/2026-10-15/06b-Splitting-Criteria_EDIT.pptx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fhow-a-tree-learns-edca3415c2"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # 06b-Splitting-Criteria_EDIT

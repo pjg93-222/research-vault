@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "PRACTICE-Part_A-Probability-Foundations (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\PRACTICE-Part_A-Probability-Foundations (1).pdf"
 sha256: a098b35fd720e0c76805470564b937588888f01b09ea0360dc3d1527a6dfccce
 downloaded_at: "2026-08-07T15:23:11-05:00"
 size: 291146
 copy: "_sources/inbox/2026-10-15/PRACTICE-Part_A-Probability-Foundations (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Finspectors-d805a16f34"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # PRACTICE-Part_A-Probability-Foundations (1)

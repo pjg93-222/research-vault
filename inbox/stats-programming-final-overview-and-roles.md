@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Stats_Programming Final Overview and Roles"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Stats_Programming Final Overview and Roles.pdf"
 sha256: 832829bcf2aeff8fc1026a74237f6f1070a4f5e947157541ac4805b4b292b2da
 downloaded_at: "2026-08-21T18:28:40-05:00"
 size: 543572
 copy: "_sources/inbox/2026-10-15/Stats_Programming Final Overview and Roles.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fabdul-gafar-idowu-isoke-taylor-sherry-madabhushi-paul-goff-ruiyang-wang-b940875d47"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Stats_Programming Final Overview and Roles

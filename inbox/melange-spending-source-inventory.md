@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "melange_spending_source_inventory"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Sector_Research_Source_Check_2026-09-25\\melange_spending_source_inventory.md"
 sha256: c766d376336a7c9c02fac514d1d1195ac04114352a5bdaded735ebfb8a239668
 downloaded_at: "2026-09-25T11:03:38-05:00"
 size: 8760
 copy: "_sources/inbox/2026-10-15/melange_spending_source_inventory.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Flocal-lobbying-and-contribution-sources-checked-september-25-2026-2b12ce5cf6"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # melange_spending_source_inventory

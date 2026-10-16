@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "EMPLOYMENT_TENURE_STATE_20260903"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\EMPLOYMENT_TENURE_STATE_20260903.md"
 sha256: 058b073b651a2751db0c2d934a631abf787e35195cce469bcdb0be299a6ee5d4
 downloaded_at: "2026-09-02T23:27:41-05:00"
 size: 7761
 copy: "_sources/inbox/2026-10-15/EMPLOYMENT_TENURE_STATE_20260903.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpersonal%2Fgeneral%2Femployment-tenure-lane-state-record-2026-09-03-10e986c76b"
+collection: "personal"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # EMPLOYMENT_TENURE_STATE_20260903

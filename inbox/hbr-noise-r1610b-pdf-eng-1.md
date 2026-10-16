@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "HBR Noise R1610B-PDF-ENG (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\HBR Noise R1610B-PDF-ENG (1).pdf"
 sha256: 762ead9a132b7be4045be9a11055f63d9eceadfd5e72ce74d53d12ba058527df
 downloaded_at: "2026-09-22T19:22:57-05:00"
 size: 357978
 copy: "_sources/inbox/2026-10-15/HBR Noise R1610B-PDF-ENG (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Freprint-r1610b-published-in-hbr-october-2016-cfff05cc6c"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # HBR Noise R1610B-PDF-ENG (1)

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "TOP_NAMED_TARGET_MENTIONS_REVIEW_20260828"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\TOP_NAMED_TARGET_MENTIONS_REVIEW_20260828.md"
 sha256: ba4f552ab83cde9f4079f49be23120420bd0b174dc3d331e89dab22e8f8a5164
 downloaded_at: "2026-08-28T11:15:38-05:00"
 size: 11003
 copy: "_sources/inbox/2026-10-15/TOP_NAMED_TARGET_MENTIONS_REVIEW_20260828.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Ftop-named-target-mentions-by-industry-review-draft-17e48b94e9"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # TOP_NAMED_TARGET_MENTIONS_REVIEW_20260828

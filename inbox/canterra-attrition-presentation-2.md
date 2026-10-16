@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Canterra_Attrition_Presentation (2)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Canterra_Attrition_Presentation (2).pptx"
 sha256: 581bd2b5d0f046a18ecf7a1e9c1b016d9a7c62ffa8b3f6aabc32cd4f261306cb
 downloaded_at: "2026-10-13T16:58:46-05:00"
 size: 1308676
 copy: "_sources/inbox/2026-10-15/Canterra_Attrition_Presentation (2).pptx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Faction-77b61636b7"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Canterra_Attrition_Presentation (2)

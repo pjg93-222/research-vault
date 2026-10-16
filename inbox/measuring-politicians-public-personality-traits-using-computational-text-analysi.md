@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "measuring-politicians-public-personality-traits-using-computational-text-analysis-a-multimethod-feasibility-study-for-agency-and-communion"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\measuring-politicians-public-personality-traits-using-computational-text-analysis-a-multimethod-feasibility-study-for-agency-and-communion.pdf"
 sha256: 76398e751f64e86ad1a987736dabb6f935f240f05e93a2488a8de52b39dd73de
 downloaded_at: "2026-06-14T16:44:54-05:00"
 size: 1457581
 copy: "_sources/inbox/2026-10-15/measuring-politicians-public-personality-traits-using-computational-text-analysis-a-multimethod-feasibility-study-for-agency-and-communion.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=research%2Fpapers%2Fpersonality-psychometrics%2Fbirkenmaier-2025-measuring-politicians-public"
+collection: "research"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # measuring-politicians-public-personality-traits-using-computational-text-analysis-a-multimethod-feasibility-study-for-agency-and-communion

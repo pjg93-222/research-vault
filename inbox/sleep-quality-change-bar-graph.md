@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Sleep Quality Change Bar Graph"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Sleep Quality Change Bar Graph.pdf"
 sha256: 78f1e922a7bb5128b36bebbe2f86b3953fd824beedb2509bc2013f117e0c7c70
 downloaded_at: "2026-08-18T14:06:16-05:00"
 size: 4540
 copy: "_sources/inbox/2026-10-15/Sleep Quality Change Bar Graph.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Faverage-change-in-sleep-quality-e1ed500f10"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Sleep Quality Change Bar Graph

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "BSR Insurance MSBA 2026 Assignment_In person DillonMerrill"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\BSR Insurance MSBA 2026 Assignment_In person DillonMerrill.pdf"
 sha256: baad88bb923f65e1495ff5c93958a432119036427733f06c3a921161d6a955f2
 downloaded_at: "2026-10-05T19:37:37-05:00"
 size: 347430
 copy: "_sources/inbox/2026-10-15/BSR Insurance MSBA 2026 Assignment_In person DillonMerrill.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fopan-6600-visualization-and-storytelling-ebb7d49339"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # BSR Insurance MSBA 2026 Assignment_In person DillonMerrill

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "BSR Insurance MSBA 2026 Assignment_fulltime"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\BSR Insurance MSBA 2026 Assignment_fulltime.pdf"
 sha256: 3568f6b6b0e422a20e6f528aa849f292ecb85ad14ff49e70cd61f42af56aa237
 downloaded_at: "2026-08-14T12:23:44-05:00"
 size: 256771
 copy: "_sources/inbox/2026-10-15/BSR Insurance MSBA 2026 Assignment_fulltime.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fmgmt-6600-using-data-to-lead-change-9633a992df"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # BSR Insurance MSBA 2026 Assignment_fulltime

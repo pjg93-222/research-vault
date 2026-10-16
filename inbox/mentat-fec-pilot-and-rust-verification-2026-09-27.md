@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Mentat FEC Pilot and Rust Verification 2026-09-27"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Mentat FEC Pilot and Rust Verification 2026-09-27.md"
 sha256: 961be6bda8c49e7b0ba723be4f72fbf958f71a4becf6a0df8c49b06689989faf
 downloaded_at: "2026-09-27T17:46:56-05:00"
 size: 5150
 copy: "_sources/inbox/2026-10-15/Mentat FEC Pilot and Rust Verification 2026-09-27.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fmentat-fec-pilot-and-rust-verification-97748d286a"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Mentat FEC Pilot and Rust Verification 2026-09-27

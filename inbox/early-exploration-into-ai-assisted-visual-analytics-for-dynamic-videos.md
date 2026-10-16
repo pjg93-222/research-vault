@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Early_Exploration_into_AI-Assisted_Visual_Analytics_for_Dynamic_Videos"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Early_Exploration_into_AI-Assisted_Visual_Analytics_for_Dynamic_Videos.pdf"
 sha256: a22e737b12b82c995c64bef1b659da507a409ce1a44253293033f3953bc551b4
 downloaded_at: "2026-07-26T17:10:02-05:00"
 size: 1933904
 copy: "_sources/inbox/2026-10-15/Early_Exploration_into_AI-Assisted_Visual_Analytics_for_Dynamic_Videos.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fearly-exploration-into-ai-assisted-visual-analytics-for-dynamic-videos-4aefb2a530.md"
+collection: "research"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Early_Exploration_into_AI-Assisted_Visual_Analytics_for_Dynamic_Videos

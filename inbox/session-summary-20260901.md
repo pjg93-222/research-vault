@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "SESSION_SUMMARY_20260901"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\SESSION_SUMMARY_20260901.md"
 sha256: 1e14b50e6b624ba5d7af8a3d08eaf589de2a020c4f19f56f94745269ae798cd9
 downloaded_at: "2026-09-01T10:29:02-05:00"
 size: 5798
 copy: "_sources/inbox/2026-10-15/SESSION_SUMMARY_20260901.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fmember-approach-briefs-session-summary-2d03b42d07"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # SESSION_SUMMARY_20260901

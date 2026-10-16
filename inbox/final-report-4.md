@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Final report (4)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Final report (4).pdf"
 sha256: d4f9ed0b0bc058a1ed1321a69ed644f3cf768935219a825a68493b88395509df
 downloaded_at: "2026-10-13T15:09:25-05:00"
 size: 835317
 copy: "_sources/inbox/2026-10-15/Final report (4).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fa-exploratory-analysis-i-initial-insights-ii-visualizations-87362c3b55"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Final report (4)

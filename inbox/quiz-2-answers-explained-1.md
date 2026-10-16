@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Quiz 2 - Answers Explained (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Quiz 2 - Answers Explained (1).docx"
 sha256: 2cc48346095dbced0993cac9d9885fe4730bb5bd14a632b8212201fb67b26760
 downloaded_at: "2026-08-19T16:53:46-05:00"
 size: 10282
 copy: "_sources/inbox/2026-10-15/Quiz 2 - Answers Explained (1).docx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fquiz-2-control-flow-functions-answers-explained-d1aaa175bd"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Quiz 2 - Answers Explained (1)

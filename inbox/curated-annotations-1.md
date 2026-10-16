@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Curated Annotations (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Curated Annotations (1).pdf"
 sha256: 15b8ef54718366fe8140f97e0cc880d51413e8d7072b28ac533cd0cd93e4c7a8
 downloaded_at: "2026-05-28T15:42:25-05:00"
 size: 122871
 copy: "_sources/inbox/2026-10-15/Curated Annotations (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fcurated-annotations-1-cc97bfd91d.md"
+collection: "research-reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Curated Annotations (1)

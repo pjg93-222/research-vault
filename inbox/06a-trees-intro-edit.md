@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "06a-Trees-Intro_EDIT"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\06a-Trees-Intro_EDIT.pptx"
 sha256: 30e0de8c9dde6a996bd635f6903f502eac7308d5e9a3fe2d1f03cd775b4c7217
 downloaded_at: "2026-10-06T09:23:38-05:00"
 size: 3622959
 copy: "_sources/inbox/2026-10-15/06a-Trees-Intro_EDIT.pptx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fintroduction-to-decision-trees-72a326b319"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # 06a-Trees-Intro_EDIT

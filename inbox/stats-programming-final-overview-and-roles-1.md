@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Stats_Programming Final Overview and Roles (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Stats_Programming Final Overview and Roles (1).pdf"
 sha256: e40ce63143fb534c0ace6010229dd6916161a91eef8d01548f6759506cb9764f
 downloaded_at: "2026-08-21T19:36:57-05:00"
 size: 642010
 copy: "_sources/inbox/2026-10-15/Stats_Programming Final Overview and Roles (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fa-regression-analysis-on-airbnb-data-in-washington-dc-4fe349e6fe"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Stats_Programming Final Overview and Roles (1)

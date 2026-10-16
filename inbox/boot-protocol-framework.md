@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "boot-protocol-framework"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\boot-protocol-framework.md"
 sha256: a12f33b82ca75581218eab4a13bb79a55b56fb3d68ad3297863e70339baca08c
 downloaded_at: "2026-08-11T15:14:52-05:00"
 size: 9675
 copy: "_sources/inbox/2026-10-15/boot-protocol-framework.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fboot-protocol-implementation-evaluation-framework-4820f7caf6"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # boot-protocol-framework

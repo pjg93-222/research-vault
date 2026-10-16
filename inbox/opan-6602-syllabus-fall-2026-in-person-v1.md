@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "OPAN 6602 Syllabus (Fall 2026 in person)(v1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\OPAN 6602 Syllabus (Fall 2026 in person)(v1).pdf"
 sha256: 22a679d6506fbf0525379bf05b8a0c422bd85fe39c562cc1b95294e9a660ed24
 downloaded_at: "2026-10-06T18:47:06-05:00"
 size: 204047
 copy: "_sources/inbox/2026-10-15/OPAN 6602 Syllabus (Fall 2026 in person)(v1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fopan-6602-foundations-of-machine-learning-746034c4db"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # OPAN 6602 Syllabus (Fall 2026 in person)(v1)

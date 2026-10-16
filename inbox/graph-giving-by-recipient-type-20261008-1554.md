@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "graph-giving-by-recipient-type-20261008-1554"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\graph-giving-by-recipient-type-20261008-1554.pdf"
 sha256: 5887e4197dd88c3f72c6e710fd3f7576f2b864425d90dc0198fe452cf446d042
 downloaded_at: "2026-10-08T14:54:47-05:00"
 size: 104598
 copy: "_sources/inbox/2026-10-15/graph-giving-by-recipient-type-20261008-1554.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fgiving-by-recipient-type-62510d3169"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # graph-giving-by-recipient-type-20261008-1554

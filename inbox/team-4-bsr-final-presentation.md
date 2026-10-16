@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Team 4 - BSR Final Presentation"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Team 4 - BSR Final Presentation.pdf"
 sha256: 3591eb162d073c2e629d86e957eb9121eda92bf7534c88c5f9e9450d5006bf6d
 downloaded_at: "2026-08-20T13:57:03-05:00"
 size: 1776945
 copy: "_sources/inbox/2026-10-15/Team 4 - BSR Final Presentation.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fwhat-is-the-driver-of-bsrs-rise-459beb1e5b"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Team 4 - BSR Final Presentation

@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "FLAGS"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\FLAGS.md"
 sha256: cfcf897e19323577892bce436b15cf7a623fe0b05414feaff4ce5fc207d96c37
 downloaded_at: "2026-07-28T22:18:04-05:00"
 size: 9542
 copy: "_sources/inbox/2026-10-15/FLAGS.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fflags-what-is-known-to-be-weak-258159e7f4"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # FLAGS

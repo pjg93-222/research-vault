@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "symmetry-16-01177"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\symmetry-16-01177.pdf"
 sha256: e271b10559184655d9d8720d20063cb5e198638ac24d79916c972766f06f0d8c
 downloaded_at: "2026-09-20T15:15:06-05:00"
 size: 3853258
 copy: "_sources/inbox/2026-10-15/symmetry-16-01177.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fcitation-chala-t-d-koczy-l-t-6d56f4cd62.md"
+collection: "research"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # symmetry-16-01177

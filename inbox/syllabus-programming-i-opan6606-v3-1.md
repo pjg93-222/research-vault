@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Syllabus - Programming I - OPAN6606 v3 (1)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Syllabus - Programming I - OPAN6606 v3 (1).pdf"
 sha256: 09dc2b0432d626c210b5d43fe5be0556d8997f8e099b9b0832aa0f6e1f8dde9c
 downloaded_at: "2026-08-11T13:12:38-05:00"
 size: 289245
 copy: "_sources/inbox/2026-10-15/Syllabus - Programming I - OPAN6606 v3 (1).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fprogramming-i-introduction-to-data-de1c636d5a"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Syllabus - Programming I - OPAN6606 v3 (1)

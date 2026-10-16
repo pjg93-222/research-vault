@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Inference"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Inference.pdf"
 sha256: c55d1e107e30afd894dedd85004f842781e05cee9285fc874c55d8cc5a07e8a4
 downloaded_at: "2026-08-11T20:38:57-05:00"
 size: 11588904
 copy: "_sources/inbox/2026-10-15/Inference.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Freference%2Fgeneral%2Fstatistics-for-business-analytics-5938069bc2"
+collection: "reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Inference

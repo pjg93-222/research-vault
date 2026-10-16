@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "SSR_TSRPT"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\SSR_TSRPT.pdf"
 sha256: dc864951cdbcde23ad9627313edc637d00648b42eebd2877f4ca1ae259f06555
 downloaded_at: "2026-06-11T23:10:47-05:00"
 size: 52659
 copy: "_sources/inbox/2026-10-15/SSR_TSRPT.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Funiversity-of-minnesota-unofficial-transcript-caa20fcb92"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # SSR_TSRPT

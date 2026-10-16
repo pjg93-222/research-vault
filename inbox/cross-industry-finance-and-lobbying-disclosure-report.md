@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "Cross Industry Finance and Lobbying Disclosure Report"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\Cross Industry Finance and Lobbying Disclosure Report.docx"
 sha256: 4a33611b7c05727a299e7adfebfbcbe3670ddde24a44719f008583b3a5677e28
 downloaded_at: "2026-08-04T13:36:23-05:00"
 size: 182215
 copy: "_sources/inbox/2026-10-15/Cross Industry Finance and Lobbying Disclosure Report.docx"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fcross-industry-finance-and-lobbying-disclosure-report-analysis-recommendations-5f4e69cc7b.md"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # Cross Industry Finance and Lobbying Disclosure Report

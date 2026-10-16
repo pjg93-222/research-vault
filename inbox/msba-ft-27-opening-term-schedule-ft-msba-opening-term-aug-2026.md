@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "MSBA FT'27 - Opening Term Schedule - FT MSBA - Opening Term (Aug 2026)"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\MSBA FT'27 - Opening Term Schedule - FT MSBA - Opening Term (Aug 2026).pdf"
 sha256: d006ab1d98a976da66e3a2cc73e3dfd7fde42680d03c982e04637f7a743dfa5a
 downloaded_at: "2026-07-29T13:20:30-05:00"
 size: 54281
 copy: "_sources/inbox/2026-10-15/MSBA FT'27 - Opening Term Schedule - FT MSBA - Opening Term (Aug 2026).pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fcoursework%2Fgeneral%2Fprogramming-i-introduction-to-184e333b5d"
+collection: "coursework"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # MSBA FT'27 - Opening Term Schedule - FT MSBA - Opening Term (Aug 2026)

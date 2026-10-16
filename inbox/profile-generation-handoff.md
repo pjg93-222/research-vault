@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "PROFILE_GENERATION_HANDOFF"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\PROFILE_GENERATION_HANDOFF.md"
 sha256: d6bc2500a9fc92373a85b947f5e45e76f0b08ef04a53322850fd7869d5017393
 downloaded_at: "2026-08-31T13:38:48-05:00"
 size: 13658
 copy: "_sources/inbox/2026-10-15/PROFILE_GENERATION_HANDOFF.md"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fproject-records%2Fgeneral%2Fmember-approach-briefs-generation-handoff-e8fe00eaef"
+collection: "project-records"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # PROFILE_GENERATION_HANDOFF

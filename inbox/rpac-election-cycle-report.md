@@ -1,13 +1,18 @@
 ---
 type: inbox-item
 title: "RPAC-Election-Cycle-Report"
-status: raw
+status: "curated"
 source_path: "C:\\Users\\pgoff\\Downloads\\RPAC-Election-Cycle-Report.pdf"
 sha256: e83a900b5957542e3996fa7c75d7b9f2a6ed5d2d83174a8af82dfa6f72534846
 downloaded_at: "2026-08-25T11:17:08-05:00"
 size: 2398618
 copy: "_sources/inbox/2026-10-15/RPAC-Election-Cycle-Report.pdf"
 tags: [inbox, type/inbox]
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fpolicy-reference%2Fgeneral%2Frpac-presidents-circle-ebda08c526"
+collection: "policy-reference"
+extraction_status: "text-extracted"
+evidence_status: "UNVERIFIED"
+curated_at: "2026-10-16"
 ---
 
 # RPAC-Election-Cycle-Report
