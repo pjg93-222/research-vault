@@ -8,7 +8,7 @@ downloaded_at: "2026-10-06T14:07:50-05:00"
 size: 20549136
 copy: "_sources/inbox/2026-10-15/Slide Deck.pptx"
 tags: [inbox, type/inbox]
-canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fai-expands-the-search-humans-choose-closing-food-access-gaps-in-dc-dfa47d694c.md"
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fresearch%2Fgeneral%2Fai-expands-the-search-humans-choose-closing-food-access-gaps-in-dc-dfa47d694c"
 collection: "research"
 extraction_status: "text-extracted"
 evidence_status: "UNVERIFIED"

@@ -8,7 +8,7 @@ downloaded_at: "2026-06-18T11:32:55-05:00"
 size: 126189
 copy: "_sources/inbox/2026-10-15/Report - Annotated Bibliography.pdf"
 tags: [inbox, type/inbox]
-canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Falexander-raquel-meyer-et-al-measuring-rates-of-return-for-lobbying-expenditures-an-d070b38352.md"
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fresearch%2Fgeneral%2Falexander-raquel-meyer-et-al-measuring-rates-of-return-for-lobbying-expenditures-an-d070b38352"
 collection: "research-reference"
 extraction_status: "text-extracted"
 evidence_status: "UNVERIFIED"

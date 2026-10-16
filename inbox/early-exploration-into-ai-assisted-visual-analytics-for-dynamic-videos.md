@@ -8,7 +8,7 @@ downloaded_at: "2026-07-26T17:10:02-05:00"
 size: 1933904
 copy: "_sources/inbox/2026-10-15/Early_Exploration_into_AI-Assisted_Visual_Analytics_for_Dynamic_Videos.pdf"
 tags: [inbox, type/inbox]
-canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fearly-exploration-into-ai-assisted-visual-analytics-for-dynamic-videos-4aefb2a530.md"
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fresearch%2Fgeneral%2Fearly-exploration-into-ai-assisted-visual-analytics-for-dynamic-videos-4aefb2a530"
 collection: "research"
 extraction_status: "text-extracted"
 evidence_status: "UNVERIFIED"

@@ -8,7 +8,7 @@ downloaded_at: "2026-05-28T15:42:25-05:00"
 size: 122871
 copy: "_sources/inbox/2026-10-15/Curated Annotations (1).pdf"
 tags: [inbox, type/inbox]
-canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fcurated-annotations-1-cc97bfd91d.md"
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fresearch%2Fgeneral%2Fcurated-annotations-1-cc97bfd91d"
 collection: "research-reference"
 extraction_status: "text-extracted"
 evidence_status: "UNVERIFIED"

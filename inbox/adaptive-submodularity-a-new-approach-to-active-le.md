@@ -8,7 +8,7 @@ downloaded_at: "2026-06-06T19:21:22-05:00"
 size: 351392
 copy: "_sources/inbox/2026-10-15/Adaptive_Submodularity_A_New_Approach_to_Active_Le.pdf"
 tags: [inbox, type/inbox]
-canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fadaptive-submodularity-a-new-approach-to-active-learning-and-stochastic-optimization-54ab85b5a0.md"
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fresearch%2Fgeneral%2Fadaptive-submodularity-a-new-approach-to-active-learning-and-stochastic-optimization-54ab85b5a0"
 collection: "research"
 extraction_status: "text-extracted"
 evidence_status: "UNVERIFIED"

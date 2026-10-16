@@ -8,7 +8,7 @@ downloaded_at: "2026-09-20T15:15:06-05:00"
 size: 3853258
 copy: "_sources/inbox/2026-10-15/symmetry-16-01177.pdf"
 tags: [inbox, type/inbox]
-canonical_note: "obsidian://open?vault=linked&file=research%2Fgeneral%2Fcitation-chala-t-d-koczy-l-t-6d56f4cd62.md"
+canonical_note: "obsidian://open?vault=linked&file=knowledge%2Fresearch%2Fgeneral%2Fcitation-chala-t-d-koczy-l-t-6d56f4cd62"
 collection: "research"
 extraction_status: "text-extracted"
 evidence_status: "UNVERIFIED"
