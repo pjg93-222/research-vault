@@ -207,9 +207,11 @@ The literature mostly tells us the *direction* of an effect and the *class of mo
 
 **What it computes.** gate(n) = max(0.15, seed_prob(n) x SGATE[tier]); committed allies are never gated.
 
+Code check 2026-10-28: SGATE for Ally/Champion/Defender is 1.0 but gate() at fec/moneyball_core.py:672-676 has no exemption, so max(0.15, seed_prob*SGATE) still applies to them.
+
 **Method.** SGATE ranges from Highly Persuadable 1.00 down to Opponent 0.35, with unknown 0.85. seed_prob comes from the receptivity layer.
 
-**Code refs:** `fec/moneyball_core.py:626-630`
+**Code refs:** `fec/moneyball_core.py:672-676`
 
 **Assumptions:**
 - A lobbied legislator acts only with a stance-graded take-up probability (Chen et al. UAI 2021 contingency-aware seeding)
@@ -351,7 +353,9 @@ His Bonica margin note asking for a short-term theory of engagement is answered 
 
 **Method.** Fixed design table. PERS_NONE was ratified 2026-07-02 at Ally parity. The no-position default drives about 60% of cells (open M5).
 
-**Code refs:** `fec/moneyball_core.py:564-568`
+Code check 2026-10-28: fec/moneyball_core.py:609 defaults PERS_NONE to 0.40; the comment there says 0.45 reverts.
+
+**Code refs:** `fec/moneyball_core.py:609-614`
 
 **Assumptions:**
 - Persuadability is inverted-U along the stance ladder

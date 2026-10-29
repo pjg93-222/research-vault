@@ -49,7 +49,7 @@ Brain notes: [concepts/concurrent-service-overlap-edge-rule](obsidian://open?vau
 
 **Method.** Weight = guaranteed overlap x container proximity kappa (personal office 1.00, committee same side 0.75, unknown 0.60, opposite 0.40, leadership 0.75, admin 0.50). 16.0M of 31.1M candidate pairs rejected for zero overlap. After admin exclusion (v6) 4.66M guaranteed pairs remain. Admin containers carried 70.8% of pairs; degree vs largest office size r = 0.87.
 
-**Code refs.** `audits/staffer_network/build_staffer_social_network.py:1150-1194`, `fec/staffer_network/employment_history.py:1965-2124`, `staffer_graph_snapshot.py:241-245`
+**Code refs.** `audits/staffer_network/build_staffer_social_network.py:148-158 (kappa table; :1150-1158 is the run-boundary audit)`, `fec/staffer_network/employment_history.py:1965-2124`, `fec/surfaces/staffer_graph_snapshot.py:241-245`
 
 **Assumptions.**
 - Concurrent service in a container indicates a real connection
@@ -209,7 +209,7 @@ Paul's note that more research on forms of centrality is needed matches the evid
 
 **Method.** A never-guess name ladder (nicknames, accents, surname + chamber uniqueness). A payroll-evidence pin plus record-pair title threshold >= 8 characters (raised from 6; the removals were bare 'counsel'). The web-reference loop has made 0 automatic merges. Exact-name candidates feed only an exploratory layer.
 
-**Code refs.** `fec/build_staff_directory.py`, `staffer_identity_auto.py:148`, `staffer_payroll_identity.py`
+**Code refs.** `fec/members/build_staff_directory.py`, `fec/surfaces/staffer_identity_auto.py (line 148 is an evidence-date helper; the >=8-char title threshold was not located on 2026-10-28)`, `fec/surfaces/staffer_payroll_identity.py`
 
 **Assumptions.**
 - Payroll account identity with a corroborating record pair means the same person
@@ -297,7 +297,7 @@ Paul wants relationship decay modeled and notes that no source estimates the hal
 
 **What it computes.** Evidence strength = 1 - prod over sources of (1 - max source strength). Outreach candidates are ordered by PageRank, then route cost.
 
-**Method.** Noisy-OR is defined but not in the build path.
+**Method.** Noisy-OR is defined but not in the build path. Code check 2026-10-28: noisy-OR is named only in the walk docstring at fec/staffer_network/network_math.py:75; no function or call exists.
 
 **Code refs.** `fec/staffer_network/network_math.py:69-88`, `fec/staffer_network/ranking_math.py:62-82`
 

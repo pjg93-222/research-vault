@@ -50,7 +50,7 @@ So every edge probability, cost constant and dial in this system remains an unes
 
 **Method.** Dijkstra on -log p. activeP(p) = p/(p + (1-p) x ASKM) with ASKM 0.07 (about a 14x odds shift, unestimated). recruitCost(p) = 1000 + 9000(1-p), clamped to $1k-$10k.
 
-**Code refs:** `fec/templates/make_dashboard_html_00.tpl (buildPath, chainHold, recruitCost)`
+**Code refs:** `fec/surfaces/templates/make_dashboard_html_00.tpl (buildPath, chainHold, recruitCost)`
 
 **Assumptions**
 - Cosponsor-kernel edge probabilities proxy ask success
@@ -142,7 +142,7 @@ The evidence points first to fixing the existing exact search: honour the droppe
 
 **Method.** Greedy max coverage (1-1/e) with locality and degree pruning (GCOMB), plus grow() spread with recruitability x log(deg) x proximity.
 
-**Code refs:** `fec/templates/make_dashboard_html_00.tpl (budgetRecruit, multiTarget, grow)`
+**Code refs:** `fec/surfaces/templates/make_dashboard_html_00.tpl (budgetRecruit, multiTarget, grow)`
 
 **Assumptions**
 - Approximate submodularity on the cosponsor graph
@@ -363,6 +363,8 @@ Paul also wants learned heuristics. The evidence cuts against them for this rout
 ## Ordered person-overlap routes and employment-routing overlay
 
 **What it computes.** Routes through dated Politico-reconciled co-work. distance = ceil(1e6 x 128 / strength), with strength = proximity x log2(1 + days/30). Overlay costs: current co-worker 1, historical 3, reported activity 2, filing 5, policy 8.
+
+Code check 2026-10-28: fec/surfaces/staffer_connection_facts.py:22-31 DIMENSIONS uses weights 128/64/32/16/8/4/2/1; the 1/3/2/5/8 overlay costs were not located.
 
 **Method.** Bidirectional Dijkstra on (cost, steps). User-asserted current co-worker hop at cost 1.
 

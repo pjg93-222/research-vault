@@ -80,7 +80,7 @@ This project measured and REJECTED that kind of normalization. Each is FLAGGED a
 
 **Code refs.**
 - `C:/Users/pgoff/OneDrive/Desktop/Draft Systems/congress_member_scraper.R (Stage 3)`
-- `fec/moneyball_core.py:371-542 (load_network, load_network_directed)`
+- `fec/moneyball_core.py:508-560 (load_network :508, load_network_directed :554)`
 - `fec/network/build_multilayer_network.py:9-19`
 
 **Assumptions.**
@@ -166,7 +166,7 @@ The Aref SDSM null and Battaglini's row-share weights are degree or volume norma
 
 **Code refs.**
 - `fec/moneyball_core.py:68-72`
-- `fec/build_dashboard_bundle.py`
+- `fec/surfaces/build_dashboard_bundle.py`
 
 **Assumptions.**
 - Cosponsorship alone measures cross-party bridging
@@ -301,7 +301,7 @@ Flags: Ahmad's per-retweeter normalization and Tang-style count weights belong t
 **Method.** Hellinger genealogy across time. Homophily replication at press resolution was null.
 
 **Code refs.**
-- `fec/press_hcoi.py`
+- `fec/network/press_hcoi.py`
 
 **Assumptions.**
 - Shared issue attention indicates coalition (Malaterre & Lareau 2024)
@@ -367,11 +367,13 @@ The built component's null homophily result is consistent with the paper's cauti
 
 **What it computes.** Pairs who both appeared substantively in the same interview episode (>= 4 turns or >= 200 words; 1,151 pairs). Signed directed references with LLM valence per context window (4,358 edges; green above +0.15, red below -0.15).
 
+Code check 2026-10-28: fec/members/member_reference_layer.py:383 prints at +/-0.2; dashboard threshold not traced.
+
 **Method.** Episodes with more than 8 members are skipped. Edges need at least 2 scored contexts. Name resolution never guesses.
 
 **Code refs.**
-- `fec/co_appearance_layer.py`
-- `member_reference_layer.py`
+- `fec/network/co_appearance_layer.py`
+- `fec/members/member_reference_layer.py`
 
 **Assumptions.**
 - Appearing in the same episode indicates a relation
@@ -441,6 +443,8 @@ Tang's count-based reliability weight is a per-edge volume weight of the rejecte
 **What it computes.** Coalitions from a signed backbone with frustration-minimizing local search seeded by positive Louvain.
 
 **Method.** R backbone sdsm (alpha .05, signed). DW-NOMINATE vote edges were rejected in favour of the signed backbone.
+
+Code check 2026-10-28: fec/network/signed_coalitions.py:8-9 signs member_references.json by sign(net); seeds at :73-75 are party split plus random restarts. No `sdsm` or Louvain seed in fec/.
 
 **Code refs.**
 - `fec/network/signed_coalitions.py`
@@ -524,6 +528,8 @@ The SDSM degree-preserving null is in the rejected per-edge volume-normalization
 **What it computes.** Ward.D2 clusters on member lean profiles (9 blocs) and a combined bloc index.
 
 **Method.** COALITION_LEAN_WEIGHT 3.0, min 6 members. Static snapshot. All blocs are labelled pro-CU (a known mislabel).
+
+Code check 2026-10-28: Ward.D2/hclust and COALITION_LEAN_WEIGHT are not found anywhere under fec/; this step lives only in the R scrapers or is retired.
 
 **Code refs.**
 - `C:/Users/pgoff/OneDrive/Desktop/Draft Systems/cu_press_release_scraper.R (detect_coalitions)`

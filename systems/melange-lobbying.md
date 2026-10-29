@@ -49,7 +49,7 @@ Brain notes: [actors/lobbyview-collector](obsidian://open?vault=brain&file=actor
 
 **Method.** Name regex with guards. NAICS is linkage metadata only. Fail-closed guards. Vintage 2024-10-25; coverage reliable through 2021.
 
-**Code refs.** `fec/collect_lobbyview.py`, `fec/collect_lda_filings.py`
+**Code refs.** `fec/lobbying/collect_lobbyview.py`, `fec/lobbying/collect_lda_filings.py`
 
 **Assumptions**
 - Client names are decisive for finance classification
@@ -115,7 +115,7 @@ Paul treats LobbyView as the fundamental source and Harrison as an introductory 
 
 | Source | Date | Relation | Record shows | Transfers when | Strength | Check |
 |---|---|---|---|---|---|---|
-| memory `telecom-industry-lane-2026-10-07.md` | 2026-10-07 | internal (system record) | Telecom vs credit-union comparison. Federal LDA, OpenSecrets-style totals: telecom $102.7M vs CU $7.4M in 2025 (14x). 2025 lobbyists 526 vs 81; covered positions 196 vs 25. PAC giving to House and Senate candidates, 2024: about 3:1. Method: the full LDA sweep (539,782 filings, 2021 to 2026 Q2), read by the scratchpad script `lda/lda_sector_compare.py`; LobbyView cross-check within 1% (telecom) and 4% (CU); Mentat Telecom and Credit Union workbooks. Index file `audits/staffer_live_runtime/lda_activity_v2.sqlite` holds IDs only: no names, no amounts. | Descriptive sector totals; LDA here identifies and totals filings and is not an edge or weight source (D-021). The memory does not say how "OpenSecrets-style" treats self-filer expense against hired-firm income, which is the Harrison hazard above. The Mentat giving-forecast hub records a different telecom 2025 figure from a Melange page ($102.4M in-house + $37.0M outside-firm fees), as does the brain note [actors/mentat-console](obsidian://open?vault=brain&file=actors%2Fmentat-console); the two are not reconciled here. The sweep runs past the 2021 LobbyView coverage limit, and the LobbyView agreement figures do not say which years they compare. | internal (lane memory) | UNVERIFIED |
+| memory `telecom-industry-lane-2026-10-07.md` | 2026-10-07 | internal (system record) | Telecom vs credit-union comparison. Federal LDA, OpenSecrets-style totals: telecom $102.7M vs CU $7.4M in 2025 (14x). 2025 lobbyists 526 vs 81; covered positions 196 vs 25. PAC giving to House and Senate candidates, 2024: about 3:1. Method: the full LDA sweep (539,782 filings, 2021 to 2026 Q2), read by the scratchpad script `lda/lda_sector_compare.py` (not in the repo as of 2026-10-28; memory-only path); LobbyView cross-check within 1% (telecom) and 4% (CU); Mentat Telecom and Credit Union workbooks. Index file `audits/staffer_live_runtime/lda_activity_v2.sqlite` holds IDs only: no names, no amounts. | Descriptive sector totals; LDA here identifies and totals filings and is not an edge or weight source (D-021). The memory does not say how "OpenSecrets-style" treats self-filer expense against hired-firm income, which is the Harrison hazard above. The Mentat giving-forecast hub records a different telecom 2025 figure from a Melange page ($102.4M in-house + $37.0M outside-firm fees), as does the brain note [actors/mentat-console](obsidian://open?vault=brain&file=actors%2Fmentat-console); the two are not reconciled here. The sweep runs past the 2021 LobbyView coverage limit, and the LobbyView agreement figures do not say which years they compare. | internal (lane memory) | UNVERIFIED |
 
 ## Lobbying member-year network and circular lobbied-member link
 
@@ -123,7 +123,7 @@ Paul treats LobbyView as the fundamental source and Harrison as an introductory 
 
 **Method.** P(joined | lobbied) = 1 by construction, so it is REFUTED as evidence of influence. LD-2 filings never name members.
 
-**Code refs.** `fec/build_network_2021_rebuild.py`, `lobby_interactions.py:4`
+**Code refs.** `fec/lobbying/build_network_2021_rebuild.py`, `fec/lobbying/lobby_interactions.py:4`
 
 **Assumptions**
 - The bill-roster join is not a lobbying-contact measure
@@ -193,7 +193,7 @@ The evidence decisively supports the system's REFUTED verdict, and it does not s
 
 **Method.** Round 1 VOID. Round 2 p = .098 (Spearman +0.259, N = 52). Round 3: raw rho +0.153, but the four-control partial is -0.0002. Closed pending a new vintage. FEC as a 42-month leading indicator is a candidate heuristic.
 
-**Code refs.** `fec/build_network_2021_rebuild.py`
+**Code refs.** `fec/lobbying/build_network_2021_rebuild.py`
 
 **Assumptions**
 - FEC giving leads lobbying (unvalidated)
@@ -266,7 +266,7 @@ The system's closure (FEC as a target-side money prior only) is consistent with 
 
 **Method.** Gold positives name the member. Negatives come from the same organisation's roster join, split 50/50 by organisation. Contamination is estimated by a recall sample.
 
-**Code refs.** `contact inference lane (path not recorded)`
+**Code refs.** `contact inference lane (code at fec/lobbying/contact_inference/ on branch lane/contact-inference-v1, unmerged as of 2026-10-28 (D-374, D-388, D-389); nothing is shown on the boards until v1 ships (D-373))`
 
 **Assumptions**
 - Roster-join negatives are not contacts
@@ -321,6 +321,8 @@ Borrowing only definitions that can be documented (for example Bacik's g and p, 
 ## Ridge-logistic cosponsor forecaster
 
 **Computes.** Predicted cosponsor joins on open bills. A frozen forecast of 265,396 predictions is unscored.
+
+Code check 2026-10-28: the count 265,396 appears nowhere in fec/; source artifact not located.
 
 **Method.** Ridge logistic regression. Scoring against the lobbied-member table would be circular.
 
@@ -378,6 +380,8 @@ Paul wants prediction, not reaction, which is his critique of Kim J. 2025. The b
 **Computes.** Per-bill mode (standard, advisory or contested) adding a counterparty term (Romero Moreno 2021).
 
 **Method.** Loader shipped; engine wiring not built.
+
+Code check 2026-10-28: fec/surfaces/build_dashboard_bundle.py:741-751 loads the contested-bills registry, so the dashboard consumes it; engine wiring still not traced.
 
 **Code refs.** `fec/lobbying/contested_bills.py`
 
